@@ -9,12 +9,54 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ProposalsRouteImport } from './routes/proposals'
+import { Route as MultiDayRouteImport } from './routes/multi-day'
+import { Route as ExperiencesRouteImport } from './routes/experiences'
+import { Route as DayToursRouteImport } from './routes/day-tours'
+import { Route as CorporateRouteImport } from './routes/corporate'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as BuilderRouteImport } from './routes/builder'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 
+const ProposalsRoute = ProposalsRouteImport.update({
+  id: '/proposals',
+  path: '/proposals',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MultiDayRoute = MultiDayRouteImport.update({
+  id: '/multi-day',
+  path: '/multi-day',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExperiencesRoute = ExperiencesRouteImport.update({
+  id: '/experiences',
+  path: '/experiences',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DayToursRoute = DayToursRouteImport.update({
+  id: '/day-tours',
+  path: '/day-tours',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CorporateRoute = CorporateRouteImport.update({
+  id: '/corporate',
+  path: '/corporate',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BuilderRoute = BuilderRouteImport.update({
   id: '/builder',
   path: '/builder',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -25,37 +67,142 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/builder': typeof BuilderRoute
+  '/contact': typeof ContactRoute
+  '/corporate': typeof CorporateRoute
+  '/day-tours': typeof DayToursRoute
+  '/experiences': typeof ExperiencesRoute
+  '/multi-day': typeof MultiDayRoute
+  '/proposals': typeof ProposalsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/builder': typeof BuilderRoute
+  '/contact': typeof ContactRoute
+  '/corporate': typeof CorporateRoute
+  '/day-tours': typeof DayToursRoute
+  '/experiences': typeof ExperiencesRoute
+  '/multi-day': typeof MultiDayRoute
+  '/proposals': typeof ProposalsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/builder': typeof BuilderRoute
+  '/contact': typeof ContactRoute
+  '/corporate': typeof CorporateRoute
+  '/day-tours': typeof DayToursRoute
+  '/experiences': typeof ExperiencesRoute
+  '/multi-day': typeof MultiDayRoute
+  '/proposals': typeof ProposalsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/builder'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/builder'
+    | '/contact'
+    | '/corporate'
+    | '/day-tours'
+    | '/experiences'
+    | '/multi-day'
+    | '/proposals'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/builder'
-  id: '__root__' | '/' | '/builder'
+  to:
+    | '/'
+    | '/about'
+    | '/builder'
+    | '/contact'
+    | '/corporate'
+    | '/day-tours'
+    | '/experiences'
+    | '/multi-day'
+    | '/proposals'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/builder'
+    | '/contact'
+    | '/corporate'
+    | '/day-tours'
+    | '/experiences'
+    | '/multi-day'
+    | '/proposals'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
   BuilderRoute: typeof BuilderRoute
+  ContactRoute: typeof ContactRoute
+  CorporateRoute: typeof CorporateRoute
+  DayToursRoute: typeof DayToursRoute
+  ExperiencesRoute: typeof ExperiencesRoute
+  MultiDayRoute: typeof MultiDayRoute
+  ProposalsRoute: typeof ProposalsRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/proposals': {
+      id: '/proposals'
+      path: '/proposals'
+      fullPath: '/proposals'
+      preLoaderRoute: typeof ProposalsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/multi-day': {
+      id: '/multi-day'
+      path: '/multi-day'
+      fullPath: '/multi-day'
+      preLoaderRoute: typeof MultiDayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/experiences': {
+      id: '/experiences'
+      path: '/experiences'
+      fullPath: '/experiences'
+      preLoaderRoute: typeof ExperiencesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/day-tours': {
+      id: '/day-tours'
+      path: '/day-tours'
+      fullPath: '/day-tours'
+      preLoaderRoute: typeof DayToursRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/corporate': {
+      id: '/corporate'
+      path: '/corporate'
+      fullPath: '/corporate'
+      preLoaderRoute: typeof CorporateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/builder': {
       id: '/builder'
       path: '/builder'
       fullPath: '/builder'
       preLoaderRoute: typeof BuilderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -70,7 +217,14 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
   BuilderRoute: BuilderRoute,
+  ContactRoute: ContactRoute,
+  CorporateRoute: CorporateRoute,
+  DayToursRoute: DayToursRoute,
+  ExperiencesRoute: ExperiencesRoute,
+  MultiDayRoute: MultiDayRoute,
+  ProposalsRoute: ProposalsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
