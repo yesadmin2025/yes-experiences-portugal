@@ -135,11 +135,11 @@ function HomePage() {
   return (
     <SiteLayout>
       {/* 1 — HERO */}
-      <section className="relative min-h-[78vh] md:min-h-[92vh] flex items-end overflow-hidden">
+      <section className="relative min-h-[80vh] md:min-h-[94vh] flex items-end overflow-hidden">
         <img
           src={heroImg}
           alt="Hidden coastal road in Portugal at golden hour"
-          className="absolute inset-0 w-full h-full object-cover object-center scale-105 animate-[heroZoom_18s_ease-out_forwards]"
+          className="absolute inset-0 w-full h-full object-cover object-center scale-110 animate-[heroZoom_24s_ease-out_forwards]"
           width={1920}
           height={1080}
         />
@@ -150,56 +150,53 @@ function HomePage() {
         <div className="container-x relative z-10 pb-20 md:pb-32 pt-32 md:pt-40">
           <div className="max-w-3xl text-[color:var(--ivory)]">
             <span
-              className="inline-flex items-center gap-3 text-[10px] uppercase tracking-[0.34em] text-[color:var(--gold-soft)] opacity-0 animate-[heroFade_1s_ease-out_0.2s_forwards]"
+              className="inline-flex items-center gap-3 text-[10px] uppercase tracking-[0.34em] text-[color:var(--gold-soft)] opacity-0 animate-[heroFade_1.1s_ease-out_0.3s_forwards]"
             >
               <span className="h-px w-8 bg-[color:var(--gold)]" />
               Private · By local hands · Designed around you
             </span>
             <h1
-              className="serif mt-6 md:mt-8 text-[2.6rem] sm:text-5xl md:text-7xl lg:text-[5.25rem] leading-[1.04] font-light tracking-[-0.015em] opacity-0 animate-[heroFade_1.2s_ease-out_0.45s_forwards]"
+              className="serif mt-6 md:mt-8 text-[2.6rem] sm:text-5xl md:text-7xl lg:text-[5.25rem] leading-[1.04] font-light tracking-[-0.015em] opacity-0 animate-[heroFade_1.4s_ease-out_0.6s_forwards]"
             >
               Portugal,
               <br />
               <span className="italic text-[color:var(--gold-soft)]">Designed Around You</span>
             </h1>
             <p
-              className="mt-6 md:mt-8 text-base md:text-xl text-[color:var(--ivory)]/90 max-w-xl leading-[1.7] font-light opacity-0 animate-[heroFade_1.2s_ease-out_0.75s_forwards]"
+              className="mt-6 md:mt-8 text-base md:text-xl text-[color:var(--ivory)]/90 max-w-xl leading-[1.7] font-light opacity-0 animate-[heroFade_1.4s_ease-out_0.95s_forwards]"
             >
               Private experiences crafted through local knowledge, hidden gems and authentic
               moments — like exploring Portugal with a local friend.
             </p>
 
-            <div className="mt-9 md:mt-11 flex flex-col sm:flex-row flex-wrap gap-4 sm:gap-6 opacity-0 animate-[heroFade_1.2s_ease-out_1s_forwards]">
+            <div className="mt-9 md:mt-11 flex flex-col sm:flex-row flex-wrap gap-4 sm:gap-6 opacity-0 animate-[heroFade_1.4s_ease-out_1.25s_forwards]">
               {/* Primary — teal bg, white text, thin gold border */}
               <Link
                 to="/builder"
-                className="group inline-flex items-center justify-center gap-3 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-white px-9 py-4 text-[11px] tracking-[0.22em] uppercase border border-[color:var(--gold)]/80 hover:border-[color:var(--gold)] transition-all duration-500 hover:-translate-y-0.5 hover:shadow-[0_10px_30px_-12px_rgba(201,169,106,0.55)]"
+                className="group inline-flex items-center justify-center gap-3 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-white px-9 py-4 text-[11px] tracking-[0.22em] uppercase border border-[color:var(--gold)]/70 hover:border-[color:var(--gold)] transition-all duration-700 hover:-translate-y-1 hover:shadow-[0_18px_40px_-18px_rgba(41,91,97,0.55)]"
               >
                 Design &amp; Secure Your Experience
-                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-300" />
+                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-500" />
               </Link>
               {/* Secondary — transparent, thin gold border, white text */}
               <Link
                 to="/experiences"
-                className="group inline-flex items-center justify-center gap-3 bg-transparent text-white px-9 py-4 text-[11px] tracking-[0.22em] uppercase border border-[color:var(--gold)]/80 hover:border-[color:var(--gold)] hover:bg-white/[0.06] transition-all duration-500 hover:-translate-y-0.5 hover:shadow-[0_10px_30px_-12px_rgba(201,169,106,0.4)]"
+                className="group inline-flex items-center justify-center gap-3 bg-transparent text-white px-9 py-4 text-[11px] tracking-[0.22em] uppercase border border-[color:var(--gold)]/70 hover:border-[color:var(--gold)] hover:bg-white/[0.06] transition-all duration-700 hover:-translate-y-1"
               >
                 Explore Signature Experiences
-                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-300" />
+                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-500" />
               </Link>
             </div>
 
-            {/* Supporting microcopy — communicates immediacy & direct booking */}
-            <div className="mt-6 md:mt-7 max-w-xl space-y-1.5 opacity-0 animate-[heroFade_1.2s_ease-out_1.2s_forwards]">
-              <p className="text-[13px] md:text-sm text-[color:var(--ivory)]/95 leading-relaxed font-light">
-                Instant confirmation. No waiting. No back-and-forth emails.
-              </p>
-              <p className="text-[12px] md:text-[13px] text-[color:var(--ivory)]/70 leading-relaxed font-light italic">
-                Plan, personalize and secure your private experience in minutes — with a local designer available if you want a personal touch.
+            {/* Supporting microcopy — instant, direct, simple */}
+            <div className="mt-6 md:mt-7 max-w-xl opacity-0 animate-[heroFade_1.4s_ease-out_1.5s_forwards]">
+              <p className="text-[13px] md:text-sm text-[color:var(--ivory)]/95 leading-relaxed font-light tracking-wide">
+                Instant confirmation. Direct booking. No waiting.
               </p>
             </div>
 
             <p
-              className="mt-8 md:mt-10 text-[10px] uppercase tracking-[0.32em] text-[color:var(--gold-soft)]/90 flex items-center gap-3 opacity-0 animate-[heroFade_1.2s_ease-out_1.4s_forwards]"
+              className="mt-8 md:mt-10 text-[10px] uppercase tracking-[0.32em] text-[color:var(--gold-soft)]/90 flex items-center gap-3 opacity-0 animate-[heroFade_1.4s_ease-out_1.75s_forwards]"
             >
               <span className="h-px w-6 bg-[color:var(--gold)]" />
               Private experiences only — from 1 guest to large private groups
@@ -209,7 +206,7 @@ function HomePage() {
       </section>
 
       {/* 2 — TRUST BAR */}
-      <section className="bg-[color:var(--ivory)] border-b border-[color:var(--border)] py-12 md:py-14">
+      <section className="bg-[color:var(--ivory)] border-b border-[color:var(--border)] py-14 md:py-16">
         <div className="container-x">
           <div className="reveal flex flex-col items-center text-center gap-4">
             {/* Headline */}
@@ -221,7 +218,14 @@ function HomePage() {
             <div className="flex items-center gap-2.5">
               <div className="flex gap-0.5 text-[color:var(--gold)]">
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={14} fill="currentColor" strokeWidth={0} />
+                  <Star
+                    key={i}
+                    size={14}
+                    fill="currentColor"
+                    strokeWidth={0}
+                    className="reveal-stagger"
+                    style={{ transitionDelay: `${i * 90}ms` }}
+                  />
                 ))}
               </div>
               <span className="text-[11px] uppercase tracking-[0.28em] text-[color:var(--charcoal-soft)]">
@@ -241,11 +245,15 @@ function HomePage() {
                 { name: "Tripadvisor", badge: "Travelers' Choice" },
                 { name: "Viator", badge: "Top-rated Operator" },
               ].map((p, i) => (
-                <div key={p.name} className="flex flex-col items-center gap-1.5">
+                <div
+                  key={p.name}
+                  className="flex flex-col items-center gap-1.5 reveal-stagger"
+                  style={{ transitionDelay: `${250 + i * 140}ms` }}
+                >
                   <span className="serif text-base md:text-lg text-[color:var(--charcoal)] tracking-tight">
                     {p.name}
                   </span>
-                  <span className="inline-flex items-center gap-1.5 text-[9px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)] border border-[color:var(--gold)]/40 px-2 py-1">
+                  <span className="inline-flex items-center gap-1.5 text-[9px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)] border border-[color:var(--border)] px-2 py-1">
                     <Star size={8} fill="currentColor" strokeWidth={0} className="text-[color:var(--gold)]" />
                     {p.badge}
                   </span>
@@ -257,7 +265,7 @@ function HomePage() {
       </section>
 
       {/* 3 — EXPERIENCE TYPES */}
-      <section className="py-24 md:py-32 bg-[color:var(--ivory)]">
+      <section className="py-28 md:py-36 bg-[color:var(--ivory)]">
         <div className="container-x">
           <div className="reveal text-center max-w-2xl mx-auto mb-16">
             <span className="eyebrow">The Experiences</span>
@@ -270,21 +278,27 @@ function HomePage() {
             </p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-7">
-            {types.map((c) => (
-              <Link key={c.title} to={c.to} className="group block">
-                <div className="relative overflow-hidden aspect-[3/4] mb-5">
+            {types.map((c, i) => (
+              <Link
+                key={c.title}
+                to={c.to}
+                className="group block reveal-stagger transition-transform duration-500 hover:-translate-y-1.5"
+                style={{ transitionDelay: `${i * 110}ms` }}
+              >
+                <div className="relative overflow-hidden aspect-[3/4] mb-5 shadow-[0_10px_30px_-20px_rgba(46,46,46,0.25)] group-hover:shadow-[0_24px_50px_-22px_rgba(41,91,97,0.3)] transition-shadow duration-700">
                   <img
                     src={c.img}
                     alt={c.title}
                     loading="lazy"
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="w-full h-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-110"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal)]/55 via-transparent to-transparent" />
-                  <span className="absolute top-4 left-4 text-[10px] uppercase tracking-[0.25em] text-[color:var(--gold-soft)]">
+                  <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal)]/60 via-transparent to-transparent" />
+                  <div className="absolute inset-0 bg-[color:var(--teal)]/0 group-hover:bg-[color:var(--teal)]/10 transition-colors duration-700" />
+                  <span className="absolute top-4 left-4 text-[10px] uppercase tracking-[0.25em] text-white/85">
                     Private · Tailored
                   </span>
                 </div>
-                <h3 className="serif text-xl text-[color:var(--charcoal)] group-hover:text-[color:var(--teal)] transition-colors">
+                <h3 className="serif text-xl text-[color:var(--charcoal)] group-hover:text-[color:var(--teal)] transition-colors duration-500">
                   {c.title}
                 </h3>
                 <p className="mt-2 text-sm text-[color:var(--charcoal-soft)] leading-relaxed">
@@ -304,8 +318,8 @@ function HomePage() {
         </div>
         <div className="container-x relative">
           <div className="grid lg:grid-cols-12 gap-12 items-center">
-            <div className="lg:col-span-6">
-              <span className="inline-flex items-center gap-3 text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold-soft)]">
+            <div className="reveal lg:col-span-6">
+              <span className="inline-flex items-center gap-3 text-[10px] uppercase tracking-[0.3em] text-[color:var(--ivory)]/75">
                 <span className="h-px w-8 bg-[color:var(--gold)]" />
                 The Experience Studio
               </span>
@@ -320,7 +334,7 @@ function HomePage() {
               <div className="mt-8 flex flex-wrap gap-4">
                 <Link
                   to="/builder"
-                  className="inline-flex items-center gap-2 bg-[color:var(--ivory)] text-[color:var(--teal)] hover:bg-[color:var(--gold-soft)] px-8 py-4 text-sm uppercase tracking-[0.1em] transition-all"
+                  className="inline-flex items-center gap-2 bg-[color:var(--ivory)] text-[color:var(--teal)] hover:bg-white border border-[color:var(--gold)]/50 hover:border-[color:var(--gold)] px-8 py-4 text-sm uppercase tracking-[0.1em] transition-all duration-500 hover:-translate-y-0.5"
                 >
                   Open the Studio
                   <ArrowRight size={15} />
@@ -329,7 +343,7 @@ function HomePage() {
             </div>
 
             {/* Visual preview */}
-            <div className="lg:col-span-6">
+            <div className="reveal lg:col-span-6">
               <div className="bg-[color:var(--ivory)] text-[color:var(--charcoal)] p-8 md:p-10 shadow-[var(--shadow-elegant)]">
                 <div className="flex items-center justify-between mb-8">
                   <span className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--charcoal-soft)]">
@@ -370,9 +384,9 @@ function HomePage() {
       </section>
 
       {/* 5 — SIGNATURE EXPERIENCES */}
-      <section className="py-24 md:py-32 bg-[color:var(--ivory)]">
+      <section className="py-28 md:py-36 bg-[color:var(--ivory)]">
         <div className="container-x">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
+          <div className="reveal flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
             <div>
               <span className="eyebrow">Signature Experiences</span>
               <h2 className="serif text-4xl md:text-5xl mt-5 leading-tight">
@@ -381,40 +395,42 @@ function HomePage() {
             </div>
             <Link
               to="/experiences"
-              className="text-sm uppercase tracking-[0.2em] text-[color:var(--teal)] hover:text-[color:var(--teal-2)] inline-flex items-center gap-2"
+              className="text-sm uppercase tracking-[0.2em] text-[color:var(--teal)] hover:text-[color:var(--teal-2)] inline-flex items-center gap-2 transition-colors"
             >
               View all <ArrowRight size={14} />
             </Link>
           </div>
           <div className="grid md:grid-cols-3 gap-7">
-            {signatures.map((s) => (
+            {signatures.map((s, i) => (
               <article
                 key={s.title}
-                className="group bg-[color:var(--card)] border border-[color:var(--border)]"
+                className="group bg-[color:var(--card)] border border-[color:var(--border)] reveal-stagger transition-all duration-500 hover:-translate-y-1.5 hover:shadow-[0_24px_50px_-24px_rgba(41,91,97,0.25)] hover:border-[color:var(--teal)]/30"
+                style={{ transitionDelay: `${i * 130}ms` }}
               >
                 <div className="relative overflow-hidden aspect-[4/3]">
                   <img
                     src={s.img}
                     alt={s.title}
                     loading="lazy"
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="w-full h-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-110"
                   />
+                  <div className="absolute inset-0 bg-[color:var(--teal)]/0 group-hover:bg-[color:var(--teal)]/8 transition-colors duration-700" />
                 </div>
                 <div className="p-6">
-                  <h3 className="serif text-2xl text-[color:var(--charcoal)]">{s.title}</h3>
+                  <h3 className="serif text-2xl text-[color:var(--charcoal)] group-hover:text-[color:var(--teal)] transition-colors duration-500">{s.title}</h3>
                   <p className="mt-2 text-sm text-[color:var(--charcoal-soft)] leading-relaxed">
                     {s.line}
                   </p>
                   <ul className="mt-5 space-y-2">
-                    {s.pace.map((p, i) => (
+                    {s.pace.map((p, idx) => (
                       <li
                         key={p}
                         className="flex items-center gap-3 text-[13px] text-[color:var(--charcoal)]"
                       >
-                        <span className="text-[color:var(--gold)] text-[10px]">
-                          {String(i + 1).padStart(2, "0")}
+                        <span className="text-[color:var(--teal)] text-[10px] tracking-wider">
+                          {String(idx + 1).padStart(2, "0")}
                         </span>
-                        <span className="h-px w-4 bg-[color:var(--gold)]/40" />
+                        <span className="h-px w-4 bg-[color:var(--gold)]/50" />
                         {p}
                       </li>
                     ))}
@@ -422,19 +438,19 @@ function HomePage() {
                   <div className="mt-6 pt-5 border-t border-[color:var(--border)] flex flex-wrap gap-2">
                     <Link
                       to="/contact"
-                      className="text-xs uppercase tracking-[0.18em] bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] px-4 py-2.5"
+                      className="text-xs uppercase tracking-[0.18em] bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] px-4 py-2.5 transition-colors"
                     >
                       Book
                     </Link>
                     <Link
                       to="/builder"
-                      className="text-xs uppercase tracking-[0.18em] border border-[color:var(--charcoal)]/30 hover:border-[color:var(--teal)] hover:text-[color:var(--teal)] text-[color:var(--charcoal)] px-4 py-2.5"
+                      className="text-xs uppercase tracking-[0.18em] border border-[color:var(--charcoal)]/20 hover:border-[color:var(--teal)] hover:text-[color:var(--teal)] text-[color:var(--charcoal)] px-4 py-2.5 transition-colors"
                     >
                       Customize
                     </Link>
                     <Link
                       to="/builder"
-                      className="text-xs uppercase tracking-[0.18em] text-[color:var(--teal)] hover:text-[color:var(--teal-2)] px-4 py-2.5"
+                      className="text-xs uppercase tracking-[0.18em] text-[color:var(--teal)] hover:text-[color:var(--teal-2)] px-4 py-2.5 transition-colors"
                     >
                       Build your own →
                     </Link>
@@ -447,10 +463,10 @@ function HomePage() {
       </section>
 
       {/* 6 — MULTI-DAY HIGHLIGHT */}
-      <section className="bg-[color:var(--sand)] py-24 md:py-32">
+      <section className="bg-[color:var(--sand)] py-28 md:py-36">
         <div className="container-x">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div className="lg:order-2">
+            <div className="reveal lg:order-2">
               <span className="eyebrow">Multi-Day Journeys</span>
               <h2 className="serif text-4xl md:text-5xl mt-5 leading-tight">
                 A few days, <br />
@@ -473,27 +489,29 @@ function HomePage() {
               </div>
               <Link
                 to="/multi-day"
-                className="mt-10 inline-flex items-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] px-7 py-3.5 text-sm uppercase tracking-[0.1em] transition-all"
+                className="mt-10 inline-flex items-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] border border-[color:var(--gold)]/50 hover:border-[color:var(--gold)] px-7 py-3.5 text-sm uppercase tracking-[0.1em] transition-all duration-500 hover:-translate-y-0.5"
               >
                 Discover Multi-Day Journeys
                 <ArrowRight size={15} />
               </Link>
             </div>
-            <div className="lg:order-1 relative">
-              <img
-                src={multiDayImg}
-                alt="Aerial view of Douro Valley vineyards"
-                loading="lazy"
-                className="w-full aspect-[5/4] object-cover"
-              />
-              <div className="absolute -bottom-5 -left-5 hidden md:block w-28 h-28 border border-[color:var(--gold)]" />
+            <div className="reveal lg:order-1 relative group">
+              <div className="overflow-hidden">
+                <img
+                  src={multiDayImg}
+                  alt="Aerial view of Douro Valley vineyards"
+                  loading="lazy"
+                  className="w-full aspect-[5/4] object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-105"
+                />
+              </div>
+              <div className="absolute -bottom-5 -left-5 hidden md:block w-28 h-28 border border-[color:var(--gold)]/60" />
             </div>
           </div>
         </div>
       </section>
 
       {/* 7 — EDITORIAL STORYTELLING */}
-      <section className="py-24 md:py-32 bg-[color:var(--ivory)]">
+      <section className="py-28 md:py-36 bg-[color:var(--ivory)]">
         <div className="container-x">
           <div className="reveal text-center max-w-2xl mx-auto mb-14">
             <span className="eyebrow">From the field</span>
@@ -505,18 +523,23 @@ function HomePage() {
             </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {editorial.map((e) => (
-              <article key={e.title} className="group">
+            {editorial.map((e, i) => (
+              <article
+                key={e.title}
+                className="group reveal-stagger"
+                style={{ transitionDelay: `${i * 110}ms` }}
+              >
                 <div className="relative overflow-hidden aspect-[4/5] mb-4">
                   <img
                     src={e.img}
                     alt={e.title}
                     loading="lazy"
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="w-full h-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal)]/40 to-transparent" />
+                  <div className="absolute inset-0 bg-[color:var(--teal)]/0 group-hover:bg-[color:var(--teal)]/8 transition-colors duration-700" />
                 </div>
-                <h3 className="serif text-lg text-[color:var(--charcoal)]">{e.title}</h3>
+                <h3 className="serif text-lg text-[color:var(--charcoal)] group-hover:text-[color:var(--teal)] transition-colors duration-500">{e.title}</h3>
                 <p className="mt-2 text-sm text-[color:var(--charcoal-soft)] leading-relaxed">
                   {e.line}
                 </p>
@@ -527,11 +550,11 @@ function HomePage() {
       </section>
 
       {/* 8 — CORPORATE & CELEBRATIONS */}
-      <section className="bg-[color:var(--charcoal)] text-[color:var(--ivory)] py-24 md:py-32">
+      <section className="bg-[color:var(--charcoal)] text-[color:var(--ivory)] py-28 md:py-36">
         <div className="container-x">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div>
-              <span className="inline-flex items-center gap-3 text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold-soft)]">
+            <div className="reveal">
+              <span className="inline-flex items-center gap-3 text-[10px] uppercase tracking-[0.3em] text-[color:var(--ivory)]/75">
                 <span className="h-px w-8 bg-[color:var(--gold)]" />
                 Corporate & Celebrations
               </span>
@@ -539,7 +562,7 @@ function HomePage() {
                 Fully private. <br />
                 <span className="italic">Fully managed.</span>
               </h2>
-              <p className="mt-6 text-[color:var(--ivory)]/80 leading-relaxed max-w-lg">
+              <p className="mt-6 text-[color:var(--ivory)]/85 leading-relaxed max-w-lg">
                 From an intimate proposal to a 200-guest incentive program — tailored
                 end-to-end by a single team. Quietly extraordinary, never ordinary.
               </p>
@@ -564,39 +587,43 @@ function HomePage() {
               <div className="mt-10 flex flex-wrap gap-3">
                 <Link
                   to="/corporate"
-                  className="inline-flex items-center gap-2 bg-[color:var(--gold)] hover:bg-[color:var(--gold-soft)] text-[color:var(--charcoal)] px-7 py-3.5 text-sm uppercase tracking-[0.1em] transition-all"
+                  className="inline-flex items-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-white border border-[color:var(--gold)]/60 hover:border-[color:var(--gold)] px-7 py-3.5 text-sm uppercase tracking-[0.1em] transition-all duration-500 hover:-translate-y-0.5"
                 >
                   For Companies
                   <ArrowRight size={15} />
                 </Link>
                 <Link
                   to="/proposals"
-                  className="inline-flex items-center gap-2 border border-[color:var(--ivory)]/40 hover:border-[color:var(--ivory)] text-[color:var(--ivory)] px-7 py-3.5 text-sm uppercase tracking-[0.1em] transition-all"
+                  className="inline-flex items-center gap-2 border border-[color:var(--ivory)]/40 hover:border-[color:var(--ivory)] text-[color:var(--ivory)] px-7 py-3.5 text-sm uppercase tracking-[0.1em] transition-all duration-500 hover:-translate-y-0.5"
                 >
                   For Celebrations
                 </Link>
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <img
-                src={catCorporate}
-                alt="Corporate private experience"
-                loading="lazy"
-                className="w-full aspect-[3/4] object-cover"
-              />
-              <img
-                src={catProposals}
-                alt="Private celebration"
-                loading="lazy"
-                className="w-full aspect-[3/4] object-cover mt-10"
-              />
+            <div className="reveal grid grid-cols-2 gap-4">
+              <div className="overflow-hidden group">
+                <img
+                  src={catCorporate}
+                  alt="Corporate private experience"
+                  loading="lazy"
+                  className="w-full aspect-[3/4] object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-105"
+                />
+              </div>
+              <div className="overflow-hidden group mt-10">
+                <img
+                  src={catProposals}
+                  alt="Private celebration"
+                  loading="lazy"
+                  className="w-full aspect-[3/4] object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-105"
+                />
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* 9 — REVIEWS */}
-      <section className="py-24 md:py-32 bg-[color:var(--ivory)]">
+      <section className="py-28 md:py-36 bg-[color:var(--ivory)]">
         <div className="container-x">
           <div className="reveal text-center max-w-2xl mx-auto mb-14">
             <span className="eyebrow">Voices</span>
@@ -608,18 +635,19 @@ function HomePage() {
             {reviews.map((r, i) => (
               <figure
                 key={i}
-                className="bg-[color:var(--card)] border border-[color:var(--border)] p-8"
+                className="bg-[color:var(--card)] border border-[color:var(--border)] p-8 reveal-stagger transition-all duration-500 hover:-translate-y-1.5 hover:shadow-[0_24px_50px_-24px_rgba(41,91,97,0.2)] hover:border-[color:var(--teal)]/25"
+                style={{ transitionDelay: `${i * 130}ms` }}
               >
                 <div className="flex gap-0.5 text-[color:var(--gold)] mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} size={12} fill="currentColor" />
+                  {[...Array(5)].map((_, idx) => (
+                    <Star key={idx} size={12} fill="currentColor" />
                   ))}
                 </div>
                 <blockquote className="serif italic text-lg leading-relaxed text-[color:var(--charcoal)]">
                   "{r.quote}"
                 </blockquote>
                 <figcaption className="mt-6 pt-4 border-t border-[color:var(--border)]">
-                  <p className="text-sm font-medium">{r.name}</p>
+                  <p className="text-sm font-medium text-[color:var(--charcoal)]">{r.name}</p>
                   <p className="text-xs text-[color:var(--charcoal-soft)] mt-0.5">
                     {r.location}
                   </p>
@@ -631,11 +659,11 @@ function HomePage() {
       </section>
 
       {/* 10 — FINAL CTA */}
-      <section className="pb-24 md:pb-32 bg-[color:var(--ivory)]">
+      <section className="pb-28 md:pb-36 bg-[color:var(--ivory)]">
         <div className="container-x">
-          <div className="relative bg-[color:var(--sand)] p-12 md:p-20 overflow-hidden">
-            <div className="absolute -bottom-24 -left-24 w-80 h-80 rounded-full border border-[color:var(--gold)]/20" />
-            <div className="absolute -top-12 right-1/4 w-40 h-40 rounded-full border border-[color:var(--gold)]/15" />
+          <div className="reveal relative bg-[color:var(--sand)] p-12 md:p-20 overflow-hidden">
+            <div className="absolute -bottom-24 -left-24 w-80 h-80 rounded-full border border-[color:var(--gold)]/15" />
+            <div className="absolute -top-12 right-1/4 w-40 h-40 rounded-full border border-[color:var(--gold)]/10" />
             <div className="relative max-w-2xl">
               <span className="eyebrow">Begin</span>
               <h2 className="serif text-4xl md:text-5xl mt-5 leading-tight">
@@ -649,14 +677,14 @@ function HomePage() {
               <div className="mt-9 flex flex-wrap gap-4">
                 <Link
                   to="/builder"
-                  className="inline-flex items-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] px-8 py-4 text-sm uppercase tracking-[0.1em] transition-all"
+                  className="inline-flex items-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] border border-[color:var(--gold)]/60 hover:border-[color:var(--gold)] px-8 py-4 text-sm uppercase tracking-[0.1em] transition-all duration-500 hover:-translate-y-0.5"
                 >
                   Build Your Own Experience
                   <ArrowRight size={15} />
                 </Link>
                 <Link
                   to="/contact"
-                  className="inline-flex items-center gap-2 border border-[color:var(--charcoal)]/30 hover:border-[color:var(--charcoal)] text-[color:var(--charcoal)] px-8 py-4 text-sm uppercase tracking-[0.1em] transition-all"
+                  className="inline-flex items-center gap-2 border border-[color:var(--charcoal)]/25 hover:border-[color:var(--teal)] hover:text-[color:var(--teal)] text-[color:var(--charcoal)] px-8 py-4 text-sm uppercase tracking-[0.1em] transition-all duration-500 hover:-translate-y-0.5"
                 >
                   Speak with our team
                 </Link>
