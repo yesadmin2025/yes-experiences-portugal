@@ -135,7 +135,7 @@ function HomePage() {
   return (
     <SiteLayout>
       {/* 1 — HERO */}
-      <section className="relative min-h-[88vh] md:min-h-[100vh] flex items-end overflow-hidden">
+      <section className="relative min-h-[78vh] md:min-h-[92vh] flex items-end overflow-hidden">
         <img
           src={heroImg}
           alt="Hidden coastal road in Portugal at golden hour"
@@ -144,10 +144,10 @@ function HomePage() {
           height={1080}
         />
         {/* Refined dark overlay — readable but cinematic */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal)]/80 via-[color:var(--charcoal)]/30 to-[color:var(--charcoal)]/40" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_60%,transparent_40%,rgba(0,0,0,0.35)_100%)]" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal)]/85 via-[color:var(--charcoal)]/35 to-[color:var(--charcoal)]/45" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_60%,transparent_40%,rgba(0,0,0,0.4)_100%)]" />
 
-        <div className="container-x relative z-10 pb-24 md:pb-36 pt-36 md:pt-44">
+        <div className="container-x relative z-10 pb-20 md:pb-32 pt-32 md:pt-40">
           <div className="max-w-3xl text-[color:var(--ivory)]">
             <span
               className="inline-flex items-center gap-3 text-[10px] uppercase tracking-[0.34em] text-[color:var(--gold-soft)] opacity-0 animate-[heroFade_1s_ease-out_0.2s_forwards]"
@@ -156,20 +156,20 @@ function HomePage() {
               Private · By local hands · Designed around you
             </span>
             <h1
-              className="serif mt-7 md:mt-8 text-[2.75rem] sm:text-5xl md:text-7xl lg:text-[5.5rem] leading-[1.04] font-light tracking-[-0.015em] opacity-0 animate-[heroFade_1.2s_ease-out_0.45s_forwards]"
+              className="serif mt-6 md:mt-8 text-[2.6rem] sm:text-5xl md:text-7xl lg:text-[5.25rem] leading-[1.04] font-light tracking-[-0.015em] opacity-0 animate-[heroFade_1.2s_ease-out_0.45s_forwards]"
             >
               Portugal,
               <br />
               <span className="italic text-[color:var(--gold-soft)]">Designed Around You</span>
             </h1>
             <p
-              className="mt-7 md:mt-8 text-base md:text-xl text-[color:var(--ivory)]/85 max-w-xl leading-[1.7] font-light opacity-0 animate-[heroFade_1.2s_ease-out_0.75s_forwards]"
+              className="mt-6 md:mt-8 text-base md:text-xl text-[color:var(--ivory)]/90 max-w-xl leading-[1.7] font-light opacity-0 animate-[heroFade_1.2s_ease-out_0.75s_forwards]"
             >
               Private experiences crafted through local knowledge, hidden gems and authentic
               moments — like exploring Portugal with a local friend.
             </p>
 
-            <div className="mt-10 md:mt-12 flex flex-col sm:flex-row flex-wrap gap-4 sm:gap-5 opacity-0 animate-[heroFade_1.2s_ease-out_1s_forwards]">
+            <div className="mt-9 md:mt-11 flex flex-col sm:flex-row flex-wrap gap-4 sm:gap-6 opacity-0 animate-[heroFade_1.2s_ease-out_1s_forwards]">
               {/* Primary — teal bg, white text, thin gold border */}
               <Link
                 to="/builder"
@@ -189,7 +189,7 @@ function HomePage() {
             </div>
 
             <p
-              className="mt-10 md:mt-12 text-[10px] uppercase tracking-[0.32em] text-[color:var(--gold-soft)]/90 flex items-center gap-3 opacity-0 animate-[heroFade_1.2s_ease-out_1.3s_forwards]"
+              className="mt-9 md:mt-12 text-[10px] uppercase tracking-[0.32em] text-[color:var(--gold-soft)]/90 flex items-center gap-3 opacity-0 animate-[heroFade_1.2s_ease-out_1.3s_forwards]"
             >
               <span className="h-px w-6 bg-[color:var(--gold)]" />
               Private experiences only — from 1 guest to large private groups
@@ -199,45 +199,45 @@ function HomePage() {
       </section>
 
       {/* 2 — TRUST BAR */}
-      <section className="bg-[color:var(--ivory)] border-b border-[color:var(--border)] py-10 md:py-12">
+      <section className="bg-[color:var(--ivory)] border-b border-[color:var(--border)] py-12 md:py-14">
         <div className="container-x">
-          <div className="reveal flex flex-col items-center text-center gap-5">
-            {/* 5-star rating */}
-            <div className="flex items-center gap-2">
-              <div className="flex gap-0.5 text-[color:var(--gold)]">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={15} fill="currentColor" strokeWidth={0} />
-                ))}
-              </div>
-              <span className="text-[11px] uppercase tracking-[0.28em] text-[color:var(--charcoal-soft)] ml-1">
-                5.0
-              </span>
-            </div>
-
+          <div className="reveal flex flex-col items-center text-center gap-4">
             {/* Headline */}
             <p className="text-[11px] uppercase tracking-[0.34em] text-[color:var(--charcoal)]">
               Trusted by international travelers
             </p>
 
-            {/* Brand marks */}
-            <div className="flex flex-wrap items-center justify-center gap-x-8 sm:gap-x-12 gap-y-3 pt-1">
-              <span className="serif text-lg md:text-xl text-[color:var(--charcoal)] tracking-tight">
-                Google
-              </span>
-              <span className="hidden sm:block h-3 w-px bg-[color:var(--border)]" />
-              <span className="serif text-lg md:text-xl text-[color:var(--charcoal)] tracking-tight">
-                Tripadvisor
-              </span>
-              <span className="hidden sm:block h-3 w-px bg-[color:var(--border)]" />
-              <span className="serif text-lg md:text-xl text-[color:var(--charcoal)] tracking-tight">
-                Viator
+            {/* 5-star rating */}
+            <div className="flex items-center gap-2.5">
+              <div className="flex gap-0.5 text-[color:var(--gold)]">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} size={14} fill="currentColor" strokeWidth={0} />
+                ))}
+              </div>
+              <span className="text-[11px] uppercase tracking-[0.28em] text-[color:var(--charcoal-soft)]">
+                5.0
               </span>
             </div>
 
             {/* Supporting line */}
-            <p className="text-xs md:text-[13px] text-[color:var(--charcoal-soft)] max-w-xl leading-relaxed">
-              500+ 5-star reviews across Google, Tripadvisor and Viator
+            <p className="text-[13px] text-[color:var(--charcoal-soft)] max-w-xl leading-relaxed">
+              600+ 5-star reviews across Google, TripAdvisor and Viator
             </p>
+
+            {/* Brand marks — subtle text-based badges */}
+            <div className="mt-2 flex flex-wrap items-center justify-center gap-x-7 sm:gap-x-10 gap-y-3">
+              <span className="serif text-base md:text-lg text-[color:var(--charcoal)] tracking-tight">
+                Google
+              </span>
+              <span className="hidden sm:block h-3 w-px bg-[color:var(--gold)]/40" />
+              <span className="serif text-base md:text-lg text-[color:var(--charcoal)] tracking-tight">
+                Tripadvisor
+              </span>
+              <span className="hidden sm:block h-3 w-px bg-[color:var(--gold)]/40" />
+              <span className="serif text-base md:text-lg text-[color:var(--charcoal)] tracking-tight">
+                Viator
+              </span>
+            </div>
           </div>
         </div>
       </section>
