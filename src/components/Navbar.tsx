@@ -18,7 +18,7 @@ export function Navbar() {
   return (
     <header className="fixed top-0 inset-x-0 z-50 bg-white border-b border-[color:var(--border)] shadow-[0_6px_24px_-18px_rgba(15,23,42,0.18)] opacity-0 animate-[headerFade_700ms_ease-out_forwards]">
       <div className="container-x">
-        <div className="flex items-center justify-between h-20 md:h-24">
+        <div className="flex items-center justify-between h-[88px] md:h-28">
           {/* Logo — left */}
           <Link
             to="/"

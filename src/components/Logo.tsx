@@ -7,7 +7,7 @@ interface LogoProps {
 }
 
 const sizes = {
-  sm: "h-12 md:h-14",
+  sm: "h-14 md:h-16",
   md: "h-20 md:h-24",
   lg: "h-28 md:h-36",
 };
