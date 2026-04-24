@@ -240,6 +240,9 @@ function BuilderPage() {
           <p className="mt-5 text-[color:var(--charcoal-soft)] max-w-xl mx-auto">
             One decision at a time. Your story, timeline and map evolve as you go.
           </p>
+          <p className="mt-4 text-[13px] text-[color:var(--charcoal-soft)] max-w-xl mx-auto italic">
+            Design it yourself, or refine it with a local experience designer at any time.
+          </p>
         </div>
       </section>
 
