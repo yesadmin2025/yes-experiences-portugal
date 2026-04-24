@@ -24,7 +24,13 @@ export function Logo({ size = "md", variant = "default", className = "" }: LogoP
       } ${className}`}
       draggable={false}
       decoding="async"
-      style={{ imageRendering: "auto" }}
+      loading="eager"
+      style={{
+        imageRendering: "auto",
+        WebkitBackfaceVisibility: "hidden",
+        backfaceVisibility: "hidden",
+        transform: "translateZ(0)",
+      }}
     />
   );
 }

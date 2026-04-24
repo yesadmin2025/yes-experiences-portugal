@@ -139,46 +139,55 @@ function HomePage() {
         <img
           src={heroImg}
           alt="Hidden coastal road in Portugal at golden hour"
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover scale-105 animate-[heroZoom_18s_ease-out_forwards]"
           width={1920}
           height={1080}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal)]/85 via-[color:var(--charcoal)]/20 to-[color:var(--charcoal)]/45" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal)]/90 via-[color:var(--charcoal)]/30 to-[color:var(--charcoal)]/55" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_45%,rgba(0,0,0,0.35)_100%)]" />
 
-        <div className="container-x relative z-10 pb-24 md:pb-32 pt-40">
+        <div className="container-x relative z-10 pb-28 md:pb-36 pt-40">
           <div className="max-w-3xl text-[color:var(--ivory)]">
-            <span className="inline-flex items-center gap-3 text-[10px] uppercase tracking-[0.32em] text-[color:var(--gold-soft)]">
+            <span
+              className="inline-flex items-center gap-3 text-[10px] uppercase tracking-[0.34em] text-[color:var(--gold-soft)] opacity-0 animate-[heroFade_1s_ease-out_0.2s_forwards]"
+            >
               <span className="h-px w-8 bg-[color:var(--gold)]" />
               Private · By local hands · Designed around you
             </span>
-            <h1 className="serif mt-7 text-5xl md:text-7xl lg:text-[5.5rem] leading-[1.02] font-light">
+            <h1
+              className="serif mt-8 text-5xl md:text-7xl lg:text-[5.75rem] leading-[1.02] font-light tracking-[-0.015em] opacity-0 animate-[heroFade_1.2s_ease-out_0.45s_forwards]"
+            >
               Portugal,
               <br />
-              <span className="italic">Designed Around You</span>
+              <span className="italic text-[color:var(--gold-soft)]">Designed Around You</span>
             </h1>
-            <p className="mt-7 text-lg md:text-xl text-[color:var(--ivory)]/90 max-w-2xl leading-relaxed font-light">
+            <p
+              className="mt-8 text-lg md:text-xl text-[color:var(--ivory)]/85 max-w-xl leading-[1.7] font-light opacity-0 animate-[heroFade_1.2s_ease-out_0.75s_forwards]"
+            >
               Private experiences crafted through local knowledge, hidden gems and authentic
               moments — like exploring Portugal with a local friend.
             </p>
 
-            <div className="mt-10 flex flex-wrap gap-4">
+            <div className="mt-12 flex flex-wrap gap-5 md:gap-6 opacity-0 animate-[heroFade_1.2s_ease-out_1s_forwards]">
               <Link
                 to="/builder"
-                className="group inline-flex items-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] px-8 py-4 text-sm tracking-[0.1em] uppercase transition-all"
+                className="group inline-flex items-center gap-3 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] px-9 py-4 text-[11px] tracking-[0.22em] uppercase border border-[color:var(--gold)]/70 hover:border-[color:var(--gold)] transition-all duration-500 hover:shadow-[0_0_24px_-4px_rgba(201,169,106,0.55)]"
               >
-                Build Your Own Experience
-                <ArrowRight size={15} className="group-hover:translate-x-1 transition-transform" />
+                Build Your Experience
+                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-300" />
               </Link>
               <Link
                 to="/experiences"
-                className="group inline-flex items-center gap-2 border border-[color:var(--ivory)]/50 hover:border-[color:var(--ivory)] hover:bg-[color:var(--ivory)]/5 text-[color:var(--ivory)] px-8 py-4 text-sm tracking-[0.1em] uppercase transition-all"
+                className="group inline-flex items-center gap-3 bg-transparent hover:bg-[color:var(--gold)]/10 text-[color:var(--ivory)] px-9 py-4 text-[11px] tracking-[0.22em] uppercase border border-[color:var(--gold)]/70 hover:border-[color:var(--gold)] transition-all duration-500 hover:shadow-[0_0_24px_-4px_rgba(201,169,106,0.45)]"
               >
                 Explore Signature Experiences
-                <ArrowRight size={15} className="group-hover:translate-x-1 transition-transform" />
+                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-300" />
               </Link>
             </div>
 
-            <p className="mt-10 text-xs uppercase tracking-[0.28em] text-[color:var(--gold-soft)] flex items-center gap-3">
+            <p
+              className="mt-12 text-[10px] uppercase tracking-[0.32em] text-[color:var(--gold-soft)]/90 flex items-center gap-3 opacity-0 animate-[heroFade_1.2s_ease-out_1.3s_forwards]"
+            >
               <span className="h-px w-6 bg-[color:var(--gold)]" />
               Private experiences only — from 1 guest to large private groups
             </p>
