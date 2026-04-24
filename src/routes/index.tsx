@@ -384,9 +384,6 @@ function HomePage() {
       </section>
 
       {/* 5 — SIGNATURE EXPERIENCES */}
-      <section className="py-24 md:py-32 bg-[color:var(--ivory)]">
-        <div className="container-x">
-      {/* 5 — SIGNATURE EXPERIENCES */}
       <section className="py-28 md:py-36 bg-[color:var(--ivory)]">
         <div className="container-x">
           <div className="reveal flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
