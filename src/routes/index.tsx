@@ -657,11 +657,11 @@ function HomePage() {
       </section>
 
       {/* 10 — FINAL CTA */}
-      <section className="pb-24 md:pb-32 bg-[color:var(--ivory)]">
+      <section className="pb-28 md:pb-36 bg-[color:var(--ivory)]">
         <div className="container-x">
-          <div className="relative bg-[color:var(--sand)] p-12 md:p-20 overflow-hidden">
-            <div className="absolute -bottom-24 -left-24 w-80 h-80 rounded-full border border-[color:var(--gold)]/20" />
-            <div className="absolute -top-12 right-1/4 w-40 h-40 rounded-full border border-[color:var(--gold)]/15" />
+          <div className="reveal relative bg-[color:var(--sand)] p-12 md:p-20 overflow-hidden">
+            <div className="absolute -bottom-24 -left-24 w-80 h-80 rounded-full border border-[color:var(--gold)]/15" />
+            <div className="absolute -top-12 right-1/4 w-40 h-40 rounded-full border border-[color:var(--gold)]/10" />
             <div className="relative max-w-2xl">
               <span className="eyebrow">Begin</span>
               <h2 className="serif text-4xl md:text-5xl mt-5 leading-tight">
@@ -675,14 +675,14 @@ function HomePage() {
               <div className="mt-9 flex flex-wrap gap-4">
                 <Link
                   to="/builder"
-                  className="inline-flex items-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] px-8 py-4 text-sm uppercase tracking-[0.1em] transition-all"
+                  className="inline-flex items-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] border border-[color:var(--gold)]/60 hover:border-[color:var(--gold)] px-8 py-4 text-sm uppercase tracking-[0.1em] transition-all duration-500 hover:-translate-y-0.5"
                 >
                   Build Your Own Experience
                   <ArrowRight size={15} />
                 </Link>
                 <Link
                   to="/contact"
-                  className="inline-flex items-center gap-2 border border-[color:var(--charcoal)]/30 hover:border-[color:var(--charcoal)] text-[color:var(--charcoal)] px-8 py-4 text-sm uppercase tracking-[0.1em] transition-all"
+                  className="inline-flex items-center gap-2 border border-[color:var(--charcoal)]/25 hover:border-[color:var(--teal)] hover:text-[color:var(--teal)] text-[color:var(--charcoal)] px-8 py-4 text-sm uppercase tracking-[0.1em] transition-all duration-500 hover:-translate-y-0.5"
                 >
                   Speak with our team
                 </Link>
