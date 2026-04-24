@@ -206,7 +206,7 @@ function HomePage() {
       </section>
 
       {/* 2 — TRUST BAR */}
-      <section className="bg-[color:var(--ivory)] border-b border-[color:var(--border)] py-12 md:py-14">
+      <section className="bg-[color:var(--ivory)] border-b border-[color:var(--border)] py-14 md:py-16">
         <div className="container-x">
           <div className="reveal flex flex-col items-center text-center gap-4">
             {/* Headline */}
@@ -218,7 +218,14 @@ function HomePage() {
             <div className="flex items-center gap-2.5">
               <div className="flex gap-0.5 text-[color:var(--gold)]">
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={14} fill="currentColor" strokeWidth={0} />
+                  <Star
+                    key={i}
+                    size={14}
+                    fill="currentColor"
+                    strokeWidth={0}
+                    className="reveal-stagger"
+                    style={{ transitionDelay: `${i * 90}ms` }}
+                  />
                 ))}
               </div>
               <span className="text-[11px] uppercase tracking-[0.28em] text-[color:var(--charcoal-soft)]">
@@ -238,11 +245,15 @@ function HomePage() {
                 { name: "Tripadvisor", badge: "Travelers' Choice" },
                 { name: "Viator", badge: "Top-rated Operator" },
               ].map((p, i) => (
-                <div key={p.name} className="flex flex-col items-center gap-1.5">
+                <div
+                  key={p.name}
+                  className="flex flex-col items-center gap-1.5 reveal-stagger"
+                  style={{ transitionDelay: `${250 + i * 140}ms` }}
+                >
                   <span className="serif text-base md:text-lg text-[color:var(--charcoal)] tracking-tight">
                     {p.name}
                   </span>
-                  <span className="inline-flex items-center gap-1.5 text-[9px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)] border border-[color:var(--gold)]/40 px-2 py-1">
+                  <span className="inline-flex items-center gap-1.5 text-[9px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)] border border-[color:var(--border)] px-2 py-1">
                     <Star size={8} fill="currentColor" strokeWidth={0} className="text-[color:var(--gold)]" />
                     {p.badge}
                   </span>
