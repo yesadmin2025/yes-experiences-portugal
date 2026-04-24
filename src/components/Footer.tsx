@@ -7,8 +7,8 @@ export function Footer() {
       <div className="container-x py-20">
         <div className="grid md:grid-cols-4 gap-12">
           <div className="md:col-span-1">
-            <div className="inline-flex items-center justify-center bg-[color:var(--ivory)] rounded-md px-5 py-4">
-              <Logo size="sm" />
+            <div className="inline-block">
+              <Logo variant="light" size="sm" />
             </div>
             <p className="mt-6 text-sm text-[color:var(--ivory)]/70 leading-relaxed max-w-xs">
               Private, designed Portugal experiences — crafted around your story by passionate
