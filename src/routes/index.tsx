@@ -463,10 +463,10 @@ function HomePage() {
       </section>
 
       {/* 6 — MULTI-DAY HIGHLIGHT */}
-      <section className="bg-[color:var(--sand)] py-24 md:py-32">
+      <section className="bg-[color:var(--sand)] py-28 md:py-36">
         <div className="container-x">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div className="lg:order-2">
+            <div className="reveal lg:order-2">
               <span className="eyebrow">Multi-Day Journeys</span>
               <h2 className="serif text-4xl md:text-5xl mt-5 leading-tight">
                 A few days, <br />
@@ -489,20 +489,22 @@ function HomePage() {
               </div>
               <Link
                 to="/multi-day"
-                className="mt-10 inline-flex items-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] px-7 py-3.5 text-sm uppercase tracking-[0.1em] transition-all"
+                className="mt-10 inline-flex items-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] border border-[color:var(--gold)]/50 hover:border-[color:var(--gold)] px-7 py-3.5 text-sm uppercase tracking-[0.1em] transition-all duration-500 hover:-translate-y-0.5"
               >
                 Discover Multi-Day Journeys
                 <ArrowRight size={15} />
               </Link>
             </div>
-            <div className="lg:order-1 relative">
-              <img
-                src={multiDayImg}
-                alt="Aerial view of Douro Valley vineyards"
-                loading="lazy"
-                className="w-full aspect-[5/4] object-cover"
-              />
-              <div className="absolute -bottom-5 -left-5 hidden md:block w-28 h-28 border border-[color:var(--gold)]" />
+            <div className="reveal lg:order-1 relative group">
+              <div className="overflow-hidden">
+                <img
+                  src={multiDayImg}
+                  alt="Aerial view of Douro Valley vineyards"
+                  loading="lazy"
+                  className="w-full aspect-[5/4] object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-105"
+                />
+              </div>
+              <div className="absolute -bottom-5 -left-5 hidden md:block w-28 h-28 border border-[color:var(--gold)]/60" />
             </div>
           </div>
         </div>
