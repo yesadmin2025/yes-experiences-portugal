@@ -175,7 +175,7 @@ function HomePage() {
                 to="/builder"
                 className="group inline-flex items-center justify-center gap-3 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-white px-9 py-4 text-[11px] tracking-[0.22em] uppercase border border-[color:var(--gold)]/80 hover:border-[color:var(--gold)] transition-all duration-500 hover:-translate-y-0.5 hover:shadow-[0_10px_30px_-12px_rgba(201,169,106,0.55)]"
               >
-                Build Your Experience
+                Design &amp; Secure Your Experience
                 <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-300" />
               </Link>
               {/* Secondary — transparent, thin gold border, white text */}
@@ -188,8 +188,18 @@ function HomePage() {
               </Link>
             </div>
 
+            {/* Supporting microcopy — communicates immediacy & direct booking */}
+            <div className="mt-6 md:mt-7 max-w-xl space-y-1.5 opacity-0 animate-[heroFade_1.2s_ease-out_1.2s_forwards]">
+              <p className="text-[13px] md:text-sm text-[color:var(--ivory)]/90 leading-relaxed font-light">
+                Instant confirmation available for selected experiences.
+              </p>
+              <p className="text-[12px] md:text-[13px] text-[color:var(--ivory)]/70 leading-relaxed font-light italic">
+                For fully custom experiences, refine with a local designer.
+              </p>
+            </div>
+
             <p
-              className="mt-9 md:mt-12 text-[10px] uppercase tracking-[0.32em] text-[color:var(--gold-soft)]/90 flex items-center gap-3 opacity-0 animate-[heroFade_1.2s_ease-out_1.3s_forwards]"
+              className="mt-8 md:mt-10 text-[10px] uppercase tracking-[0.32em] text-[color:var(--gold-soft)]/90 flex items-center gap-3 opacity-0 animate-[heroFade_1.2s_ease-out_1.4s_forwards]"
             >
               <span className="h-px w-6 bg-[color:var(--gold)]" />
               Private experiences only — from 1 guest to large private groups
