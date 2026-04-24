@@ -509,7 +509,7 @@ function HomePage() {
       </section>
 
       {/* 7 — EDITORIAL STORYTELLING */}
-      <section className="py-24 md:py-32 bg-[color:var(--ivory)]">
+      <section className="py-28 md:py-36 bg-[color:var(--ivory)]">
         <div className="container-x">
           <div className="reveal text-center max-w-2xl mx-auto mb-14">
             <span className="eyebrow">From the field</span>
@@ -521,18 +521,23 @@ function HomePage() {
             </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {editorial.map((e) => (
-              <article key={e.title} className="group">
+            {editorial.map((e, i) => (
+              <article
+                key={e.title}
+                className="group reveal-stagger"
+                style={{ transitionDelay: `${i * 110}ms` }}
+              >
                 <div className="relative overflow-hidden aspect-[4/5] mb-4">
                   <img
                     src={e.img}
                     alt={e.title}
                     loading="lazy"
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="w-full h-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal)]/40 to-transparent" />
+                  <div className="absolute inset-0 bg-[color:var(--teal)]/0 group-hover:bg-[color:var(--teal)]/8 transition-colors duration-700" />
                 </div>
-                <h3 className="serif text-lg text-[color:var(--charcoal)]">{e.title}</h3>
+                <h3 className="serif text-lg text-[color:var(--charcoal)] group-hover:text-[color:var(--teal)] transition-colors duration-500">{e.title}</h3>
                 <p className="mt-2 text-sm text-[color:var(--charcoal-soft)] leading-relaxed">
                   {e.line}
                 </p>
