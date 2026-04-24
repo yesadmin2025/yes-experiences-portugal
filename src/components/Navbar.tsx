@@ -27,20 +27,20 @@ export function Navbar() {
 
   return (
     <header
-      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 ${
         scrolled
-          ? "bg-[color:var(--ivory)]/95 backdrop-blur-md border-b border-[color:var(--border)]"
-          : "bg-transparent"
+          ? "bg-[color:var(--ivory)]/90 backdrop-blur-xl"
+          : "bg-[color:var(--ivory)]/0"
       }`}
     >
-      <div className="container-x py-4 md:py-6">
-        <div className="flex items-center justify-between lg:grid lg:grid-cols-[1fr_auto_1fr] lg:gap-10">
-          <nav className="hidden lg:flex items-center justify-end gap-8 text-[12px] uppercase tracking-[0.18em]">
+      <div className="container-x py-5 md:py-7">
+        <div className="flex items-center justify-between lg:grid lg:grid-cols-[1fr_auto_1fr] lg:gap-12">
+          <nav className="hidden lg:flex items-center justify-end gap-10 text-[11px] uppercase tracking-[0.22em] font-medium">
             {leftNav.map((n) => (
               <Link
                 key={n.to}
                 to={n.to}
-                className="text-[color:var(--charcoal)] hover:text-[color:var(--teal)] transition-colors"
+                className="text-[color:var(--charcoal)] hover:text-[color:var(--teal)] transition-colors duration-300"
                 activeProps={{ className: "text-[color:var(--teal)]" }}
               >
                 {n.label}
@@ -48,16 +48,20 @@ export function Navbar() {
             ))}
           </nav>
 
-          <Link to="/" className="flex-shrink-0 flex justify-center" aria-label="YES experiences PORTUGAL — Home">
+          <Link
+            to="/"
+            className="flex-shrink-0 flex justify-center items-center px-2"
+            aria-label="YES experiences PORTUGAL — Home"
+          >
             <Logo size="sm" />
           </Link>
 
-          <nav className="hidden lg:flex items-center justify-start gap-8 text-[12px] uppercase tracking-[0.18em]">
+          <nav className="hidden lg:flex items-center justify-start gap-10 text-[11px] uppercase tracking-[0.22em] font-medium">
             {rightNav.map((n) => (
               <Link
                 key={n.to}
                 to={n.to}
-                className="text-[color:var(--charcoal)] hover:text-[color:var(--teal)] transition-colors"
+                className="text-[color:var(--charcoal)] hover:text-[color:var(--teal)] transition-colors duration-300"
                 activeProps={{ className: "text-[color:var(--teal)]" }}
               >
                 {n.label}
@@ -74,6 +78,9 @@ export function Navbar() {
           </button>
         </div>
       </div>
+      {scrolled && (
+        <div className="h-px bg-gradient-to-r from-transparent via-[color:var(--gold)]/40 to-transparent" />
+      )}
 
       {open && (
         <div className="lg:hidden bg-[color:var(--ivory)] border-t border-[color:var(--border)]">
