@@ -386,7 +386,10 @@ function HomePage() {
       {/* 5 — SIGNATURE EXPERIENCES */}
       <section className="py-24 md:py-32 bg-[color:var(--ivory)]">
         <div className="container-x">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
+      {/* 5 — SIGNATURE EXPERIENCES */}
+      <section className="py-28 md:py-36 bg-[color:var(--ivory)]">
+        <div className="container-x">
+          <div className="reveal flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
             <div>
               <span className="eyebrow">Signature Experiences</span>
               <h2 className="serif text-4xl md:text-5xl mt-5 leading-tight">
@@ -395,40 +398,42 @@ function HomePage() {
             </div>
             <Link
               to="/experiences"
-              className="text-sm uppercase tracking-[0.2em] text-[color:var(--teal)] hover:text-[color:var(--teal-2)] inline-flex items-center gap-2"
+              className="text-sm uppercase tracking-[0.2em] text-[color:var(--teal)] hover:text-[color:var(--teal-2)] inline-flex items-center gap-2 transition-colors"
             >
               View all <ArrowRight size={14} />
             </Link>
           </div>
           <div className="grid md:grid-cols-3 gap-7">
-            {signatures.map((s) => (
+            {signatures.map((s, i) => (
               <article
                 key={s.title}
-                className="group bg-[color:var(--card)] border border-[color:var(--border)]"
+                className="group bg-[color:var(--card)] border border-[color:var(--border)] reveal-stagger transition-all duration-500 hover:-translate-y-1.5 hover:shadow-[0_24px_50px_-24px_rgba(41,91,97,0.25)] hover:border-[color:var(--teal)]/30"
+                style={{ transitionDelay: `${i * 130}ms` }}
               >
                 <div className="relative overflow-hidden aspect-[4/3]">
                   <img
                     src={s.img}
                     alt={s.title}
                     loading="lazy"
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="w-full h-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-110"
                   />
+                  <div className="absolute inset-0 bg-[color:var(--teal)]/0 group-hover:bg-[color:var(--teal)]/8 transition-colors duration-700" />
                 </div>
                 <div className="p-6">
-                  <h3 className="serif text-2xl text-[color:var(--charcoal)]">{s.title}</h3>
+                  <h3 className="serif text-2xl text-[color:var(--charcoal)] group-hover:text-[color:var(--teal)] transition-colors duration-500">{s.title}</h3>
                   <p className="mt-2 text-sm text-[color:var(--charcoal-soft)] leading-relaxed">
                     {s.line}
                   </p>
                   <ul className="mt-5 space-y-2">
-                    {s.pace.map((p, i) => (
+                    {s.pace.map((p, idx) => (
                       <li
                         key={p}
                         className="flex items-center gap-3 text-[13px] text-[color:var(--charcoal)]"
                       >
-                        <span className="text-[color:var(--gold)] text-[10px]">
-                          {String(i + 1).padStart(2, "0")}
+                        <span className="text-[color:var(--teal)] text-[10px] tracking-wider">
+                          {String(idx + 1).padStart(2, "0")}
                         </span>
-                        <span className="h-px w-4 bg-[color:var(--gold)]/40" />
+                        <span className="h-px w-4 bg-[color:var(--gold)]/50" />
                         {p}
                       </li>
                     ))}
@@ -436,19 +441,19 @@ function HomePage() {
                   <div className="mt-6 pt-5 border-t border-[color:var(--border)] flex flex-wrap gap-2">
                     <Link
                       to="/contact"
-                      className="text-xs uppercase tracking-[0.18em] bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] px-4 py-2.5"
+                      className="text-xs uppercase tracking-[0.18em] bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] px-4 py-2.5 transition-colors"
                     >
                       Book
                     </Link>
                     <Link
                       to="/builder"
-                      className="text-xs uppercase tracking-[0.18em] border border-[color:var(--charcoal)]/30 hover:border-[color:var(--teal)] hover:text-[color:var(--teal)] text-[color:var(--charcoal)] px-4 py-2.5"
+                      className="text-xs uppercase tracking-[0.18em] border border-[color:var(--charcoal)]/20 hover:border-[color:var(--teal)] hover:text-[color:var(--teal)] text-[color:var(--charcoal)] px-4 py-2.5 transition-colors"
                     >
                       Customize
                     </Link>
                     <Link
                       to="/builder"
-                      className="text-xs uppercase tracking-[0.18em] text-[color:var(--teal)] hover:text-[color:var(--teal-2)] px-4 py-2.5"
+                      className="text-xs uppercase tracking-[0.18em] text-[color:var(--teal)] hover:text-[color:var(--teal-2)] px-4 py-2.5 transition-colors"
                     >
                       Build your own →
                     </Link>
