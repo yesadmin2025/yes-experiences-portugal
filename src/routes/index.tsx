@@ -318,8 +318,8 @@ function HomePage() {
         </div>
         <div className="container-x relative">
           <div className="grid lg:grid-cols-12 gap-12 items-center">
-            <div className="lg:col-span-6">
-              <span className="inline-flex items-center gap-3 text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold-soft)]">
+            <div className="reveal lg:col-span-6">
+              <span className="inline-flex items-center gap-3 text-[10px] uppercase tracking-[0.3em] text-[color:var(--ivory)]/75">
                 <span className="h-px w-8 bg-[color:var(--gold)]" />
                 The Experience Studio
               </span>
@@ -334,7 +334,7 @@ function HomePage() {
               <div className="mt-8 flex flex-wrap gap-4">
                 <Link
                   to="/builder"
-                  className="inline-flex items-center gap-2 bg-[color:var(--ivory)] text-[color:var(--teal)] hover:bg-[color:var(--gold-soft)] px-8 py-4 text-sm uppercase tracking-[0.1em] transition-all"
+                  className="inline-flex items-center gap-2 bg-[color:var(--ivory)] text-[color:var(--teal)] hover:bg-white border border-[color:var(--gold)]/50 hover:border-[color:var(--gold)] px-8 py-4 text-sm uppercase tracking-[0.1em] transition-all duration-500 hover:-translate-y-0.5"
                 >
                   Open the Studio
                   <ArrowRight size={15} />
@@ -343,7 +343,7 @@ function HomePage() {
             </div>
 
             {/* Visual preview */}
-            <div className="lg:col-span-6">
+            <div className="reveal lg:col-span-6">
               <div className="bg-[color:var(--ivory)] text-[color:var(--charcoal)] p-8 md:p-10 shadow-[var(--shadow-elegant)]">
                 <div className="flex items-center justify-between mb-8">
                   <span className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--charcoal-soft)]">
