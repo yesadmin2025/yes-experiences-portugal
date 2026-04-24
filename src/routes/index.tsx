@@ -135,11 +135,11 @@ function HomePage() {
   return (
     <SiteLayout>
       {/* 1 — HERO */}
-      <section className="relative min-h-[78vh] md:min-h-[92vh] flex items-end overflow-hidden">
+      <section className="relative min-h-[80vh] md:min-h-[94vh] flex items-end overflow-hidden">
         <img
           src={heroImg}
           alt="Hidden coastal road in Portugal at golden hour"
-          className="absolute inset-0 w-full h-full object-cover object-center scale-105 animate-[heroZoom_18s_ease-out_forwards]"
+          className="absolute inset-0 w-full h-full object-cover object-center scale-110 animate-[heroZoom_24s_ease-out_forwards]"
           width={1920}
           height={1080}
         />
@@ -150,56 +150,53 @@ function HomePage() {
         <div className="container-x relative z-10 pb-20 md:pb-32 pt-32 md:pt-40">
           <div className="max-w-3xl text-[color:var(--ivory)]">
             <span
-              className="inline-flex items-center gap-3 text-[10px] uppercase tracking-[0.34em] text-[color:var(--gold-soft)] opacity-0 animate-[heroFade_1s_ease-out_0.2s_forwards]"
+              className="inline-flex items-center gap-3 text-[10px] uppercase tracking-[0.34em] text-[color:var(--gold-soft)] opacity-0 animate-[heroFade_1.1s_ease-out_0.3s_forwards]"
             >
               <span className="h-px w-8 bg-[color:var(--gold)]" />
               Private · By local hands · Designed around you
             </span>
             <h1
-              className="serif mt-6 md:mt-8 text-[2.6rem] sm:text-5xl md:text-7xl lg:text-[5.25rem] leading-[1.04] font-light tracking-[-0.015em] opacity-0 animate-[heroFade_1.2s_ease-out_0.45s_forwards]"
+              className="serif mt-6 md:mt-8 text-[2.6rem] sm:text-5xl md:text-7xl lg:text-[5.25rem] leading-[1.04] font-light tracking-[-0.015em] opacity-0 animate-[heroFade_1.4s_ease-out_0.6s_forwards]"
             >
               Portugal,
               <br />
               <span className="italic text-[color:var(--gold-soft)]">Designed Around You</span>
             </h1>
             <p
-              className="mt-6 md:mt-8 text-base md:text-xl text-[color:var(--ivory)]/90 max-w-xl leading-[1.7] font-light opacity-0 animate-[heroFade_1.2s_ease-out_0.75s_forwards]"
+              className="mt-6 md:mt-8 text-base md:text-xl text-[color:var(--ivory)]/90 max-w-xl leading-[1.7] font-light opacity-0 animate-[heroFade_1.4s_ease-out_0.95s_forwards]"
             >
               Private experiences crafted through local knowledge, hidden gems and authentic
               moments — like exploring Portugal with a local friend.
             </p>
 
-            <div className="mt-9 md:mt-11 flex flex-col sm:flex-row flex-wrap gap-4 sm:gap-6 opacity-0 animate-[heroFade_1.2s_ease-out_1s_forwards]">
+            <div className="mt-9 md:mt-11 flex flex-col sm:flex-row flex-wrap gap-4 sm:gap-6 opacity-0 animate-[heroFade_1.4s_ease-out_1.25s_forwards]">
               {/* Primary — teal bg, white text, thin gold border */}
               <Link
                 to="/builder"
-                className="group inline-flex items-center justify-center gap-3 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-white px-9 py-4 text-[11px] tracking-[0.22em] uppercase border border-[color:var(--gold)]/80 hover:border-[color:var(--gold)] transition-all duration-500 hover:-translate-y-0.5 hover:shadow-[0_10px_30px_-12px_rgba(201,169,106,0.55)]"
+                className="group inline-flex items-center justify-center gap-3 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-white px-9 py-4 text-[11px] tracking-[0.22em] uppercase border border-[color:var(--gold)]/70 hover:border-[color:var(--gold)] transition-all duration-700 hover:-translate-y-1 hover:shadow-[0_18px_40px_-18px_rgba(41,91,97,0.55)]"
               >
                 Design &amp; Secure Your Experience
-                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-300" />
+                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-500" />
               </Link>
               {/* Secondary — transparent, thin gold border, white text */}
               <Link
                 to="/experiences"
-                className="group inline-flex items-center justify-center gap-3 bg-transparent text-white px-9 py-4 text-[11px] tracking-[0.22em] uppercase border border-[color:var(--gold)]/80 hover:border-[color:var(--gold)] hover:bg-white/[0.06] transition-all duration-500 hover:-translate-y-0.5 hover:shadow-[0_10px_30px_-12px_rgba(201,169,106,0.4)]"
+                className="group inline-flex items-center justify-center gap-3 bg-transparent text-white px-9 py-4 text-[11px] tracking-[0.22em] uppercase border border-[color:var(--gold)]/70 hover:border-[color:var(--gold)] hover:bg-white/[0.06] transition-all duration-700 hover:-translate-y-1"
               >
                 Explore Signature Experiences
-                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-300" />
+                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-500" />
               </Link>
             </div>
 
-            {/* Supporting microcopy — communicates immediacy & direct booking */}
-            <div className="mt-6 md:mt-7 max-w-xl space-y-1.5 opacity-0 animate-[heroFade_1.2s_ease-out_1.2s_forwards]">
-              <p className="text-[13px] md:text-sm text-[color:var(--ivory)]/95 leading-relaxed font-light">
-                Instant confirmation. No waiting. No back-and-forth emails.
-              </p>
-              <p className="text-[12px] md:text-[13px] text-[color:var(--ivory)]/70 leading-relaxed font-light italic">
-                Plan, personalize and secure your private experience in minutes — with a local designer available if you want a personal touch.
+            {/* Supporting microcopy — instant, direct, simple */}
+            <div className="mt-6 md:mt-7 max-w-xl opacity-0 animate-[heroFade_1.4s_ease-out_1.5s_forwards]">
+              <p className="text-[13px] md:text-sm text-[color:var(--ivory)]/95 leading-relaxed font-light tracking-wide">
+                Instant confirmation. Direct booking. No waiting.
               </p>
             </div>
 
             <p
-              className="mt-8 md:mt-10 text-[10px] uppercase tracking-[0.32em] text-[color:var(--gold-soft)]/90 flex items-center gap-3 opacity-0 animate-[heroFade_1.2s_ease-out_1.4s_forwards]"
+              className="mt-8 md:mt-10 text-[10px] uppercase tracking-[0.32em] text-[color:var(--gold-soft)]/90 flex items-center gap-3 opacity-0 animate-[heroFade_1.4s_ease-out_1.75s_forwards]"
             >
               <span className="h-px w-6 bg-[color:var(--gold)]" />
               Private experiences only — from 1 guest to large private groups
