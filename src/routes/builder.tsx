@@ -428,6 +428,15 @@ function BuilderPage() {
 
               {step === 10 && <SummaryView s={s} days={days} investment={investment} liveStory={liveStory} isMultiDay={isMultiDay} />}
 
+              {/* Mid-flow concierge note — subtle, optional */}
+              {step > 0 && step < 10 && step === 5 && (
+                <div className="mt-10 border-l-2 border-[color:var(--gold)] pl-5 py-1">
+                  <p className="text-[13px] text-[color:var(--charcoal-soft)] italic leading-relaxed">
+                    Need a local eye? Our designer can help perfect the route — without slowing you down.
+                  </p>
+                </div>
+              )}
+
               {/* Nav */}
               {step < 10 && (
                 <div className="mt-14 flex justify-between items-center">
