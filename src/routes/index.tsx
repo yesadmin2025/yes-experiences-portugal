@@ -548,11 +548,11 @@ function HomePage() {
       </section>
 
       {/* 8 — CORPORATE & CELEBRATIONS */}
-      <section className="bg-[color:var(--charcoal)] text-[color:var(--ivory)] py-24 md:py-32">
+      <section className="bg-[color:var(--charcoal)] text-[color:var(--ivory)] py-28 md:py-36">
         <div className="container-x">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div>
-              <span className="inline-flex items-center gap-3 text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold-soft)]">
+            <div className="reveal">
+              <span className="inline-flex items-center gap-3 text-[10px] uppercase tracking-[0.3em] text-[color:var(--ivory)]/75">
                 <span className="h-px w-8 bg-[color:var(--gold)]" />
                 Corporate & Celebrations
               </span>
@@ -560,7 +560,7 @@ function HomePage() {
                 Fully private. <br />
                 <span className="italic">Fully managed.</span>
               </h2>
-              <p className="mt-6 text-[color:var(--ivory)]/80 leading-relaxed max-w-lg">
+              <p className="mt-6 text-[color:var(--ivory)]/85 leading-relaxed max-w-lg">
                 From an intimate proposal to a 200-guest incentive program — tailored
                 end-to-end by a single team. Quietly extraordinary, never ordinary.
               </p>
@@ -585,32 +585,36 @@ function HomePage() {
               <div className="mt-10 flex flex-wrap gap-3">
                 <Link
                   to="/corporate"
-                  className="inline-flex items-center gap-2 bg-[color:var(--gold)] hover:bg-[color:var(--gold-soft)] text-[color:var(--charcoal)] px-7 py-3.5 text-sm uppercase tracking-[0.1em] transition-all"
+                  className="inline-flex items-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-white border border-[color:var(--gold)]/60 hover:border-[color:var(--gold)] px-7 py-3.5 text-sm uppercase tracking-[0.1em] transition-all duration-500 hover:-translate-y-0.5"
                 >
                   For Companies
                   <ArrowRight size={15} />
                 </Link>
                 <Link
                   to="/proposals"
-                  className="inline-flex items-center gap-2 border border-[color:var(--ivory)]/40 hover:border-[color:var(--ivory)] text-[color:var(--ivory)] px-7 py-3.5 text-sm uppercase tracking-[0.1em] transition-all"
+                  className="inline-flex items-center gap-2 border border-[color:var(--ivory)]/40 hover:border-[color:var(--ivory)] text-[color:var(--ivory)] px-7 py-3.5 text-sm uppercase tracking-[0.1em] transition-all duration-500 hover:-translate-y-0.5"
                 >
                   For Celebrations
                 </Link>
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <img
-                src={catCorporate}
-                alt="Corporate private experience"
-                loading="lazy"
-                className="w-full aspect-[3/4] object-cover"
-              />
-              <img
-                src={catProposals}
-                alt="Private celebration"
-                loading="lazy"
-                className="w-full aspect-[3/4] object-cover mt-10"
-              />
+            <div className="reveal grid grid-cols-2 gap-4">
+              <div className="overflow-hidden group">
+                <img
+                  src={catCorporate}
+                  alt="Corporate private experience"
+                  loading="lazy"
+                  className="w-full aspect-[3/4] object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-105"
+                />
+              </div>
+              <div className="overflow-hidden group mt-10">
+                <img
+                  src={catProposals}
+                  alt="Private celebration"
+                  loading="lazy"
+                  className="w-full aspect-[3/4] object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-105"
+                />
+              </div>
             </div>
           </div>
         </div>
