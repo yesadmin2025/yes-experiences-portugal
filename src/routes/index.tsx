@@ -190,11 +190,11 @@ function HomePage() {
 
             {/* Supporting microcopy — communicates immediacy & direct booking */}
             <div className="mt-6 md:mt-7 max-w-xl space-y-1.5 opacity-0 animate-[heroFade_1.2s_ease-out_1.2s_forwards]">
-              <p className="text-[13px] md:text-sm text-[color:var(--ivory)]/90 leading-relaxed font-light">
-                Instant confirmation available for selected experiences.
+              <p className="text-[13px] md:text-sm text-[color:var(--ivory)]/95 leading-relaxed font-light">
+                Instant confirmation. No waiting. No back-and-forth emails.
               </p>
               <p className="text-[12px] md:text-[13px] text-[color:var(--ivory)]/70 leading-relaxed font-light italic">
-                For fully custom experiences, refine with a local designer.
+                Plan, personalize and secure your private experience in minutes — with a local designer available if you want a personal touch.
               </p>
             </div>
 
@@ -234,19 +234,23 @@ function HomePage() {
               600+ 5-star reviews across Google, TripAdvisor and Viator
             </p>
 
-            {/* Brand marks — subtle text-based badges */}
-            <div className="mt-2 flex flex-wrap items-center justify-center gap-x-7 sm:gap-x-10 gap-y-3">
-              <span className="serif text-base md:text-lg text-[color:var(--charcoal)] tracking-tight">
-                Google
-              </span>
-              <span className="hidden sm:block h-3 w-px bg-[color:var(--gold)]/40" />
-              <span className="serif text-base md:text-lg text-[color:var(--charcoal)] tracking-tight">
-                Tripadvisor
-              </span>
-              <span className="hidden sm:block h-3 w-px bg-[color:var(--gold)]/40" />
-              <span className="serif text-base md:text-lg text-[color:var(--charcoal)] tracking-tight">
-                Viator
-              </span>
+            {/* Brand marks — platform name + small trust badge underneath */}
+            <div className="mt-3 flex flex-wrap items-start justify-center gap-x-10 sm:gap-x-14 gap-y-5">
+              {[
+                { name: "Google", badge: "Excellent · 5.0" },
+                { name: "Tripadvisor", badge: "Travelers' Choice" },
+                { name: "Viator", badge: "Top-rated Operator" },
+              ].map((p, i) => (
+                <div key={p.name} className="flex flex-col items-center gap-1.5">
+                  <span className="serif text-base md:text-lg text-[color:var(--charcoal)] tracking-tight">
+                    {p.name}
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 text-[9px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)] border border-[color:var(--gold)]/40 px-2 py-1">
+                    <Star size={8} fill="currentColor" strokeWidth={0} className="text-[color:var(--gold)]" />
+                    {p.badge}
+                  </span>
+                </div>
+              ))}
             </div>
           </div>
         </div>

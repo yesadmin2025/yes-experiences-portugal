@@ -240,6 +240,9 @@ function BuilderPage() {
           <p className="mt-5 text-[color:var(--charcoal-soft)] max-w-xl mx-auto">
             One decision at a time. Your story, timeline and map evolve as you go.
           </p>
+          <p className="mt-4 text-[13px] text-[color:var(--charcoal-soft)] max-w-xl mx-auto italic">
+            Design it yourself, or refine it with a local experience designer at any time.
+          </p>
         </div>
       </section>
 
@@ -424,6 +427,15 @@ function BuilderPage() {
               )}
 
               {step === 10 && <SummaryView s={s} days={days} investment={investment} liveStory={liveStory} isMultiDay={isMultiDay} />}
+
+              {/* Mid-flow concierge note — subtle, optional */}
+              {step > 0 && step < 10 && step === 5 && (
+                <div className="mt-10 border-l-2 border-[color:var(--gold)] pl-5 py-1">
+                  <p className="text-[13px] text-[color:var(--charcoal-soft)] italic leading-relaxed">
+                    Need a local eye? Our designer can help perfect the route — without slowing you down.
+                  </p>
+                </div>
+              )}
 
               {/* Nav */}
               {step < 10 && (
@@ -772,22 +784,37 @@ function SummaryView({ s, days, investment, liveStory, isMultiDay }: { s: Builde
         </div>
       </div>
 
+      {/* Final-step concierge note */}
+      <p className="mt-10 text-[13px] text-[color:var(--charcoal-soft)] italic leading-relaxed max-w-xl">
+        Secure your experience now, or refine it with a local designer before confirming.
+      </p>
+
       {/* CTA */}
-      <div className="mt-10 flex flex-wrap gap-4">
+      <div className="mt-5 flex flex-wrap gap-4">
         <Link
           to="/contact"
-          className="inline-flex items-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] px-8 py-4 text-sm uppercase tracking-[0.1em] transition-all"
+          className="inline-flex items-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] px-8 py-4 text-sm uppercase tracking-[0.18em] border border-[color:var(--gold)]/70 hover:border-[color:var(--gold)] transition-all hover:shadow-[0_10px_30px_-12px_rgba(201,169,106,0.5)]"
         >
-          Send to our designers
+          Secure Your Experience
           <ArrowRight size={15} />
+        </Link>
+        <Link
+          to="/contact"
+          className="inline-flex items-center gap-2 bg-transparent text-[color:var(--charcoal)] hover:text-[color:var(--teal)] px-8 py-4 text-sm uppercase tracking-[0.18em] border border-[color:var(--gold)]/70 hover:border-[color:var(--gold)] hover:bg-[color:var(--gold)]/[0.06] transition-all"
+        >
+          Refine with a Local Designer
         </Link>
         <button
           onClick={() => window.location.reload()}
-          className="inline-flex items-center gap-2 border border-[color:var(--charcoal)]/30 hover:border-[color:var(--charcoal)] text-[color:var(--charcoal)] px-8 py-4 text-sm uppercase tracking-[0.1em] transition-all"
+          className="inline-flex items-center gap-2 text-[color:var(--charcoal-soft)] hover:text-[color:var(--charcoal)] px-4 py-4 text-xs uppercase tracking-[0.2em] transition-colors"
         >
           Start over
         </button>
       </div>
+
+      <p className="mt-6 text-[12px] text-[color:var(--charcoal-soft)] leading-relaxed max-w-xl">
+        Instant confirmation. No waiting. No back-and-forth emails.
+      </p>
 
       <p className="mt-8 text-xs uppercase tracking-[0.25em] text-[color:var(--charcoal-soft)] flex items-center gap-2">
         <Sparkles size={12} className="text-[color:var(--gold)]" />
