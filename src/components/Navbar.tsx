@@ -18,23 +18,23 @@ export function Navbar() {
   return (
     <header className="fixed top-0 inset-x-0 z-50 bg-white border-b border-black/[0.04] shadow-[0_2px_12px_-6px_rgba(15,23,42,0.06)] opacity-0 animate-[headerFade_900ms_ease-out_forwards]">
       <div className="container-x">
-        <div className="flex items-center justify-between h-[92px] md:h-[108px]">
-          {/* Logo — left */}
+        <div className="flex items-center justify-between h-20 md:h-[96px] lg:h-[108px]">
+          {/* Logo — left, vertically centered via flex */}
           <Link
             to="/"
-            className="flex-shrink-0 flex items-center py-2 -ml-1"
+            className="flex-shrink-0 inline-flex items-center h-full"
             aria-label="YES experiences PORTUGAL — Home"
           >
-            <Logo size="sm" className="opacity-95" />
+            <Logo size="sm" className="block opacity-95" />
           </Link>
 
-          {/* Desktop nav — right */}
-          <nav className="hidden lg:flex items-center gap-10 text-[11px] uppercase tracking-[0.24em] font-normal">
+          {/* Desktop nav — right, vertically centered */}
+          <nav className="hidden lg:flex items-center h-full gap-10 text-[11px] uppercase tracking-[0.24em] font-normal leading-none">
             {navLinks.map((n) => (
               <Link
                 key={n.to}
                 to={n.to}
-                className="text-[color:var(--charcoal-soft)] hover:text-[color:var(--teal)] transition-colors duration-300"
+                className="inline-flex items-center text-[color:var(--charcoal-soft)] hover:text-[color:var(--teal)] transition-colors duration-300"
                 activeProps={{ className: "text-[color:var(--teal)]" }}
               >
                 {n.label}
