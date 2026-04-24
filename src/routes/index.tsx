@@ -245,7 +245,7 @@ function HomePage() {
       {/* 3 — EXPERIENCE TYPES */}
       <section className="py-24 md:py-32 bg-[color:var(--ivory)]">
         <div className="container-x">
-          <div className="text-center max-w-2xl mx-auto mb-16">
+          <div className="reveal text-center max-w-2xl mx-auto mb-16">
             <span className="eyebrow">The Experiences</span>
             <h2 className="serif text-4xl md:text-5xl mt-5 leading-tight">
               From intimate moments <br />
@@ -481,7 +481,7 @@ function HomePage() {
       {/* 7 — EDITORIAL STORYTELLING */}
       <section className="py-24 md:py-32 bg-[color:var(--ivory)]">
         <div className="container-x">
-          <div className="text-center max-w-2xl mx-auto mb-14">
+          <div className="reveal text-center max-w-2xl mx-auto mb-14">
             <span className="eyebrow">From the field</span>
             <h2 className="serif text-4xl md:text-5xl mt-5 leading-tight">
               The Portugal <span className="italic">we travel ourselves</span>
@@ -584,7 +584,7 @@ function HomePage() {
       {/* 9 — REVIEWS */}
       <section className="py-24 md:py-32 bg-[color:var(--ivory)]">
         <div className="container-x">
-          <div className="text-center max-w-2xl mx-auto mb-14">
+          <div className="reveal text-center max-w-2xl mx-auto mb-14">
             <span className="eyebrow">Voices</span>
             <h2 className="serif text-4xl md:text-5xl mt-5">
               What guests <span className="italic">tell us after</span>
