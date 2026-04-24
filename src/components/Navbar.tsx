@@ -16,16 +16,16 @@ export function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="fixed top-0 inset-x-0 z-50 bg-white/95 backdrop-blur-sm border-b border-black/[0.05] shadow-[0_1px_2px_rgba(15,23,42,0.04)] opacity-0 animate-[headerFade_700ms_ease-out_forwards]">
+    <header className="fixed top-0 inset-x-0 z-50 bg-white border-b border-black/[0.04] shadow-[0_2px_12px_-6px_rgba(15,23,42,0.06)] opacity-0 animate-[headerFade_900ms_ease-out_forwards]">
       <div className="container-x">
-        <div className="flex items-center justify-between h-[84px] md:h-[100px]">
+        <div className="flex items-center justify-between h-[92px] md:h-[108px]">
           {/* Logo — left */}
           <Link
             to="/"
-            className="flex-shrink-0 flex items-center py-2"
+            className="flex-shrink-0 flex items-center py-2 -ml-1"
             aria-label="YES experiences PORTUGAL — Home"
           >
-            <Logo size="sm" className="h-12 md:h-14 opacity-95" />
+            <Logo size="sm" className="opacity-95" />
           </Link>
 
           {/* Desktop nav — right */}
