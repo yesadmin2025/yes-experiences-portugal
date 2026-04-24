@@ -265,7 +265,7 @@ function HomePage() {
       </section>
 
       {/* 3 — EXPERIENCE TYPES */}
-      <section className="py-24 md:py-32 bg-[color:var(--ivory)]">
+      <section className="py-28 md:py-36 bg-[color:var(--ivory)]">
         <div className="container-x">
           <div className="reveal text-center max-w-2xl mx-auto mb-16">
             <span className="eyebrow">The Experiences</span>
@@ -278,21 +278,27 @@ function HomePage() {
             </p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-7">
-            {types.map((c) => (
-              <Link key={c.title} to={c.to} className="group block">
-                <div className="relative overflow-hidden aspect-[3/4] mb-5">
+            {types.map((c, i) => (
+              <Link
+                key={c.title}
+                to={c.to}
+                className="group block reveal-stagger transition-transform duration-500 hover:-translate-y-1.5"
+                style={{ transitionDelay: `${i * 110}ms` }}
+              >
+                <div className="relative overflow-hidden aspect-[3/4] mb-5 shadow-[0_10px_30px_-20px_rgba(46,46,46,0.25)] group-hover:shadow-[0_24px_50px_-22px_rgba(41,91,97,0.3)] transition-shadow duration-700">
                   <img
                     src={c.img}
                     alt={c.title}
                     loading="lazy"
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="w-full h-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-110"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal)]/55 via-transparent to-transparent" />
-                  <span className="absolute top-4 left-4 text-[10px] uppercase tracking-[0.25em] text-[color:var(--gold-soft)]">
+                  <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal)]/60 via-transparent to-transparent" />
+                  <div className="absolute inset-0 bg-[color:var(--teal)]/0 group-hover:bg-[color:var(--teal)]/10 transition-colors duration-700" />
+                  <span className="absolute top-4 left-4 text-[10px] uppercase tracking-[0.25em] text-white/85">
                     Private · Tailored
                   </span>
                 </div>
-                <h3 className="serif text-xl text-[color:var(--charcoal)] group-hover:text-[color:var(--teal)] transition-colors">
+                <h3 className="serif text-xl text-[color:var(--charcoal)] group-hover:text-[color:var(--teal)] transition-colors duration-500">
                   {c.title}
                 </h3>
                 <p className="mt-2 text-sm text-[color:var(--charcoal-soft)] leading-relaxed">
