@@ -221,7 +221,8 @@
     opacity: 1 !important;
     transform: none !important;
   }
-  .reveal {
+  .reveal,
+  .reveal-stagger {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
