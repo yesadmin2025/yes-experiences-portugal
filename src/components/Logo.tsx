@@ -1,59 +1,26 @@
+import logoSrc from "@/assets/yes-logo.png";
+
 interface LogoProps {
-  variant?: "default" | "light";
   size?: "sm" | "md" | "lg";
+  variant?: "default" | "light";
+  className?: string;
 }
 
-export function Logo({ variant = "default", size = "md" }: LogoProps) {
-  const teal = variant === "light" ? "#FAF8F3" : "#295B61";
-  const charcoal = variant === "light" ? "#FAF8F3" : "#2E2E2E";
-  const gold = "#C9A96A";
+const sizes = {
+  sm: "h-12 md:h-14",
+  md: "h-16 md:h-20",
+  lg: "h-24 md:h-28",
+};
 
-  const scale = size === "sm" ? 0.7 : size === "lg" ? 1.2 : 1;
-
+export function Logo({ size = "md", variant = "default", className = "" }: LogoProps) {
   return (
-    <div
-      className="flex flex-col items-center leading-none select-none"
-      style={{ transform: `scale(${scale})`, transformOrigin: "center" }}
-    >
-      <span
-        className="script"
-        style={{
-          color: teal,
-          fontSize: "44px",
-          lineHeight: 0.9,
-          fontWeight: 700,
-          letterSpacing: "-0.02em",
-        }}
-      >
-        Yes
-      </span>
-      <span
-        className="serif"
-        style={{
-          color: charcoal,
-          fontSize: "20px",
-          fontWeight: 400,
-          letterSpacing: "0.01em",
-          marginTop: "-2px",
-        }}
-      >
-        experiences
-      </span>
-      <div className="flex items-center gap-2 mt-1">
-        <span style={{ width: 14, height: 1, background: gold }} />
-        <span
-          style={{
-            color: gold,
-            fontSize: "9px",
-            letterSpacing: "0.4em",
-            fontFamily: "var(--font-sans)",
-            fontWeight: 500,
-          }}
-        >
-          PORTUGAL
-        </span>
-        <span style={{ width: 14, height: 1, background: gold }} />
-      </div>
-    </div>
+    <img
+      src={logoSrc}
+      alt="YES experiences PORTUGAL"
+      className={`${sizes[size]} w-auto select-none ${
+        variant === "light" ? "brightness-0 invert opacity-95" : ""
+      } ${className}`}
+      draggable={false}
+    />
   );
 }

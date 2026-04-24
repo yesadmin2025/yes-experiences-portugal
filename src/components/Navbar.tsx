@@ -33,44 +33,46 @@ export function Navbar() {
           : "bg-transparent"
       }`}
     >
-      <div className="container-x flex items-center justify-between py-4 md:py-5">
-        <nav className="hidden lg:flex items-center gap-8 flex-1 text-sm">
-          {leftNav.map((n) => (
-            <Link
-              key={n.to}
-              to={n.to}
-              className="text-[color:var(--charcoal)] hover:text-[color:var(--teal)] transition-colors"
-              activeProps={{ className: "text-[color:var(--teal)]" }}
-            >
-              {n.label}
-            </Link>
-          ))}
-        </nav>
+      <div className="container-x py-4 md:py-6">
+        <div className="flex items-center justify-between lg:grid lg:grid-cols-[1fr_auto_1fr] lg:gap-10">
+          <nav className="hidden lg:flex items-center justify-end gap-8 text-[12px] uppercase tracking-[0.18em]">
+            {leftNav.map((n) => (
+              <Link
+                key={n.to}
+                to={n.to}
+                className="text-[color:var(--charcoal)] hover:text-[color:var(--teal)] transition-colors"
+                activeProps={{ className: "text-[color:var(--teal)]" }}
+              >
+                {n.label}
+              </Link>
+            ))}
+          </nav>
 
-        <Link to="/" className="flex-shrink-0 mx-auto lg:mx-8">
-          <Logo size="sm" />
-        </Link>
+          <Link to="/" className="flex-shrink-0 flex justify-center" aria-label="YES experiences PORTUGAL — Home">
+            <Logo size="sm" />
+          </Link>
 
-        <nav className="hidden lg:flex items-center gap-8 flex-1 justify-end text-sm">
-          {rightNav.map((n) => (
-            <Link
-              key={n.to}
-              to={n.to}
-              className="text-[color:var(--charcoal)] hover:text-[color:var(--teal)] transition-colors"
-              activeProps={{ className: "text-[color:var(--teal)]" }}
-            >
-              {n.label}
-            </Link>
-          ))}
-        </nav>
+          <nav className="hidden lg:flex items-center justify-start gap-8 text-[12px] uppercase tracking-[0.18em]">
+            {rightNav.map((n) => (
+              <Link
+                key={n.to}
+                to={n.to}
+                className="text-[color:var(--charcoal)] hover:text-[color:var(--teal)] transition-colors"
+                activeProps={{ className: "text-[color:var(--teal)]" }}
+              >
+                {n.label}
+              </Link>
+            ))}
+          </nav>
 
-        <button
-          className="lg:hidden text-[color:var(--charcoal)]"
-          onClick={() => setOpen(!open)}
-          aria-label="Menu"
-        >
-          {open ? <X size={22} /> : <Menu size={22} />}
-        </button>
+          <button
+            className="lg:hidden text-[color:var(--charcoal)] absolute right-6"
+            onClick={() => setOpen(!open)}
+            aria-label="Menu"
+          >
+            {open ? <X size={22} /> : <Menu size={22} />}
+          </button>
+        </div>
       </div>
 
       {open && (
