@@ -6,7 +6,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
   // Reveal-on-scroll for any element with class="reveal"
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const els = document.querySelectorAll<HTMLElement>(".reveal");
+    const els = document.querySelectorAll<HTMLElement>(".reveal, .reveal-stagger");
     if (!els.length) return;
 
     if (
@@ -26,7 +26,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
           }
         });
       },
-      { threshold: 0.15, rootMargin: "0px 0px -40px 0px" },
+      { threshold: 0.12, rootMargin: "0px 0px -60px 0px" },
     );
 
     els.forEach((el) => io.observe(el));
