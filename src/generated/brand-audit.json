@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-25T04:09:58.770Z",
+  "generatedAt": "2026-04-25T06:33:21.936Z",
   "filesScanned": 23,
   "approvedPalette": {
     "teal": "#295B61",
@@ -18,10 +18,10 @@
     "#cccccc"
   ],
   "counts": {
-    "total": 44,
-    "approved": 18,
-    "allowlisted": 18,
-    "mismatch": 8
+    "total": 43,
+    "approved": 17,
+    "allowlisted": 17,
+    "mismatch": 9
   },
   "findings": [
     {
@@ -35,7 +35,7 @@
     },
     {
       "file": "src/components/PlatformBadge.tsx",
-      "line": 35,
+      "line": 46,
       "col": 17,
       "raw": "#EA4335",
       "normalized": "#ea4335",
@@ -44,7 +44,7 @@
     },
     {
       "file": "src/components/PlatformBadge.tsx",
-      "line": 39,
+      "line": 50,
       "col": 17,
       "raw": "#4285F4",
       "normalized": "#4285f4",
@@ -53,7 +53,7 @@
     },
     {
       "file": "src/components/PlatformBadge.tsx",
-      "line": 43,
+      "line": 54,
       "col": 17,
       "raw": "#FBBC05",
       "normalized": "#fbbc05",
@@ -62,7 +62,7 @@
     },
     {
       "file": "src/components/PlatformBadge.tsx",
-      "line": 47,
+      "line": 58,
       "col": 17,
       "raw": "#34A853",
       "normalized": "#34a853",
@@ -71,120 +71,111 @@
     },
     {
       "file": "src/components/PlatformBadge.tsx",
-      "line": 51,
-      "col": 68,
-      "raw": "#3c4043",
-      "normalized": "#3c4043",
-      "snippet": "<span className=\"text-[10px] font-medium tracking-wide text-[#3c4043]\">Google</span>",
+      "line": 86,
+      "col": 17,
+      "raw": "#00AF87",
+      "normalized": "#00af87",
+      "snippet": "fill=\"#00AF87\"",
       "status": "mismatch"
     },
     {
       "file": "src/components/PlatformBadge.tsx",
-      "line": 66,
+      "line": 89,
       "col": 56,
       "raw": "#000",
       "normalized": "#000000",
-      "snippet": "<ellipse cx=\"14\" cy=\"9\" rx=\"13\" ry=\"7.5\" fill=\"#000\" />",
+      "snippet": "<ellipse cx=\"28\" cy=\"26\" rx=\"26\" ry=\"15\" fill=\"#000\" />",
       "status": "allowlisted"
     },
     {
       "file": "src/components/PlatformBadge.tsx",
-      "line": 67,
-      "col": 45,
-      "raw": "#fff",
-      "normalized": "#ffffff",
-      "snippet": "<circle cx=\"9\" cy=\"9\" r=\"4.6\" fill=\"#fff\" />",
-      "status": "allowlisted"
-    },
-    {
-      "file": "src/components/PlatformBadge.tsx",
-      "line": 68,
+      "line": 91,
       "col": 46,
       "raw": "#fff",
       "normalized": "#ffffff",
-      "snippet": "<circle cx=\"19\" cy=\"9\" r=\"4.6\" fill=\"#fff\" />",
+      "snippet": "<circle cx=\"17\" cy=\"26\" r=\"10\" fill=\"#fff\" />",
       "status": "allowlisted"
     },
     {
       "file": "src/components/PlatformBadge.tsx",
-      "line": 69,
-      "col": 45,
-      "raw": "#000",
-      "normalized": "#000000",
-      "snippet": "<circle cx=\"9\" cy=\"9\" r=\"2.1\" fill=\"#000\" />",
-      "status": "allowlisted"
-    },
-    {
-      "file": "src/components/PlatformBadge.tsx",
-      "line": 70,
+      "line": 92,
       "col": 46,
-      "raw": "#000",
-      "normalized": "#000000",
-      "snippet": "<circle cx=\"19\" cy=\"9\" r=\"2.1\" fill=\"#000\" />",
-      "status": "allowlisted"
-    },
-    {
-      "file": "src/components/PlatformBadge.tsx",
-      "line": 71,
-      "col": 49,
       "raw": "#fff",
       "normalized": "#ffffff",
-      "snippet": "<circle cx=\"8.4\" cy=\"8.4\" r=\"0.7\" fill=\"#fff\" />",
+      "snippet": "<circle cx=\"39\" cy=\"26\" r=\"10\" fill=\"#fff\" />",
       "status": "allowlisted"
-    },
-    {
-      "file": "src/components/PlatformBadge.tsx",
-      "line": 72,
-      "col": 50,
-      "raw": "#fff",
-      "normalized": "#ffffff",
-      "snippet": "<circle cx=\"18.4\" cy=\"8.4\" r=\"0.7\" fill=\"#fff\" />",
-      "status": "allowlisted"
-    },
-    {
-      "file": "src/components/PlatformBadge.tsx",
-      "line": 74,
-      "col": 48,
-      "raw": "#00AF87",
-      "normalized": "#00af87",
-      "snippet": "<circle cx=\"14\" cy=\"2.3\" r=\"1.4\" fill=\"#00AF87\" />",
-      "status": "mismatch"
-    },
-    {
-      "file": "src/components/PlatformBadge.tsx",
-      "line": 76,
-      "col": 70,
-      "raw": "#000",
-      "normalized": "#000000",
-      "snippet": "<span className=\"text-[10px] font-semibold tracking-wide text-[#000]\">Tripadvisor</span>",
-      "status": "allowlisted"
-    },
-    {
-      "file": "src/components/PlatformBadge.tsx",
-      "line": 90,
-      "col": 63,
-      "raw": "#328E7E",
-      "normalized": "#328e7e",
-      "snippet": "className=\"text-[11px] font-bold tracking-tight text-[#328E7E] leading-none\"",
-      "status": "mismatch"
     },
     {
       "file": "src/components/PlatformBadge.tsx",
       "line": 94,
-      "col": 32,
-      "raw": "#F26B52",
-      "normalized": "#f26b52",
-      "snippet": "<span className=\"text-[#F26B52]\">.</span>",
+      "col": 45,
+      "raw": "#00AF87",
+      "normalized": "#00af87",
+      "snippet": "<circle cx=\"17\" cy=\"26\" r=\"6\" fill=\"#00AF87\" />",
       "status": "mismatch"
     },
     {
       "file": "src/components/PlatformBadge.tsx",
-      "line": 96,
-      "col": 71,
-      "raw": "#6B6B6B",
-      "normalized": "#6b6b6b",
-      "snippet": "<span className=\"text-[8.5px] uppercase tracking-[0.18em] text-[#6B6B6B]\" aria-hidden=\"true\">",
-      "status": "approved"
+      "line": 95,
+      "col": 45,
+      "raw": "#00AF87",
+      "normalized": "#00af87",
+      "snippet": "<circle cx=\"39\" cy=\"26\" r=\"6\" fill=\"#00AF87\" />",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/PlatformBadge.tsx",
+      "line": 97,
+      "col": 47,
+      "raw": "#000",
+      "normalized": "#000000",
+      "snippet": "<circle cx=\"17\" cy=\"26\" r=\"3.4\" fill=\"#000\" />",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/components/PlatformBadge.tsx",
+      "line": 98,
+      "col": 47,
+      "raw": "#000",
+      "normalized": "#000000",
+      "snippet": "<circle cx=\"39\" cy=\"26\" r=\"3.4\" fill=\"#000\" />",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/components/PlatformBadge.tsx",
+      "line": 100,
+      "col": 49,
+      "raw": "#fff",
+      "normalized": "#ffffff",
+      "snippet": "<circle cx=\"15.8\" cy=\"24.8\" r=\"1\" fill=\"#fff\" />",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/components/PlatformBadge.tsx",
+      "line": 101,
+      "col": 49,
+      "raw": "#fff",
+      "normalized": "#ffffff",
+      "snippet": "<circle cx=\"37.8\" cy=\"24.8\" r=\"1\" fill=\"#fff\" />",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/components/PlatformBadge.tsx",
+      "line": 130,
+      "col": 17,
+      "raw": "#328E7E",
+      "normalized": "#328e7e",
+      "snippet": "fill=\"#328E7E\"",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/PlatformBadge.tsx",
+      "line": 134,
+      "col": 48,
+      "raw": "#F26B52",
+      "normalized": "#f26b52",
+      "snippet": "<circle cx=\"111\" cy=\"29\" r=\"4.2\" fill=\"#F26B52\" />",
+      "status": "mismatch"
     },
     {
       "file": "src/routes/brand-qa.tsx",
