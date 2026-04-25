@@ -363,20 +363,20 @@ function HomePage() {
       {/* 4 — SIGNATURE EXPERIENCES */}
       <section className="py-32 md:py-44 bg-[color:var(--sand)]">
         <div className="container-x">
-          <div className="reveal flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
+          <div className="reveal flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
             <div>
               <span className="eyebrow">Signature Experiences</span>
-              <h2 className="serif text-4xl md:text-5xl mt-5 leading-tight">
+              <h2 className="serif text-4xl md:text-5xl mt-6 leading-[1.1]">
                 Crafted by us, <span className="italic">customized by you</span>
               </h2>
-              <p className="mt-5 max-w-lg text-[15px] text-[color:var(--charcoal-soft)] leading-relaxed">
+              <p className="mt-6 max-w-lg text-[16px] text-[color:var(--charcoal-soft)] leading-[1.75]">
                 Ready-to-book private experiences — refined over years and adjusted in minutes
                 to fit the way you travel.
               </p>
             </div>
             <Link
               to="/experiences"
-              className="text-sm uppercase tracking-[0.2em] text-[color:var(--teal)] hover:text-[color:var(--teal-2)] inline-flex items-center gap-2 transition-colors"
+              className="text-[13px] uppercase tracking-[0.2em] text-[color:var(--teal)] hover:text-[color:var(--teal-2)] inline-flex items-center gap-2 transition-colors font-medium"
             >
               View all <ArrowRight size={14} />
             </Link>
@@ -394,43 +394,43 @@ function HomePage() {
                     />
                     <div className="absolute inset-0 bg-[color:var(--teal)]/0 group-hover:bg-[color:var(--teal)]/8 transition-colors duration-700" />
                   </div>
-                  <div className="p-6">
-                    <h3 className="serif text-2xl text-[color:var(--charcoal)] group-hover:text-[color:var(--teal)] transition-colors duration-500">
+                  <div className="p-7 md:p-8">
+                    <h3 className="serif text-[1.65rem] text-[color:var(--charcoal)] group-hover:text-[color:var(--teal)] transition-colors duration-500 leading-snug">
                       {s.title}
                     </h3>
-                    <p className="mt-2 text-[14.5px] text-[color:var(--charcoal-soft)] leading-relaxed">
+                    <p className="mt-3 text-[15px] text-[color:var(--charcoal-soft)] leading-[1.7]">
                       {s.line}
                     </p>
-                    <ul className="mt-5 space-y-2">
+                    <ul className="mt-6 space-y-2.5">
                       {s.pace.map((p, idx) => (
                         <li
                           key={p}
-                          className="flex items-center gap-3 text-[13.5px] text-[color:var(--charcoal)]"
+                          className="flex items-center gap-3 text-[14px] text-[color:var(--charcoal)]"
                         >
-                          <span className="text-[color:var(--teal)] text-[10px] tracking-wider">
+                          <span className="text-[color:var(--teal)] text-[10.5px] tracking-wider font-medium">
                             {String(idx + 1).padStart(2, "0")}
                           </span>
-                          <span className="h-px w-4 bg-[color:var(--gold)]/50" />
+                          <span className="h-px w-4 bg-[color:var(--gold)]/60" />
                           {p}
                         </li>
                       ))}
                     </ul>
-                    <div className="mt-6 pt-5 border-t border-[color:var(--border)] flex flex-wrap gap-2">
+                    <div className="mt-7 pt-5 border-t border-[color:var(--border)] flex flex-wrap gap-2">
                       <Link
                         to="/contact"
-                        className="text-xs uppercase tracking-[0.18em] bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] px-4 py-2.5 transition-colors"
+                        className="text-[12px] uppercase tracking-[0.18em] bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] px-4 py-2.5 transition-colors font-medium"
                       >
                         Book
                       </Link>
                       <Link
                         to="/builder"
-                        className="text-xs uppercase tracking-[0.18em] border border-[color:var(--charcoal)]/20 hover:border-[color:var(--teal)] hover:text-[color:var(--teal)] text-[color:var(--charcoal)] px-4 py-2.5 transition-colors"
+                        className="text-[12px] uppercase tracking-[0.18em] border border-[color:var(--charcoal)]/25 hover:border-[color:var(--teal)] hover:text-[color:var(--teal)] text-[color:var(--charcoal)] px-4 py-2.5 transition-colors"
                       >
                         Customize
                       </Link>
                       <Link
                         to="/builder"
-                        className="text-xs uppercase tracking-[0.18em] text-[color:var(--teal)] hover:text-[color:var(--teal-2)] px-4 py-2.5 transition-colors"
+                        className="text-[12px] uppercase tracking-[0.18em] text-[color:var(--teal)] hover:text-[color:var(--teal-2)] px-4 py-2.5 transition-colors"
                       >
                         Build your own →
                       </Link>
