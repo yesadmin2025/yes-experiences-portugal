@@ -35,7 +35,7 @@ export function Navbar() {
   return (
     <header className="fixed top-0 inset-x-0 z-50 bg-white border-b border-black/[0.06] shadow-[0_1px_0_0_rgba(201,169,106,0.18),0_10px_28px_-18px_rgba(15,23,42,0.10)] opacity-0 animate-[headerFade_900ms_ease-out_forwards]">
       <div className="container-x">
-        <div className="flex items-center justify-between h-[112px] md:h-[128px] lg:h-[140px]">
+        <div className="flex items-center justify-between h-[88px] md:h-[100px] lg:h-[108px]">
           {/* Official master logo — uploaded brand asset, used as-is.
               Sized for premium presence with breathing room in the header. */}
           <Link
@@ -48,7 +48,7 @@ export function Navbar() {
               width={909}
               height={579}
               alt="YES experiences PORTUGAL"
-              className="block h-[88px] md:h-[104px] lg:h-[116px] w-auto select-none"
+              className="block h-[64px] md:h-[76px] lg:h-[84px] w-auto select-none"
               draggable={false}
               fetchPriority="high"
               decoding="async"

@@ -21,7 +21,7 @@ export function Footer() {
                 width={909}
                 height={579}
                 alt="YES experiences PORTUGAL"
-                className="block h-[88px] md:h-[104px] lg:h-[116px] w-auto select-none"
+                className="block h-[72px] md:h-[84px] lg:h-[92px] w-auto select-none"
                 draggable={false}
                 loading="lazy"
                 decoding="async"
