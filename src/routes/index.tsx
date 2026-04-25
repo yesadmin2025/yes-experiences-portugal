@@ -674,7 +674,10 @@ function HomePage() {
         </div>
       </section>
 
-      {/* 10 — FINAL CTA */}
+      {/* 10 — FAQ */}
+      <FAQ />
+
+      {/* 11 — FINAL CTA */}
       <section className="pb-28 md:pb-36 bg-[color:var(--ivory)]">
         <div className="container-x">
           <div className="reveal relative bg-[color:var(--sand)] p-12 md:p-20 overflow-hidden">
