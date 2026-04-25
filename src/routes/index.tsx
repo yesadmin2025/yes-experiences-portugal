@@ -407,7 +407,7 @@ function HomePage() {
                     <div className="mt-7 pt-5 border-t border-[color:var(--border)] flex flex-wrap gap-2">
                       <Link
                         to="/contact"
-                        className="text-[12px] uppercase tracking-[0.18em] bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] px-4 py-2.5 transition-colors font-medium"
+                        className="cta-primary text-[12px] uppercase tracking-[0.18em] px-5 py-2.5 font-semibold"
                       >
                         Book
                       </Link>
