@@ -25,7 +25,12 @@ export function FloatingActions() {
   };
 
   return (
-    <div className="fixed bottom-5 right-5 md:bottom-8 md:right-8 z-40 flex flex-col items-end gap-3 print:hidden">
+    <div
+      className="fixed right-5 md:right-8 z-40 flex flex-col items-end gap-3 print:hidden bottom-24 md:bottom-8"
+      // On mobile, sit above the MobileStickyCTA bar (≈64px + iOS safe-area).
+      // The lg+ floating pill keeps its original bottom-8 spacing.
+      style={{ bottom: undefined }}
+    >
       {/* Floating CTA — hidden on mobile (< lg) where MobileStickyCTA owns
           the primary call-to-action surface. Visible from lg up so desktop
           users still get the persistent "Start Your Experience" anchor. */}
