@@ -1,0 +1,469 @@
+{
+  "generatedAt": "2026-04-25T01:14:44.829Z",
+  "filesScanned": 20,
+  "approvedPalette": {
+    "teal": "#295B61",
+    "teal-2": "#2A7C82",
+    "gold": "#C9A96A",
+    "gold-soft": "#E1CFA6",
+    "ivory": "#FAF8F3",
+    "sand": "#F4EFE7",
+    "charcoal": "#2E2E2E",
+    "charcoal-soft": "#6B6B6B"
+  },
+  "allowlist": [
+    "#000000",
+    "#ffffff",
+    "#1f1f1f",
+    "#cccccc"
+  ],
+  "counts": {
+    "total": 49,
+    "approved": 34,
+    "allowlisted": 15,
+    "mismatch": 0
+  },
+  "findings": [
+    {
+      "file": "src/components/Navbar.tsx",
+      "line": 33,
+      "col": 38,
+      "raw": "#2E2E2E",
+      "normalized": "#2e2e2e",
+      "snippet": "Default uses charcoal (#2E2E2E, 13.58:1) instead of charcoal-soft",
+      "status": "approved"
+    },
+    {
+      "file": "src/routes/brand-qa.tsx",
+      "line": 26,
+      "col": 10,
+      "raw": "#295B61",
+      "normalized": "#295b61",
+      "snippet": "teal: \"#295B61\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/routes/brand-qa.tsx",
+      "line": 27,
+      "col": 14,
+      "raw": "#2A7C82",
+      "normalized": "#2a7c82",
+      "snippet": "\"teal-2\": \"#2A7C82\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/routes/brand-qa.tsx",
+      "line": 28,
+      "col": 10,
+      "raw": "#C9A96A",
+      "normalized": "#c9a96a",
+      "snippet": "gold: \"#C9A96A\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/routes/brand-qa.tsx",
+      "line": 29,
+      "col": 17,
+      "raw": "#E1CFA6",
+      "normalized": "#e1cfa6",
+      "snippet": "\"gold-soft\": \"#E1CFA6\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/routes/brand-qa.tsx",
+      "line": 30,
+      "col": 11,
+      "raw": "#FAF8F3",
+      "normalized": "#faf8f3",
+      "snippet": "ivory: \"#FAF8F3\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/routes/brand-qa.tsx",
+      "line": 31,
+      "col": 10,
+      "raw": "#F4EFE7",
+      "normalized": "#f4efe7",
+      "snippet": "sand: \"#F4EFE7\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/routes/brand-qa.tsx",
+      "line": 32,
+      "col": 14,
+      "raw": "#2E2E2E",
+      "normalized": "#2e2e2e",
+      "snippet": "charcoal: \"#2E2E2E\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/routes/brand-qa.tsx",
+      "line": 33,
+      "col": 21,
+      "raw": "#6B6B6B",
+      "normalized": "#6b6b6b",
+      "snippet": "\"charcoal-soft\": \"#6B6B6B\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/routes/brand-qa.tsx",
+      "line": 43,
+      "col": 6,
+      "raw": "#000",
+      "normalized": "#000000",
+      "snippet": "\"#000\",",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/routes/brand-qa.tsx",
+      "line": 44,
+      "col": 6,
+      "raw": "#000000",
+      "normalized": "#000000",
+      "snippet": "\"#000000\",",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/routes/brand-qa.tsx",
+      "line": 45,
+      "col": 6,
+      "raw": "#fff",
+      "normalized": "#ffffff",
+      "snippet": "\"#fff\",",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/routes/brand-qa.tsx",
+      "line": 46,
+      "col": 6,
+      "raw": "#ffffff",
+      "normalized": "#ffffff",
+      "snippet": "\"#ffffff\",",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/routes/brand-qa.tsx",
+      "line": 47,
+      "col": 6,
+      "raw": "#1f1f1f",
+      "normalized": "#1f1f1f",
+      "snippet": "\"#1f1f1f\", // dark-mode card surface",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/routes/brand-qa.tsx",
+      "line": 48,
+      "col": 6,
+      "raw": "#ccc",
+      "normalized": "#cccccc",
+      "snippet": "\"#ccc\", // recharts internal selectors only",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/styles.css",
+      "line": 85,
+      "col": 11,
+      "raw": "#295B61",
+      "normalized": "#295b61",
+      "snippet": "--teal: #295B61;",
+      "status": "approved"
+    },
+    {
+      "file": "src/styles.css",
+      "line": 86,
+      "col": 13,
+      "raw": "#2A7C82",
+      "normalized": "#2a7c82",
+      "snippet": "--teal-2: #2A7C82;",
+      "status": "approved"
+    },
+    {
+      "file": "src/styles.css",
+      "line": 87,
+      "col": 11,
+      "raw": "#C9A96A",
+      "normalized": "#c9a96a",
+      "snippet": "--gold: #C9A96A;",
+      "status": "approved"
+    },
+    {
+      "file": "src/styles.css",
+      "line": 88,
+      "col": 16,
+      "raw": "#E1CFA6",
+      "normalized": "#e1cfa6",
+      "snippet": "--gold-soft: #E1CFA6;",
+      "status": "approved"
+    },
+    {
+      "file": "src/styles.css",
+      "line": 89,
+      "col": 12,
+      "raw": "#FAF8F3",
+      "normalized": "#faf8f3",
+      "snippet": "--ivory: #FAF8F3;",
+      "status": "approved"
+    },
+    {
+      "file": "src/styles.css",
+      "line": 90,
+      "col": 11,
+      "raw": "#F4EFE7",
+      "normalized": "#f4efe7",
+      "snippet": "--sand: #F4EFE7;",
+      "status": "approved"
+    },
+    {
+      "file": "src/styles.css",
+      "line": 91,
+      "col": 15,
+      "raw": "#2E2E2E",
+      "normalized": "#2e2e2e",
+      "snippet": "--charcoal: #2E2E2E;",
+      "status": "approved"
+    },
+    {
+      "file": "src/styles.css",
+      "line": 92,
+      "col": 20,
+      "raw": "#6B6B6B",
+      "normalized": "#6b6b6b",
+      "snippet": "--charcoal-soft: #6B6B6B;",
+      "status": "approved"
+    },
+    {
+      "file": "src/styles.css",
+      "line": 97,
+      "col": 11,
+      "raw": "#ffffff",
+      "normalized": "#ffffff",
+      "snippet": "--card: #ffffff;",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/styles.css",
+      "line": 99,
+      "col": 14,
+      "raw": "#ffffff",
+      "normalized": "#ffffff",
+      "snippet": "--popover: #ffffff;",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/styles.css",
+      "line": 110,
+      "col": 29,
+      "raw": "#ffffff",
+      "normalized": "#ffffff",
+      "snippet": "--destructive-foreground: #ffffff;",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/styles.css",
+      "line": 119,
+      "col": 11,
+      "raw": "#1f1f1f",
+      "normalized": "#1f1f1f",
+      "snippet": "--card: #1f1f1f;",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 290,
+      "col": 17,
+      "raw": "#000",
+      "normalized": "#000000",
+      "snippet": "\"black\": \"#000\",",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 291,
+      "col": 17,
+      "raw": "#fff",
+      "normalized": "#ffffff",
+      "snippet": "\"white\": \"#fff\",",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 293,
+      "col": 22,
+      "raw": "#2E2E2E",
+      "normalized": "#2e2e2e",
+      "snippet": "\"foreground\": \"#2E2E2E\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 294,
+      "col": 16,
+      "raw": "#ffffff",
+      "normalized": "#ffffff",
+      "snippet": "\"card\": \"#ffffff\",",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 295,
+      "col": 27,
+      "raw": "#2E2E2E",
+      "normalized": "#2e2e2e",
+      "snippet": "\"card-foreground\": \"#2E2E2E\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 296,
+      "col": 19,
+      "raw": "#ffffff",
+      "normalized": "#ffffff",
+      "snippet": "\"popover\": \"#ffffff\",",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 297,
+      "col": 30,
+      "raw": "#2E2E2E",
+      "normalized": "#2e2e2e",
+      "snippet": "\"popover-foreground\": \"#2E2E2E\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 299,
+      "col": 30,
+      "raw": "#FAF8F3",
+      "normalized": "#faf8f3",
+      "snippet": "\"primary-foreground\": \"#FAF8F3\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 300,
+      "col": 21,
+      "raw": "#F4EFE7",
+      "normalized": "#f4efe7",
+      "snippet": "\"secondary\": \"#F4EFE7\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 301,
+      "col": 32,
+      "raw": "#2E2E2E",
+      "normalized": "#2e2e2e",
+      "snippet": "\"secondary-foreground\": \"#2E2E2E\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 302,
+      "col": 17,
+      "raw": "#F4EFE7",
+      "normalized": "#f4efe7",
+      "snippet": "\"muted\": \"#F4EFE7\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 303,
+      "col": 28,
+      "raw": "#6B6B6B",
+      "normalized": "#6b6b6b",
+      "snippet": "\"muted-foreground\": \"#6B6B6B\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 304,
+      "col": 18,
+      "raw": "#C9A96A",
+      "normalized": "#c9a96a",
+      "snippet": "\"accent\": \"#C9A96A\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 305,
+      "col": 29,
+      "raw": "#2E2E2E",
+      "normalized": "#2e2e2e",
+      "snippet": "\"accent-foreground\": \"#2E2E2E\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 307,
+      "col": 34,
+      "raw": "#ffffff",
+      "normalized": "#ffffff",
+      "snippet": "\"destructive-foreground\": \"#ffffff\",",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 311,
+      "col": 16,
+      "raw": "#C9A96A",
+      "normalized": "#c9a96a",
+      "snippet": "\"gold\": \"#C9A96A\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 312,
+      "col": 21,
+      "raw": "#E1CFA6",
+      "normalized": "#e1cfa6",
+      "snippet": "\"gold-soft\": \"#E1CFA6\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 314,
+      "col": 18,
+      "raw": "#2A7C82",
+      "normalized": "#2a7c82",
+      "snippet": "\"teal-2\": \"#2A7C82\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 315,
+      "col": 17,
+      "raw": "#FAF8F3",
+      "normalized": "#faf8f3",
+      "snippet": "\"ivory\": \"#FAF8F3\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 316,
+      "col": 16,
+      "raw": "#F4EFE7",
+      "normalized": "#f4efe7",
+      "snippet": "\"sand\": \"#F4EFE7\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 317,
+      "col": 20,
+      "raw": "#2E2E2E",
+      "normalized": "#2e2e2e",
+      "snippet": "\"charcoal\": \"#2E2E2E\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 318,
+      "col": 25,
+      "raw": "#6B6B6B",
+      "normalized": "#6b6b6b",
+      "snippet": "\"charcoal-soft\": \"#6B6B6B\"",
+      "status": "approved"
+    }
+  ]
+}
