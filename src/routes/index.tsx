@@ -172,18 +172,18 @@ function HomePage() {
               {/* Primary — clear conversion anchor */}
               <Link
                 to="/builder"
-                className="group inline-flex items-center justify-center gap-3 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-white px-9 py-4 text-[12px] tracking-[0.22em] uppercase font-medium border border-[color:var(--gold)]/70 hover:border-[color:var(--gold)] transition-all duration-700 hover:-translate-y-1 hover:shadow-[0_18px_40px_-18px_rgba(41,91,97,0.6)]"
+                className="cta-primary group inline-flex items-center justify-center gap-3 px-10 py-[18px] text-[12.5px] tracking-[0.22em] uppercase font-semibold"
               >
                 Design &amp; Secure Your Experience
-                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-500" />
+                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-300" />
               </Link>
               {/* Secondary — refined outline, slightly stronger visibility */}
               <Link
                 to="/experiences"
-                className="group inline-flex items-center justify-center gap-3 bg-white/[0.04] backdrop-blur-[2px] text-white px-9 py-4 text-[12px] tracking-[0.22em] uppercase font-medium border border-[color:var(--ivory)]/55 hover:border-[color:var(--gold)] hover:bg-white/[0.10] transition-all duration-700 hover:-translate-y-1"
+                className="cta-secondary-dark group inline-flex items-center justify-center gap-3 px-10 py-[18px] text-[12.5px] tracking-[0.22em] uppercase font-semibold"
               >
                 Explore Signature Experiences
-                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-500" />
+                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-300" />
               </Link>
             </div>
 
@@ -407,7 +407,7 @@ function HomePage() {
                     <div className="mt-7 pt-5 border-t border-[color:var(--border)] flex flex-wrap gap-2">
                       <Link
                         to="/contact"
-                        className="text-[12px] uppercase tracking-[0.18em] bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] px-4 py-2.5 transition-colors font-medium"
+                        className="cta-primary text-[12px] uppercase tracking-[0.18em] px-5 py-2.5 font-semibold"
                       >
                         Book
                       </Link>
@@ -457,7 +457,7 @@ function HomePage() {
               <div className="mt-9 flex flex-wrap gap-4">
                 <Link
                   to="/builder"
-                  className="inline-flex items-center gap-2 bg-[color:var(--ivory)] text-[color:var(--teal)] hover:bg-white border border-[color:var(--gold)]/60 hover:border-[color:var(--gold)] px-8 py-4 text-[12px] uppercase tracking-[0.2em] font-medium transition-all duration-500 hover:-translate-y-0.5"
+                  className="group inline-flex items-center gap-2 bg-[color:var(--ivory)] text-[color:var(--teal)] hover:bg-white border-[1.5px] border-[color:var(--gold)]/70 hover:border-[color:var(--gold)] px-9 py-[18px] text-[12.5px] uppercase tracking-[0.2em] font-semibold transition-all duration-[260ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] hover:-translate-y-[2px] hover:shadow-[0_14px_30px_-12px_rgba(201,169,106,0.45)]"
                 >
                   Open the Studio
                   <ArrowRight size={15} />
@@ -532,7 +532,7 @@ function HomePage() {
               </div>
               <Link
                 to="/multi-day"
-                className="mt-10 inline-flex items-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] border border-[color:var(--gold)]/60 hover:border-[color:var(--gold)] px-7 py-3.5 text-[12px] uppercase tracking-[0.2em] font-medium transition-all duration-500 hover:-translate-y-0.5"
+                className="cta-primary mt-10 inline-flex items-center gap-2 px-8 py-[16px] text-[12.5px] uppercase tracking-[0.2em] font-semibold"
               >
                 Discover Multi-Day Journeys
                 <ArrowRight size={15} />
@@ -639,14 +639,14 @@ function HomePage() {
               <div className="mt-10 flex flex-wrap gap-3">
                 <Link
                   to="/corporate"
-                  className="inline-flex items-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-white border border-[color:var(--gold)]/60 hover:border-[color:var(--gold)] px-7 py-3.5 text-[12px] uppercase tracking-[0.2em] font-medium transition-all duration-500 hover:-translate-y-0.5"
+                  className="cta-primary inline-flex items-center gap-2 px-8 py-[16px] text-[12.5px] uppercase tracking-[0.2em] font-semibold"
                 >
                   For Companies
                   <ArrowRight size={15} />
                 </Link>
                 <Link
                   to="/proposals"
-                  className="inline-flex items-center gap-2 border border-[color:var(--ivory)]/50 hover:border-[color:var(--gold)] text-[color:var(--ivory)] px-7 py-3.5 text-[12px] uppercase tracking-[0.2em] font-medium transition-all duration-500 hover:-translate-y-0.5"
+                  className="cta-secondary-dark inline-flex items-center gap-2 px-8 py-[16px] text-[12.5px] uppercase tracking-[0.2em] font-semibold"
                 >
                   For Celebrations
                 </Link>
@@ -730,14 +730,14 @@ function HomePage() {
               <div className="mt-10 flex flex-wrap gap-4">
                 <Link
                   to="/builder"
-                  className="inline-flex items-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] border border-[color:var(--gold)]/60 hover:border-[color:var(--gold)] px-8 py-4 text-[12px] uppercase tracking-[0.2em] font-medium transition-all duration-500 hover:-translate-y-0.5"
+                  className="cta-primary inline-flex items-center gap-2 px-9 py-[18px] text-[12.5px] uppercase tracking-[0.22em] font-semibold"
                 >
                   Design &amp; Secure Your Experience
                   <ArrowRight size={15} />
                 </Link>
                 <Link
                   to="/contact"
-                  className="inline-flex items-center gap-2 border border-[color:var(--charcoal)]/30 hover:border-[color:var(--teal)] hover:text-[color:var(--teal)] text-[color:var(--charcoal)] px-8 py-4 text-[12px] uppercase tracking-[0.2em] font-medium transition-all duration-500 hover:-translate-y-0.5"
+                  className="cta-secondary-light inline-flex items-center gap-2 px-9 py-[18px] text-[12.5px] uppercase tracking-[0.22em] font-semibold"
                 >
                   Speak with our team
                 </Link>
