@@ -196,6 +196,34 @@
   .container-x {
     @apply mx-auto w-full max-w-[1240px] px-6 md:px-10;
   }
+  /* ─────────────────────────────────────────────────────────────
+     HERO H1 — display rhythm tuned per breakpoint.
+     Mobile: airier line-height for readability at small sizes.
+     Tablet → desktop: tracking tightens and leading compresses
+     so the display sizes feel composed and editorial.
+     ───────────────────────────────────────────────────────────── */
+  .hero-h1 {
+    letter-spacing: -0.012em;
+    line-height: 1.08;
+  }
+  @media (min-width: 640px) {
+    .hero-h1 {
+      letter-spacing: -0.016em;
+      line-height: 1.05;
+    }
+  }
+  @media (min-width: 768px) {
+    .hero-h1 {
+      letter-spacing: -0.02em;
+      line-height: 1.02;
+    }
+  }
+  @media (min-width: 1024px) {
+    .hero-h1 {
+      letter-spacing: -0.024em;
+      line-height: 0.98;
+    }
+  }
   .eyebrow {
     @apply inline-flex items-center gap-3 text-[11px] uppercase tracking-[0.28em] text-[color:var(--charcoal-soft)];
   }
