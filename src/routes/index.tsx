@@ -310,7 +310,7 @@ function HomePage() {
         <div className="container-x">
           <div className="reveal text-center max-w-2xl mx-auto mb-20">
             <span className="eyebrow">The Experiences</span>
-            <h2 className="serif text-4xl md:text-5xl mt-6 leading-[1.1]">
+            <h2 className="serif text-4xl md:text-5xl mt-6">
               From intimate moments <br />
               to <span className="italic">large private programs</span>
             </h2>
