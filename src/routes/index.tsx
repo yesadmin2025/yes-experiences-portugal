@@ -355,7 +355,7 @@ function HomePage() {
           <div className="reveal flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
             <div>
               <span className="eyebrow">Signature Experiences</span>
-              <h2 className="serif text-4xl md:text-5xl mt-6 leading-[1.1]">
+              <h2 className="serif text-4xl md:text-5xl mt-6">
                 Crafted by us, <span className="italic">customized by you</span>
               </h2>
               <p className="mt-6 max-w-lg text-[16px] text-[color:var(--charcoal-soft)] leading-[1.75]">
