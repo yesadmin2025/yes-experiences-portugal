@@ -679,7 +679,7 @@ function HomePage() {
         <div className="container-x">
           <div className="reveal text-center max-w-2xl mx-auto mb-16">
             <span className="eyebrow">Voices</span>
-            <h2 className="serif text-4xl md:text-5xl mt-6 leading-[1.1]">
+            <h2 className="serif text-4xl md:text-5xl mt-6">
               What guests <span className="italic">tell us after</span>
             </h2>
           </div>
