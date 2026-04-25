@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-04-25T03:11:53.392Z",
-  "filesScanned": 21,
+  "generatedAt": "2026-04-25T03:19:55.641Z",
+  "filesScanned": 22,
   "approvedPalette": {
     "teal": "#295B61",
     "teal-2": "#2A7C82",
@@ -80,11 +80,11 @@
     },
     {
       "file": "src/components/Navbar.tsx",
-      "line": 44,
-      "col": 38,
+      "line": 62,
+      "col": 39,
       "raw": "#2E2E2E",
       "normalized": "#2e2e2e",
-      "snippet": "Default uses charcoal (#2E2E2E, 13.58:1) instead of charcoal-soft",
+      "snippet": "Default text: charcoal (#2E2E2E, 13.58:1). Hover/active: teal (7.60:1).",
       "status": "approved"
     },
     {

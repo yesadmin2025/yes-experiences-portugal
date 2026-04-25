@@ -199,16 +199,29 @@ function HomePage() {
         </div>
       </section>
 
-      {/* 2 — TRUST BAR */}
-      <section className="bg-[color:var(--ivory)] border-b border-[color:var(--border)] py-14 md:py-16">
+      {/* 2 — TRUST BAR
+          Three platform marks aligned on a perfect 3-column grid so every
+          name sits on the same baseline and every rating sits on the same
+          line below it — no off-row "Viator" on mobile, no flex drift on
+          desktop. Gold is used sparingly: just the 5 hero stars and the
+          hairline vertical dividers between marks. Each piece is a
+          .reveal-stagger child of the same parent so the existing
+          IntersectionObserver fades them in with the project's standard
+          110ms cadence as the section scrolls into view. */}
+      <section className="bg-[color:var(--ivory)] border-b border-[color:var(--border)] py-16 md:py-20">
         <div className="container-x">
-          <div className="reveal flex flex-col items-center text-center gap-4">
-            <p className="text-[11px] uppercase tracking-[0.34em] text-[color:var(--charcoal)]">
+          {/* Intro: eyebrow → 5 gold stars + 5.0 → supporting line.
+              Each is its own .reveal-stagger so they cascade in calmly. */}
+          <div className="flex flex-col items-center text-center gap-4">
+            <p className="reveal-stagger text-[11px] uppercase tracking-[0.34em] text-[color:var(--charcoal)]">
               Trusted by international travelers
             </p>
 
-            <div className="flex items-center gap-2.5">
-              <div className="flex gap-0.5 text-[color:var(--gold)]">
+            <div className="reveal-stagger flex items-center gap-3">
+              <div
+                className="flex gap-1 text-[color:var(--gold)]"
+                aria-label="Rated 5 out of 5"
+              >
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} size={14} fill="currentColor" strokeWidth={0} />
                 ))}
@@ -218,12 +231,17 @@ function HomePage() {
               </span>
             </div>
 
-            <p className="text-[14px] text-[color:var(--charcoal-soft)] max-w-xl leading-relaxed">
+            <p className="reveal-stagger text-[14px] text-[color:var(--charcoal-soft)] max-w-xl leading-relaxed">
               600+ 5-star reviews across Google, TripAdvisor and Viator
             </p>
           </div>
 
-          <div className="mt-10 grid grid-cols-2 gap-x-6 gap-y-7 max-w-[420px] mx-auto sm:flex sm:max-w-none sm:flex-row sm:items-start sm:justify-center sm:gap-x-14 sm:gap-y-0">
+          {/* Platform marks — true 3-column grid, equal columns, items
+              centered. Hairline gold dividers between columns are the only
+              gold detail on the row. Each cell is a .reveal-stagger so the
+              three marks fade in one after another, in rhythm with the
+              intro above. */}
+          <div className="mt-12 max-w-3xl mx-auto grid grid-cols-3 items-center">
             {[
               { name: "Google", badge: "Excellent · 5.0" },
               { name: "Tripadvisor", badge: "Travelers' Choice" },
@@ -232,15 +250,17 @@ function HomePage() {
               <div
                 key={p.name}
                 className={[
-                  "flex flex-col items-center gap-1.5 reveal-stagger",
-                  i === 2 ? "col-span-2 justify-self-center" : "",
+                  "reveal-stagger flex flex-col items-center gap-2 px-3 sm:px-6",
+                  // Hairline gold divider on the left edge of cols 2 & 3
+                  i > 0
+                    ? "border-l border-[color:var(--gold)]/25"
+                    : "",
                 ].join(" ")}
               >
-                <span className="serif text-base md:text-lg text-[color:var(--charcoal)] tracking-tight whitespace-nowrap">
+                <span className="serif text-[17px] sm:text-[19px] md:text-[22px] leading-none text-[color:var(--charcoal)] tracking-tight whitespace-nowrap">
                   {p.name}
                 </span>
-                <span className="inline-flex items-center gap-1.5 text-[9px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)] border border-[color:var(--border)] px-2 py-1 whitespace-nowrap">
-                  <Star size={8} fill="currentColor" strokeWidth={0} className="text-[color:var(--gold)]" />
+                <span className="text-[9px] sm:text-[10px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)] leading-none whitespace-nowrap text-center">
                   {p.badge}
                 </span>
               </div>
