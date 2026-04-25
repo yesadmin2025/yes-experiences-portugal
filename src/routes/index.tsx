@@ -276,7 +276,7 @@ function HomePage() {
               style={{ transitionDelay: "220ms" }}
               id="trust-bar-summary"
             >
-              600+ 5-star reviews across Google, TripAdvisor and Viator
+              600+ 5-star reviews across Google, Tripadvisor, Viator, GetYourGuide and Trustpilot
             </p>
           </div>
 
