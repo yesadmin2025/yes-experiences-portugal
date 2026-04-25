@@ -511,36 +511,44 @@ function HomePage() {
       </section>
 
       {/* 7 — EDITORIAL STORYTELLING */}
-      <section className="py-28 md:py-36 bg-[color:var(--ivory)]">
+      <section className="py-32 md:py-44 bg-[color:var(--ivory)]">
         <div className="container-x">
-          <div className="reveal text-center max-w-2xl mx-auto mb-14">
+          <div className="reveal text-center max-w-2xl mx-auto mb-16 md:mb-20">
             <span className="eyebrow">From the field</span>
-            <h2 className="serif text-4xl md:text-5xl mt-5 leading-tight">
+            <h2 className="serif text-[2.5rem] md:text-5xl lg:text-[3.4rem] mt-6 leading-[1.08] text-[color:var(--charcoal)]">
               The Portugal <span className="italic">we travel ourselves</span>
             </h2>
-            <p className="mt-5 text-[color:var(--charcoal-soft)]">
+            <p className="mt-6 text-[15px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.75] max-w-xl mx-auto font-light">
               Notes from the road — the places we keep returning to, away from the crowds.
             </p>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-7">
             {editorial.map((e, i) => (
               <article
                 key={e.title}
                 className="group reveal-stagger"
-                style={{ transitionDelay: `${i * 110}ms` }}
+                style={{ transitionDelay: `${i * 130}ms` }}
               >
-                <div className="relative overflow-hidden aspect-[4/5] mb-4">
+                <div className="relative overflow-hidden aspect-[4/5] mb-5 shadow-[0_10px_30px_-22px_rgba(46,46,46,0.35)] group-hover:shadow-[0_24px_50px_-22px_rgba(41,91,97,0.28)] transition-shadow duration-700">
                   <img
                     src={e.img}
                     alt={e.title}
                     loading="lazy"
-                    className="w-full h-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-110"
+                    className="w-full h-full object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.08]"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal)]/40 to-transparent" />
-                  <div className="absolute inset-0 bg-[color:var(--teal)]/0 group-hover:bg-[color:var(--teal)]/8 transition-colors duration-700" />
+                  {/* Stronger bottom gradient — guarantees title contrast */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal)]/80 via-[color:var(--charcoal)]/15 to-transparent" />
+                  <div className="absolute inset-0 bg-[color:var(--teal)]/0 group-hover:bg-[color:var(--teal)]/10 transition-colors duration-700" />
+                  {/* On-image title — bold, readable, editorial */}
+                  <div className="absolute left-5 right-5 bottom-5">
+                    <span className="block h-px w-8 bg-[color:var(--gold)] mb-3 opacity-90" />
+                    <h3 className="serif text-[1.35rem] md:text-[1.45rem] leading-tight text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.35)]">
+                      {e.title}
+                    </h3>
+                  </div>
                 </div>
-                <h3 className="serif text-lg text-[color:var(--charcoal)] group-hover:text-[color:var(--teal)] transition-colors duration-500">{e.title}</h3>
-                <p className="mt-2 text-sm text-[color:var(--charcoal-soft)] leading-relaxed">
+                {/* Body copy below the image — charcoal on ivory for max readability */}
+                <p className="text-[15px] text-[color:var(--charcoal)] leading-[1.7] font-light max-w-[34ch]">
                   {e.line}
                 </p>
               </article>
