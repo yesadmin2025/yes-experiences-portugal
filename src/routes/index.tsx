@@ -336,7 +336,7 @@ function HomePage() {
                       Private · Tailored
                     </span>
                   </div>
-                  <h3 className="serif text-[1.5rem] text-[color:var(--charcoal)] leading-snug group-hover:text-[color:var(--teal)] transition-colors duration-500">
+                  <h3 className="serif text-[1.5rem] text-[color:var(--charcoal)] group-hover:text-[color:var(--teal)] transition-colors duration-500">
                     {c.title}
                   </h3>
                   <p className="mt-3 text-[15.5px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
