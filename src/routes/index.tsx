@@ -384,7 +384,7 @@ function HomePage() {
                     <div className="absolute inset-0 bg-[color:var(--teal)]/0 group-hover:bg-[color:var(--teal)]/8 transition-colors duration-700" />
                   </div>
                   <div className="p-7 md:p-8">
-                    <h3 className="serif text-[1.65rem] text-[color:var(--charcoal)] group-hover:text-[color:var(--teal)] transition-colors duration-500 leading-snug">
+                    <h3 className="serif text-[1.65rem] text-[color:var(--charcoal)] group-hover:text-[color:var(--teal)] transition-colors duration-500">
                       {s.title}
                     </h3>
                     <p className="mt-3 text-[15px] text-[color:var(--charcoal-soft)] leading-[1.7]">
