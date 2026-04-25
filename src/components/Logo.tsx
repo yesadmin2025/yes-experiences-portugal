@@ -45,14 +45,16 @@ export function Logo({
 }: LogoProps) {
   const s = SIZES[size];
 
-  const teal = variant === "light" ? "var(--ivory)" : "var(--teal)";
-  const charcoal = variant === "light" ? "var(--ivory)" : "var(--charcoal)";
-  const gold = variant === "light" ? "var(--gold)" : "var(--gold)";
-  const portugalColor = variant === "light" ? "var(--gold)" : "var(--gold)";
+  const isLight = variant === "light";
+  const yesColor = isLight ? "var(--ivory)" : "var(--teal)";
+  const expColor = isLight ? "var(--ivory)" : "var(--charcoal)";
+  const gold = "var(--gold)";
+  const portugalColor = gold;
+  const align = isLight ? "items-start" : "items-center";
 
   return (
     <span
-      className={`inline-flex flex-col items-center leading-none select-none ${s.gap} ${className}`}
+      className={`inline-flex flex-col ${align} leading-none select-none ${s.gap} ${className}`}
       role="img"
       aria-label="YES experiences PORTUGAL"
       translate="no"
@@ -61,9 +63,9 @@ export function Logo({
       <span
         className={`script ${s.yes} font-bold leading-none`}
         style={{
-          color: teal,
+          color: yesColor,
           letterSpacing: "-0.02em",
-          textShadow: variant === "light" ? "none" : undefined,
+          textShadow: isLight ? "none" : undefined,
         }}
         aria-hidden
       >
@@ -74,9 +76,10 @@ export function Logo({
       <span
         className={`serif ${s.exp} italic leading-none`}
         style={{
-          color: charcoal,
+          color: expColor,
           letterSpacing: "0.005em",
           marginTop: "-0.15em",
+          opacity: isLight ? 0.92 : 1,
         }}
         aria-hidden
       >
