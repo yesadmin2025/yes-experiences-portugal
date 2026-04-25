@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-25T08:04:16.611Z",
+  "generatedAt": "2026-04-25T08:31:50.168Z",
   "filesScanned": 23,
   "approvedPalette": {
     "teal": "#295B61",
@@ -18,9 +18,9 @@
     "#cccccc"
   ],
   "counts": {
-    "total": 27,
+    "total": 28,
     "approved": 17,
-    "allowlisted": 10,
+    "allowlisted": 11,
     "mismatch": 0
   },
   "findings": [
@@ -161,7 +161,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 85,
+      "line": 86,
       "col": 11,
       "raw": "#295B61",
       "normalized": "#295b61",
@@ -170,7 +170,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 86,
+      "line": 87,
       "col": 13,
       "raw": "#2A7C82",
       "normalized": "#2a7c82",
@@ -179,7 +179,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 87,
+      "line": 88,
       "col": 11,
       "raw": "#C9A96A",
       "normalized": "#c9a96a",
@@ -188,7 +188,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 88,
+      "line": 89,
       "col": 16,
       "raw": "#E1CFA6",
       "normalized": "#e1cfa6",
@@ -197,7 +197,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 89,
+      "line": 90,
       "col": 12,
       "raw": "#FAF8F3",
       "normalized": "#faf8f3",
@@ -206,7 +206,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 90,
+      "line": 91,
       "col": 11,
       "raw": "#F4EFE7",
       "normalized": "#f4efe7",
@@ -215,7 +215,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 91,
+      "line": 92,
       "col": 15,
       "raw": "#2E2E2E",
       "normalized": "#2e2e2e",
@@ -224,7 +224,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 92,
+      "line": 93,
       "col": 20,
       "raw": "#6B6B6B",
       "normalized": "#6b6b6b",
@@ -233,7 +233,16 @@
     },
     {
       "file": "src/styles.css",
-      "line": 97,
+      "line": 94,
+      "col": 20,
+      "raw": "#1F1F1F",
+      "normalized": "#1f1f1f",
+      "snippet": "--charcoal-deep: #1F1F1F;",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/styles.css",
+      "line": 99,
       "col": 11,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -242,7 +251,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 99,
+      "line": 101,
       "col": 14,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -251,7 +260,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 110,
+      "line": 112,
       "col": 29,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -260,7 +269,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 119,
+      "line": 121,
       "col": 11,
       "raw": "#1f1f1f",
       "normalized": "#1f1f1f",
