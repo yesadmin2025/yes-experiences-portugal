@@ -203,7 +203,7 @@
      so the display sizes feel composed and editorial.
      ───────────────────────────────────────────────────────────── */
   .hero-h1 {
-    letter-spacing: -0.012em;
+    letter-spacing: -0.03em;
     line-height: 1.08;
   }
   @media (min-width: 640px) {
