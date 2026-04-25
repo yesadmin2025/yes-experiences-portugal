@@ -730,7 +730,7 @@ function HomePage() {
               <div className="mt-10 flex flex-wrap gap-4">
                 <Link
                   to="/builder"
-                  className="inline-flex items-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] border border-[color:var(--gold)]/60 hover:border-[color:var(--gold)] px-8 py-4 text-[12px] uppercase tracking-[0.2em] font-medium transition-all duration-500 hover:-translate-y-0.5"
+                  className="cta-primary inline-flex items-center gap-2 px-9 py-[18px] text-[12.5px] uppercase tracking-[0.22em] font-semibold"
                 >
                   Design &amp; Secure Your Experience
                   <ArrowRight size={15} />
