@@ -1,5 +1,7 @@
 import { Link } from "@tanstack/react-router";
-import { Logo } from "./Logo";
+import logoGold1x from "@/assets/yes-experiences-portugal-logo-gold-1x.png";
+import logoGold2x from "@/assets/yes-experiences-portugal-logo-gold-2x.png";
+import logoGold3x from "@/assets/yes-experiences-portugal-logo-gold-3x.png";
 
 export function Footer() {
   return (
@@ -7,9 +9,27 @@ export function Footer() {
       <div className="container-x py-20">
         <div className="grid md:grid-cols-4 gap-12">
           <div className="md:col-span-1">
-            <div className="inline-block">
-              <Logo variant="light" layout="header" size="sm" />
-            </div>
+            {/* Gold variant of the official master logo — same letterforms,
+                proportions and gold rules as the header lockup, recolored
+                so YES reads in champagne gold and "experiences" in warm
+                ivory for the dark charcoal footer surface. */}
+            <Link
+              to="/"
+              className="inline-block rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--charcoal)]"
+              aria-label="YES experiences PORTUGAL — Home"
+            >
+              <img
+                src={logoGold1x}
+                srcSet={`${logoGold1x} 1x, ${logoGold2x} 2x, ${logoGold3x} 3x`}
+                width={157}
+                height={104}
+                alt="YES experiences PORTUGAL"
+                className="block h-[78px] md:h-[88px] w-auto select-none"
+                draggable={false}
+                loading="lazy"
+                decoding="async"
+              />
+            </Link>
             <p className="mt-7 text-sm text-[color:var(--ivory)]/70 leading-relaxed max-w-xs">
               Private, designed Portugal experiences — crafted around your story by passionate
               local experts.

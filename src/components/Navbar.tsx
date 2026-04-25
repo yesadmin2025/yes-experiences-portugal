@@ -1,9 +1,9 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Menu, X, ArrowRight } from "lucide-react";
-import logo1x from "@/assets/yes-experiences-portugal-logo-1x.png";
-import logo2x from "@/assets/yes-experiences-portugal-logo-2x.png";
-import logo3x from "@/assets/yes-experiences-portugal-logo-3x.png";
+import logo1x from "@/assets/yes-experiences-portugal-logo-teal-1x.png";
+import logo2x from "@/assets/yes-experiences-portugal-logo-teal-2x.png";
+import logo3x from "@/assets/yes-experiences-portugal-logo-teal-3x.png";
 
 // Desktop nav — full editorial set, kept compact in tracking so all 8
 // items fit gracefully on a single row at lg+ widths.
