@@ -48,8 +48,8 @@ export function Navbar() {
             <img
               src={logo1x}
               srcSet={`${logo1x} 1x, ${logo2x} 2x, ${logo3x} 3x`}
-              width={157}
-              height={104}
+              width={446}
+              height={312}
               alt="YES experiences PORTUGAL"
               className="block h-[78px] md:h-[92px] lg:h-[104px] w-auto select-none"
               draggable={false}
