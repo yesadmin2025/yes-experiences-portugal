@@ -52,7 +52,7 @@ function ExperiencesPage() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {items.map((it) => (
               <article key={it.title} className="group">
-                <div className="relative aspect-[4/5] overflow-hidden mb-5">
+                <div className="lift-layer-sm relative aspect-[4/5] overflow-hidden mb-5 shadow-[0_10px_30px_-20px_rgba(46,46,46,0.25)] group-hover:shadow-[0_28px_55px_-22px_rgba(41,91,97,0.3)]">
                   <img
                     src={it.img}
                     alt={it.title}
