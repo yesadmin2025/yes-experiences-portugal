@@ -613,19 +613,19 @@ function HomePage() {
       </section>
 
       {/* 8 — CORPORATE & CELEBRATIONS */}
-      <section className="bg-[color:var(--charcoal)] text-[color:var(--ivory)] py-28 md:py-36">
+      <section className="bg-[color:var(--charcoal-deep)] text-[color:var(--ivory)] py-32 md:py-40">
         <div className="container-x">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="reveal">
-              <span className="inline-flex items-center gap-3 text-[10px] uppercase tracking-[0.3em] text-[color:var(--ivory)]/80">
+              <span className="inline-flex items-center gap-3 text-[11px] uppercase tracking-[0.3em] text-[color:var(--ivory)]/85">
                 <span className="h-px w-8 bg-[color:var(--gold)]" />
                 Corporate &amp; Celebrations
               </span>
-              <h2 className="serif text-4xl md:text-5xl mt-6 leading-tight font-light">
+              <h2 className="serif text-4xl md:text-5xl mt-7 leading-[1.1] font-light">
                 Fully private. <br />
                 <span className="italic">Fully managed.</span>
               </h2>
-              <p className="mt-6 text-[16px] text-[color:var(--ivory)]/90 leading-[1.75] max-w-lg">
+              <p className="mt-7 text-[17px] text-[color:var(--ivory)]/95 leading-[1.75] max-w-lg">
                 From an intimate proposal to a 200-guest incentive program — designed
                 end-to-end by a single team. Quietly extraordinary, never ordinary.
               </p>
@@ -640,7 +640,7 @@ function HomePage() {
                 ].map((item) => (
                   <div
                     key={item}
-                    className="flex items-center gap-2 text-[14px] text-[color:var(--ivory)]/95"
+                    className="flex items-center gap-2.5 text-[14.5px] text-[color:var(--ivory)]/95"
                   >
                     <span className="h-1 w-1 bg-[color:var(--gold)] rounded-full" />
                     {item}
@@ -650,14 +650,14 @@ function HomePage() {
               <div className="mt-10 flex flex-wrap gap-3">
                 <Link
                   to="/corporate"
-                  className="inline-flex items-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-white border border-[color:var(--gold)]/60 hover:border-[color:var(--gold)] px-7 py-3.5 text-sm uppercase tracking-[0.18em] transition-all duration-500 hover:-translate-y-0.5"
+                  className="inline-flex items-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-white border border-[color:var(--gold)]/60 hover:border-[color:var(--gold)] px-7 py-3.5 text-[12px] uppercase tracking-[0.2em] font-medium transition-all duration-500 hover:-translate-y-0.5"
                 >
                   For Companies
                   <ArrowRight size={15} />
                 </Link>
                 <Link
                   to="/proposals"
-                  className="inline-flex items-center gap-2 border border-[color:var(--ivory)]/40 hover:border-[color:var(--ivory)] text-[color:var(--ivory)] px-7 py-3.5 text-sm uppercase tracking-[0.18em] transition-all duration-500 hover:-translate-y-0.5"
+                  className="inline-flex items-center gap-2 border border-[color:var(--ivory)]/50 hover:border-[color:var(--gold)] text-[color:var(--ivory)] px-7 py-3.5 text-[12px] uppercase tracking-[0.2em] font-medium transition-all duration-500 hover:-translate-y-0.5"
                 >
                   For Celebrations
                 </Link>
@@ -688,27 +688,27 @@ function HomePage() {
       {/* 9 — REVIEWS */}
       <section className="py-28 md:py-36 bg-[color:var(--ivory)]">
         <div className="container-x">
-          <div className="reveal text-center max-w-2xl mx-auto mb-14">
+          <div className="reveal text-center max-w-2xl mx-auto mb-16">
             <span className="eyebrow">Voices</span>
-            <h2 className="serif text-4xl md:text-5xl mt-5">
+            <h2 className="serif text-4xl md:text-5xl mt-6 leading-[1.1]">
               What guests <span className="italic">tell us after</span>
             </h2>
           </div>
           <div className="grid md:grid-cols-3 gap-7">
             {reviews.map((r, i) => (
               <figure key={i} className="group reveal-stagger h-full">
-                <div className="lift-layer-sm bg-[color:var(--card)] border border-[color:var(--border)] group-hover:border-[color:var(--teal)]/25 group-hover:shadow-[0_24px_50px_-24px_rgba(41,91,97,0.2)] p-8 h-full">
-                  <div className="flex gap-0.5 text-[color:var(--gold)] mb-4">
+                <div className="lift-layer-sm bg-[color:var(--card)] border border-[color:var(--border)] group-hover:border-[color:var(--teal)]/25 group-hover:shadow-[0_24px_50px_-24px_rgba(41,91,97,0.2)] p-8 md:p-9 h-full">
+                  <div className="flex gap-0.5 text-[color:var(--gold)] mb-5">
                     {[...Array(5)].map((_, idx) => (
-                      <Star key={idx} size={12} fill="currentColor" />
+                      <Star key={idx} size={13} fill="currentColor" />
                     ))}
                   </div>
-                  <blockquote className="serif italic text-[19px] leading-[1.6] text-[color:var(--charcoal)]">
+                  <blockquote className="serif italic text-[19px] md:text-[20px] leading-[1.6] text-[color:var(--charcoal)]">
                     "{r.quote}"
                   </blockquote>
-                  <figcaption className="mt-6 pt-4 border-t border-[color:var(--border)]">
-                    <p className="text-sm font-medium text-[color:var(--charcoal)]">{r.name}</p>
-                    <p className="text-xs text-[color:var(--charcoal-soft)] mt-0.5">
+                  <figcaption className="mt-7 pt-5 border-t border-[color:var(--border)]">
+                    <p className="text-[14px] font-medium text-[color:var(--charcoal)]">{r.name}</p>
+                    <p className="text-[12.5px] text-[color:var(--charcoal-soft)] mt-1">
                       {r.location}
                     </p>
                   </figcaption>
@@ -730,31 +730,31 @@ function HomePage() {
             <div className="absolute -top-12 right-1/4 w-40 h-40 rounded-full border border-[color:var(--gold)]/10" />
             <div className="relative max-w-2xl">
               <span className="eyebrow">Begin</span>
-              <h2 className="serif text-4xl md:text-5xl mt-5 leading-tight">
+              <h2 className="serif text-4xl md:text-5xl mt-6 leading-[1.1]">
                 Your Portugal story <br />
                 <span className="italic text-[color:var(--teal)]">starts with a single step.</span>
               </h2>
-              <p className="mt-6 text-[16px] text-[color:var(--charcoal-soft)] leading-[1.75] max-w-lg">
+              <p className="mt-7 text-[17px] text-[color:var(--charcoal-soft)] leading-[1.75] max-w-lg">
                 Open the Experience Studio and design a private journey around you —
                 or speak with a local experience designer for a fully bespoke proposal.
               </p>
-              <div className="mt-9 flex flex-wrap gap-4">
+              <div className="mt-10 flex flex-wrap gap-4">
                 <Link
                   to="/builder"
-                  className="inline-flex items-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] border border-[color:var(--gold)]/60 hover:border-[color:var(--gold)] px-8 py-4 text-sm uppercase tracking-[0.18em] transition-all duration-500 hover:-translate-y-0.5"
+                  className="inline-flex items-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] border border-[color:var(--gold)]/60 hover:border-[color:var(--gold)] px-8 py-4 text-[12px] uppercase tracking-[0.2em] font-medium transition-all duration-500 hover:-translate-y-0.5"
                 >
                   Design &amp; Secure Your Experience
                   <ArrowRight size={15} />
                 </Link>
                 <Link
                   to="/contact"
-                  className="inline-flex items-center gap-2 border border-[color:var(--charcoal)]/25 hover:border-[color:var(--teal)] hover:text-[color:var(--teal)] text-[color:var(--charcoal)] px-8 py-4 text-sm uppercase tracking-[0.18em] transition-all duration-500 hover:-translate-y-0.5"
+                  className="inline-flex items-center gap-2 border border-[color:var(--charcoal)]/30 hover:border-[color:var(--teal)] hover:text-[color:var(--teal)] text-[color:var(--charcoal)] px-8 py-4 text-[12px] uppercase tracking-[0.2em] font-medium transition-all duration-500 hover:-translate-y-0.5"
                 >
                   Speak with our team
                 </Link>
               </div>
 
-              <div className="mt-10 flex flex-wrap gap-x-8 gap-y-3 text-xs uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)]">
+              <div className="mt-11 flex flex-wrap gap-x-8 gap-y-3 text-[12px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)]">
                 <span className="inline-flex items-center gap-2">
                   <Compass size={13} className="text-[color:var(--gold)]" /> Local hands
                 </span>
