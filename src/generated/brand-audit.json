@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-25T01:12:56.692Z",
+  "generatedAt": "2026-04-25T01:14:44.829Z",
   "filesScanned": 20,
   "approvedPalette": {
     "teal": "#295B61",
@@ -18,9 +18,9 @@
     "#cccccc"
   ],
   "counts": {
-    "total": 76,
-    "approved": 56,
-    "allowlisted": 20,
+    "total": 49,
+    "approved": 34,
+    "allowlisted": 15,
     "mismatch": 0
   },
   "findings": [
@@ -35,7 +35,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 25,
+      "line": 26,
       "col": 10,
       "raw": "#295B61",
       "normalized": "#295b61",
@@ -44,7 +44,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 26,
+      "line": 27,
       "col": 14,
       "raw": "#2A7C82",
       "normalized": "#2a7c82",
@@ -53,7 +53,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 27,
+      "line": 28,
       "col": 10,
       "raw": "#C9A96A",
       "normalized": "#c9a96a",
@@ -62,7 +62,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 28,
+      "line": 29,
       "col": 17,
       "raw": "#E1CFA6",
       "normalized": "#e1cfa6",
@@ -71,7 +71,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 29,
+      "line": 30,
       "col": 11,
       "raw": "#FAF8F3",
       "normalized": "#faf8f3",
@@ -80,7 +80,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 30,
+      "line": 31,
       "col": 10,
       "raw": "#F4EFE7",
       "normalized": "#f4efe7",
@@ -89,7 +89,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 31,
+      "line": 32,
       "col": 14,
       "raw": "#2E2E2E",
       "normalized": "#2e2e2e",
@@ -98,7 +98,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 32,
+      "line": 33,
       "col": 21,
       "raw": "#6B6B6B",
       "normalized": "#6b6b6b",
@@ -107,7 +107,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 42,
+      "line": 43,
       "col": 6,
       "raw": "#000",
       "normalized": "#000000",
@@ -116,7 +116,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 43,
+      "line": 44,
       "col": 6,
       "raw": "#000000",
       "normalized": "#000000",
@@ -125,7 +125,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 44,
+      "line": 45,
       "col": 6,
       "raw": "#fff",
       "normalized": "#ffffff",
@@ -134,7 +134,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 45,
+      "line": 46,
       "col": 6,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -143,7 +143,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 46,
+      "line": 47,
       "col": 6,
       "raw": "#1f1f1f",
       "normalized": "#1f1f1f",
@@ -152,254 +152,11 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 47,
+      "line": 48,
       "col": 6,
       "raw": "#ccc",
       "normalized": "#cccccc",
       "snippet": "\"#ccc\", // recharts internal selectors only",
-      "status": "allowlisted"
-    },
-    {
-      "file": "src/routes/brand-qa.tsx",
-      "line": 84,
-      "col": 45,
-      "raw": "#295B61",
-      "normalized": "#295b61",
-      "snippet": "{ where: \"styles.css :root --teal\", hex: \"#295B61\" },",
-      "status": "approved"
-    },
-    {
-      "file": "src/routes/brand-qa.tsx",
-      "line": 85,
-      "col": 47,
-      "raw": "#2A7C82",
-      "normalized": "#2a7c82",
-      "snippet": "{ where: \"styles.css :root --teal-2\", hex: \"#2A7C82\" },",
-      "status": "approved"
-    },
-    {
-      "file": "src/routes/brand-qa.tsx",
-      "line": 86,
-      "col": 45,
-      "raw": "#C9A96A",
-      "normalized": "#c9a96a",
-      "snippet": "{ where: \"styles.css :root --gold\", hex: \"#C9A96A\" },",
-      "status": "approved"
-    },
-    {
-      "file": "src/routes/brand-qa.tsx",
-      "line": 87,
-      "col": 50,
-      "raw": "#E1CFA6",
-      "normalized": "#e1cfa6",
-      "snippet": "{ where: \"styles.css :root --gold-soft\", hex: \"#E1CFA6\" },",
-      "status": "approved"
-    },
-    {
-      "file": "src/routes/brand-qa.tsx",
-      "line": 88,
-      "col": 46,
-      "raw": "#FAF8F3",
-      "normalized": "#faf8f3",
-      "snippet": "{ where: \"styles.css :root --ivory\", hex: \"#FAF8F3\" },",
-      "status": "approved"
-    },
-    {
-      "file": "src/routes/brand-qa.tsx",
-      "line": 89,
-      "col": 45,
-      "raw": "#F4EFE7",
-      "normalized": "#f4efe7",
-      "snippet": "{ where: \"styles.css :root --sand\", hex: \"#F4EFE7\" },",
-      "status": "approved"
-    },
-    {
-      "file": "src/routes/brand-qa.tsx",
-      "line": 90,
-      "col": 49,
-      "raw": "#2E2E2E",
-      "normalized": "#2e2e2e",
-      "snippet": "{ where: \"styles.css :root --charcoal\", hex: \"#2E2E2E\" },",
-      "status": "approved"
-    },
-    {
-      "file": "src/routes/brand-qa.tsx",
-      "line": 91,
-      "col": 54,
-      "raw": "#6B6B6B",
-      "normalized": "#6b6b6b",
-      "snippet": "{ where: \"styles.css :root --charcoal-soft\", hex: \"#6B6B6B\" },",
-      "status": "approved"
-    },
-    {
-      "file": "src/routes/brand-qa.tsx",
-      "line": 93,
-      "col": 45,
-      "raw": "#ffffff",
-      "normalized": "#ffffff",
-      "snippet": "{ where: \"styles.css :root --card\", hex: \"#ffffff\" },",
-      "status": "allowlisted"
-    },
-    {
-      "file": "src/routes/brand-qa.tsx",
-      "line": 94,
-      "col": 48,
-      "raw": "#ffffff",
-      "normalized": "#ffffff",
-      "snippet": "{ where: \"styles.css :root --popover\", hex: \"#ffffff\" },",
-      "status": "allowlisted"
-    },
-    {
-      "file": "src/routes/brand-qa.tsx",
-      "line": 95,
-      "col": 63,
-      "raw": "#ffffff",
-      "normalized": "#ffffff",
-      "snippet": "{ where: \"styles.css :root --destructive-foreground\", hex: \"#ffffff\" },",
-      "status": "allowlisted"
-    },
-    {
-      "file": "src/routes/brand-qa.tsx",
-      "line": 96,
-      "col": 45,
-      "raw": "#1f1f1f",
-      "normalized": "#1f1f1f",
-      "snippet": "{ where: \"styles.css .dark --card\", hex: \"#1f1f1f\" },",
-      "status": "allowlisted"
-    },
-    {
-      "file": "src/routes/brand-qa.tsx",
-      "line": 98,
-      "col": 58,
-      "raw": "#295B61",
-      "normalized": "#295b61",
-      "snippet": "{ where: \"tailwind.config.lov.json colors.teal\", hex: \"#295B61\" },",
-      "status": "approved"
-    },
-    {
-      "file": "src/routes/brand-qa.tsx",
-      "line": 99,
-      "col": 60,
-      "raw": "#2A7C82",
-      "normalized": "#2a7c82",
-      "snippet": "{ where: \"tailwind.config.lov.json colors.teal-2\", hex: \"#2A7C82\" },",
-      "status": "approved"
-    },
-    {
-      "file": "src/routes/brand-qa.tsx",
-      "line": 100,
-      "col": 58,
-      "raw": "#C9A96A",
-      "normalized": "#c9a96a",
-      "snippet": "{ where: \"tailwind.config.lov.json colors.gold\", hex: \"#C9A96A\" },",
-      "status": "approved"
-    },
-    {
-      "file": "src/routes/brand-qa.tsx",
-      "line": 101,
-      "col": 63,
-      "raw": "#E1CFA6",
-      "normalized": "#e1cfa6",
-      "snippet": "{ where: \"tailwind.config.lov.json colors.gold-soft\", hex: \"#E1CFA6\" },",
-      "status": "approved"
-    },
-    {
-      "file": "src/routes/brand-qa.tsx",
-      "line": 102,
-      "col": 59,
-      "raw": "#FAF8F3",
-      "normalized": "#faf8f3",
-      "snippet": "{ where: \"tailwind.config.lov.json colors.ivory\", hex: \"#FAF8F3\" },",
-      "status": "approved"
-    },
-    {
-      "file": "src/routes/brand-qa.tsx",
-      "line": 103,
-      "col": 58,
-      "raw": "#F4EFE7",
-      "normalized": "#f4efe7",
-      "snippet": "{ where: \"tailwind.config.lov.json colors.sand\", hex: \"#F4EFE7\" },",
-      "status": "approved"
-    },
-    {
-      "file": "src/routes/brand-qa.tsx",
-      "line": 104,
-      "col": 62,
-      "raw": "#2E2E2E",
-      "normalized": "#2e2e2e",
-      "snippet": "{ where: \"tailwind.config.lov.json colors.charcoal\", hex: \"#2E2E2E\" },",
-      "status": "approved"
-    },
-    {
-      "file": "src/routes/brand-qa.tsx",
-      "line": 105,
-      "col": 67,
-      "raw": "#6B6B6B",
-      "normalized": "#6b6b6b",
-      "snippet": "{ where: \"tailwind.config.lov.json colors.charcoal-soft\", hex: \"#6B6B6B\" },",
-      "status": "approved"
-    },
-    {
-      "file": "src/routes/brand-qa.tsx",
-      "line": 106,
-      "col": 64,
-      "raw": "#2E2E2E",
-      "normalized": "#2e2e2e",
-      "snippet": "{ where: \"tailwind.config.lov.json colors.foreground\", hex: \"#2E2E2E\" },",
-      "status": "approved"
-    },
-    {
-      "file": "src/routes/brand-qa.tsx",
-      "line": 107,
-      "col": 72,
-      "raw": "#FAF8F3",
-      "normalized": "#faf8f3",
-      "snippet": "{ where: \"tailwind.config.lov.json colors.primary-foreground\", hex: \"#FAF8F3\" },",
-      "status": "approved"
-    },
-    {
-      "file": "src/routes/brand-qa.tsx",
-      "line": 108,
-      "col": 63,
-      "raw": "#F4EFE7",
-      "normalized": "#f4efe7",
-      "snippet": "{ where: \"tailwind.config.lov.json colors.secondary\", hex: \"#F4EFE7\" },",
-      "status": "approved"
-    },
-    {
-      "file": "src/routes/brand-qa.tsx",
-      "line": 109,
-      "col": 59,
-      "raw": "#F4EFE7",
-      "normalized": "#f4efe7",
-      "snippet": "{ where: \"tailwind.config.lov.json colors.muted\", hex: \"#F4EFE7\" },",
-      "status": "approved"
-    },
-    {
-      "file": "src/routes/brand-qa.tsx",
-      "line": 110,
-      "col": 70,
-      "raw": "#6B6B6B",
-      "normalized": "#6b6b6b",
-      "snippet": "{ where: \"tailwind.config.lov.json colors.muted-foreground\", hex: \"#6B6B6B\" },",
-      "status": "approved"
-    },
-    {
-      "file": "src/routes/brand-qa.tsx",
-      "line": 111,
-      "col": 60,
-      "raw": "#C9A96A",
-      "normalized": "#c9a96a",
-      "snippet": "{ where: \"tailwind.config.lov.json colors.accent\", hex: \"#C9A96A\" },",
-      "status": "approved"
-    },
-    {
-      "file": "src/routes/brand-qa.tsx",
-      "line": 281,
-      "col": 28,
-      "raw": "#1f1f1f",
-      "normalized": "#1f1f1f",
-      "snippet": "surface (<code>#1f1f1f</code>).",
       "status": "allowlisted"
     },
     {
