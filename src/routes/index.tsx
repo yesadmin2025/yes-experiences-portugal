@@ -144,57 +144,59 @@ function HomePage() {
           width={1920}
           height={1080}
         />
-        {/* Dark gradient + radial vignette — keeps copy readable without flattening the image. */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal)]/90 via-[color:var(--charcoal)]/55 to-[color:var(--charcoal)]/55 md:from-[color:var(--charcoal)]/88 md:via-[color:var(--charcoal)]/45 md:to-[color:var(--charcoal)]/50" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_65%,transparent_35%,rgba(0,0,0,0.5)_100%)]" />
+        {/* Dark gradient + radial vignette — keeps copy effortlessly readable
+            without flattening the image. Slightly deeper at the base so the
+            CTAs and microcopy never compete with the photograph. */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/95 via-[color:var(--charcoal)]/60 to-[color:var(--charcoal)]/55 md:from-[color:var(--charcoal-deep)]/92 md:via-[color:var(--charcoal)]/50 md:to-[color:var(--charcoal)]/45" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_65%,transparent_30%,rgba(0,0,0,0.55)_100%)]" />
 
-        <div className="container-x relative z-10 pb-20 md:pb-32 pt-32 md:pt-40">
+        <div className="container-x relative z-10 pb-24 md:pb-36 pt-32 md:pt-40">
           <div className="max-w-3xl text-[color:var(--ivory)]">
-            <span className="inline-flex items-center gap-3 text-[10px] uppercase tracking-[0.34em] text-[color:var(--gold-soft)] opacity-0 animate-[heroFade_1.1s_ease-out_0.3s_forwards]">
+            <span className="inline-flex items-center gap-3 text-[11px] uppercase tracking-[0.34em] text-[color:var(--gold-soft)] opacity-0 animate-[heroFade_1.1s_ease-out_0.3s_forwards]">
               <span className="h-px w-8 bg-[color:var(--gold)]" />
               Private · By local hands · Designed around you
             </span>
 
-            <h1 className="serif mt-6 md:mt-8 text-[2.7rem] sm:text-5xl md:text-7xl lg:text-[5.4rem] leading-[1.04] font-light tracking-[-0.015em] opacity-0 animate-[heroFade_1.4s_ease-out_0.6s_forwards]">
+            <h1 className="serif mt-7 md:mt-9 text-[2.7rem] sm:text-5xl md:text-7xl lg:text-[5.4rem] leading-[1.04] font-light tracking-[-0.015em] opacity-0 animate-[heroFade_1.4s_ease-out_0.6s_forwards]">
               Portugal,
               <br />
               <span className="italic text-[color:var(--gold-soft)]">Designed Around You</span>
             </h1>
 
-            <p className="mt-6 md:mt-8 text-[17px] md:text-xl text-[color:var(--ivory)]/95 max-w-xl leading-[1.7] font-light opacity-0 animate-[heroFade_1.4s_ease-out_0.95s_forwards]">
-              Private experiences crafted through local knowledge, hidden gems and authentic
-              moments — like exploring Portugal with a local friend.
+            <p className="mt-7 md:mt-9 text-[18px] md:text-[22px] text-[color:var(--ivory)] max-w-xl leading-[1.7] font-light opacity-0 animate-[heroFade_1.4s_ease-out_0.95s_forwards]">
+              Private experiences shaped by local knowledge, hidden places and quiet moments —
+              like exploring Portugal with a friend who lives here.
             </p>
 
-            <div className="mt-9 md:mt-11 flex flex-col sm:flex-row flex-wrap gap-4 sm:gap-5 opacity-0 animate-[heroFade_1.4s_ease-out_1.25s_forwards]">
+            <div className="mt-10 md:mt-12 flex flex-col sm:flex-row flex-wrap gap-4 sm:gap-5 opacity-0 animate-[heroFade_1.4s_ease-out_1.25s_forwards]">
               {/* Primary — clear conversion anchor */}
               <Link
                 to="/builder"
-                className="group inline-flex items-center justify-center gap-3 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-white px-9 py-4 text-[11px] tracking-[0.22em] uppercase border border-[color:var(--gold)]/70 hover:border-[color:var(--gold)] transition-all duration-700 hover:-translate-y-1 hover:shadow-[0_18px_40px_-18px_rgba(41,91,97,0.55)]"
+                className="group inline-flex items-center justify-center gap-3 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-white px-9 py-4 text-[12px] tracking-[0.22em] uppercase font-medium border border-[color:var(--gold)]/70 hover:border-[color:var(--gold)] transition-all duration-700 hover:-translate-y-1 hover:shadow-[0_18px_40px_-18px_rgba(41,91,97,0.6)]"
               >
                 Design &amp; Secure Your Experience
                 <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-500" />
               </Link>
-              {/* Secondary — discoverable, lower-commitment path */}
+              {/* Secondary — refined outline, slightly stronger visibility */}
               <Link
                 to="/experiences"
-                className="group inline-flex items-center justify-center gap-3 bg-transparent text-white px-9 py-4 text-[11px] tracking-[0.22em] uppercase border border-[color:var(--gold)]/70 hover:border-[color:var(--gold)] hover:bg-white/[0.06] transition-all duration-700 hover:-translate-y-1"
+                className="group inline-flex items-center justify-center gap-3 bg-white/[0.04] backdrop-blur-[2px] text-white px-9 py-4 text-[12px] tracking-[0.22em] uppercase font-medium border border-[color:var(--ivory)]/55 hover:border-[color:var(--gold)] hover:bg-white/[0.10] transition-all duration-700 hover:-translate-y-1"
               >
                 Explore Signature Experiences
                 <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-500" />
               </Link>
             </div>
 
-            {/* Microcopy — instant, direct, simple */}
-            <div className="mt-6 md:mt-7 max-w-xl opacity-0 animate-[heroFade_1.4s_ease-out_1.5s_forwards]">
-              <p className="text-[13px] md:text-[14px] text-[color:var(--ivory)]/95 leading-relaxed font-light tracking-wide">
-                Instant confirmation. No waiting. No back-and-forth emails.
+            {/* Microcopy — friction-removing, calm, trust-building */}
+            <div className="mt-7 md:mt-8 max-w-xl opacity-0 animate-[heroFade_1.4s_ease-out_1.5s_forwards]">
+              <p className="text-[14px] md:text-[15px] text-[color:var(--ivory)]/95 leading-[1.7] font-light tracking-wide">
+                Instant confirmation · Designed around you · No back-and-forth
               </p>
             </div>
 
-            <p className="mt-8 md:mt-10 text-[10px] uppercase tracking-[0.32em] text-[color:var(--gold-soft)]/95 flex items-center gap-3 opacity-0 animate-[heroFade_1.4s_ease-out_1.75s_forwards]">
+            <p className="mt-9 md:mt-11 text-[10.5px] uppercase tracking-[0.32em] text-[color:var(--gold-soft)] flex items-center gap-3 opacity-0 animate-[heroFade_1.4s_ease-out_1.75s_forwards]">
               <span className="h-px w-6 bg-[color:var(--gold)]" />
-              From one guest to large private groups
+              From a single guest to large private groups
             </p>
           </div>
         </div>
