@@ -237,23 +237,29 @@ function HomePage() {
           </div>
 
           {/* Badge grid — flat parent of only .reveal-stagger children.
-              Identical wrapper pattern to the categories / signatures /
-              editorial / reviews grids, so the observer's sibling-index
-              cadence applies cleanly. */}
-          <div className="mt-8 flex flex-wrap items-start justify-center gap-x-10 sm:gap-x-14 gap-y-5">
+              Mobile: 2-column grid → balanced 2-row layout (Google +
+                Tripadvisor on row 1, Viator centered on row 2 via col-span-2).
+              ≥sm: flex row, all three badges aligned on a single row.
+              Wrapper structure (one direct parent → 3 .reveal-stagger
+              siblings) is unchanged, so the observer cadence holds. */}
+          <div className="mt-10 grid grid-cols-2 gap-x-6 gap-y-7 max-w-[420px] mx-auto sm:flex sm:max-w-none sm:flex-row sm:items-start sm:justify-center sm:gap-x-14 sm:gap-y-0">
             {[
               { name: "Google", badge: "Excellent · 5.0" },
               { name: "Tripadvisor", badge: "Travelers' Choice" },
               { name: "Viator", badge: "Top-rated Operator" },
-            ].map((p) => (
+            ].map((p, i) => (
               <div
                 key={p.name}
-                className="flex flex-col items-center gap-1.5 reveal-stagger"
+                className={[
+                  "flex flex-col items-center gap-1.5 reveal-stagger",
+                  // Last badge centers itself across both columns on mobile
+                  i === 2 ? "col-span-2 justify-self-center" : "",
+                ].join(" ")}
               >
-                <span className="serif text-base md:text-lg text-[color:var(--charcoal)] tracking-tight">
+                <span className="serif text-base md:text-lg text-[color:var(--charcoal)] tracking-tight whitespace-nowrap">
                   {p.name}
                 </span>
-                <span className="inline-flex items-center gap-1.5 text-[9px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)] border border-[color:var(--border)] px-2 py-1">
+                <span className="inline-flex items-center gap-1.5 text-[9px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)] border border-[color:var(--border)] px-2 py-1 whitespace-nowrap">
                   <Star size={8} fill="currentColor" strokeWidth={0} className="text-[color:var(--gold)]" />
                   {p.badge}
                 </span>
