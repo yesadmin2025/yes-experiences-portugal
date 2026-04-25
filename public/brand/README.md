@@ -1,0 +1,84 @@
+# YES experiences PORTUGAL — Brand Asset Kit
+
+This folder contains the official redistributable logo files for
+**YES experiences PORTUGAL**, organized by format and variant.
+
+## Folder layout
+
+```
+public/brand/
+├── README.md          ← this file
+├── manifest.json      ← machine-readable index of every variant
+├── svg/               ← vector master files (recommended for web + print)
+├── png/               ← rasterized exports at @1x / @2x / @3x
+└── pdf/               ← single-page print-ready PDFs
+```
+
+## Variants (6)
+
+Every variant is delivered with a **fully transparent background**, so the
+mark composites onto any surface cleanly.
+
+| File slug                                       | Lockup     | Color         | Recommended use                            |
+| ----------------------------------------------- | ---------- | ------------- | ------------------------------------------ |
+| `yes-experiences-portugal-centered-full`        | Centered   | Full color    | Default. Light backgrounds (ivory, white). |
+| `yes-experiences-portugal-centered-mono-dark`   | Centered   | Mono charcoal | Single-color print, light backgrounds.     |
+| `yes-experiences-portugal-centered-mono-light`  | Centered   | Mono ivory    | Reversed, dark backgrounds (charcoal).     |
+| `yes-experiences-portugal-horizontal-full`      | Horizontal | Full color    | Headers, signage, wide layouts.            |
+| `yes-experiences-portugal-horizontal-mono-dark` | Horizontal | Mono charcoal | Single-color print, light backgrounds.     |
+| `yes-experiences-portugal-horizontal-mono-light`| Horizontal | Mono ivory    | Reversed, dark backgrounds.                |
+
+### Color tokens used
+
+| Role         | Hex       | CSS token         |
+| ------------ | --------- | ----------------- |
+| YES (full)   | `#295B61` | `--teal`          |
+| experiences  | `#2E2E2E` | `--charcoal`      |
+| Accent rules / PORTUGAL | `#C9A96A` | `--gold` |
+| Mono dark    | `#2E2E2E` | `--charcoal`      |
+| Mono light   | `#FAF8F3` | `--ivory`         |
+
+The teal matches the hero-CTA fill on the live site exactly.
+
+## Format guidance
+
+- **SVG** — use whenever possible. Infinitely scalable, smallest file size,
+  text outlines are embedded as paths so no font is required to render.
+- **PNG @1x/2x/3x** — for surfaces that don't accept SVG (some email clients,
+  legacy CMSes, social avatars). Pick the highest-resolution file the target
+  surface supports.
+- **PDF** — for print collateral, decks, signage, and hand-off to printers.
+  Vector content preserved.
+
+## Honest note on EPS / .ai
+
+EPS and Adobe Illustrator (`.ai`) files are intentionally **not** included.
+A meaningful `.ai` file requires Adobe Illustrator to author, and shipping a
+"PDF-shell renamed to .ai" would be misleading. The included PDF files are
+fully vector and open editably in Illustrator, Affinity Designer, Inkscape
+and Sketch — for the vast majority of print workflows they substitute for
+EPS/AI directly. If your printer specifically requires `.eps`, open the PDF
+in Illustrator and re-save as `.eps`.
+
+## Honest note on typographic fidelity
+
+The vector master is **typographically built** from the brand's chosen
+display fonts (Kaushan Script for "YES", Cormorant Garamond Italic for
+"experiences", Inter Medium for "PORTUGAL") in the brand-token colors. This
+matches the codebase's design system and produces a clean, scalable, fully
+editable vector master.
+
+It is **not** a 1:1 trace of any prior raster artwork. If your brand
+guidelines require a custom-lettered "YES" brushstroke to be preserved
+verbatim, supply the original vector source from your designer and the
+build pipeline at `/tmp/brand-build/build.py` can be re-run against it.
+
+## Regenerating
+
+The build pipeline lives outside this folder (it's a one-off script, not a
+runtime dependency of the site). If you need to regenerate or add new
+variants, the source is `/tmp/brand-build/build.py` + `render.py`.
+
+---
+
+© YES experiences Portugal. All rights reserved.
