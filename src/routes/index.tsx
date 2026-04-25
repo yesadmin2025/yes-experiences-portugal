@@ -532,7 +532,7 @@ function HomePage() {
               </div>
               <Link
                 to="/multi-day"
-                className="mt-10 inline-flex items-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] border border-[color:var(--gold)]/60 hover:border-[color:var(--gold)] px-7 py-3.5 text-[12px] uppercase tracking-[0.2em] font-medium transition-all duration-500 hover:-translate-y-0.5"
+                className="cta-primary mt-10 inline-flex items-center gap-2 px-8 py-[16px] text-[12.5px] uppercase tracking-[0.2em] font-semibold"
               >
                 Discover Multi-Day Journeys
                 <ArrowRight size={15} />
