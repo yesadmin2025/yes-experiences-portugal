@@ -282,26 +282,26 @@ function HomePage() {
               <Link
                 key={c.title}
                 to={c.to}
-                className="group block reveal-stagger transition-transform duration-500 hover:-translate-y-1.5"
-                style={{ transitionDelay: `${i * 110}ms` }}
+                className="group block reveal-stagger transition-transform duration-700 hover:-translate-y-2"
+                style={{ transitionDelay: `${i * 130}ms` }}
               >
-                <div className="relative overflow-hidden aspect-[3/4] mb-5 shadow-[0_10px_30px_-20px_rgba(46,46,46,0.25)] group-hover:shadow-[0_24px_50px_-22px_rgba(41,91,97,0.3)] transition-shadow duration-700">
+                <div className="relative overflow-hidden aspect-[3/4] mb-5 shadow-[0_10px_30px_-20px_rgba(46,46,46,0.28)] group-hover:shadow-[0_28px_55px_-22px_rgba(41,91,97,0.32)] transition-shadow duration-700">
                   <img
                     src={c.img}
                     alt={c.title}
                     loading="lazy"
-                    className="w-full h-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-110"
+                    className="w-full h-full object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.08]"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal)]/60 via-transparent to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal)]/70 via-[color:var(--charcoal)]/10 to-transparent" />
                   <div className="absolute inset-0 bg-[color:var(--teal)]/0 group-hover:bg-[color:var(--teal)]/10 transition-colors duration-700" />
-                  <span className="absolute top-4 left-4 text-[10px] uppercase tracking-[0.25em] text-white/85">
+                  <span className="absolute top-4 left-4 text-[10px] uppercase tracking-[0.25em] text-white/95 drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)]">
                     Private · Tailored
                   </span>
                 </div>
-                <h3 className="serif text-xl text-[color:var(--charcoal)] group-hover:text-[color:var(--teal)] transition-colors duration-500">
+                <h3 className="serif text-[1.35rem] text-[color:var(--charcoal)] leading-snug group-hover:text-[color:var(--teal)] transition-colors duration-500">
                   {c.title}
                 </h3>
-                <p className="mt-2 text-sm text-[color:var(--charcoal-soft)] leading-relaxed">
+                <p className="mt-2.5 text-[14.5px] text-[color:var(--charcoal-soft)] leading-[1.65] font-light">
                   {c.line}
                 </p>
               </Link>
