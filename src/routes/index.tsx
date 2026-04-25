@@ -458,6 +458,7 @@ function HomePage() {
                     </Link>
                   </div>
                 </div>
+                </div>
               </article>
             ))}
           </div>
