@@ -71,6 +71,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
       <Navbar />
       <main className="flex-1">{children}</main>
       <Footer />
+      <FloatingActions />
     </div>
   );
 }
