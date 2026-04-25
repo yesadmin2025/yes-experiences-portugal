@@ -46,19 +46,19 @@ const STACK_SIZES = {
 /** Header-tuned: tighter YES/experiences, larger centered PORTUGAL. */
 const HEADER_SIZES = {
   sm: {
-    yes: "text-[34px] md:text-[40px] lg:text-[44px]",
-    exp: "text-[12px] md:text-[14px] lg:text-[15px]",
-    portugal: "text-[12px] md:text-[13px] lg:text-[14px]",
+    yes: "text-[42px] md:text-[50px] lg:text-[56px]",
+    exp: "text-[14px] md:text-[16px] lg:text-[18px]",
+    portugal: "text-[13px] md:text-[15px] lg:text-[16px]",
   },
   md: {
-    yes: "text-[44px] md:text-[52px] lg:text-[58px]",
-    exp: "text-[15px] md:text-[17px] lg:text-[18px]",
-    portugal: "text-[13px] md:text-[14px] lg:text-[15px]",
+    yes: "text-[52px] md:text-[60px] lg:text-[66px]",
+    exp: "text-[17px] md:text-[19px] lg:text-[20px]",
+    portugal: "text-[14px] md:text-[16px] lg:text-[17px]",
   },
   lg: {
-    yes: "text-[56px] md:text-[68px] lg:text-[76px]",
-    exp: "text-[18px] md:text-[20px] lg:text-[22px]",
-    portugal: "text-[14px] md:text-[15px] lg:text-[16px]",
+    yes: "text-[64px] md:text-[76px] lg:text-[84px]",
+    exp: "text-[20px] md:text-[22px] lg:text-[24px]",
+    portugal: "text-[15px] md:text-[17px] lg:text-[18px]",
   },
 };
 

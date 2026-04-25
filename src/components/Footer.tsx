@@ -8,9 +8,9 @@ export function Footer() {
         <div className="grid md:grid-cols-4 gap-12">
           <div className="md:col-span-1">
             <div className="inline-block">
-              <Logo variant="light" size="sm" />
+              <Logo variant="light" layout="header" size="sm" />
             </div>
-            <p className="mt-6 text-sm text-[color:var(--ivory)]/70 leading-relaxed max-w-xs">
+            <p className="mt-7 text-sm text-[color:var(--ivory)]/70 leading-relaxed max-w-xs">
               Private, designed Portugal experiences — crafted around your story by passionate
               local experts.
             </p>
