@@ -16,6 +16,7 @@ import { Route as DayToursRouteImport } from './routes/day-tours'
 import { Route as CorporateRouteImport } from './routes/corporate'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as BuilderRouteImport } from './routes/builder'
+import { Route as BrandQaRouteImport } from './routes/brand-qa'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -54,6 +55,11 @@ const BuilderRoute = BuilderRouteImport.update({
   path: '/builder',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BrandQaRoute = BrandQaRouteImport.update({
+  id: '/brand-qa',
+  path: '/brand-qa',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
@@ -68,6 +74,7 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/brand-qa': typeof BrandQaRoute
   '/builder': typeof BuilderRoute
   '/contact': typeof ContactRoute
   '/corporate': typeof CorporateRoute
@@ -79,6 +86,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/brand-qa': typeof BrandQaRoute
   '/builder': typeof BuilderRoute
   '/contact': typeof ContactRoute
   '/corporate': typeof CorporateRoute
@@ -91,6 +99,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/brand-qa': typeof BrandQaRoute
   '/builder': typeof BuilderRoute
   '/contact': typeof ContactRoute
   '/corporate': typeof CorporateRoute
@@ -104,6 +113,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/brand-qa'
     | '/builder'
     | '/contact'
     | '/corporate'
@@ -115,6 +125,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/brand-qa'
     | '/builder'
     | '/contact'
     | '/corporate'
@@ -126,6 +137,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/about'
+    | '/brand-qa'
     | '/builder'
     | '/contact'
     | '/corporate'
@@ -138,6 +150,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  BrandQaRoute: typeof BrandQaRoute
   BuilderRoute: typeof BuilderRoute
   ContactRoute: typeof ContactRoute
   CorporateRoute: typeof CorporateRoute
@@ -198,6 +211,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BuilderRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/brand-qa': {
+      id: '/brand-qa'
+      path: '/brand-qa'
+      fullPath: '/brand-qa'
+      preLoaderRoute: typeof BrandQaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -218,6 +238,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  BrandQaRoute: BrandQaRoute,
   BuilderRoute: BuilderRoute,
   ContactRoute: ContactRoute,
   CorporateRoute: CorporateRoute,
