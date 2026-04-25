@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-04-25T01:57:54.606Z",
+  "generatedAt": "2026-04-25T02:05:00.885Z",
   "filesScanned": 22,
   "approvedPalette": {
-    "teal": "#2A5E63",
+    "teal": "#2A5E61",
     "teal-2": "#2A7C82",
     "gold": "#C9A96A",
     "gold-soft": "#E1CFA6",
@@ -28,9 +28,9 @@
       "file": "src/components/Logo.tsx",
       "line": 20,
       "col": 10,
-      "raw": "#2A5E63",
-      "normalized": "#2a5e63",
-      "snippet": "* (teal #2A5E63, charcoal #2E2E2E, gold #C9A96A, ivory #FAF8F3).",
+      "raw": "#2A5E61",
+      "normalized": "#2a5e61",
+      "snippet": "* (teal #2A5E61, charcoal #2E2E2E, gold #C9A96A, ivory #FAF8F3).",
       "status": "approved"
     },
     {
@@ -39,7 +39,7 @@
       "col": 28,
       "raw": "#2E2E2E",
       "normalized": "#2e2e2e",
-      "snippet": "* (teal #2A5E63, charcoal #2E2E2E, gold #C9A96A, ivory #FAF8F3).",
+      "snippet": "* (teal #2A5E61, charcoal #2E2E2E, gold #C9A96A, ivory #FAF8F3).",
       "status": "approved"
     },
     {
@@ -48,7 +48,7 @@
       "col": 42,
       "raw": "#C9A96A",
       "normalized": "#c9a96a",
-      "snippet": "* (teal #2A5E63, charcoal #2E2E2E, gold #C9A96A, ivory #FAF8F3).",
+      "snippet": "* (teal #2A5E61, charcoal #2E2E2E, gold #C9A96A, ivory #FAF8F3).",
       "status": "approved"
     },
     {
@@ -57,25 +57,25 @@
       "col": 57,
       "raw": "#FAF8F3",
       "normalized": "#faf8f3",
-      "snippet": "* (teal #2A5E63, charcoal #2E2E2E, gold #C9A96A, ivory #FAF8F3).",
+      "snippet": "* (teal #2A5E61, charcoal #2E2E2E, gold #C9A96A, ivory #FAF8F3).",
       "status": "approved"
     },
     {
       "file": "src/components/Logo.tsx",
       "line": 72,
       "col": 60,
-      "raw": "#2A5E63",
-      "normalized": "#2a5e63",
-      "snippet": "// Brand-locked: YES must always render in approved teal #2A5E63 on light surfaces.",
+      "raw": "#2A5E61",
+      "normalized": "#2a5e61",
+      "snippet": "// Brand-locked: YES must always render in approved teal #2A5E61 on light surfaces.",
       "status": "approved"
     },
     {
       "file": "src/components/Logo.tsx",
       "line": 73,
       "col": 48,
-      "raw": "#2A5E63",
-      "normalized": "#2a5e63",
-      "snippet": "const yesColor = isLight ? \"var(--ivory)\" : \"#2A5E63\";",
+      "raw": "#2A5E61",
+      "normalized": "#2a5e61",
+      "snippet": "const yesColor = isLight ? \"var(--ivory)\" : \"#2A5E61\";",
       "status": "approved"
     },
     {
@@ -91,9 +91,9 @@
       "file": "src/routes/brand-qa.tsx",
       "line": 26,
       "col": 10,
-      "raw": "#2A5E63",
-      "normalized": "#2a5e63",
-      "snippet": "teal: \"#2A5E63\",",
+      "raw": "#2A5E61",
+      "normalized": "#2a5e61",
+      "snippet": "teal: \"#2A5E61\",",
       "status": "approved"
     },
     {
@@ -217,9 +217,9 @@
       "file": "src/styles.css",
       "line": 85,
       "col": 11,
-      "raw": "#2A5E63",
-      "normalized": "#2a5e63",
-      "snippet": "--teal: #2A5E63;",
+      "raw": "#2A5E61",
+      "normalized": "#2a5e61",
+      "snippet": "--teal: #2A5E61;",
       "status": "approved"
     },
     {

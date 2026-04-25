@@ -23,7 +23,7 @@ export const Route = createFileRoute("/brand-qa")({
  * referenced anywhere in the app) is reported as a failure below.
  */
 const APPROVED = {
-  teal: "#2A5E63",
+  teal: "#2A5E61",
   "teal-2": "#2A7C82",
   gold: "#C9A96A",
   "gold-soft": "#E1CFA6",

@@ -17,7 +17,7 @@ interface LogoProps {
  * Typographic YES experiences PORTUGAL lockup.
  *
  * Built as live text instead of an image so the brand colours are exact
- * (teal #2A5E63, charcoal #2E2E2E, gold #C9A96A, ivory #FAF8F3).
+ * (teal #2A5E61, charcoal #2E2E2E, gold #C9A96A, ivory #FAF8F3).
  */
 const STACK_SIZES = {
   sm: {
@@ -69,8 +69,8 @@ export function Logo({
   className = "",
 }: LogoProps) {
   const isLight = variant === "light";
-  // Brand-locked: YES must always render in approved teal #2A5E63 on light surfaces.
-  const yesColor = isLight ? "var(--ivory)" : "#2A5E63";
+  // Brand-locked: YES must always render in approved teal #2A5E61 on light surfaces.
+  const yesColor = isLight ? "var(--ivory)" : "#2A5E61";
   const expColor = isLight ? "var(--ivory)" : "var(--charcoal)";
   const gold = "var(--gold)";
 
