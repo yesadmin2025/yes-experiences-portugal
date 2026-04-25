@@ -17,7 +17,7 @@ const OUT_DIR = join(SRC, "generated");
 const OUT_FILE = join(OUT_DIR, "brand-audit.json");
 
 const APPROVED = {
-  teal: "#295B61",
+  teal: "#2A5E63",
   "teal-2": "#2A7C82",
   gold: "#C9A96A",
   "gold-soft": "#E1CFA6",
