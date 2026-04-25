@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-25T01:29:28.251Z",
+  "generatedAt": "2026-04-25T01:30:44.817Z",
   "filesScanned": 22,
   "approvedPalette": {
     "teal": "#295B61",
@@ -26,43 +26,43 @@
   "findings": [
     {
       "file": "src/components/Logo.tsx",
-      "line": 13,
+      "line": 20,
       "col": 10,
       "raw": "#295B61",
       "normalized": "#295b61",
-      "snippet": "* (teal #295B61, charcoal #2E2E2E, gold #C9A96A, ivory #FAF8F3) and the",
+      "snippet": "* (teal #295B61, charcoal #2E2E2E, gold #C9A96A, ivory #FAF8F3).",
       "status": "approved"
     },
     {
       "file": "src/components/Logo.tsx",
-      "line": 13,
+      "line": 20,
       "col": 28,
       "raw": "#2E2E2E",
       "normalized": "#2e2e2e",
-      "snippet": "* (teal #295B61, charcoal #2E2E2E, gold #C9A96A, ivory #FAF8F3) and the",
+      "snippet": "* (teal #295B61, charcoal #2E2E2E, gold #C9A96A, ivory #FAF8F3).",
       "status": "approved"
     },
     {
       "file": "src/components/Logo.tsx",
-      "line": 13,
+      "line": 20,
       "col": 42,
       "raw": "#C9A96A",
       "normalized": "#c9a96a",
-      "snippet": "* (teal #295B61, charcoal #2E2E2E, gold #C9A96A, ivory #FAF8F3) and the",
+      "snippet": "* (teal #295B61, charcoal #2E2E2E, gold #C9A96A, ivory #FAF8F3).",
       "status": "approved"
     },
     {
       "file": "src/components/Logo.tsx",
-      "line": 13,
+      "line": 20,
       "col": 57,
       "raw": "#FAF8F3",
       "normalized": "#faf8f3",
-      "snippet": "* (teal #295B61, charcoal #2E2E2E, gold #C9A96A, ivory #FAF8F3) and the",
+      "snippet": "* (teal #295B61, charcoal #2E2E2E, gold #C9A96A, ivory #FAF8F3).",
       "status": "approved"
     },
     {
       "file": "src/components/Navbar.tsx",
-      "line": 34,
+      "line": 33,
       "col": 38,
       "raw": "#2E2E2E",
       "normalized": "#2e2e2e",

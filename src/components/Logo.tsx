@@ -69,7 +69,8 @@ export function Logo({
   className = "",
 }: LogoProps) {
   const isLight = variant === "light";
-  const yesColor = isLight ? "var(--ivory)" : "var(--teal)";
+  // Brand-locked: YES must always render in approved teal #295B61 on light surfaces.
+  const yesColor = isLight ? "var(--ivory)" : "#295B61";
   const expColor = isLight ? "var(--ivory)" : "var(--charcoal)";
   const gold = "var(--gold)";
 
