@@ -26,11 +26,13 @@ export function FloatingActions() {
 
   return (
     <div className="fixed bottom-5 right-5 md:bottom-8 md:right-8 z-40 flex flex-col items-end gap-3 print:hidden">
-      {/* Floating CTA */}
+      {/* Floating CTA — hidden on mobile (< lg) where MobileStickyCTA owns
+          the primary call-to-action surface. Visible from lg up so desktop
+          users still get the persistent "Start Your Experience" anchor. */}
       <Link
         to="/builder"
         aria-label="Start your experience"
-        className="group inline-flex items-center gap-2 rounded-full border border-[color:var(--teal)]/60 bg-[color:var(--ivory)]/95 backdrop-blur-md px-5 py-2.5 text-[12px] uppercase tracking-[0.18em] text-[color:var(--teal)] shadow-[0_8px_24px_-12px_rgba(41,91,97,0.35)] hover:-translate-y-0.5 hover:border-[color:var(--teal)] hover:bg-[color:var(--teal)] hover:text-[color:var(--ivory)] transition-all duration-500"
+        className="hidden lg:inline-flex group items-center gap-2 rounded-full border border-[color:var(--teal)]/60 bg-[color:var(--ivory)]/95 backdrop-blur-md px-5 py-2.5 text-[12px] uppercase tracking-[0.18em] text-[color:var(--teal)] shadow-[0_8px_24px_-12px_rgba(41,91,97,0.35)] hover:-translate-y-0.5 hover:border-[color:var(--teal)] hover:bg-[color:var(--teal)] hover:text-[color:var(--ivory)] transition-all duration-500"
       >
         Start Your Experience
         <span
