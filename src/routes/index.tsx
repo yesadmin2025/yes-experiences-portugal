@@ -208,38 +208,71 @@ function HomePage() {
           only adds the .is-visible class, so motion stays restrained,
           smooth, and perfectly in time with every other section.
           Gold is used sparingly: just the 5 hero stars and the hairline
-          vertical dividers between marks. */}
-      <section className="bg-[color:var(--ivory)] border-b border-[color:var(--border)] py-16 md:py-20">
+          vertical dividers between marks.
+
+          Accessibility:
+          • Section is a labelled landmark via aria-labelledby pointing to
+            a visually-hidden heading.
+          • The hero star row is a single role="img" with an explicit
+            "Rated 5.0 out of 5 stars" label; the visual "5.0" glyph is
+            aria-hidden so it isn't announced twice.
+          • Each platform badge is a <figure> with a <figcaption>; the
+            platform name carries aria-describedby pointing to its
+            badge's id, so a screen reader announces e.g.
+            "Google, Rated 5.0 out of 5 stars on Google".
+          • Decorative star glyphs and column dividers are aria-hidden. */}
+      <section
+        className="bg-[color:var(--ivory)] border-b border-[color:var(--border)] py-16 md:py-20"
+        aria-labelledby="trust-bar-title"
+      >
+        <h2 id="trust-bar-title" className="sr-only">
+          Trusted by international travelers — 5.0 average rating
+        </h2>
+
         <div className="container-x">
           {/* Intro: eyebrow → 5 gold stars + 5.0 → supporting line. */}
           <div className="flex flex-col items-center text-center gap-4">
             <p
               className="reveal-stagger text-[11px] uppercase tracking-[0.34em] text-[color:var(--charcoal)]"
               style={{ transitionDelay: "0ms" }}
+              id="trust-bar-eyebrow"
             >
               Trusted by international travelers
             </p>
 
-            <div
+            <p
               className="reveal-stagger flex items-center gap-3"
               style={{ transitionDelay: "110ms" }}
+              aria-describedby="trust-bar-eyebrow trust-bar-summary"
             >
-              <div
+              <span
                 className="flex gap-1 text-[color:var(--gold)]"
-                aria-label="Rated 5 out of 5"
+                role="img"
+                aria-label="Rated 5.0 out of 5 stars"
               >
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={14} fill="currentColor" strokeWidth={0} />
+                  <Star
+                    key={i}
+                    size={14}
+                    fill="currentColor"
+                    strokeWidth={0}
+                    aria-hidden="true"
+                    focusable="false"
+                  />
                 ))}
-              </div>
-              <span className="text-[11px] uppercase tracking-[0.28em] text-[color:var(--charcoal-soft)]">
+              </span>
+              <span
+                className="text-[11px] uppercase tracking-[0.28em] text-[color:var(--charcoal-soft)]"
+                aria-hidden="true"
+              >
                 5.0
               </span>
-            </div>
+            </p>
 
             <p
               className="reveal-stagger text-[14px] text-[color:var(--charcoal-soft)] max-w-xl leading-relaxed"
               style={{ transitionDelay: "220ms" }}
+              id="trust-bar-summary"
             >
               600+ 5-star reviews across Google, TripAdvisor and Viator
             </p>
@@ -248,47 +281,79 @@ function HomePage() {
           {/* Platform marks — true 3-column grid; the three cells continue
               the same 110ms cadence (330 → 440 → 550 ms) so the whole
               Trust Bar reads as one unbroken reveal.
-              Each platform now shows a small icon-style badge directly
-              UNDER its name: 5 hairline gold stars + numeric rating in a
-              soft hairline pill. Gold is restricted to the 5 mini stars
-              and the column dividers — nothing else. */}
-          <div className="mt-12 max-w-3xl mx-auto grid grid-cols-3 items-center">
+              Each platform shows a small icon-style badge directly UNDER
+              its name: 5 hairline gold stars + numeric rating in a soft
+              hairline pill. */}
+          <ul
+            className="mt-12 max-w-3xl mx-auto grid grid-cols-3 items-center list-none p-0"
+            aria-label="Review ratings by platform"
+          >
             {[
               { name: "Google", rating: "5.0" },
               { name: "Tripadvisor", rating: "5.0" },
               { name: "Viator", rating: "5.0" },
-            ].map((p, i) => (
-              <div
-                key={p.name}
-                className={[
-                  "reveal-stagger flex flex-col items-center gap-3 px-3 sm:px-6",
-                  i > 0 ? "border-l border-[color:var(--gold)]/25" : "",
-                ].join(" ")}
-                style={{ transitionDelay: `${330 + i * 110}ms` }}
-              >
-                <span className="serif text-[17px] sm:text-[19px] md:text-[22px] leading-none text-[color:var(--charcoal)] tracking-tight whitespace-nowrap">
-                  {p.name}
-                </span>
-
-                {/* Icon-style badge — restrained pill with 5 gold micro
-                    stars and a small numeric rating. Sits directly under
-                    the platform name. */}
-                <span
-                  className="inline-flex items-center gap-1.5 border border-[color:var(--border)] px-2.5 py-1 leading-none"
-                  aria-label={`${p.name} — rated ${p.rating} out of 5`}
+            ].map((p, i) => {
+              const badgeId = `trust-badge-${p.name.toLowerCase()}`;
+              const ratingLabel = `Rated ${p.rating} out of 5 stars on ${p.name}`;
+              return (
+                <li
+                  key={p.name}
+                  className={[
+                    "reveal-stagger flex flex-col items-center gap-3 px-3 sm:px-6",
+                    // Hairline gold dividers are purely decorative
+                    i > 0 ? "border-l border-[color:var(--gold)]/25" : "",
+                  ].join(" ")}
+                  style={{ transitionDelay: `${330 + i * 110}ms` }}
                 >
-                  <span className="flex gap-[2px] text-[color:var(--gold)]" aria-hidden="true">
-                    {[...Array(5)].map((_, idx) => (
-                      <Star key={idx} size={9} fill="currentColor" strokeWidth={0} />
-                    ))}
-                  </span>
-                  <span className="text-[10px] tracking-[0.18em] text-[color:var(--charcoal-soft)]">
-                    {p.rating}
-                  </span>
-                </span>
-              </div>
-            ))}
-          </div>
+                  <figure className="flex flex-col items-center gap-3 m-0">
+                    {/* Platform name — links to its rating badge via
+                        aria-describedby for clear announcement order:
+                        "Google" then "Rated 5.0 out of 5 stars on Google". */}
+                    <figcaption
+                      className="serif text-[17px] sm:text-[19px] md:text-[22px] leading-none text-[color:var(--charcoal)] tracking-tight whitespace-nowrap"
+                      aria-describedby={badgeId}
+                    >
+                      {p.name}
+                    </figcaption>
+
+                    {/* Icon-style badge — restrained pill with 5 gold
+                        micro stars and the numeric rating. The whole
+                        pill is a single role="img" so SR users hear one
+                        clean phrase instead of five star icons + a
+                        number. */}
+                    <span
+                      id={badgeId}
+                      className="inline-flex items-center gap-1.5 border border-[color:var(--border)] px-2.5 py-1 leading-none"
+                      role="img"
+                      aria-label={ratingLabel}
+                    >
+                      <span
+                        className="flex gap-[2px] text-[color:var(--gold)]"
+                        aria-hidden="true"
+                      >
+                        {[...Array(5)].map((_, idx) => (
+                          <Star
+                            key={idx}
+                            size={9}
+                            fill="currentColor"
+                            strokeWidth={0}
+                            aria-hidden="true"
+                            focusable="false"
+                          />
+                        ))}
+                      </span>
+                      <span
+                        className="text-[10px] tracking-[0.18em] text-[color:var(--charcoal-soft)]"
+                        aria-hidden="true"
+                      >
+                        {p.rating}
+                      </span>
+                    </span>
+                  </figure>
+                </li>
+              );
+            })}
+          </ul>
         </div>
       </section>
 
