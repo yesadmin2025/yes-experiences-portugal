@@ -127,20 +127,11 @@ function BrandQAPage() {
     [live],
   );
 
-  const referencedRows = useMemo(() => {
-    const approvedSet = new Set(
-      Object.values(APPROVED).map((h) => h.toLowerCase()),
-    );
-    return REFERENCED_HEXES.map((r) => {
-      const norm = normalizeHex(r.hex)!;
-      const inApproved = approvedSet.has(norm);
-      const inAllow = ALLOWLIST.has(norm);
-      return { ...r, normalized: norm, ok: inApproved || inAllow, inApproved };
-    });
-  }, []);
+  const findings = audit.findings;
+  const mismatches = findings.filter((f) => f.status === "mismatch");
 
   const tokenPass = tokenRows.every((r) => r.ok);
-  const refPass = referencedRows.every((r) => r.ok);
+  const refPass = mismatches.length === 0;
   const allPass = tokenPass && refPass;
 
   return (
