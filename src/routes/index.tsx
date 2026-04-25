@@ -143,9 +143,9 @@ function HomePage() {
           width={1920}
           height={1080}
         />
-        {/* Refined dark overlay — readable but cinematic */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal)]/85 via-[color:var(--charcoal)]/35 to-[color:var(--charcoal)]/45" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_60%,transparent_40%,rgba(0,0,0,0.4)_100%)]" />
+        {/* Refined dark overlay — readable but cinematic. Strengthened for WCAG AA on mobile */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal)]/90 via-[color:var(--charcoal)]/55 to-[color:var(--charcoal)]/55 md:from-[color:var(--charcoal)]/88 md:via-[color:var(--charcoal)]/45 md:to-[color:var(--charcoal)]/50" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_65%,transparent_35%,rgba(0,0,0,0.5)_100%)]" />
 
         <div className="container-x relative z-10 pb-20 md:pb-32 pt-32 md:pt-40">
           <div className="max-w-3xl text-[color:var(--ivory)]">
@@ -292,9 +292,11 @@ function HomePage() {
                     loading="lazy"
                     className="w-full h-full object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.08]"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal)]/70 via-[color:var(--charcoal)]/10 to-transparent" />
+                  {/* Bottom gradient + top scrim — guarantees readability for both top eyebrow and any caption */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal)]/80 via-[color:var(--charcoal)]/15 to-transparent" />
+                  <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[color:var(--charcoal)]/55 to-transparent" />
                   <div className="absolute inset-0 bg-[color:var(--teal)]/0 group-hover:bg-[color:var(--teal)]/10 transition-colors duration-700" />
-                  <span className="absolute top-4 left-4 text-[10px] uppercase tracking-[0.25em] text-white/95 drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)]">
+                  <span className="absolute top-4 left-4 text-[10px] uppercase tracking-[0.25em] text-white drop-shadow-[0_1px_6px_rgba(0,0,0,0.6)]">
                     Private · Tailored
                   </span>
                 </div>
@@ -536,13 +538,13 @@ function HomePage() {
                     loading="lazy"
                     className="w-full h-full object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.08]"
                   />
-                  {/* Stronger bottom gradient — guarantees title contrast */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal)]/80 via-[color:var(--charcoal)]/15 to-transparent" />
+                  {/* Stronger bottom gradient — guarantees title contrast (WCAG AA on large serif) */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal)]/88 via-[color:var(--charcoal)]/25 to-transparent" />
                   <div className="absolute inset-0 bg-[color:var(--teal)]/0 group-hover:bg-[color:var(--teal)]/10 transition-colors duration-700" />
                   {/* On-image title — bold, readable, editorial */}
                   <div className="absolute left-5 right-5 bottom-5">
                     <span className="block h-px w-8 bg-[color:var(--gold)] mb-3 opacity-90" />
-                    <h3 className="serif text-[1.35rem] md:text-[1.45rem] leading-tight text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.35)]">
+                    <h3 className="serif text-[1.35rem] md:text-[1.45rem] leading-tight text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
                       {e.title}
                     </h3>
                   </div>
