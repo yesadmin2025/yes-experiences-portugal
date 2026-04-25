@@ -139,7 +139,7 @@ function HomePage() {
         <img
           src={heroImg}
           alt="Hidden coastal road in Portugal at golden hour"
-          className="absolute inset-0 w-full h-full object-cover object-center scale-110 animate-[heroZoom_24s_ease-out_forwards]"
+          className="absolute inset-0 w-full h-full object-cover object-center scale-110 animate-[heroZoom_32s_ease-out_forwards]"
           width={1920}
           height={1080}
         />
@@ -265,7 +265,7 @@ function HomePage() {
       </section>
 
       {/* 3 — EXPERIENCE TYPES */}
-      <section className="py-28 md:py-36 bg-[color:var(--ivory)]">
+      <section className="py-32 md:py-44 bg-[color:var(--ivory)]">
         <div className="container-x">
           <div className="reveal text-center max-w-2xl mx-auto mb-16">
             <span className="eyebrow">The Experiences</span>
@@ -384,7 +384,7 @@ function HomePage() {
       </section>
 
       {/* 5 — SIGNATURE EXPERIENCES */}
-      <section className="py-28 md:py-36 bg-[color:var(--ivory)]">
+      <section className="py-32 md:py-44 bg-[color:var(--ivory)]">
         <div className="container-x">
           <div className="reveal flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
             <div>
@@ -463,7 +463,7 @@ function HomePage() {
       </section>
 
       {/* 6 — MULTI-DAY HIGHLIGHT */}
-      <section className="bg-[color:var(--sand)] py-28 md:py-36">
+      <section className="bg-[color:var(--sand)] py-32 md:py-44">
         <div className="container-x">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="reveal lg:order-2">
