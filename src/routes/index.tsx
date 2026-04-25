@@ -406,11 +406,9 @@ function HomePage() {
           </div>
           <div className="grid md:grid-cols-3 gap-7">
             {signatures.map((s, i) => (
-              <article
-                key={s.title}
-                className="group bg-[color:var(--card)] border border-[color:var(--border)] reveal-stagger transition-all duration-500 hover:-translate-y-1.5 hover:shadow-[0_24px_50px_-24px_rgba(41,91,97,0.25)] hover:border-[color:var(--teal)]/30"
-
-              >
+              <article key={s.title} className="group reveal-stagger">
+                {/* lift-layer owns hover transform/shadow/border — reveal owns entrance */}
+                <div className="lift-layer-sm bg-[color:var(--card)] border border-[color:var(--border)] group-hover:border-[color:var(--teal)]/30 group-hover:shadow-[0_24px_50px_-24px_rgba(41,91,97,0.25)] h-full">
                 <div className="relative overflow-hidden aspect-[4/3]">
                   <img
                     src={s.img}
