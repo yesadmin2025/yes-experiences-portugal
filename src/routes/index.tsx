@@ -558,7 +558,7 @@ function HomePage() {
         <div className="container-x">
           <div className="reveal text-center max-w-2xl mx-auto mb-16 md:mb-20">
             <span className="eyebrow">Local Stories &amp; Hidden Gems</span>
-            <h2 className="serif text-[2.5rem] md:text-5xl lg:text-[3.4rem] mt-6 leading-[1.08] text-[color:var(--charcoal)]">
+            <h2 className="serif text-[2.5rem] md:text-5xl lg:text-[3.4rem] mt-6">
               The Portugal <span className="italic">we travel ourselves</span>
             </h2>
             <p className="mt-6 text-[16px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.75] max-w-xl mx-auto font-light">
