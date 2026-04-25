@@ -646,7 +646,7 @@ function HomePage() {
                 </Link>
                 <Link
                   to="/proposals"
-                  className="inline-flex items-center gap-2 border border-[color:var(--ivory)]/50 hover:border-[color:var(--gold)] text-[color:var(--ivory)] px-7 py-3.5 text-[12px] uppercase tracking-[0.2em] font-medium transition-all duration-500 hover:-translate-y-0.5"
+                  className="cta-secondary-dark inline-flex items-center gap-2 px-8 py-[16px] text-[12.5px] uppercase tracking-[0.2em] font-semibold"
                 >
                   For Celebrations
                 </Link>
