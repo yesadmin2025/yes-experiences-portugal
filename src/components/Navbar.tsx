@@ -1,9 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Menu, X, ArrowRight } from "lucide-react";
-import logo1x from "@/assets/yes-experiences-portugal-logo-teal-1x.png";
-import logo2x from "@/assets/yes-experiences-portugal-logo-teal-2x.png";
-import logo3x from "@/assets/yes-experiences-portugal-logo-teal-3x.png";
+import logoTeal from "@/assets/yes-logo-teal.svg";
 
 // Desktop nav — full editorial set, kept compact in tracking so all 8
 // items fit gracefully on a single row at lg+ widths.
@@ -46,12 +44,11 @@ export function Navbar() {
             aria-label="YES experiences PORTUGAL — Home"
           >
             <img
-              src={logo1x}
-              srcSet={`${logo1x} 1x, ${logo2x} 2x, ${logo3x} 3x`}
-              width={446}
-              height={312}
+              src={logoTeal}
+              width={1200}
+              height={900}
               alt="YES experiences PORTUGAL"
-              className="block h-[84px] md:h-[100px] lg:h-[112px] w-auto select-none"
+              className="block h-[92px] md:h-[108px] lg:h-[120px] w-auto select-none"
               draggable={false}
               fetchPriority="high"
               decoding="async"

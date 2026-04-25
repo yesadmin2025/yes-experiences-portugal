@@ -1,7 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import logoGold1x from "@/assets/yes-experiences-portugal-logo-gold-1x.png";
-import logoGold2x from "@/assets/yes-experiences-portugal-logo-gold-2x.png";
-import logoGold3x from "@/assets/yes-experiences-portugal-logo-gold-3x.png";
+import logoGold from "@/assets/yes-logo-gold.svg";
 
 export function Footer() {
   return (
