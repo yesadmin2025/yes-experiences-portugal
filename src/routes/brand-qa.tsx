@@ -202,56 +202,125 @@ function BrandQAPage() {
           </div>
         </section>
 
-        {/* Referenced hex audit */}
+        {/* Build-time scan results */}
         <section className="mb-12">
-          <h2 className="mb-4 text-xl">Referenced hex codes</h2>
-          <div className="overflow-hidden rounded-lg border border-[color:var(--border)] bg-card">
+          <div className="mb-4 flex items-baseline justify-between">
+            <h2 className="text-xl">Build-time scan</h2>
+            <p className="text-xs text-[color:var(--charcoal-soft)]">
+              {audit.filesScanned} files · {audit.counts.total} hex refs ·{" "}
+              <span className="text-[color:var(--teal)]">
+                {audit.counts.approved} approved
+              </span>
+              {" · "}
+              {audit.counts.allowlisted} allowlisted
+              {" · "}
+              <span
+                className={
+                  audit.counts.mismatch
+                    ? "text-red-700"
+                    : "text-[color:var(--charcoal-soft)]"
+                }
+              >
+                {audit.counts.mismatch} mismatch
+              </span>
+              {" · generated "}
+              {new Date(audit.generatedAt).toLocaleString()}
+            </p>
+          </div>
+
+          {mismatches.length > 0 && (
+            <div className="mb-6 overflow-hidden rounded-lg border border-red-300 bg-red-50">
+              <div className="border-b border-red-200 bg-red-100 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-red-800">
+                Mismatches ({mismatches.length})
+              </div>
+              <table className="w-full text-left text-sm">
+                <thead className="text-xs uppercase tracking-wider text-red-700/70">
+                  <tr>
+                    <th className="px-4 py-2">File</th>
+                    <th className="px-4 py-2">Hex</th>
+                    <th className="px-4 py-2">Snippet</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {mismatches.map((f, i) => (
+                    <tr key={i} className="border-t border-red-200">
+                      <td className="px-4 py-2 font-mono text-xs text-red-800">
+                        {f.file}:{f.line}
+                      </td>
+                      <td className="px-4 py-2">
+                        <span className="inline-flex items-center gap-2">
+                          <span
+                            className="inline-block h-4 w-4 rounded border border-red-300"
+                            style={{ background: f.normalized }}
+                            aria-hidden
+                          />
+                          <code>{f.normalized}</code>
+                        </span>
+                      </td>
+                      <td className="px-4 py-2 font-mono text-xs text-red-900/80">
+                        {f.snippet}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          <details className="overflow-hidden rounded-lg border border-[color:var(--border)] bg-card">
+            <summary className="cursor-pointer bg-[color:var(--sand)] px-4 py-3 text-xs uppercase tracking-wider text-[color:var(--charcoal-soft)]">
+              All findings ({findings.length})
+            </summary>
             <table className="w-full text-left text-sm">
-              <thead className="bg-[color:var(--sand)] text-xs uppercase tracking-wider text-[color:var(--charcoal-soft)]">
+              <thead className="text-xs uppercase tracking-wider text-[color:var(--charcoal-soft)]">
                 <tr>
-                  <th className="px-4 py-3">Reference</th>
-                  <th className="px-4 py-3">Hex</th>
-                  <th className="px-4 py-3">Status</th>
+                  <th className="px-4 py-2">File</th>
+                  <th className="px-4 py-2">Hex</th>
+                  <th className="px-4 py-2">Status</th>
                 </tr>
               </thead>
               <tbody>
-                {referencedRows.map((r, i) => (
+                {findings.map((f, i) => (
                   <tr
                     key={i}
                     className="border-t border-[color:var(--border)]"
                   >
                     <td className="px-4 py-2 font-mono text-xs">
-                      {r.where}
+                      {f.file}:{f.line}
                     </td>
                     <td className="px-4 py-2">
                       <span className="inline-flex items-center gap-2">
                         <span
                           className="inline-block h-4 w-4 rounded border border-[color:var(--border)]"
-                          style={{ background: r.normalized }}
+                          style={{ background: f.normalized }}
                           aria-hidden
                         />
-                        <code>{r.normalized}</code>
+                        <code>{f.normalized}</code>
                       </span>
                     </td>
-                    <td className="px-4 py-2">
-                      {r.ok ? (
+                    <td className="px-4 py-2 text-xs">
+                      {f.status === "approved" ? (
                         <span className="text-[color:var(--teal)]">
-                          {r.inApproved ? "Approved" : "Allowlisted"}
+                          Approved
+                        </span>
+                      ) : f.status === "allowlisted" ? (
+                        <span className="text-[color:var(--charcoal-soft)]">
+                          Allowlisted
                         </span>
                       ) : (
-                        <span className="text-red-700">
-                          Not in approved palette
-                        </span>
+                        <span className="text-red-700">Mismatch</span>
                       )}
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
-          </div>
+          </details>
+
           <p className="mt-3 text-xs text-[color:var(--charcoal-soft)]">
-            Allowlisted neutrals: pure black, pure white, dark-mode card
-            surface (<code>#1f1f1f</code>).
+            Generated by <code>scripts/brand-audit.mjs</code> on{" "}
+            <code>predev</code> / <code>prebuild</code>. Run manually with{" "}
+            <code>bun run brand:audit</code>.
           </p>
         </section>
 
