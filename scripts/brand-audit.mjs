@@ -29,14 +29,8 @@ const APPROVED = {
 const APPROVED_SET = new Set(Object.values(APPROVED).map((h) => h.toLowerCase()));
 
 // Allowed neutrals + framework defaults that aren't brand drift.
-const ALLOWLIST = new Set(
-  [
-    "#000", "#000000",
-    "#fff", "#ffffff",
-    "#1f1f1f", // dark-mode card
-    "#ccc",    // recharts internal selectors
-  ].map((h) => h.toLowerCase()),
-);
+const ALLOWLIST_RAW = ["#000", "#000000", "#fff", "#ffffff", "#1f1f1f", "#ccc"];
+const ALLOWLIST = new Set(ALLOWLIST_RAW.map((h) => normalize(h)));
 
 const EXTS = new Set([".tsx", ".ts", ".css", ".json"]);
 const SKIP_DIRS = new Set(["generated", "node_modules", "components/ui"]);
