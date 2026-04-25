@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Menu, X, ArrowRight } from "lucide-react";
-import logoTeal from "@/assets/yes-logo-teal.svg";
+import logoTeal from "@/assets/yes-logo-approved.png";
 
 // Desktop nav — full editorial set, kept compact in tracking so all 8
 // items fit gracefully on a single row at lg+ widths.
@@ -45,13 +45,14 @@ export function Navbar() {
           >
             <img
               src={logoTeal}
-              width={1200}
-              height={900}
+              width={909}
+              height={579}
               alt="YES experiences PORTUGAL"
-              className="block h-[92px] md:h-[108px] lg:h-[120px] w-auto select-none"
+              className="block h-[88px] md:h-[104px] lg:h-[116px] w-auto select-none"
               draggable={false}
               fetchPriority="high"
               decoding="async"
+              style={{ imageRendering: "auto" }}
             />
           </Link>
 
