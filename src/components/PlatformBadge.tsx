@@ -1,9 +1,10 @@
 /**
- * PlatformBadge — official, recognizable brand marks for the trust bar.
+ * PlatformBadge — official brand marks for the trust bar.
  *
- * Uses the actual high-resolution logo files supplied by the brand, rendered
- * on a transparent background and sized to a uniform optical height so they
- * read as a balanced row across every breakpoint.
+ * Uses the actual high-resolution logo files supplied by the brand. Each
+ * platform gets a per-mark optical scale so square monograms (Google,
+ * Tripadvisor, GetYourGuide) and wide wordmarks (Viator, Trustpilot)
+ * read at the same visual weight in a single row.
  */
 
 import googleLogo from "@/assets/platform-google.png";
@@ -19,12 +20,18 @@ export type Platform =
   | "getyourguide"
   | "trustpilot";
 
-const SOURCES: Record<Platform, { src: string; label: string }> = {
-  google: { src: googleLogo, label: "Google" },
-  tripadvisor: { src: tripadvisorLogo, label: "Tripadvisor" },
-  viator: { src: viatorLogo, label: "Viator" },
-  getyourguide: { src: getyourguideLogo, label: "GetYourGuide" },
-  trustpilot: { src: trustpilotLogo, label: "Trustpilot" },
+// Per-mark optical scale relative to the container height. Wordmarks read
+// large at full height because they're wide; monograms need extra height
+// to feel balanced against them.
+const SOURCES: Record<
+  Platform,
+  { src: string; label: string; scale: number }
+> = {
+  google: { src: googleLogo, label: "Google", scale: 1 },
+  tripadvisor: { src: tripadvisorLogo, label: "Tripadvisor", scale: 1 },
+  viator: { src: viatorLogo, label: "Viator", scale: 0.6 },
+  getyourguide: { src: getyourguideLogo, label: "GetYourGuide", scale: 1 },
+  trustpilot: { src: trustpilotLogo, label: "Trustpilot", scale: 0.78 },
 };
 
 export function PlatformBadge({
@@ -34,14 +41,15 @@ export function PlatformBadge({
   platform: Platform;
   className?: string;
 }) {
-  const { src, label } = SOURCES[platform];
+  const { src, label, scale } = SOURCES[platform];
   return (
     <img
       src={src}
       alt={`${label} — official review platform`}
       loading="lazy"
       decoding="async"
-      className={`block h-full w-auto object-contain select-none ${className}`}
+      style={{ height: `${scale * 100}%` }}
+      className={`block w-auto object-contain select-none ${className}`}
       draggable={false}
     />
   );
