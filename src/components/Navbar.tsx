@@ -16,7 +16,7 @@ export function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="fixed top-0 inset-x-0 z-50 bg-[color:var(--ivory)] border-b border-black/[0.06] shadow-[0_1px_0_0_rgba(201,169,106,0.22),0_10px_28px_-18px_rgba(15,23,42,0.10)] opacity-0 animate-[headerFade_900ms_ease-out_forwards]">
+    <header className="fixed top-0 inset-x-0 z-50 bg-white border-b border-black/[0.06] shadow-[0_1px_0_0_rgba(201,169,106,0.18),0_10px_28px_-18px_rgba(15,23,42,0.10)] opacity-0 animate-[headerFade_900ms_ease-out_forwards]">
       <div className="container-x">
         <div className="flex items-center justify-between h-[112px] md:h-[128px] lg:h-[140px]">
           {/* Official master logo — uploaded brand asset, used as-is.
@@ -68,7 +68,7 @@ export function Navbar() {
       {open && (
         <div
           id="mobile-nav"
-          className="lg:hidden bg-[color:var(--ivory)] border-t border-black/[0.05]"
+          className="lg:hidden bg-white border-t border-black/[0.05]"
         >
           <div className="container-x py-6 flex flex-col gap-5 text-sm">
             {navLinks.map((n) => (
