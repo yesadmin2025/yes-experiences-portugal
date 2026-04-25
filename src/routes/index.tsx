@@ -538,13 +538,13 @@ function HomePage() {
                     loading="lazy"
                     className="w-full h-full object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.08]"
                   />
-                  {/* Stronger bottom gradient — guarantees title contrast */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal)]/80 via-[color:var(--charcoal)]/15 to-transparent" />
+                  {/* Stronger bottom gradient — guarantees title contrast (WCAG AA on large serif) */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal)]/88 via-[color:var(--charcoal)]/25 to-transparent" />
                   <div className="absolute inset-0 bg-[color:var(--teal)]/0 group-hover:bg-[color:var(--teal)]/10 transition-colors duration-700" />
                   {/* On-image title — bold, readable, editorial */}
                   <div className="absolute left-5 right-5 bottom-5">
                     <span className="block h-px w-8 bg-[color:var(--gold)] mb-3 opacity-90" />
-                    <h3 className="serif text-[1.35rem] md:text-[1.45rem] leading-tight text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.35)]">
+                    <h3 className="serif text-[1.35rem] md:text-[1.45rem] leading-tight text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
                       {e.title}
                     </h3>
                   </div>
