@@ -288,7 +288,7 @@ function HomePage() {
               checkmark — instead of repeating the star/rating badge that
               already appears once at the top of the section. */}
           <ul
-            className="mt-12 mx-auto grid grid-cols-3 sm:grid-cols-5 items-stretch list-none p-0 gap-y-8 max-w-[520px] sm:max-w-4xl"
+            className="mt-12 mx-auto grid grid-cols-3 sm:grid-cols-5 items-center list-none p-0 gap-x-2 sm:gap-x-4 gap-y-8 max-w-[420px] sm:max-w-3xl"
             aria-label="Official review platforms"
           >
             {[
@@ -301,27 +301,10 @@ function HomePage() {
               return (
                 <li
                   key={p.key}
-                  className="reveal-stagger flex items-center justify-center px-3 sm:px-5 md:px-6 py-2"
+                  className="reveal-stagger flex items-center justify-center px-2 sm:px-3 py-2"
                   style={{ transitionDelay: `${330 + i * 90}ms` }}
                 >
-                  <figure className="flex flex-col items-center justify-center gap-3 sm:gap-4 m-0">
-                    {/* 5-star rating — uniform across every platform */}
-                    <span
-                      className="flex gap-[2px] text-[color:var(--gold)]"
-                      role="img"
-                      aria-label="Rated 5 out of 5 stars"
-                    >
-                      {[...Array(5)].map((_, s) => (
-                        <Star
-                          key={s}
-                          size={11}
-                          fill="currentColor"
-                          strokeWidth={0}
-                          aria-hidden="true"
-                          focusable="false"
-                        />
-                      ))}
-                    </span>
+                  <figure className="flex items-center justify-center m-0">
 
                     {/* Official platform brand mark — uniform optical height */}
                     <div className="flex items-center justify-center h-9 sm:h-10 md:h-11">
