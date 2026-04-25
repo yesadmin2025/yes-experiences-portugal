@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-25T01:12:25.003Z",
+  "generatedAt": "2026-04-25T01:12:48.417Z",
   "filesScanned": 20,
   "approvedPalette": {
     "teal": "#295B61",
@@ -12,18 +12,16 @@
     "charcoal-soft": "#6B6B6B"
   },
   "allowlist": [
-    "#000",
     "#000000",
-    "#fff",
     "#ffffff",
     "#1f1f1f",
-    "#ccc"
+    "#cccccc"
   ],
   "counts": {
     "total": 76,
     "approved": 56,
-    "allowlisted": 19,
-    "mismatch": 1
+    "allowlisted": 20,
+    "mismatch": 0
   },
   "findings": [
     {
@@ -159,7 +157,7 @@
       "raw": "#ccc",
       "normalized": "#cccccc",
       "snippet": "\"#ccc\", // recharts internal selectors only",
-      "status": "mismatch"
+      "status": "allowlisted"
     },
     {
       "file": "src/routes/brand-qa.tsx",
