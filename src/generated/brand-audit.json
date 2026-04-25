@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-04-25T01:51:22.340Z",
-  "filesScanned": 21,
+  "generatedAt": "2026-04-25T01:57:54.606Z",
+  "filesScanned": 22,
   "approvedPalette": {
-    "teal": "#295B61",
+    "teal": "#2A5E63",
     "teal-2": "#2A7C82",
     "gold": "#C9A96A",
     "gold-soft": "#E1CFA6",
@@ -18,9 +18,9 @@
     "#cccccc"
   ],
   "counts": {
-    "total": 33,
-    "approved": 23,
-    "allowlisted": 10,
+    "total": 55,
+    "approved": 40,
+    "allowlisted": 15,
     "mismatch": 0
   },
   "findings": [
@@ -28,9 +28,9 @@
       "file": "src/components/Logo.tsx",
       "line": 20,
       "col": 10,
-      "raw": "#295B61",
-      "normalized": "#295b61",
-      "snippet": "* (teal #295B61, charcoal #2E2E2E, gold #C9A96A, ivory #FAF8F3).",
+      "raw": "#2A5E63",
+      "normalized": "#2a5e63",
+      "snippet": "* (teal #2A5E63, charcoal #2E2E2E, gold #C9A96A, ivory #FAF8F3).",
       "status": "approved"
     },
     {
@@ -39,7 +39,7 @@
       "col": 28,
       "raw": "#2E2E2E",
       "normalized": "#2e2e2e",
-      "snippet": "* (teal #295B61, charcoal #2E2E2E, gold #C9A96A, ivory #FAF8F3).",
+      "snippet": "* (teal #2A5E63, charcoal #2E2E2E, gold #C9A96A, ivory #FAF8F3).",
       "status": "approved"
     },
     {
@@ -48,7 +48,7 @@
       "col": 42,
       "raw": "#C9A96A",
       "normalized": "#c9a96a",
-      "snippet": "* (teal #295B61, charcoal #2E2E2E, gold #C9A96A, ivory #FAF8F3).",
+      "snippet": "* (teal #2A5E63, charcoal #2E2E2E, gold #C9A96A, ivory #FAF8F3).",
       "status": "approved"
     },
     {
@@ -57,25 +57,25 @@
       "col": 57,
       "raw": "#FAF8F3",
       "normalized": "#faf8f3",
-      "snippet": "* (teal #295B61, charcoal #2E2E2E, gold #C9A96A, ivory #FAF8F3).",
+      "snippet": "* (teal #2A5E63, charcoal #2E2E2E, gold #C9A96A, ivory #FAF8F3).",
       "status": "approved"
     },
     {
       "file": "src/components/Logo.tsx",
       "line": 72,
       "col": 60,
-      "raw": "#295B61",
-      "normalized": "#295b61",
-      "snippet": "// Brand-locked: YES must always render in approved teal #295B61 on light surfaces.",
+      "raw": "#2A5E63",
+      "normalized": "#2a5e63",
+      "snippet": "// Brand-locked: YES must always render in approved teal #2A5E63 on light surfaces.",
       "status": "approved"
     },
     {
       "file": "src/components/Logo.tsx",
       "line": 73,
       "col": 48,
-      "raw": "#295B61",
-      "normalized": "#295b61",
-      "snippet": "const yesColor = isLight ? \"var(--ivory)\" : \"#295B61\";",
+      "raw": "#2A5E63",
+      "normalized": "#2a5e63",
+      "snippet": "const yesColor = isLight ? \"var(--ivory)\" : \"#2A5E63\";",
       "status": "approved"
     },
     {
@@ -91,9 +91,9 @@
       "file": "src/routes/brand-qa.tsx",
       "line": 26,
       "col": 10,
-      "raw": "#295B61",
-      "normalized": "#295b61",
-      "snippet": "teal: \"#295B61\",",
+      "raw": "#2A5E63",
+      "normalized": "#2a5e63",
+      "snippet": "teal: \"#2A5E63\",",
       "status": "approved"
     },
     {
@@ -217,9 +217,9 @@
       "file": "src/styles.css",
       "line": 85,
       "col": 11,
-      "raw": "#295B61",
-      "normalized": "#295b61",
-      "snippet": "--teal: #295B61;",
+      "raw": "#2A5E63",
+      "normalized": "#2a5e63",
+      "snippet": "--teal: #2A5E63;",
       "status": "approved"
     },
     {
@@ -320,6 +320,204 @@
       "normalized": "#1f1f1f",
       "snippet": "--card: #1f1f1f;",
       "status": "allowlisted"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 290,
+      "col": 17,
+      "raw": "#000",
+      "normalized": "#000000",
+      "snippet": "\"black\": \"#000\",",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 291,
+      "col": 17,
+      "raw": "#fff",
+      "normalized": "#ffffff",
+      "snippet": "\"white\": \"#fff\",",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 293,
+      "col": 22,
+      "raw": "#2E2E2E",
+      "normalized": "#2e2e2e",
+      "snippet": "\"foreground\": \"#2E2E2E\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 294,
+      "col": 16,
+      "raw": "#ffffff",
+      "normalized": "#ffffff",
+      "snippet": "\"card\": \"#ffffff\",",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 295,
+      "col": 27,
+      "raw": "#2E2E2E",
+      "normalized": "#2e2e2e",
+      "snippet": "\"card-foreground\": \"#2E2E2E\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 296,
+      "col": 19,
+      "raw": "#ffffff",
+      "normalized": "#ffffff",
+      "snippet": "\"popover\": \"#ffffff\",",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 297,
+      "col": 30,
+      "raw": "#2E2E2E",
+      "normalized": "#2e2e2e",
+      "snippet": "\"popover-foreground\": \"#2E2E2E\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 299,
+      "col": 30,
+      "raw": "#FAF8F3",
+      "normalized": "#faf8f3",
+      "snippet": "\"primary-foreground\": \"#FAF8F3\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 300,
+      "col": 21,
+      "raw": "#F4EFE7",
+      "normalized": "#f4efe7",
+      "snippet": "\"secondary\": \"#F4EFE7\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 301,
+      "col": 32,
+      "raw": "#2E2E2E",
+      "normalized": "#2e2e2e",
+      "snippet": "\"secondary-foreground\": \"#2E2E2E\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 302,
+      "col": 17,
+      "raw": "#F4EFE7",
+      "normalized": "#f4efe7",
+      "snippet": "\"muted\": \"#F4EFE7\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 303,
+      "col": 28,
+      "raw": "#6B6B6B",
+      "normalized": "#6b6b6b",
+      "snippet": "\"muted-foreground\": \"#6B6B6B\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 304,
+      "col": 18,
+      "raw": "#C9A96A",
+      "normalized": "#c9a96a",
+      "snippet": "\"accent\": \"#C9A96A\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 305,
+      "col": 29,
+      "raw": "#2E2E2E",
+      "normalized": "#2e2e2e",
+      "snippet": "\"accent-foreground\": \"#2E2E2E\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 307,
+      "col": 34,
+      "raw": "#ffffff",
+      "normalized": "#ffffff",
+      "snippet": "\"destructive-foreground\": \"#ffffff\",",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 311,
+      "col": 16,
+      "raw": "#C9A96A",
+      "normalized": "#c9a96a",
+      "snippet": "\"gold\": \"#C9A96A\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 312,
+      "col": 21,
+      "raw": "#E1CFA6",
+      "normalized": "#e1cfa6",
+      "snippet": "\"gold-soft\": \"#E1CFA6\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 314,
+      "col": 18,
+      "raw": "#2A7C82",
+      "normalized": "#2a7c82",
+      "snippet": "\"teal-2\": \"#2A7C82\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 315,
+      "col": 17,
+      "raw": "#FAF8F3",
+      "normalized": "#faf8f3",
+      "snippet": "\"ivory\": \"#FAF8F3\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 316,
+      "col": 16,
+      "raw": "#F4EFE7",
+      "normalized": "#f4efe7",
+      "snippet": "\"sand\": \"#F4EFE7\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 317,
+      "col": 20,
+      "raw": "#2E2E2E",
+      "normalized": "#2e2e2e",
+      "snippet": "\"charcoal\": \"#2E2E2E\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 318,
+      "col": 25,
+      "raw": "#6B6B6B",
+      "normalized": "#6b6b6b",
+      "snippet": "\"charcoal-soft\": \"#6B6B6B\"",
+      "status": "approved"
     }
   ]
 }
