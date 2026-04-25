@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Logo } from "./Logo";
 import { Menu, X } from "lucide-react";
+import logoSrc from "@/assets/yes-experiences-portugal-logo.png";
 
 const navLinks = [
   { to: "/experiences", label: "Experiences" },
@@ -16,17 +16,22 @@ export function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="fixed top-0 inset-x-0 z-50 bg-white border-b border-black/[0.05] shadow-[0_1px_0_0_rgba(201,169,106,0.22),0_10px_28px_-18px_rgba(15,23,42,0.10)] opacity-0 animate-[headerFade_900ms_ease-out_forwards]">
+    <header className="fixed top-0 inset-x-0 z-50 bg-white border-b border-black/[0.06] shadow-[0_1px_0_0_rgba(201,169,106,0.22),0_10px_28px_-18px_rgba(15,23,42,0.10)] opacity-0 animate-[headerFade_900ms_ease-out_forwards]">
       <div className="container-x">
-        <div className="flex items-center justify-between h-[100px] md:h-[116px] lg:h-[128px]">
-          {/* Logo — left, vertically centered. Tight header lockup with
-              enlarged PORTUGAL aligned to the YES+experiences midline. */}
+        <div className="flex items-center justify-between h-[112px] md:h-[128px] lg:h-[140px]">
+          {/* Official master logo — uploaded brand asset, used as-is.
+              Sized for premium presence with breathing room in the header. */}
           <Link
             to="/"
             className="flex-shrink-0 inline-flex items-center h-full rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             aria-label="YES experiences PORTUGAL — Home"
           >
-            <Logo layout="header" size="sm" className="block" />
+            <img
+              src={logoSrc}
+              alt="YES experiences PORTUGAL"
+              className="block h-[78px] md:h-[92px] lg:h-[104px] w-auto select-none"
+              draggable={false}
+            />
           </Link>
 
           {/* Desktop nav — right, vertically centered.
