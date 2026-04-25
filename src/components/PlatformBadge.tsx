@@ -1,8 +1,12 @@
 /**
  * PlatformBadge — official brand marks for the trust bar.
  *
- * Uses the actual high-resolution logo files supplied by the brand. Each
- * platform gets a per-mark optical scale so square monograms (Google,
+ * Rendered in a premium monochrome treatment: original platform colors are
+ * neutralized via CSS filters so Google, Tripadvisor, Viator, GetYourGuide
+ * and Trustpilot all read as soft charcoal marks. This keeps the trust row
+ * curated and editorial — never a marketplace badge wall.
+ *
+ * Each platform gets a per-mark optical scale so square monograms (Google,
  * Tripadvisor, GetYourGuide) and wide wordmarks (Viator, Trustpilot)
  * read at the same visual weight in a single row.
  */
@@ -34,6 +38,17 @@ const SOURCES: Record<
   trustpilot: { src: trustpilotLogo, label: "Trustpilot", scale: 0.78 },
 };
 
+// Monochrome treatment: strip color, lift midtones, and tone toward soft
+// charcoal (#6B6B6B) so every mark reads as a single neutral weight.
+// `brightness(0)` collapses the artwork to pure black, then `invert(.42)`
+// lifts it to ~#6B charcoal. Slight contrast boost preserves edge clarity
+// on small marks. Hover deepens to dark charcoal (#2E2E2E) for a quiet
+// premium response.
+const MONO_FILTER =
+  "brightness(0) invert(0.42) contrast(1.05)";
+const MONO_FILTER_HOVER =
+  "brightness(0) invert(0.18) contrast(1.05)";
+
 export function PlatformBadge({
   platform,
   className = "",
@@ -48,7 +63,20 @@ export function PlatformBadge({
       alt={`${label} — official review platform`}
       loading="lazy"
       decoding="async"
-      style={{ height: `${scale * 100}%` }}
+      style={{
+        height: `${scale * 100}%`,
+        filter: MONO_FILTER,
+        transition: "filter 600ms ease, opacity 600ms ease",
+        opacity: 0.85,
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.filter = MONO_FILTER_HOVER;
+        e.currentTarget.style.opacity = "1";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.filter = MONO_FILTER;
+        e.currentTarget.style.opacity = "0.85";
+      }}
       className={`block w-auto object-contain select-none ${className}`}
       draggable={false}
     />
