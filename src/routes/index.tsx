@@ -282,30 +282,32 @@ function HomePage() {
               <Link
                 key={c.title}
                 to={c.to}
-                className="group block reveal-stagger transition-transform duration-700 hover:-translate-y-2"
-
+                className="group block reveal-stagger"
               >
-                <div className="relative overflow-hidden aspect-[3/4] mb-5 shadow-[0_10px_30px_-20px_rgba(46,46,46,0.28)] group-hover:shadow-[0_28px_55px_-22px_rgba(41,91,97,0.32)] transition-shadow duration-700">
-                  <img
-                    src={c.img}
-                    alt={c.title}
-                    loading="lazy"
-                    className="w-full h-full object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.08]"
-                  />
-                  {/* Bottom gradient + top scrim — guarantees readability for both top eyebrow and any caption */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal)]/80 via-[color:var(--charcoal)]/15 to-transparent" />
-                  <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[color:var(--charcoal)]/55 to-transparent" />
-                  <div className="absolute inset-0 bg-[color:var(--teal)]/0 group-hover:bg-[color:var(--teal)]/10 transition-colors duration-700" />
-                  <span className="absolute top-4 left-4 text-[10px] uppercase tracking-[0.25em] text-white drop-shadow-[0_1px_6px_rgba(0,0,0,0.6)]">
-                    Private · Tailored
-                  </span>
+                {/* lift-layer-sm owns hover transform — reveal owns entrance, no double transform */}
+                <div className="lift-layer-sm">
+                  <div className="relative overflow-hidden aspect-[3/4] mb-5 shadow-[0_10px_30px_-20px_rgba(46,46,46,0.28)] group-hover:shadow-[0_28px_55px_-22px_rgba(41,91,97,0.32)] transition-shadow duration-700">
+                    <img
+                      src={c.img}
+                      alt={c.title}
+                      loading="lazy"
+                      className="w-full h-full object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.08]"
+                    />
+                    {/* Bottom gradient + top scrim — guarantees readability for both top eyebrow and any caption */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal)]/80 via-[color:var(--charcoal)]/15 to-transparent" />
+                    <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[color:var(--charcoal)]/55 to-transparent" />
+                    <div className="absolute inset-0 bg-[color:var(--teal)]/0 group-hover:bg-[color:var(--teal)]/10 transition-colors duration-700" />
+                    <span className="absolute top-4 left-4 text-[10px] uppercase tracking-[0.25em] text-white drop-shadow-[0_1px_6px_rgba(0,0,0,0.6)]">
+                      Private · Tailored
+                    </span>
+                  </div>
+                  <h3 className="serif text-[1.35rem] text-[color:var(--charcoal)] leading-snug group-hover:text-[color:var(--teal)] transition-colors duration-500">
+                    {c.title}
+                  </h3>
+                  <p className="mt-2.5 text-[14.5px] text-[color:var(--charcoal-soft)] leading-[1.65] font-light">
+                    {c.line}
+                  </p>
                 </div>
-                <h3 className="serif text-[1.35rem] text-[color:var(--charcoal)] leading-snug group-hover:text-[color:var(--teal)] transition-colors duration-500">
-                  {c.title}
-                </h3>
-                <p className="mt-2.5 text-[14.5px] text-[color:var(--charcoal-soft)] leading-[1.65] font-light">
-                  {c.line}
-                </p>
               </Link>
             ))}
           </div>
