@@ -104,7 +104,7 @@ function FooterCol({
 }) {
   return (
     <div>
-      <h4 className="text-[11.5px] uppercase tracking-[0.3em] text-[color:var(--gold)] mb-6">
+      <h4 className="font-sans font-medium text-[11.5px] uppercase tracking-[0.3em] text-[color:var(--gold)] mb-6">
         {title}
       </h4>
       <ul className="space-y-3.5 text-[14.5px]">

@@ -157,7 +157,7 @@ function HomePage() {
               Private · By local hands · Designed around you
             </span>
 
-            <h1 className="serif mt-7 md:mt-9 text-[2.7rem] sm:text-5xl md:text-7xl lg:text-[5.4rem] leading-[1.04] font-light tracking-[-0.015em] opacity-0 animate-[heroFade_1.4s_ease-out_0.6s_forwards]">
+            <h1 className="serif mt-7 md:mt-9 text-[2.7rem] sm:text-5xl md:text-7xl lg:text-[5.4rem] opacity-0 animate-[heroFade_1.4s_ease-out_0.6s_forwards]">
               Portugal,
               <br />
               <span className="italic text-[color:var(--gold-soft)]">Designed Around You</span>
@@ -310,7 +310,7 @@ function HomePage() {
         <div className="container-x">
           <div className="reveal text-center max-w-2xl mx-auto mb-20">
             <span className="eyebrow">The Experiences</span>
-            <h2 className="serif text-4xl md:text-5xl mt-6 leading-[1.1]">
+            <h2 className="serif text-4xl md:text-5xl mt-6">
               From intimate moments <br />
               to <span className="italic">large private programs</span>
             </h2>
@@ -336,7 +336,7 @@ function HomePage() {
                       Private · Tailored
                     </span>
                   </div>
-                  <h3 className="serif text-[1.5rem] text-[color:var(--charcoal)] leading-snug group-hover:text-[color:var(--teal)] transition-colors duration-500">
+                  <h3 className="serif text-[1.5rem] text-[color:var(--charcoal)] group-hover:text-[color:var(--teal)] transition-colors duration-500">
                     {c.title}
                   </h3>
                   <p className="mt-3 text-[15.5px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
@@ -355,7 +355,7 @@ function HomePage() {
           <div className="reveal flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
             <div>
               <span className="eyebrow">Signature Experiences</span>
-              <h2 className="serif text-4xl md:text-5xl mt-6 leading-[1.1]">
+              <h2 className="serif text-4xl md:text-5xl mt-6">
                 Crafted by us, <span className="italic">customized by you</span>
               </h2>
               <p className="mt-6 max-w-lg text-[16px] text-[color:var(--charcoal-soft)] leading-[1.75]">
@@ -384,7 +384,7 @@ function HomePage() {
                     <div className="absolute inset-0 bg-[color:var(--teal)]/0 group-hover:bg-[color:var(--teal)]/8 transition-colors duration-700" />
                   </div>
                   <div className="p-7 md:p-8">
-                    <h3 className="serif text-[1.65rem] text-[color:var(--charcoal)] group-hover:text-[color:var(--teal)] transition-colors duration-500 leading-snug">
+                    <h3 className="serif text-[1.65rem] text-[color:var(--charcoal)] group-hover:text-[color:var(--teal)] transition-colors duration-500">
                       {s.title}
                     </h3>
                     <p className="mt-3 text-[15px] text-[color:var(--charcoal-soft)] leading-[1.7]">
@@ -445,7 +445,7 @@ function HomePage() {
                 <span className="h-px w-8 bg-[color:var(--gold)]" />
                 The Experience Studio
               </span>
-              <h2 className="serif text-4xl md:text-5xl mt-6 leading-tight font-light">
+              <h2 className="serif text-4xl md:text-5xl mt-6">
                 Design your own Portugal —<br />
                 <span className="italic">step by step.</span>
               </h2>
@@ -511,7 +511,7 @@ function HomePage() {
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="reveal lg:order-2">
               <span className="eyebrow">Multi-Day Journeys</span>
-              <h2 className="serif text-4xl md:text-5xl mt-5 leading-tight">
+              <h2 className="serif text-4xl md:text-5xl mt-5">
                 A few days, <br />
                 <span className="italic">one continuous story.</span>
               </h2>
@@ -558,7 +558,7 @@ function HomePage() {
         <div className="container-x">
           <div className="reveal text-center max-w-2xl mx-auto mb-16 md:mb-20">
             <span className="eyebrow">Local Stories &amp; Hidden Gems</span>
-            <h2 className="serif text-[2.5rem] md:text-5xl lg:text-[3.4rem] mt-6 leading-[1.08] text-[color:var(--charcoal)]">
+            <h2 className="serif text-[2.5rem] md:text-5xl lg:text-[3.4rem] mt-6">
               The Portugal <span className="italic">we travel ourselves</span>
             </h2>
             <p className="mt-6 text-[16px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.75] max-w-xl mx-auto font-light">
@@ -579,7 +579,7 @@ function HomePage() {
                   <div className="absolute inset-0 bg-[color:var(--teal)]/0 group-hover:bg-[color:var(--teal)]/10 transition-colors duration-700" />
                   <div className="absolute left-5 right-5 bottom-5">
                     <span className="block h-px w-8 bg-[color:var(--gold)] mb-3 opacity-90" />
-                    <h3 className="serif text-[1.4rem] md:text-[1.5rem] leading-tight text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
+                    <h3 className="serif text-[1.4rem] md:text-[1.5rem] leading-[1.15] text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
                       {e.title}
                     </h3>
                   </div>
@@ -610,7 +610,7 @@ function HomePage() {
                 <span className="h-px w-8 bg-[color:var(--gold)]" />
                 Corporate &amp; Celebrations
               </span>
-              <h2 className="serif text-4xl md:text-5xl mt-7 leading-[1.1] font-light">
+              <h2 className="serif text-4xl md:text-5xl mt-7">
                 Fully private. <br />
                 <span className="italic">Fully managed.</span>
               </h2>
@@ -679,7 +679,7 @@ function HomePage() {
         <div className="container-x">
           <div className="reveal text-center max-w-2xl mx-auto mb-16">
             <span className="eyebrow">Voices</span>
-            <h2 className="serif text-4xl md:text-5xl mt-6 leading-[1.1]">
+            <h2 className="serif text-4xl md:text-5xl mt-6">
               What guests <span className="italic">tell us after</span>
             </h2>
           </div>
@@ -719,7 +719,7 @@ function HomePage() {
             <div className="absolute -top-12 right-1/4 w-40 h-40 rounded-full border border-[color:var(--gold)]/10" />
             <div className="relative max-w-2xl">
               <span className="eyebrow">Begin</span>
-              <h2 className="serif text-4xl md:text-5xl mt-6 leading-[1.1]">
+              <h2 className="serif text-4xl md:text-5xl mt-6">
                 Your Portugal story <br />
                 <span className="italic text-[color:var(--teal)]">starts with a single step.</span>
               </h2>
