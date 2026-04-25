@@ -62,7 +62,7 @@ export function FAQ() {
           <span className="eyebrow">Before you book</span>
           <h2
             id="faq-title"
-            className="serif text-4xl md:text-5xl mt-5 leading-tight text-[color:var(--charcoal)]"
+            className="serif text-4xl md:text-5xl mt-5"
           >
             Everything You Need to Know{" "}
             <span className="italic text-[color:var(--teal)]">
