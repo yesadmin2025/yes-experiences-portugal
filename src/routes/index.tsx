@@ -143,9 +143,9 @@ function HomePage() {
           width={1920}
           height={1080}
         />
-        {/* Refined dark overlay — readable but cinematic */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal)]/85 via-[color:var(--charcoal)]/35 to-[color:var(--charcoal)]/45" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_60%,transparent_40%,rgba(0,0,0,0.4)_100%)]" />
+        {/* Refined dark overlay — readable but cinematic. Strengthened for WCAG AA on mobile */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal)]/90 via-[color:var(--charcoal)]/55 to-[color:var(--charcoal)]/55 md:from-[color:var(--charcoal)]/88 md:via-[color:var(--charcoal)]/45 md:to-[color:var(--charcoal)]/50" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_65%,transparent_35%,rgba(0,0,0,0.5)_100%)]" />
 
         <div className="container-x relative z-10 pb-20 md:pb-32 pt-32 md:pt-40">
           <div className="max-w-3xl text-[color:var(--ivory)]">
