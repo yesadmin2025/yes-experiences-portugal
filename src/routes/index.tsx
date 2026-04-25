@@ -15,6 +15,7 @@ import editWinery from "@/assets/edit-winery.jpg";
 import editMarket from "@/assets/edit-market.jpg";
 import editViewpoint from "@/assets/edit-viewpoint.jpg";
 import { ArrowRight, Star, MapPin, Compass, Clock } from "lucide-react";
+import { PlatformBadge } from "@/components/PlatformBadge";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -291,12 +292,10 @@ function HomePage() {
             aria-label="Official review platforms"
           >
             {[
-              { name: "Google" },
-              { name: "Tripadvisor" },
-              { name: "Viator" },
+              { name: "Google", key: "google" as const },
+              { name: "Tripadvisor", key: "tripadvisor" as const },
+              { name: "Viator", key: "viator" as const },
             ].map((p, i) => {
-              const badgeId = `trust-official-${p.name.toLowerCase()}`;
-              const officialLabel = `${p.name} — official review platform`;
               return (
                 <li
                   key={p.name}
@@ -307,50 +306,16 @@ function HomePage() {
                   ].join(" ")}
                   style={{ transitionDelay: `${330 + i * 110}ms` }}
                 >
-                  <figure className="flex flex-col items-center gap-2.5 m-0">
-                    {/* Platform name — links to its "Official platform"
-                        caption via aria-describedby so SR users hear:
-                        "Google, Google — official review platform". */}
+                  <figure className="flex flex-col items-center gap-3 m-0">
+                    {/* Platform name */}
                     <figcaption
                       className="serif text-[17px] sm:text-[19px] md:text-[22px] leading-none text-[color:var(--charcoal)] tracking-tight whitespace-nowrap"
-                      aria-describedby={badgeId}
                     >
                       {p.name}
                     </figcaption>
 
-                    {/* Official-platform caption — hairline pill with a
-                        tiny gold check. Restrained, monochrome, and
-                        clearly NOT a rating widget. */}
-                    <span
-                      id={badgeId}
-                      className="inline-flex items-center gap-1.5 border border-[color:var(--border)] px-2.5 py-1 leading-none"
-                      role="img"
-                      aria-label={officialLabel}
-                    >
-                      <svg
-                        width="10"
-                        height="10"
-                        viewBox="0 0 12 12"
-                        fill="none"
-                        aria-hidden="true"
-                        focusable="false"
-                        className="text-[color:var(--gold)]"
-                      >
-                        <path
-                          d="M2.5 6.2 5 8.7l4.5-5"
-                          stroke="currentColor"
-                          strokeWidth="1.4"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                      <span
-                        className="text-[9.5px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)]"
-                        aria-hidden="true"
-                      >
-                        Official platform
-                      </span>
-                    </span>
+                    {/* Official platform brand badge */}
+                    <PlatformBadge platform={p.key} />
                   </figure>
                 </li>
               );
