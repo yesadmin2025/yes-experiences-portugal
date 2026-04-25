@@ -719,7 +719,7 @@ function HomePage() {
             <div className="absolute -top-12 right-1/4 w-40 h-40 rounded-full border border-[color:var(--gold)]/10" />
             <div className="relative max-w-2xl">
               <span className="eyebrow">Begin</span>
-              <h2 className="serif text-4xl md:text-5xl mt-6 leading-[1.1]">
+              <h2 className="serif text-4xl md:text-5xl mt-6">
                 Your Portugal story <br />
                 <span className="italic text-[color:var(--teal)]">starts with a single step.</span>
               </h2>
