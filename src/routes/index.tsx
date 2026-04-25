@@ -460,15 +460,15 @@ function HomePage() {
                 Design your own Portugal —<br />
                 <span className="italic">step by step.</span>
               </h2>
-              <p className="mt-6 text-[16px] text-[color:var(--ivory)]/90 leading-[1.75] max-w-lg font-light">
+              <p className="mt-7 text-[17px] text-[color:var(--ivory)]/95 leading-[1.75] max-w-lg font-light">
                 Tell us how you travel. We'll shape a private experience around your group, your
-                pace, your highlights — with a live story, timeline and map evolving as you go.
-                Secure it the moment it feels right.
+                pace and the moments that matter — with a live story, timeline and map evolving
+                as you go. Secure it the moment it feels right.
               </p>
-              <div className="mt-8 flex flex-wrap gap-4">
+              <div className="mt-9 flex flex-wrap gap-4">
                 <Link
                   to="/builder"
-                  className="inline-flex items-center gap-2 bg-[color:var(--ivory)] text-[color:var(--teal)] hover:bg-white border border-[color:var(--gold)]/50 hover:border-[color:var(--gold)] px-8 py-4 text-sm uppercase tracking-[0.18em] transition-all duration-500 hover:-translate-y-0.5"
+                  className="inline-flex items-center gap-2 bg-[color:var(--ivory)] text-[color:var(--teal)] hover:bg-white border border-[color:var(--gold)]/60 hover:border-[color:var(--gold)] px-8 py-4 text-[12px] uppercase tracking-[0.2em] font-medium transition-all duration-500 hover:-translate-y-0.5"
                 >
                   Open the Studio
                   <ArrowRight size={15} />
@@ -526,16 +526,16 @@ function HomePage() {
                 A few days, <br />
                 <span className="italic">one continuous story.</span>
               </h2>
-              <p className="mt-6 text-[16px] text-[color:var(--charcoal-soft)] leading-[1.75] max-w-lg">
-                Linger longer. Travel slower. Wake up in a vineyard, lunch in a fishing village,
+              <p className="mt-7 text-[17px] text-[color:var(--charcoal-soft)] leading-[1.75] max-w-lg">
+                Linger longer. Travel slower. Wake in a vineyard, lunch in a fishing village,
                 fall asleep above the Douro — connected by quiet roads and people who know them
                 by name.
               </p>
-              <div className="mt-8 flex flex-wrap gap-3">
+              <div className="mt-9 flex flex-wrap gap-3">
                 {["Coast & Vineyards", "Lisbon to Douro", "Alentejo Slow"].map((tag) => (
                   <span
                     key={tag}
-                    className="text-xs uppercase tracking-[0.2em] px-4 py-2 border border-[color:var(--charcoal)]/15 text-[color:var(--charcoal)]"
+                    className="text-[12px] uppercase tracking-[0.2em] px-4 py-2 border border-[color:var(--charcoal)]/20 text-[color:var(--charcoal)]"
                   >
                     {tag}
                   </span>
@@ -543,7 +543,7 @@ function HomePage() {
               </div>
               <Link
                 to="/multi-day"
-                className="mt-10 inline-flex items-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] border border-[color:var(--gold)]/50 hover:border-[color:var(--gold)] px-7 py-3.5 text-sm uppercase tracking-[0.18em] transition-all duration-500 hover:-translate-y-0.5"
+                className="mt-10 inline-flex items-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] border border-[color:var(--gold)]/60 hover:border-[color:var(--gold)] px-7 py-3.5 text-[12px] uppercase tracking-[0.2em] font-medium transition-all duration-500 hover:-translate-y-0.5"
               >
                 Discover Multi-Day Journeys
                 <ArrowRight size={15} />
@@ -595,16 +595,16 @@ function HomePage() {
                     </h3>
                   </div>
                 </div>
-                <p className="text-[15px] text-[color:var(--charcoal)] leading-[1.7] font-light max-w-[34ch]">
+                <p className="text-[15.5px] text-[color:var(--charcoal)] leading-[1.7] font-light max-w-[34ch]">
                   {e.line}
                 </p>
               </article>
             ))}
           </div>
-          <div className="reveal mt-14 text-center">
+          <div className="reveal mt-16 text-center">
             <Link
               to="/local-stories"
-              className="inline-flex items-center gap-2 text-sm uppercase tracking-[0.2em] text-[color:var(--teal)] hover:text-[color:var(--teal-2)] transition-colors"
+              className="inline-flex items-center gap-2 text-[13px] uppercase tracking-[0.2em] text-[color:var(--teal)] hover:text-[color:var(--teal-2)] transition-colors font-medium"
             >
               Read all local stories <ArrowRight size={14} />
             </Link>
