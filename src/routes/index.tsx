@@ -276,7 +276,7 @@ function HomePage() {
               style={{ transitionDelay: "220ms" }}
               id="trust-bar-summary"
             >
-              600+ 5-star reviews across Google, TripAdvisor and Viator
+              600+ 5-star reviews across Google, Tripadvisor, Viator, GetYourGuide and Trustpilot
             </p>
           </div>
 
@@ -288,34 +288,43 @@ function HomePage() {
               checkmark — instead of repeating the star/rating badge that
               already appears once at the top of the section. */}
           <ul
-            className="mt-12 mx-auto grid grid-cols-3 items-stretch list-none p-0 max-w-[640px] sm:max-w-3xl"
+            className="mt-12 mx-auto grid grid-cols-3 sm:grid-cols-5 items-stretch list-none p-0 gap-y-8 max-w-[520px] sm:max-w-4xl"
             aria-label="Official review platforms"
           >
             {[
-              { name: "Google", key: "google" as const },
-              { name: "Tripadvisor", key: "tripadvisor" as const },
-              { name: "Viator", key: "viator" as const },
+              { key: "google" as const },
+              { key: "tripadvisor" as const },
+              { key: "viator" as const },
+              { key: "getyourguide" as const },
+              { key: "trustpilot" as const },
             ].map((p, i) => {
               return (
                 <li
-                  key={p.name}
-                  className={[
-                    "reveal-stagger flex items-center justify-center px-2 sm:px-6 md:px-8 py-2",
-                    // Hairline gold dividers are purely decorative
-                    i > 0 ? "border-l border-[color:var(--gold)]/25" : "",
-                  ].join(" ")}
-                  style={{ transitionDelay: `${330 + i * 110}ms` }}
+                  key={p.key}
+                  className="reveal-stagger flex items-center justify-center px-3 sm:px-5 md:px-6 py-2"
+                  style={{ transitionDelay: `${330 + i * 90}ms` }}
                 >
-                  <figure className="flex flex-col items-center justify-center gap-4 sm:gap-5 m-0">
-                    {/* Platform name — fixed line slot keeps badges baseline-aligned */}
-                    <figcaption
-                      className="serif text-[16px] sm:text-[19px] md:text-[22px] leading-none text-[color:var(--charcoal)] tracking-tight whitespace-nowrap h-[20px] sm:h-[22px] md:h-[24px] flex items-center"
+                  <figure className="flex flex-col items-center justify-center gap-3 sm:gap-4 m-0">
+                    {/* 5-star rating — uniform across every platform */}
+                    <span
+                      className="flex gap-[2px] text-[color:var(--gold)]"
+                      role="img"
+                      aria-label="Rated 5 out of 5 stars"
                     >
-                      {p.name}
-                    </figcaption>
+                      {[...Array(5)].map((_, s) => (
+                        <Star
+                          key={s}
+                          size={11}
+                          fill="currentColor"
+                          strokeWidth={0}
+                          aria-hidden="true"
+                          focusable="false"
+                        />
+                      ))}
+                    </span>
 
                     {/* Official platform brand mark — uniform optical height */}
-                    <div className="flex items-center justify-center h-8 sm:h-9 md:h-10">
+                    <div className="flex items-center justify-center h-9 sm:h-10 md:h-11">
                       <PlatformBadge platform={p.key} />
                     </div>
                   </figure>

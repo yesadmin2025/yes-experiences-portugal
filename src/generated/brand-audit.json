@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-25T06:33:21.936Z",
+  "generatedAt": "2026-04-25T07:04:13.272Z",
   "filesScanned": 23,
   "approvedPalette": {
     "teal": "#295B61",
@@ -26,7 +26,7 @@
   "findings": [
     {
       "file": "src/components/Navbar.tsx",
-      "line": 62,
+      "line": 60,
       "col": 39,
       "raw": "#2E2E2E",
       "normalized": "#2e2e2e",
