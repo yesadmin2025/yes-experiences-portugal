@@ -68,7 +68,7 @@ export function Navbar() {
       {open && (
         <div
           id="mobile-nav"
-          className="lg:hidden bg-white border-t border-black/[0.05]"
+          className="lg:hidden bg-[color:var(--ivory)] border-t border-black/[0.05]"
         >
           <div className="container-x py-6 flex flex-col gap-5 text-sm">
             {navLinks.map((n) => (
