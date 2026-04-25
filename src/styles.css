@@ -27,11 +27,11 @@
     src: url("https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7W0Q5nw.woff2") format("woff2");
   }
   @font-face {
-    font-family: "Caveat";
+    font-family: "Kaushan Script";
     font-style: normal;
-    font-weight: 400 700;
+    font-weight: 400;
     font-display: swap;
-    src: url("https://fonts.gstatic.com/s/caveat/v18/Wnz6HAc5bAfYB2QRah7pcpNvOx-pjfJ9eIWpZw.woff2") format("woff2");
+    src: url("https://fonts.gstatic.com/s/kaushanscript/v19/vm8vdRfvXFLG3OLnsO15WYS5DF7_.ttf") format("truetype");
   }
 }
 
@@ -72,7 +72,7 @@
 
   --font-serif: "Cormorant Garamond", Georgia, serif;
   --font-sans: "Inter", system-ui, sans-serif;
-  --font-script: "Caveat", cursive;
+  --font-script: "Kaushan Script", cursive;
 
   --shadow-elegant: 0 30px 60px -30px color-mix(in oklab, var(--teal) 30%, transparent);
   --shadow-card: 0 20px 40px -24px rgba(46, 46, 46, 0.18);
