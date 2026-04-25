@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import logoGold from "@/assets/yes-logo-approved-gold.png";
+import logoGold from "@/assets/yes-logo-approved-gold-silk.png";
 
 export function Footer() {
   return (
@@ -7,10 +7,9 @@ export function Footer() {
       <div className="container-x py-20">
         <div className="grid md:grid-cols-4 gap-12">
           <div className="md:col-span-1">
-            {/* Gold variant of the official master logo — same letterforms,
-                proportions and gold rules as the header lockup, recolored
-                so YES reads in champagne gold and "experiences" in warm
-                ivory for the dark charcoal footer surface. */}
+            {/* Gold variant of the approved header artwork — same silhouette
+                and scale, with a softer champagne-gold finish for the dark
+                footer surface. */}
             <Link
               to="/"
               className="inline-block rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--charcoal)]"
