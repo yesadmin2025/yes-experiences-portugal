@@ -224,7 +224,6 @@ function HomePage() {
                     fill="currentColor"
                     strokeWidth={0}
                     className="reveal-stagger"
-                    style={{ transitionDelay: `${i * 90}ms` }}
                   />
                 ))}
               </div>
@@ -244,11 +243,10 @@ function HomePage() {
                 { name: "Google", badge: "Excellent · 5.0" },
                 { name: "Tripadvisor", badge: "Travelers' Choice" },
                 { name: "Viator", badge: "Top-rated Operator" },
-              ].map((p, i) => (
+              ].map((p) => (
                 <div
                   key={p.name}
                   className="flex flex-col items-center gap-1.5 reveal-stagger"
-                  style={{ transitionDelay: `${250 + i * 140}ms` }}
                 >
                   <span className="serif text-base md:text-lg text-[color:var(--charcoal)] tracking-tight">
                     {p.name}
