@@ -393,6 +393,9 @@ function HomePage() {
         </div>
       </section>
 
+      {/* 4.5 — FAQ (placed right after Builder Preview) */}
+      <FAQ />
+
       {/* 5 — SIGNATURE EXPERIENCES */}
       <section className="py-32 md:py-44 bg-[color:var(--ivory)]">
         <div className="container-x">
