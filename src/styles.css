@@ -77,6 +77,10 @@
 
   --shadow-elegant: 0 30px 60px -30px color-mix(in oklab, var(--teal) 30%, transparent);
   --shadow-card: 0 20px 40px -24px rgba(46, 46, 46, 0.18);
+  --shadow-card-hover: 0 28px 55px -22px rgba(41, 91, 97, 0.22);
+  --shadow-cta: 0 8px 20px -10px rgba(41, 91, 97, 0.35);
+  --shadow-cta-hover: 0 14px 30px -12px rgba(41, 91, 97, 0.45);
+  --shadow-cta-light: 0 6px 18px -10px rgba(46, 46, 46, 0.22);
 }
 
 :root {
