@@ -288,7 +288,7 @@ function HomePage() {
               checkmark — instead of repeating the star/rating badge that
               already appears once at the top of the section. */}
           <ul
-            className="mt-12 mx-auto grid grid-cols-3 sm:grid-cols-5 items-center list-none p-0 gap-x-2 sm:gap-x-4 gap-y-8 max-w-[420px] sm:max-w-3xl"
+            className="mt-12 mx-auto grid grid-cols-5 items-center list-none p-0 gap-x-1 sm:gap-x-3 max-w-[480px] sm:max-w-2xl"
             aria-label="Official review platforms"
           >
             {[
@@ -301,16 +301,12 @@ function HomePage() {
               return (
                 <li
                   key={p.key}
-                  className="reveal-stagger flex items-center justify-center px-2 sm:px-3 py-2"
+                  className="reveal-stagger flex items-center justify-center px-1 sm:px-2 py-2"
                   style={{ transitionDelay: `${330 + i * 90}ms` }}
                 >
-                  <figure className="flex items-center justify-center m-0">
-
-                    {/* Official platform brand mark — uniform optical height */}
-                    <div className="flex items-center justify-center h-7 sm:h-8 md:h-9">
-                      <PlatformBadge platform={p.key} />
-                    </div>
-                  </figure>
+                  <div className="flex items-center justify-center h-8 sm:h-9 md:h-10 w-full">
+                    <PlatformBadge platform={p.key} />
+                  </div>
                 </li>
               );
             })}
