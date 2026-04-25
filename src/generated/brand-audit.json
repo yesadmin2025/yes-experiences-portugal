@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-25T01:30:44.817Z",
+  "generatedAt": "2026-04-25T01:31:34.044Z",
   "filesScanned": 22,
   "approvedPalette": {
     "teal": "#295B61",
@@ -18,8 +18,8 @@
     "#cccccc"
   ],
   "counts": {
-    "total": 53,
-    "approved": 38,
+    "total": 55,
+    "approved": 40,
     "allowlisted": 15,
     "mismatch": 0
   },
@@ -58,6 +58,24 @@
       "raw": "#FAF8F3",
       "normalized": "#faf8f3",
       "snippet": "* (teal #295B61, charcoal #2E2E2E, gold #C9A96A, ivory #FAF8F3).",
+      "status": "approved"
+    },
+    {
+      "file": "src/components/Logo.tsx",
+      "line": 72,
+      "col": 60,
+      "raw": "#295B61",
+      "normalized": "#295b61",
+      "snippet": "// Brand-locked: YES must always render in approved teal #295B61 on light surfaces.",
+      "status": "approved"
+    },
+    {
+      "file": "src/components/Logo.tsx",
+      "line": 73,
+      "col": 48,
+      "raw": "#295B61",
+      "normalized": "#295b61",
+      "snippet": "const yesColor = isLight ? \"var(--ivory)\" : \"#295B61\";",
       "status": "approved"
     },
     {
