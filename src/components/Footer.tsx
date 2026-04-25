@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import logoGold from "@/assets/yes-logo-gold.svg";
+import logoGold from "@/assets/yes-logo-approved-gold.png";
 
 export function Footer() {
   return (
@@ -18,13 +18,14 @@ export function Footer() {
             >
               <img
                 src={logoGold}
-                width={1200}
-                height={900}
+                width={909}
+                height={579}
                 alt="YES experiences PORTUGAL"
-                className="block h-[92px] md:h-[108px] lg:h-[120px] w-auto select-none"
+                className="block h-[88px] md:h-[104px] lg:h-[116px] w-auto select-none"
                 draggable={false}
                 loading="lazy"
                 decoding="async"
+                style={{ imageRendering: "auto" }}
               />
             </Link>
             <p className="mt-7 text-sm text-[color:var(--ivory)]/70 leading-relaxed max-w-xs">
