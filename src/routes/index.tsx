@@ -281,20 +281,21 @@ function HomePage() {
           {/* Platform marks — true 3-column grid; the three cells continue
               the same 110ms cadence (330 → 440 → 550 ms) so the whole
               Trust Bar reads as one unbroken reveal.
-              Each platform shows a small icon-style badge directly UNDER
-              its name: 5 hairline gold stars + numeric rating in a soft
-              hairline pill. */}
+              Per brief: under each platform name we show an "Official
+              platform" caption — a small hairline tag with a tiny gold
+              checkmark — instead of repeating the star/rating badge that
+              already appears once at the top of the section. */}
           <ul
             className="mt-12 max-w-3xl mx-auto grid grid-cols-3 items-center list-none p-0"
-            aria-label="Review ratings by platform"
+            aria-label="Official review platforms"
           >
             {[
-              { name: "Google", rating: "5.0" },
-              { name: "Tripadvisor", rating: "5.0" },
-              { name: "Viator", rating: "5.0" },
+              { name: "Google" },
+              { name: "Tripadvisor" },
+              { name: "Viator" },
             ].map((p, i) => {
-              const badgeId = `trust-badge-${p.name.toLowerCase()}`;
-              const ratingLabel = `Rated ${p.rating} out of 5 stars on ${p.name}`;
+              const badgeId = `trust-official-${p.name.toLowerCase()}`;
+              const officialLabel = `${p.name} — official review platform`;
               return (
                 <li
                   key={p.name}
@@ -305,10 +306,10 @@ function HomePage() {
                   ].join(" ")}
                   style={{ transitionDelay: `${330 + i * 110}ms` }}
                 >
-                  <figure className="flex flex-col items-center gap-3 m-0">
-                    {/* Platform name — links to its rating badge via
-                        aria-describedby for clear announcement order:
-                        "Google" then "Rated 5.0 out of 5 stars on Google". */}
+                  <figure className="flex flex-col items-center gap-2.5 m-0">
+                    {/* Platform name — links to its "Official platform"
+                        caption via aria-describedby so SR users hear:
+                        "Google, Google — official review platform". */}
                     <figcaption
                       className="serif text-[17px] sm:text-[19px] md:text-[22px] leading-none text-[color:var(--charcoal)] tracking-tight whitespace-nowrap"
                       aria-describedby={badgeId}
@@ -316,37 +317,37 @@ function HomePage() {
                       {p.name}
                     </figcaption>
 
-                    {/* Icon-style badge — restrained pill with 5 gold
-                        micro stars and the numeric rating. The whole
-                        pill is a single role="img" so SR users hear one
-                        clean phrase instead of five star icons + a
-                        number. */}
+                    {/* Official-platform caption — hairline pill with a
+                        tiny gold check. Restrained, monochrome, and
+                        clearly NOT a rating widget. */}
                     <span
                       id={badgeId}
                       className="inline-flex items-center gap-1.5 border border-[color:var(--border)] px-2.5 py-1 leading-none"
                       role="img"
-                      aria-label={ratingLabel}
+                      aria-label={officialLabel}
                     >
+                      <svg
+                        width="10"
+                        height="10"
+                        viewBox="0 0 12 12"
+                        fill="none"
+                        aria-hidden="true"
+                        focusable="false"
+                        className="text-[color:var(--gold)]"
+                      >
+                        <path
+                          d="M2.5 6.2 5 8.7l4.5-5"
+                          stroke="currentColor"
+                          strokeWidth="1.4"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
                       <span
-                        className="flex gap-[2px] text-[color:var(--gold)]"
+                        className="text-[9.5px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)]"
                         aria-hidden="true"
                       >
-                        {[...Array(5)].map((_, idx) => (
-                          <Star
-                            key={idx}
-                            size={9}
-                            fill="currentColor"
-                            strokeWidth={0}
-                            aria-hidden="true"
-                            focusable="false"
-                          />
-                        ))}
-                      </span>
-                      <span
-                        className="text-[10px] tracking-[0.18em] text-[color:var(--charcoal-soft)]"
-                        aria-hidden="true"
-                      >
-                        {p.rating}
+                        Official platform
                       </span>
                     </span>
                   </figure>
