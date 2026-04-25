@@ -205,26 +205,25 @@ function HomePage() {
         </div>
       </section>
 
-      {/* 2 — TRUST BAR */}
+      {/* 2 — TRUST BAR
+          Structure mirrors the other card grids:
+          - Section title/intro uses .reveal (single fade-up)
+          - The badge row is a flat parent containing only .reveal-stagger
+            siblings, so the observer assigns them sequential 110ms delays
+            from one continuous index — same cadence as every other grid. */}
       <section className="bg-[color:var(--ivory)] border-b border-[color:var(--border)] py-14 md:py-16">
         <div className="container-x">
+          {/* Intro block — single .reveal, like every other section title */}
           <div className="reveal flex flex-col items-center text-center gap-4">
-            {/* Headline */}
             <p className="text-[11px] uppercase tracking-[0.34em] text-[color:var(--charcoal)]">
               Trusted by international travelers
             </p>
 
-            {/* 5-star rating */}
+            {/* 5-star rating — static (instant). Stagger lives on the badge row below. */}
             <div className="flex items-center gap-2.5">
               <div className="flex gap-0.5 text-[color:var(--gold)]">
                 {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    size={14}
-                    fill="currentColor"
-                    strokeWidth={0}
-                    className="reveal-stagger"
-                  />
+                  <Star key={i} size={14} fill="currentColor" strokeWidth={0} />
                 ))}
               </div>
               <span className="text-[11px] uppercase tracking-[0.28em] text-[color:var(--charcoal-soft)]">
@@ -232,32 +231,34 @@ function HomePage() {
               </span>
             </div>
 
-            {/* Supporting line */}
             <p className="text-[13px] text-[color:var(--charcoal-soft)] max-w-xl leading-relaxed">
               600+ 5-star reviews across Google, TripAdvisor and Viator
             </p>
+          </div>
 
-            {/* Brand marks — platform name + small trust badge underneath */}
-            <div className="mt-3 flex flex-wrap items-start justify-center gap-x-10 sm:gap-x-14 gap-y-5">
-              {[
-                { name: "Google", badge: "Excellent · 5.0" },
-                { name: "Tripadvisor", badge: "Travelers' Choice" },
-                { name: "Viator", badge: "Top-rated Operator" },
-              ].map((p) => (
-                <div
-                  key={p.name}
-                  className="flex flex-col items-center gap-1.5 reveal-stagger"
-                >
-                  <span className="serif text-base md:text-lg text-[color:var(--charcoal)] tracking-tight">
-                    {p.name}
-                  </span>
-                  <span className="inline-flex items-center gap-1.5 text-[9px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)] border border-[color:var(--border)] px-2 py-1">
-                    <Star size={8} fill="currentColor" strokeWidth={0} className="text-[color:var(--gold)]" />
-                    {p.badge}
-                  </span>
-                </div>
-              ))}
-            </div>
+          {/* Badge grid — flat parent of only .reveal-stagger children.
+              Identical wrapper pattern to the categories / signatures /
+              editorial / reviews grids, so the observer's sibling-index
+              cadence applies cleanly. */}
+          <div className="mt-8 flex flex-wrap items-start justify-center gap-x-10 sm:gap-x-14 gap-y-5">
+            {[
+              { name: "Google", badge: "Excellent · 5.0" },
+              { name: "Tripadvisor", badge: "Travelers' Choice" },
+              { name: "Viator", badge: "Top-rated Operator" },
+            ].map((p) => (
+              <div
+                key={p.name}
+                className="flex flex-col items-center gap-1.5 reveal-stagger"
+              >
+                <span className="serif text-base md:text-lg text-[color:var(--charcoal)] tracking-tight">
+                  {p.name}
+                </span>
+                <span className="inline-flex items-center gap-1.5 text-[9px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)] border border-[color:var(--border)] px-2 py-1">
+                  <Star size={8} fill="currentColor" strokeWidth={0} className="text-[color:var(--gold)]" />
+                  {p.badge}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
       </section>
