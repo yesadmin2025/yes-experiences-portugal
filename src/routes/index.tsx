@@ -224,7 +224,6 @@ function HomePage() {
                     fill="currentColor"
                     strokeWidth={0}
                     className="reveal-stagger"
-                    style={{ transitionDelay: `${i * 90}ms` }}
                   />
                 ))}
               </div>
