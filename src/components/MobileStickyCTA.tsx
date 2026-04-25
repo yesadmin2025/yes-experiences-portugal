@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Link } from "@tanstack/react-router";
+import { useEffect, useRef, useState } from "react";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 
 /**
@@ -140,7 +140,60 @@ export function MobileStickyCTA() {
     };
   }, []);
 
-  const handleIntent = () => {
+  // Submit-lock: prevents double-taps from firing two navigations or two
+  // analytics events. Mirrored in a ref so synchronous click handlers can
+  // gate-check without waiting for a re-render.
+  const [submitting, setSubmitting] = useState(false);
+  const submittingRef = useRef(false);
+
+  // Watch the router's loading state — once navigation completes (or fails),
+  // re-enable the button. A short safety-net timeout also re-enables the
+  // CTA if for any reason routing never settles, so the bar never gets
+  // stuck disabled.
+  const isRouterLoading = useRouterState({
+    select: (s) => s.isLoading || s.status === "pending",
+  });
+
+  useEffect(() => {
+    if (!submitting) return;
+    if (!isRouterLoading) {
+      // Router has settled — release the lock on the next tick so any
+      // synchronous re-tap from the same gesture is still suppressed.
+      const t = window.setTimeout(() => {
+        submittingRef.current = false;
+        setSubmitting(false);
+      }, 50);
+      return () => window.clearTimeout(t);
+    }
+    // Safety net — never leave the button disabled longer than 4s.
+    const safety = window.setTimeout(() => {
+      submittingRef.current = false;
+      setSubmitting(false);
+    }, 4000);
+    return () => window.clearTimeout(safety);
+  }, [submitting, isRouterLoading]);
+
+  // BFCache restore: if the user comes back via back/forward, reset the
+  // lock so the CTA is interactive again immediately.
+  useEffect(() => {
+    const onPageShow = () => {
+      submittingRef.current = false;
+      setSubmitting(false);
+    };
+    window.addEventListener("pageshow", onPageShow);
+    return () => window.removeEventListener("pageshow", onPageShow);
+  }, []);
+
+  const handleIntent = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    // Block the second (and Nth) tap entirely — no navigation, no analytics.
+    if (submittingRef.current) {
+      e.preventDefault();
+      e.stopPropagation();
+      return;
+    }
+    submittingRef.current = true;
+    setSubmitting(true);
+
     trackIntent({
       cta: "design_secure",
       surface: "mobile_sticky",
@@ -184,20 +237,39 @@ export function MobileStickyCTA() {
             </p>
           </div>
 
-          {/* CTA — matches the desktop primary action exactly */}
+          {/* CTA — matches the desktop primary action exactly.
+              While submitting: pointer-events blocked, opacity dimmed,
+              aria-disabled set, and the click handler short-circuits any
+              extra taps. The visual change is calm — no spinner — to
+              preserve the premium feel; the small dot turns into a thin
+              progress hint via opacity only. */}
           <Link
             to="/builder"
             onClick={handleIntent}
-            tabIndex={visible ? 0 : -1}
-            className="group inline-flex items-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-white border border-[color:var(--gold)]/70 px-4 py-3 text-[10.5px] tracking-[0.2em] uppercase whitespace-nowrap transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
-            aria-label="Design and secure your experience"
+            tabIndex={visible && !submitting ? 0 : -1}
+            aria-disabled={submitting}
+            aria-busy={submitting}
             data-cta="design_secure"
             data-cta-surface="mobile_sticky"
+            data-state={submitting ? "submitting" : "idle"}
+            className={[
+              "group inline-flex items-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-white",
+              "border border-[color:var(--gold)]/70 px-4 py-3 text-[10.5px] tracking-[0.2em] uppercase whitespace-nowrap",
+              "transition-[opacity,background-color] duration-300",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-white",
+              submitting
+                ? "opacity-70 pointer-events-none cursor-default"
+                : "",
+            ].join(" ")}
+            aria-label="Design and secure your experience"
           >
-            Design &amp; Secure
+            {submitting ? "Opening…" : "Design \u0026 Secure"}
             <ArrowRight
               size={13}
-              className="group-hover:translate-x-0.5 transition-transform duration-300"
+              className={[
+                "transition-transform duration-300",
+                submitting ? "translate-x-0.5" : "group-hover:translate-x-0.5",
+              ].join(" ")}
             />
           </Link>
         </div>
