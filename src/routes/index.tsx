@@ -292,9 +292,11 @@ function HomePage() {
                     loading="lazy"
                     className="w-full h-full object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.08]"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal)]/70 via-[color:var(--charcoal)]/10 to-transparent" />
+                  {/* Bottom gradient + top scrim — guarantees readability for both top eyebrow and any caption */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal)]/80 via-[color:var(--charcoal)]/15 to-transparent" />
+                  <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[color:var(--charcoal)]/55 to-transparent" />
                   <div className="absolute inset-0 bg-[color:var(--teal)]/0 group-hover:bg-[color:var(--teal)]/10 transition-colors duration-700" />
-                  <span className="absolute top-4 left-4 text-[10px] uppercase tracking-[0.25em] text-white/95 drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)]">
+                  <span className="absolute top-4 left-4 text-[10px] uppercase tracking-[0.25em] text-white drop-shadow-[0_1px_6px_rgba(0,0,0,0.6)]">
                     Private · Tailored
                   </span>
                 </div>
