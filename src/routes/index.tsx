@@ -644,25 +644,24 @@ function HomePage() {
           </div>
           <div className="grid md:grid-cols-3 gap-7">
             {reviews.map((r, i) => (
-              <figure
-                key={i}
-                className="bg-[color:var(--card)] border border-[color:var(--border)] p-8 reveal-stagger transition-all duration-500 hover:-translate-y-1.5 hover:shadow-[0_24px_50px_-24px_rgba(41,91,97,0.2)] hover:border-[color:var(--teal)]/25"
-
-              >
-                <div className="flex gap-0.5 text-[color:var(--gold)] mb-4">
-                  {[...Array(5)].map((_, idx) => (
-                    <Star key={idx} size={12} fill="currentColor" />
-                  ))}
+              <figure key={i} className="group reveal-stagger h-full">
+                {/* lift-layer owns hover transform/shadow — reveal owns entrance */}
+                <div className="lift-layer-sm bg-[color:var(--card)] border border-[color:var(--border)] group-hover:border-[color:var(--teal)]/25 group-hover:shadow-[0_24px_50px_-24px_rgba(41,91,97,0.2)] p-8 h-full">
+                  <div className="flex gap-0.5 text-[color:var(--gold)] mb-4">
+                    {[...Array(5)].map((_, idx) => (
+                      <Star key={idx} size={12} fill="currentColor" />
+                    ))}
+                  </div>
+                  <blockquote className="serif italic text-lg leading-relaxed text-[color:var(--charcoal)]">
+                    "{r.quote}"
+                  </blockquote>
+                  <figcaption className="mt-6 pt-4 border-t border-[color:var(--border)]">
+                    <p className="text-sm font-medium text-[color:var(--charcoal)]">{r.name}</p>
+                    <p className="text-xs text-[color:var(--charcoal-soft)] mt-0.5">
+                      {r.location}
+                    </p>
+                  </figcaption>
                 </div>
-                <blockquote className="serif italic text-lg leading-relaxed text-[color:var(--charcoal)]">
-                  "{r.quote}"
-                </blockquote>
-                <figcaption className="mt-6 pt-4 border-t border-[color:var(--border)]">
-                  <p className="text-sm font-medium text-[color:var(--charcoal)]">{r.name}</p>
-                  <p className="text-xs text-[color:var(--charcoal-soft)] mt-0.5">
-                    {r.location}
-                  </p>
-                </figcaption>
               </figure>
             ))}
           </div>
