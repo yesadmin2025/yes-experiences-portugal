@@ -17,12 +17,11 @@ export function Footer() {
               aria-label="YES experiences PORTUGAL — Home"
             >
               <img
-                src={logoGold1x}
-                srcSet={`${logoGold1x} 1x, ${logoGold2x} 2x, ${logoGold3x} 3x`}
-                width={446}
-                height={312}
+                src={logoGold}
+                width={1200}
+                height={900}
                 alt="YES experiences PORTUGAL"
-                className="block h-[84px] md:h-[100px] lg:h-[112px] w-auto select-none"
+                className="block h-[92px] md:h-[108px] lg:h-[120px] w-auto select-none"
                 draggable={false}
                 loading="lazy"
                 decoding="async"
