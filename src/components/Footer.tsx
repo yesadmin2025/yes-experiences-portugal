@@ -11,16 +11,16 @@ const SOCIALS = [
 
 export function Footer() {
   return (
-    <footer className="bg-[color:var(--charcoal)] text-[color:var(--ivory)]">
-      <div className="container-x py-20">
-        <div className="grid md:grid-cols-4 gap-12">
+    <footer className="bg-[color:var(--charcoal-deep)] text-[color:var(--ivory)]">
+      <div className="container-x py-24 md:py-28">
+        <div className="grid md:grid-cols-4 gap-14">
           <div className="md:col-span-1">
             {/* Gold variant of the approved header artwork — same silhouette
                 and scale, with a softer champagne-gold finish for the dark
                 footer surface. */}
             <Link
               to="/"
-              className="inline-block rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--charcoal)]"
+              className="inline-block rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--charcoal-deep)]"
               aria-label="YES experiences PORTUGAL — Home"
             >
               <img
@@ -35,7 +35,7 @@ export function Footer() {
                 style={{ imageRendering: "auto" }}
               />
             </Link>
-            <p className="mt-7 text-sm text-[color:var(--ivory)]/70 leading-relaxed max-w-xs">
+            <p className="mt-8 text-[14.5px] text-[color:var(--ivory)]/80 leading-[1.75] max-w-xs font-light">
               Private, designed Portugal experiences — crafted around your story by passionate
               local experts.
             </p>
@@ -67,8 +67,8 @@ export function Footer() {
           />
         </div>
 
-        <div className="mt-16 pt-8 border-t border-[color:var(--ivory)]/15 flex flex-col items-center gap-6">
-          <ul className="flex items-center gap-5 list-none p-0 m-0">
+        <div className="mt-20 pt-10 border-t border-[color:var(--ivory)]/15 flex flex-col items-center gap-8">
+          <ul className="flex items-center gap-6 list-none p-0 m-0">
             {SOCIALS.map(({ href, label, Icon }) => (
               <li key={label}>
                 <a
@@ -76,14 +76,14 @@ export function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="inline-flex items-center justify-center text-[color:var(--ivory)]/50 hover:text-[color:var(--ivory)] hover:-translate-y-0.5 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--charcoal)] rounded-sm"
+                  className="inline-flex items-center justify-center text-[color:var(--ivory)]/55 hover:text-[color:var(--gold)] hover:-translate-y-0.5 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--charcoal-deep)] rounded-sm"
                 >
-                  <Icon size={16} strokeWidth={1.5} />
+                  <Icon size={17} strokeWidth={1.5} />
                 </a>
               </li>
             ))}
           </ul>
-          <div className="w-full flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-[color:var(--ivory)]/60">
+          <div className="w-full flex flex-col md:flex-row justify-between items-center gap-4 text-[12px] text-[color:var(--ivory)]/65">
             <p>© {new Date().getFullYear()} YES experiences Portugal. All rights reserved.</p>
             <p className="tracking-[0.3em] uppercase text-[color:var(--gold)]">
               Designed in Portugal
