@@ -41,13 +41,13 @@ export const Route = createFileRoute("/")({
 const types = [
   {
     title: "Private Day Experiences",
-    line: "A single, unhurried day — designed entirely around you.",
+    line: "One unhurried day, designed entirely around you — at your pace, in your story.",
     img: catPrivate,
     to: "/day-tours",
   },
   {
     title: "Multi-Day Journeys",
-    line: "Several days, one story — coast to vineyard, city to village.",
+    line: "Several days woven into one continuous story — coast to vineyard, city to village.",
     img: catMultiday,
     to: "/multi-day",
   },
@@ -59,7 +59,7 @@ const types = [
   },
   {
     title: "Proposals & Celebrations",
-    line: "Quietly extraordinary moments — proposals, anniversaries, milestones.",
+    line: "Quietly extraordinary moments — proposals, anniversaries, milestones to remember.",
     img: catProposals,
     to: "/proposals",
   },
@@ -69,19 +69,19 @@ const signatures = [
   {
     title: "A Day in Hidden Douro",
     img: expWine,
-    line: "Family wineries, schist terraces, a long lunch above the river.",
+    line: "Family wineries, schist terraces, a long lunch above the river — far from the bus routes.",
     pace: ["Morning vineyard walk", "Long table lunch", "Sunset tasting"],
   },
   {
     title: "Wild Atlantic Coast",
     img: expCoastal,
-    line: "Coastal roads only locals drive, a fishermen's lunch, no crowds.",
+    line: "Coastal roads only locals drive, a fishermen's lunch, a hidden cove with no one else in sight.",
     pace: ["Cliff walk", "Seafood by the harbor", "Hidden cove"],
   },
   {
     title: "Lisbon Through Locals",
     img: expStreet,
-    line: "The Lisbon postcards never see — neighborhoods, ateliers, tascas.",
+    line: "The Lisbon postcards never see — quiet neighborhoods, ateliers and family-run tascas.",
     pace: ["Morning market", "Artisan visit", "Family tavern lunch"],
   },
 ];
@@ -144,57 +144,59 @@ function HomePage() {
           width={1920}
           height={1080}
         />
-        {/* Dark gradient + radial vignette — keeps copy readable without flattening the image. */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal)]/90 via-[color:var(--charcoal)]/55 to-[color:var(--charcoal)]/55 md:from-[color:var(--charcoal)]/88 md:via-[color:var(--charcoal)]/45 md:to-[color:var(--charcoal)]/50" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_65%,transparent_35%,rgba(0,0,0,0.5)_100%)]" />
+        {/* Dark gradient + radial vignette — keeps copy effortlessly readable
+            without flattening the image. Slightly deeper at the base so the
+            CTAs and microcopy never compete with the photograph. */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/95 via-[color:var(--charcoal)]/60 to-[color:var(--charcoal)]/55 md:from-[color:var(--charcoal-deep)]/92 md:via-[color:var(--charcoal)]/50 md:to-[color:var(--charcoal)]/45" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_65%,transparent_30%,rgba(0,0,0,0.55)_100%)]" />
 
-        <div className="container-x relative z-10 pb-20 md:pb-32 pt-32 md:pt-40">
+        <div className="container-x relative z-10 pb-24 md:pb-36 pt-32 md:pt-40">
           <div className="max-w-3xl text-[color:var(--ivory)]">
-            <span className="inline-flex items-center gap-3 text-[10px] uppercase tracking-[0.34em] text-[color:var(--gold-soft)] opacity-0 animate-[heroFade_1.1s_ease-out_0.3s_forwards]">
+            <span className="inline-flex items-center gap-3 text-[11px] uppercase tracking-[0.34em] text-[color:var(--gold-soft)] opacity-0 animate-[heroFade_1.1s_ease-out_0.3s_forwards]">
               <span className="h-px w-8 bg-[color:var(--gold)]" />
               Private · By local hands · Designed around you
             </span>
 
-            <h1 className="serif mt-6 md:mt-8 text-[2.7rem] sm:text-5xl md:text-7xl lg:text-[5.4rem] leading-[1.04] font-light tracking-[-0.015em] opacity-0 animate-[heroFade_1.4s_ease-out_0.6s_forwards]">
+            <h1 className="serif mt-7 md:mt-9 text-[2.7rem] sm:text-5xl md:text-7xl lg:text-[5.4rem] leading-[1.04] font-light tracking-[-0.015em] opacity-0 animate-[heroFade_1.4s_ease-out_0.6s_forwards]">
               Portugal,
               <br />
               <span className="italic text-[color:var(--gold-soft)]">Designed Around You</span>
             </h1>
 
-            <p className="mt-6 md:mt-8 text-[17px] md:text-xl text-[color:var(--ivory)]/95 max-w-xl leading-[1.7] font-light opacity-0 animate-[heroFade_1.4s_ease-out_0.95s_forwards]">
-              Private experiences crafted through local knowledge, hidden gems and authentic
-              moments — like exploring Portugal with a local friend.
+            <p className="mt-7 md:mt-9 text-[18px] md:text-[22px] text-[color:var(--ivory)] max-w-xl leading-[1.7] font-light opacity-0 animate-[heroFade_1.4s_ease-out_0.95s_forwards]">
+              Private experiences shaped by local knowledge, hidden places and quiet moments —
+              like exploring Portugal with a friend who lives here.
             </p>
 
-            <div className="mt-9 md:mt-11 flex flex-col sm:flex-row flex-wrap gap-4 sm:gap-5 opacity-0 animate-[heroFade_1.4s_ease-out_1.25s_forwards]">
+            <div className="mt-10 md:mt-12 flex flex-col sm:flex-row flex-wrap gap-4 sm:gap-5 opacity-0 animate-[heroFade_1.4s_ease-out_1.25s_forwards]">
               {/* Primary — clear conversion anchor */}
               <Link
                 to="/builder"
-                className="group inline-flex items-center justify-center gap-3 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-white px-9 py-4 text-[11px] tracking-[0.22em] uppercase border border-[color:var(--gold)]/70 hover:border-[color:var(--gold)] transition-all duration-700 hover:-translate-y-1 hover:shadow-[0_18px_40px_-18px_rgba(41,91,97,0.55)]"
+                className="group inline-flex items-center justify-center gap-3 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-white px-9 py-4 text-[12px] tracking-[0.22em] uppercase font-medium border border-[color:var(--gold)]/70 hover:border-[color:var(--gold)] transition-all duration-700 hover:-translate-y-1 hover:shadow-[0_18px_40px_-18px_rgba(41,91,97,0.6)]"
               >
                 Design &amp; Secure Your Experience
                 <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-500" />
               </Link>
-              {/* Secondary — discoverable, lower-commitment path */}
+              {/* Secondary — refined outline, slightly stronger visibility */}
               <Link
                 to="/experiences"
-                className="group inline-flex items-center justify-center gap-3 bg-transparent text-white px-9 py-4 text-[11px] tracking-[0.22em] uppercase border border-[color:var(--gold)]/70 hover:border-[color:var(--gold)] hover:bg-white/[0.06] transition-all duration-700 hover:-translate-y-1"
+                className="group inline-flex items-center justify-center gap-3 bg-white/[0.04] backdrop-blur-[2px] text-white px-9 py-4 text-[12px] tracking-[0.22em] uppercase font-medium border border-[color:var(--ivory)]/55 hover:border-[color:var(--gold)] hover:bg-white/[0.10] transition-all duration-700 hover:-translate-y-1"
               >
                 Explore Signature Experiences
                 <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-500" />
               </Link>
             </div>
 
-            {/* Microcopy — instant, direct, simple */}
-            <div className="mt-6 md:mt-7 max-w-xl opacity-0 animate-[heroFade_1.4s_ease-out_1.5s_forwards]">
-              <p className="text-[13px] md:text-[14px] text-[color:var(--ivory)]/95 leading-relaxed font-light tracking-wide">
-                Instant confirmation. No waiting. No back-and-forth emails.
+            {/* Microcopy — friction-removing, calm, trust-building */}
+            <div className="mt-7 md:mt-8 max-w-xl opacity-0 animate-[heroFade_1.4s_ease-out_1.5s_forwards]">
+              <p className="text-[14px] md:text-[15px] text-[color:var(--ivory)]/95 leading-[1.7] font-light tracking-wide">
+                Instant confirmation · Designed around you · No back-and-forth
               </p>
             </div>
 
-            <p className="mt-8 md:mt-10 text-[10px] uppercase tracking-[0.32em] text-[color:var(--gold-soft)]/95 flex items-center gap-3 opacity-0 animate-[heroFade_1.4s_ease-out_1.75s_forwards]">
+            <p className="mt-9 md:mt-11 text-[10.5px] uppercase tracking-[0.32em] text-[color:var(--gold-soft)] flex items-center gap-3 opacity-0 animate-[heroFade_1.4s_ease-out_1.75s_forwards]">
               <span className="h-px w-6 bg-[color:var(--gold)]" />
-              From one guest to large private groups
+              From a single guest to large private groups
             </p>
           </div>
         </div>
@@ -272,11 +274,11 @@ function HomePage() {
             </p>
 
             <p
-              className="reveal-stagger text-[14px] text-[color:var(--charcoal-soft)] max-w-xl leading-relaxed"
+              className="reveal-stagger text-[15px] text-[color:var(--charcoal-soft)] max-w-xl leading-[1.7]"
               style={{ transitionDelay: "220ms" }}
               id="trust-bar-summary"
             >
-              700+ 5-star reviews across Google, Tripadvisor, Viator, GetYourGuide and Trustpilot
+              700+ five-star reviews across Google, Tripadvisor, Viator, GetYourGuide and Trustpilot
             </p>
           </div>
 
@@ -317,38 +319,38 @@ function HomePage() {
       {/* 3 — EXPERIENCE TYPES */}
       <section className="py-32 md:py-44 bg-[color:var(--ivory)]">
         <div className="container-x">
-          <div className="reveal text-center max-w-2xl mx-auto mb-16">
+          <div className="reveal text-center max-w-2xl mx-auto mb-20">
             <span className="eyebrow">The Experiences</span>
-            <h2 className="serif text-4xl md:text-5xl mt-5 leading-tight">
+            <h2 className="serif text-4xl md:text-5xl mt-6 leading-[1.1]">
               From intimate moments <br />
               to <span className="italic">large private programs</span>
             </h2>
-            <p className="mt-5 text-[15px] text-[color:var(--charcoal-soft)] leading-relaxed">
+            <p className="mt-6 text-[16px] text-[color:var(--charcoal-soft)] leading-[1.75]">
               Always private. Always personal. Always designed around you — for one guest, or a hundred.
             </p>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-7">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {types.map((c) => (
               <Link key={c.title} to={c.to} className="group block reveal-stagger">
                 <div className="lift-layer-sm">
-                  <div className="relative overflow-hidden aspect-[3/4] mb-5 shadow-[0_10px_30px_-20px_rgba(46,46,46,0.28)] group-hover:shadow-[0_28px_55px_-22px_rgba(41,91,97,0.32)] transition-shadow duration-700">
+                  <div className="relative overflow-hidden aspect-[3/4] mb-6 shadow-[0_10px_30px_-20px_rgba(46,46,46,0.28)] group-hover:shadow-[0_28px_55px_-22px_rgba(41,91,97,0.32)] transition-shadow duration-700">
                     <img
                       src={c.img}
                       alt={c.title}
                       loading="lazy"
                       className="w-full h-full object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.08]"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal)]/80 via-[color:var(--charcoal)]/15 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/85 via-[color:var(--charcoal)]/20 to-transparent" />
                     <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[color:var(--charcoal)]/55 to-transparent" />
                     <div className="absolute inset-0 bg-[color:var(--teal)]/0 group-hover:bg-[color:var(--teal)]/10 transition-colors duration-700" />
-                    <span className="absolute top-4 left-4 text-[10px] uppercase tracking-[0.25em] text-white drop-shadow-[0_1px_6px_rgba(0,0,0,0.6)]">
+                    <span className="absolute top-4 left-4 text-[10.5px] uppercase tracking-[0.25em] text-white drop-shadow-[0_1px_6px_rgba(0,0,0,0.7)]">
                       Private · Tailored
                     </span>
                   </div>
-                  <h3 className="serif text-[1.4rem] text-[color:var(--charcoal)] leading-snug group-hover:text-[color:var(--teal)] transition-colors duration-500">
+                  <h3 className="serif text-[1.5rem] text-[color:var(--charcoal)] leading-snug group-hover:text-[color:var(--teal)] transition-colors duration-500">
                     {c.title}
                   </h3>
-                  <p className="mt-2.5 text-[15px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
+                  <p className="mt-3 text-[15.5px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
                     {c.line}
                   </p>
                 </div>
@@ -361,20 +363,20 @@ function HomePage() {
       {/* 4 — SIGNATURE EXPERIENCES */}
       <section className="py-32 md:py-44 bg-[color:var(--sand)]">
         <div className="container-x">
-          <div className="reveal flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
+          <div className="reveal flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
             <div>
               <span className="eyebrow">Signature Experiences</span>
-              <h2 className="serif text-4xl md:text-5xl mt-5 leading-tight">
+              <h2 className="serif text-4xl md:text-5xl mt-6 leading-[1.1]">
                 Crafted by us, <span className="italic">customized by you</span>
               </h2>
-              <p className="mt-5 max-w-lg text-[15px] text-[color:var(--charcoal-soft)] leading-relaxed">
+              <p className="mt-6 max-w-lg text-[16px] text-[color:var(--charcoal-soft)] leading-[1.75]">
                 Ready-to-book private experiences — refined over years and adjusted in minutes
                 to fit the way you travel.
               </p>
             </div>
             <Link
               to="/experiences"
-              className="text-sm uppercase tracking-[0.2em] text-[color:var(--teal)] hover:text-[color:var(--teal-2)] inline-flex items-center gap-2 transition-colors"
+              className="text-[13px] uppercase tracking-[0.2em] text-[color:var(--teal)] hover:text-[color:var(--teal-2)] inline-flex items-center gap-2 transition-colors font-medium"
             >
               View all <ArrowRight size={14} />
             </Link>
@@ -392,43 +394,43 @@ function HomePage() {
                     />
                     <div className="absolute inset-0 bg-[color:var(--teal)]/0 group-hover:bg-[color:var(--teal)]/8 transition-colors duration-700" />
                   </div>
-                  <div className="p-6">
-                    <h3 className="serif text-2xl text-[color:var(--charcoal)] group-hover:text-[color:var(--teal)] transition-colors duration-500">
+                  <div className="p-7 md:p-8">
+                    <h3 className="serif text-[1.65rem] text-[color:var(--charcoal)] group-hover:text-[color:var(--teal)] transition-colors duration-500 leading-snug">
                       {s.title}
                     </h3>
-                    <p className="mt-2 text-[14.5px] text-[color:var(--charcoal-soft)] leading-relaxed">
+                    <p className="mt-3 text-[15px] text-[color:var(--charcoal-soft)] leading-[1.7]">
                       {s.line}
                     </p>
-                    <ul className="mt-5 space-y-2">
+                    <ul className="mt-6 space-y-2.5">
                       {s.pace.map((p, idx) => (
                         <li
                           key={p}
-                          className="flex items-center gap-3 text-[13.5px] text-[color:var(--charcoal)]"
+                          className="flex items-center gap-3 text-[14px] text-[color:var(--charcoal)]"
                         >
-                          <span className="text-[color:var(--teal)] text-[10px] tracking-wider">
+                          <span className="text-[color:var(--teal)] text-[10.5px] tracking-wider font-medium">
                             {String(idx + 1).padStart(2, "0")}
                           </span>
-                          <span className="h-px w-4 bg-[color:var(--gold)]/50" />
+                          <span className="h-px w-4 bg-[color:var(--gold)]/60" />
                           {p}
                         </li>
                       ))}
                     </ul>
-                    <div className="mt-6 pt-5 border-t border-[color:var(--border)] flex flex-wrap gap-2">
+                    <div className="mt-7 pt-5 border-t border-[color:var(--border)] flex flex-wrap gap-2">
                       <Link
                         to="/contact"
-                        className="text-xs uppercase tracking-[0.18em] bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] px-4 py-2.5 transition-colors"
+                        className="text-[12px] uppercase tracking-[0.18em] bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] px-4 py-2.5 transition-colors font-medium"
                       >
                         Book
                       </Link>
                       <Link
                         to="/builder"
-                        className="text-xs uppercase tracking-[0.18em] border border-[color:var(--charcoal)]/20 hover:border-[color:var(--teal)] hover:text-[color:var(--teal)] text-[color:var(--charcoal)] px-4 py-2.5 transition-colors"
+                        className="text-[12px] uppercase tracking-[0.18em] border border-[color:var(--charcoal)]/25 hover:border-[color:var(--teal)] hover:text-[color:var(--teal)] text-[color:var(--charcoal)] px-4 py-2.5 transition-colors"
                       >
                         Customize
                       </Link>
                       <Link
                         to="/builder"
-                        className="text-xs uppercase tracking-[0.18em] text-[color:var(--teal)] hover:text-[color:var(--teal-2)] px-4 py-2.5 transition-colors"
+                        className="text-[12px] uppercase tracking-[0.18em] text-[color:var(--teal)] hover:text-[color:var(--teal-2)] px-4 py-2.5 transition-colors"
                       >
                         Build your own →
                       </Link>
@@ -458,15 +460,15 @@ function HomePage() {
                 Design your own Portugal —<br />
                 <span className="italic">step by step.</span>
               </h2>
-              <p className="mt-6 text-[16px] text-[color:var(--ivory)]/90 leading-[1.75] max-w-lg font-light">
+              <p className="mt-7 text-[17px] text-[color:var(--ivory)]/95 leading-[1.75] max-w-lg font-light">
                 Tell us how you travel. We'll shape a private experience around your group, your
-                pace, your highlights — with a live story, timeline and map evolving as you go.
-                Secure it the moment it feels right.
+                pace and the moments that matter — with a live story, timeline and map evolving
+                as you go. Secure it the moment it feels right.
               </p>
-              <div className="mt-8 flex flex-wrap gap-4">
+              <div className="mt-9 flex flex-wrap gap-4">
                 <Link
                   to="/builder"
-                  className="inline-flex items-center gap-2 bg-[color:var(--ivory)] text-[color:var(--teal)] hover:bg-white border border-[color:var(--gold)]/50 hover:border-[color:var(--gold)] px-8 py-4 text-sm uppercase tracking-[0.18em] transition-all duration-500 hover:-translate-y-0.5"
+                  className="inline-flex items-center gap-2 bg-[color:var(--ivory)] text-[color:var(--teal)] hover:bg-white border border-[color:var(--gold)]/60 hover:border-[color:var(--gold)] px-8 py-4 text-[12px] uppercase tracking-[0.2em] font-medium transition-all duration-500 hover:-translate-y-0.5"
                 >
                   Open the Studio
                   <ArrowRight size={15} />
@@ -524,16 +526,16 @@ function HomePage() {
                 A few days, <br />
                 <span className="italic">one continuous story.</span>
               </h2>
-              <p className="mt-6 text-[16px] text-[color:var(--charcoal-soft)] leading-[1.75] max-w-lg">
-                Linger longer. Travel slower. Wake up in a vineyard, lunch in a fishing village,
+              <p className="mt-7 text-[17px] text-[color:var(--charcoal-soft)] leading-[1.75] max-w-lg">
+                Linger longer. Travel slower. Wake in a vineyard, lunch in a fishing village,
                 fall asleep above the Douro — connected by quiet roads and people who know them
                 by name.
               </p>
-              <div className="mt-8 flex flex-wrap gap-3">
+              <div className="mt-9 flex flex-wrap gap-3">
                 {["Coast & Vineyards", "Lisbon to Douro", "Alentejo Slow"].map((tag) => (
                   <span
                     key={tag}
-                    className="text-xs uppercase tracking-[0.2em] px-4 py-2 border border-[color:var(--charcoal)]/15 text-[color:var(--charcoal)]"
+                    className="text-[12px] uppercase tracking-[0.2em] px-4 py-2 border border-[color:var(--charcoal)]/20 text-[color:var(--charcoal)]"
                   >
                     {tag}
                   </span>
@@ -541,7 +543,7 @@ function HomePage() {
               </div>
               <Link
                 to="/multi-day"
-                className="mt-10 inline-flex items-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] border border-[color:var(--gold)]/50 hover:border-[color:var(--gold)] px-7 py-3.5 text-sm uppercase tracking-[0.18em] transition-all duration-500 hover:-translate-y-0.5"
+                className="mt-10 inline-flex items-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] border border-[color:var(--gold)]/60 hover:border-[color:var(--gold)] px-7 py-3.5 text-[12px] uppercase tracking-[0.2em] font-medium transition-all duration-500 hover:-translate-y-0.5"
               >
                 Discover Multi-Day Journeys
                 <ArrowRight size={15} />
@@ -593,16 +595,16 @@ function HomePage() {
                     </h3>
                   </div>
                 </div>
-                <p className="text-[15px] text-[color:var(--charcoal)] leading-[1.7] font-light max-w-[34ch]">
+                <p className="text-[15.5px] text-[color:var(--charcoal)] leading-[1.7] font-light max-w-[34ch]">
                   {e.line}
                 </p>
               </article>
             ))}
           </div>
-          <div className="reveal mt-14 text-center">
+          <div className="reveal mt-16 text-center">
             <Link
               to="/local-stories"
-              className="inline-flex items-center gap-2 text-sm uppercase tracking-[0.2em] text-[color:var(--teal)] hover:text-[color:var(--teal-2)] transition-colors"
+              className="inline-flex items-center gap-2 text-[13px] uppercase tracking-[0.2em] text-[color:var(--teal)] hover:text-[color:var(--teal-2)] transition-colors font-medium"
             >
               Read all local stories <ArrowRight size={14} />
             </Link>
@@ -611,19 +613,19 @@ function HomePage() {
       </section>
 
       {/* 8 — CORPORATE & CELEBRATIONS */}
-      <section className="bg-[color:var(--charcoal)] text-[color:var(--ivory)] py-28 md:py-36">
+      <section className="bg-[color:var(--charcoal-deep)] text-[color:var(--ivory)] py-32 md:py-40">
         <div className="container-x">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="reveal">
-              <span className="inline-flex items-center gap-3 text-[10px] uppercase tracking-[0.3em] text-[color:var(--ivory)]/80">
+              <span className="inline-flex items-center gap-3 text-[11px] uppercase tracking-[0.3em] text-[color:var(--ivory)]/85">
                 <span className="h-px w-8 bg-[color:var(--gold)]" />
                 Corporate &amp; Celebrations
               </span>
-              <h2 className="serif text-4xl md:text-5xl mt-6 leading-tight font-light">
+              <h2 className="serif text-4xl md:text-5xl mt-7 leading-[1.1] font-light">
                 Fully private. <br />
                 <span className="italic">Fully managed.</span>
               </h2>
-              <p className="mt-6 text-[16px] text-[color:var(--ivory)]/90 leading-[1.75] max-w-lg">
+              <p className="mt-7 text-[17px] text-[color:var(--ivory)]/95 leading-[1.75] max-w-lg">
                 From an intimate proposal to a 200-guest incentive program — designed
                 end-to-end by a single team. Quietly extraordinary, never ordinary.
               </p>
@@ -638,7 +640,7 @@ function HomePage() {
                 ].map((item) => (
                   <div
                     key={item}
-                    className="flex items-center gap-2 text-[14px] text-[color:var(--ivory)]/95"
+                    className="flex items-center gap-2.5 text-[14.5px] text-[color:var(--ivory)]/95"
                   >
                     <span className="h-1 w-1 bg-[color:var(--gold)] rounded-full" />
                     {item}
@@ -648,14 +650,14 @@ function HomePage() {
               <div className="mt-10 flex flex-wrap gap-3">
                 <Link
                   to="/corporate"
-                  className="inline-flex items-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-white border border-[color:var(--gold)]/60 hover:border-[color:var(--gold)] px-7 py-3.5 text-sm uppercase tracking-[0.18em] transition-all duration-500 hover:-translate-y-0.5"
+                  className="inline-flex items-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-white border border-[color:var(--gold)]/60 hover:border-[color:var(--gold)] px-7 py-3.5 text-[12px] uppercase tracking-[0.2em] font-medium transition-all duration-500 hover:-translate-y-0.5"
                 >
                   For Companies
                   <ArrowRight size={15} />
                 </Link>
                 <Link
                   to="/proposals"
-                  className="inline-flex items-center gap-2 border border-[color:var(--ivory)]/40 hover:border-[color:var(--ivory)] text-[color:var(--ivory)] px-7 py-3.5 text-sm uppercase tracking-[0.18em] transition-all duration-500 hover:-translate-y-0.5"
+                  className="inline-flex items-center gap-2 border border-[color:var(--ivory)]/50 hover:border-[color:var(--gold)] text-[color:var(--ivory)] px-7 py-3.5 text-[12px] uppercase tracking-[0.2em] font-medium transition-all duration-500 hover:-translate-y-0.5"
                 >
                   For Celebrations
                 </Link>
@@ -686,27 +688,27 @@ function HomePage() {
       {/* 9 — REVIEWS */}
       <section className="py-28 md:py-36 bg-[color:var(--ivory)]">
         <div className="container-x">
-          <div className="reveal text-center max-w-2xl mx-auto mb-14">
+          <div className="reveal text-center max-w-2xl mx-auto mb-16">
             <span className="eyebrow">Voices</span>
-            <h2 className="serif text-4xl md:text-5xl mt-5">
+            <h2 className="serif text-4xl md:text-5xl mt-6 leading-[1.1]">
               What guests <span className="italic">tell us after</span>
             </h2>
           </div>
           <div className="grid md:grid-cols-3 gap-7">
             {reviews.map((r, i) => (
               <figure key={i} className="group reveal-stagger h-full">
-                <div className="lift-layer-sm bg-[color:var(--card)] border border-[color:var(--border)] group-hover:border-[color:var(--teal)]/25 group-hover:shadow-[0_24px_50px_-24px_rgba(41,91,97,0.2)] p-8 h-full">
-                  <div className="flex gap-0.5 text-[color:var(--gold)] mb-4">
+                <div className="lift-layer-sm bg-[color:var(--card)] border border-[color:var(--border)] group-hover:border-[color:var(--teal)]/25 group-hover:shadow-[0_24px_50px_-24px_rgba(41,91,97,0.2)] p-8 md:p-9 h-full">
+                  <div className="flex gap-0.5 text-[color:var(--gold)] mb-5">
                     {[...Array(5)].map((_, idx) => (
-                      <Star key={idx} size={12} fill="currentColor" />
+                      <Star key={idx} size={13} fill="currentColor" />
                     ))}
                   </div>
-                  <blockquote className="serif italic text-[19px] leading-[1.6] text-[color:var(--charcoal)]">
+                  <blockquote className="serif italic text-[19px] md:text-[20px] leading-[1.6] text-[color:var(--charcoal)]">
                     "{r.quote}"
                   </blockquote>
-                  <figcaption className="mt-6 pt-4 border-t border-[color:var(--border)]">
-                    <p className="text-sm font-medium text-[color:var(--charcoal)]">{r.name}</p>
-                    <p className="text-xs text-[color:var(--charcoal-soft)] mt-0.5">
+                  <figcaption className="mt-7 pt-5 border-t border-[color:var(--border)]">
+                    <p className="text-[14px] font-medium text-[color:var(--charcoal)]">{r.name}</p>
+                    <p className="text-[12.5px] text-[color:var(--charcoal-soft)] mt-1">
                       {r.location}
                     </p>
                   </figcaption>
@@ -728,31 +730,31 @@ function HomePage() {
             <div className="absolute -top-12 right-1/4 w-40 h-40 rounded-full border border-[color:var(--gold)]/10" />
             <div className="relative max-w-2xl">
               <span className="eyebrow">Begin</span>
-              <h2 className="serif text-4xl md:text-5xl mt-5 leading-tight">
+              <h2 className="serif text-4xl md:text-5xl mt-6 leading-[1.1]">
                 Your Portugal story <br />
                 <span className="italic text-[color:var(--teal)]">starts with a single step.</span>
               </h2>
-              <p className="mt-6 text-[16px] text-[color:var(--charcoal-soft)] leading-[1.75] max-w-lg">
+              <p className="mt-7 text-[17px] text-[color:var(--charcoal-soft)] leading-[1.75] max-w-lg">
                 Open the Experience Studio and design a private journey around you —
                 or speak with a local experience designer for a fully bespoke proposal.
               </p>
-              <div className="mt-9 flex flex-wrap gap-4">
+              <div className="mt-10 flex flex-wrap gap-4">
                 <Link
                   to="/builder"
-                  className="inline-flex items-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] border border-[color:var(--gold)]/60 hover:border-[color:var(--gold)] px-8 py-4 text-sm uppercase tracking-[0.18em] transition-all duration-500 hover:-translate-y-0.5"
+                  className="inline-flex items-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] border border-[color:var(--gold)]/60 hover:border-[color:var(--gold)] px-8 py-4 text-[12px] uppercase tracking-[0.2em] font-medium transition-all duration-500 hover:-translate-y-0.5"
                 >
                   Design &amp; Secure Your Experience
                   <ArrowRight size={15} />
                 </Link>
                 <Link
                   to="/contact"
-                  className="inline-flex items-center gap-2 border border-[color:var(--charcoal)]/25 hover:border-[color:var(--teal)] hover:text-[color:var(--teal)] text-[color:var(--charcoal)] px-8 py-4 text-sm uppercase tracking-[0.18em] transition-all duration-500 hover:-translate-y-0.5"
+                  className="inline-flex items-center gap-2 border border-[color:var(--charcoal)]/30 hover:border-[color:var(--teal)] hover:text-[color:var(--teal)] text-[color:var(--charcoal)] px-8 py-4 text-[12px] uppercase tracking-[0.2em] font-medium transition-all duration-500 hover:-translate-y-0.5"
                 >
                   Speak with our team
                 </Link>
               </div>
 
-              <div className="mt-10 flex flex-wrap gap-x-8 gap-y-3 text-xs uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)]">
+              <div className="mt-11 flex flex-wrap gap-x-8 gap-y-3 text-[12px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)]">
                 <span className="inline-flex items-center gap-2">
                   <Compass size={13} className="text-[color:var(--gold)]" /> Local hands
                 </span>

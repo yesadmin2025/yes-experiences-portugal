@@ -69,6 +69,7 @@
   --color-sand: var(--sand);
   --color-charcoal: var(--charcoal);
   --color-charcoal-soft: var(--charcoal-soft);
+  --color-charcoal-deep: var(--charcoal-deep);
 
   --font-serif: "Cormorant Garamond", Georgia, serif;
   --font-sans: "Inter", system-ui, sans-serif;
@@ -90,6 +91,7 @@
   --sand: #F4EFE7;
   --charcoal: #2E2E2E;
   --charcoal-soft: #6B6B6B;
+  --charcoal-deep: #1F1F1F;
 
   /* Semantic */
   --background: var(--ivory);
