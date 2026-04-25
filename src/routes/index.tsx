@@ -283,7 +283,7 @@ function HomePage() {
                 key={c.title}
                 to={c.to}
                 className="group block reveal-stagger transition-transform duration-700 hover:-translate-y-2"
-                style={{ transitionDelay: `${i * 130}ms` }}
+
               >
                 <div className="relative overflow-hidden aspect-[3/4] mb-5 shadow-[0_10px_30px_-20px_rgba(46,46,46,0.28)] group-hover:shadow-[0_28px_55px_-22px_rgba(41,91,97,0.32)] transition-shadow duration-700">
                   <img
@@ -407,7 +407,7 @@ function HomePage() {
               <article
                 key={s.title}
                 className="group bg-[color:var(--card)] border border-[color:var(--border)] reveal-stagger transition-all duration-500 hover:-translate-y-1.5 hover:shadow-[0_24px_50px_-24px_rgba(41,91,97,0.25)] hover:border-[color:var(--teal)]/30"
-                style={{ transitionDelay: `${i * 130}ms` }}
+
               >
                 <div className="relative overflow-hidden aspect-[4/3]">
                   <img
@@ -529,7 +529,7 @@ function HomePage() {
               <article
                 key={e.title}
                 className="group reveal-stagger"
-                style={{ transitionDelay: `${i * 130}ms` }}
+
               >
                 <div className="relative overflow-hidden aspect-[4/5] mb-5 shadow-[0_10px_30px_-22px_rgba(46,46,46,0.35)] group-hover:shadow-[0_24px_50px_-22px_rgba(41,91,97,0.28)] transition-shadow duration-700">
                   <img
@@ -646,7 +646,7 @@ function HomePage() {
               <figure
                 key={i}
                 className="bg-[color:var(--card)] border border-[color:var(--border)] p-8 reveal-stagger transition-all duration-500 hover:-translate-y-1.5 hover:shadow-[0_24px_50px_-24px_rgba(41,91,97,0.2)] hover:border-[color:var(--teal)]/25"
-                style={{ transitionDelay: `${i * 130}ms` }}
+
               >
                 <div className="flex gap-0.5 text-[color:var(--gold)] mb-4">
                   {[...Array(5)].map((_, idx) => (
