@@ -579,7 +579,7 @@ function HomePage() {
                   <div className="absolute inset-0 bg-[color:var(--teal)]/0 group-hover:bg-[color:var(--teal)]/10 transition-colors duration-700" />
                   <div className="absolute left-5 right-5 bottom-5">
                     <span className="block h-px w-8 bg-[color:var(--gold)] mb-3 opacity-90" />
-                    <h3 className="serif text-[1.4rem] md:text-[1.5rem] leading-tight text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
+                    <h3 className="serif text-[1.4rem] md:text-[1.5rem] leading-[1.15] text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
                       {e.title}
                     </h3>
                   </div>
