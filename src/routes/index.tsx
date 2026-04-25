@@ -207,8 +207,9 @@ function HomePage() {
           The SiteLayout IntersectionObserver respects inline delays and
           only adds the .is-visible class, so motion stays restrained,
           smooth, and perfectly in time with every other section.
-          Gold is used sparingly: just the 5 hero stars and the hairline
-          vertical dividers between marks.
+          Gold is used sparingly: just the 5 hero stars, the hairline
+          vertical dividers between marks, and the tiny check inside
+          each "Official platform" caption.
 
           Accessibility:
           • Section is a labelled landmark via aria-labelledby pointing to
@@ -216,11 +217,11 @@ function HomePage() {
           • The hero star row is a single role="img" with an explicit
             "Rated 5.0 out of 5 stars" label; the visual "5.0" glyph is
             aria-hidden so it isn't announced twice.
-          • Each platform badge is a <figure> with a <figcaption>; the
-            platform name carries aria-describedby pointing to its
-            badge's id, so a screen reader announces e.g.
-            "Google, Rated 5.0 out of 5 stars on Google".
-          • Decorative star glyphs and column dividers are aria-hidden. */}
+          • Each platform is a <figure> with a <figcaption>; the platform
+            name carries aria-describedby pointing to its caption's id,
+            so a screen reader announces e.g.
+            "Google, Google — official review platform".
+          • Decorative glyphs and column dividers are aria-hidden. */}
       <section
         className="bg-[color:var(--ivory)] border-b border-[color:var(--border)] py-16 md:py-20"
         aria-labelledby="trust-bar-title"
