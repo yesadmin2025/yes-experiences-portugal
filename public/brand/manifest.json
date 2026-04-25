@@ -1,0 +1,56 @@
+[
+  {
+    "name": "yes-experiences-portugal-centered-full",
+    "layout": "centered",
+    "description": "Centered stacked, full color, transparent",
+    "yes": "#295B61",
+    "experiences": "#2E2E2E",
+    "accent": "#C9A96A",
+    "background": "transparent"
+  },
+  {
+    "name": "yes-experiences-portugal-centered-mono-dark",
+    "layout": "centered",
+    "description": "Centered stacked, mono charcoal, transparent (use on light bg)",
+    "yes": "#2E2E2E",
+    "experiences": "#2E2E2E",
+    "accent": "#2E2E2E",
+    "background": "transparent"
+  },
+  {
+    "name": "yes-experiences-portugal-centered-mono-light",
+    "layout": "centered",
+    "description": "Centered stacked, mono ivory, transparent (use on dark bg)",
+    "yes": "#FAF8F3",
+    "experiences": "#FAF8F3",
+    "accent": "#FAF8F3",
+    "background": "transparent"
+  },
+  {
+    "name": "yes-experiences-portugal-horizontal-full",
+    "layout": "horizontal",
+    "description": "Horizontal lockup, full color, transparent",
+    "yes": "#295B61",
+    "experiences": "#2E2E2E",
+    "accent": "#C9A96A",
+    "background": "transparent"
+  },
+  {
+    "name": "yes-experiences-portugal-horizontal-mono-dark",
+    "layout": "horizontal",
+    "description": "Horizontal lockup, mono charcoal, transparent",
+    "yes": "#2E2E2E",
+    "experiences": "#2E2E2E",
+    "accent": "#2E2E2E",
+    "background": "transparent"
+  },
+  {
+    "name": "yes-experiences-portugal-horizontal-mono-light",
+    "layout": "horizontal",
+    "description": "Horizontal lockup, mono ivory, transparent",
+    "yes": "#FAF8F3",
+    "experiences": "#FAF8F3",
+    "accent": "#FAF8F3",
+    "background": "transparent"
+  }
+]
