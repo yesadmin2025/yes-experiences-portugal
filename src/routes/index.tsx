@@ -172,18 +172,18 @@ function HomePage() {
               {/* Primary — clear conversion anchor */}
               <Link
                 to="/builder"
-                className="group inline-flex items-center justify-center gap-3 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-white px-9 py-4 text-[12px] tracking-[0.22em] uppercase font-medium border border-[color:var(--gold)]/70 hover:border-[color:var(--gold)] transition-all duration-700 hover:-translate-y-1 hover:shadow-[0_18px_40px_-18px_rgba(41,91,97,0.6)]"
+                className="cta-primary group inline-flex items-center justify-center gap-3 px-10 py-[18px] text-[12.5px] tracking-[0.22em] uppercase font-semibold"
               >
                 Design &amp; Secure Your Experience
-                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-500" />
+                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-300" />
               </Link>
               {/* Secondary — refined outline, slightly stronger visibility */}
               <Link
                 to="/experiences"
-                className="group inline-flex items-center justify-center gap-3 bg-white/[0.04] backdrop-blur-[2px] text-white px-9 py-4 text-[12px] tracking-[0.22em] uppercase font-medium border border-[color:var(--ivory)]/55 hover:border-[color:var(--gold)] hover:bg-white/[0.10] transition-all duration-700 hover:-translate-y-1"
+                className="cta-secondary-dark group inline-flex items-center justify-center gap-3 px-10 py-[18px] text-[12.5px] tracking-[0.22em] uppercase font-semibold"
               >
                 Explore Signature Experiences
-                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-500" />
+                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-300" />
               </Link>
             </div>
 
