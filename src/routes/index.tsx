@@ -393,6 +393,9 @@ function HomePage() {
         </div>
       </section>
 
+      {/* 4.5 — FAQ (placed right after Builder Preview) */}
+      <FAQ />
+
       {/* 5 — SIGNATURE EXPERIENCES */}
       <section className="py-32 md:py-44 bg-[color:var(--ivory)]">
         <div className="container-x">
@@ -673,9 +676,6 @@ function HomePage() {
           </div>
         </div>
       </section>
-
-      {/* 10 — FAQ */}
-      <FAQ />
 
       {/* 11 — FINAL CTA */}
       <section className="pb-28 md:pb-36 bg-[color:var(--ivory)]">
