@@ -1,8 +1,9 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
-import logoSrc from "@/assets/yes-experiences-portugal-logo.png";
-
+import logo1x from "@/assets/yes-experiences-portugal-logo-1x.png";
+import logo2x from "@/assets/yes-experiences-portugal-logo-2x.png";
+import logo3x from "@/assets/yes-experiences-portugal-logo-3x.png";
 const navLinks = [
   { to: "/experiences", label: "Experiences" },
   { to: "/day-tours", label: "Day Tours" },
@@ -27,10 +28,15 @@ export function Navbar() {
             aria-label="YES experiences PORTUGAL — Home"
           >
             <img
-              src={logoSrc}
+              src={logo1x}
+              srcSet={`${logo1x} 1x, ${logo2x} 2x, ${logo3x} 3x`}
+              width={157}
+              height={104}
               alt="YES experiences PORTUGAL"
               className="block h-[78px] md:h-[92px] lg:h-[104px] w-auto select-none"
               draggable={false}
+              fetchPriority="high"
+              decoding="async"
             />
           </Link>
 
