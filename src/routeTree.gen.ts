@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ProposalsRouteImport } from './routes/proposals'
 import { Route as MultiDayRouteImport } from './routes/multi-day'
+import { Route as LocalStoriesRouteImport } from './routes/local-stories'
 import { Route as ExperiencesRouteImport } from './routes/experiences'
 import { Route as DayToursRouteImport } from './routes/day-tours'
 import { Route as CorporateRouteImport } from './routes/corporate'
@@ -28,6 +29,11 @@ const ProposalsRoute = ProposalsRouteImport.update({
 const MultiDayRoute = MultiDayRouteImport.update({
   id: '/multi-day',
   path: '/multi-day',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LocalStoriesRoute = LocalStoriesRouteImport.update({
+  id: '/local-stories',
+  path: '/local-stories',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ExperiencesRoute = ExperiencesRouteImport.update({
@@ -80,6 +86,7 @@ export interface FileRoutesByFullPath {
   '/corporate': typeof CorporateRoute
   '/day-tours': typeof DayToursRoute
   '/experiences': typeof ExperiencesRoute
+  '/local-stories': typeof LocalStoriesRoute
   '/multi-day': typeof MultiDayRoute
   '/proposals': typeof ProposalsRoute
 }
@@ -92,6 +99,7 @@ export interface FileRoutesByTo {
   '/corporate': typeof CorporateRoute
   '/day-tours': typeof DayToursRoute
   '/experiences': typeof ExperiencesRoute
+  '/local-stories': typeof LocalStoriesRoute
   '/multi-day': typeof MultiDayRoute
   '/proposals': typeof ProposalsRoute
 }
@@ -105,6 +113,7 @@ export interface FileRoutesById {
   '/corporate': typeof CorporateRoute
   '/day-tours': typeof DayToursRoute
   '/experiences': typeof ExperiencesRoute
+  '/local-stories': typeof LocalStoriesRoute
   '/multi-day': typeof MultiDayRoute
   '/proposals': typeof ProposalsRoute
 }
@@ -119,6 +128,7 @@ export interface FileRouteTypes {
     | '/corporate'
     | '/day-tours'
     | '/experiences'
+    | '/local-stories'
     | '/multi-day'
     | '/proposals'
   fileRoutesByTo: FileRoutesByTo
@@ -131,6 +141,7 @@ export interface FileRouteTypes {
     | '/corporate'
     | '/day-tours'
     | '/experiences'
+    | '/local-stories'
     | '/multi-day'
     | '/proposals'
   id:
@@ -143,6 +154,7 @@ export interface FileRouteTypes {
     | '/corporate'
     | '/day-tours'
     | '/experiences'
+    | '/local-stories'
     | '/multi-day'
     | '/proposals'
   fileRoutesById: FileRoutesById
@@ -156,6 +168,7 @@ export interface RootRouteChildren {
   CorporateRoute: typeof CorporateRoute
   DayToursRoute: typeof DayToursRoute
   ExperiencesRoute: typeof ExperiencesRoute
+  LocalStoriesRoute: typeof LocalStoriesRoute
   MultiDayRoute: typeof MultiDayRoute
   ProposalsRoute: typeof ProposalsRoute
 }
@@ -174,6 +187,13 @@ declare module '@tanstack/react-router' {
       path: '/multi-day'
       fullPath: '/multi-day'
       preLoaderRoute: typeof MultiDayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/local-stories': {
+      id: '/local-stories'
+      path: '/local-stories'
+      fullPath: '/local-stories'
+      preLoaderRoute: typeof LocalStoriesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/experiences': {
@@ -244,6 +264,7 @@ const rootRouteChildren: RootRouteChildren = {
   CorporateRoute: CorporateRoute,
   DayToursRoute: DayToursRoute,
   ExperiencesRoute: ExperiencesRoute,
+  LocalStoriesRoute: LocalStoriesRoute,
   MultiDayRoute: MultiDayRoute,
   ProposalsRoute: ProposalsRoute,
 }

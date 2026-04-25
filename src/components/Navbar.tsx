@@ -1,15 +1,33 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ArrowRight } from "lucide-react";
 import logo1x from "@/assets/yes-experiences-portugal-logo-1x.png";
 import logo2x from "@/assets/yes-experiences-portugal-logo-2x.png";
 import logo3x from "@/assets/yes-experiences-portugal-logo-3x.png";
-const navLinks = [
+
+// Desktop nav — full editorial set, kept compact in tracking so all 8
+// items fit gracefully on a single row at lg+ widths.
+const desktopLinks = [
   { to: "/experiences", label: "Experiences" },
-  { to: "/day-tours", label: "Day Tours" },
+  { to: "/builder", label: "Experience Studio" },
   { to: "/multi-day", label: "Multi-Day Journeys" },
-  { to: "/proposals", label: "Proposals & Celebrations" },
   { to: "/corporate", label: "Corporate" },
+  { to: "/proposals", label: "Proposals & Celebrations" },
+  { to: "/local-stories", label: "Local Stories" },
+  { to: "/about", label: "About Us" },
+  { to: "/contact", label: "Contact" },
+];
+
+// Mobile uses slightly different labels per the brief (more inviting on small
+// screens) — "Design Your Experience" instead of the studio name, and
+// Local Stories is intentionally omitted to keep the mobile menu focused.
+const mobileLinks = [
+  { to: "/experiences", label: "Experiences" },
+  { to: "/builder", label: "Design Your Experience" },
+  { to: "/multi-day", label: "Multi-Day Journeys" },
+  { to: "/corporate", label: "Corporate" },
+  { to: "/proposals", label: "Proposals & Celebrations" },
+  { to: "/about", label: "About Us" },
   { to: "/contact", label: "Contact" },
 ];
 
@@ -40,12 +58,13 @@ export function Navbar() {
             />
           </Link>
 
-          {/* Desktop nav — right, vertically centered.
-              Default uses charcoal (#2E2E2E, 13.58:1) instead of charcoal-soft
-              for stronger small-text contrast. Hover/active = teal (7.60:1).
-              Focus-visible ring guarantees keyboard accessibility (WCAG 2.4.7). */}
-          <nav className="hidden lg:flex items-center h-full gap-10 text-[11px] uppercase tracking-[0.24em] font-normal leading-none">
-            {navLinks.map((n) => (
+          {/* Desktop nav + CTA — right side, vertically centered.
+              Default text: charcoal (#2E2E2E, 13.58:1). Hover/active: teal (7.60:1).
+              Tracking tightened slightly (0.20em) so all 8 labels fit on one
+              row at lg+ without wrapping. The CTA button is the calm,
+              conversion-focused anchor — teal fill, fine gold border. */}
+          <nav className="hidden lg:flex items-center h-full gap-7 xl:gap-9 text-[11px] uppercase tracking-[0.2em] font-normal leading-none">
+            {desktopLinks.map((n) => (
               <Link
                 key={n.to}
                 to={n.to}
@@ -55,10 +74,16 @@ export function Navbar() {
                 {n.label}
               </Link>
             ))}
+            <Link
+              to="/builder"
+              className="ml-2 group inline-flex items-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-white border border-[color:var(--gold)]/70 hover:border-[color:var(--gold)] px-5 py-3 text-[10.5px] tracking-[0.2em] uppercase transition-all duration-500 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+            >
+              Design &amp; Secure
+              <ArrowRight size={13} className="group-hover:translate-x-0.5 transition-transform duration-300" />
+            </Link>
           </nav>
 
-          {/* Mobile menu button — right, vertically centered.
-              Uses charcoal (13.58:1) for max icon contrast on white. */}
+          {/* Mobile menu button — right, vertically centered. */}
           <button
             className="lg:hidden inline-flex items-center justify-center h-10 w-10 -mr-2 text-[color:var(--charcoal)] hover:text-[color:var(--teal)] transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             onClick={() => setOpen(!open)}
@@ -76,8 +101,8 @@ export function Navbar() {
           id="mobile-nav"
           className="lg:hidden bg-white border-t border-black/[0.05]"
         >
-          <div className="container-x py-6 flex flex-col gap-5 text-sm">
-            {navLinks.map((n) => (
+          <div className="container-x py-7 flex flex-col gap-5 text-sm">
+            {mobileLinks.map((n) => (
               <Link
                 key={n.to}
                 to={n.to}
@@ -88,6 +113,14 @@ export function Navbar() {
                 {n.label}
               </Link>
             ))}
+            <Link
+              to="/builder"
+              onClick={() => setOpen(false)}
+              className="mt-3 inline-flex items-center justify-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-white border border-[color:var(--gold)]/70 px-5 py-3.5 text-[11px] tracking-[0.22em] uppercase transition-colors"
+            >
+              Design &amp; Secure Your Experience
+              <ArrowRight size={14} />
+            </Link>
           </div>
         </div>
       )}
