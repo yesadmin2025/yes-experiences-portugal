@@ -457,7 +457,7 @@ function HomePage() {
               <div className="mt-9 flex flex-wrap gap-4">
                 <Link
                   to="/builder"
-                  className="inline-flex items-center gap-2 bg-[color:var(--ivory)] text-[color:var(--teal)] hover:bg-white border border-[color:var(--gold)]/60 hover:border-[color:var(--gold)] px-8 py-4 text-[12px] uppercase tracking-[0.2em] font-medium transition-all duration-500 hover:-translate-y-0.5"
+                  className="group inline-flex items-center gap-2 bg-[color:var(--ivory)] text-[color:var(--teal)] hover:bg-white border-[1.5px] border-[color:var(--gold)]/70 hover:border-[color:var(--gold)] px-9 py-[18px] text-[12.5px] uppercase tracking-[0.2em] font-semibold transition-all duration-[260ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] hover:-translate-y-[2px] hover:shadow-[0_14px_30px_-12px_rgba(201,169,106,0.45)]"
                 >
                   Open the Studio
                   <ArrowRight size={15} />
