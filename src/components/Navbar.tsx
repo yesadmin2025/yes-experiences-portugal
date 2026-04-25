@@ -16,9 +16,9 @@ export function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="fixed top-0 inset-x-0 z-50 bg-white border-b border-black/[0.04] shadow-[0_2px_12px_-6px_rgba(15,23,42,0.06)] opacity-0 animate-[headerFade_900ms_ease-out_forwards]">
+    <header className="fixed top-0 inset-x-0 z-50 bg-white border-b border-black/[0.05] shadow-[0_1px_0_0_rgba(201,169,106,0.18),0_6px_20px_-12px_rgba(15,23,42,0.10)] opacity-0 animate-[headerFade_900ms_ease-out_forwards]">
       <div className="container-x">
-        <div className="flex items-center justify-between h-20 md:h-[96px] lg:h-[108px]">
+        <div className="flex items-center justify-between h-[88px] md:h-[104px] lg:h-[116px]">
           {/* Logo — left, vertically centered via flex */}
           <Link
             to="/"
