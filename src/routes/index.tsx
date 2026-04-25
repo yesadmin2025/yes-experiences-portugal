@@ -245,40 +245,29 @@ function HomePage() {
             </p>
 
             <p
-              className="reveal-stagger flex items-center gap-3"
+              className="reveal-stagger flex items-center gap-1 text-[color:var(--gold)]"
               style={{ transitionDelay: "110ms" }}
-              aria-describedby="trust-bar-eyebrow trust-bar-summary"
+              role="img"
+              aria-label="Rated 5 out of 5 stars"
             >
-              <span
-                className="flex gap-1 text-[color:var(--gold)]"
-                role="img"
-                aria-label="Rated 5.0 out of 5 stars"
-              >
-                {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    size={14}
-                    fill="currentColor"
-                    strokeWidth={0}
-                    aria-hidden="true"
-                    focusable="false"
-                  />
-                ))}
-              </span>
-              <span
-                className="text-[11px] uppercase tracking-[0.28em] text-[color:var(--charcoal-soft)]"
-                aria-hidden="true"
-              >
-                5.0
-              </span>
+              {[...Array(5)].map((_, i) => (
+                <Star
+                  key={i}
+                  size={16}
+                  fill="currentColor"
+                  strokeWidth={0}
+                  aria-hidden="true"
+                  focusable="false"
+                />
+              ))}
             </p>
 
             <p
-              className="reveal-stagger text-[15px] text-[color:var(--charcoal-soft)] max-w-xl leading-[1.7]"
+              className="reveal-stagger text-[15px] text-[color:var(--charcoal-soft)] leading-[1.7]"
               style={{ transitionDelay: "220ms" }}
               id="trust-bar-summary"
             >
-              700+ five-star reviews across Google, Tripadvisor, Viator, GetYourGuide and Trustpilot
+              700+ verified 5-star reviews across trusted platforms
             </p>
           </div>
 
