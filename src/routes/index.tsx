@@ -306,16 +306,18 @@ function HomePage() {
                   ].join(" ")}
                   style={{ transitionDelay: `${330 + i * 110}ms` }}
                 >
-                  <figure className="flex flex-col items-center gap-3 m-0">
-                    {/* Platform name */}
+                  <figure className="flex flex-col items-center gap-4 m-0 w-full">
+                    {/* Platform name — fixed line slot keeps badges baseline-aligned */}
                     <figcaption
-                      className="serif text-[17px] sm:text-[19px] md:text-[22px] leading-none text-[color:var(--charcoal)] tracking-tight whitespace-nowrap"
+                      className="serif text-[17px] sm:text-[19px] md:text-[22px] leading-none text-[color:var(--charcoal)] tracking-tight whitespace-nowrap h-[22px] md:h-[24px] flex items-center"
                     >
                       {p.name}
                     </figcaption>
 
-                    {/* Official platform brand badge */}
-                    <PlatformBadge platform={p.key} />
+                    {/* Official platform brand badge — uniform pill chassis */}
+                    <div className="flex items-center justify-center h-7">
+                      <PlatformBadge platform={p.key} />
+                    </div>
                   </figure>
                 </li>
               );

@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-04-25T03:19:55.641Z",
-  "filesScanned": 22,
+  "generatedAt": "2026-04-25T04:09:58.770Z",
+  "filesScanned": 23,
   "approvedPalette": {
     "teal": "#295B61",
     "teal-2": "#2A7C82",
@@ -18,66 +18,12 @@
     "#cccccc"
   ],
   "counts": {
-    "total": 33,
-    "approved": 23,
-    "allowlisted": 10,
-    "mismatch": 0
+    "total": 44,
+    "approved": 18,
+    "allowlisted": 18,
+    "mismatch": 8
   },
   "findings": [
-    {
-      "file": "src/components/Logo.tsx",
-      "line": 20,
-      "col": 10,
-      "raw": "#295B61",
-      "normalized": "#295b61",
-      "snippet": "* (teal #295B61, charcoal #2E2E2E, gold #C9A96A, ivory #FAF8F3).",
-      "status": "approved"
-    },
-    {
-      "file": "src/components/Logo.tsx",
-      "line": 20,
-      "col": 28,
-      "raw": "#2E2E2E",
-      "normalized": "#2e2e2e",
-      "snippet": "* (teal #295B61, charcoal #2E2E2E, gold #C9A96A, ivory #FAF8F3).",
-      "status": "approved"
-    },
-    {
-      "file": "src/components/Logo.tsx",
-      "line": 20,
-      "col": 42,
-      "raw": "#C9A96A",
-      "normalized": "#c9a96a",
-      "snippet": "* (teal #295B61, charcoal #2E2E2E, gold #C9A96A, ivory #FAF8F3).",
-      "status": "approved"
-    },
-    {
-      "file": "src/components/Logo.tsx",
-      "line": 20,
-      "col": 57,
-      "raw": "#FAF8F3",
-      "normalized": "#faf8f3",
-      "snippet": "* (teal #295B61, charcoal #2E2E2E, gold #C9A96A, ivory #FAF8F3).",
-      "status": "approved"
-    },
-    {
-      "file": "src/components/Logo.tsx",
-      "line": 72,
-      "col": 60,
-      "raw": "#295B61",
-      "normalized": "#295b61",
-      "snippet": "// Brand-locked: YES must always render in approved teal #295B61 on light surfaces.",
-      "status": "approved"
-    },
-    {
-      "file": "src/components/Logo.tsx",
-      "line": 73,
-      "col": 48,
-      "raw": "#295B61",
-      "normalized": "#295b61",
-      "snippet": "const yesColor = isLight ? \"var(--ivory)\" : \"#295B61\";",
-      "status": "approved"
-    },
     {
       "file": "src/components/Navbar.tsx",
       "line": 62,
@@ -85,6 +31,159 @@
       "raw": "#2E2E2E",
       "normalized": "#2e2e2e",
       "snippet": "Default text: charcoal (#2E2E2E, 13.58:1). Hover/active: teal (7.60:1).",
+      "status": "approved"
+    },
+    {
+      "file": "src/components/PlatformBadge.tsx",
+      "line": 35,
+      "col": 17,
+      "raw": "#EA4335",
+      "normalized": "#ea4335",
+      "snippet": "fill=\"#EA4335\"",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/PlatformBadge.tsx",
+      "line": 39,
+      "col": 17,
+      "raw": "#4285F4",
+      "normalized": "#4285f4",
+      "snippet": "fill=\"#4285F4\"",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/PlatformBadge.tsx",
+      "line": 43,
+      "col": 17,
+      "raw": "#FBBC05",
+      "normalized": "#fbbc05",
+      "snippet": "fill=\"#FBBC05\"",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/PlatformBadge.tsx",
+      "line": 47,
+      "col": 17,
+      "raw": "#34A853",
+      "normalized": "#34a853",
+      "snippet": "fill=\"#34A853\"",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/PlatformBadge.tsx",
+      "line": 51,
+      "col": 68,
+      "raw": "#3c4043",
+      "normalized": "#3c4043",
+      "snippet": "<span className=\"text-[10px] font-medium tracking-wide text-[#3c4043]\">Google</span>",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/PlatformBadge.tsx",
+      "line": 66,
+      "col": 56,
+      "raw": "#000",
+      "normalized": "#000000",
+      "snippet": "<ellipse cx=\"14\" cy=\"9\" rx=\"13\" ry=\"7.5\" fill=\"#000\" />",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/components/PlatformBadge.tsx",
+      "line": 67,
+      "col": 45,
+      "raw": "#fff",
+      "normalized": "#ffffff",
+      "snippet": "<circle cx=\"9\" cy=\"9\" r=\"4.6\" fill=\"#fff\" />",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/components/PlatformBadge.tsx",
+      "line": 68,
+      "col": 46,
+      "raw": "#fff",
+      "normalized": "#ffffff",
+      "snippet": "<circle cx=\"19\" cy=\"9\" r=\"4.6\" fill=\"#fff\" />",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/components/PlatformBadge.tsx",
+      "line": 69,
+      "col": 45,
+      "raw": "#000",
+      "normalized": "#000000",
+      "snippet": "<circle cx=\"9\" cy=\"9\" r=\"2.1\" fill=\"#000\" />",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/components/PlatformBadge.tsx",
+      "line": 70,
+      "col": 46,
+      "raw": "#000",
+      "normalized": "#000000",
+      "snippet": "<circle cx=\"19\" cy=\"9\" r=\"2.1\" fill=\"#000\" />",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/components/PlatformBadge.tsx",
+      "line": 71,
+      "col": 49,
+      "raw": "#fff",
+      "normalized": "#ffffff",
+      "snippet": "<circle cx=\"8.4\" cy=\"8.4\" r=\"0.7\" fill=\"#fff\" />",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/components/PlatformBadge.tsx",
+      "line": 72,
+      "col": 50,
+      "raw": "#fff",
+      "normalized": "#ffffff",
+      "snippet": "<circle cx=\"18.4\" cy=\"8.4\" r=\"0.7\" fill=\"#fff\" />",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/components/PlatformBadge.tsx",
+      "line": 74,
+      "col": 48,
+      "raw": "#00AF87",
+      "normalized": "#00af87",
+      "snippet": "<circle cx=\"14\" cy=\"2.3\" r=\"1.4\" fill=\"#00AF87\" />",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/PlatformBadge.tsx",
+      "line": 76,
+      "col": 70,
+      "raw": "#000",
+      "normalized": "#000000",
+      "snippet": "<span className=\"text-[10px] font-semibold tracking-wide text-[#000]\">Tripadvisor</span>",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/components/PlatformBadge.tsx",
+      "line": 90,
+      "col": 63,
+      "raw": "#328E7E",
+      "normalized": "#328e7e",
+      "snippet": "className=\"text-[11px] font-bold tracking-tight text-[#328E7E] leading-none\"",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/PlatformBadge.tsx",
+      "line": 94,
+      "col": 32,
+      "raw": "#F26B52",
+      "normalized": "#f26b52",
+      "snippet": "<span className=\"text-[#F26B52]\">.</span>",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/PlatformBadge.tsx",
+      "line": 96,
+      "col": 71,
+      "raw": "#6B6B6B",
+      "normalized": "#6b6b6b",
+      "snippet": "<span className=\"text-[8.5px] uppercase tracking-[0.18em] text-[#6B6B6B]\" aria-hidden=\"true\">",
       "status": "approved"
     },
     {
