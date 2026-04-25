@@ -82,23 +82,61 @@ export function MobileStickyCTA() {
     // Only on small screens — match Tailwind's lg breakpoint (1024px).
     const mqDesktop = window.matchMedia("(min-width: 1024px)");
 
-    const onScroll = () => {
+    // Persist "passed hero" intent across navigations (incl. back/forward
+    // and BFCache restores) via sessionStorage. Once the user has scrolled
+    // past the hero anywhere on the site, the sticky CTA stays available
+    // when they return — they've already proven they're past the fold.
+    const STORAGE_KEY = "yes:passedHero";
+    const HERO_THRESHOLD = 600;
+
+    const readPersisted = (): boolean => {
+      try {
+        return window.sessionStorage.getItem(STORAGE_KEY) === "1";
+      } catch {
+        return false;
+      }
+    };
+
+    const markPersisted = () => {
+      try {
+        window.sessionStorage.setItem(STORAGE_KEY, "1");
+      } catch {
+        /* storage may be blocked — fail silently */
+      }
+    };
+
+    const evaluate = () => {
       // Hide entirely on desktop regardless of scroll position.
       if (mqDesktop.matches) {
         setVisible(false);
         return;
       }
-      // Reveal once the hero is mostly off-screen — ~600px is past the
-      // hero CTA cluster on every supported mobile viewport.
-      setVisible(window.scrollY > 600);
+
+      const pastHeroNow = window.scrollY > HERO_THRESHOLD;
+      if (pastHeroNow) {
+        markPersisted();
+        setVisible(true);
+        return;
+      }
+
+      // Not currently past the hero, but if the user has already crossed
+      // it earlier in this session (and is now returning via back/forward
+      // or a BFCache restore), keep the CTA visible.
+      setVisible(readPersisted());
     };
 
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    mqDesktop.addEventListener?.("change", onScroll);
+    // pageshow fires on initial load AND on BFCache restores — perfect
+    // hook for "remember where the user was" behavior.
+    const onPageShow = () => evaluate();
+
+    evaluate();
+    window.addEventListener("scroll", evaluate, { passive: true });
+    window.addEventListener("pageshow", onPageShow);
+    mqDesktop.addEventListener?.("change", evaluate);
     return () => {
-      window.removeEventListener("scroll", onScroll);
-      mqDesktop.removeEventListener?.("change", onScroll);
+      window.removeEventListener("scroll", evaluate);
+      window.removeEventListener("pageshow", onPageShow);
+      mqDesktop.removeEventListener?.("change", evaluate);
     };
   }, []);
 
