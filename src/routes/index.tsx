@@ -511,7 +511,7 @@ function HomePage() {
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="reveal lg:order-2">
               <span className="eyebrow">Multi-Day Journeys</span>
-              <h2 className="serif text-4xl md:text-5xl mt-5 leading-tight">
+              <h2 className="serif text-4xl md:text-5xl mt-5">
                 A few days, <br />
                 <span className="italic">one continuous story.</span>
               </h2>
