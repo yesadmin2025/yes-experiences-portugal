@@ -247,17 +247,21 @@ function HomePage() {
 
           {/* Platform marks — true 3-column grid; the three cells continue
               the same 110ms cadence (330 → 440 → 550 ms) so the whole
-              Trust Bar reads as one unbroken reveal. */}
+              Trust Bar reads as one unbroken reveal.
+              Each platform now shows a small icon-style badge directly
+              UNDER its name: 5 hairline gold stars + numeric rating in a
+              soft hairline pill. Gold is restricted to the 5 mini stars
+              and the column dividers — nothing else. */}
           <div className="mt-12 max-w-3xl mx-auto grid grid-cols-3 items-center">
             {[
-              { name: "Google", badge: "Excellent · 5.0" },
-              { name: "Tripadvisor", badge: "Travelers' Choice" },
-              { name: "Viator", badge: "Top-rated Operator" },
+              { name: "Google", rating: "5.0" },
+              { name: "Tripadvisor", rating: "5.0" },
+              { name: "Viator", rating: "5.0" },
             ].map((p, i) => (
               <div
                 key={p.name}
                 className={[
-                  "reveal-stagger flex flex-col items-center gap-2 px-3 sm:px-6",
+                  "reveal-stagger flex flex-col items-center gap-3 px-3 sm:px-6",
                   i > 0 ? "border-l border-[color:var(--gold)]/25" : "",
                 ].join(" ")}
                 style={{ transitionDelay: `${330 + i * 110}ms` }}
@@ -265,8 +269,22 @@ function HomePage() {
                 <span className="serif text-[17px] sm:text-[19px] md:text-[22px] leading-none text-[color:var(--charcoal)] tracking-tight whitespace-nowrap">
                   {p.name}
                 </span>
-                <span className="text-[9px] sm:text-[10px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)] leading-none whitespace-nowrap text-center">
-                  {p.badge}
+
+                {/* Icon-style badge — restrained pill with 5 gold micro
+                    stars and a small numeric rating. Sits directly under
+                    the platform name. */}
+                <span
+                  className="inline-flex items-center gap-1.5 border border-[color:var(--border)] px-2.5 py-1 leading-none"
+                  aria-label={`${p.name} — rated ${p.rating} out of 5`}
+                >
+                  <span className="flex gap-[2px] text-[color:var(--gold)]" aria-hidden="true">
+                    {[...Array(5)].map((_, idx) => (
+                      <Star key={idx} size={9} fill="currentColor" strokeWidth={0} />
+                    ))}
+                  </span>
+                  <span className="text-[10px] tracking-[0.18em] text-[color:var(--charcoal-soft)]">
+                    {p.rating}
+                  </span>
                 </span>
               </div>
             ))}
