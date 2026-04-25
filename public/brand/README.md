@@ -7,12 +7,34 @@ This folder contains the official redistributable logo files for
 
 ```
 public/brand/
-├── README.md          ← this file
-├── manifest.json      ← machine-readable index of every variant
-├── svg/               ← vector master files (recommended for web + print)
-├── png/               ← rasterized exports at @1x / @2x / @3x
-└── pdf/               ← single-page print-ready PDFs
+├── README.md              ← this file
+├── manifest.json          ← machine-readable index of every variant
+├── yes-brand-board.pdf    ← single-page brand-color reference (print-ready)
+├── yes-brand-board.png    ← same brand-color reference, hi-res raster
+├── svg/                   ← vector master files (recommended for web + print)
+├── png/                   ← rasterized exports at @1x / @2x / @3x
+└── pdf/                   ← single-page print-ready PDFs
 ```
+
+## The brand board
+
+`yes-brand-board.pdf` (and its PNG twin) is the canonical color reference.
+It carries the master logo at the top and the full 8-token palette below,
+each swatch labelled with **role · hex · CSS token · usage**. Every hex
+value on the board is verified at build time against `src/styles.css` —
+the build fails if any token drifts. Hand this single page to printers,
+designers, or partners as the source of truth.
+
+| Token            | Hex       | Role                              |
+| ---------------- | --------- | --------------------------------- |
+| `--teal`         | `#295B61` | Primary brand color               |
+| `--teal-2`       | `#2A7C82` | Secondary teal (hover, accents)   |
+| `--gold`         | `#C9A96A` | Accent (rules, dividers)          |
+| `--gold-soft`    | `#E1CFA6` | Soft accent (microcopy)           |
+| `--charcoal`     | `#2E2E2E` | Primary text / dark surface       |
+| `--charcoal-soft`| `#6B6B6B` | Secondary text                    |
+| `--ivory`        | `#FAF8F3` | Primary background                |
+| `--sand`         | `#F4EFE7` | Quiet surface                     |
 
 ## Variants (6)
 
