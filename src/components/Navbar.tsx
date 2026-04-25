@@ -18,16 +18,15 @@ export function Navbar() {
   return (
     <header className="fixed top-0 inset-x-0 z-50 bg-white border-b border-black/[0.05] shadow-[0_1px_0_0_rgba(201,169,106,0.22),0_10px_28px_-18px_rgba(15,23,42,0.10)] opacity-0 animate-[headerFade_900ms_ease-out_forwards]">
       <div className="container-x">
-        <div className="flex items-center justify-between h-[120px] md:h-[140px] lg:h-[156px]">
-          {/* Logo — left, vertically centered via flex.
-              Typographic lockup: brand teal/charcoal/gold with a properly
-              sized PORTUGAL caption — never the small baked-in raster. */}
+        <div className="flex items-center justify-between h-[84px] md:h-[96px] lg:h-[104px]">
+          {/* Logo — left, vertically centered. Tight header lockup with
+              enlarged PORTUGAL aligned to the YES+experiences midline. */}
           <Link
             to="/"
             className="flex-shrink-0 inline-flex items-center h-full rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             aria-label="YES experiences PORTUGAL — Home"
           >
-            <Logo size="sm" className="block" />
+            <Logo layout="header" size="sm" className="block" />
           </Link>
 
           {/* Desktop nav — right, vertically centered.
