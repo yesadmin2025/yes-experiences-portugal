@@ -41,13 +41,13 @@ export const Route = createFileRoute("/")({
 const types = [
   {
     title: "Private Day Experiences",
-    line: "A single, unhurried day — designed entirely around you.",
+    line: "One unhurried day, designed entirely around you — at your pace, in your story.",
     img: catPrivate,
     to: "/day-tours",
   },
   {
     title: "Multi-Day Journeys",
-    line: "Several days, one story — coast to vineyard, city to village.",
+    line: "Several days woven into one continuous story — coast to vineyard, city to village.",
     img: catMultiday,
     to: "/multi-day",
   },
@@ -59,7 +59,7 @@ const types = [
   },
   {
     title: "Proposals & Celebrations",
-    line: "Quietly extraordinary moments — proposals, anniversaries, milestones.",
+    line: "Quietly extraordinary moments — proposals, anniversaries, milestones to remember.",
     img: catProposals,
     to: "/proposals",
   },
@@ -69,19 +69,19 @@ const signatures = [
   {
     title: "A Day in Hidden Douro",
     img: expWine,
-    line: "Family wineries, schist terraces, a long lunch above the river.",
+    line: "Family wineries, schist terraces, a long lunch above the river — far from the bus routes.",
     pace: ["Morning vineyard walk", "Long table lunch", "Sunset tasting"],
   },
   {
     title: "Wild Atlantic Coast",
     img: expCoastal,
-    line: "Coastal roads only locals drive, a fishermen's lunch, no crowds.",
+    line: "Coastal roads only locals drive, a fishermen's lunch, a hidden cove with no one else in sight.",
     pace: ["Cliff walk", "Seafood by the harbor", "Hidden cove"],
   },
   {
     title: "Lisbon Through Locals",
     img: expStreet,
-    line: "The Lisbon postcards never see — neighborhoods, ateliers, tascas.",
+    line: "The Lisbon postcards never see — quiet neighborhoods, ateliers and family-run tascas.",
     pace: ["Morning market", "Artisan visit", "Family tavern lunch"],
   },
 ];
