@@ -7,7 +7,7 @@ interface LogoProps {
 }
 
 const sizes = {
-  sm: "h-10 md:h-12 lg:h-14",
+  sm: "h-12 md:h-14 lg:h-[68px]",
   md: "h-20 md:h-24",
   lg: "h-28 md:h-36",
 };
@@ -23,13 +23,15 @@ export function Logo({ size = "md", variant = "default", className = "" }: LogoP
         variant === "light" ? "brightness-0 invert opacity-95" : ""
       } ${className}`}
       draggable={false}
-      decoding="async"
+      decoding="sync"
       loading="eager"
+      fetchPriority="high"
       style={{
         imageRendering: "auto",
         WebkitBackfaceVisibility: "hidden",
         backfaceVisibility: "hidden",
         transform: "translateZ(0)",
+        filter: "contrast(1.04)",
       }}
     />
   );
