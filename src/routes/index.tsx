@@ -307,7 +307,7 @@ function HomePage() {
                   <figure className="flex items-center justify-center m-0">
 
                     {/* Official platform brand mark — uniform optical height */}
-                    <div className="flex items-center justify-center h-9 sm:h-10 md:h-11">
+                    <div className="flex items-center justify-center h-7 sm:h-8 md:h-9">
                       <PlatformBadge platform={p.key} />
                     </div>
                   </figure>
