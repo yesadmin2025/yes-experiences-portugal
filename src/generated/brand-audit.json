@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-04-25T01:57:36.381Z",
+  "generatedAt": "2026-04-25T01:57:54.606Z",
   "filesScanned": 22,
   "approvedPalette": {
-    "teal": "#295B61",
+    "teal": "#2A5E63",
     "teal-2": "#2A7C82",
     "gold": "#C9A96A",
     "gold-soft": "#E1CFA6",
@@ -19,9 +19,9 @@
   ],
   "counts": {
     "total": 55,
-    "approved": 35,
+    "approved": 40,
     "allowlisted": 15,
-    "mismatch": 5
+    "mismatch": 0
   },
   "findings": [
     {
@@ -31,7 +31,7 @@
       "raw": "#2A5E63",
       "normalized": "#2a5e63",
       "snippet": "* (teal #2A5E63, charcoal #2E2E2E, gold #C9A96A, ivory #FAF8F3).",
-      "status": "mismatch"
+      "status": "approved"
     },
     {
       "file": "src/components/Logo.tsx",
@@ -67,7 +67,7 @@
       "raw": "#2A5E63",
       "normalized": "#2a5e63",
       "snippet": "// Brand-locked: YES must always render in approved teal #2A5E63 on light surfaces.",
-      "status": "mismatch"
+      "status": "approved"
     },
     {
       "file": "src/components/Logo.tsx",
@@ -76,7 +76,7 @@
       "raw": "#2A5E63",
       "normalized": "#2a5e63",
       "snippet": "const yesColor = isLight ? \"var(--ivory)\" : \"#2A5E63\";",
-      "status": "mismatch"
+      "status": "approved"
     },
     {
       "file": "src/components/Navbar.tsx",
@@ -94,7 +94,7 @@
       "raw": "#2A5E63",
       "normalized": "#2a5e63",
       "snippet": "teal: \"#2A5E63\",",
-      "status": "mismatch"
+      "status": "approved"
     },
     {
       "file": "src/routes/brand-qa.tsx",
@@ -220,7 +220,7 @@
       "raw": "#2A5E63",
       "normalized": "#2a5e63",
       "snippet": "--teal: #2A5E63;",
-      "status": "mismatch"
+      "status": "approved"
     },
     {
       "file": "src/styles.css",
