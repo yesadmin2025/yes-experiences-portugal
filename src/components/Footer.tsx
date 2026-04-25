@@ -1,5 +1,13 @@
 import { Link } from "@tanstack/react-router";
+import { Instagram, Facebook, Youtube, Linkedin } from "lucide-react";
 import logoGold from "@/assets/yes-logo-approved-gold-silk.png";
+
+const SOCIALS = [
+  { href: "https://instagram.com/", label: "Instagram", Icon: Instagram },
+  { href: "https://facebook.com/", label: "Facebook", Icon: Facebook },
+  { href: "https://youtube.com/", label: "YouTube", Icon: Youtube },
+  { href: "https://linkedin.com/", label: "LinkedIn", Icon: Linkedin },
+];
 
 export function Footer() {
   return (
@@ -59,11 +67,28 @@ export function Footer() {
           />
         </div>
 
-        <div className="mt-16 pt-8 border-t border-[color:var(--ivory)]/15 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-[color:var(--ivory)]/60">
-          <p>© {new Date().getFullYear()} YES experiences Portugal. All rights reserved.</p>
-          <p className="tracking-[0.3em] uppercase text-[color:var(--gold)]">
-            Designed in Portugal
-          </p>
+        <div className="mt-16 pt-8 border-t border-[color:var(--ivory)]/15 flex flex-col items-center gap-6">
+          <ul className="flex items-center gap-5 list-none p-0 m-0">
+            {SOCIALS.map(({ href, label, Icon }) => (
+              <li key={label}>
+                <a
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  className="inline-flex items-center justify-center text-[color:var(--ivory)]/50 hover:text-[color:var(--ivory)] hover:-translate-y-0.5 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--charcoal)] rounded-sm"
+                >
+                  <Icon size={16} strokeWidth={1.5} />
+                </a>
+              </li>
+            ))}
+          </ul>
+          <div className="w-full flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-[color:var(--ivory)]/60">
+            <p>© {new Date().getFullYear()} YES experiences Portugal. All rights reserved.</p>
+            <p className="tracking-[0.3em] uppercase text-[color:var(--gold)]">
+              Designed in Portugal
+            </p>
+          </div>
         </div>
       </div>
     </footer>
