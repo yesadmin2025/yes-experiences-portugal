@@ -610,7 +610,7 @@ function HomePage() {
                 <span className="h-px w-8 bg-[color:var(--gold)]" />
                 Corporate &amp; Celebrations
               </span>
-              <h2 className="serif text-4xl md:text-5xl mt-7 leading-[1.1] font-light">
+              <h2 className="serif text-4xl md:text-5xl mt-7">
                 Fully private. <br />
                 <span className="italic">Fully managed.</span>
               </h2>
