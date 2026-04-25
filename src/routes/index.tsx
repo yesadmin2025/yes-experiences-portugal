@@ -288,7 +288,7 @@ function HomePage() {
               checkmark — instead of repeating the star/rating badge that
               already appears once at the top of the section. */}
           <ul
-            className="mt-12 max-w-3xl mx-auto grid grid-cols-3 items-center list-none p-0"
+            className="mt-12 mx-auto grid grid-cols-3 items-stretch list-none p-0 max-w-[640px] sm:max-w-3xl"
             aria-label="Official review platforms"
           >
             {[
@@ -300,22 +300,22 @@ function HomePage() {
                 <li
                   key={p.name}
                   className={[
-                    "reveal-stagger flex flex-col items-center gap-3 px-3 sm:px-6",
+                    "reveal-stagger flex items-center justify-center px-2 sm:px-6 md:px-8 py-2",
                     // Hairline gold dividers are purely decorative
                     i > 0 ? "border-l border-[color:var(--gold)]/25" : "",
                   ].join(" ")}
                   style={{ transitionDelay: `${330 + i * 110}ms` }}
                 >
-                  <figure className="flex flex-col items-center gap-4 m-0 w-full">
+                  <figure className="flex flex-col items-center justify-center gap-4 sm:gap-5 m-0">
                     {/* Platform name — fixed line slot keeps badges baseline-aligned */}
                     <figcaption
-                      className="serif text-[17px] sm:text-[19px] md:text-[22px] leading-none text-[color:var(--charcoal)] tracking-tight whitespace-nowrap h-[22px] md:h-[24px] flex items-center"
+                      className="serif text-[16px] sm:text-[19px] md:text-[22px] leading-none text-[color:var(--charcoal)] tracking-tight whitespace-nowrap h-[20px] sm:h-[22px] md:h-[24px] flex items-center"
                     >
                       {p.name}
                     </figcaption>
 
-                    {/* Official platform brand badge — uniform pill chassis */}
-                    <div className="flex items-center justify-center h-7">
+                    {/* Official platform brand mark — uniform optical height */}
+                    <div className="flex items-center justify-center h-8 sm:h-9 md:h-10">
                       <PlatformBadge platform={p.key} />
                     </div>
                   </figure>

@@ -1,20 +1,20 @@
 /**
- * PlatformBadge — recognizable brand glyphs for the trust bar.
+ * PlatformBadge — official, recognizable brand marks for the trust bar.
  *
- * Glyph-only marks (no wordmarks) on a transparent background. All three
- * are rendered inside an identical fixed-size square so they share the
- * same optical weight and baseline regardless of the brand's natural
- * proportions. This matches the "just the badge" treatment used next to
- * the platform name in the trust bar.
+ * All three marks are rendered on a transparent background and sized to
+ * the same optical height so they read as a balanced row across every
+ * breakpoint. Each is the platform's own widely-recognized identity:
+ *
+ *   • Google      — multi-color "G" monogram
+ *   • Tripadvisor — Ollie the owl (full-color wordmark glyph)
+ *   • Viator      — official "viator." lockup with the orange brand dot
+ *
+ * Viator does not publish a standalone glyph, so its wordmark is the
+ * recognizable mark; it is sized to match the optical weight of the
+ * other two glyphs on the same baseline.
  */
 
 type Platform = "google" | "tripadvisor" | "viator";
-
-// Fixed square slot — keeps Google / Tripadvisor / Viator visually
-// matched in the trust-bar grid at every breakpoint.
-const SLOT =
-  "inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 " +
-  "bg-transparent select-none";
 
 export function PlatformBadge({
   platform,
@@ -23,22 +23,22 @@ export function PlatformBadge({
   platform: Platform;
   className?: string;
 }) {
-  if (platform === "google") return <GoogleBadge className={className} />;
-  if (platform === "tripadvisor") return <TripadvisorBadge className={className} />;
-  return <ViatorBadge className={className} />;
+  if (platform === "google") return <GoogleMark className={className} />;
+  if (platform === "tripadvisor") return <TripadvisorMark className={className} />;
+  return <ViatorMark className={className} />;
 }
 
-/* ---------- Google — full-color G ---------- */
-function GoogleBadge({ className }: { className?: string }) {
+/* ---------- Google — multi-color G monogram ---------- */
+function GoogleMark({ className = "" }: { className?: string }) {
   return (
     <span
-      className={`${SLOT} ${className}`}
+      className={`inline-flex items-center justify-center h-8 sm:h-9 md:h-10 w-auto ${className}`}
       role="img"
       aria-label="Google — official review platform"
     >
       <svg
         viewBox="0 0 48 48"
-        className="w-full h-full"
+        className="block h-full w-auto"
         aria-hidden="true"
         focusable="false"
       >
@@ -63,54 +63,76 @@ function GoogleBadge({ className }: { className?: string }) {
   );
 }
 
-/* ---------- Tripadvisor — owl glyph ---------- */
-function TripadvisorBadge({ className }: { className?: string }) {
+/* ---------- Tripadvisor — Ollie the owl (signature mark) ----------
+   Faithful inline reconstruction: the green leaf accent on top, the
+   black body, two large white eyes with concentric green and black
+   pupils, and white catchlights. Sized to match Google optically. */
+function TripadvisorMark({ className = "" }: { className?: string }) {
   return (
     <span
-      className={`${SLOT} ${className}`}
+      className={`inline-flex items-center justify-center h-8 sm:h-9 md:h-10 w-auto ${className}`}
       role="img"
       aria-label="Tripadvisor — official review platform"
     >
       <svg
-        viewBox="0 0 32 22"
-        className="w-full h-full"
+        viewBox="0 0 56 44"
+        className="block h-full w-auto"
         aria-hidden="true"
         focusable="false"
       >
+        {/* Green leaf accent on top of the head */}
+        <path
+          d="M28 1c-2.6 0-4.8 1.6-5.8 3.9 1.6-.7 3.5-1 5.8-1s4.2.3 5.8 1C32.8 2.6 30.6 1 28 1z"
+          fill="#00AF87"
+        />
         {/* Owl body */}
-        <ellipse cx="16" cy="13" rx="15" ry="8.5" fill="#000" />
-        {/* Eyes — outer white */}
-        <circle cx="10.5" cy="13" r="5.2" fill="#fff" />
-        <circle cx="21.5" cy="13" r="5.2" fill="#fff" />
-        {/* Pupils */}
-        <circle cx="10.5" cy="13" r="2.4" fill="#000" />
-        <circle cx="21.5" cy="13" r="2.4" fill="#000" />
+        <ellipse cx="28" cy="26" rx="26" ry="15" fill="#000" />
+        {/* Eye whites */}
+        <circle cx="17" cy="26" r="10" fill="#fff" />
+        <circle cx="39" cy="26" r="10" fill="#fff" />
+        {/* Green inner ring (Tripadvisor signature) */}
+        <circle cx="17" cy="26" r="6" fill="#00AF87" />
+        <circle cx="39" cy="26" r="6" fill="#00AF87" />
+        {/* Black pupils */}
+        <circle cx="17" cy="26" r="3.4" fill="#000" />
+        <circle cx="39" cy="26" r="3.4" fill="#000" />
         {/* Catchlights */}
-        <circle cx="9.8" cy="12.3" r="0.8" fill="#fff" />
-        <circle cx="20.8" cy="12.3" r="0.8" fill="#fff" />
-        {/* Trademark green leaf accent */}
-        <circle cx="16" cy="3.3" r="1.8" fill="#00AF87" />
+        <circle cx="15.8" cy="24.8" r="1" fill="#fff" />
+        <circle cx="37.8" cy="24.8" r="1" fill="#fff" />
       </svg>
     </span>
   );
 }
 
-/* ---------- Viator — teal "v." monogram ---------- */
-function ViatorBadge({ className }: { className?: string }) {
-  // Viator's standalone glyph is the lowercase "v" + brand dot.
-  // Rendered as inline type so it scales cleanly with the slot.
+/* ---------- Viator — official "viator." wordmark with orange dot ----------
+   Viator's recognizable identity is its lowercase wordmark; rendering it
+   as the mark keeps it instantly identifiable. Brand teal + orange dot. */
+function ViatorMark({ className = "" }: { className?: string }) {
   return (
     <span
-      className={`${SLOT} ${className}`}
+      className={`inline-flex items-center justify-center h-8 sm:h-9 md:h-10 w-auto ${className}`}
       role="img"
       aria-label="Viator — official review platform"
     >
-      <span
-        className="font-bold leading-none tracking-tight text-[18px] sm:text-[20px] md:text-[22px] text-[#328E7E]"
+      <svg
+        viewBox="0 0 120 36"
+        className="block h-full w-auto"
         aria-hidden="true"
+        focusable="false"
       >
-        v<span className="text-[#F26B52]">.</span>
-      </span>
+        <text
+          x="0"
+          y="29"
+          fontFamily="'Inter', system-ui, sans-serif"
+          fontSize="34"
+          fontWeight="800"
+          letterSpacing="-1"
+          fill="#328E7E"
+        >
+          viator
+        </text>
+        <circle cx="111" cy="29" r="4.2" fill="#F26B52" />
+      </svg>
     </span>
   );
 }
