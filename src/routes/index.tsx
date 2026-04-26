@@ -214,21 +214,32 @@ function HomePage() {
               like exploring Portugal with a friend who lives here.
             </p>
 
-            <div className="cta-magnet-group mt-10 md:mt-12 flex flex-col sm:flex-row flex-wrap gap-4 sm:gap-5 opacity-0 animate-[heroFade_1.4s_ease-out_1.25s_forwards]">
+            <div className="cta-magnet-group mt-10 md:mt-12 flex flex-col sm:flex-row flex-wrap gap-4 sm:gap-6 opacity-0 animate-[heroFade_1.4s_ease-out_1.25s_forwards]">
               {/* Primary — clear conversion anchor.
+                  Padding tuned for a balanced, premium click target:
+                    px-11 (44px sides) + py-[20px] → ~56px tall total
+                    (≥48px WCAG AAA touch target, with breathing room
+                    around the type so the squared geometry feels
+                    balanced, not cramped).
                   Three layered conversion cues, all squared 2px, all
                   reduced-motion-gated, all driven by the CSS variable
                   API in src/styles.css:
                     .cta-attention  → one-shot gold halo bloom on load
                     .cta-breathe    → slow ambient gold-rim breathing
                     .cta-magnet-group on parent → sibling dims on hover
-                  The square geometry and exact wording stay untouched. */}
+                  The square geometry and exact wording stay untouched.
+                  The label sits inside .cta-label so its tracking can
+                  expand a hair on hover (premium "settling" cue)
+                  without affecting the arrow's glide. */}
               <Link
                 to="/builder"
-                className="cta-primary cta-attention cta-breathe group inline-flex items-center justify-center gap-3 px-10 py-[18px] text-[12.5px] tracking-[0.22em] uppercase font-semibold"
+                className="cta-primary cta-attention cta-breathe group inline-flex items-center justify-center gap-3.5 px-11 py-[20px] text-[12.5px] font-semibold"
               >
-                Design &amp; Secure Your Experience
-                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-300" />
+                <span className="cta-label">Design &amp; Secure Your Experience</span>
+                <ArrowRight
+                  size={14}
+                  className="cta-arrow opacity-80 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-[420ms] ease-[cubic-bezier(0.16,1,0.3,1)]"
+                />
               </Link>
               {/* Secondary — refined outline. data-cta-stagger applies
                   to BOTH the attention pulse (+140ms via --cta-pulse-
@@ -238,10 +249,13 @@ function HomePage() {
               <Link
                 to="/experiences"
                 data-cta-stagger
-                className="cta-secondary-dark cta-attention cta-breathe group inline-flex items-center justify-center gap-3 px-10 py-[18px] text-[12.5px] tracking-[0.22em] uppercase font-semibold"
+                className="cta-secondary-dark cta-attention cta-breathe group inline-flex items-center justify-center gap-3.5 px-11 py-[20px] text-[12.5px] font-semibold"
               >
-                Explore Signature Experiences
-                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-300" />
+                <span className="cta-label">Explore Signature Experiences</span>
+                <ArrowRight
+                  size={14}
+                  className="cta-arrow opacity-80 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-[420ms] ease-[cubic-bezier(0.16,1,0.3,1)]"
+                />
               </Link>
             </div>
 
