@@ -117,6 +117,37 @@
   --border: rgba(46, 46, 46, 0.12);
   --input: rgba(46, 46, 46, 0.18);
   --ring: var(--teal);
+
+  /* ─────────────────────────────────────────────────────────────
+     HERO CTA ATTENTION-PULSE API
+     A small set of CSS variables that drive the one-shot gold halo
+     bloom on .cta-attention buttons. Override at any scope to retune
+     the pulse without touching JSX or component code:
+
+       :root             → site-wide default
+       .hero-cta-group   → tweak both hero CTAs at once
+       .cta-primary, …   → per-variant override
+       inline style      → per-instance (last resort)
+
+     Defaults below match the hero copy fade-in (heroFade ends at
+     1.25s + 1.4s = 2.65s) so the pulse fires right after the text
+     settles. The secondary CTA carries a +140ms stagger so the two
+     halos never bloom in lockstep (which reads as mechanical).
+
+       --cta-pulse-delay      when the pulse begins (default 2.9s)
+       --cta-pulse-duration   length of the bloom (default 1.6s)
+       --cta-pulse-easing     timing function (default critically-
+                              damped ease-out, matches hero parallax)
+       --cta-pulse-iterations how many times it fires (default 1 —
+                              set to "infinite" for demos/recordings)
+       --cta-pulse-stagger    extra delay applied to non-primary
+                              CTAs in a hero group (default 140ms)
+     ───────────────────────────────────────────────────────────── */
+  --cta-pulse-delay: 2.9s;
+  --cta-pulse-duration: 1.6s;
+  --cta-pulse-easing: cubic-bezier(0.16, 1, 0.3, 1);
+  --cta-pulse-iterations: 1;
+  --cta-pulse-stagger: 140ms;
 }
 
 .dark {
@@ -300,18 +331,32 @@
      on the hero buttons only. We animate ONLY the ::before halo so the
      button's own transform (which carries the parallax tilt) is never
      overwritten — no fight with the pointer-tracking translate3d().
-     animation-delay is set inline at the call-site so primary/secondary
-     can be staggered ~140ms, keeping the pulse from reading as
-     synchronized/mechanical. */
+
+     All four animation parameters are driven by the CSS variable API
+     declared in :root (see HERO CTA ATTENTION-PULSE API above). Override
+     any variable at any scope to retune without touching JSX:
+
+       <Link className="cta-primary cta-attention" />        → defaults
+       <Link className="cta-attention" data-cta-stagger />   → +stagger
+       <div style={{ '--cta-pulse-duration': '2.4s' }}>      → scope
+       :root { --cta-pulse-iterations: infinite; }           → demos
+
+     No fill-mode: once the pulse ends, animation styles release and the
+     existing hover transition takes over, so hover still blooms the
+     halo normally afterward. */
   .cta-attention::before {
-    /* No fill-mode: once the 1.6s pulse ends, animation styles release
-       and the existing opacity/transform transition takes over again,
-       so hover still blooms the halo normally afterward. The delay is
-       passed in via a CSS variable from the call-site (--cta-pulse-delay)
-       so primary/secondary can be staggered without inline pseudo
-       targeting (which CSS doesn't support). */
-    animation: ctaAttentionHalo 1.6s cubic-bezier(0.16, 1, 0.3, 1);
+    animation-name: ctaAttentionHalo;
+    animation-duration: var(--cta-pulse-duration, 1.6s);
+    animation-timing-function: var(--cta-pulse-easing, cubic-bezier(0.16, 1, 0.3, 1));
     animation-delay: var(--cta-pulse-delay, 0s);
+    animation-iteration-count: var(--cta-pulse-iterations, 1);
+  }
+
+  /* Stagger hook — add `data-cta-stagger` on any non-anchor CTA in a
+     hero group to push its delay by --cta-pulse-stagger. Keeps the two
+     halos out of phase without per-instance inline styles. */
+  .cta-attention[data-cta-stagger]::before {
+    animation-delay: calc(var(--cta-pulse-delay, 0s) + var(--cta-pulse-stagger, 0ms));
   }
 
   /* Reduced-motion: never run the attention pulse. The buttons still
