@@ -143,7 +143,7 @@ export function MobileStickyCTA() {
     setSubmitting(true);
 
     trackIntent({
-      cta: "design_secure",
+      cta: "explore_experiences",
       surface: "mobile_sticky",
       path: typeof window !== "undefined" ? window.location.pathname : "/",
       scroll_y: typeof window !== "undefined" ? Math.round(window.scrollY) : 0,
