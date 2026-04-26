@@ -43,6 +43,15 @@ export type UsePastHeroOptions = {
    * Default: undefined (always active).
    */
   mediaQuery?: string;
+  /**
+   * Idle window in ms after the last scroll event before the hook is
+   * allowed to flip to `true`. While the user is actively scrolling the
+   * surface stays hidden (or hides if it was already showing) so it
+   * never competes with motion. The bar fades in only once the user has
+   * stopped to read. Default 220ms — long enough to feel intentional,
+   * short enough to feel responsive. Set to 0 to disable.
+   */
+  scrollIdleMs?: number;
 };
 
 function readPersisted(): boolean {
