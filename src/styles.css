@@ -478,6 +478,9 @@
     position: relative;
     overflow: hidden;
     isolation: isolate;
+    /* Unified radius across the CTA family — keeps the squared,
+       architectural geometry consistent on every surface. */
+    border-radius: 2px;
     background-color: transparent;
     color: var(--charcoal);
     border: 1.5px solid color-mix(in oklab, var(--gold) 65%, transparent);
