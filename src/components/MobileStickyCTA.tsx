@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
+import { usePastHero } from "@/hooks/use-past-hero";
 
 /**
  * MobileStickyCTA
