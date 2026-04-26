@@ -61,10 +61,11 @@ export function Navbar() {
                 style={{ imageRendering: "auto" }}
               />
               {/* Reinforced "PORTUGAL" — sits over the faded original.
-                  Teal for AAA contrast on the ivory/white header. */}
+                  A short ivory backdrop masks the washed-out artwork so the
+                  reinforced teal wordmark reads cleanly at AAA contrast. */}
               <span
                 aria-hidden="true"
-                className="pointer-events-none absolute left-1/2 -translate-x-1/2 bottom-[10%] md:bottom-[11%] text-[color:var(--teal)] font-sans font-semibold uppercase text-[9px] md:text-[10.5px] lg:text-[11.5px] tracking-[0.42em] leading-none"
+                className="pointer-events-none absolute left-1/2 -translate-x-1/2 bottom-[9%] md:bottom-[10%] bg-white px-1.5 text-[color:var(--teal)] font-sans font-semibold uppercase text-[9px] md:text-[10.5px] lg:text-[11.5px] tracking-[0.42em] leading-none"
               >
                 Portugal
               </span>
