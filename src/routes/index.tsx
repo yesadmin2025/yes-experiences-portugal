@@ -224,7 +224,7 @@ function HomePage() {
               <Link
                 to="/builder"
                 className="cta-primary cta-attention group inline-flex items-center justify-center gap-3 px-10 py-[18px] text-[12.5px] tracking-[0.22em] uppercase font-semibold"
-                style={{ animationDelay: "2.9s" }}
+                style={{ ["--cta-pulse-delay" as never]: "2.9s" }}
               >
                 Design &amp; Secure Your Experience
                 <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-300" />
