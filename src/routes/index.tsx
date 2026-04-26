@@ -218,19 +218,20 @@ function HomePage() {
         />
 
         <div className="container-x relative z-10 pb-24 md:pb-36 pt-32 md:pt-40">
-          <div className="max-w-3xl text-[color:var(--ivory)]">
+          <div className="max-w-3xl text-[color:var(--gold-soft)]">
             <span className="inline-flex items-center gap-3 text-[11px] uppercase tracking-[0.34em] text-[color:var(--gold-soft)] opacity-0 animate-[heroFade_1.1s_ease-out_0.3s_forwards]">
               <span className="h-px w-8 bg-[color:var(--gold)]" />
-              Private · By locals · Your way
+              <span>Private · By locals · Your way</span>
+              <span className="h-px w-8 bg-[color:var(--gold)]" />
             </span>
 
-            <h1 className="hero-h1 serif mt-12 md:mt-16 text-[2.05rem] sm:text-5xl md:text-7xl lg:text-[5.4rem] text-[color:var(--sand)] opacity-0 animate-[heroFade_1.4s_ease-out_0.6s_forwards]">
+            <h1 className="hero-h1 serif mt-12 md:mt-16 text-[2.05rem] sm:text-5xl md:text-7xl lg:text-[5.4rem] text-[color:var(--gold-soft)] opacity-0 animate-[heroFade_1.4s_ease-out_0.6s_forwards]">
               Portugal,
               <br />
-              <span className="italic text-[color:var(--gold-soft)] inline-block mt-1 md:mt-2">Crafted Just for You</span>
+              <span className="italic text-[color:var(--gold)] inline-block mt-1 md:mt-2">Designed Just for You</span>
             </h1>
 
-            <p className="mt-7 md:mt-9 text-[18px] md:text-[22px] text-[color:var(--sand)]/90 max-w-xl leading-[1.7] font-light opacity-0 animate-[heroFade_1.4s_ease-out_0.95s_forwards]">
+            <p className="mt-7 md:mt-9 text-[18px] md:text-[22px] text-[color:var(--gold-soft)]/85 max-w-xl leading-[1.7] font-light opacity-0 animate-[heroFade_1.4s_ease-out_0.95s_forwards]">
               Private experiences shaped by local knowledge, hidden places and quiet moments —
               like exploring Portugal with a friend who lives here.
             </p>
@@ -255,7 +256,7 @@ function HomePage() {
                 to="/builder"
                 className="cta-primary cta-attention cta-breathe group inline-flex items-center justify-center gap-3 px-9 py-[18px] text-[12px] md:text-[12.5px] lg:text-[13px] tracking-[0.22em] md:tracking-[0.2em] uppercase font-light leading-[1.55]"
               >
-                Design &amp; Secure Your Experience
+                Design &amp; Secure Your Journey
                 <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform duration-300" />
               </Link>
               {/* Secondary — refined outline. data-cta-stagger applies
@@ -275,7 +276,7 @@ function HomePage() {
 
             {/* Microcopy — friction-removing, calm, trust-building */}
             <div className="mt-7 md:mt-8 max-w-xl opacity-0 animate-[heroFade_1.4s_ease-out_1.5s_forwards]">
-              <p className="text-[14px] md:text-[15px] text-[color:var(--sand)]/85 leading-[1.7] font-light tracking-wide">
+              <p className="text-[14px] md:text-[15px] text-[color:var(--gold-soft)]/80 leading-[1.7] font-light tracking-wide">
                 Instant confirmation · Personalized · No back-and-forth
               </p>
             </div>
