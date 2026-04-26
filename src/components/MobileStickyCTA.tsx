@@ -319,7 +319,7 @@ export function MobileStickyCTA() {
                 Your Portugal, Your Way
               </p>
               <p className="text-[10.5px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)] mt-0.5 truncate">
-                Private. Local. Instantly secured.
+                Private. Local. Curated.
               </p>
             </div>
 
