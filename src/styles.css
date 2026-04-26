@@ -499,6 +499,18 @@
        overridden here, so re-apply it (4px). */
     transform: translate(4px, -0.04em);
   }
+  /* ── Container line-height normalization ───────────────────────
+     Flexbox centers the line-box, not the glyph. Setting line-height
+     to 1 collapses the box to the em, so vertical padding lands
+     symmetrically on the em (and, with the .cta-label translate
+     above, on the cap-height). Without this, browsers add ~0.2em
+     of leading split unevenly between top and bottom depending on
+     font metrics — the root cause of caps drifting low. */
+  .cta-primary,
+  .cta-secondary-dark,
+  .cta-secondary-light {
+    line-height: 1;
+  }
 
   /* Reduced-motion: never run the attention pulse, breathing,
      magnet dim, or the label's settling shift. The buttons still
