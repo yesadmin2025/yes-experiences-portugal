@@ -159,6 +159,7 @@ function HomePage() {
 
   return (
     <SiteLayout>
+      {ctaDebug && <CtaScrollDebugOverlay targetRef={ctaGroupRef} />}
       {/* 1 — HERO
           Cinematic image, slow zoom, layered overlays for AA-compliant
           contrast on the headline and microcopy. A subtle pointer parallax
