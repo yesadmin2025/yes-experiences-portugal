@@ -656,17 +656,20 @@
     background-color: color-mix(in oklab, var(--gold) 12%, transparent);
     border-color: color-mix(in oklab, var(--gold) 75%, transparent);
     color: #ffffff;
-    /* Whisper of warmth — single soft layer, low opacity. */
-    text-shadow: 0 0 10px color-mix(in oklab, var(--gold) 24%, transparent);
-    /* Match primary's lift+scale rhythm so the two CTAs respond as
-       a coordinated pair when scanned. */
+    /* Two-layer warm glow on the label, both very low opacity so the
+       thin type stays thin. Tight 4px halo + soft 16px bloom. */
+    text-shadow:
+      0 0 4px color-mix(in oklab, var(--gold) 20%, transparent),
+      0 0 16px color-mix(in oklab, var(--gold) 12%, transparent);
+    /* Match primary's lift+scale rhythm AND preserve the scroll scale,
+       so both CTAs respond as a coordinated pair when scanned. */
     transform:
       translate3d(
         calc(var(--hero-px, 0) * 1.5px),
         calc(var(--hero-py, 0) * 1px - 4px),
         0
       )
-      scale(1.02);
+      scale(calc(var(--cta-scroll-scale, 1) * 1.02));
     box-shadow:
       inset 0 1px 0 0 rgba(255, 255, 255, 0.14),
       inset 0 -1px 0 0 rgba(0, 0, 0, 0.22),
@@ -681,10 +684,11 @@
   }
   .cta-secondary-dark:active {
     transform: translate3d(
-      calc(var(--hero-px, 0) * 1.5px),
-      calc(var(--hero-py, 0) * 1px - 0.5px),
-      0
-    );
+        calc(var(--hero-px, 0) * 1.5px),
+        calc(var(--hero-py, 0) * 1px - 0.5px),
+        0
+      )
+      scale(var(--cta-scroll-scale, 1));
   }
   .cta-secondary-dark:focus-visible {
     outline: none;
