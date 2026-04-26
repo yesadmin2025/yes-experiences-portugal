@@ -317,12 +317,12 @@
          right — reinforcing the depth illusion.
      ───────────────────────────────────────────────────────────── */
 
-  /* Idle gold-rim breathing — used by ::after on every CTA. Opacity
-     drifts 0.0 → 0.55 → 0.0 over 8s. Slow enough to read as ambient
-     presence, never as a blink. */
+  /* Idle gold-rim breathing — used by ::after on hero CTAs. Opacity
+     drifts 0 → peak → 0 over a slow cycle. Peak is var-driven so it
+     can be retuned without editing keyframes. */
   @keyframes ctaRimBreathe {
     0%, 100% { opacity: 0; }
-    50%      { opacity: 0.55; }
+    50%      { opacity: var(--cta-breathe-peak, 0.55); }
   }
 
   /* One-shot attention pulse — fires ONCE shortly after the hero copy
