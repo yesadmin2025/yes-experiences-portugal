@@ -266,7 +266,7 @@ function HomePage() {
               <Link
                 to="/experiences"
                 data-cta-stagger
-                className="cta-secondary-dark cta-attention cta-breathe group inline-flex items-center justify-center gap-3 px-9 py-[15px] text-[12px] md:text-[12.5px] lg:text-[13px] tracking-[0.22em] md:tracking-[0.2em] uppercase font-light leading-none"
+                className="cta-secondary-dark cta-attention cta-breathe group inline-flex items-center justify-center gap-3 px-9 py-[18px] text-[12px] md:text-[12.5px] lg:text-[13px] tracking-[0.22em] md:tracking-[0.2em] uppercase font-light leading-[1.55]"
               >
                 Explore Signature Experiences
                 <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform duration-300" />
