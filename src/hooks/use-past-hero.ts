@@ -132,12 +132,19 @@ export function usePastHero({
     };
 
     const onScroll = () => {
-      // Hide immediately while the user is actively scrolling — the
-      // surface should never compete with motion. Only one state update
-      // per frame: skip if already hidden.
+      // Always hide immediately while scrolling — competing with motion
+      // looks cheap. setState is a no-op if already false.
       setPastHero((prev) => (prev ? false : prev));
-      if (idleTimer !== undefined) window.clearTimeout(idleTimer);
-      // Wait for scroll to stop before considering revealing the bar.
+      if (idleTimer !== undefined) {
+        window.clearTimeout(idleTimer);
+        idleTimer = undefined;
+      }
+      // If we're currently inside the hero (or the breakpoint excludes
+      // us), there is nothing to reveal — skip scheduling settle entirely.
+      // This guarantees the bar can never appear when the user scrolls
+      // back up into the hero and stops there: no timer, no reveal.
+      if (!qualifies()) return;
+      // Otherwise wait for scroll to stop before considering reveal.
       idleTimer = window.setTimeout(settle, scrollIdleMs);
     };
 
