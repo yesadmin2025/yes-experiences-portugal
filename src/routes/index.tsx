@@ -144,13 +144,15 @@ function HomePage() {
           width={1920}
           height={1080}
         />
-        {/* Warm editorial wash — a soft charcoal-to-transparent gradient anchored
-            at the base for CTA legibility, layered with a warm teal/gold tint that
-            matches the brand palette and a gentle radial vignette. The image stays
-            luminous; the copy stays effortlessly readable. */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/70 via-[color:var(--charcoal)]/20 to-transparent md:from-[color:var(--charcoal-deep)]/65 md:via-[color:var(--charcoal)]/15 md:to-transparent" />
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,color-mix(in_oklab,var(--teal)_18%,transparent)_0%,transparent_45%,color-mix(in_oklab,var(--gold)_10%,transparent)_100%)] mix-blend-soft-light" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_72%,transparent_55%,rgba(0,0,0,0.28)_100%)]" />
+        {/* Layered editorial wash — premium warmth without losing legibility.
+            Order matters: the brand soft-light tint sits FIRST (closest to the
+            image) so subsequent darkening overlays aren't blended away. Then a
+            base vertical wash, a left-anchored column behind the headline, and
+            a barely-there corner vignette. */}
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,color-mix(in_oklab,var(--teal)_18%,transparent)_0%,transparent_50%,color-mix(in_oklab,var(--gold)_10%,transparent)_100%)] mix-blend-soft-light" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/85 via-[color:var(--charcoal-deep)]/45 to-[color:var(--charcoal-deep)]/40 md:from-[color:var(--charcoal-deep)]/80 md:via-[color:var(--charcoal-deep)]/35 md:to-[color:var(--charcoal-deep)]/30" />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(15,15,15,0.65)_0%,rgba(15,15,15,0.4)_35%,transparent_70%)] md:bg-[linear-gradient(90deg,rgba(15,15,15,0.6)_0%,rgba(15,15,15,0.32)_40%,transparent_72%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_72%,transparent_55%,rgba(0,0,0,0.3)_100%)]" />
 
         <div className="container-x relative z-10 pb-24 md:pb-36 pt-32 md:pt-40">
           <div className="max-w-3xl text-[color:var(--ivory)]">
@@ -159,7 +161,7 @@ function HomePage() {
               Private · By local hands · Designed around you
             </span>
 
-            <h1 className="hero-h1 serif mt-7 md:mt-9 text-[2.05rem] sm:text-5xl md:text-7xl lg:text-[5.4rem] opacity-0 animate-[heroFade_1.4s_ease-out_0.6s_forwards]">
+            <h1 className="hero-h1 serif mt-7 md:mt-9 text-[2.05rem] sm:text-5xl md:text-7xl lg:text-[5.4rem] text-[color:var(--ivory)] opacity-0 animate-[heroFade_1.4s_ease-out_0.6s_forwards]">
               Portugal,
               <br />
               <span className="italic text-[color:var(--gold-soft)]">Designed Around You</span>
