@@ -12,7 +12,9 @@
     "preview": "vite preview",
     "brand:audit": "node scripts/brand-audit.mjs",
     "lint": "eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "test:e2e": "playwright test",
+    "test:e2e:install": "playwright install chromium"
   },
   "dependencies": {
     "@cloudflare/vite-plugin": "^1.25.5",
