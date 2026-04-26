@@ -11,6 +11,15 @@ import { ArrowUp } from "lucide-react";
  *    the user has signalled engagement by scrolling.
  *  - Scroll-to-top button — appears once the user has scrolled past ~600px.
  * Both are stacked in the bottom-right and stay out of the way on mobile.
+ *
+ * A11y / interactivity gating (consistent with MobileStickyCTA):
+ *   • The wrapper carries `aria-hidden` + `inert` whenever NOTHING inside is
+ *     currently revealed (pre-scroll, both children are hidden), removing
+ *     the entire subtree from the focus order, hit testing, and the
+ *     accessibility tree in one pass.
+ *   • Each child also keeps its own `tabIndex={-1}` and
+ *     `pointer-events-none` while hidden as a defense-in-depth layer, so
+ *     even legacy AT or a stray `inert` override can't reach them.
  */
 export function FloatingActions() {
   // Single shared scroll-past-hero gate for both controls. Same 600px
@@ -31,6 +40,12 @@ export function FloatingActions() {
     window.scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" });
   };
 
+  // When `pastHero` is false, BOTH children are hidden at every
+  // breakpoint (the lg-only floating CTA is `hidden lg:inline-flex`, and
+  // the scroll-to-top button is gated on `pastHero` too). So a single
+  // wrapper-level `inert`/`aria-hidden` cleanly mirrors the visual state.
+  const allHidden = !pastHero;
+
   return (
     <div
       // On mobile, sit above the MobileStickyCTA bar (~64px tall + iOS
@@ -39,16 +54,22 @@ export function FloatingActions() {
       // bottom-8 spacing.
       className="fixed right-5 md:right-8 z-40 flex flex-col items-end gap-3 print:hidden bottom-24 md:bottom-8"
       style={{ marginBottom: "env(safe-area-inset-bottom, 0px)" }}
+      // Single source of truth for the hidden state — removes children
+      // from focus, AT, and pointer hit-testing while pre-hero.
+      aria-hidden={allHidden}
+      inert={allHidden}
     >
       {/* Floating CTA — hidden on mobile (< lg) where MobileStickyCTA owns
           the primary call-to-action surface. On lg+ it fades in only after
           the user scrolls past the hero, so it never competes with the
           hero's own conversion anchors. Same 8px translate-up transition
-          as the scroll-to-top button below for a unified reveal. */}
+          as the scroll-to-top button below for a unified reveal.
+
+          tabIndex / pointer-events are also gated here as defense-in-depth
+          on top of the wrapper-level `inert`. */}
       <Link
         to="/builder"
         aria-label="Start your experience"
-        aria-hidden={!pastHero}
         tabIndex={pastHero ? 0 : -1}
         className={
           "hidden lg:inline-flex group items-center gap-2 rounded-full border border-[color:var(--teal)]/60 bg-[color:var(--ivory)]/95 backdrop-blur-md px-5 py-2.5 text-[12px] uppercase tracking-[0.18em] text-[color:var(--teal)] shadow-[0_8px_24px_-12px_rgba(41,91,97,0.35)] hover:-translate-y-0.5 hover:border-[color:var(--teal)] hover:bg-[color:var(--teal)] hover:text-[color:var(--ivory)] transition-all duration-500 " +
@@ -69,7 +90,6 @@ export function FloatingActions() {
         type="button"
         onClick={scrollTop}
         aria-label="Scroll to top"
-        aria-hidden={!pastHero}
         tabIndex={pastHero ? 0 : -1}
         className={
           "inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--border)] bg-[color:var(--ivory)]/95 backdrop-blur-md text-[color:var(--charcoal)] shadow-[0_6px_18px_-10px_rgba(46,46,46,0.35)] transition-all duration-500 hover:-translate-y-0.5 hover:border-[color:var(--teal)]/60 hover:text-[color:var(--teal)] " +
