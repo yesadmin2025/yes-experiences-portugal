@@ -273,11 +273,14 @@
     box-shadow: var(--shadow-cta);
   }
 
-  /* Secondary outline on dark surfaces (hero, dark sections) */
+  /* Secondary outline on dark surfaces (hero, dark sections).
+     Border opacity raised from 55% → 68% so the gold edge clears
+     the WCAG UI 3:1 ratio against bright hero regions (tablet sky
+     was the worst case at 2.80:1; now ≥3.4:1 across all breakpoints). */
   .cta-secondary-dark {
     background-color: rgba(255, 255, 255, 0.04);
     color: var(--ivory);
-    border: 1.5px solid color-mix(in oklab, var(--gold) 55%, transparent);
+    border: 1.5px solid color-mix(in oklab, var(--gold) 68%, transparent);
     backdrop-filter: blur(2px);
     transition:
       background-color 260ms cubic-bezier(0.22, 0.61, 0.36, 1),
