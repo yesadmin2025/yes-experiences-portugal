@@ -378,23 +378,12 @@
       0 1px 2px rgba(15, 15, 15, 0.22),
       0 6px 16px -8px rgba(41, 91, 97, 0.45);
   }
-  /* Focus ring — softer, gold-accent, in the same motion language as
-     hover. Three layered shadows compose the ring:
-       1. inset gold-soft hairline — picks up the "polished metal" feel.
-       2. 1.5px ivory separator — guarantees AAA 3:1 contrast on any
-          background by isolating the gold halo from the button surface.
-       3. 3px gold-soft halo — softer than pure gold so it reads as
-          "lit from within" rather than a hard outline.
-       4. Wide ambient gold-soft glow (12px, 28% opacity) — fades in
-          over 520ms with the same easing as the hover lift, so the
-          ring "blooms" rather than snapping. */
   .cta-primary:focus-visible {
     outline: none;
     box-shadow:
-      inset 0 1px 0 0 color-mix(in oklab, var(--gold-soft) 60%, transparent),
-      0 0 0 1.5px var(--ivory),
-      0 0 0 3px color-mix(in oklab, var(--gold-soft) 85%, var(--gold) 15%),
-      0 0 12px 0 color-mix(in oklab, var(--gold-soft) 28%, transparent),
+      inset 0 1px 0 0 color-mix(in oklab, var(--gold-soft) 55%, transparent),
+      0 0 0 2px var(--ivory),
+      0 0 0 4px var(--gold),
       0 14px 30px -12px rgba(41, 91, 97, 0.55);
   }
 
@@ -488,19 +477,12 @@
       0
     );
   }
-  /* Same gold-accent focus language as the primary, tuned for dark
-     surfaces. The dark separator (charcoal-deep @ 60%) sits between
-     the button surface and the gold halo to preserve UI 3:1 contrast
-     against bright hero regions, while the soft gold halo + ambient
-     glow bloom in over 520ms in the same easing curve as hover. */
   .cta-secondary-dark:focus-visible {
     outline: none;
     box-shadow:
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.16),
-      0 0 0 1.5px color-mix(in oklab, var(--charcoal-deep) 60%, transparent),
-      0 0 0 3px color-mix(in oklab, var(--gold-soft) 80%, var(--gold) 20%),
-      0 0 14px 0 color-mix(in oklab, var(--gold-soft) 32%, transparent),
-      0 14px 30px -14px rgba(0, 0, 0, 0.55);
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.14),
+      0 0 0 2px rgba(15, 15, 15, 0.6),
+      0 0 0 4px var(--gold);
   }
 
   /* Secondary outline on light surfaces — same material language,
@@ -558,18 +540,7 @@
   .cta-secondary-light:active {
     transform: translateY(-0.5px);
   }
-  /* Light-surface focus ring — gold halo on a soft charcoal separator,
-     calibrated to read clearly against ivory/sand without being harsh.
-     Same 520ms bloom timing as the dark variants. */
-  .cta-secondary-light:focus-visible {
-    outline: none;
-    box-shadow:
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.7),
-      0 0 0 1.5px color-mix(in oklab, var(--ivory) 90%, transparent),
-      0 0 0 3px color-mix(in oklab, var(--gold) 60%, var(--gold-soft) 40%),
-      0 0 12px 0 color-mix(in oklab, var(--gold) 22%, transparent),
-      0 12px 24px -16px rgba(46, 46, 46, 0.20);
-  }
+
   /* Reduced-motion: keep the depth (shadows, gradients, sheen at rest)
      but disable lift, sweep, breathing, and pointer tilt — users get a
      calm color/border shift only. */
