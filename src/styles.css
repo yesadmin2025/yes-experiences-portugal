@@ -316,9 +316,16 @@
   }
 }
 
+/* Front-loaded opacity curve: text reaches ~98% opacity at 55% of the
+   timeline so it never lingers in low-contrast intermediate frames against
+   bright hero regions on mobile. The remaining 45% is a quiet positional
+   settle (translateY easing to 0) — keeps the editorial cadence intact
+   while eliminating any sub-AAA legibility window during the fade. */
 @keyframes heroFade {
-  from { opacity: 0; transform: translateY(14px); }
-  to   { opacity: 1; transform: translateY(0); }
+  0%   { opacity: 0;    transform: translateY(14px); }
+  35%  { opacity: 0.85; transform: translateY(6px); }
+  55%  { opacity: 0.98; transform: translateY(2px); }
+  100% { opacity: 1;    transform: translateY(0); }
 }
 
 @keyframes heroZoom {
