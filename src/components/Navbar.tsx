@@ -43,33 +43,17 @@ export function Navbar() {
             className="flex-shrink-0 inline-flex items-center h-full rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             aria-label="YES experiences PORTUGAL — Home"
           >
-            {/* Master logo PNG. The bundled artwork sets "PORTUGAL" in a very
-                light gold that fades against the white header — we reinforce
-                it with an overlaid teal wordmark sized & positioned to sit
-                exactly on top of the original lockup, so the brand reads
-                "YES experiences · PORTUGAL" with proper legibility. */}
-            <span className="relative inline-block h-[64px] md:h-[76px] lg:h-[84px]">
-              <img
-                src={logoTeal}
-                width={909}
-                height={579}
-                alt="YES experiences PORTUGAL"
-                className="block h-full w-auto select-none"
-                draggable={false}
-                fetchPriority="high"
-                decoding="async"
-                style={{ imageRendering: "auto" }}
-              />
-              {/* Reinforced "PORTUGAL" — sits over the faded original.
-                  A short ivory backdrop masks the washed-out artwork so the
-                  reinforced teal wordmark reads cleanly at AAA contrast. */}
-              <span
-                aria-hidden="true"
-                className="pointer-events-none absolute left-1/2 -translate-x-1/2 bottom-[2%] md:bottom-[3%] bg-white px-1.5 text-[color:var(--teal)] font-sans font-semibold uppercase text-[8.5px] md:text-[10px] lg:text-[11px] tracking-[0.42em] leading-none"
-              >
-                Portugal
-              </span>
-            </span>
+            <img
+              src={logoTeal}
+              width={909}
+              height={579}
+              alt="YES experiences PORTUGAL"
+              className="block h-[64px] md:h-[76px] lg:h-[84px] w-auto select-none"
+              draggable={false}
+              fetchPriority="high"
+              decoding="async"
+              style={{ imageRendering: "auto" }}
+            />
           </Link>
 
           {/* Desktop nav + CTA — right side, vertically centered.
