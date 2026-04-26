@@ -4,6 +4,10 @@ import { SiteLayout } from "@/components/SiteLayout";
 import { FAQ } from "@/components/FAQ";
 import { useHeroParallax } from "@/hooks/use-hero-parallax";
 import { useCtaScrollScale } from "@/hooks/use-cta-scroll-scale";
+import {
+  CtaScrollDebugOverlay,
+  useCtaScrollDebugToggle,
+} from "@/components/CtaScrollDebugOverlay";
 import heroImg from "@/assets/hero-coast.jpg";
 import multiDayImg from "@/assets/multi-day.jpg";
 import expWine from "@/assets/exp-wine.jpg";
@@ -138,17 +142,24 @@ function HomePage() {
   // section. Image and vignette read those vars via inline calc() to shift
   // gently without triggering layout. No-op on touch & reduced-motion.
   const heroRef = useHeroParallax<HTMLElement>();
-  // Hero CTAs start a touch smaller (0.94×) and ease up to 1.02× across the
-  // first 220px of scroll — a subtle "the page is opening up to you" cue.
-  // Writes --cta-scroll-scale on the magnet group; CTAs compose it into
-  // their existing transform alongside parallax. Reduced-motion pins to 1.02×.
-  // Subtler scroll-driven growth: tighter envelope (0.96 → 1.015) over
-  // a longer scroll window (280px), with smoothstep easing in the hook.
-  // The button breathes upward instead of springing.
-  const ctaGroupRef = useCtaScrollScale<HTMLDivElement>(0.96, 1.015, 280);
+  // Hero CTA scroll-driven scale.
+  // Defaults: 0.96 → 1.015 across the first 280px of scroll, smoothstep
+  // easing, hard-clamped. Override at runtime WITHOUT editing the hook
+  // by setting any of these on the magnet group's style or on a parent
+  // CSS scope: --cta-scroll-from, --cta-scroll-to, --cta-scroll-distance.
+  // The hook re-reads them every rAF tick, so devtools edits show up live.
+  const ctaGroupRef = useCtaScrollScale<HTMLDivElement>({
+    from: 0.96,
+    to: 1.015,
+    distance: 280,
+  });
+  // QA overlay — toggle with Shift+D, or load with ?debug-cta. Renders
+  // nothing in production unless explicitly enabled.
+  const ctaDebug = useCtaScrollDebugToggle();
 
   return (
     <SiteLayout>
+      {ctaDebug && <CtaScrollDebugOverlay targetRef={ctaGroupRef} />}
       {/* 1 — HERO
           Cinematic image, slow zoom, layered overlays for AA-compliant
           contrast on the headline and microcopy. A subtle pointer parallax
