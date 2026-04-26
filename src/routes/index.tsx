@@ -227,7 +227,7 @@ function HomePage() {
             <h1 className="hero-h1 serif mt-12 md:mt-16 text-[2.05rem] sm:text-5xl md:text-7xl lg:text-[5.4rem] text-[color:var(--ivory)] opacity-0 animate-[heroFade_1.4s_ease-out_0.6s_forwards]">
               Portugal,
               <br />
-              <span className="italic text-[color:var(--gold-soft)]">Designed Around You</span>
+              <span className="italic text-[color:var(--gold-soft)] inline-block mt-1 md:mt-2">Designed Around You</span>
             </h1>
 
             <p className="mt-7 md:mt-9 text-[18px] md:text-[22px] text-[color:var(--ivory)] max-w-xl leading-[1.7] font-light opacity-0 animate-[heroFade_1.4s_ease-out_0.95s_forwards]">

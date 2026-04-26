@@ -275,25 +275,25 @@
      so the display sizes feel composed and editorial.
      ───────────────────────────────────────────────────────────── */
   .hero-h1 {
-    letter-spacing: -0.018em;
-    line-height: 1.08;
+    letter-spacing: -0.012em;
+    line-height: 1.22;
   }
   @media (min-width: 640px) {
     .hero-h1 {
-      letter-spacing: -0.016em;
-      line-height: 1.05;
+      letter-spacing: -0.014em;
+      line-height: 1.18;
     }
   }
   @media (min-width: 768px) {
     .hero-h1 {
-      letter-spacing: -0.02em;
-      line-height: 1.02;
+      letter-spacing: -0.018em;
+      line-height: 1.14;
     }
   }
   @media (min-width: 1024px) {
     .hero-h1 {
-      letter-spacing: -0.024em;
-      line-height: 0.98;
+      letter-spacing: -0.022em;
+      line-height: 1.1;
     }
   }
   .eyebrow {
