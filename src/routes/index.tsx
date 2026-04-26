@@ -237,7 +237,7 @@ function HomePage() {
 
             <div
               ref={ctaGroupRef}
-              className="cta-magnet-group mt-10 md:mt-12 flex flex-col sm:flex-row flex-wrap gap-4 sm:gap-5 opacity-0 animate-[heroFade_1.4s_ease-out_1.25s_forwards]"
+              className="cta-magnet-group mt-10 md:mt-12 flex flex-col sm:flex-row flex-wrap gap-5 sm:gap-6 opacity-0 animate-[heroFade_1.4s_ease-out_1.25s_forwards]"
             >
               {/* Primary — clear conversion anchor.
                   Three layered conversion cues, all squared 2px, all
@@ -253,7 +253,7 @@ function HomePage() {
                   The square geometry and exact wording stay untouched. */}
               <Link
                 to="/builder"
-                className="cta-primary cta-attention cta-breathe group inline-flex items-center justify-center gap-3 px-9 py-[15px] text-[12px] md:text-[12.5px] lg:text-[13px] tracking-[0.22em] md:tracking-[0.2em] uppercase font-light leading-none"
+                className="cta-primary cta-attention cta-breathe group inline-flex items-center justify-center gap-3 px-9 py-[18px] text-[12px] md:text-[12.5px] lg:text-[13px] tracking-[0.22em] md:tracking-[0.2em] uppercase font-light leading-[1.55]"
               >
                 Design &amp; Secure Your Experience
                 <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform duration-300" />
@@ -266,7 +266,7 @@ function HomePage() {
               <Link
                 to="/experiences"
                 data-cta-stagger
-                className="cta-secondary-dark cta-attention cta-breathe group inline-flex items-center justify-center gap-3 px-9 py-[15px] text-[12px] md:text-[12.5px] lg:text-[13px] tracking-[0.22em] md:tracking-[0.2em] uppercase font-light leading-none"
+                className="cta-secondary-dark cta-attention cta-breathe group inline-flex items-center justify-center gap-3 px-9 py-[18px] text-[12px] md:text-[12.5px] lg:text-[13px] tracking-[0.22em] md:tracking-[0.2em] uppercase font-light leading-[1.55]"
               >
                 Explore Signature Experiences
                 <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform duration-300" />
