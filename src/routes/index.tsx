@@ -3,6 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
 import { FAQ } from "@/components/FAQ";
 import { useHeroParallax } from "@/hooks/use-hero-parallax";
+import { useCtaScrollScale } from "@/hooks/use-cta-scroll-scale";
 import heroImg from "@/assets/hero-coast.jpg";
 import multiDayImg from "@/assets/multi-day.jpg";
 import expWine from "@/assets/exp-wine.jpg";
@@ -137,6 +138,11 @@ function HomePage() {
   // section. Image and vignette read those vars via inline calc() to shift
   // gently without triggering layout. No-op on touch & reduced-motion.
   const heroRef = useHeroParallax<HTMLElement>();
+  // Hero CTAs start a touch smaller (0.94×) and ease up to 1.02× across the
+  // first 220px of scroll — a subtle "the page is opening up to you" cue.
+  // Writes --cta-scroll-scale on the magnet group; CTAs compose it into
+  // their existing transform alongside parallax. Reduced-motion pins to 1.02×.
+  const ctaGroupRef = useCtaScrollScale<HTMLDivElement>(0.94, 1.02, 220);
 
   return (
     <SiteLayout>
@@ -215,7 +221,10 @@ function HomePage() {
               like exploring Portugal with a friend who lives here.
             </p>
 
-            <div className="cta-magnet-group mt-10 md:mt-12 flex flex-col sm:flex-row flex-wrap gap-4 sm:gap-5 opacity-0 animate-[heroFade_1.4s_ease-out_1.25s_forwards]">
+            <div
+              ref={ctaGroupRef}
+              className="cta-magnet-group mt-10 md:mt-12 flex flex-col sm:flex-row flex-wrap gap-4 sm:gap-5 opacity-0 animate-[heroFade_1.4s_ease-out_1.25s_forwards]"
+            >
               {/* Primary — clear conversion anchor.
                   Three layered conversion cues, all squared 2px, all
                   reduced-motion-gated, all driven by the CSS variable
@@ -223,13 +232,17 @@ function HomePage() {
                     .cta-attention  → one-shot gold halo bloom on load
                     .cta-breathe    → slow ambient gold-rim breathing
                     .cta-magnet-group on parent → sibling dims on hover
+                  Typography: font-light + tighter padding for a thinner,
+                  more elegant label. The button starts compact (0.94×)
+                  and grows to 1.02× over the first 220px of scroll via
+                  --cta-scroll-scale (set by useCtaScrollScale).
                   The square geometry and exact wording stay untouched. */}
               <Link
                 to="/builder"
-                className="cta-primary cta-attention cta-breathe group inline-flex items-center justify-center gap-3 px-10 py-[18px] text-[12.5px] tracking-[0.22em] uppercase font-semibold"
+                className="cta-primary cta-attention cta-breathe group inline-flex items-center justify-center gap-3 px-9 py-[15px] text-[11.5px] tracking-[0.24em] uppercase font-light"
               >
                 Design &amp; Secure Your Experience
-                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-300" />
+                <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform duration-300" />
               </Link>
               {/* Secondary — refined outline. data-cta-stagger applies
                   to BOTH the attention pulse (+140ms via --cta-pulse-
@@ -239,10 +252,10 @@ function HomePage() {
               <Link
                 to="/experiences"
                 data-cta-stagger
-                className="cta-secondary-dark cta-attention cta-breathe group inline-flex items-center justify-center gap-3 px-10 py-[18px] text-[12.5px] tracking-[0.22em] uppercase font-semibold"
+                className="cta-secondary-dark cta-attention cta-breathe group inline-flex items-center justify-center gap-3 px-9 py-[15px] text-[11.5px] tracking-[0.24em] uppercase font-light"
               >
                 Explore Signature Experiences
-                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-300" />
+                <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform duration-300" />
               </Link>
             </div>
 
