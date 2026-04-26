@@ -3,6 +3,7 @@ import { Navbar } from "./Navbar";
 import { Footer } from "./Footer";
 import { FloatingActions } from "./FloatingActions";
 import { MobileStickyCTA } from "./MobileStickyCTA";
+import { PostHeroAnnouncer } from "./PostHeroAnnouncer";
 
 export function SiteLayout({ children }: { children: ReactNode }) {
   // Reveal-on-scroll with a consistent, calm stagger rhythm.
