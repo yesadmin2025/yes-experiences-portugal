@@ -479,14 +479,18 @@
       /* Atmospheric teal depth shadows */
       0 10px 24px -12px rgba(41, 91, 97, 0.42),
       0 22px 48px -24px rgba(41, 91, 97, 0.32);
-    /* Pointer-aware micro-tilt: shifts with the hero parallax (≤1.5px)
-       so the button feels coupled to the depth field. Falls back to 0,0
-       outside the hero (no --hero-px set ⇒ 0). */
+    /* Pointer-aware micro-tilt + scroll-driven scale.
+       --hero-px / --hero-py (-1 → 1) shift the button ≤1.5px with the
+       parallax field. --cta-scroll-scale (0.94 → 1.02) is set by
+       useCtaScrollScale on the hero CTA group: the button starts a touch
+       compact and grows subtly as the user scrolls into the page. Both
+       fall back to neutral defaults outside the hero. */
     transform: translate3d(
-      calc(var(--hero-px, 0) * 1.5px),
-      calc(var(--hero-py, 0) * 1px),
-      0
-    );
+        calc(var(--hero-px, 0) * 1.5px),
+        calc(var(--hero-py, 0) * 1px),
+        0
+      )
+      scale(var(--cta-scroll-scale, 1));
     transition:
       background-color 520ms cubic-bezier(0.16, 1, 0.3, 1),
       border-color 520ms cubic-bezier(0.16, 1, 0.3, 1),
