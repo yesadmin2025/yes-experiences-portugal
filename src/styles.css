@@ -429,6 +429,8 @@
     opacity: 1;
   }
 
+  /* ─────────────────────────────────────────────────────────────
+     CTA label — premium typographic motion. The label sits inside
      a <span class="cta-label"> so its tracking/transform can shift
      independently of the arrow icon. The hover treatment is a
      subtle "settling" cue: tracking expands +0.005em and the type
