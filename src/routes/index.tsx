@@ -137,6 +137,10 @@ function HomePage() {
   // section. Image and vignette read those vars via inline calc() to shift
   // gently without triggering layout. No-op on touch & reduced-motion.
   const heroRef = useHeroParallax<HTMLElement>();
+  // A/B/C label test — same geometry, only text changes. The variant ID
+  // is exposed via data-cta-variant on each Link for analytics
+  // attribution. See src/hooks/use-cta-variant.ts.
+  const ctaVariant = useCtaVariant();
 
   return (
     <SiteLayout>
