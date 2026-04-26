@@ -542,284 +542,142 @@
   }
 
   /* ─────────────────────────────────────────────────────────────
-     NAV CTA — editorial-luxury header CTA.
-     This is the single highest-conversion surface on the site, so
-     every layer earns its place:
-
-       1. SURFACE (.nav-cta)
-          • Deep teal base with a top→bottom gradient (1→2) that
-            shifts diagonally on hover (background-position glide).
-          • Inset gold hairline highlight + dark inset bottom edge
-            for material depth — the button reads as a slim ingot.
-          • Outer shadow stack: close + ambient + colored gold spread
-            on hover, never on a white card alone.
-
-       2. ROTATING CONIC BORDER (.nav-cta::before)
-          • A masked conic-gradient ring (gold → transparent → gold)
-            that rotates slowly at all times (24s) and accelerates
-            briefly on hover. This is the unmistakable "premium"
-            signal — used in luxury watch UIs and editorial covers.
-
-       3. SHEEN WASH (.nav-cta::after)
-          • A wide diagonal gold gradient that sweeps across the
-            surface on hover (1100ms, soft cubic). Layered above the
-            conic ring so light catches the surface, not the edge.
-
-       4. LABEL (.nav-cta-label)
-          • Letter-spacing widens fractionally on hover (0.20 →
-            0.24em) — gives the wordmark a tactile "settle" feel.
-          • A hidden 1px gold underline draws from left to right
-            on hover (scale-x 0 → 1 with a 480ms wide ease).
-
-       5. ARROW PILL (.nav-cta-arrow)
-          • At rest: bare arrow in white.
-          • On hover: a gold-tinted glass pill blooms behind the
-            arrow (background-color + scale + soft glow), the arrow
-            translates 4px and the pill emits a layered halo.
-
-       6. PULSE DOT (.nav-cta-pulse)
-          • A tiny 5px gold dot at the leading edge with a soft
-            outward ping animation (2.8s) — a calm "live action"
-            signal that draws the eye without being noisy.
-
-     Reduced-motion: rings stop rotating, sheen disabled, halos go
-     static, dot stops pinging — color/opacity transitions only.
+     NAV CTA — header-scaled sibling of .cta-primary.
+     Optimized for the small (px-5/py-3, 10.5px label) header slot:
+       • Tighter shadow stack so the button reads as "lifted" against
+         the white header without competing with the logo.
+       • Subtle top→bottom teal gradient + inset gold hairline = a
+         polished, dimensional surface even at rest.
+       • Faster sheen sweep (820ms) tuned to micro-interactions where
+         the cursor doesn't linger long (header hovers are short).
+       • Idle gold-rim breathing (6s, ~50% strength) — barely
+         perceptible signal that the action is "warm".
+       • On hover: gold border lights, ambient gold halo blooms,
+         button lifts -1.5px (tight, premium, never jumpy).
+       • Active: pressed-in (-0.5px) with collapsed shadow — tactile.
+       • Focus-visible: ivory-then-gold ring stack = AAA visible on
+         the white header without being loud.
+     No pointer-aware tilt here (the navbar isn't part of the hero
+     parallax field, so coupling would feel disconnected).
      ───────────────────────────────────────────────────────────── */
-
-  @keyframes navCtaConicSpin {
-    to { transform: rotate(360deg); }
-  }
-  @keyframes navCtaPulseRing {
-    0%   { transform: scale(0.9); opacity: 0.55; }
-    70%  { transform: scale(2.2); opacity: 0;    }
-    100% { transform: scale(2.2); opacity: 0;    }
-  }
-  @keyframes navCtaPulseDot {
-    0%, 100% { opacity: 0.85; transform: scale(1);    }
-    50%      { opacity: 1;    transform: scale(1.15); }
-  }
-  @keyframes navCtaHaloPulse {
-    0%, 100% { opacity: 0.55; transform: scale(1);    }
-    50%      { opacity: 0.95; transform: scale(1.14); }
-  }
-
   .nav-cta {
     position: relative;
-    overflow: visible;       /* halos / conic ring extend past the button */
+    overflow: hidden;
     isolation: isolate;
+    background-image: linear-gradient(180deg, var(--teal) 0%, color-mix(in oklab, var(--teal) 85%, var(--teal-2) 15%) 100%);
     color: #ffffff;
-    border: 1px solid color-mix(in oklab, var(--gold) 60%, transparent);
-    background-color: var(--teal);
-    background-image:
-      /* Top sheen highlight (very subtle) */
-      linear-gradient(180deg,
-        color-mix(in oklab, #ffffff 8%, transparent) 0%,
-        transparent 28%,
-        transparent 72%,
-        color-mix(in oklab, #000000 14%, transparent) 100%),
-      /* Diagonal teal wash that glides on hover */
-      linear-gradient(135deg,
-        var(--teal) 0%,
-        color-mix(in oklab, var(--teal) 70%, var(--teal-2) 30%) 50%,
-        var(--teal) 100%);
-    background-size: 100% 100%, 220% 220%;
-    background-position: 0 0, 0% 50%;
+    border: 1px solid color-mix(in oklab, var(--gold) 65%, transparent);
     box-shadow:
-      inset 0 1px 0 0 color-mix(in oklab, var(--gold-soft) 45%, transparent),
-      inset 0 -1px 0 0 rgba(0, 0, 0, 0.20),
-      0 1px 2px rgba(15, 23, 42, 0.12),
-      0 6px 14px -8px rgba(41, 91, 97, 0.42),
-      0 14px 30px -18px rgba(41, 91, 97, 0.32);
+      inset 0 1px 0 0 color-mix(in oklab, var(--gold-soft) 40%, transparent),
+      inset 0 -1px 0 0 rgba(0, 0, 0, 0.16),
+      0 1px 2px rgba(15, 23, 42, 0.10),
+      0 6px 14px -8px rgba(41, 91, 97, 0.40),
+      0 14px 30px -18px rgba(41, 91, 97, 0.30);
     transition:
-      background-position 720ms cubic-bezier(0.16, 1, 0.3, 1),
+      background-image 420ms cubic-bezier(0.16, 1, 0.3, 1),
       border-color 420ms cubic-bezier(0.16, 1, 0.3, 1),
       box-shadow 420ms cubic-bezier(0.16, 1, 0.3, 1),
       transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
   }
-
-  /* Rotating conic gold ring — sits OUTSIDE the box on a sibling
-     pseudo, masked to a 1px ring. Always rotates; speeds up on hover. */
+  /* Sheen — narrower & faster than the hero CTA's; appropriate to the
+     header's compact scale. */
   .nav-cta::before {
     content: "";
     position: absolute;
-    inset: -1px;
+    inset: 0;
     z-index: -1;
-    border-radius: inherit;
-    padding: 1px;
-    background: conic-gradient(
-      from 0deg,
-      transparent 0deg,
-      color-mix(in oklab, var(--gold) 70%, transparent) 60deg,
-      color-mix(in oklab, var(--gold-soft) 90%, transparent) 90deg,
-      color-mix(in oklab, var(--gold) 70%, transparent) 120deg,
-      transparent 200deg,
-      transparent 360deg
+    background: linear-gradient(
+      115deg,
+      transparent 28%,
+      color-mix(in oklab, var(--gold-soft) 30%, transparent) 46%,
+      color-mix(in oklab, var(--gold-soft) 44%, transparent) 50%,
+      color-mix(in oklab, var(--gold-soft) 24%, transparent) 54%,
+      transparent 72%
     );
-    /* Mask to a hairline ring so only the rotating edge shows. */
-    -webkit-mask:
-      linear-gradient(#000 0 0) content-box,
-      linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-            mask:
-      linear-gradient(#000 0 0) content-box,
-      linear-gradient(#000 0 0);
-            mask-composite: exclude;
-    opacity: 0.55;
-    animation: navCtaConicSpin 24s linear infinite;
-    transition: opacity 420ms ease, animation-duration 420ms ease;
+    transform: translateX(-115%);
+    transition: transform 820ms cubic-bezier(0.16, 1, 0.3, 1);
     pointer-events: none;
   }
-  .nav-cta:hover::before,
-  .nav-cta:focus-visible::before {
-    opacity: 1;
-    animation-duration: 9s;     /* visibly accelerates on hover */
-  }
-
-  /* Gold sheen wash — sweeps across the face on hover. */
+  /* Idle gold-rim — quieter (50% peak) and faster (6s) than hero CTAs
+     so it harmonizes with the header's tighter rhythm. */
   .nav-cta::after {
     content: "";
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    background: linear-gradient(
-      115deg,
-      transparent 22%,
-      color-mix(in oklab, var(--gold-soft) 28%, transparent) 44%,
-      color-mix(in oklab, var(--gold-soft) 48%, transparent) 50%,
-      color-mix(in oklab, var(--gold-soft) 24%, transparent) 56%,
-      transparent 78%
-    );
-    transform: translateX(-120%);
-    transition: transform 1100ms cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--gold) 24%, transparent);
+    opacity: 0;
+    animation: ctaRimBreathe 6s ease-in-out infinite;
     pointer-events: none;
-    mix-blend-mode: screen;
+  }
+  .nav-cta:hover {
+    border-color: var(--gold);
+    background-image: linear-gradient(180deg, var(--teal-2) 0%, var(--teal) 100%);
+    transform: translateY(-1.5px);
+    box-shadow:
+      inset 0 1px 0 0 color-mix(in oklab, var(--gold-soft) 60%, transparent),
+      inset 0 -1px 0 0 rgba(0, 0, 0, 0.20),
+      inset 0 0 0 1px color-mix(in oklab, var(--gold) 28%, transparent),
+      0 2px 4px rgba(15, 23, 42, 0.16),
+      0 10px 22px -10px rgba(41, 91, 97, 0.50),
+      0 22px 40px -22px rgba(201, 169, 106, 0.32);
+  }
+  .nav-cta:hover::before {
+    transform: translateX(115%);
   }
   .nav-cta:hover::after,
   .nav-cta:focus-visible::after {
-    transform: translateX(120%);
-  }
-
-  /* Hover surface: glide the teal wash diagonally, brighten the gold
-     edge, lift -2px, bloom an ambient gold halo behind the button. */
-  .nav-cta:hover,
-  .nav-cta:focus-visible {
-    border-color: var(--gold);
-    background-position: 0 0, 100% 50%;
-    transform: translateY(-2px);
-    box-shadow:
-      inset 0 1px 0 0 color-mix(in oklab, var(--gold-soft) 65%, transparent),
-      inset 0 -1px 0 0 rgba(0, 0, 0, 0.24),
-      inset 0 0 0 1px color-mix(in oklab, var(--gold) 32%, transparent),
-      0 2px 4px rgba(15, 23, 42, 0.18),
-      0 12px 26px -10px rgba(41, 91, 97, 0.55),
-      0 22px 44px -22px rgba(201, 169, 106, 0.42),
-      0 30px 60px -28px rgba(201, 169, 106, 0.28);
+    animation: none;
+    opacity: 0;
   }
   .nav-cta:active {
     transform: translateY(-0.5px);
     box-shadow:
-      inset 0 1px 0 0 color-mix(in oklab, var(--gold-soft) 45%, transparent),
-      inset 0 -1px 0 0 rgba(0, 0, 0, 0.24),
-      0 1px 2px rgba(15, 23, 42, 0.20),
+      inset 0 1px 0 0 color-mix(in oklab, var(--gold-soft) 40%, transparent),
+      inset 0 -1px 0 0 rgba(0, 0, 0, 0.20),
+      0 1px 2px rgba(15, 23, 42, 0.18),
       0 4px 12px -6px rgba(41, 91, 97, 0.45);
   }
   .nav-cta:focus-visible {
     outline: none;
-    /* Keep the hover shadow stack but stack an ivory→gold ring on top
-       so the keyboard state is unmistakably AAA-visible on white. */
     box-shadow:
-      inset 0 1px 0 0 color-mix(in oklab, var(--gold-soft) 65%, transparent),
-      inset 0 -1px 0 0 rgba(0, 0, 0, 0.24),
-      inset 0 0 0 1px color-mix(in oklab, var(--gold) 32%, transparent),
+      inset 0 1px 0 0 color-mix(in oklab, var(--gold-soft) 50%, transparent),
       0 0 0 2px var(--ivory),
       0 0 0 4px var(--gold),
-      0 12px 26px -10px rgba(41, 91, 97, 0.55),
-      0 22px 44px -22px rgba(201, 169, 106, 0.42);
+      0 10px 22px -10px rgba(41, 91, 97, 0.50);
   }
 
-  /* ── PULSE DOT (leading-edge "live" indicator) ─────────────── */
-  .nav-cta-pulse {
-    position: relative;
-    display: inline-block;
-    width: 6px;
-    height: 6px;
-    border-radius: 9999px;
-    background: var(--gold-soft);
-    box-shadow: 0 0 0 1px color-mix(in oklab, var(--gold) 70%, transparent),
-                0 0 8px color-mix(in oklab, var(--gold) 60%, transparent);
-    animation: navCtaPulseDot 2.8s ease-in-out infinite;
-    flex-shrink: 0;
-  }
-  .nav-cta-pulse::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: var(--gold);
-    opacity: 0.55;
-    animation: navCtaPulseRing 2.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  /* ─────────────────────────────────────────────────────────────
+     NAV CTA ARROW HALO — premium gold glow that breathes around
+     the arrow icon on hover/focus. Two stacked radial layers:
+       • Close halo (.is-close) — tight, brighter gold core that
+         scales 0.6 → 1.0 with a soft cubic ease.
+       • Ambient halo (.is-ambient) — wider, dimmer gold bloom
+         that pulses gently (haloPulse, 2.4s) once active.
+     The arrow itself sits on z-index:1 so the halo never
+     compromises icon contrast. All effects fade fully on
+     mouse-leave; reduced-motion users get a static soft glow.
+     ───────────────────────────────────────────────────────────── */
+  @keyframes navCtaHaloPulse {
+    0%, 100% { opacity: 0.55; transform: scale(1); }
+    50%      { opacity: 0.95; transform: scale(1.12); }
   }
 
-  /* ── LABEL (letter-spread + drawing underline) ──────────────── */
-  .nav-cta-label {
-    position: relative;
-    display: inline-block;
-    letter-spacing: 0.20em;
-    transition: letter-spacing 520ms cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .nav-cta-label::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: -3px;
-    height: 1px;
-    background: linear-gradient(90deg,
-      transparent 0%,
-      color-mix(in oklab, var(--gold-soft) 90%, transparent) 20%,
-      var(--gold) 50%,
-      color-mix(in oklab, var(--gold-soft) 90%, transparent) 80%,
-      transparent 100%);
-    transform: scaleX(0);
-    transform-origin: left center;
-    transition: transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .nav-cta:hover .nav-cta-label,
-  .nav-cta:focus-visible .nav-cta-label {
-    letter-spacing: 0.24em;
-  }
-  .nav-cta:hover .nav-cta-label::after,
-  .nav-cta:focus-visible .nav-cta-label::after {
-    transform: scaleX(1);
-  }
-
-  /* ── ARROW PILL (morphs from bare arrow → gold-glass pill) ──── */
   .nav-cta-arrow {
     position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 24px;
-    height: 24px;
-    border-radius: 9999px;
-    background-color: transparent;
     isolation: isolate;
-    transition:
-      background-color 480ms cubic-bezier(0.16, 1, 0.3, 1),
-      transform 480ms cubic-bezier(0.16, 1, 0.3, 1),
-      box-shadow 480ms cubic-bezier(0.16, 1, 0.3, 1);
   }
   .nav-cta-arrow > svg {
     position: relative;
-    z-index: 2;
-    transition:
-      transform 480ms cubic-bezier(0.16, 1, 0.3, 1),
-      color 320ms ease;
+    z-index: 1;
+    transition: transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
   }
-  /* Stacked halos behind the arrow — both off at rest. */
   .nav-cta-arrow .nav-cta-halo {
     position: absolute;
-    inset: -6px;
+    inset: -8px;
     border-radius: 9999px;
     pointer-events: none;
     opacity: 0;
@@ -828,39 +686,32 @@
       opacity 520ms cubic-bezier(0.16, 1, 0.3, 1),
       transform 620ms cubic-bezier(0.16, 1, 0.3, 1);
     will-change: opacity, transform;
-    z-index: 0;
   }
+  /* Close halo — bright, tight gold core. */
   .nav-cta-arrow .nav-cta-halo.is-close {
     background: radial-gradient(
       circle at center,
-      color-mix(in oklab, var(--gold-soft) 80%, transparent) 0%,
-      color-mix(in oklab, var(--gold) 35%, transparent) 40%,
-      transparent 75%
+      color-mix(in oklab, var(--gold-soft) 75%, transparent) 0%,
+      color-mix(in oklab, var(--gold) 35%, transparent) 35%,
+      transparent 70%
     );
-    filter: blur(3px);
+    filter: blur(4px);
   }
+  /* Ambient halo — wider, dimmer bloom for atmospheric depth. */
   .nav-cta-arrow .nav-cta-halo.is-ambient {
     inset: -14px;
     background: radial-gradient(
       circle at center,
-      color-mix(in oklab, var(--gold) 50%, transparent) 0%,
+      color-mix(in oklab, var(--gold) 45%, transparent) 0%,
       color-mix(in oklab, var(--gold) 18%, transparent) 45%,
-      transparent 78%
+      transparent 75%
     );
     filter: blur(8px);
   }
-  /* Hover: pill fills with gold glass, halos bloom + ambient pulses,
-     arrow glides forward 4px (stronger than the old 2px so the gesture
-     reads from the corner of the eye). */
-  .nav-cta:hover .nav-cta-arrow,
-  .nav-cta:focus-visible .nav-cta-arrow {
-    background-color: color-mix(in oklab, var(--gold) 22%, transparent);
-    box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--gold) 55%, transparent);
-  }
+  /* Hover / focus state — both halos bloom in; ambient starts pulsing. */
   .nav-cta:hover .nav-cta-arrow > svg,
   .nav-cta:focus-visible .nav-cta-arrow > svg {
-    transform: translateX(4px);
-    color: var(--gold-soft);
+    transform: translateX(2px);
   }
   .nav-cta:hover .nav-cta-arrow .nav-cta-halo,
   .nav-cta:focus-visible .nav-cta-arrow .nav-cta-halo {
@@ -872,7 +723,9 @@
     animation: navCtaHaloPulse 2.4s ease-in-out 200ms infinite;
   }
 
-  /* ── REDUCED MOTION ─────────────────────────────────────────── */
+  /* Reduced-motion: keep the depth (shadows, gradients, sheen at rest)
+     but disable lift, sweep, breathing, and pointer tilt — users get a
+     calm color/border shift only. */
   @media (prefers-reduced-motion: reduce) {
     .cta-primary,
     .cta-secondary-dark,
@@ -881,29 +734,40 @@
       transition: background-color 200ms ease, border-color 200ms ease, color 200ms ease;
       transform: none;
     }
-    .cta-primary:hover, .cta-secondary-dark:hover, .cta-secondary-light:hover, .nav-cta:hover,
-    .cta-primary:active, .cta-secondary-dark:active, .cta-secondary-light:active, .nav-cta:active {
+    .cta-primary:hover,
+    .cta-secondary-dark:hover,
+    .cta-secondary-light:hover,
+    .nav-cta:hover,
+    .cta-primary:active,
+    .cta-secondary-dark:active,
+    .cta-secondary-light:active,
+    .nav-cta:active {
       transform: none;
     }
-    .cta-primary::before, .cta-secondary-dark::before, .cta-secondary-light::before,
-    .cta-primary::after, .cta-secondary-dark::after {
+    .cta-primary::before,
+    .cta-secondary-dark::before,
+    .cta-secondary-light::before,
+    .nav-cta::before,
+    .cta-primary::after,
+    .cta-secondary-dark::after,
+    .nav-cta::after {
       display: none;
     }
-    /* Nav CTA: stop the conic ring + sheen + dot ping; keep static gold edge. */
-    .nav-cta::before { animation: none; opacity: 0.7; }
-    .nav-cta::after  { display: none; }
-    .nav-cta-pulse,
-    .nav-cta-pulse::after { animation: none; }
-    .nav-cta-pulse::after { opacity: 0; }
-    .nav-cta-label { transition: none; letter-spacing: 0.20em !important; }
-    .nav-cta-label::after { transition: opacity 200ms ease; transform: scaleX(1); opacity: 0; }
-    .nav-cta:hover .nav-cta-label::after,
-    .nav-cta:focus-visible .nav-cta-label::after { opacity: 1; }
-    .nav-cta-arrow { transition: background-color 200ms ease; }
-    .nav-cta-arrow > svg { transition: color 200ms ease; transform: none !important; }
-    .nav-cta-arrow .nav-cta-halo { transition: opacity 200ms ease; transform: none; animation: none !important; }
+    /* Halo: keep a static soft glow, no pulse, no scale-in. */
+    .nav-cta-arrow .nav-cta-halo {
+      transition: opacity 200ms ease;
+      transform: none;
+    }
     .nav-cta:hover .nav-cta-arrow .nav-cta-halo,
-    .nav-cta:focus-visible .nav-cta-arrow .nav-cta-halo { opacity: 0.7; transform: none; }
+    .nav-cta:focus-visible .nav-cta-arrow .nav-cta-halo {
+      opacity: 0.7;
+      transform: none;
+      animation: none;
+    }
+    .nav-cta:hover .nav-cta-arrow > svg,
+    .nav-cta:focus-visible .nav-cta-arrow > svg {
+      transform: none;
+    }
   }
 }
 
