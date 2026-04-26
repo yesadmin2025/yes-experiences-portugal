@@ -148,6 +148,22 @@
   --cta-pulse-easing: cubic-bezier(0.16, 1, 0.3, 1);
   --cta-pulse-iterations: 1;
   --cta-pulse-stagger: 140ms;
+
+  /* Ambient gold-edge breathing — a slow, low-amplitude opacity drift
+     on the hero CTA's inset gold rim. Reads as "the button is alive"
+     without being loud (peak opacity 0.55, never 1.0). Stops on hover
+     so the active state owns the gold accent. Tune at any scope:
+
+       --cta-breathe-duration   full cycle length (default 6s)
+       --cta-breathe-easing     timing function (default ease-in-out)
+       --cta-breathe-peak       max rim opacity (default 0.55)
+       --cta-breathe-stagger    extra delay for staggered CTAs
+                                (default -3s = anti-phase)
+   */
+  --cta-breathe-duration: 6s;
+  --cta-breathe-easing: ease-in-out;
+  --cta-breathe-peak: 0.55;
+  --cta-breathe-stagger: -3s;
 }
 
 .dark {
