@@ -182,20 +182,20 @@ export function MobileStickyCTA() {
         style={{ paddingBottom: "max(env(safe-area-inset-bottom), 0px)" }}
       >
         <div className="px-4 py-3 flex items-center gap-3">
-          {/* Left — brand-led pull, not a label.
-              Headline is a quiet invitation in the brand's serif voice
-              ("Your Portugal awaits"), and the eyebrow underneath turns
-              from a pillar list into a soft promise that hints at what
-              happens next ("Begin with a local") — warmer, more human,
-              and unmistakably tied to the "like a local friend" promise
-              from the hero. Both lines stay short enough to never wrap
-              in the ~60% column. */}
+          {/* Left — storytelling pull, not a label.
+              The serif headline opens a narrative ("Your story in
+              Portugal"), and the uppercase eyebrow underneath roots it
+              in the brand's core promise of local knowledge — the same
+              "like a local friend" thread that runs through the hero.
+              Together they set up the button as the *next page of the
+              story*, not just another link. Both lines are short enough
+              to never wrap inside the ~60% column. */}
           <div className="min-w-0 flex-1">
             <p className="serif italic text-[15px] leading-tight text-[color:var(--charcoal)] truncate">
-              Your Portugal awaits
+              Your story in Portugal
             </p>
             <p className="text-[10.5px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)] mt-0.5 truncate">
-              Begin with a local
+              Written with locals
             </p>
           </div>
 
@@ -229,9 +229,9 @@ export function MobileStickyCTA() {
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-white",
               submitting ? "opacity-70 pointer-events-none cursor-default" : "",
             ].join(" ")}
-            aria-label="Begin planning your Portugal experience"
+            aria-label="Start your Portugal story with a local"
           >
-            {submitting ? "Opening…" : "Begin"}
+            {submitting ? "Opening…" : "Start your story"}
             <ArrowRight
               size={13}
               className={[
