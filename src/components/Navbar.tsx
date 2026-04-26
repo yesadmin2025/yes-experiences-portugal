@@ -119,9 +119,10 @@ export function Navbar() {
             <Link
               to="/builder"
               onClick={() => setOpen(false)}
-              className="nav-cta group mt-3 inline-flex items-center justify-center gap-2 px-5 py-3.5 text-[11px] tracking-[0.22em] uppercase font-medium"
+              className="nav-cta group mt-3 inline-flex items-center justify-center gap-2.5 pl-4 pr-3.5 py-3.5 text-[11px] uppercase font-medium"
             >
-              Design &amp; Secure Your Experience
+              <span aria-hidden className="nav-cta-pulse" />
+              <span className="nav-cta-label" style={{ letterSpacing: "0.22em" }}>Design &amp; Secure Your Experience</span>
               <span className="nav-cta-arrow">
                 <span aria-hidden className="nav-cta-halo is-ambient" />
                 <span aria-hidden className="nav-cta-halo is-close" />
