@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowUp } from "lucide-react";
+import { usePastHero } from "@/hooks/use-past-hero";
 
 /**
  * FloatingActions
