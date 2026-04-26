@@ -242,7 +242,7 @@ function HomePage() {
                   The square geometry and exact wording stay untouched. */}
               <Link
                 to="/builder"
-                className="cta-primary cta-attention cta-breathe group inline-flex items-center justify-center gap-3 px-9 py-[15px] text-[11.5px] tracking-[0.24em] uppercase font-light"
+                className="cta-primary cta-attention cta-breathe group inline-flex items-center justify-center gap-3 px-9 py-[15px] text-[12px] md:text-[12.5px] lg:text-[13px] tracking-[0.22em] md:tracking-[0.2em] uppercase font-light leading-none"
               >
                 Design &amp; Secure Your Experience
                 <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform duration-300" />
