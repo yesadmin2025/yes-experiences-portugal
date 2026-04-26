@@ -117,6 +117,37 @@
   --border: rgba(46, 46, 46, 0.12);
   --input: rgba(46, 46, 46, 0.18);
   --ring: var(--teal);
+
+  /* ─────────────────────────────────────────────────────────────
+     HERO CTA ATTENTION-PULSE API
+     A small set of CSS variables that drive the one-shot gold halo
+     bloom on .cta-attention buttons. Override at any scope to retune
+     the pulse without touching JSX or component code:
+
+       :root             → site-wide default
+       .hero-cta-group   → tweak both hero CTAs at once
+       .cta-primary, …   → per-variant override
+       inline style      → per-instance (last resort)
+
+     Defaults below match the hero copy fade-in (heroFade ends at
+     1.25s + 1.4s = 2.65s) so the pulse fires right after the text
+     settles. The secondary CTA carries a +140ms stagger so the two
+     halos never bloom in lockstep (which reads as mechanical).
+
+       --cta-pulse-delay      when the pulse begins (default 2.9s)
+       --cta-pulse-duration   length of the bloom (default 1.6s)
+       --cta-pulse-easing     timing function (default critically-
+                              damped ease-out, matches hero parallax)
+       --cta-pulse-iterations how many times it fires (default 1 —
+                              set to "infinite" for demos/recordings)
+       --cta-pulse-stagger    extra delay applied to non-primary
+                              CTAs in a hero group (default 140ms)
+     ───────────────────────────────────────────────────────────── */
+  --cta-pulse-delay: 2.9s;
+  --cta-pulse-duration: 1.6s;
+  --cta-pulse-easing: cubic-bezier(0.16, 1, 0.3, 1);
+  --cta-pulse-iterations: 1;
+  --cta-pulse-stagger: 140ms;
 }
 
 .dark {
