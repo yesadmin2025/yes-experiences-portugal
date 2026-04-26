@@ -278,6 +278,20 @@
     50%      { opacity: 0.55; }
   }
 
+  @keyframes heroCtaAuraBreathe {
+    0%, 100% { opacity: 0.26; transform: translate3d(-50%, 0, 0) scaleX(0.86); }
+    50%      { opacity: 0.52; transform: translate3d(-50%, 0, 0) scaleX(1); }
+  }
+
+  @keyframes heroCtaEdgeOrbit {
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes heroCtaIconPulse {
+    0%, 100% { opacity: 0.42; transform: scale(0.82); }
+    50%      { opacity: 0.9; transform: scale(1.12); }
+  }
+
   /* Primary teal button — anchor of every section's conversion.
      Subtle vertical gradient (teal → teal-2 at bottom) gives a
      polished, dimensional surface even at rest. */
