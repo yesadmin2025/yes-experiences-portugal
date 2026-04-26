@@ -203,7 +203,11 @@ export function MobileStickyCTA() {
               preserve the premium feel; the small dot turns into a thin
               progress hint via opacity only. */}
           <Link
-            to="/builder"
+            // Routes to the experience hub, not the bespoke builder.
+            // The user can pick day tours, multi-day, corporate, proposals,
+            // OR start a custom build from there — the sticky no longer
+            // pre-commits them to one funnel.
+            to="/experiences"
             onClick={handleIntent}
             // Defense-in-depth: even though the wrapper sets `inert` when
             // hidden, also strip the link from the tab order whenever
@@ -212,7 +216,7 @@ export function MobileStickyCTA() {
             tabIndex={visible && !submitting ? 0 : -1}
             aria-disabled={submitting}
             aria-busy={submitting}
-            data-cta="design_secure"
+            data-cta="explore_experiences"
             data-cta-surface="mobile_sticky"
             data-state={submitting ? "submitting" : "idle"}
             className={[
@@ -220,13 +224,11 @@ export function MobileStickyCTA() {
               "border border-[color:var(--gold)]/70 px-4 py-3 text-[10.5px] tracking-[0.2em] uppercase whitespace-nowrap",
               "transition-[opacity,background-color] duration-300",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-white",
-              submitting
-                ? "opacity-70 pointer-events-none cursor-default"
-                : "",
+              submitting ? "opacity-70 pointer-events-none cursor-default" : "",
             ].join(" ")}
-            aria-label="Design and secure your experience"
+            aria-label="Explore Portugal experiences"
           >
-            {submitting ? "Opening…" : "Design \u0026 Secure"}
+            {submitting ? "Opening…" : "Explore"}
             <ArrowRight
               size={13}
               className={[
