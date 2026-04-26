@@ -120,10 +120,10 @@ export function Navbar() {
             <Link
               to="/builder"
               onClick={() => setOpen(false)}
-              className="mt-3 inline-flex items-center justify-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-white border border-[color:var(--gold)]/70 px-5 py-3.5 text-[11px] tracking-[0.22em] uppercase transition-colors"
+              className="nav-cta group mt-3 inline-flex items-center justify-center gap-2 px-5 py-3.5 text-[11px] tracking-[0.22em] uppercase font-medium"
             >
               Design &amp; Secure Your Experience
-              <ArrowRight size={14} />
+              <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform duration-300" />
             </Link>
           </div>
         </div>
