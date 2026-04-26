@@ -429,6 +429,20 @@
     opacity: 1;
   }
 
+  /* Lift desync — the two hero CTAs must never lift at the exact same
+     instant (mechanical, less premium). The CTA carrying
+     data-cta-stagger (the secondary in the hero pair) trails the
+     primary by ~110ms on transform AND box-shadow only, so the
+     visual "rise" feels like a wave passing through the pair, not a
+     synchronised twitch. Color/border transitions stay in sync to
+     keep the family unified. The delay applies in both directions
+     (hover-in and hover-out), which is the desired effect — the
+     secondary always settles a beat after the primary. */
+  .cta-magnet-group > [data-cta-stagger] {
+    transition-delay: 110ms;
+    transition-property: transform, box-shadow;
+  }
+
   /* Reduced-motion: never run the attention pulse, breathing, or
      magnet dim. The buttons still get their full color/shadow depth
      — just no movement. */
@@ -441,6 +455,9 @@
     .cta-magnet-group:hover > .cta-secondary-dark,
     .cta-magnet-group:hover > .cta-secondary-light {
       opacity: 1;
+    }
+    .cta-magnet-group > [data-cta-stagger] {
+      transition-delay: 0ms;
     }
   }
 
@@ -525,38 +542,38 @@
   .cta-primary:hover {
     /* Border lifts to full gold but stays 1px — the change is in
        saturation, not weight. */
-    border-color: color-mix(in oklab, var(--gold) 80%, transparent);
+    border-color: color-mix(in oklab, var(--gold) 78%, transparent);
     background-image: linear-gradient(180deg, var(--teal-2) 0%, var(--teal) 100%);
-    /* Two-layer gold glow on the label — both very soft, very low
-       opacity, so the type still reads as thin & elegant. The tight
-       4px tier gives the letterforms a faint warm halo (the "lit"
-       cue); the wide 18px tier blooms gently behind them so the
-       label feels suspended in light rather than outlined.
-       No hard 1px lift shadow — that would re-thicken the type. */
+    /* Two-tier label glow, dialled DOWN for a thinner, more refined
+       read. Tight 3px halo at 18% gives the letterforms a faint warm
+       edge; the wider 14px bloom at 10% adds atmosphere without
+       blurring the type. Lower blur radius + lower opacity = less
+       perceived thickness. */
     text-shadow:
-      0 0 4px color-mix(in oklab, var(--gold) 22%, transparent),
-      0 0 18px color-mix(in oklab, var(--gold) 14%, transparent);
+      0 0 3px color-mix(in oklab, var(--gold) 18%, transparent),
+      0 0 14px color-mix(in oklab, var(--gold) 10%, transparent);
     box-shadow:
-      inset 0 1px 0 0 color-mix(in oklab, var(--gold-soft) 50%, transparent),
-      inset 0 -1px 0 0 rgba(0, 0, 0, 0.22),
-      0 2px 4px rgba(15, 15, 15, 0.22),
-      /* Soft, wide gold halo — wider and warmer than rest, but no
-         hard ring. The button feels enveloped in light. */
-      0 0 40px -4px color-mix(in oklab, var(--gold) 38%, transparent),
-      /* Atmospheric depth deepens */
-      0 16px 34px -12px rgba(41, 91, 97, 0.55),
-      0 32px 64px -24px rgba(201, 169, 106, 0.42);
-    /* Lift -4px composed with parallax tilt AND the scroll-driven
-       base scale, then multiplied by a small hover pop (×1.02).
-       Composing instead of overwriting preserves the scroll cue so
-       a hover mid-page doesn't snap the button back to scale 1. */
+      inset 0 1px 0 0 color-mix(in oklab, var(--gold-soft) 44%, transparent),
+      inset 0 -1px 0 0 rgba(0, 0, 0, 0.20),
+      0 1px 3px rgba(15, 15, 15, 0.20),
+      /* Airier gold halo — narrower spread (-6px), lower opacity (28%)
+         so the lift doesn't add visual weight. The button feels
+         buoyant, not bigger. */
+      0 0 32px -6px color-mix(in oklab, var(--gold) 28%, transparent),
+      /* Atmospheric depth — softened so the lift reads as elevation,
+         not mass. */
+      0 12px 26px -14px rgba(41, 91, 97, 0.45),
+      0 24px 50px -28px rgba(201, 169, 106, 0.30);
+    /* Lift -3px (was -4) — gentler elevation. Composed with parallax
+       tilt and the scroll-driven base scale; hover pop reduced to
+       ×1.012 (was ×1.02) so the button rises rather than swells. */
     transform:
       translate3d(
         calc(var(--hero-px, 0) * 1.5px),
-        calc(var(--hero-py, 0) * 1px - 4px),
+        calc(var(--hero-py, 0) * 1px - 3px),
         0
       )
-      scale(calc(var(--cta-scroll-scale, 1) * 1.02));
+      scale(calc(var(--cta-scroll-scale, 1) * 1.012));
   }
   .cta-primary:hover::before {
     opacity: 1;
@@ -656,27 +673,27 @@
     background-color: color-mix(in oklab, var(--gold) 12%, transparent);
     border-color: color-mix(in oklab, var(--gold) 75%, transparent);
     color: #ffffff;
-    /* Two-layer warm glow on the label, both very low opacity so the
-       thin type stays thin. Tight 4px halo + soft 16px bloom. */
+    /* Two-tier label glow, dialled DOWN to match the primary: tight
+       3px halo at 16% + 14px bloom at 8%. Thin type stays thin. */
     text-shadow:
-      0 0 4px color-mix(in oklab, var(--gold) 20%, transparent),
-      0 0 16px color-mix(in oklab, var(--gold) 12%, transparent);
-    /* Match primary's lift+scale rhythm AND preserve the scroll scale,
-       so both CTAs respond as a coordinated pair when scanned. */
+      0 0 3px color-mix(in oklab, var(--gold) 16%, transparent),
+      0 0 14px color-mix(in oklab, var(--gold) 8%, transparent);
+    /* Lift -3px + ×1.012 — matches the primary's gentler elevation.
+       Scroll scale preserved. */
     transform:
       translate3d(
         calc(var(--hero-px, 0) * 1.5px),
-        calc(var(--hero-py, 0) * 1px - 4px),
+        calc(var(--hero-py, 0) * 1px - 3px),
         0
       )
-      scale(calc(var(--cta-scroll-scale, 1) * 1.02));
+      scale(calc(var(--cta-scroll-scale, 1) * 1.012));
     box-shadow:
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.14),
-      inset 0 -1px 0 0 rgba(0, 0, 0, 0.22),
-      /* Soft, wide gold halo — wider than rest, no hard ring. */
-      0 0 36px -4px color-mix(in oklab, var(--gold) 28%, transparent),
-      0 16px 36px -14px rgba(0, 0, 0, 0.55),
-      0 30px 60px -24px rgba(0, 0, 0, 0.55);
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.12),
+      inset 0 -1px 0 0 rgba(0, 0, 0, 0.20),
+      /* Airier gold halo — narrower spread, lower opacity. */
+      0 0 28px -6px color-mix(in oklab, var(--gold) 20%, transparent),
+      0 12px 28px -16px rgba(0, 0, 0, 0.45),
+      0 24px 48px -28px rgba(0, 0, 0, 0.40);
   }
   .cta-secondary-dark:hover::before {
     opacity: 1;
