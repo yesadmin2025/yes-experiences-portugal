@@ -148,6 +148,22 @@
   --cta-pulse-easing: cubic-bezier(0.16, 1, 0.3, 1);
   --cta-pulse-iterations: 1;
   --cta-pulse-stagger: 140ms;
+
+  /* Ambient gold-edge breathing — a slow, low-amplitude opacity drift
+     on the hero CTA's inset gold rim. Reads as "the button is alive"
+     without being loud (peak opacity 0.55, never 1.0). Stops on hover
+     so the active state owns the gold accent. Tune at any scope:
+
+       --cta-breathe-duration   full cycle length (default 6s)
+       --cta-breathe-easing     timing function (default ease-in-out)
+       --cta-breathe-peak       max rim opacity (default 0.55)
+       --cta-breathe-stagger    extra delay for staggered CTAs
+                                (default -3s = anti-phase)
+   */
+  --cta-breathe-duration: 6s;
+  --cta-breathe-easing: ease-in-out;
+  --cta-breathe-peak: 0.55;
+  --cta-breathe-stagger: -3s;
 }
 
 .dark {
@@ -301,12 +317,12 @@
          right — reinforcing the depth illusion.
      ───────────────────────────────────────────────────────────── */
 
-  /* Idle gold-rim breathing — used by ::after on every CTA. Opacity
-     drifts 0.0 → 0.55 → 0.0 over 8s. Slow enough to read as ambient
-     presence, never as a blink. */
+  /* Idle gold-rim breathing — used by ::after on hero CTAs. Opacity
+     drifts 0 → peak → 0 over a slow cycle. Peak is var-driven so it
+     can be retuned without editing keyframes. */
   @keyframes ctaRimBreathe {
     0%, 100% { opacity: 0; }
-    50%      { opacity: 0.55; }
+    50%      { opacity: var(--cta-breathe-peak, 0.55); }
   }
 
   /* One-shot attention pulse — fires ONCE shortly after the hero copy
@@ -359,11 +375,72 @@
     animation-delay: calc(var(--cta-pulse-delay, 0s) + var(--cta-pulse-stagger, 0ms));
   }
 
-  /* Reduced-motion: never run the attention pulse. The buttons still
-     get their full color/shadow depth — just no movement. */
+  /* ─────────────────────────────────────────────────────────────
+     Opt-in utility — slow ambient gold-edge breathing on the
+     button's ::after pseudo. Apply alongside .cta-primary or
+     .cta-secondary-dark on hero CTAs only. Stops cleanly on
+     hover/focus so the active state owns the gold accent.
+     Driven by the --cta-breathe-* API in :root. */
+  .cta-breathe::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--gold) 50%, transparent);
+    opacity: 0;
+    pointer-events: none;
+    animation:
+      ctaRimBreathe
+      var(--cta-breathe-duration, 6s)
+      var(--cta-breathe-easing, ease-in-out)
+      infinite;
+  }
+  /* Stagger hook — add `data-cta-stagger` to push the breathing into
+     anti-phase with its sibling. Default stagger is -3s (half-cycle of
+     the 6s default), so two CTAs never breathe in lockstep. */
+  .cta-breathe[data-cta-stagger]::after {
+    animation-delay: var(--cta-breathe-stagger, -3s);
+  }
+  .cta-breathe:hover::after,
+  .cta-breathe:focus-visible::after {
+    animation: none;
+    opacity: 0;
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     Hero CTA group magnetism — when one CTA is hovered, the
+     non-hovered siblings dim slightly (opacity 0.78). Reinforces
+     focus on the hovered choice without stealing the click target.
+     Apply .cta-magnet-group to the parent <div> wrapping the CTAs. */
+  .cta-magnet-group:hover > .cta-primary,
+  .cta-magnet-group:hover > .cta-secondary-dark,
+  .cta-magnet-group:hover > .cta-secondary-light {
+    opacity: 0.78;
+    transition:
+      opacity 320ms cubic-bezier(0.16, 1, 0.3, 1),
+      background-color 520ms cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 520ms cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 520ms cubic-bezier(0.16, 1, 0.3, 1),
+      transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .cta-magnet-group:hover > .cta-primary:hover,
+  .cta-magnet-group:hover > .cta-secondary-dark:hover,
+  .cta-magnet-group:hover > .cta-secondary-light:hover {
+    opacity: 1;
+  }
+
+  /* Reduced-motion: never run the attention pulse, breathing, or
+     magnet dim. The buttons still get their full color/shadow depth
+     — just no movement. */
   @media (prefers-reduced-motion: reduce) {
-    .cta-attention::before {
+    .cta-attention::before,
+    .cta-breathe::after {
       animation: none;
+    }
+    .cta-magnet-group:hover > .cta-primary,
+    .cta-magnet-group:hover > .cta-secondary-dark,
+    .cta-magnet-group:hover > .cta-secondary-light {
+      opacity: 1;
     }
   }
 
@@ -430,19 +507,23 @@
     border-color: var(--gold);
     background-image: linear-gradient(180deg, var(--teal-2) 0%, var(--teal) 100%);
     box-shadow:
-      inset 0 1px 0 0 color-mix(in oklab, var(--gold-soft) 65%, transparent),
-      inset 0 -1px 0 0 rgba(0, 0, 0, 0.22),
-      inset 0 0 0 1px color-mix(in oklab, var(--gold) 35%, transparent),
-      0 2px 4px rgba(15, 15, 15, 0.22),
-      0 14px 30px -12px rgba(41, 91, 97, 0.60),
-      0 28px 60px -24px rgba(201, 169, 106, 0.45);
-    /* Lift bumped from -2px → -3px to read as a deliberate "pop"
-       without ever feeling jumpy at the parallax scale. */
-    transform: translate3d(
-      calc(var(--hero-px, 0) * 1.5px),
-      calc(var(--hero-py, 0) * 1px - 3px),
-      0
-    );
+      inset 0 1px 0 0 color-mix(in oklab, var(--gold-soft) 70%, transparent),
+      inset 0 -1px 0 0 rgba(0, 0, 0, 0.24),
+      inset 0 0 0 1px color-mix(in oklab, var(--gold) 38%, transparent),
+      0 2px 4px rgba(15, 15, 15, 0.24),
+      0 16px 34px -12px rgba(41, 91, 97, 0.62),
+      0 32px 68px -24px rgba(201, 169, 106, 0.50);
+    /* Lift -4px + 1.02× scale composed into a single transform so the
+       parallax tilt (translate3d) is preserved. The scale gives the
+       button a subtle physical "pop" toward the viewer — premium,
+       not bouncy. */
+    transform:
+      translate3d(
+        calc(var(--hero-px, 0) * 1.5px),
+        calc(var(--hero-py, 0) * 1px - 4px),
+        0
+      )
+      scale(1.02);
   }
   .cta-primary:hover::before {
     opacity: 1;
@@ -525,20 +606,24 @@
     pointer-events: none;
   }
   .cta-secondary-dark:hover {
-    background-color: color-mix(in oklab, var(--gold) 16%, transparent);
+    background-color: color-mix(in oklab, var(--gold) 18%, transparent);
     border-color: var(--gold);
     color: #ffffff;
-    transform: translate3d(
-      calc(var(--hero-px, 0) * 1.5px),
-      calc(var(--hero-py, 0) * 1px - 3px),
-      0
-    );
+    /* Match primary's lift+scale rhythm so the two CTAs respond as
+       a coordinated pair when scanned. */
+    transform:
+      translate3d(
+        calc(var(--hero-px, 0) * 1.5px),
+        calc(var(--hero-py, 0) * 1px - 4px),
+        0
+      )
+      scale(1.02);
     box-shadow:
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.16),
-      inset 0 -1px 0 0 rgba(0, 0, 0, 0.22),
-      inset 0 0 0 1px color-mix(in oklab, var(--gold) 32%, transparent),
-      0 14px 32px -14px rgba(201, 169, 106, 0.50),
-      0 26px 52px -24px rgba(0, 0, 0, 0.60);
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.18),
+      inset 0 -1px 0 0 rgba(0, 0, 0, 0.24),
+      inset 0 0 0 1px color-mix(in oklab, var(--gold) 36%, transparent),
+      0 16px 36px -14px rgba(201, 169, 106, 0.55),
+      0 30px 60px -24px rgba(0, 0, 0, 0.65);
   }
   .cta-secondary-dark:hover::before {
     opacity: 1;
