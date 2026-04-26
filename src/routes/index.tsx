@@ -256,9 +256,11 @@ function HomePage() {
               <Link
                 to="/experiences"
                 data-cta-stagger
+                data-cta-variant={ctaVariant.id}
+                data-cta-slot="hero-secondary"
                 className="cta-secondary-dark cta-attention cta-breathe group inline-flex items-center justify-center gap-3.5 px-11 py-[20px] text-[12.5px] font-semibold"
               >
-                <span className="cta-label">Explore Signature Experiences</span>
+                <span className="cta-label">{ctaVariant.secondary}</span>
                 <ArrowRight
                   size={14}
                   className="cta-arrow opacity-80 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-[420ms] ease-[cubic-bezier(0.16,1,0.3,1)]"
