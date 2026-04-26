@@ -182,17 +182,20 @@ export function MobileStickyCTA() {
         style={{ paddingBottom: "max(env(safe-area-inset-bottom), 0px)" }}
       >
         <div className="px-4 py-3 flex items-center gap-3">
-          {/* Left — restrained brand microcopy. Charcoal-soft, never gold.
-              Headline echoes the hero tagline ("Portugal, designed around
-              you"); microcopy carries three brand pillars instead of a
-              single trust signal so it reads as a brand line, not a banner.
-              Both lines fit in the narrow 60%-ish space without wrapping. */}
+          {/* Left — brand-led pull, not a label.
+              Headline is a quiet invitation in the brand's serif voice
+              ("Your Portugal awaits"), and the eyebrow underneath turns
+              from a pillar list into a soft promise that hints at what
+              happens next ("Begin with a local") — warmer, more human,
+              and unmistakably tied to the "like a local friend" promise
+              from the hero. Both lines stay short enough to never wrap
+              in the ~60% column. */}
           <div className="min-w-0 flex-1">
-            <p className="serif text-[15px] leading-tight text-[color:var(--charcoal)] truncate">
-              Crafted around you
+            <p className="serif italic text-[15px] leading-tight text-[color:var(--charcoal)] truncate">
+              Your Portugal awaits
             </p>
-            <p className="text-[10.5px] uppercase tracking-[0.2em] text-[color:var(--charcoal-soft)] mt-0.5 truncate">
-              Private · Tailored · Portugal
+            <p className="text-[10.5px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)] mt-0.5 truncate">
+              Begin with a local
             </p>
           </div>
 
@@ -226,9 +229,9 @@ export function MobileStickyCTA() {
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-white",
               submitting ? "opacity-70 pointer-events-none cursor-default" : "",
             ].join(" ")}
-            aria-label="Explore Portugal experiences"
+            aria-label="Begin planning your Portugal experience"
           >
-            {submitting ? "Opening…" : "Explore"}
+            {submitting ? "Opening…" : "Begin"}
             <ArrowRight
               size={13}
               className={[
