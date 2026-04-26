@@ -144,11 +144,13 @@ function HomePage() {
           width={1920}
           height={1080}
         />
-        {/* Dark gradient + radial vignette — keeps copy effortlessly readable
-            without flattening the image. Slightly deeper at the base so the
-            CTAs and microcopy never compete with the photograph. */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/80 via-[color:var(--charcoal)]/35 to-transparent md:from-[color:var(--charcoal-deep)]/75 md:via-[color:var(--charcoal)]/25 md:to-transparent" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_70%,transparent_45%,rgba(0,0,0,0.35)_100%)]" />
+        {/* Warm editorial wash — a soft charcoal-to-transparent gradient anchored
+            at the base for CTA legibility, layered with a warm teal/gold tint that
+            matches the brand palette and a gentle radial vignette. The image stays
+            luminous; the copy stays effortlessly readable. */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/70 via-[color:var(--charcoal)]/20 to-transparent md:from-[color:var(--charcoal-deep)]/65 md:via-[color:var(--charcoal)]/15 md:to-transparent" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,color-mix(in_oklab,var(--teal)_18%,transparent)_0%,transparent_45%,color-mix(in_oklab,var(--gold)_10%,transparent)_100%)] mix-blend-soft-light" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_72%,transparent_55%,rgba(0,0,0,0.28)_100%)]" />
 
         <div className="container-x relative z-10 pb-24 md:pb-36 pt-32 md:pt-40">
           <div className="max-w-3xl text-[color:var(--ivory)]">
