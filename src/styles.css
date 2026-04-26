@@ -119,6 +119,31 @@
   --ring: var(--teal);
 
   /* ─────────────────────────────────────────────────────────────
+     CTA LABEL GLOW API
+     Two-tier text-shadow on hover: a tight "halo" hugging the
+     letterforms + a wider "bloom" for atmospheric warmth.
+     Tuned per-variant so the primary (white on teal) and secondary
+     (ivory on dark) can each carry the right amount of light without
+     ever fattening the type. Bump `*-opacity` for visibility, bump
+     `*-blur` for softness — keep blur modest to preserve thinness.
+
+     Override scopes: :root → .hero-cta-group → .cta-primary etc.
+  ──────────────────────────────────────────────────────────────── */
+  /* Primary (white type, teal surface) — needs slightly more light to
+     read as "lit" against the bright fill. */
+  --cta-primary-halo-blur: 4px;
+  --cta-primary-halo-opacity: 26%;
+  --cta-primary-bloom-blur: 18px;
+  --cta-primary-bloom-opacity: 16%;
+
+  /* Secondary (ivory type, dark glass) — dark backdrop already lifts
+     the type; keep glow a touch lighter so it stays subordinate. */
+  --cta-secondary-halo-blur: 4px;
+  --cta-secondary-halo-opacity: 22%;
+  --cta-secondary-bloom-blur: 18px;
+  --cta-secondary-bloom-opacity: 13%;
+
+  /* ─────────────────────────────────────────────────────────────
      HERO CTA ATTENTION-PULSE API
      A small set of CSS variables that drive the one-shot gold halo
      bloom on .cta-attention buttons. Override at any scope to retune
