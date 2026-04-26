@@ -278,6 +278,50 @@
     50%      { opacity: 0.55; }
   }
 
+  /* One-shot attention pulse — fires ONCE shortly after the hero copy
+     finishes fading in, drawing the eye to the conversion anchors
+     before going completely quiet. Two coordinated tracks:
+       • outer halo (::before): bloom from scale(0.92, opacity 0) →
+         scale(1.18, opacity 0.85) → settle back to rest. Reads as a
+         soft gold "breath" of light, not a blink.
+       • base (button itself): a tiny scale impulse (1 → 1.025 → 1)
+         composed on top of the parallax tilt via CSS transforms on
+         a separate pseudo path — see .cta-attention below.
+     Total duration 1.6s, runs exactly once, then leaves no residual
+     state — hover behavior is untouched after the pulse completes. */
+  @keyframes ctaAttentionHalo {
+    0%   { opacity: 0;    transform: scale(0.92); }
+    35%  { opacity: 0.85; transform: scale(1.18); }
+    70%  { opacity: 0.25; transform: scale(1.06); }
+    100% { opacity: 0;    transform: scale(0.92); }
+  }
+
+  /* Opt-in utility — apply alongside .cta-primary / .cta-secondary-dark
+     on the hero buttons only. We animate ONLY the ::before halo so the
+     button's own transform (which carries the parallax tilt) is never
+     overwritten — no fight with the pointer-tracking translate3d().
+     animation-delay is set inline at the call-site so primary/secondary
+     can be staggered ~140ms, keeping the pulse from reading as
+     synchronized/mechanical. */
+  .cta-attention::before {
+    /* No fill-mode: once the 1.6s pulse ends, animation styles release
+       and the existing opacity/transform transition takes over again,
+       so hover still blooms the halo normally afterward. The delay is
+       passed in via a CSS variable from the call-site (--cta-pulse-delay)
+       so primary/secondary can be staggered without inline pseudo
+       targeting (which CSS doesn't support). */
+    animation: ctaAttentionHalo 1.6s cubic-bezier(0.16, 1, 0.3, 1);
+    animation-delay: var(--cta-pulse-delay, 0s);
+  }
+
+  /* Reduced-motion: never run the attention pulse. The buttons still
+     get their full color/shadow depth — just no movement. */
+  @media (prefers-reduced-motion: reduce) {
+    .cta-attention::before {
+      animation: none;
+    }
+  }
+
   /* Primary teal button — anchor of every section's conversion.
      Subtle vertical gradient (teal → teal-2 at bottom) gives a
      polished, dimensional surface even at rest. */

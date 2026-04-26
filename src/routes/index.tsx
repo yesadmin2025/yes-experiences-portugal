@@ -215,18 +215,27 @@ function HomePage() {
             </p>
 
             <div className="mt-10 md:mt-12 flex flex-col sm:flex-row flex-wrap gap-4 sm:gap-5 opacity-0 animate-[heroFade_1.4s_ease-out_1.25s_forwards]">
-              {/* Primary — clear conversion anchor */}
+              {/* Primary — clear conversion anchor.
+                  .cta-attention fires a one-shot gold halo bloom 250ms
+                  after the hero copy finishes fading in (heroFade ends
+                  at 1.25s + 1.4s = 2.65s → pulse starts 2.9s). Runs
+                  exactly once, then leaves no residual state.
+                  prefers-reduced-motion disables it entirely. */}
               <Link
                 to="/builder"
-                className="cta-primary group inline-flex items-center justify-center gap-3 px-10 py-[18px] text-[12.5px] tracking-[0.22em] uppercase font-semibold"
+                className="cta-primary cta-attention group inline-flex items-center justify-center gap-3 px-10 py-[18px] text-[12.5px] tracking-[0.22em] uppercase font-semibold"
+                style={{ ["--cta-pulse-delay" as never]: "2.9s" }}
               >
                 Design &amp; Secure Your Experience
                 <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-300" />
               </Link>
-              {/* Secondary — refined outline, slightly stronger visibility */}
+              {/* Secondary — refined outline. Pulse staggered +140ms
+                  from primary so the two never bloom in lockstep
+                  (synchronized halos read as mechanical). */}
               <Link
                 to="/experiences"
-                className="cta-secondary-dark group inline-flex items-center justify-center gap-3 px-10 py-[18px] text-[12.5px] tracking-[0.22em] uppercase font-semibold"
+                className="cta-secondary-dark cta-attention group inline-flex items-center justify-center gap-3 px-10 py-[18px] text-[12.5px] tracking-[0.22em] uppercase font-semibold"
+                style={{ ["--cta-pulse-delay" as never]: "3.04s" }}
               >
                 Explore Signature Experiences
                 <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-300" />
