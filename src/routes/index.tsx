@@ -157,10 +157,10 @@ function HomePage() {
               Private · By local hands · Designed around you
             </span>
 
-            <h1 className="hero-h1 serif mt-7 md:mt-9 text-[2.05rem] sm:text-5xl md:text-7xl lg:text-[5.4rem] opacity-0 animate-[heroFade_1.4s_ease-out_0.6s_forwards]">
+            <h1 className="hero-h1 serif mt-7 md:mt-9 text-[2.05rem] sm:text-5xl md:text-7xl lg:text-[5.4rem] text-white [text-shadow:0_2px_24px_rgba(0,0,0,0.55),0_1px_2px_rgba(0,0,0,0.45)] opacity-0 animate-[heroFade_1.4s_ease-out_0.6s_forwards]">
               Portugal,
               <br />
-              <span className="italic text-[color:var(--gold-soft)]">Designed Around You</span>
+              <span className="italic text-[color:var(--gold-soft)] [text-shadow:0_2px_20px_rgba(0,0,0,0.5)]">Designed Around You</span>
             </h1>
 
             <p className="mt-7 md:mt-9 text-[18px] md:text-[22px] text-[color:var(--ivory)] max-w-xl leading-[1.7] font-light opacity-0 animate-[heroFade_1.4s_ease-out_0.95s_forwards]">
