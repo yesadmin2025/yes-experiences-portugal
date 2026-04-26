@@ -144,17 +144,15 @@ function HomePage() {
           width={1920}
           height={1080}
         />
-        {/* Layered editorial wash — premium warmth without darkness.
-            1) Vertical: gentle charcoal at base for CTAs, soft top wash for the eyebrow.
-            2) Lateral: a left-anchored gradient that sits behind the headline column,
-               restoring contrast for "Portugal," and the gold eyebrows where the sky
-               and rock highlights would otherwise wash them out.
-            3) Brand tint: warm teal→gold soft-light pass that ties the photo to the palette.
-            4) Vignette: barely-there radial darkening only at the far corners. */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/75 via-[color:var(--charcoal)]/25 to-[color:var(--charcoal-deep)]/30 md:from-[color:var(--charcoal-deep)]/70 md:via-[color:var(--charcoal)]/18 md:to-[color:var(--charcoal-deep)]/22" />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,color-mix(in_oklab,var(--charcoal-deep)_55%,transparent)_0%,color-mix(in_oklab,var(--charcoal-deep)_30%,transparent)_30%,transparent_60%)] md:bg-[linear-gradient(90deg,color-mix(in_oklab,var(--charcoal-deep)_50%,transparent)_0%,color-mix(in_oklab,var(--charcoal-deep)_22%,transparent)_35%,transparent_65%)]" />
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,color-mix(in_oklab,var(--teal)_16%,transparent)_0%,transparent_45%,color-mix(in_oklab,var(--gold)_10%,transparent)_100%)] mix-blend-soft-light" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_72%,transparent_55%,rgba(0,0,0,0.25)_100%)]" />
+        {/* Layered editorial wash — premium warmth without losing legibility.
+            Order matters: the brand soft-light tint sits FIRST (closest to the
+            image) so subsequent darkening overlays aren't blended away. Then a
+            base vertical wash, a left-anchored column behind the headline, and
+            a barely-there corner vignette. */}
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,color-mix(in_oklab,var(--teal)_18%,transparent)_0%,transparent_50%,color-mix(in_oklab,var(--gold)_10%,transparent)_100%)] mix-blend-soft-light" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/85 via-[color:var(--charcoal-deep)]/45 to-[color:var(--charcoal-deep)]/40 md:from-[color:var(--charcoal-deep)]/80 md:via-[color:var(--charcoal-deep)]/35 md:to-[color:var(--charcoal-deep)]/30" />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(15,15,15,0.65)_0%,rgba(15,15,15,0.4)_35%,transparent_70%)] md:bg-[linear-gradient(90deg,rgba(15,15,15,0.6)_0%,rgba(15,15,15,0.32)_40%,transparent_72%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_72%,transparent_55%,rgba(0,0,0,0.3)_100%)]" />
 
         <div className="container-x relative z-10 pb-24 md:pb-36 pt-32 md:pt-40">
           <div className="max-w-3xl text-[color:var(--ivory)]">
