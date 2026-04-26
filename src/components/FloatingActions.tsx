@@ -22,18 +22,14 @@ import { usePastHero } from "@/hooks/use-past-hero";
  *     even legacy AT or a stray `inert` override can't reach them.
  */
 export function FloatingActions() {
-  // Single shared scroll-past-hero gate for both controls. Same 600px
-  // threshold the MobileStickyCTA uses, so the desktop CTA reveal lines
-  // up with the mobile one across breakpoints.
-  const [pastHero, setPastHero] = useState(false);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const onScroll = () => setPastHero(window.scrollY > 600);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  // Shared visibility gate — same threshold, persistence, and BFCache
+  // handling that <MobileStickyCTA> uses, so both post-hero surfaces
+  // appear/disappear in lockstep across breakpoints. No mediaQuery here:
+  // FloatingActions is responsible for both the mobile-only scroll-to-top
+  // arrow and the lg+ floating CTA, so the wrapper itself stays mounted
+  // across breakpoints; per-child Tailwind classes handle the breakpoint
+  // visibility.
+  const pastHero = usePastHero({ threshold: 600 });
 
   const scrollTop = () => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
