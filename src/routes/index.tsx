@@ -219,15 +219,15 @@ function HomePage() {
 
         <div className="container-x relative z-10 pb-24 md:pb-36 pt-32 md:pt-40">
           <div className="max-w-3xl text-[color:var(--ivory)]">
-            <span className="inline-flex items-center gap-3 text-[10.5px] uppercase tracking-[0.42em] text-[color:var(--gold-soft)]/85 font-light opacity-0 animate-[heroFade_1.1s_ease-out_0.3s_forwards]">
-              <span className="h-px w-8 bg-[color:var(--gold)]/70" />
-              Private · By Locals · Designed Around You
+            <span className="inline-flex items-center gap-3 text-[11px] uppercase tracking-[0.34em] text-[color:var(--gold-soft)] opacity-0 animate-[heroFade_1.1s_ease-out_0.3s_forwards]">
+              <span className="h-px w-8 bg-[color:var(--gold)]" />
+              Private · By local hands · Designed around you
             </span>
 
-            <h1 className="hero-h1 serif mt-12 md:mt-16 text-[2.05rem] sm:text-5xl md:text-7xl lg:text-[5.4rem] text-[color:var(--ivory)]/90 font-light opacity-0 animate-[heroFade_1.4s_ease-out_0.6s_forwards]">
+            <h1 className="hero-h1 serif mt-12 md:mt-16 text-[2.05rem] sm:text-5xl md:text-7xl lg:text-[5.4rem] text-[color:var(--ivory)] opacity-0 animate-[heroFade_1.4s_ease-out_0.6s_forwards]">
               Portugal,
               <br />
-              <span className="italic text-[color:var(--gold-soft)]/90 inline-block mt-1 md:mt-2">Designed Around You</span>
+              <span className="italic text-[color:var(--gold-soft)] inline-block mt-1 md:mt-2">Designed Around You</span>
             </h1>
 
             <p className="mt-7 md:mt-9 text-[18px] md:text-[22px] text-[color:var(--ivory)] max-w-xl leading-[1.7] font-light opacity-0 animate-[heroFade_1.4s_ease-out_0.95s_forwards]">

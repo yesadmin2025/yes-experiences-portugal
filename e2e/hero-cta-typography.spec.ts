@@ -49,7 +49,7 @@ test.describe("Hero CTA — typography & spacing contract", () => {
     await gotoHero(page);
 
     const eyebrow = page
-      .locator("span", { hasText: /Private\s+·\s+By Locals/i })
+      .locator("span", { hasText: "Private · By local hands" })
       .first();
     const h1 = page.locator("h1.hero-h1");
 
