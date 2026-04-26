@@ -142,7 +142,10 @@ function HomePage() {
   // first 220px of scroll — a subtle "the page is opening up to you" cue.
   // Writes --cta-scroll-scale on the magnet group; CTAs compose it into
   // their existing transform alongside parallax. Reduced-motion pins to 1.02×.
-  const ctaGroupRef = useCtaScrollScale<HTMLDivElement>(0.94, 1.02, 220);
+  // Subtler scroll-driven growth: tighter envelope (0.96 → 1.015) over
+  // a longer scroll window (280px), with smoothstep easing in the hook.
+  // The button breathes upward instead of springing.
+  const ctaGroupRef = useCtaScrollScale<HTMLDivElement>(0.96, 1.015, 280);
 
   return (
     <SiteLayout>
