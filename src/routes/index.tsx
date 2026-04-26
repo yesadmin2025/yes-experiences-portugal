@@ -237,7 +237,7 @@ function HomePage() {
 
             <div
               ref={ctaGroupRef}
-              className="cta-magnet-group mt-10 md:mt-12 flex flex-col sm:flex-row flex-wrap gap-4 sm:gap-5 opacity-0 animate-[heroFade_1.4s_ease-out_1.25s_forwards]"
+              className="cta-magnet-group mt-10 md:mt-12 flex flex-col sm:flex-row flex-wrap gap-5 sm:gap-6 opacity-0 animate-[heroFade_1.4s_ease-out_1.25s_forwards]"
             >
               {/* Primary — clear conversion anchor.
                   Three layered conversion cues, all squared 2px, all
