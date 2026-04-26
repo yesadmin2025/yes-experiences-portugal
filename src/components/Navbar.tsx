@@ -74,16 +74,10 @@ export function Navbar() {
             ))}
             <Link
               to="/builder"
-              className="nav-cta ml-2 group inline-flex items-center gap-2 px-5 py-3 text-[10.5px] tracking-[0.2em] uppercase font-medium"
+              className="ml-2 group inline-flex items-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-white border border-[color:var(--gold)]/70 hover:border-[color:var(--gold)] px-5 py-3 text-[10.5px] tracking-[0.2em] uppercase transition-all duration-500 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             >
-              <span className="relative">Design &amp; Secure</span>
-              <span className="relative inline-flex items-center justify-center">
-                <ArrowRight size={13} className="relative z-[1] group-hover:translate-x-0.5 transition-transform duration-300" />
-                <span
-                  aria-hidden
-                  className="absolute inset-0 -m-1 rounded-full bg-[color:var(--gold)]/0 group-hover:bg-[color:var(--gold)]/25 blur-[6px] transition-colors duration-500"
-                />
-              </span>
+              Design &amp; Secure
+              <ArrowRight size={13} className="group-hover:translate-x-0.5 transition-transform duration-300" />
             </Link>
           </nav>
 
@@ -120,10 +114,10 @@ export function Navbar() {
             <Link
               to="/builder"
               onClick={() => setOpen(false)}
-              className="nav-cta group mt-3 inline-flex items-center justify-center gap-2 px-5 py-3.5 text-[11px] tracking-[0.22em] uppercase font-medium"
+              className="mt-3 inline-flex items-center justify-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-white border border-[color:var(--gold)]/70 px-5 py-3.5 text-[11px] tracking-[0.22em] uppercase transition-colors"
             >
               Design &amp; Secure Your Experience
-              <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform duration-300" />
+              <ArrowRight size={14} />
             </Link>
           </div>
         </div>
