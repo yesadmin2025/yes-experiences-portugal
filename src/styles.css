@@ -1063,6 +1063,15 @@
     /* Nav CTA: stop the conic ring + sheen + dot ping; keep static gold edge. */
     .nav-cta::before { animation: none; opacity: 0.7; }
     .nav-cta::after  { display: none; }
+    .hero-cta-aura,
+    .hero-cta-edge,
+    .hero-cta-icon-halo { animation: none !important; }
+    .hero-cta-aura { opacity: 0.34; filter: blur(16px); }
+    .hero-cta-edge { opacity: 0.62; }
+    .hero-cta:hover .hero-cta-icon,
+    .hero-cta:focus-visible .hero-cta-icon { transform: none; }
+    .hero-cta:hover .hero-cta-copy,
+    .hero-cta:focus-visible .hero-cta-copy { transform: none; }
     .nav-cta-pulse,
     .nav-cta-pulse::after { animation: none; }
     .nav-cta-pulse::after { opacity: 0; }
