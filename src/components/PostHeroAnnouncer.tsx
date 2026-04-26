@@ -46,7 +46,7 @@ export function PostHeroAnnouncer() {
     const onPastHero = () => {
       // Short, calm, action-oriented. Avoid alarmist phrasing — this is
       // an opportunity, not an alert.
-      setMessage("Start your Portugal story with a local — shortcut available at the bottom of the screen.");
+      setMessage("Begin your Portugal story with a local — shortcut available at the bottom of the screen.");
     };
 
     window.addEventListener(PAST_HERO_EVENT, onPastHero);

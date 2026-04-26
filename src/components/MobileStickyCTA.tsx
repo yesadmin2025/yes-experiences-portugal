@@ -183,19 +183,18 @@ export function MobileStickyCTA() {
       >
         <div className="px-4 py-3 flex items-center gap-3">
           {/* Left — storytelling pull, not a label.
-              The serif headline opens a narrative ("Your story in
-              Portugal"), and the uppercase eyebrow underneath roots it
-              in the brand's core promise of local knowledge — the same
-              "like a local friend" thread that runs through the hero.
-              Together they set up the button as the *next page of the
-              story*, not just another link. Both lines are short enough
-              to never wrap inside the ~60% column. */}
+              The serif headline names the offer in narrative voice
+              ("Your Portugal journey by locals"), echoing the hero's
+              "like a local friend" promise; the uppercase eyebrow
+              underneath sets up the button as the next beat in that
+              story ("Let your story begin"). Both lines are short
+              enough to never wrap inside the ~60% column. */}
           <div className="min-w-0 flex-1">
             <p className="serif italic text-[15px] leading-tight text-[color:var(--charcoal)] truncate">
-              Your story in Portugal
+              Your Portugal journey by locals
             </p>
             <p className="text-[10.5px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)] mt-0.5 truncate">
-              Written with locals
+              Let your story begin
             </p>
           </div>
 
@@ -229,9 +228,9 @@ export function MobileStickyCTA() {
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-white",
               submitting ? "opacity-70 pointer-events-none cursor-default" : "",
             ].join(" ")}
-            aria-label="Start your Portugal story with a local"
+            aria-label="Begin your Portugal story with a local"
           >
-            {submitting ? "Opening…" : "Start your story"}
+            {submitting ? "Opening…" : "Begin the story"}
             <ArrowRight
               size={13}
               className={[
