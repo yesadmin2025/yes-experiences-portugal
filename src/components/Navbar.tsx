@@ -77,12 +77,10 @@ export function Navbar() {
               className="nav-cta ml-2 group inline-flex items-center gap-2 px-5 py-3 text-[10.5px] tracking-[0.2em] uppercase font-medium"
             >
               <span className="relative">Design &amp; Secure</span>
-              <span className="relative inline-flex items-center justify-center">
-                <ArrowRight size={13} className="relative z-[1] group-hover:translate-x-0.5 transition-transform duration-300" />
-                <span
-                  aria-hidden
-                  className="absolute inset-0 -m-1 rounded-full bg-[color:var(--gold)]/0 group-hover:bg-[color:var(--gold)]/25 blur-[6px] transition-colors duration-500"
-                />
+              <span className="nav-cta-arrow">
+                <span aria-hidden className="nav-cta-halo is-ambient" />
+                <span aria-hidden className="nav-cta-halo is-close" />
+                <ArrowRight size={13} />
               </span>
             </Link>
           </nav>
