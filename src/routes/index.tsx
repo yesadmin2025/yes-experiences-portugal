@@ -216,26 +216,26 @@ function HomePage() {
 
             <div className="mt-10 md:mt-12 flex flex-col sm:flex-row flex-wrap gap-4 sm:gap-5 opacity-0 animate-[heroFade_1.4s_ease-out_1.25s_forwards]">
               {/* Primary — clear conversion anchor.
-                  .cta-attention fires a one-shot gold halo bloom 250ms
-                  after the hero copy finishes fading in (heroFade ends
-                  at 1.25s + 1.4s = 2.65s → pulse starts 2.9s). Runs
-                  exactly once, then leaves no residual state.
-                  prefers-reduced-motion disables it entirely. */}
+                  .cta-attention fires a one-shot gold halo bloom after
+                  the hero copy finishes fading in. All timing is driven
+                  by the CSS variable API in src/styles.css (search for
+                  "HERO CTA ATTENTION-PULSE API") — override --cta-pulse-*
+                  at any scope to retune without editing this file.
+                  prefers-reduced-motion disables the pulse entirely. */}
               <Link
                 to="/builder"
                 className="cta-primary cta-attention group inline-flex items-center justify-center gap-3 px-10 py-[18px] text-[12.5px] tracking-[0.22em] uppercase font-semibold"
-                style={{ ["--cta-pulse-delay" as never]: "2.9s" }}
               >
                 Design &amp; Secure Your Experience
                 <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-300" />
               </Link>
-              {/* Secondary — refined outline. Pulse staggered +140ms
-                  from primary so the two never bloom in lockstep
-                  (synchronized halos read as mechanical). */}
+              {/* Secondary — refined outline. data-cta-stagger pushes
+                  this halo by --cta-pulse-stagger (default 140ms) so
+                  the two never bloom in lockstep. */}
               <Link
                 to="/experiences"
+                data-cta-stagger
                 className="cta-secondary-dark cta-attention group inline-flex items-center justify-center gap-3 px-10 py-[18px] text-[12.5px] tracking-[0.22em] uppercase font-semibold"
-                style={{ ["--cta-pulse-delay" as never]: "3.04s" }}
               >
                 Explore Signature Experiences
                 <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-300" />
