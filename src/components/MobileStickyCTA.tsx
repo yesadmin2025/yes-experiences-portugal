@@ -214,9 +214,16 @@ export function MobileStickyCTA() {
           ? "opacity-100 translate-y-0 pointer-events-auto"
           : "opacity-0 translate-y-6 pointer-events-none",
       ].join(" ")}
-      // Hidden from AT when offscreen so screen readers don't announce
-      // an invisible button.
+      // Belt-and-braces a11y when the bar is hidden by scroll:
+      //   • aria-hidden  → screen readers skip the subtree
+      //   • inert        → removes every descendant from focus order, hit
+      //                    testing, and the accessibility tree in one shot
+      //                    (so the inner <Link> can't be tabbed to or
+      //                    activated by AT even if pointer-events leaks)
+      //   • pointer-events-none on the wrapper above blocks pointer input
+      // React 19 forwards the `inert` boolean attribute natively.
       aria-hidden={!visible}
+      inert={!visible}
     >
       {/* Soft gradient scrim above the bar — keeps the CTA legible against
           any underlying section without a hard edge. */}
