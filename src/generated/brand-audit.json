@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-04-25T09:20:38.270Z",
-  "filesScanned": 23,
+  "generatedAt": "2026-04-26T22:14:18.015Z",
+  "filesScanned": 26,
   "approvedPalette": {
     "teal": "#295B61",
     "teal-2": "#2A7C82",
@@ -18,9 +18,9 @@
     "#cccccc"
   ],
   "counts": {
-    "total": 31,
+    "total": 32,
     "approved": 19,
-    "allowlisted": 12,
+    "allowlisted": 13,
     "mismatch": 0
   },
   "findings": [
@@ -287,7 +287,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 125,
+      "line": 172,
       "col": 11,
       "raw": "#1f1f1f",
       "normalized": "#1f1f1f",
@@ -296,7 +296,16 @@
     },
     {
       "file": "src/styles.css",
-      "line": 256,
+      "line": 477,
+      "col": 12,
+      "raw": "#ffffff",
+      "normalized": "#ffffff",
+      "snippet": "color: #ffffff;",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/styles.css",
+      "line": 675,
       "col": 12,
       "raw": "#ffffff",
       "normalized": "#ffffff",

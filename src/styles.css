@@ -119,6 +119,31 @@
   --ring: var(--teal);
 
   /* ─────────────────────────────────────────────────────────────
+     CTA LABEL GLOW API
+     Two-tier text-shadow on hover: a tight "halo" hugging the
+     letterforms + a wider "bloom" for atmospheric warmth.
+     Tuned per-variant so the primary (white on teal) and secondary
+     (ivory on dark) can each carry the right amount of light without
+     ever fattening the type. Bump `*-opacity` for visibility, bump
+     `*-blur` for softness — keep blur modest to preserve thinness.
+
+     Override scopes: :root → .hero-cta-group → .cta-primary etc.
+  ──────────────────────────────────────────────────────────────── */
+  /* Primary (white type, teal surface) — needs slightly more light to
+     read as "lit" against the bright fill. */
+  --cta-primary-halo-blur: 4px;
+  --cta-primary-halo-opacity: 26%;
+  --cta-primary-bloom-blur: 18px;
+  --cta-primary-bloom-opacity: 16%;
+
+  /* Secondary (ivory type, dark glass) — dark backdrop already lifts
+     the type; keep glow a touch lighter so it stays subordinate. */
+  --cta-secondary-halo-blur: 4px;
+  --cta-secondary-halo-opacity: 22%;
+  --cta-secondary-bloom-blur: 18px;
+  --cta-secondary-bloom-opacity: 13%;
+
+  /* ─────────────────────────────────────────────────────────────
      HERO CTA ATTENTION-PULSE API
      A small set of CSS variables that drive the one-shot gold halo
      bloom on .cta-attention buttons. Override at any scope to retune
@@ -544,14 +569,14 @@
        saturation, not weight. */
     border-color: color-mix(in oklab, var(--gold) 78%, transparent);
     background-image: linear-gradient(180deg, var(--teal-2) 0%, var(--teal) 100%);
-    /* Two-tier label glow, dialled DOWN for a thinner, more refined
-       read. Tight 3px halo at 18% gives the letterforms a faint warm
-       edge; the wider 14px bloom at 10% adds atmosphere without
-       blurring the type. Lower blur radius + lower opacity = less
-       perceived thickness. */
+    /* Two-tier label glow driven by the CTA glow API tokens above.
+       --cta-primary-halo-* hugs each letterform; --cta-primary-bloom-*
+       adds atmospheric warmth around the word. Tune blur for softness
+       and opacity for visibility independently — the type itself is
+       still font-light, so the glow does the lifting, not the weight. */
     text-shadow:
-      0 0 3px color-mix(in oklab, var(--gold) 18%, transparent),
-      0 0 14px color-mix(in oklab, var(--gold) 10%, transparent);
+      0 0 var(--cta-primary-halo-blur) color-mix(in oklab, var(--gold) var(--cta-primary-halo-opacity), transparent),
+      0 0 var(--cta-primary-bloom-blur) color-mix(in oklab, var(--gold) var(--cta-primary-bloom-opacity), transparent);
     box-shadow:
       inset 0 1px 0 0 color-mix(in oklab, var(--gold-soft) 44%, transparent),
       inset 0 -1px 0 0 rgba(0, 0, 0, 0.20),
@@ -673,11 +698,14 @@
     background-color: color-mix(in oklab, var(--gold) 12%, transparent);
     border-color: color-mix(in oklab, var(--gold) 75%, transparent);
     color: #ffffff;
-    /* Two-tier label glow, dialled DOWN to match the primary: tight
-       3px halo at 16% + 14px bloom at 8%. Thin type stays thin. */
+    /* Two-tier label glow driven by --cta-secondary-halo-* and
+       --cta-secondary-bloom-* tokens. Dark backdrop already lifts the
+       ivory type, so this variant runs slightly lighter than the
+       primary by default — retune the tokens at :root or
+       .hero-cta-group to push it harder if needed. */
     text-shadow:
-      0 0 3px color-mix(in oklab, var(--gold) 16%, transparent),
-      0 0 14px color-mix(in oklab, var(--gold) 8%, transparent);
+      0 0 var(--cta-secondary-halo-blur) color-mix(in oklab, var(--gold) var(--cta-secondary-halo-opacity), transparent),
+      0 0 var(--cta-secondary-bloom-blur) color-mix(in oklab, var(--gold) var(--cta-secondary-bloom-opacity), transparent);
     /* Lift -3px + ×1.012 — matches the primary's gentler elevation.
        Scroll scale preserved. */
     transform:
