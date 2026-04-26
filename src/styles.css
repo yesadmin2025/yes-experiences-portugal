@@ -315,8 +315,7 @@
   /* Reduced-motion: never run the attention pulse. The buttons still
      get their full color/shadow depth — just no movement. */
   @media (prefers-reduced-motion: reduce) {
-    .cta-attention::before,
-    .cta-attention:hover::before {
+    .cta-attention::before {
       animation: none;
     }
   }
