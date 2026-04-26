@@ -647,82 +647,6 @@
       0 10px 22px -10px rgba(41, 91, 97, 0.50);
   }
 
-  /* ─────────────────────────────────────────────────────────────
-     NAV CTA ARROW HALO — premium gold glow that breathes around
-     the arrow icon on hover/focus. Two stacked radial layers:
-       • Close halo (.is-close) — tight, brighter gold core that
-         scales 0.6 → 1.0 with a soft cubic ease.
-       • Ambient halo (.is-ambient) — wider, dimmer gold bloom
-         that pulses gently (haloPulse, 2.4s) once active.
-     The arrow itself sits on z-index:1 so the halo never
-     compromises icon contrast. All effects fade fully on
-     mouse-leave; reduced-motion users get a static soft glow.
-     ───────────────────────────────────────────────────────────── */
-  @keyframes navCtaHaloPulse {
-    0%, 100% { opacity: 0.55; transform: scale(1); }
-    50%      { opacity: 0.95; transform: scale(1.12); }
-  }
-
-  .nav-cta-arrow {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    isolation: isolate;
-  }
-  .nav-cta-arrow > svg {
-    position: relative;
-    z-index: 1;
-    transition: transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .nav-cta-arrow .nav-cta-halo {
-    position: absolute;
-    inset: -8px;
-    border-radius: 9999px;
-    pointer-events: none;
-    opacity: 0;
-    transform: scale(0.6);
-    transition:
-      opacity 520ms cubic-bezier(0.16, 1, 0.3, 1),
-      transform 620ms cubic-bezier(0.16, 1, 0.3, 1);
-    will-change: opacity, transform;
-  }
-  /* Close halo — bright, tight gold core. */
-  .nav-cta-arrow .nav-cta-halo.is-close {
-    background: radial-gradient(
-      circle at center,
-      color-mix(in oklab, var(--gold-soft) 75%, transparent) 0%,
-      color-mix(in oklab, var(--gold) 35%, transparent) 35%,
-      transparent 70%
-    );
-    filter: blur(4px);
-  }
-  /* Ambient halo — wider, dimmer bloom for atmospheric depth. */
-  .nav-cta-arrow .nav-cta-halo.is-ambient {
-    inset: -14px;
-    background: radial-gradient(
-      circle at center,
-      color-mix(in oklab, var(--gold) 45%, transparent) 0%,
-      color-mix(in oklab, var(--gold) 18%, transparent) 45%,
-      transparent 75%
-    );
-    filter: blur(8px);
-  }
-  /* Hover / focus state — both halos bloom in; ambient starts pulsing. */
-  .nav-cta:hover .nav-cta-arrow > svg,
-  .nav-cta:focus-visible .nav-cta-arrow > svg {
-    transform: translateX(2px);
-  }
-  .nav-cta:hover .nav-cta-arrow .nav-cta-halo,
-  .nav-cta:focus-visible .nav-cta-arrow .nav-cta-halo {
-    opacity: 1;
-    transform: scale(1);
-  }
-  .nav-cta:hover .nav-cta-arrow .nav-cta-halo.is-ambient,
-  .nav-cta:focus-visible .nav-cta-arrow .nav-cta-halo.is-ambient {
-    animation: navCtaHaloPulse 2.4s ease-in-out 200ms infinite;
-  }
-
   /* Reduced-motion: keep the depth (shadows, gradients, sheen at rest)
      but disable lift, sweep, breathing, and pointer tilt — users get a
      calm color/border shift only. */
@@ -752,21 +676,6 @@
     .cta-secondary-dark::after,
     .nav-cta::after {
       display: none;
-    }
-    /* Halo: keep a static soft glow, no pulse, no scale-in. */
-    .nav-cta-arrow .nav-cta-halo {
-      transition: opacity 200ms ease;
-      transform: none;
-    }
-    .nav-cta:hover .nav-cta-arrow .nav-cta-halo,
-    .nav-cta:focus-visible .nav-cta-arrow .nav-cta-halo {
-      opacity: 0.7;
-      transform: none;
-      animation: none;
-    }
-    .nav-cta:hover .nav-cta-arrow > svg,
-    .nav-cta:focus-visible .nav-cta-arrow > svg {
-      transform: none;
     }
   }
 }
