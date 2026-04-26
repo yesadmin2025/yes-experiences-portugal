@@ -144,13 +144,17 @@ function HomePage() {
           width={1920}
           height={1080}
         />
-        {/* Warm editorial wash — a soft charcoal-to-transparent gradient anchored
-            at the base for CTA legibility, layered with a warm teal/gold tint that
-            matches the brand palette and a gentle radial vignette. The image stays
-            luminous; the copy stays effortlessly readable. */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/70 via-[color:var(--charcoal)]/20 to-transparent md:from-[color:var(--charcoal-deep)]/65 md:via-[color:var(--charcoal)]/15 md:to-transparent" />
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,color-mix(in_oklab,var(--teal)_18%,transparent)_0%,transparent_45%,color-mix(in_oklab,var(--gold)_10%,transparent)_100%)] mix-blend-soft-light" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_72%,transparent_55%,rgba(0,0,0,0.28)_100%)]" />
+        {/* Layered editorial wash — premium warmth without darkness.
+            1) Vertical: gentle charcoal at base for CTAs, soft top wash for the eyebrow.
+            2) Lateral: a left-anchored gradient that sits behind the headline column,
+               restoring contrast for "Portugal," and the gold eyebrows where the sky
+               and rock highlights would otherwise wash them out.
+            3) Brand tint: warm teal→gold soft-light pass that ties the photo to the palette.
+            4) Vignette: barely-there radial darkening only at the far corners. */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/75 via-[color:var(--charcoal)]/25 to-[color:var(--charcoal-deep)]/30 md:from-[color:var(--charcoal-deep)]/70 md:via-[color:var(--charcoal)]/18 md:to-[color:var(--charcoal-deep)]/22" />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,color-mix(in_oklab,var(--charcoal-deep)_55%,transparent)_0%,color-mix(in_oklab,var(--charcoal-deep)_30%,transparent)_30%,transparent_60%)] md:bg-[linear-gradient(90deg,color-mix(in_oklab,var(--charcoal-deep)_50%,transparent)_0%,color-mix(in_oklab,var(--charcoal-deep)_22%,transparent)_35%,transparent_65%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,color-mix(in_oklab,var(--teal)_16%,transparent)_0%,transparent_45%,color-mix(in_oklab,var(--gold)_10%,transparent)_100%)] mix-blend-soft-light" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_72%,transparent_55%,rgba(0,0,0,0.25)_100%)]" />
 
         <div className="container-x relative z-10 pb-24 md:pb-36 pt-32 md:pt-40">
           <div className="max-w-3xl text-[color:var(--ivory)]">
