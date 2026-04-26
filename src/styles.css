@@ -375,11 +375,72 @@
     animation-delay: calc(var(--cta-pulse-delay, 0s) + var(--cta-pulse-stagger, 0ms));
   }
 
-  /* Reduced-motion: never run the attention pulse. The buttons still
-     get their full color/shadow depth — just no movement. */
+  /* ─────────────────────────────────────────────────────────────
+     Opt-in utility — slow ambient gold-edge breathing on the
+     button's ::after pseudo. Apply alongside .cta-primary or
+     .cta-secondary-dark on hero CTAs only. Stops cleanly on
+     hover/focus so the active state owns the gold accent.
+     Driven by the --cta-breathe-* API in :root. */
+  .cta-breathe::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--gold) 50%, transparent);
+    opacity: 0;
+    pointer-events: none;
+    animation:
+      ctaRimBreathe
+      var(--cta-breathe-duration, 6s)
+      var(--cta-breathe-easing, ease-in-out)
+      infinite;
+  }
+  /* Stagger hook — add `data-cta-stagger` to push the breathing into
+     anti-phase with its sibling. Default stagger is -3s (half-cycle of
+     the 6s default), so two CTAs never breathe in lockstep. */
+  .cta-breathe[data-cta-stagger]::after {
+    animation-delay: var(--cta-breathe-stagger, -3s);
+  }
+  .cta-breathe:hover::after,
+  .cta-breathe:focus-visible::after {
+    animation: none;
+    opacity: 0;
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     Hero CTA group magnetism — when one CTA is hovered, the
+     non-hovered siblings dim slightly (opacity 0.78). Reinforces
+     focus on the hovered choice without stealing the click target.
+     Apply .cta-magnet-group to the parent <div> wrapping the CTAs. */
+  .cta-magnet-group:hover > .cta-primary,
+  .cta-magnet-group:hover > .cta-secondary-dark,
+  .cta-magnet-group:hover > .cta-secondary-light {
+    opacity: 0.78;
+    transition:
+      opacity 320ms cubic-bezier(0.16, 1, 0.3, 1),
+      background-color 520ms cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 520ms cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 520ms cubic-bezier(0.16, 1, 0.3, 1),
+      transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .cta-magnet-group:hover > .cta-primary:hover,
+  .cta-magnet-group:hover > .cta-secondary-dark:hover,
+  .cta-magnet-group:hover > .cta-secondary-light:hover {
+    opacity: 1;
+  }
+
+  /* Reduced-motion: never run the attention pulse, breathing, or
+     magnet dim. The buttons still get their full color/shadow depth
+     — just no movement. */
   @media (prefers-reduced-motion: reduce) {
-    .cta-attention::before {
+    .cta-attention::before,
+    .cta-breathe::after {
       animation: none;
+    }
+    .cta-magnet-group:hover > .cta-primary,
+    .cta-magnet-group:hover > .cta-secondary-dark,
+    .cta-magnet-group:hover > .cta-secondary-light {
+      opacity: 1;
     }
   }
 
