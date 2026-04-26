@@ -456,6 +456,9 @@
     .cta-magnet-group:hover > .cta-secondary-light {
       opacity: 1;
     }
+    .cta-magnet-group > [data-cta-stagger] {
+      transition-delay: 0ms;
+    }
   }
 
   /* Primary teal button — anchor of every section's conversion.
