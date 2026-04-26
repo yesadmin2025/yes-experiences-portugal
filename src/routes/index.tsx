@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
+import { useCtaVariant } from "@/hooks/use-cta-variant";
 import { FAQ } from "@/components/FAQ";
 import { useHeroParallax } from "@/hooks/use-hero-parallax";
 import heroImg from "@/assets/hero-coast.jpg";
@@ -136,6 +137,10 @@ function HomePage() {
   // section. Image and vignette read those vars via inline calc() to shift
   // gently without triggering layout. No-op on touch & reduced-motion.
   const heroRef = useHeroParallax<HTMLElement>();
+  // A/B/C label test — same geometry, only text changes. The variant ID
+  // is exposed via data-cta-variant on each Link for analytics
+  // attribution. See src/hooks/use-cta-variant.ts.
+  const ctaVariant = useCtaVariant();
 
   return (
     <SiteLayout>
@@ -233,9 +238,11 @@ function HomePage() {
                   without affecting the arrow's glide. */}
               <Link
                 to="/builder"
+                data-cta-variant={ctaVariant.id}
+                data-cta-slot="hero-primary"
                 className="cta-primary cta-attention cta-breathe group inline-flex items-center justify-center gap-3.5 px-11 py-[20px] text-[12.5px] font-semibold"
               >
-                <span className="cta-label">Design &amp; Secure Your Experience</span>
+                <span className="cta-label">{ctaVariant.primary}</span>
                 <ArrowRight
                   size={14}
                   className="cta-arrow opacity-80 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-[420ms] ease-[cubic-bezier(0.16,1,0.3,1)]"
@@ -249,9 +256,11 @@ function HomePage() {
               <Link
                 to="/experiences"
                 data-cta-stagger
+                data-cta-variant={ctaVariant.id}
+                data-cta-slot="hero-secondary"
                 className="cta-secondary-dark cta-attention cta-breathe group inline-flex items-center justify-center gap-3.5 px-11 py-[20px] text-[12.5px] font-semibold"
               >
-                <span className="cta-label">Explore Signature Experiences</span>
+                <span className="cta-label">{ctaVariant.secondary}</span>
                 <ArrowRight
                   size={14}
                   className="cta-arrow opacity-80 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-[420ms] ease-[cubic-bezier(0.16,1,0.3,1)]"
