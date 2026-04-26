@@ -138,6 +138,11 @@ function HomePage() {
   // section. Image and vignette read those vars via inline calc() to shift
   // gently without triggering layout. No-op on touch & reduced-motion.
   const heroRef = useHeroParallax<HTMLElement>();
+  // Hero CTAs start a touch smaller (0.94×) and ease up to 1.02× across the
+  // first 220px of scroll — a subtle "the page is opening up to you" cue.
+  // Writes --cta-scroll-scale on the magnet group; CTAs compose it into
+  // their existing transform alongside parallax. Reduced-motion pins to 1.02×.
+  const ctaGroupRef = useCtaScrollScale<HTMLDivElement>(0.94, 1.02, 220);
 
   return (
     <SiteLayout>
