@@ -218,28 +218,18 @@ function HomePage() {
               {/* Primary — clear conversion anchor */}
               <Link
                 to="/builder"
-                className="hero-cta cta-primary group inline-flex items-center justify-center gap-3 px-10 py-[18px] text-[12.5px] tracking-[0.22em] uppercase font-semibold"
+                className="cta-primary group inline-flex items-center justify-center gap-3 px-10 py-[18px] text-[12.5px] tracking-[0.22em] uppercase font-semibold"
               >
-                <span aria-hidden className="hero-cta-aura" />
-                <span aria-hidden className="hero-cta-edge" />
-                <span className="hero-cta-copy">Design &amp; Secure Your Experience</span>
-                <span className="hero-cta-icon" aria-hidden>
-                  <span className="hero-cta-icon-halo" />
-                  <ArrowRight size={14} />
-                </span>
+                Design &amp; Secure Your Experience
+                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-300" />
               </Link>
               {/* Secondary — refined outline, slightly stronger visibility */}
               <Link
                 to="/experiences"
-                className="hero-cta cta-secondary-dark group inline-flex items-center justify-center gap-3 px-10 py-[18px] text-[12.5px] tracking-[0.22em] uppercase font-semibold"
+                className="cta-secondary-dark group inline-flex items-center justify-center gap-3 px-10 py-[18px] text-[12.5px] tracking-[0.22em] uppercase font-semibold"
               >
-                <span aria-hidden className="hero-cta-aura" />
-                <span aria-hidden className="hero-cta-edge" />
-                <span className="hero-cta-copy">Explore Signature Experiences</span>
-                <span className="hero-cta-icon" aria-hidden>
-                  <span className="hero-cta-icon-halo" />
-                  <ArrowRight size={14} />
-                </span>
+                Explore Signature Experiences
+                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-300" />
               </Link>
             </div>
 

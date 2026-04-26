@@ -278,20 +278,6 @@
     50%      { opacity: 0.55; }
   }
 
-  @keyframes heroCtaAuraBreathe {
-    0%, 100% { opacity: 0.26; transform: translate3d(-50%, 0, 0) scaleX(0.86); }
-    50%      { opacity: 0.52; transform: translate3d(-50%, 0, 0) scaleX(1); }
-  }
-
-  @keyframes heroCtaEdgeOrbit {
-    to { transform: rotate(360deg); }
-  }
-
-  @keyframes heroCtaIconPulse {
-    0%, 100% { opacity: 0.42; transform: scale(0.82); }
-    50%      { opacity: 0.9; transform: scale(1.12); }
-  }
-
   /* Primary teal button — anchor of every section's conversion.
      Subtle vertical gradient (teal → teal-2 at bottom) gives a
      polished, dimensional surface even at rest. */
@@ -497,163 +483,6 @@
       inset 0 1px 0 0 rgba(255, 255, 255, 0.14),
       0 0 0 2px rgba(15, 15, 15, 0.6),
       0 0 0 4px var(--gold);
-  }
-
-  .hero-cta.hero-cta {
-    min-height: 60px;
-    overflow: visible;
-    border-radius: 999px;
-    transform-style: preserve-3d;
-    will-change: transform, box-shadow, filter;
-    transition:
-      background-color 560ms cubic-bezier(0.16, 1, 0.3, 1),
-      border-color 560ms cubic-bezier(0.16, 1, 0.3, 1),
-      box-shadow 560ms cubic-bezier(0.16, 1, 0.3, 1),
-      filter 560ms cubic-bezier(0.16, 1, 0.3, 1),
-      transform 560ms cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .hero-cta.cta-primary {
-    background-image:
-      radial-gradient(circle at 18% 0%, color-mix(in oklab, var(--gold-soft) 24%, transparent) 0%, transparent 30%),
-      linear-gradient(135deg, var(--teal-2) 0%, var(--teal) 52%, color-mix(in oklab, var(--charcoal-deep) 55%, var(--teal)) 100%);
-    border-color: color-mix(in oklab, var(--gold) 86%, transparent);
-    box-shadow:
-      inset 0 1px 0 0 color-mix(in oklab, var(--ivory) 22%, transparent),
-      inset 0 -1px 0 0 rgba(0, 0, 0, 0.28),
-      0 0 0 1px color-mix(in oklab, var(--gold) 18%, transparent),
-      0 12px 28px -16px rgba(41, 91, 97, 0.72),
-      0 26px 70px -32px rgba(201, 169, 106, 0.34);
-  }
-  .hero-cta.cta-secondary-dark {
-    background-color: color-mix(in oklab, var(--charcoal-deep) 44%, transparent);
-    border-color: color-mix(in oklab, var(--gold-soft) 76%, transparent);
-    box-shadow:
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.16),
-      inset 0 -1px 0 0 rgba(0, 0, 0, 0.28),
-      0 0 0 1px color-mix(in oklab, var(--gold) 14%, transparent),
-      0 14px 34px -24px rgba(0, 0, 0, 0.76),
-      0 22px 62px -34px rgba(201, 169, 106, 0.26);
-  }
-  .hero-cta-aura {
-    position: absolute;
-    left: 50%;
-    bottom: -18px;
-    z-index: -2;
-    width: 82%;
-    height: 34px;
-    border-radius: 999px;
-    background: radial-gradient(ellipse at center, color-mix(in oklab, var(--gold) 42%, transparent) 0%, transparent 72%);
-    filter: blur(16px);
-    opacity: 0.3;
-    transform: translate3d(-50%, 0, 0) scaleX(0.86);
-    animation: heroCtaAuraBreathe 5.6s ease-in-out infinite;
-    pointer-events: none;
-  }
-  .hero-cta-edge {
-    position: absolute;
-    inset: -2px;
-    z-index: -1;
-    border-radius: inherit;
-    background: conic-gradient(from 160deg, transparent 0deg, color-mix(in oklab, var(--gold-soft) 88%, transparent) 48deg, transparent 110deg, transparent 238deg, color-mix(in oklab, var(--gold) 70%, transparent) 292deg, transparent 360deg);
-    opacity: 0.5;
-    filter: blur(0.2px);
-    animation: heroCtaEdgeOrbit 18s linear infinite;
-    pointer-events: none;
-  }
-  .hero-cta-copy,
-  .hero-cta-icon {
-    position: relative;
-    z-index: 2;
-  }
-  .hero-cta-copy {
-    transition: transform 520ms cubic-bezier(0.16, 1, 0.3, 1), text-shadow 520ms cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .hero-cta-icon {
-    display: inline-grid;
-    place-items: center;
-    width: 26px;
-    height: 26px;
-    margin-right: -7px;
-    border-radius: 999px;
-    color: currentColor;
-    transition: background-color 520ms cubic-bezier(0.16, 1, 0.3, 1), color 520ms cubic-bezier(0.16, 1, 0.3, 1), transform 520ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 520ms cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .hero-cta-icon svg {
-    position: relative;
-    z-index: 2;
-    transition: transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .hero-cta-icon-halo {
-    position: absolute;
-    inset: -8px;
-    border-radius: inherit;
-    background: radial-gradient(circle at center, color-mix(in oklab, var(--gold-soft) 54%, transparent) 0%, transparent 72%);
-    opacity: 0;
-    transform: scale(0.82);
-    filter: blur(8px);
-    pointer-events: none;
-    transition: opacity 520ms cubic-bezier(0.16, 1, 0.3, 1), transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .hero-cta:hover,
-  .hero-cta:focus-visible {
-    filter: saturate(1.08) brightness(1.04);
-  }
-  .hero-cta.cta-primary:hover,
-  .hero-cta.cta-primary:focus-visible {
-    border-color: var(--gold-soft);
-    box-shadow:
-      inset 0 1px 0 0 color-mix(in oklab, var(--ivory) 34%, transparent),
-      inset 0 -1px 0 0 rgba(0, 0, 0, 0.32),
-      inset 0 0 0 1px color-mix(in oklab, var(--gold-soft) 26%, transparent),
-      0 0 0 1px color-mix(in oklab, var(--gold) 28%, transparent),
-      0 18px 34px -16px rgba(41, 91, 97, 0.82),
-      0 34px 86px -30px rgba(201, 169, 106, 0.56),
-      0 0 44px -20px color-mix(in oklab, var(--gold) 74%, transparent);
-    transform: translate3d(calc(var(--hero-px, 0) * 1.5px), calc(var(--hero-py, 0) * 1px - 4px), 0) scale(1.018);
-  }
-  .hero-cta.cta-secondary-dark:hover,
-  .hero-cta.cta-secondary-dark:focus-visible {
-    background-color: color-mix(in oklab, var(--gold) 18%, rgba(31, 31, 31, 0.54));
-    border-color: var(--gold-soft);
-    box-shadow:
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.2),
-      inset 0 -1px 0 0 rgba(0, 0, 0, 0.3),
-      inset 0 0 0 1px color-mix(in oklab, var(--gold-soft) 22%, transparent),
-      0 16px 36px -22px rgba(0, 0, 0, 0.82),
-      0 32px 76px -34px rgba(201, 169, 106, 0.44),
-      0 0 38px -22px color-mix(in oklab, var(--gold) 68%, transparent);
-    transform: translate3d(calc(var(--hero-px, 0) * 1.5px), calc(var(--hero-py, 0) * 1px - 4px), 0) scale(1.014);
-  }
-  .hero-cta:hover .hero-cta-aura,
-  .hero-cta:focus-visible .hero-cta-aura {
-    opacity: 0.78;
-    filter: blur(20px);
-  }
-  .hero-cta:hover .hero-cta-edge,
-  .hero-cta:focus-visible .hero-cta-edge {
-    opacity: 0.95;
-    animation-duration: 7s;
-  }
-  .hero-cta:hover .hero-cta-copy,
-  .hero-cta:focus-visible .hero-cta-copy {
-    transform: translateX(1px);
-    text-shadow: 0 0 18px color-mix(in oklab, var(--gold-soft) 34%, transparent);
-  }
-  .hero-cta:hover .hero-cta-icon,
-  .hero-cta:focus-visible .hero-cta-icon {
-    color: var(--charcoal-deep);
-    background-color: var(--gold-soft);
-    box-shadow: 0 0 0 1px color-mix(in oklab, var(--ivory) 38%, transparent), 0 8px 22px -10px color-mix(in oklab, var(--gold) 88%, transparent);
-    transform: translateX(5px) scale(1.06);
-  }
-  .hero-cta:hover .hero-cta-icon svg,
-  .hero-cta:focus-visible .hero-cta-icon svg {
-    transform: translateX(1px);
-  }
-  .hero-cta:hover .hero-cta-icon-halo,
-  .hero-cta:focus-visible .hero-cta-icon-halo {
-    opacity: 0.88;
-    animation: heroCtaIconPulse 1.9s ease-in-out infinite;
   }
 
   /* Secondary outline on light surfaces — same material language,
@@ -1063,15 +892,6 @@
     /* Nav CTA: stop the conic ring + sheen + dot ping; keep static gold edge. */
     .nav-cta::before { animation: none; opacity: 0.7; }
     .nav-cta::after  { display: none; }
-    .hero-cta-aura,
-    .hero-cta-edge,
-    .hero-cta-icon-halo { animation: none !important; }
-    .hero-cta-aura { opacity: 0.34; filter: blur(16px); }
-    .hero-cta-edge { opacity: 0.62; }
-    .hero-cta:hover .hero-cta-icon,
-    .hero-cta:focus-visible .hero-cta-icon { transform: none; }
-    .hero-cta:hover .hero-cta-copy,
-    .hero-cta:focus-visible .hero-cta-copy { transform: none; }
     .nav-cta-pulse,
     .nav-cta-pulse::after { animation: none; }
     .nav-cta-pulse::after { opacity: 0; }
