@@ -426,7 +426,20 @@
   .cta-magnet-group:hover > .cta-primary:hover,
   .cta-magnet-group:hover > .cta-secondary-dark:hover,
   .cta-magnet-group:hover > .cta-secondary-light:hover {
-    opacity: 1;
+  }
+
+  /* Lift desync — the two hero CTAs must never lift at the exact same
+     instant (mechanical, less premium). The CTA carrying
+     data-cta-stagger (the secondary in the hero pair) trails the
+     primary by ~110ms on transform AND box-shadow only, so the
+     visual "rise" feels like a wave passing through the pair, not a
+     synchronised twitch. Color/border transitions stay in sync to
+     keep the family unified. The delay applies in both directions
+     (hover-in and hover-out), which is the desired effect — the
+     secondary always settles a beat after the primary. */
+  .cta-magnet-group > [data-cta-stagger] {
+    transition-delay: 110ms;
+    transition-property: transform, box-shadow;
   }
 
   /* Reduced-motion: never run the attention pulse, breathing, or
