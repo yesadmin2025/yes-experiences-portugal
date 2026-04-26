@@ -21,7 +21,11 @@ import { usePastHero } from "@/hooks/use-past-hero";
  */
 
 type IntentDetail = {
-  cta: "design_secure";
+  // Broader funnel: the sticky now opens the experience hub rather than
+  // committing the user to the bespoke builder, since they may want a
+  // day tour, multi-day, corporate, or proposal package — all reachable
+  // from /experiences.
+  cta: "explore_experiences";
   surface: "mobile_sticky";
   path: string;
   scroll_y: number;
@@ -139,7 +143,7 @@ export function MobileStickyCTA() {
     setSubmitting(true);
 
     trackIntent({
-      cta: "design_secure",
+      cta: "explore_experiences",
       surface: "mobile_sticky",
       path: typeof window !== "undefined" ? window.location.pathname : "/",
       scroll_y: typeof window !== "undefined" ? Math.round(window.scrollY) : 0,
@@ -178,13 +182,17 @@ export function MobileStickyCTA() {
         style={{ paddingBottom: "max(env(safe-area-inset-bottom), 0px)" }}
       >
         <div className="px-4 py-3 flex items-center gap-3">
-          {/* Left — restrained brand microcopy. Charcoal-soft, never gold. */}
+          {/* Left — restrained brand microcopy. Charcoal-soft, never gold.
+              Headline echoes the hero tagline ("Portugal, designed around
+              you"); microcopy carries three brand pillars instead of a
+              single trust signal so it reads as a brand line, not a banner.
+              Both lines fit in the narrow 60%-ish space without wrapping. */}
           <div className="min-w-0 flex-1">
             <p className="serif text-[15px] leading-tight text-[color:var(--charcoal)] truncate">
-              Your private Portugal experience
+              Crafted around you
             </p>
-            <p className="text-[10.5px] uppercase tracking-[0.2em] text-[color:var(--charcoal-soft)] mt-0.5">
-              Instant confirmation
+            <p className="text-[10.5px] uppercase tracking-[0.2em] text-[color:var(--charcoal-soft)] mt-0.5 truncate">
+              Private · Tailored · Portugal
             </p>
           </div>
 
@@ -195,7 +203,11 @@ export function MobileStickyCTA() {
               preserve the premium feel; the small dot turns into a thin
               progress hint via opacity only. */}
           <Link
-            to="/builder"
+            // Routes to the experience hub, not the bespoke builder.
+            // The user can pick day tours, multi-day, corporate, proposals,
+            // OR start a custom build from there — the sticky no longer
+            // pre-commits them to one funnel.
+            to="/experiences"
             onClick={handleIntent}
             // Defense-in-depth: even though the wrapper sets `inert` when
             // hidden, also strip the link from the tab order whenever
@@ -204,7 +216,7 @@ export function MobileStickyCTA() {
             tabIndex={visible && !submitting ? 0 : -1}
             aria-disabled={submitting}
             aria-busy={submitting}
-            data-cta="design_secure"
+            data-cta="explore_experiences"
             data-cta-surface="mobile_sticky"
             data-state={submitting ? "submitting" : "idle"}
             className={[
@@ -212,13 +224,11 @@ export function MobileStickyCTA() {
               "border border-[color:var(--gold)]/70 px-4 py-3 text-[10.5px] tracking-[0.2em] uppercase whitespace-nowrap",
               "transition-[opacity,background-color] duration-300",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-white",
-              submitting
-                ? "opacity-70 pointer-events-none cursor-default"
-                : "",
+              submitting ? "opacity-70 pointer-events-none cursor-default" : "",
             ].join(" ")}
-            aria-label="Design and secure your experience"
+            aria-label="Explore Portugal experiences"
           >
-            {submitting ? "Opening…" : "Design \u0026 Secure"}
+            {submitting ? "Opening…" : "Explore"}
             <ArrowRight
               size={13}
               className={[
