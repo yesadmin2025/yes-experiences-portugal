@@ -515,10 +515,21 @@
     }
     .cta-label,
     .cta-primary:hover .cta-label,
-    .cta-secondary-dark:hover .cta-label {
+    .cta-secondary-dark:hover .cta-label,
+    .cta-secondary-light:hover .cta-label {
       transition: none;
-      transform: none;
+      /* Keep the optical-centering offset even with reduced motion —
+         it's not animation, it's static layout correction. */
+      transform: translateY(-0.04em);
       letter-spacing: 0.22em;
+    }
+    .cta-primary > .cta-arrow,
+    .cta-secondary-dark > .cta-arrow,
+    .cta-secondary-light > .cta-arrow,
+    .cta-primary:hover > .cta-arrow,
+    .cta-secondary-dark:hover > .cta-arrow,
+    .cta-secondary-light:hover > .cta-arrow {
+      transform: translateY(-0.04em);
     }
   }
 
