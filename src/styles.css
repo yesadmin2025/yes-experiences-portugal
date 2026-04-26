@@ -429,40 +429,9 @@
     opacity: 1;
   }
 
-  /* ─────────────────────────────────────────────────────────────
-     CTA label — premium typographic motion. The label sits inside
-     a <span class="cta-label"> so its tracking/transform can shift
-     independently of the arrow icon. The hover treatment is a
-     subtle "settling" cue: tracking expands +0.005em and the type
-     drifts up 0.5px, mimicking the quiet confidence of a luxury
-     wordmark settling into place. No weight change, no color
-     change, no underline — restraint over flourish.
-     ───────────────────────────────────────────────────────────── */
-  .cta-label {
-    display: inline-block;
-    text-transform: uppercase;
-    letter-spacing: 0.22em;
-    /* Reduce optical heaviness from full caps — a hair tighter font
-       smoothing on WebKit so the type reads as engraved, not bold. */
-    -webkit-font-smoothing: antialiased;
-    transform: translateY(0);
-    transition:
-      letter-spacing 520ms cubic-bezier(0.16, 1, 0.3, 1),
-      transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
-    /* Eat the trailing space the wider tracking creates so the
-       label stays optically centered with the arrow. */
-    margin-right: -0.22em;
-    will-change: letter-spacing, transform;
-  }
-  .cta-primary:hover .cta-label,
-  .cta-secondary-dark:hover .cta-label {
-    letter-spacing: 0.225em;
-    transform: translateY(-0.5px);
-  }
-
-  /* Reduced-motion: never run the attention pulse, breathing,
-     magnet dim, or the label's settling shift. The buttons still
-     get their full color/shadow depth — just no movement. */
+  /* Reduced-motion: never run the attention pulse, breathing, or
+     magnet dim. The buttons still get their full color/shadow depth
+     — just no movement. */
   @media (prefers-reduced-motion: reduce) {
     .cta-attention::before,
     .cta-breathe::after {
@@ -472,13 +441,6 @@
     .cta-magnet-group:hover > .cta-secondary-dark,
     .cta-magnet-group:hover > .cta-secondary-light {
       opacity: 1;
-    }
-    .cta-label,
-    .cta-primary:hover .cta-label,
-    .cta-secondary-dark:hover .cta-label {
-      transition: none;
-      transform: none;
-      letter-spacing: 0.22em;
     }
   }
 
