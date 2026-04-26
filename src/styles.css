@@ -307,9 +307,11 @@
     /* No fill-mode: once the 1.6s pulse ends, animation styles release
        and the existing opacity/transform transition takes over again,
        so hover still blooms the halo normally afterward. The delay is
-       set inline at the call-site (animation-delay) to wait for the
-       hero copy fade-in to complete (~2.65s). */
+       passed in via a CSS variable from the call-site (--cta-pulse-delay)
+       so primary/secondary can be staggered without inline pseudo
+       targeting (which CSS doesn't support). */
     animation: ctaAttentionHalo 1.6s cubic-bezier(0.16, 1, 0.3, 1);
+    animation-delay: var(--cta-pulse-delay, 0s);
   }
 
   /* Reduced-motion: never run the attention pulse. The buttons still
