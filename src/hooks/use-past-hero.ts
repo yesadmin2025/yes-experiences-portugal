@@ -88,53 +88,85 @@ function dispatchPastHeroOnce() {
   }
 }
 
-export function usePastHero({ threshold = 600, mediaQuery }: UsePastHeroOptions = {}) {
+export function usePastHero({
+  threshold = 600,
+  mediaQuery,
+  scrollIdleMs = 220,
+}: UsePastHeroOptions = {}) {
   const [pastHero, setPastHero] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
 
     const mq = mediaQuery ? window.matchMedia(mediaQuery) : null;
+    let idleTimer: number | undefined;
 
-    const evaluate = () => {
-      // Media-query gate (e.g. mobile-only). When it doesn't match, the
-      // hook reports false regardless of scroll — the consumer is hidden
-      // entirely at this breakpoint.
-      if (mq && !mq.matches) {
-        setPastHero(false);
-        return;
-      }
+    /**
+     * Compute the "would be visible" state from current conditions only.
+     * Hard rules:
+     *  • Media-query gate must match.
+     *  • Current scrollY MUST be past the threshold. The persisted
+     *    sessionStorage flag is used ONLY as a tiebreaker between equally
+     *    qualifying moments (e.g. BFCache restore at scrollY > threshold);
+     *    it is never enough on its own. This guarantees the bar can never
+     *    appear while the user is still inside the hero, even on a fresh
+     *    page load where they previously visited the site.
+     */
+    const qualifies = () => {
+      if (mq && !mq.matches) return false;
+      return window.scrollY > threshold;
+    };
 
-      const pastNow = window.scrollY > threshold;
-      if (pastNow) {
+    /** Apply the resting (scroll-idle) visibility decision. */
+    const settle = () => {
+      if (qualifies()) {
         markPersisted();
         dispatchPastHeroOnce();
         setPastHero(true);
-        return;
+      } else {
+        // Either we're back inside the hero, or the breakpoint changed,
+        // or storage said we'd been past before but scroll says otherwise.
+        // The current frame wins — never reveal over the hero.
+        setPastHero(false);
       }
-
-      // Not currently past the threshold, but if the user crossed it
-      // earlier in this session (and is now returning via back/forward
-      // or a BFCache restore), keep the surfaces available.
-      const persisted = readPersisted();
-      if (persisted) dispatchPastHeroOnce();
-      setPastHero(persisted);
     };
 
-    // pageshow fires on initial load AND on BFCache restores — a clean
-    // hook for "remember where the user was" behavior.
-    const onPageShow = () => evaluate();
+    const onScroll = () => {
+      // Hide immediately while the user is actively scrolling — the
+      // surface should never compete with motion. Only one state update
+      // per frame: skip if already hidden.
+      setPastHero((prev) => (prev ? false : prev));
+      if (idleTimer !== undefined) window.clearTimeout(idleTimer);
+      // Wait for scroll to stop before considering revealing the bar.
+      idleTimer = window.setTimeout(settle, scrollIdleMs);
+    };
 
-    evaluate();
-    window.addEventListener("scroll", evaluate, { passive: true });
+    // pageshow fires on initial load AND on BFCache restores. Treat it
+    // like the first frame: settle immediately, no debounce — the page
+    // isn't moving.
+    const onPageShow = () => {
+      if (idleTimer !== undefined) window.clearTimeout(idleTimer);
+      settle();
+    };
+
+    const onMqChange = () => {
+      if (idleTimer !== undefined) window.clearTimeout(idleTimer);
+      settle();
+    };
+
+    // Initial paint: respect the same "must currently qualify" rule, so
+    // a fresh load at the top of the page never flashes the bar.
+    settle();
+    window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("pageshow", onPageShow);
-    mq?.addEventListener?.("change", evaluate);
+    mq?.addEventListener?.("change", onMqChange);
     return () => {
-      window.removeEventListener("scroll", evaluate);
+      window.removeEventListener("scroll", onScroll);
       window.removeEventListener("pageshow", onPageShow);
-      mq?.removeEventListener?.("change", evaluate);
+      mq?.removeEventListener?.("change", onMqChange);
+      if (idleTimer !== undefined) window.clearTimeout(idleTimer);
     };
-  }, [threshold, mediaQuery]);
+  }, [threshold, mediaQuery, scrollIdleMs]);
 
   return pastHero;
 }
