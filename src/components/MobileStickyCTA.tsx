@@ -21,7 +21,11 @@ import { usePastHero } from "@/hooks/use-past-hero";
  */
 
 type IntentDetail = {
-  cta: "design_secure";
+  // Broader funnel: the sticky now opens the experience hub rather than
+  // committing the user to the bespoke builder, since they may want a
+  // day tour, multi-day, corporate, or proposal package — all reachable
+  // from /experiences.
+  cta: "explore_experiences";
   surface: "mobile_sticky";
   path: string;
   scroll_y: number;
