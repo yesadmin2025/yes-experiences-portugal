@@ -182,11 +182,6 @@ export function MobileStickyCTA() {
         style={{ paddingBottom: "max(env(safe-area-inset-bottom), 0px)" }}
       >
         <div className="px-4 py-3 flex items-center gap-3">
-          {/* Left — restrained brand microcopy. Charcoal-soft, never gold.
-              Headline echoes the hero tagline ("Portugal, designed around
-              you"); microcopy carries three brand pillars instead of a
-              single trust signal so it reads as a brand line, not a banner.
-              Both lines fit in the narrow 60%-ish space without wrapping. */}
           {/* Left — brand-led pull, not a label.
               Headline is a quiet invitation in the brand's serif voice
               ("Your Portugal awaits"), and the eyebrow underneath turns
