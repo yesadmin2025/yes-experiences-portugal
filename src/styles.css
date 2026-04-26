@@ -423,9 +423,12 @@
       box-shadow 520ms cubic-bezier(0.16, 1, 0.3, 1),
       transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
   }
+  .cta-magnet-group:hover > .cta-primary:hover,
+  .cta-magnet-group:hover > .cta-secondary-dark:hover,
+  .cta-magnet-group:hover > .cta-secondary-light:hover {
+    opacity: 1;
+  }
 
-  /* ─────────────────────────────────────────────────────────────
-     CTA label — premium typographic motion. The label sits inside
      a <span class="cta-label"> so its tracking/transform can shift
      independently of the arrow icon. The hover treatment is a
      subtle "settling" cue: tracking expands +0.005em and the type
