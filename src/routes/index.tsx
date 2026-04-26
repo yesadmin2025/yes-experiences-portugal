@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
+import { useCtaVariant } from "@/hooks/use-cta-variant";
 import { FAQ } from "@/components/FAQ";
 import { useHeroParallax } from "@/hooks/use-hero-parallax";
 import heroImg from "@/assets/hero-coast.jpg";
