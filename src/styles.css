@@ -698,11 +698,14 @@
     background-color: color-mix(in oklab, var(--gold) 12%, transparent);
     border-color: color-mix(in oklab, var(--gold) 75%, transparent);
     color: #ffffff;
-    /* Two-tier label glow, dialled DOWN to match the primary: tight
-       3px halo at 16% + 14px bloom at 8%. Thin type stays thin. */
+    /* Two-tier label glow driven by --cta-secondary-halo-* and
+       --cta-secondary-bloom-* tokens. Dark backdrop already lifts the
+       ivory type, so this variant runs slightly lighter than the
+       primary by default — retune the tokens at :root or
+       .hero-cta-group to push it harder if needed. */
     text-shadow:
-      0 0 3px color-mix(in oklab, var(--gold) 16%, transparent),
-      0 0 14px color-mix(in oklab, var(--gold) 8%, transparent);
+      0 0 var(--cta-secondary-halo-blur) color-mix(in oklab, var(--gold) var(--cta-secondary-halo-opacity), transparent),
+      0 0 var(--cta-secondary-bloom-blur) color-mix(in oklab, var(--gold) var(--cta-secondary-bloom-opacity), transparent);
     /* Lift -3px + ×1.012 — matches the primary's gentler elevation.
        Scroll scale preserved. */
     transform:
