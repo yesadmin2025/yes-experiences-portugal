@@ -178,13 +178,17 @@ export function MobileStickyCTA() {
         style={{ paddingBottom: "max(env(safe-area-inset-bottom), 0px)" }}
       >
         <div className="px-4 py-3 flex items-center gap-3">
-          {/* Left — restrained brand microcopy. Charcoal-soft, never gold. */}
+          {/* Left — restrained brand microcopy. Charcoal-soft, never gold.
+              Headline echoes the hero tagline ("Portugal, designed around
+              you"); microcopy carries three brand pillars instead of a
+              single trust signal so it reads as a brand line, not a banner.
+              Both lines fit in the narrow 60%-ish space without wrapping. */}
           <div className="min-w-0 flex-1">
             <p className="serif text-[15px] leading-tight text-[color:var(--charcoal)] truncate">
-              Your private Portugal experience
+              Crafted around you
             </p>
-            <p className="text-[10.5px] uppercase tracking-[0.2em] text-[color:var(--charcoal-soft)] mt-0.5">
-              Instant confirmation
+            <p className="text-[10.5px] uppercase tracking-[0.2em] text-[color:var(--charcoal-soft)] mt-0.5 truncate">
+              Private · Tailored · Portugal
             </p>
           </div>
 
