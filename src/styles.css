@@ -426,6 +426,7 @@
   .cta-magnet-group:hover > .cta-primary:hover,
   .cta-magnet-group:hover > .cta-secondary-dark:hover,
   .cta-magnet-group:hover > .cta-secondary-light:hover {
+    opacity: 1;
   }
 
   /* Lift desync — the two hero CTAs must never lift at the exact same
