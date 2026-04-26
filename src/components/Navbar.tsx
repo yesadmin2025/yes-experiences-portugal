@@ -43,17 +43,32 @@ export function Navbar() {
             className="flex-shrink-0 inline-flex items-center h-full rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             aria-label="YES experiences PORTUGAL — Home"
           >
-            <img
-              src={logoTeal}
-              width={909}
-              height={579}
-              alt="YES experiences PORTUGAL"
-              className="block h-[64px] md:h-[76px] lg:h-[84px] w-auto select-none"
-              draggable={false}
-              fetchPriority="high"
-              decoding="async"
-              style={{ imageRendering: "auto" }}
-            />
+            {/* Master logo PNG. The bundled artwork sets "PORTUGAL" in a very
+                light gold that fades against the white header — we reinforce
+                it with an overlaid teal wordmark sized & positioned to sit
+                exactly on top of the original lockup, so the brand reads
+                "YES experiences · PORTUGAL" with proper legibility. */}
+            <span className="relative inline-block h-[64px] md:h-[76px] lg:h-[84px]">
+              <img
+                src={logoTeal}
+                width={909}
+                height={579}
+                alt="YES experiences PORTUGAL"
+                className="block h-full w-auto select-none"
+                draggable={false}
+                fetchPriority="high"
+                decoding="async"
+                style={{ imageRendering: "auto" }}
+              />
+              {/* Reinforced "PORTUGAL" — sits over the faded original.
+                  Teal for AAA contrast on the ivory/white header. */}
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute left-1/2 -translate-x-1/2 bottom-[10%] md:bottom-[11%] text-[color:var(--teal)] font-sans font-semibold uppercase text-[9px] md:text-[10.5px] lg:text-[11.5px] tracking-[0.42em] leading-none"
+              >
+                Portugal
+              </span>
+            </span>
           </Link>
 
           {/* Desktop nav + CTA — right side, vertically centered.
