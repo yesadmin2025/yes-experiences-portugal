@@ -147,8 +147,8 @@ function HomePage() {
         {/* Dark gradient + radial vignette — keeps copy effortlessly readable
             without flattening the image. Slightly deeper at the base so the
             CTAs and microcopy never compete with the photograph. */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/95 via-[color:var(--charcoal)]/60 to-[color:var(--charcoal)]/55 md:from-[color:var(--charcoal-deep)]/92 md:via-[color:var(--charcoal)]/50 md:to-[color:var(--charcoal)]/45" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_65%,transparent_30%,rgba(0,0,0,0.55)_100%)]" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/95 via-[color:var(--charcoal)]/75 to-[color:var(--charcoal)]/70 md:from-[color:var(--charcoal-deep)]/92 md:via-[color:var(--charcoal)]/65 md:to-[color:var(--charcoal)]/60" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_60%,rgba(0,0,0,0.35)_0%,rgba(0,0,0,0.7)_100%)]" />
 
         <div className="container-x relative z-10 pb-24 md:pb-36 pt-32 md:pt-40">
           <div className="max-w-3xl text-[color:var(--ivory)]">
