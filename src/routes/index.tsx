@@ -142,7 +142,10 @@ function HomePage() {
   // first 220px of scroll — a subtle "the page is opening up to you" cue.
   // Writes --cta-scroll-scale on the magnet group; CTAs compose it into
   // their existing transform alongside parallax. Reduced-motion pins to 1.02×.
-  const ctaGroupRef = useCtaScrollScale<HTMLDivElement>(0.94, 1.02, 220);
+  // Subtler scroll-driven growth: tighter envelope (0.96 → 1.015) over
+  // a longer scroll window (280px), with smoothstep easing in the hook.
+  // The button breathes upward instead of springing.
+  const ctaGroupRef = useCtaScrollScale<HTMLDivElement>(0.96, 1.015, 280);
 
   return (
     <SiteLayout>
@@ -239,7 +242,7 @@ function HomePage() {
                   The square geometry and exact wording stay untouched. */}
               <Link
                 to="/builder"
-                className="cta-primary cta-attention cta-breathe group inline-flex items-center justify-center gap-3 px-9 py-[15px] text-[11.5px] tracking-[0.24em] uppercase font-light"
+                className="cta-primary cta-attention cta-breathe group inline-flex items-center justify-center gap-3 px-9 py-[15px] text-[12px] md:text-[12.5px] lg:text-[13px] tracking-[0.22em] md:tracking-[0.2em] uppercase font-light leading-none"
               >
                 Design &amp; Secure Your Experience
                 <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform duration-300" />
@@ -252,7 +255,7 @@ function HomePage() {
               <Link
                 to="/experiences"
                 data-cta-stagger
-                className="cta-secondary-dark cta-attention cta-breathe group inline-flex items-center justify-center gap-3 px-9 py-[15px] text-[11.5px] tracking-[0.24em] uppercase font-light"
+                className="cta-secondary-dark cta-attention cta-breathe group inline-flex items-center justify-center gap-3 px-9 py-[15px] text-[12px] md:text-[12.5px] lg:text-[13px] tracking-[0.22em] md:tracking-[0.2em] uppercase font-light leading-none"
               >
                 Explore Signature Experiences
                 <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform duration-300" />
