@@ -147,8 +147,8 @@ function HomePage() {
         {/* Dark gradient + radial vignette — keeps copy effortlessly readable
             without flattening the image. Slightly deeper at the base so the
             CTAs and microcopy never compete with the photograph. */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/95 via-[color:var(--charcoal)]/75 to-[color:var(--charcoal)]/70 md:from-[color:var(--charcoal-deep)]/92 md:via-[color:var(--charcoal)]/65 md:to-[color:var(--charcoal)]/60" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_60%,rgba(0,0,0,0.35)_0%,rgba(0,0,0,0.7)_100%)]" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/95 via-[color:var(--charcoal)]/60 to-[color:var(--charcoal)]/55 md:from-[color:var(--charcoal-deep)]/92 md:via-[color:var(--charcoal)]/50 md:to-[color:var(--charcoal)]/45" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_65%,transparent_30%,rgba(0,0,0,0.55)_100%)]" />
 
         <div className="container-x relative z-10 pb-24 md:pb-36 pt-32 md:pt-40">
           <div className="max-w-3xl text-[color:var(--ivory)]">
@@ -157,10 +157,10 @@ function HomePage() {
               Private · By local hands · Designed around you
             </span>
 
-            <h1 className="hero-h1 serif mt-7 md:mt-9 text-[2.05rem] sm:text-5xl md:text-7xl lg:text-[5.4rem] text-white [text-shadow:0_2px_24px_rgba(0,0,0,0.55),0_1px_2px_rgba(0,0,0,0.45)] opacity-0 animate-[heroFade_1.4s_ease-out_0.6s_forwards]">
+            <h1 className="hero-h1 serif mt-7 md:mt-9 text-[2.05rem] sm:text-5xl md:text-7xl lg:text-[5.4rem] opacity-0 animate-[heroFade_1.4s_ease-out_0.6s_forwards]">
               Portugal,
               <br />
-              <span className="italic text-[color:var(--gold-soft)] [text-shadow:0_2px_20px_rgba(0,0,0,0.5)]">Designed Around You</span>
+              <span className="italic text-[color:var(--gold-soft)]">Designed Around You</span>
             </h1>
 
             <p className="mt-7 md:mt-9 text-[18px] md:text-[22px] text-[color:var(--ivory)] max-w-xl leading-[1.7] font-light opacity-0 animate-[heroFade_1.4s_ease-out_0.95s_forwards]">
