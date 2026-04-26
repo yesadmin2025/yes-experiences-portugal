@@ -458,32 +458,27 @@
     border-radius: 2px;
     background-image: linear-gradient(180deg, var(--teal) 0%, color-mix(in oklab, var(--teal) 88%, var(--teal-2) 12%) 100%);
     color: #ffffff;
-    /* Thicker, more present gold border — the edge IS the brand cue.
-       Was 1px @ 70% gold; now 2px @ full gold for a confident,
-       unmissable frame that reads as luxury hardware (think a watch
-       bezel) rather than a hairline outline. */
-    border: 2px solid var(--gold);
-    /* Gold text glow — a barely-visible warm halo on the white label
-       that makes the type feel lit-from-behind. Two layered shadows:
-       a tight gold lift + a soft gold bloom. Total ~1.5px spread,
-       so legibility is untouched but the type "carries weight". */
-    text-shadow:
-      0 0 1px color-mix(in oklab, var(--gold-soft) 50%, transparent),
-      0 0 8px color-mix(in oklab, var(--gold) 30%, transparent);
+    /* Hairline gold border — premium restraint over heavy frame.
+       1px @ 55% gold reads as a refined edge, not a hardware bezel.
+       The "thickness" the button needs comes from the soft glow
+       shadow below, not from the line itself. */
+    border: 1px solid color-mix(in oklab, var(--gold) 55%, transparent);
+    /* No text-shadow at rest — clean white type, like a luxury watch
+       face. The label is the message; let it breathe. */
     box-shadow:
-      /* Inner top-light highlight (gold-tinted) for material lift */
-      inset 0 1px 0 0 color-mix(in oklab, var(--gold-soft) 55%, transparent),
+      /* Inner top-light highlight — material lift, kept subtle */
+      inset 0 1px 0 0 color-mix(in oklab, var(--gold-soft) 35%, transparent),
       /* Inner bottom shadow for dimensional weight */
-      inset 0 -1px 0 0 rgba(0, 0, 0, 0.22),
+      inset 0 -1px 0 0 rgba(0, 0, 0, 0.18),
       /* Tight contact shadow */
-      0 1px 2px rgba(15, 15, 15, 0.22),
-      /* Ambient gold rim glow at rest — replaces "thicker line" with
-         actual luminous presence. The button feels surrounded by light. */
-      0 0 0 1px color-mix(in oklab, var(--gold) 18%, transparent),
-      0 0 18px -2px color-mix(in oklab, var(--gold) 32%, transparent),
-      /* Atmospheric depth shadows (teal-tinted) */
-      0 10px 24px -10px rgba(41, 91, 97, 0.50),
-      0 22px 48px -22px rgba(41, 91, 97, 0.42);
+      0 1px 2px rgba(15, 15, 15, 0.18),
+      /* Soft, wide, atmospheric gold halo — the gold "thickness"
+         lives entirely in this diffuse glow, not in a hard ring.
+         Wide spread, low opacity, no tight 1px ring. */
+      0 0 28px -6px color-mix(in oklab, var(--gold) 22%, transparent),
+      /* Atmospheric teal depth shadows */
+      0 10px 24px -12px rgba(41, 91, 97, 0.42),
+      0 22px 48px -24px rgba(41, 91, 97, 0.32);
     /* Pointer-aware micro-tilt: shifts with the hero parallax (≤1.5px)
        so the button feels coupled to the depth field. Falls back to 0,0
        outside the hero (no --hero-px set ⇒ 0). */
