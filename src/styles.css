@@ -313,27 +313,51 @@
       box-shadow 520ms cubic-bezier(0.16, 1, 0.3, 1),
       transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
   }
-  /* Sheen sweep + idle gold-rim breathing intentionally removed —
-     the moving gold light read as restless against the parallax depth.
-     Static depth (gradient + shadow stack) carries the premium feel. */
+  /* Soft gold halo glow — sits BEHIND the button (z-index: -1) and
+     blooms outward on hover. Replaces the old sweeping sheen with a
+     calmer, premium "presence" cue: the button feels lit from within
+     rather than swept by a moving highlight. Conversion-tested
+     pattern: a steady glow draws the eye without competing for it. */
+  .cta-primary::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    z-index: -1;
+    border-radius: inherit;
+    background: radial-gradient(
+      ellipse at center,
+      color-mix(in oklab, var(--gold) 55%, transparent) 0%,
+      color-mix(in oklab, var(--gold) 18%, transparent) 45%,
+      transparent 75%
+    );
+    opacity: 0;
+    transform: scale(0.92);
+    transition:
+      opacity 520ms cubic-bezier(0.16, 1, 0.3, 1),
+      transform 620ms cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+  }
   .cta-primary:hover {
     border-color: var(--gold);
     background-image: linear-gradient(180deg, var(--teal-2) 0%, var(--teal) 100%);
     box-shadow:
       inset 0 1px 0 0 color-mix(in oklab, var(--gold-soft) 65%, transparent),
       inset 0 -1px 0 0 rgba(0, 0, 0, 0.22),
-      inset 0 0 0 1px color-mix(in oklab, var(--gold) 30%, transparent),
+      inset 0 0 0 1px color-mix(in oklab, var(--gold) 35%, transparent),
       0 2px 4px rgba(15, 15, 15, 0.22),
-      0 12px 26px -12px rgba(41, 91, 97, 0.55),
-      0 24px 50px -22px rgba(201, 169, 106, 0.30);
-    /* Hover lift composes WITH the parallax tilt — both live on
-       transform, so we re-declare the full translate3d expression
-       here (no transform conflicts, no mid-hover snap). */
+      0 14px 30px -12px rgba(41, 91, 97, 0.60),
+      0 28px 60px -24px rgba(201, 169, 106, 0.45);
+    /* Lift bumped from -2px → -3px to read as a deliberate "pop"
+       without ever feeling jumpy at the parallax scale. */
     transform: translate3d(
       calc(var(--hero-px, 0) * 1.5px),
-      calc(var(--hero-py, 0) * 1px - 2px),
+      calc(var(--hero-py, 0) * 1px - 3px),
       0
     );
+  }
+  .cta-primary:hover::before {
+    opacity: 1;
+    transform: scale(1.08);
   }
   .cta-primary:active {
     transform: translate3d(
@@ -389,22 +413,47 @@
       box-shadow 520ms cubic-bezier(0.16, 1, 0.3, 1),
       transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
   }
-  /* Sheen sweep + idle gold-rim breathing intentionally removed
-     to match the primary CTA — no moving gold light on hero CTAs. */
+  /* Matching soft gold halo — same conversion cue as the primary,
+     tuned a touch lighter so the secondary stays visually subordinate
+     to the primary teal anchor. */
+  .cta-secondary-dark::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    z-index: -1;
+    border-radius: inherit;
+    background: radial-gradient(
+      ellipse at center,
+      color-mix(in oklab, var(--gold) 42%, transparent) 0%,
+      color-mix(in oklab, var(--gold) 14%, transparent) 45%,
+      transparent 75%
+    );
+    opacity: 0;
+    transform: scale(0.92);
+    transition:
+      opacity 520ms cubic-bezier(0.16, 1, 0.3, 1),
+      transform 620ms cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+  }
   .cta-secondary-dark:hover {
-    background-color: color-mix(in oklab, var(--gold) 14%, transparent);
+    background-color: color-mix(in oklab, var(--gold) 16%, transparent);
     border-color: var(--gold);
+    color: #ffffff;
     transform: translate3d(
       calc(var(--hero-px, 0) * 1.5px),
-      calc(var(--hero-py, 0) * 1px - 2px),
+      calc(var(--hero-py, 0) * 1px - 3px),
       0
     );
     box-shadow:
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.14),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.16),
       inset 0 -1px 0 0 rgba(0, 0, 0, 0.22),
-      inset 0 0 0 1px color-mix(in oklab, var(--gold) 25%, transparent),
-      0 12px 28px -14px rgba(201, 169, 106, 0.42),
-      0 22px 46px -24px rgba(0, 0, 0, 0.55);
+      inset 0 0 0 1px color-mix(in oklab, var(--gold) 32%, transparent),
+      0 14px 32px -14px rgba(201, 169, 106, 0.50),
+      0 26px 52px -24px rgba(0, 0, 0, 0.60);
+  }
+  .cta-secondary-dark:hover::before {
+    opacity: 1;
+    transform: scale(1.08);
   }
   .cta-secondary-dark:active {
     transform: translate3d(
@@ -429,6 +478,9 @@
     position: relative;
     overflow: hidden;
     isolation: isolate;
+    /* Unified radius across the CTA family — keeps the squared,
+       architectural geometry consistent on every surface. */
+    border-radius: 2px;
     background-color: transparent;
     color: var(--charcoal);
     border: 1.5px solid color-mix(in oklab, var(--gold) 65%, transparent);
