@@ -132,38 +132,69 @@ const reviews = [
 ];
 
 function HomePage() {
+  // Pointer-driven parallax — writes --hero-px / --hero-py (-1 → 1) to the
+  // section. Image and vignette read those vars via inline calc() to shift
+  // gently without triggering layout. No-op on touch & reduced-motion.
+  const heroRef = useHeroParallax<HTMLElement>();
+
   return (
     <SiteLayout>
       {/* 1 — HERO
           Cinematic image, slow zoom, layered overlays for AA-compliant
-          contrast on the headline and microcopy. */}
-      <section className="relative min-h-[80vh] md:min-h-[94vh] flex items-end overflow-hidden">
+          contrast on the headline and microcopy. A subtle pointer parallax
+          shifts the image (≤8px) and the vignette focal point (±4%) for
+          depth behind the CTAs without altering layout or contrast. */}
+      <section
+        ref={heroRef}
+        className="relative min-h-[80vh] md:min-h-[94vh] flex items-end overflow-hidden"
+      >
         {/* Hero image — held perfectly still (scale 1.08) for the full text
             fade-in cascade (~2.7s) via animation-delay + fill-mode: both, so
             the overlay stack composites against a stationary image during
             the legibility-critical window. After the cascade completes, the
-            slow 32s zoom resumes its cinematic drift. This eliminates any
-            intermediate frames where moving image regions could shift the
-            effective overlay luminance behind the headline or CTAs. */}
-        <img
-          src={heroImg}
-          alt="Hidden coastal road in Portugal at golden hour"
-          className="absolute inset-0 w-full h-full object-cover object-center animate-[heroZoom_32s_ease-out_2.7s_both]"
-          width={1920}
-          height={1080}
-        />
+            slow 32s zoom resumes its cinematic drift. The parallax transform
+            is composited via a wrapper so it stacks cleanly with the zoom
+            animation on the <img> itself (two transform owners, no fight). */}
+        <div
+          className="absolute inset-0 will-change-transform"
+          style={{
+            transform:
+              "translate3d(calc(var(--hero-px, 0) * -8px), calc(var(--hero-py, 0) * -6px), 0)",
+            transition: "transform 220ms cubic-bezier(0.22, 0.61, 0.36, 1)",
+          }}
+        >
+          <img
+            src={heroImg}
+            alt="Hidden coastal road in Portugal at golden hour"
+            className="absolute inset-0 w-full h-full object-cover object-center animate-[heroZoom_32s_ease-out_2.7s_both]"
+            width={1920}
+            height={1080}
+          />
+        </div>
         {/* Layered editorial wash — premium warmth without losing legibility.
-            Overlays carry NO transitions and NO animations: their opacity,
-            blend modes and gradient stops are locked from first paint, so
-            the composited contrast behind text is identical at t=0 and at
-            t=fade-end. Order matters: the brand soft-light tint sits FIRST
-            (closest to the image) so subsequent darkening overlays aren't
-            blended away. Then a base vertical wash, a left-anchored column
-            behind the headline, and a barely-there corner vignette. */}
+            Overlays carry NO transitions and NO animations (except the
+            vignette focal shift, which is a pure radial-gradient stop change
+            that does NOT affect overall darkness). Their opacity, blend
+            modes and gradient stops are otherwise locked from first paint,
+            so the composited contrast behind text is identical at t=0 and
+            at t=fade-end. Order matters: the brand soft-light tint sits
+            FIRST (closest to the image) so subsequent darkening overlays
+            aren't blended away. Then a base vertical wash, a left-anchored
+            column behind the headline, and a barely-there corner vignette. */}
         <div className="absolute inset-0 bg-[linear-gradient(180deg,color-mix(in_oklab,var(--teal)_18%,transparent)_0%,transparent_50%,color-mix(in_oklab,var(--gold)_10%,transparent)_100%)] mix-blend-soft-light pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/85 via-[color:var(--charcoal-deep)]/45 to-[color:var(--charcoal-deep)]/40 md:from-[color:var(--charcoal-deep)]/80 md:via-[color:var(--charcoal-deep)]/35 md:to-[color:var(--charcoal-deep)]/30 pointer-events-none" />
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(15,15,15,0.65)_0%,rgba(15,15,15,0.4)_35%,transparent_70%)] md:bg-[linear-gradient(90deg,rgba(15,15,15,0.6)_0%,rgba(15,15,15,0.32)_40%,transparent_72%)] pointer-events-none" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_72%,transparent_55%,rgba(0,0,0,0.3)_100%)] pointer-events-none" />
+        {/* Vignette with parallax-shifted focal point — the ellipse anchor
+            slides ±4% in X and ±3% in Y so the "spotlight" subtly follows
+            the cursor. Darkness stops (transparent_55% → rgba_0.3 at 100%)
+            are unchanged, so total luminance behind text is preserved. */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage:
+              "radial-gradient(ellipse at calc(30% + var(--hero-px, 0) * 4%) calc(72% + var(--hero-py, 0) * 3%), transparent 55%, rgba(0,0,0,0.3) 100%)",
+          }}
+        />
 
         <div className="container-x relative z-10 pb-24 md:pb-36 pt-32 md:pt-40">
           <div className="max-w-3xl text-[color:var(--ivory)]">
