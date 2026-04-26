@@ -253,6 +253,10 @@ export function MobileStickyCTA() {
           <Link
             to="/builder"
             onClick={handleIntent}
+            // Defense-in-depth: even though the wrapper sets `inert` when
+            // hidden, also strip the link from the tab order whenever
+            // it's offscreen OR mid-submit, so legacy AT and any nested
+            // override of `inert` still can't reach it.
             tabIndex={visible && !submitting ? 0 : -1}
             aria-disabled={submitting}
             aria-busy={submitting}
