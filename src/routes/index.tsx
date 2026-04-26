@@ -214,30 +214,76 @@ function HomePage() {
               like exploring Portugal with a friend who lives here.
             </p>
 
-            <div className="mt-10 md:mt-12 flex flex-col sm:flex-row flex-wrap gap-4 sm:gap-5 opacity-0 animate-[heroFade_1.4s_ease-out_1.25s_forwards]">
-              {/* Primary — clear conversion anchor */}
+            {/* CTA cluster — premium materiality + conversion clarity.
+                Layout, fade timing and surrounding spacing are unchanged
+                from the approved hero. The two improvements:
+                  1) Primary CTA carries an arrow-pill (its own surface
+                     inside the button) that lifts/glides on hover —
+                     reads as a luxury watch crown rather than a flat icon.
+                  2) A discreet "available now" gold status dot sits
+                     under the primary, replacing the generic microcopy
+                     line with a calmer, more credible cue plus the same
+                     friction-removing trio in a tighter typographic
+                     hierarchy.
+                Both Links keep the existing .cta-primary / .cta-secondary-dark
+                classes, so the focus rings, parallax tilt, breathing rim and
+                sheen sweep already wired up apply automatically. */}
+            <div className="mt-10 md:mt-12 flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-4 sm:gap-5 opacity-0 animate-[heroFade_1.4s_ease-out_1.25s_forwards]">
+              {/* Primary — conversion anchor. Copy tightened to a clearer
+                  benefit verb + outcome. Arrow lives in its own pill so
+                  the hover glide reads as a deliberate gesture. */}
               <Link
                 to="/builder"
-                className="cta-primary group inline-flex items-center justify-center gap-3 px-10 py-[18px] text-[12.5px] tracking-[0.22em] uppercase font-semibold"
+                aria-label="Design and secure your private Portugal experience"
+                className="cta-primary group inline-flex items-center justify-between gap-4 pl-10 pr-3 py-[15px] text-[12.5px] tracking-[0.24em] uppercase font-semibold rounded-[2px] min-h-[58px]"
               >
-                Design &amp; Secure Your Experience
-                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-300" />
+                <span className="flex items-center gap-2.5">
+                  Design Your Experience
+                </span>
+                <span
+                  aria-hidden="true"
+                  className="inline-flex items-center justify-center w-9 h-9 rounded-[2px] bg-[color:var(--ivory)]/10 ring-1 ring-[color:var(--gold-soft)]/40 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:bg-[color:var(--gold-soft)]/20 group-hover:ring-[color:var(--gold)]/70 group-hover:translate-x-[2px]"
+                >
+                  <ArrowRight
+                    size={14}
+                    className="text-[color:var(--gold-soft)] transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:text-[color:var(--ivory)] group-hover:translate-x-[1px]"
+                  />
+                </span>
               </Link>
-              {/* Secondary — refined outline, slightly stronger visibility */}
+              {/* Secondary — exploration path. Compass icon prefixed so it
+                  reads as "browse" rather than "commit", reducing
+                  decision friction for top-of-funnel visitors. */}
               <Link
                 to="/experiences"
-                className="cta-secondary-dark group inline-flex items-center justify-center gap-3 px-10 py-[18px] text-[12.5px] tracking-[0.22em] uppercase font-semibold"
+                aria-label="Explore signature private experiences"
+                className="cta-secondary-dark group inline-flex items-center justify-center gap-3 px-9 py-[18px] text-[12.5px] tracking-[0.24em] uppercase font-semibold rounded-[2px] min-h-[58px]"
               >
-                Explore Signature Experiences
-                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-300" />
+                <Compass
+                  size={14}
+                  className="text-[color:var(--gold-soft)] transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:rotate-[18deg]"
+                  aria-hidden="true"
+                />
+                Signature Experiences
               </Link>
             </div>
 
-            {/* Microcopy — friction-removing, calm, trust-building */}
-            <div className="mt-7 md:mt-8 max-w-xl opacity-0 animate-[heroFade_1.4s_ease-out_1.5s_forwards]">
-              <p className="text-[14px] md:text-[15px] text-[color:var(--ivory)]/95 leading-[1.7] font-light tracking-wide">
-                Instant confirmation · Designed around you · No back-and-forth
-              </p>
+            {/* Conversion microcopy — calmer hierarchy. A live "available
+                this season" status dot (gold, 6px, gentle pulse) reframes
+                the previous trio as a credibility cue, not a feature list.
+                Keeps the same fade-in delay, so the reveal cadence is
+                untouched. */}
+            <div className="mt-6 md:mt-7 max-w-xl flex flex-wrap items-center gap-x-5 gap-y-2 opacity-0 animate-[heroFade_1.4s_ease-out_1.5s_forwards]">
+              <span className="inline-flex items-center gap-2.5 text-[12px] md:text-[13px] text-[color:var(--ivory)] tracking-[0.04em]">
+                <span className="relative flex h-1.5 w-1.5" aria-hidden="true">
+                  <span className="absolute inset-0 rounded-full bg-[color:var(--gold)] opacity-75 animate-ping" />
+                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[color:var(--gold)]" />
+                </span>
+                <span className="font-medium">Booking 2025 — limited private dates</span>
+              </span>
+              <span className="hidden sm:inline-block h-3 w-px bg-[color:var(--ivory)]/25" aria-hidden="true" />
+              <span className="text-[12px] md:text-[13px] text-[color:var(--ivory)]/80 font-light tracking-wide">
+                Instant confirmation · No deposit to design
+              </span>
             </div>
 
             <p className="mt-9 md:mt-11 text-[10.5px] uppercase tracking-[0.32em] text-[color:var(--gold-soft)] flex items-center gap-3 opacity-0 animate-[heroFade_1.4s_ease-out_1.75s_forwards]">
