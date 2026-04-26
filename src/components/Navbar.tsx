@@ -121,7 +121,11 @@ export function Navbar() {
               className="nav-cta group mt-3 inline-flex items-center justify-center gap-2 px-5 py-3.5 text-[11px] tracking-[0.22em] uppercase font-medium"
             >
               Design &amp; Secure Your Experience
-              <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform duration-300" />
+              <span className="nav-cta-arrow">
+                <span aria-hidden className="nav-cta-halo is-ambient" />
+                <span aria-hidden className="nav-cta-halo is-close" />
+                <ArrowRight size={14} />
+              </span>
             </Link>
           </div>
         </div>
