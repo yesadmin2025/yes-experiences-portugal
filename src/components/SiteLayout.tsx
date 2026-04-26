@@ -75,6 +75,10 @@ export function SiteLayout({ children }: { children: ReactNode }) {
       <Footer />
       <FloatingActions />
       <MobileStickyCTA />
+      {/* Single polite SR announcer — fires once per tab when the user
+          first scrolls past the hero, giving screen-reader users parity
+          with sighted users who see the post-hero CTA surfaces appear. */}
+      <PostHeroAnnouncer />
     </div>
   );
 }
