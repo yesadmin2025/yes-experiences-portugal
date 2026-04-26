@@ -74,9 +74,10 @@ export function Navbar() {
             ))}
             <Link
               to="/builder"
-              className="nav-cta ml-2 group inline-flex items-center gap-2 px-5 py-3 text-[10.5px] tracking-[0.2em] uppercase font-medium"
+              className="nav-cta ml-2 group inline-flex items-center gap-2.5 pl-4 pr-3 py-3 text-[10.5px] uppercase font-medium"
             >
-              <span className="relative">Design &amp; Secure</span>
+              <span aria-hidden className="nav-cta-pulse" />
+              <span className="nav-cta-label">Design &amp; Secure</span>
               <span className="nav-cta-arrow">
                 <span aria-hidden className="nav-cta-halo is-ambient" />
                 <span aria-hidden className="nav-cta-halo is-close" />
