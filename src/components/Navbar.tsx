@@ -65,7 +65,7 @@ export function Navbar() {
                   reinforced teal wordmark reads cleanly at AAA contrast. */}
               <span
                 aria-hidden="true"
-                className="pointer-events-none absolute left-1/2 -translate-x-1/2 bottom-[9%] md:bottom-[10%] bg-white px-1.5 text-[color:var(--teal)] font-sans font-semibold uppercase text-[9px] md:text-[10.5px] lg:text-[11.5px] tracking-[0.42em] leading-none"
+                className="pointer-events-none absolute left-1/2 -translate-x-1/2 bottom-[2%] md:bottom-[3%] bg-white px-1.5 text-[color:var(--teal)] font-sans font-semibold uppercase text-[8.5px] md:text-[10px] lg:text-[11px] tracking-[0.42em] leading-none"
               >
                 Portugal
               </span>
