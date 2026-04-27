@@ -345,3 +345,67 @@ function BrandQAPage() {
     </main>
   );
 }
+
+/* ------------------------------------------------------------------ */
+/* Brand theme selector panel                                         */
+/* ------------------------------------------------------------------ */
+/* Demonstrates the runtime-guarded <BrandThemeSelect>. The "Inject   */
+/* invalid value" button forces an unsupported string into `value`    */
+/* so reviewers can see the dev-only error panel surface.             */
+function BrandThemeSelectorPanel() {
+  // Typed as `unknown` so we can also poke invalid values into it.
+  const [theme, setTheme] = useState<unknown>("teal-on-ivory");
+
+  return (
+    <section className="mb-12">
+      <h2 className="mb-4 text-xl">Brand theme selector (runtime-guarded)</h2>
+      <p className="mb-4 max-w-2xl text-sm text-[color:var(--charcoal-soft)]">
+        The picker only emits values from <code>BrandLogoTheme</code>. If the
+        controlled <code>value</code> is unsupported (e.g. injected from a
+        stale CMS field or URL param), a dev-only error panel appears below
+        and the underlying <code>&lt;Logo&gt;</code> guard throws in dev /
+        falls back in production.
+      </p>
+
+      <div className="grid gap-6 md:grid-cols-2">
+        <div className="rounded-lg border border-[color:var(--border)] bg-card p-4">
+          <BrandThemeSelect
+            value={theme}
+            onChange={(next: BrandLogoTheme) => setTheme(next)}
+            componentName="BrandQA.ThemeSelect"
+          />
+          <div className="mt-4 flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => setTheme("emerald-on-mauve")}
+              className="rounded-md border border-destructive px-3 py-1.5 text-xs text-destructive"
+            >
+              Inject invalid value
+            </button>
+            <button
+              type="button"
+              onClick={() => setTheme("teal-on-ivory")}
+              className="rounded-md border border-[color:var(--border)] px-3 py-1.5 text-xs"
+            >
+              Reset to valid
+            </button>
+          </div>
+        </div>
+
+        <div className="rounded-lg border border-[color:var(--border)] bg-[color:var(--ivory)] p-4 flex items-center justify-center min-h-[120px]">
+          {/* Only render the live Logo preview while the theme is valid;
+              otherwise the Logo guard would throw in dev and unmount the
+              whole panel before the dev-error message could be read. */}
+          {typeof theme === "string" &&
+          (theme === "teal-on-ivory" || theme === "gold-on-charcoal") ? (
+            <Logo theme={theme as BrandLogoTheme} className="h-12 w-auto" />
+          ) : (
+            <span className="text-xs text-[color:var(--charcoal-soft)]">
+              Preview hidden while the selected theme is invalid.
+            </span>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
