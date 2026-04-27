@@ -57,70 +57,8 @@ function PreviewCheckPage() {
   const toggle = (id: string) =>
     setChecked((prev) => ({ ...prev, [id]: !prev[id] }));
 
-  const resolveTarget = (
-    doc: Document,
-    item: CheckItem,
-  ): HTMLElement | null => {
-    if (!item.hash) return null;
-    const id = item.hash.replace(/^#/, "");
-
-    // 1. Literal id match
-    const direct = doc.getElementById(id);
-    if (direct) return direct as HTMLElement;
-
-    // 2. Item-specific + global aliases
-    const aliases = [
-      ...(item.aliases ?? []),
-      ...(HASH_ALIASES[item.hash] ?? []),
-    ];
-    for (const sel of aliases) {
-      try {
-        const found = doc.querySelector<HTMLElement>(sel);
-        if (found) return found;
-      } catch {
-        /* invalid selector — skip */
-      }
-    }
-
-    // 3. "#top" always falls back to the document top
-    if (id === "top") return (doc.scrollingElement ?? doc.body) as HTMLElement;
-
-    return null;
-  };
-
   const jumpTo = (item: CheckItem) => {
-    const el = iframeRefs.current[item.id];
-    if (!el || !item.hash) return;
-
-    // Same-origin iframe — try in-place smooth scroll first so we don't
-    // reload the embedded page on every jump.
-    try {
-      const win = el.contentWindow;
-      const doc = el.contentDocument;
-      if (win && doc && doc.readyState !== "loading") {
-        const target = resolveTarget(doc, item);
-        if (target) {
-          // For "top"-like targets, scroll the window to 0 for consistency.
-          const id = item.hash.replace(/^#/, "");
-          if (id === "top" || target === doc.body || target === doc.scrollingElement) {
-            win.scrollTo({ top: 0, behavior: "smooth" });
-          } else {
-            target.scrollIntoView({ behavior: "smooth", block: "start" });
-          }
-          try {
-            win.history.replaceState(null, "", item.src + item.hash);
-          } catch {
-            /* hash sync is best-effort */
-          }
-          return;
-        }
-      }
-    } catch {
-      /* cross-origin or not-yet-loaded — fall through to reload */
-    }
-
-    // Fallback: only reload if we couldn't reach the inner DOM.
-    el.src = item.src + item.hash + "?t=" + Date.now();
+    performJump(iframeRefs.current[item.id], item);
   };
 
   const completed = CHECKS.filter((c) => checked[c.id]).length;
