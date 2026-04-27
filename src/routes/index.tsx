@@ -318,7 +318,7 @@ function HomePage() {
                 Mobile vertical rhythm: 48px from CTAs so it reads as a
                 clear, separate reassurance line, not glued to the
                 buttons. Slightly looser leading for calm readability. */}
-            <div className="mt-10 md:mt-8 max-w-sm sm:max-w-xl opacity-0 animate-[heroFade_1.4s_ease-out_1.5s_forwards]">
+            <div className="hero-rhythm-cta-to-microcopy max-w-sm sm:max-w-xl opacity-0 animate-[heroFade_1.4s_ease-out_1.5s_forwards]">
               <p
                 data-hero-field="microcopy"
                 className="text-[13px] md:text-[14px] text-[color:var(--ivory)]/95 leading-[1.8] md:leading-[1.75] font-light tracking-[0.01em] text-left"
@@ -332,7 +332,7 @@ function HomePage() {
                 reads as a brand sign-off, not a sentence continuation.
                 Decorative gold rules flank the two-line block, vertically
                 centered to keep the composition balanced. */}
-            <div className="mt-14 md:mt-16 mb-4 md:mb-2 flex justify-center opacity-0 animate-[heroFade_1.4s_ease-out_1.75s_forwards]">
+            <div className="hero-rhythm-microcopy-to-signature mb-4 md:mb-2 flex justify-center opacity-0 animate-[heroFade_1.4s_ease-out_1.75s_forwards]">
               <div
                 data-hero-field="brandLine"
                 className="inline-flex items-center gap-4 text-[color:var(--gold-soft)]"
@@ -342,7 +342,7 @@ function HomePage() {
                 <span className="sr-only">{HERO_COPY.brandLine}</span>
                 <span
                   aria-hidden="true"
-                  className="flex flex-col items-center gap-1.5 text-[10.5px] md:text-[11px] uppercase tracking-[0.32em] leading-[1.4] text-center"
+                  className="hero-rhythm-signature-line-gap flex flex-col items-center text-[10.5px] md:text-[11px] uppercase tracking-[0.32em] leading-[1.4] text-center"
                 >
                   <span>Whatever you have in mind,</span>
                   <span className="text-[color:var(--gold)] tracking-[0.38em]">We say YES.</span>
