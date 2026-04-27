@@ -1,7 +1,37 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
 
-const PUBLISHED_URL = "https://dreamscape-builder-co.lovable.app/";
+const PUBLISHED_URL = "https://dreamscape-builder-co.lovable.app";
+
+/**
+ * Every routable path generated from `src/routes/` (excluding `__root` and the
+ * api/* server routes). Keep this list in sync when new top-level routes are
+ * added — it powers the multi-page hero verification mode.
+ */
+const ALL_ROUTES = [
+  "/",
+  "/about",
+  "/brand-qa",
+  "/builder",
+  "/contact",
+  "/corporate",
+  "/day-tours",
+  "/experiences",
+  "/local-stories",
+  "/multi-day",
+  "/proposals",
+  "/hero-verify",
+] as const;
+
+const HERO_KEYS = [
+  "eyebrow",
+  "headlineLine1",
+  "headlineLine2",
+  "subheadline",
+  "primaryCta",
+  "secondaryCta",
+  "microcopy",
+] as const;
 
 type CheckResult = {
   key: string;
@@ -9,14 +39,91 @@ type CheckResult = {
   found: boolean;
 };
 
+type PageReport = {
+  path: string;
+  url: string;
+  ok: boolean;
+  httpStatus: number;
+  liveVersion: string | null;
+  versionMatch: boolean | null;
+  checks: CheckResult[];
+  missing: { key: string; expected: string }[];
+  error?: string;
+};
+
+function decodeHtml(html: string): string {
+  return html
+    .replace(/&amp;/g, "&")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&apos;/g, "'")
+    .replace(/&middot;/g, "·")
+    .replace(/&mdash;/g, "—")
+    .replace(/&ndash;/g, "–")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">");
+}
+
+async function verifyPage(targetUrl: string, path: string): Promise<PageReport> {
+  const url = new URL(path, targetUrl).toString();
+  const base: Omit<PageReport, "ok" | "httpStatus" | "checks" | "missing"> = {
+    path,
+    url,
+    liveVersion: null,
+    versionMatch: null,
+  };
+
+  try {
+    const res = await fetch(url, { headers: { "cache-control": "no-cache" } });
+    const liveVersion = res.headers.get("x-hero-copy-version");
+    const html = await res.text();
+    const decoded = decodeHtml(html);
+
+    const checks: CheckResult[] = HERO_KEYS.map((key) => ({
+      key,
+      expected: HERO_COPY[key],
+      found: decoded.includes(HERO_COPY[key]),
+    }));
+
+    const missing = checks
+      .filter((c) => !c.found)
+      .map((c) => ({ key: c.key, expected: c.expected }));
+
+    return {
+      ...base,
+      httpStatus: res.status,
+      liveVersion,
+      versionMatch:
+        liveVersion === null ? null : liveVersion === HERO_COPY_VERSION,
+      checks,
+      missing,
+      ok: missing.length === 0 && res.status === 200,
+    };
+  } catch (err) {
+    return {
+      ...base,
+      httpStatus: 0,
+      checks: [],
+      missing: HERO_KEYS.map((key) => ({ key, expected: HERO_COPY[key] })),
+      ok: false,
+      error: (err as Error).message,
+    };
+  }
+}
+
 /**
  * GET /api/verify-hero
  *
- * Fetches the live published homepage and verifies that every hero string
- * (eyebrow, headline lines, subheadline, CTAs, microcopy) from the current
- * source `HERO_COPY` is present verbatim in the rendered HTML.
+ * Default: verifies the homepage of the published site against the current
+ * source `HERO_COPY` (eyebrow, both headline lines, subheadline, CTAs,
+ * microcopy).
  *
- * Optional `?url=` query param overrides the target (e.g. preview URL).
+ * Query params:
+ *   ?url=<base>   Override the base URL (e.g. preview deployment).
+ *   ?all=1        Fan out across every route in ALL_ROUTES and require every
+ *                 page to contain all 7 hero strings verbatim. Loud failure
+ *                 on any missing string or non-200 response.
+ *   ?path=/x      Check a single specific path instead of "/".
  */
 export const Route = createFileRoute("/api/verify-hero")({
   server: {
@@ -24,73 +131,53 @@ export const Route = createFileRoute("/api/verify-hero")({
       GET: async ({ request }) => {
         const url = new URL(request.url);
         const target = url.searchParams.get("url") ?? PUBLISHED_URL;
+        const all = url.searchParams.get("all");
+        const singlePath = url.searchParams.get("path") ?? "/";
 
-        let html = "";
-        let liveVersion: string | null = null;
-        let status = 0;
+        const paths: readonly string[] =
+          all === "1" || all === "true" ? ALL_ROUTES : [singlePath];
 
-        try {
-          const res = await fetch(target, {
-            headers: { "cache-control": "no-cache" },
-          });
-          status = res.status;
-          liveVersion = res.headers.get("x-hero-copy-version");
-          html = await res.text();
-        } catch (err) {
+        // Run in parallel; cap concurrency implicitly via Promise.all on a
+        // small fixed list (≤12 paths today).
+        const pages = await Promise.all(
+          paths.map((p) => verifyPage(target, p)),
+        );
+
+        const ok = pages.every((p) => p.ok);
+        const failedCount = pages.filter((p) => !p.ok).length;
+
+        // Backwards-compatible single-page shape when not in `all` mode.
+        if (paths.length === 1) {
+          const only = pages[0];
           return Response.json(
             {
-              ok: false,
-              error: `Failed to fetch ${target}: ${(err as Error).message}`,
-              target,
+              ok: only.ok,
+              target: only.url,
+              httpStatus: only.httpStatus,
+              sourceVersion: HERO_COPY_VERSION,
+              liveVersion: only.liveVersion,
+              versionMatch: only.versionMatch,
+              checks: only.checks,
+              missing: only.missing,
+              checkedAt: new Date().toISOString(),
+              ...(only.error ? { error: only.error } : {}),
             },
-            { status: 502 },
+            {
+              status: only.ok ? 200 : only.error ? 502 : 409,
+              headers: { "cache-control": "no-store" },
+            },
           );
         }
-
-        // Decode common HTML entities so verbatim string matching works against
-        // SSR output that may have escaped quotes, dashes, or middots.
-        const decoded = html
-          .replace(/&amp;/g, "&")
-          .replace(/&quot;/g, '"')
-          .replace(/&#39;/g, "'")
-          .replace(/&apos;/g, "'")
-          .replace(/&middot;/g, "·")
-          .replace(/&mdash;/g, "—")
-          .replace(/&ndash;/g, "–")
-          .replace(/&lt;/g, "<")
-          .replace(/&gt;/g, ">");
-
-        const checks: CheckResult[] = (
-          [
-            "eyebrow",
-            "headlineLine1",
-            "headlineLine2",
-            "subheadline",
-            "primaryCta",
-            "secondaryCta",
-            "microcopy",
-          ] as const
-        ).map((key) => ({
-          key,
-          expected: HERO_COPY[key],
-          found: decoded.includes(HERO_COPY[key]),
-        }));
-
-        const missing = checks.filter((c) => !c.found);
-        const ok = missing.length === 0 && status === 200;
-        const versionMatch =
-          liveVersion === null ? null : liveVersion === HERO_COPY_VERSION;
 
         return Response.json(
           {
             ok,
-            target,
-            httpStatus: status,
+            mode: "all",
+            base: target,
             sourceVersion: HERO_COPY_VERSION,
-            liveVersion,
-            versionMatch,
-            checks,
-            missing: missing.map((c) => ({ key: c.key, expected: c.expected })),
+            totalPages: pages.length,
+            failedCount,
+            pages,
             checkedAt: new Date().toISOString(),
           },
           {
