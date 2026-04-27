@@ -660,26 +660,48 @@ export function HeroCopyDiff() {
     // tell at a glance whether the boundary triggered a fresh diff or
     // intentionally skipped it (e.g. when navigating away from index).
     if (isIndex) {
-      try {
-        const next = refresh();
+      // Version guard: a refresh only meaningfully changes anything when
+      // the stored baseline version differs from the current code version.
+      // If they match, the diff result is guaranteed to be "no-changes",
+      // so we skip the refresh and log the guard hit instead.
+      const baselineSnap = readBaseline();
+      const baselineVersion = baselineSnap?.version ?? null;
+      const currentVersion = HERO_COPY_VERSION;
+
+      if (baselineVersion !== null && baselineVersion === currentVersion) {
         console.info(
-          "%c[hero-copy] post-boundary diff refresh: ok",
-          "color:#10b981",
+          "%c[hero-copy] post-boundary diff refresh: skipped (version guard)",
+          "color:#9ca3af",
           {
             prev,
             next: pathname,
-            status: next.status,
-            changed: next.rows.length,
-            baselineVersion: next.baselineVersion,
-            currentVersion: next.currentVersion,
+            baselineVersion,
+            currentVersion,
+            reason: "baseline version matches current — nothing to diff",
           },
         );
-      } catch (err) {
-        console.warn(
-          "%c[hero-copy] post-boundary diff refresh: failed",
-          "color:#ef4444",
-          { prev, next: pathname, error: err },
-        );
+      } else {
+        try {
+          const next = refresh();
+          console.info(
+            "%c[hero-copy] post-boundary diff refresh: ok",
+            "color:#10b981",
+            {
+              prev,
+              next: pathname,
+              status: next.status,
+              changed: next.rows.length,
+              baselineVersion: next.baselineVersion,
+              currentVersion: next.currentVersion,
+            },
+          );
+        } catch (err) {
+          console.warn(
+            "%c[hero-copy] post-boundary diff refresh: failed",
+            "color:#ef4444",
+            { prev, next: pathname, error: err },
+          );
+        }
       }
     } else {
       console.info(
