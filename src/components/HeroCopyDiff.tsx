@@ -261,6 +261,33 @@ const SR_ONLY: React.CSSProperties = {
  */
 const PANEL_VISIBILITY_KEY = "hero-copy:panel-visible";
 const OUTLINES_KEY = "hero-copy:last-outlines";
+/**
+ * One-shot "force refresh on next route boundary" flag. Set by the
+ * <HeroCopyDiffResetButton/> on the index page. The route-boundary effect
+ * consumes (reads + clears) this flag and, when present, bypasses the
+ * version guard so the next refresh always runs end-to-end.
+ */
+const FORCE_REFRESH_KEY = "hero-copy:force-refresh-next";
+
+function armForceRefresh() {
+  if (typeof window === "undefined") return;
+  try {
+    sessionStorage.setItem(FORCE_REFRESH_KEY, "1");
+  } catch {
+    /* ignore */
+  }
+}
+
+function consumeForceRefresh(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    const armed = sessionStorage.getItem(FORCE_REFRESH_KEY) === "1";
+    if (armed) sessionStorage.removeItem(FORCE_REFRESH_KEY);
+    return armed;
+  } catch {
+    return false;
+  }
+}
 
 function readInitialPanelVisibility(): boolean {
   if (typeof window === "undefined") return false;
@@ -660,6 +687,10 @@ export function HeroCopyDiff() {
     // tell at a glance whether the boundary triggered a fresh diff or
     // intentionally skipped it (e.g. when navigating away from index).
     if (isIndex) {
+      // One-shot override armed by the on-page reset button. When set, we
+      // skip the version guard entirely and always run the refresh.
+      const forced = consumeForceRefresh();
+
       // Version guard: a refresh only meaningfully changes anything when
       // the stored baseline version differs from the current code version.
       // If they match, the diff result is guaranteed to be "no-changes",
@@ -668,7 +699,11 @@ export function HeroCopyDiff() {
       const baselineVersion = baselineSnap?.version ?? null;
       const currentVersion = HERO_COPY_VERSION;
 
-      if (baselineVersion !== null && baselineVersion === currentVersion) {
+      if (
+        !forced &&
+        baselineVersion !== null &&
+        baselineVersion === currentVersion
+      ) {
         console.info(
           "%c[hero-copy] post-boundary diff refresh: skipped (version guard)",
           "color:#9ca3af",
@@ -684,11 +719,14 @@ export function HeroCopyDiff() {
         try {
           const next = refresh();
           console.info(
-            "%c[hero-copy] post-boundary diff refresh: ok",
+            forced
+              ? "%c[hero-copy] post-boundary diff refresh: ok (forced)"
+              : "%c[hero-copy] post-boundary diff refresh: ok",
             "color:#10b981",
             {
               prev,
               next: pathname,
+              forced,
               status: next.status,
               changed: next.rows.length,
               baselineVersion: next.baselineVersion,
@@ -1090,5 +1128,64 @@ export function HeroCopyDiff() {
         </div>
       ) : null}
     </>
+  );
+}
+
+/**
+ * On-page "Reset hero copy diff" button.
+ *
+ * Performs the same outline cleanup as the route-boundary effect, then
+ * arms a one-shot flag (`hero-copy:force-refresh-next`) so the NEXT
+ * navigation back to "/" runs a full diff refresh — even if the version
+ * guard would normally skip it.
+ *
+ * Renders as a discreet ghost button. Drop it anywhere on the index page.
+ */
+export function HeroCopyDiffResetButton({
+  className,
+}: {
+  className?: string;
+}) {
+  const [status, setStatus] = useState<"idle" | "armed">("idle");
+
+  const onClick = useCallback(() => {
+    // Synchronous cleanup: persisted payload + any rendered outlines.
+    clearPersistedOutlines();
+    clearRenderedOutlines();
+    // Arm the override the route-boundary effect will consume on next
+    // entry to "/". Stays armed across reloads within the tab session.
+    armForceRefresh();
+    setStatus("armed");
+
+    toast("Hero copy diff reset", {
+      description:
+        "Persisted outlines cleared. Next navigation will force a full diff refresh.",
+      duration: 2400,
+      id: "hero-copy-reset",
+    });
+
+    console.info(
+      "%c[hero-copy] reset button: outlines cleared & next-boundary refresh armed",
+      "color:#f59e0b",
+      { armedKey: "hero-copy:force-refresh-next" },
+    );
+
+    window.setTimeout(() => setStatus("idle"), 2400);
+  }, []);
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      data-hero-copy-reset=""
+      data-testid="hero-copy-reset"
+      data-status={status}
+      className={
+        className ??
+        "inline-flex items-center gap-2 rounded-md border border-border/40 bg-background/40 px-3 py-1.5 text-[11px] uppercase tracking-[0.18em] text-muted-foreground backdrop-blur transition-colors hover:border-border hover:text-foreground"
+      }
+    >
+      {status === "armed" ? "Reset · armed ✓" : "Reset hero copy diff"}
+    </button>
   );
 }

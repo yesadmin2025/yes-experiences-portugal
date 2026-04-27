@@ -24,7 +24,7 @@ import editViewpoint from "@/assets/edit-viewpoint.jpg";
 import { ArrowRight, Star, MapPin, Compass, Clock } from "lucide-react";
 import { PlatformBadge } from "@/components/PlatformBadge";
 import { HeroMetaProbe } from "@/components/HeroMetaProbe";
-import { HeroCopyDiff } from "@/components/HeroCopyDiff";
+import { HeroCopyDiff, HeroCopyDiffResetButton } from "@/components/HeroCopyDiff";
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
 
 export const Route = createFileRoute("/")({
@@ -401,6 +401,13 @@ function HomePage() {
                 localStorage baseline and logs changed fields. Manual
                 controls live on `window.__heroCopy`. Renders nothing. */}
             <HeroCopyDiff />
+
+            {/* On-page reset: clears persisted outlines and arms a one-shot
+                flag so the next navigation back to "/" forces a full diff
+                refresh, bypassing the version guard. */}
+            <div className="mt-6 opacity-0 animate-[heroFade_1.4s_ease-out_2s_forwards]">
+              <HeroCopyDiffResetButton />
+            </div>
           </div>
         </div>
       </section>
