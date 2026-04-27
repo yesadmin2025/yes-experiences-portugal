@@ -140,6 +140,15 @@ function parseArgs(argv) {
 
 const { opts: CLI, errors: CLI_ERRORS } = parseArgs(process.argv.slice(2));
 
+// When piping JSON to stdout, the human-readable log MUST go to stderr or it
+// will corrupt the machine-parseable stream. We redirect console.log/clear
+// once, up-front, so every subsequent log call is automatically routed.
+const JSON_TO_STDOUT = CLI.reportJson === "-";
+if (JSON_TO_STDOUT) {
+  console.log = (...args) => process.stderr.write(args.join(" ") + "\n");
+  console.clear = () => {}; // suppress screen-clear so CI logs stay linear
+}
+
 if (CLI_ERRORS.length > 0) {
   console.log(`\x1b[31mFlag errors (--strict-flags):\x1b[0m`);
   for (const e of CLI_ERRORS) console.log(`  • ${e}`);
