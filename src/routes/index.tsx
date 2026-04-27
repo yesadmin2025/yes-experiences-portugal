@@ -268,7 +268,7 @@ function RouteValidationStrip() {
       ok: p.to === p.expectedTo,
     }));
     const allOk = results.every((r) => r.ok);
-    /* eslint-disable no-console */
+
     console.groupCollapsed(
       `%c[YES] Decision-card route check — ${allOk ? "PASS ✓" : "FAIL ✗"}`,
       `color:${allOk ? "#2e7d32" : "#c62828"};font-weight:600`,
@@ -281,7 +281,6 @@ function RouteValidationStrip() {
       );
     });
     console.groupEnd();
-    /* eslint-enable no-console */
   }, []);
 
   if (!show) return null;

@@ -76,7 +76,6 @@ export function BrandThemeSelect({
   // bad input don't spam the console on every keystroke / parent update.
   const [lastLogged, setLastLogged] = useState<unknown>(undefined);
   if (IS_DEV && !valid && value !== lastLogged) {
-    // eslint-disable-next-line no-console
     console.error(
       `[brand-lock] <${componentName}> received an unsupported brand theme: ${received}. Allowed values: ${allowedList}.`,
     );
@@ -91,7 +90,7 @@ export function BrandThemeSelect({
       // Should be unreachable — every <option> comes from BRAND_LOGO_THEMES
       // — but guard anyway in case someone monkey-patches the DOM.
       const msg = `[brand-lock] <${componentName}> attempted to emit unsupported theme: ${JSON.stringify(next)}.`;
-      // eslint-disable-next-line no-console
+
       console.error(msg);
       if (IS_DEV) throw new Error(msg);
       return;

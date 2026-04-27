@@ -127,7 +127,7 @@ function logAudit(
     outcome,
     reason,
   });
-  // eslint-disable-next-line no-console
+
   if (outcome === "ok") console.info(line);
   else console.warn(line);
 }

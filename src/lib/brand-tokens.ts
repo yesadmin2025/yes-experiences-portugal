@@ -94,7 +94,7 @@ export function assertBrandLogoTheme(value: unknown, componentName = "<unknown>"
   const message =
     `[brand-lock] <${componentName}> received an unsupported brand ` +
     `theme: ${received}. Allowed values: ${allowed}.`;
-  // eslint-disable-next-line no-console
+
   console.error(message);
   if (isDevEnvironment()) {
     // Throw so React surfaces the failing component in the dev error

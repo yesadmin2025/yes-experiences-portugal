@@ -507,13 +507,11 @@ export function HeroVerifyOverlay() {
     };
 
     if (!result.ok) {
-      // eslint-disable-next-line no-console
       console.warn(
         "[hero-verify] export self-check FAILED — on-screen diff and export diverge",
         divergences,
       );
     } else {
-      // eslint-disable-next-line no-console
       console.info(
         "[hero-verify] export self-check OK — on-screen diff matches export byte-for-byte",
       );
@@ -586,7 +584,7 @@ export function HeroVerifyOverlay() {
         : reason === "wrong-type"
           ? `"schema" field is ${typeof tag}, not a string. Expected "${EXPECTED_SCHEMA_TAG}".`
           : `"schema" field is "${String(tag)}" — expected "${EXPECTED_SCHEMA_TAG}".`;
-    // eslint-disable-next-line no-console
+
     console.error(`[hero-verify] schema-tag guard BLOCKED ${format} download — ${human}`, {
       actual: tag,
       expected: EXPECTED_SCHEMA_TAG,
@@ -619,14 +617,13 @@ export function HeroVerifyOverlay() {
   const validateBeforeDownload = (payload: unknown, format: "JSON" | "CSV"): boolean => {
     const result = validateReportV3(payload);
     if (result.ok) {
-      // eslint-disable-next-line no-console
       console.info(
         `[hero-verify] schema-check OK — payload conforms to hero-verify-report/v3 (${format})`,
       );
       setSchemaCheck({ ok: true, at: Date.now(), format });
       return true;
     }
-    // eslint-disable-next-line no-console
+
     console.warn(
       `[hero-verify] schema-check FAILED for ${format} — payload does not conform to hero-verify-report/v3`,
       result.issues,
@@ -701,7 +698,7 @@ export function HeroVerifyOverlay() {
    */
   const handleRerunSelfCheck = () => {
     const r = runDiffSelfCheck();
-    // eslint-disable-next-line no-console
+
     console.info(`[hero-verify] manual self-check re-run — ${r.ok ? "OK" : "FAILED"}`, {
       divergentFields: r.divergentFields,
       checkedFields: r.checkedFields,
@@ -750,7 +747,7 @@ export function HeroVerifyOverlay() {
     const format: "JSON" | "CSV" = schemaTagCheck?.format ?? "JSON";
     const selfCheckResult = runDiffSelfCheck();
     const payload = buildExportPayload(selfCheckResult, false);
-    // eslint-disable-next-line no-console
+
     console.info(`[hero-verify] regenerated export payload (${format}) — re-running guards`, {
       schema: payload.schema,
     });
