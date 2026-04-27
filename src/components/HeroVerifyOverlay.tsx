@@ -295,6 +295,20 @@ export function HeroVerifyOverlay() {
     | { ok: false; at: number; format: "JSON" | "CSV"; issues: ValidationIssue[] }
     | null
   >(null);
+  // Hard guard: the payload's `schema` field MUST equal the expected
+  // version tag. A missing/different tag blocks the download outright
+  // (no override) — surfaced in the legend.
+  const [schemaTagCheck, setSchemaTagCheck] = useState<
+    | { ok: true; at: number; format: "JSON" | "CSV"; tag: string }
+    | {
+        ok: false;
+        at: number;
+        format: "JSON" | "CSV";
+        reason: "missing" | "wrong-type" | "mismatch";
+        actual: unknown;
+      }
+    | null
+  >(null);
 
   // Activate only when ?verify=hero is present.
   useEffect(() => {
@@ -564,6 +578,66 @@ export function HeroVerifyOverlay() {
   });
 
   /**
+   * Hard pre-flight guard: verify the payload literally has
+   * `schema === "hero-verify-report/v3"`. This runs BEFORE the full Zod
+   * validation so we can give an unambiguous, non-overridable error
+   * when the version tag is missing or has drifted. Any failure aborts
+   * the download — there is no confirm prompt because a wrong/missing
+   * version tag means downstream audit tools cannot route the file.
+   */
+  const EXPECTED_SCHEMA_TAG = "hero-verify-report/v3" as const;
+  const assertSchemaTag = (
+    payload: unknown,
+    format: "JSON" | "CSV",
+  ): boolean => {
+    const tag =
+      payload && typeof payload === "object"
+        ? (payload as { schema?: unknown }).schema
+        : undefined;
+    let reason: "missing" | "wrong-type" | "mismatch" | null = null;
+    if (tag === undefined || tag === null) reason = "missing";
+    else if (typeof tag !== "string") reason = "wrong-type";
+    else if (tag !== EXPECTED_SCHEMA_TAG) reason = "mismatch";
+
+    if (reason === null) {
+      setSchemaTagCheck({
+        ok: true,
+        at: Date.now(),
+        format,
+        tag: tag as string,
+      });
+      return true;
+    }
+    const human =
+      reason === "missing"
+        ? `Missing "schema" field — expected "${EXPECTED_SCHEMA_TAG}".`
+        : reason === "wrong-type"
+          ? `"schema" field is ${typeof tag}, not a string. Expected "${EXPECTED_SCHEMA_TAG}".`
+          : `"schema" field is "${String(tag)}" — expected "${EXPECTED_SCHEMA_TAG}".`;
+    // eslint-disable-next-line no-console
+    console.error(
+      `[hero-verify] schema-tag guard BLOCKED ${format} download — ${human}`,
+      { actual: tag, expected: EXPECTED_SCHEMA_TAG },
+    );
+    setSchemaTagCheck({
+      ok: false,
+      at: Date.now(),
+      format,
+      reason,
+      actual: tag,
+    });
+    if (typeof window !== "undefined") {
+      window.alert(
+        `Download blocked.\n\n${human}\n\n` +
+          `The export was not written to disk because downstream audit ` +
+          `tools rely on the "${EXPECTED_SCHEMA_TAG}" version tag to ` +
+          `parse the payload.`,
+      );
+    }
+    return false;
+  };
+
+  /**
    * Validate the assembled payload against `hero-verify-report/v3`
    * BEFORE we trigger any download. The CSV path also validates because
    * its rows are derived from this same in-memory shape.
@@ -646,6 +720,9 @@ export function HeroVerifyOverlay() {
         };
       }),
     };
+    // Hard guard first: a missing/wrong `schema` tag is non-recoverable
+    // and must never reach the user's filesystem, even with override.
+    if (!assertSchemaTag(payload, "JSON")) return;
     if (!validateBeforeDownload(payload, "JSON")) return;
     const blob = new Blob([JSON.stringify(payload, null, 2)], {
       type: "application/json",
@@ -716,6 +793,7 @@ export function HeroVerifyOverlay() {
         };
       }),
     };
+    if (!assertSchemaTag(payload, "CSV")) return;
     if (!validateBeforeDownload(payload, "CSV")) return;
 
     const header = [
@@ -1075,6 +1153,51 @@ export function HeroVerifyOverlay() {
                   <li>+{selfCheck.divergences.length - 4} more (see console)</li>
                 )}
               </ul>
+            )}
+          </div>
+        )}
+        {schemaTagCheck && (
+          <div
+            style={{
+              marginTop: 8,
+              padding: "6px 8px",
+              borderRadius: 6,
+              fontSize: 11,
+              lineHeight: 1.45,
+              background: schemaTagCheck.ok
+                ? "rgba(34,197,94,0.12)"
+                : "rgba(239,68,68,0.16)",
+              border: `1px solid ${
+                schemaTagCheck.ok
+                  ? "rgba(34,197,94,0.45)"
+                  : "rgba(239,68,68,0.55)"
+              }`,
+              color: schemaTagCheck.ok
+                ? "rgb(187, 247, 208)"
+                : "rgb(254, 202, 202)",
+            }}
+          >
+            <strong style={{ letterSpacing: "0.04em" }}>
+              {schemaTagCheck.ok
+                ? `✓ Schema tag OK (${schemaTagCheck.format})`
+                : `✕ Schema tag BLOCKED (${schemaTagCheck.format})`}
+            </strong>
+            <span style={{ opacity: 0.75, marginLeft: 6 }}>
+              {schemaTagCheck.ok
+                ? schemaTagCheck.tag
+                : `expected "hero-verify-report/v3"`}
+              {" · "}
+              {new Date(schemaTagCheck.at).toLocaleTimeString()}
+            </span>
+            {!schemaTagCheck.ok && (
+              <div style={{ marginTop: 4 }}>
+                {schemaTagCheck.reason === "missing" &&
+                  `Payload has no "schema" field — download blocked.`}
+                {schemaTagCheck.reason === "wrong-type" &&
+                  `"schema" must be a string — got ${typeof schemaTagCheck.actual}.`}
+                {schemaTagCheck.reason === "mismatch" &&
+                  `"schema" was "${String(schemaTagCheck.actual)}" — download blocked.`}
+              </div>
             )}
           </div>
         )}
