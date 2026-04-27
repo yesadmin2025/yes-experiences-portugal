@@ -801,61 +801,149 @@ function HomePage() {
         </div>
       </section>
 
-      {/* 4 — EXPERIENCES (Private Day · Multi-Day · Build Your Own) */}
-      <section className="py-24 md:py-40 bg-[color:var(--sand)]">
+      {/* 5 — SIGNATURE EXPERIENCES (book or tailor)
+          Three signature starting points. Each can be booked as-is OR
+          tailored — that dual nature is communicated in the section
+          intro and reinforced by the dual CTA on each card. */}
+      <section className="py-24 md:py-40 bg-[color:var(--sand)]" aria-labelledby="signatures-title">
         <div className="container-x">
           <div className="reveal text-center max-w-2xl mx-auto mb-14 md:mb-20">
-            <span className="eyebrow">Starting points</span>
-            <h2 className="serif text-[2.25rem] md:text-5xl mt-5 leading-[1.08]">
-              Inspiration, <span className="italic">not fixed itineraries.</span>
+            <span className="eyebrow">Signature experiences</span>
+            <h2
+              id="signatures-title"
+              className="serif text-[2.25rem] md:text-5xl mt-5 leading-[1.08]"
+            >
+              Book them as they are. <br />
+              <span className="italic">Or tailor them, your way.</span>
             </h2>
             <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
-              Experience them as they are — or shape them entirely around you. Every starting point is yours to redesign.
+              Three private experiences crafted by our locals — ready to confirm in seconds, or shaped entirely around you.
             </p>
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-7 max-w-5xl mx-auto">
-            {types.slice(0, 2).map((c) => (
-              <Link key={c.title} to={c.to} className="group block reveal-stagger">
-                <div className="lift-layer-sm">
+            {signatures.map((s) => (
+              <article key={s.title} className="reveal-stagger group flex flex-col">
+                <div className="lift-layer-sm flex flex-col h-full">
                   <div className="relative overflow-hidden aspect-[4/5] mb-5 shadow-[0_10px_30px_-20px_rgba(46,46,46,0.28)] group-hover:shadow-[0_28px_55px_-22px_rgba(41,91,97,0.32)] transition-shadow duration-700">
                     <img
-                      src={c.img}
-                      alt={c.title}
+                      src={s.img}
+                      alt={s.title}
                       loading="lazy"
                       className="w-full h-full object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.08]"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/85 via-[color:var(--charcoal)]/20 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/80 via-[color:var(--charcoal)]/15 to-transparent" />
                   </div>
-                  <h3 className="serif text-[1.5rem] text-[color:var(--charcoal)] group-hover:text-[color:var(--teal)] transition-colors duration-500">
-                    {c.title}
+                  <h3 className="serif text-[1.5rem] text-[color:var(--charcoal)]">
+                    {s.title}
                   </h3>
                   <p className="mt-3 text-[15px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
-                    {c.line}
+                    {s.line}
                   </p>
+                  <div className="mt-5 pt-5 border-t border-[color:var(--border)] flex items-center gap-5">
+                    <Link
+                      to="/experiences"
+                      className="inline-flex items-center gap-2 text-[11.5px] uppercase tracking-[0.24em] font-semibold text-[color:var(--teal)] hover:text-[color:var(--teal-2)] transition-colors"
+                    >
+                      Book it <ArrowRight size={12} />
+                    </Link>
+                    <span className="h-3 w-px bg-[color:var(--border)]" aria-hidden="true" />
+                    <Link
+                      to="/builder"
+                      className="inline-flex items-center gap-2 text-[11.5px] uppercase tracking-[0.24em] font-medium text-[color:var(--charcoal-soft)] hover:text-[color:var(--teal)] transition-colors"
+                    >
+                      Tailor it <ArrowRight size={12} />
+                    </Link>
+                  </div>
                 </div>
-              </Link>
+              </article>
             ))}
-            {/* Build Your Own — visually distinct teal card pointing to Studio */}
-            <Link to="/builder" className="group block reveal-stagger sm:col-span-2 lg:col-span-1">
-              <div className="lift-layer-sm relative overflow-hidden aspect-[4/5] mb-5 bg-[color:var(--teal)] text-[color:var(--ivory)] flex flex-col justify-between p-7">
-                <div>
-                  <span className="inline-flex items-center gap-2 text-[10.5px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
-                    <Sparkles size={13} /> The Studio
-                  </span>
-                  <h3 className="serif text-[1.85rem] mt-6 leading-[1.1]">
-                    Create your <span className="italic">own.</span>
-                  </h3>
-                  <p className="mt-4 text-[15px] text-[color:var(--ivory)]/90 leading-[1.7] font-light">
-                    Design your experience in real time. Confirm it the moment it feels right — no forms, no waiting.
-                  </p>
-                </div>
-                <span className="inline-flex items-center gap-2 text-[12px] uppercase tracking-[0.22em] text-[color:var(--gold-soft)] group-hover:translate-x-1 transition-transform">
-                  Open the Studio <ArrowRight size={14} />
-                </span>
-                <div className="absolute -bottom-12 -right-12 w-40 h-40 rounded-full border border-[color:var(--gold)]/30 pointer-events-none" />
-              </div>
+          </div>
+
+          <div className="reveal mt-14 md:mt-16 text-center">
+            <Link
+              to="/experiences"
+              className="cta-secondary-light inline-flex items-center gap-2 px-8 py-[16px] text-[12.5px] uppercase tracking-[0.2em] font-semibold"
+            >
+              Explore all signatures <ArrowRight size={14} />
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* 6 — BUILD YOUR OWN (Studio)
+          Dedicated, visually distinct block for the from-scratch path.
+          Teal background anchors it as a separate product. */}
+      <section
+        className="bg-[color:var(--teal)] text-[color:var(--ivory)] py-24 md:py-36 relative overflow-hidden"
+        aria-labelledby="studio-title"
+      >
+        <div className="absolute -top-32 -right-32 w-[28rem] h-[28rem] rounded-full border border-[color:var(--gold)]/15 pointer-events-none" />
+        <div className="absolute -bottom-40 -left-32 w-[24rem] h-[24rem] rounded-full border border-[color:var(--gold)]/10 pointer-events-none" />
+        <div className="container-x relative">
+          <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center max-w-6xl mx-auto">
+            <div className="reveal lg:col-span-7">
+              <span className="inline-flex items-center gap-2 text-[10.5px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
+                <Sparkles size={13} /> The Studio
+              </span>
+              <h2
+                id="studio-title"
+                className="serif text-[2.4rem] md:text-5xl lg:text-[3.4rem] mt-5 leading-[1.05]"
+              >
+                Build it from scratch. <br />
+                <span className="italic text-[color:var(--gold-soft)]">In real time.</span>
+              </h2>
+              <p className="mt-6 text-[16px] md:text-[17.5px] text-[color:var(--ivory)]/90 leading-[1.75] max-w-xl font-light">
+                Open the Studio and design your private experience step by step — choose your places, your pace,
+                your moments. Adjust as you go. Confirm the second it feels right.
+              </p>
+              <ul className="mt-8 space-y-3 text-[14.5px] text-[color:var(--ivory)]/85 max-w-md">
+                <li className="flex items-start gap-3">
+                  <span className="mt-2 h-px w-5 bg-[color:var(--gold)] shrink-0" aria-hidden="true" />
+                  <span>Real-time creation — see it take shape as you build.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="mt-2 h-px w-5 bg-[color:var(--gold)] shrink-0" aria-hidden="true" />
+                  <span>Local knowledge guiding every choice you make.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="mt-2 h-px w-5 bg-[color:var(--gold)] shrink-0" aria-hidden="true" />
+                  <span>Instant confirmation — no forms, no waiting, no requests.</span>
+                </li>
+              </ul>
+              <Link
+                to="/builder"
+                className="inline-flex items-center gap-2 mt-10 px-9 py-[18px] text-[12.5px] uppercase tracking-[0.22em] font-semibold bg-[color:var(--gold)] text-[color:var(--charcoal-deep)] hover:bg-[color:var(--gold-soft)] transition-colors"
+              >
+                Open the Studio <ArrowRight size={15} />
+              </Link>
+            </div>
+
+            <div className="reveal lg:col-span-5">
+              <div className="relative">
+                <div className="border border-[color:var(--gold)]/30 p-8 md:p-10 bg-[color:var(--teal-2)]/40 backdrop-blur-sm">
+                  <p className="text-[10.5px] uppercase tracking-[0.32em] text-[color:var(--gold)]">
+                    A studio session, in 4 moves
+                  </p>
+                  <ol className="mt-6 space-y-5 list-none p-0 text-[15px] text-[color:var(--ivory)] font-light">
+                    {[
+                      "Choose a region or theme",
+                      "Add experiences, stops, pace",
+                      "Refine timing and moments",
+                      "Confirm — instantly",
+                    ].map((step, i) => (
+                      <li key={step} className="flex items-baseline gap-4">
+                        <span className="text-[11px] uppercase tracking-[0.3em] text-[color:var(--gold)] font-medium w-6 shrink-0">
+                          0{i + 1}
+                        </span>
+                        <span>{step}</span>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+                <div className="absolute -top-4 -right-4 hidden md:block w-20 h-20 border border-[color:var(--gold)]/40" />
+              </div>
+            </div>
           </div>
         </div>
       </section>
