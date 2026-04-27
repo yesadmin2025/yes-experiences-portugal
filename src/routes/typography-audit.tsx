@@ -880,6 +880,18 @@ function SettingsPanel({
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [validateOnly, setValidateOnly] = useState(false);
+  // Workflow preference: when ON, an Import will silently apply auto-fix
+  // corrections instead of surfacing a report and asking for confirmation.
+  // Persisted separately from AuditSettings (it's a UX preference, not a stage).
+  const AUTOFIX_KEY = "yes:typography-audit:autofix-on-import:v1";
+  const [autoFixOnImport, setAutoFixOnImport] = useState<boolean>(() => {
+    if (typeof localStorage === "undefined") return false;
+    try { return localStorage.getItem(AUTOFIX_KEY) === "1"; } catch { return false; }
+  });
+  useEffect(() => {
+    try { localStorage.setItem(AUTOFIX_KEY, autoFixOnImport ? "1" : "0"); } catch { /* ignore */ }
+  }, [autoFixOnImport]);
+
   // Hold full validation report so the panel can render a structured issue list,
   // not just a single one-line message.
   const [importReport, setImportReport] = useState<
@@ -887,7 +899,7 @@ function SettingsPanel({
     | null
   >(null);
 
-  const handleImportFile = async (file: File, dryRun: boolean) => {
+  const handleImportFile = async (file: File, dryRun: boolean, autoFix: boolean) => {
     setImportReport(null);
     try {
       if (file.size > 64 * 1024) {
@@ -906,10 +918,36 @@ function SettingsPanel({
       const text = await file.text();
       const report = validateSettingsJson(text);
       // Validate-only mode NEVER mutates current settings — even on a clean file.
+      // (Takes precedence over auto-fix, since the user explicitly asked for a dry run.)
       if (dryRun) {
         setImportReport({ fileName: file.name, mode: "validated", report });
         return;
       }
+
+      // Auto-fix path: as long as we got *some* parsed structure (validator
+      // returns parsed=null only on totally unparseable JSON), we can mechanically
+      // correct it and apply. Surface the corrections as info notes appended to
+      // the report so the user always knows what changed.
+      if (autoFix && report.parsed) {
+        const { fixed, changes } = autoFixSettings(report.parsed);
+        onChange(fixed);
+        const augmented: ValidationReport = {
+          ...report,
+          ok: true,
+          parsed: fixed,
+          issues: [
+            ...report.issues,
+            ...changes.map((c): ValidationIssue => ({
+              level: "info",
+              path: "auto-fix",
+              message: c,
+            })),
+          ],
+        };
+        setImportReport({ fileName: file.name, mode: "applied", report: augmented });
+        return;
+      }
+
       if (report.ok && report.parsed) {
         onChange(report.parsed);
         setImportReport({ fileName: file.name, mode: "applied", report });
@@ -931,10 +969,12 @@ function SettingsPanel({
     }
   };
 
-  // Read validateOnly through a ref so the input's onChange (created once per
-  // render) always sees the latest toggle state without rebinding listeners.
+  // Read toggle state through refs so the input's onChange (created once per
+  // render) always sees the latest values without rebinding listeners.
   const validateOnlyRef = useRef(validateOnly);
   useEffect(() => { validateOnlyRef.current = validateOnly; }, [validateOnly]);
+  const autoFixOnImportRef = useRef(autoFixOnImport);
+  useEffect(() => { autoFixOnImportRef.current = autoFixOnImport; }, [autoFixOnImport]);
 
   return (
     <div className="mt-6 rounded-xl border border-[color:var(--border)] bg-white/80 p-5 md:p-6">
@@ -955,7 +995,7 @@ function SettingsPanel({
             className="hidden"
             onChange={(e) => {
               const file = e.target.files?.[0];
-              if (file) void handleImportFile(file, validateOnlyRef.current);
+              if (file) void handleImportFile(file, validateOnlyRef.current, autoFixOnImportRef.current);
               // Reset so re-selecting the same file still fires onChange.
               e.target.value = "";
             }}
@@ -973,6 +1013,21 @@ function SettingsPanel({
             />
             <span className="uppercase tracking-[0.12em]">Validate only</span>
           </label>
+          <label
+            className={`flex items-center gap-1.5 rounded-md border border-[color:var(--border)] px-2.5 py-1.5 text-[11px] font-semibold normal-case tracking-normal ${(disabled || validateOnly) ? "opacity-50" : "cursor-pointer hover:bg-zinc-50"}`}
+            title={validateOnly
+              ? "Disabled while \"Validate only\" is on — dry-run never modifies settings."
+              : "When on, imports silently apply auto-fix corrections (clamp out-of-range, fix typos, re-enable Stage 1 if all stages were off) without prompting. Persisted across sessions."}
+          >
+            <input
+              type="checkbox"
+              checked={autoFixOnImport}
+              onChange={(e) => setAutoFixOnImport(e.target.checked)}
+              disabled={disabled || validateOnly}
+              className="h-3.5 w-3.5"
+            />
+            <span className="uppercase tracking-[0.12em]">Auto-fix on import</span>
+          </label>
           <button
             type="button"
             onClick={() => {
@@ -981,11 +1036,19 @@ function SettingsPanel({
             }}
             disabled={disabled}
             className="rounded-md border border-[color:var(--border)] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] hover:bg-zinc-50 disabled:opacity-50"
-            title={validateOnly
-              ? "Pick a JSON file — it will be checked and reported but not applied."
-              : "Load reliability settings from a JSON file."}
+            title={
+              validateOnly
+                ? "Pick a JSON file — it will be checked and reported but not applied."
+                : autoFixOnImport
+                  ? "Pick a JSON file — corrections will be applied automatically."
+                  : "Load reliability settings from a JSON file."
+            }
           >
-            {validateOnly ? "Validate JSON…" : "Import JSON"}
+            {validateOnly
+              ? "Validate JSON…"
+              : autoFixOnImport
+                ? "Import & auto-fix…"
+                : "Import JSON"}
           </button>
           <button
             type="button"
