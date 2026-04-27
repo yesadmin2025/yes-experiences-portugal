@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-27T05:16:52.924Z",
+  "generatedAt": "2026-04-27T06:02:52.291Z",
   "filesScanned": 34,
   "approvedPalette": {
     "teal": "#295B61",
@@ -18,10 +18,10 @@
     "#cccccc"
   ],
   "counts": {
-    "total": 63,
+    "total": 65,
     "approved": 15,
     "allowlisted": 18,
-    "mismatch": 30
+    "mismatch": 32
   },
   "findings": [
     {
@@ -455,6 +455,24 @@
       "normalized": "#cccccc",
       "snippet": "\"#ccc\", // recharts internal selectors only",
       "status": "allowlisted"
+    },
+    {
+      "file": "src/routes/index.tsx",
+      "line": 257,
+      "col": 25,
+      "raw": "#2e7d32",
+      "normalized": "#2e7d32",
+      "snippet": "`color:${allOk ? \"#2e7d32\" : \"#c62828\"};font-weight:600`,",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/index.tsx",
+      "line": 257,
+      "col": 37,
+      "raw": "#c62828",
+      "normalized": "#c62828",
+      "snippet": "`color:${allOk ? \"#2e7d32\" : \"#c62828\"};font-weight:600`,",
+      "status": "mismatch"
     },
     {
       "file": "src/styles.css",
