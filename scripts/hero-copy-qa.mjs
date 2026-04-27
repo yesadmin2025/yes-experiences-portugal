@@ -99,6 +99,7 @@ function parseArgs(argv) {
     maxRuns: Infinity,
     strictFlags: false,
     reportJson: null, // null = off; "-" = stdout; else file path
+    reportJsonStrict: false,
   };
   const errors = [];
   const strict = argv.includes("--strict-flags");
