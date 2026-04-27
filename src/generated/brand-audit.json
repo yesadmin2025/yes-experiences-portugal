@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-27T10:17:34.152Z",
+  "generatedAt": "2026-04-27T10:31:52.912Z",
   "filesScanned": 59,
   "approvedPalette": {
     "teal": "#295B61",
@@ -584,7 +584,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 94,
+      "line": 61,
       "col": 11,
       "raw": "#295b61",
       "normalized": "#295b61",
@@ -593,7 +593,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 95,
+      "line": 62,
       "col": 13,
       "raw": "#2a7c82",
       "normalized": "#2a7c82",
@@ -602,7 +602,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 96,
+      "line": 63,
       "col": 11,
       "raw": "#c9a96a",
       "normalized": "#c9a96a",
@@ -611,7 +611,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 97,
+      "line": 64,
       "col": 16,
       "raw": "#e1cfa6",
       "normalized": "#e1cfa6",
@@ -620,7 +620,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 98,
+      "line": 65,
       "col": 12,
       "raw": "#faf8f3",
       "normalized": "#faf8f3",
@@ -629,7 +629,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 99,
+      "line": 66,
       "col": 11,
       "raw": "#f4efe7",
       "normalized": "#f4efe7",
@@ -638,7 +638,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 100,
+      "line": 67,
       "col": 15,
       "raw": "#2e2e2e",
       "normalized": "#2e2e2e",
@@ -647,7 +647,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 101,
+      "line": 68,
       "col": 20,
       "raw": "#5a5a5a",
       "normalized": "#5a5a5a",
@@ -656,7 +656,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 102,
+      "line": 69,
       "col": 20,
       "raw": "#1f1f1f",
       "normalized": "#1f1f1f",
@@ -665,7 +665,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 107,
+      "line": 74,
       "col": 11,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -674,7 +674,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 109,
+      "line": 76,
       "col": 14,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -683,7 +683,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 120,
+      "line": 87,
       "col": 29,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -692,7 +692,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 227,
+      "line": 194,
       "col": 11,
       "raw": "#1f1f1f",
       "normalized": "#1f1f1f",
@@ -701,7 +701,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 663,
+      "line": 630,
       "col": 12,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -710,7 +710,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 850,
+      "line": 817,
       "col": 12,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -739,9 +739,9 @@
       "file": "src/tailwind.config.lov.json",
       "line": 293,
       "col": 22,
-      "raw": "#2E2E2E",
+      "raw": "#2e2e2e",
       "normalized": "#2e2e2e",
-      "snippet": "\"foreground\": \"#2E2E2E\",",
+      "snippet": "\"foreground\": \"#2e2e2e\",",
       "status": "approved"
     },
     {
@@ -757,9 +757,9 @@
       "file": "src/tailwind.config.lov.json",
       "line": 295,
       "col": 27,
-      "raw": "#2E2E2E",
+      "raw": "#2e2e2e",
       "normalized": "#2e2e2e",
-      "snippet": "\"card-foreground\": \"#2E2E2E\",",
+      "snippet": "\"card-foreground\": \"#2e2e2e\",",
       "status": "approved"
     },
     {
@@ -775,72 +775,72 @@
       "file": "src/tailwind.config.lov.json",
       "line": 297,
       "col": 30,
-      "raw": "#2E2E2E",
+      "raw": "#2e2e2e",
       "normalized": "#2e2e2e",
-      "snippet": "\"popover-foreground\": \"#2E2E2E\",",
+      "snippet": "\"popover-foreground\": \"#2e2e2e\",",
       "status": "approved"
     },
     {
       "file": "src/tailwind.config.lov.json",
       "line": 299,
       "col": 30,
-      "raw": "#FAF8F3",
+      "raw": "#faf8f3",
       "normalized": "#faf8f3",
-      "snippet": "\"primary-foreground\": \"#FAF8F3\",",
+      "snippet": "\"primary-foreground\": \"#faf8f3\",",
       "status": "approved"
     },
     {
       "file": "src/tailwind.config.lov.json",
       "line": 300,
       "col": 21,
-      "raw": "#F4EFE7",
+      "raw": "#f4efe7",
       "normalized": "#f4efe7",
-      "snippet": "\"secondary\": \"#F4EFE7\",",
+      "snippet": "\"secondary\": \"#f4efe7\",",
       "status": "approved"
     },
     {
       "file": "src/tailwind.config.lov.json",
       "line": 301,
       "col": 32,
-      "raw": "#2E2E2E",
+      "raw": "#2e2e2e",
       "normalized": "#2e2e2e",
-      "snippet": "\"secondary-foreground\": \"#2E2E2E\",",
+      "snippet": "\"secondary-foreground\": \"#2e2e2e\",",
       "status": "approved"
     },
     {
       "file": "src/tailwind.config.lov.json",
       "line": 302,
       "col": 17,
-      "raw": "#F4EFE7",
+      "raw": "#f4efe7",
       "normalized": "#f4efe7",
-      "snippet": "\"muted\": \"#F4EFE7\",",
+      "snippet": "\"muted\": \"#f4efe7\",",
       "status": "approved"
     },
     {
       "file": "src/tailwind.config.lov.json",
       "line": 303,
       "col": 28,
-      "raw": "#5A5A5A",
+      "raw": "#5a5a5a",
       "normalized": "#5a5a5a",
-      "snippet": "\"muted-foreground\": \"#5A5A5A\",",
+      "snippet": "\"muted-foreground\": \"#5a5a5a\",",
       "status": "mismatch"
     },
     {
       "file": "src/tailwind.config.lov.json",
       "line": 304,
       "col": 18,
-      "raw": "#C9A96A",
+      "raw": "#c9a96a",
       "normalized": "#c9a96a",
-      "snippet": "\"accent\": \"#C9A96A\",",
+      "snippet": "\"accent\": \"#c9a96a\",",
       "status": "approved"
     },
     {
       "file": "src/tailwind.config.lov.json",
       "line": 305,
       "col": 29,
-      "raw": "#2E2E2E",
+      "raw": "#2e2e2e",
       "normalized": "#2e2e2e",
-      "snippet": "\"accent-foreground\": \"#2E2E2E\",",
+      "snippet": "\"accent-foreground\": \"#2e2e2e\",",
       "status": "approved"
     },
     {
@@ -856,72 +856,72 @@
       "file": "src/tailwind.config.lov.json",
       "line": 311,
       "col": 16,
-      "raw": "#C9A96A",
+      "raw": "#c9a96a",
       "normalized": "#c9a96a",
-      "snippet": "\"gold\": \"#C9A96A\",",
+      "snippet": "\"gold\": \"#c9a96a\",",
       "status": "approved"
     },
     {
       "file": "src/tailwind.config.lov.json",
       "line": 312,
       "col": 21,
-      "raw": "#E1CFA6",
+      "raw": "#e1cfa6",
       "normalized": "#e1cfa6",
-      "snippet": "\"gold-soft\": \"#E1CFA6\",",
+      "snippet": "\"gold-soft\": \"#e1cfa6\",",
       "status": "approved"
     },
     {
       "file": "src/tailwind.config.lov.json",
       "line": 314,
       "col": 18,
-      "raw": "#2A7C82",
+      "raw": "#2a7c82",
       "normalized": "#2a7c82",
-      "snippet": "\"teal-2\": \"#2A7C82\",",
+      "snippet": "\"teal-2\": \"#2a7c82\",",
       "status": "approved"
     },
     {
       "file": "src/tailwind.config.lov.json",
       "line": 315,
       "col": 17,
-      "raw": "#FAF8F3",
+      "raw": "#faf8f3",
       "normalized": "#faf8f3",
-      "snippet": "\"ivory\": \"#FAF8F3\",",
+      "snippet": "\"ivory\": \"#faf8f3\",",
       "status": "approved"
     },
     {
       "file": "src/tailwind.config.lov.json",
       "line": 316,
       "col": 16,
-      "raw": "#F4EFE7",
+      "raw": "#f4efe7",
       "normalized": "#f4efe7",
-      "snippet": "\"sand\": \"#F4EFE7\",",
+      "snippet": "\"sand\": \"#f4efe7\",",
       "status": "approved"
     },
     {
       "file": "src/tailwind.config.lov.json",
       "line": 317,
       "col": 20,
-      "raw": "#2E2E2E",
+      "raw": "#2e2e2e",
       "normalized": "#2e2e2e",
-      "snippet": "\"charcoal\": \"#2E2E2E\",",
+      "snippet": "\"charcoal\": \"#2e2e2e\",",
       "status": "approved"
     },
     {
       "file": "src/tailwind.config.lov.json",
       "line": 318,
       "col": 25,
-      "raw": "#5A5A5A",
+      "raw": "#5a5a5a",
       "normalized": "#5a5a5a",
-      "snippet": "\"charcoal-soft\": \"#5A5A5A\",",
+      "snippet": "\"charcoal-soft\": \"#5a5a5a\",",
       "status": "mismatch"
     },
     {
       "file": "src/tailwind.config.lov.json",
       "line": 319,
       "col": 25,
-      "raw": "#1F1F1F",
+      "raw": "#1f1f1f",
       "normalized": "#1f1f1f",
-      "snippet": "\"charcoal-deep\": \"#1F1F1F\"",
+      "snippet": "\"charcoal-deep\": \"#1f1f1f\"",
       "status": "allowlisted"
     }
   ]
