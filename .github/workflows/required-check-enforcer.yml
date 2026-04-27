@@ -400,6 +400,16 @@ jobs:
           echo "  WORKFLOW_FILE_URL   : \"${WORKFLOW_FILE_URL}\""
           echo "  WORKFLOW_JOB_URL    : \"${WORKFLOW_JOB_URL}\""
           echo "  WORKFLOW_RUNS_URL   : \"${WORKFLOW_RUNS_URL}\""
+          # Phase-2 normalized inputs and URL component breakdown.
+          # Values are "(skipped)" when phase 2 did not run so the
+          # operator can see at a glance which checks the verdict
+          # actually covers.
+          echo "  ── phase-2 components ──"
+          echo "  normalized_server   : \"${normalized_server_url}\""
+          echo "  normalized_repo     : \"${normalized_repo}\""
+          echo "  file_url_blob_path  : \"${file_url_blob_path}\""
+          echo "  job_url_anchor      : \"${job_url_anchor}\""
+          echo "  runs_url_path       : \"${runs_url_path}\""
           if (( ${#validation_errors[@]} > 0 )); then
             echo "  ── errors ──"
             for e in "${validation_errors[@]}"; do
