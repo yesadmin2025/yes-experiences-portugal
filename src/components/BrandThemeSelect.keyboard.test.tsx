@@ -110,13 +110,13 @@ describe("BrandThemeSelect — keyboard transition from invalid → valid", () =
         /\[brand-lock\].*received an unsupported.*emerald-on-mauve/.test(m),
       ),
     ).toBe(true);
-    // The valid replacement was NOT logged as unsupported. Note: the
-    // log line for the invalid render *does* mention gold-on-charcoal
-    // in its "allowed values" list, so we match on the "received an
-    // unsupported … gold-on-charcoal" shape, not the bare string.
+    // The valid replacement was NOT logged as unsupported. Match on
+    // the exact "received an unsupported brand theme: <value>" shape so
+    // we don't trip on the "Allowed values: …, gold-on-charcoal" tail
+    // that appears in the original invalid-render log line.
     expect(
       messages.some((m: string) =>
-        /received an unsupported.*gold-on-charcoal/.test(m),
+        /received an unsupported brand theme:[^.]*gold-on-charcoal/.test(m),
       ),
     ).toBe(false);
   });
