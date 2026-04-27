@@ -1081,6 +1081,15 @@ function HomePage() {
               >
                 Open the Studio <ArrowRight size={15} />
               </Link>
+              <p className="mt-5 text-[13px] italic font-light text-[color:var(--ivory)]/75 max-w-md">
+                Prefer guidance?{" "}
+                <Link
+                  to="/contact"
+                  className="underline decoration-[color:var(--gold)]/60 underline-offset-4 hover:text-[color:var(--gold-soft)] transition-colors"
+                >
+                  A local designer can shape it with you.
+                </Link>
+              </p>
             </div>
 
             <div className="reveal lg:col-span-5">
