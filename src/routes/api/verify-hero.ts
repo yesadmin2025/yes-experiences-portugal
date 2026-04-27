@@ -127,11 +127,7 @@ function detectSpecDrift() {
   }));
   return { ok: drifted.length === 0, drifted };
 }
-      ok: false,
-      error: (err as Error).message,
-    };
-  }
-}
+
 
 type FailureReason =
   | "fetch_error"
