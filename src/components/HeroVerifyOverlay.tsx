@@ -434,7 +434,7 @@ export function HeroVerifyOverlay() {
     const divergences: Divergence[] = [];
 
     // Union of keys from both sides — catches missing entries on either.
-    const allKeys = new Set<string>([
+    const allKeys = new Set<HeroSpecKey>([
       ...liveDiffs.keys(),
       ...exportedDiffs.keys(),
     ]);
