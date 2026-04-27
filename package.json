@@ -21,7 +21,8 @@
     "test:e2e": "playwright test",
     "test:e2e:install": "playwright install chromium",
     "test:e2e:homepage-structure": "playwright test e2e/homepage-structure.spec.ts",
-    "test:e2e:grep:homepage-structure": "playwright test --grep \"homepage structure\""
+    "test:e2e:grep:homepage-structure": "playwright test --grep \"homepage structure\"",
+    "qa:hero-copy": "node scripts/hero-copy-qa.mjs"
   },
   "dependencies": {
     "@cloudflare/vite-plugin": "^1.25.5",
