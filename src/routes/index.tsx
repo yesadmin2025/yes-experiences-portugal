@@ -21,7 +21,7 @@ import editCoastal from "@/assets/edit-coastal-road.jpg";
 import editWinery from "@/assets/edit-winery.jpg";
 import editMarket from "@/assets/edit-market.jpg";
 import editViewpoint from "@/assets/edit-viewpoint.jpg";
-import { ArrowRight, Star, MapPin, Compass, Clock, Sparkles } from "lucide-react";
+import { ArrowRight, Star, MapPin, Compass, Clock, Sparkles, MessageSquare, PenLine, Plane, Heart, Lock, Wand2, Zap } from "lucide-react";
 import { PlatformBadge } from "@/components/PlatformBadge";
 import { HeroMetaProbe } from "@/components/HeroMetaProbe";
 import { HeroCopyDiff } from "@/components/HeroCopyDiff";
@@ -128,24 +128,71 @@ const editorial = [
   },
 ];
 
+const howItWorks = [
+  {
+    step: "01",
+    icon: MessageSquare,
+    title: "Tell us your story",
+    line: "A short conversation — who's traveling, what you love, the pace that feels right. No forms, no friction.",
+  },
+  {
+    step: "02",
+    icon: PenLine,
+    title: "We design it around you",
+    line: "Your local experience designer crafts a fully private journey — places, people, timing — and refines it until it's exactly right.",
+  },
+  {
+    step: "03",
+    icon: Plane,
+    title: "You travel, we host",
+    line: "Drivers, guides, hosts and a single point of contact — every detail handled so you can simply be present.",
+  },
+];
+
+const pillars = [
+  {
+    icon: Heart,
+    title: "Local",
+    line: "Designed and hosted by Portuguese locals — the people, places and pace only insiders know.",
+  },
+  {
+    icon: Lock,
+    title: "Private",
+    line: "Always just your group. No strangers, no shared buses — every experience entirely yours.",
+  },
+  {
+    icon: Wand2,
+    title: "Tailored",
+    line: "Built around how you travel — your pace, your interests, the moments that matter to you.",
+  },
+  {
+    icon: Zap,
+    title: "Instant",
+    line: "From idea to confirmed itinerary in days, not weeks — with a real human behind every reply.",
+  },
+];
+
 const reviews = [
   {
     quote:
       "It felt like traveling Portugal with a local friend. Every stop was somewhere we'd never have found ourselves.",
     name: "Sarah T.",
     location: "San Francisco",
+    platform: "Google",
   },
   {
     quote:
       "Quiet luxury done properly. No itineraries shoved at us — just thoughtful, beautifully timed moments.",
     name: "Pierre L.",
     location: "Paris",
+    platform: "TripAdvisor",
   },
   {
     quote:
       "Our 12 guests, fully private, completely seamless. They handled everything with extraordinary grace.",
     name: "Akiko M.",
     location: "Tokyo",
+    platform: "Trustpilot",
   },
 ];
 
@@ -568,24 +615,86 @@ function HomePage() {
         </div>
       </section>
 
-      {/* 3 — EXPERIENCE TYPES */}
-      <section className="py-32 md:py-44 bg-[color:var(--ivory)]">
+      {/* 3 — HOW IT WORKS
+          Mobile-first 3-step editorial layout. Sets expectations + removes
+          friction immediately after the trust signal. Generous vertical
+          rhythm; numbers + icons + short copy, never paragraphs. */}
+      <section className="py-24 md:py-36 bg-[color:var(--ivory)]" aria-labelledby="how-it-works-title">
         <div className="container-x">
-          <div className="reveal text-center max-w-2xl mx-auto mb-20">
-            <span className="eyebrow">The Experiences</span>
-            <h2 className="serif text-4xl md:text-5xl mt-6">
-              From intimate moments <br />
-              to <span className="italic">large private programs</span>
+          <div className="reveal text-center max-w-2xl mx-auto mb-14 md:mb-20">
+            <span className="eyebrow">How it works</span>
+            <h2 id="how-it-works-title" className="serif text-[2.25rem] md:text-5xl mt-5 leading-[1.08]">
+              Three steps. <span className="italic">No friction.</span>
             </h2>
-            <p className="mt-6 text-[16px] text-[color:var(--charcoal-soft)] leading-[1.75]">
-              Always private. Always personal. Always designed around you — for one guest, or a hundred.
+            <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
+              From first message to the moment you arrive — handled entirely by one local team.
             </p>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {types.map((c) => (
+
+          <ol className="grid md:grid-cols-3 gap-10 md:gap-8 list-none p-0 max-w-md md:max-w-none mx-auto">
+            {howItWorks.map((s, idx) => {
+              const Icon = s.icon;
+              return (
+                <li key={s.step} className="reveal-stagger relative">
+                  <div className="flex md:flex-col items-start md:items-start gap-5 md:gap-6">
+                    <div className="flex flex-col items-center md:items-start shrink-0">
+                      <span className="text-[10.5px] uppercase tracking-[0.32em] text-[color:var(--gold)] font-medium">
+                        {s.step}
+                      </span>
+                      <span className="mt-3 inline-flex items-center justify-center w-12 h-12 md:w-14 md:h-14 border border-[color:var(--gold)]/40 text-[color:var(--teal)]">
+                        <Icon size={20} strokeWidth={1.5} />
+                      </span>
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="serif text-[1.4rem] md:text-[1.55rem] text-[color:var(--charcoal)] leading-[1.2]">
+                        {s.title}
+                      </h3>
+                      <p className="mt-3 text-[15px] md:text-[15.5px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light max-w-[38ch]">
+                        {s.line}
+                      </p>
+                    </div>
+                  </div>
+                  {idx < howItWorks.length - 1 && (
+                    <span
+                      aria-hidden="true"
+                      className="hidden md:block absolute top-6 left-full w-full h-px bg-gradient-to-r from-[color:var(--gold)]/40 to-transparent -translate-x-6"
+                    />
+                  )}
+                </li>
+              );
+            })}
+          </ol>
+
+          <div className="reveal mt-14 md:mt-16 text-center">
+            <Link
+              to="/builder"
+              className="cta-primary inline-flex items-center gap-2 px-8 py-[16px] text-[12.5px] uppercase tracking-[0.2em] font-semibold"
+            >
+              Start designing yours
+              <ArrowRight size={15} />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* 4 — EXPERIENCES (Private Day · Multi-Day · Build Your Own) */}
+      <section className="py-24 md:py-40 bg-[color:var(--sand)]">
+        <div className="container-x">
+          <div className="reveal text-center max-w-2xl mx-auto mb-14 md:mb-20">
+            <span className="eyebrow">The experiences</span>
+            <h2 className="serif text-[2.25rem] md:text-5xl mt-5 leading-[1.08]">
+              Three ways <span className="italic">to travel Portugal</span>
+            </h2>
+            <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
+              All private. All tailored. All hosted by a local team that knows where to take you.
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-7 max-w-5xl mx-auto">
+            {types.slice(0, 2).map((c) => (
               <Link key={c.title} to={c.to} className="group block reveal-stagger">
                 <div className="lift-layer-sm">
-                  <div className="relative overflow-hidden aspect-[3/4] mb-6 shadow-[0_10px_30px_-20px_rgba(46,46,46,0.28)] group-hover:shadow-[0_28px_55px_-22px_rgba(41,91,97,0.32)] transition-shadow duration-700">
+                  <div className="relative overflow-hidden aspect-[4/5] mb-5 shadow-[0_10px_30px_-20px_rgba(46,46,46,0.28)] group-hover:shadow-[0_28px_55px_-22px_rgba(41,91,97,0.32)] transition-shadow duration-700">
                     <img
                       src={c.img}
                       alt={c.title}
@@ -593,201 +702,93 @@ function HomePage() {
                       className="w-full h-full object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.08]"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/85 via-[color:var(--charcoal)]/20 to-transparent" />
-                    <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[color:var(--charcoal)]/55 to-transparent" />
-                    <div className="absolute inset-0 bg-[color:var(--teal)]/0 group-hover:bg-[color:var(--teal)]/10 transition-colors duration-700" />
-                    <span className="absolute top-4 left-4 text-[10.5px] uppercase tracking-[0.25em] text-white drop-shadow-[0_1px_6px_rgba(0,0,0,0.7)]">
-                      Private · Tailored
-                    </span>
                   </div>
                   <h3 className="serif text-[1.5rem] text-[color:var(--charcoal)] group-hover:text-[color:var(--teal)] transition-colors duration-500">
                     {c.title}
                   </h3>
-                  <p className="mt-3 text-[15.5px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
+                  <p className="mt-3 text-[15px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
                     {c.line}
                   </p>
                 </div>
               </Link>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 4 — SIGNATURE EXPERIENCES */}
-      <section className="py-32 md:py-44 bg-[color:var(--sand)]">
-        <div className="container-x">
-          <div className="reveal flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
-            <div>
-              <span className="eyebrow">Signature Experiences</span>
-              <h2 className="serif text-4xl md:text-5xl mt-6">
-                Crafted by us, <span className="italic">customized by you</span>
-              </h2>
-              <p className="mt-6 max-w-lg text-[16px] text-[color:var(--charcoal-soft)] leading-[1.75]">
-                Ready-to-book private experiences — refined over years and adjusted in minutes
-                to fit the way you travel.
-              </p>
-            </div>
-            <Link
-              to="/experiences"
-              className="text-[13px] uppercase tracking-[0.2em] text-[color:var(--teal)] hover:text-[color:var(--teal-2)] inline-flex items-center gap-2 transition-colors font-medium"
-            >
-              View all <ArrowRight size={14} />
-            </Link>
-          </div>
-          <div className="grid md:grid-cols-3 gap-7">
-            {signatures.map((s) => (
-              <article key={s.title} className="group reveal-stagger">
-                <div className="lift-layer-sm bg-[color:var(--card)] border border-[color:var(--border)] group-hover:border-[color:var(--teal)]/30 group-hover:shadow-[0_24px_50px_-24px_rgba(41,91,97,0.25)] h-full">
-                  <div className="relative overflow-hidden aspect-[4/3]">
-                    <img
-                      src={s.img}
-                      alt={s.title}
-                      loading="lazy"
-                      className="w-full h-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-[color:var(--teal)]/0 group-hover:bg-[color:var(--teal)]/8 transition-colors duration-700" />
-                  </div>
-                  <div className="p-7 md:p-8">
-                    <h3 className="serif text-[1.65rem] text-[color:var(--charcoal)] group-hover:text-[color:var(--teal)] transition-colors duration-500">
-                      {s.title}
-                    </h3>
-                    <p className="mt-3 text-[15px] text-[color:var(--charcoal-soft)] leading-[1.7]">
-                      {s.line}
-                    </p>
-                    <ul className="mt-6 space-y-2.5">
-                      {s.pace.map((p, idx) => (
-                        <li
-                          key={p}
-                          className="flex items-center gap-3 text-[14px] text-[color:var(--charcoal)]"
-                        >
-                          <span className="text-[color:var(--teal)] text-[10.5px] tracking-wider font-medium">
-                            {String(idx + 1).padStart(2, "0")}
-                          </span>
-                          <span className="h-px w-4 bg-[color:var(--gold)]/60" />
-                          {p}
-                        </li>
-                      ))}
-                    </ul>
-                    <div className="mt-7 pt-5 border-t border-[color:var(--border)] flex flex-wrap gap-2">
-                      <Link
-                        to="/contact"
-                        className="cta-primary text-[12px] uppercase tracking-[0.18em] px-5 py-2.5 font-semibold"
-                      >
-                        Book
-                      </Link>
-                      <Link
-                        to="/builder"
-                        className="text-[12px] uppercase tracking-[0.18em] border border-[color:var(--charcoal)]/25 hover:border-[color:var(--teal)] hover:text-[color:var(--teal)] text-[color:var(--charcoal)] px-4 py-2.5 transition-colors"
-                      >
-                        Customize
-                      </Link>
-                      <Link
-                        to="/builder"
-                        className="text-[12px] uppercase tracking-[0.18em] text-[color:var(--teal)] hover:text-[color:var(--teal-2)] px-4 py-2.5 transition-colors"
-                      >
-                        Build your own →
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 5 — EXPERIENCE STUDIO PREVIEW */}
-      <section className="bg-[color:var(--teal)] text-[color:var(--ivory)] py-28 md:py-36 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-[0.04] pointer-events-none">
-          <div className="absolute top-1/4 right-0 w-96 h-96 rounded-full border border-[color:var(--gold)]" />
-          <div className="absolute bottom-0 left-1/4 w-72 h-72 rounded-full border border-[color:var(--gold)]" />
-        </div>
-        <div className="container-x relative">
-          <div className="grid lg:grid-cols-12 gap-12 items-center">
-            <div className="reveal lg:col-span-6">
-              <span className="inline-flex items-center gap-3 text-[10px] uppercase tracking-[0.3em] text-[color:var(--ivory)]/80">
-                <span className="h-px w-8 bg-[color:var(--gold)]" />
-                The Experience Studio
-              </span>
-              <h2 className="serif text-4xl md:text-5xl mt-6">
-                Design your own Portugal —<br />
-                <span className="italic">step by step.</span>
-              </h2>
-              <p className="mt-7 text-[17px] text-[color:var(--ivory)]/95 leading-[1.75] max-w-lg font-light">
-                Tell us how you travel. We'll shape a private experience around your group, your
-                pace and the moments that matter — with a live story, timeline and map evolving
-                as you go. Secure it the moment it feels right.
-              </p>
-              <div className="mt-9 flex flex-wrap gap-4">
-                <Link
-                  to="/builder"
-                  className="group inline-flex items-center gap-2 bg-[color:var(--ivory)] text-[color:var(--teal)] hover:bg-white border-[1.5px] border-[color:var(--gold)]/70 hover:border-[color:var(--gold)] px-9 py-[18px] text-[12.5px] uppercase tracking-[0.2em] font-semibold transition-all duration-[260ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] hover:-translate-y-[2px] hover:shadow-[0_14px_30px_-12px_rgba(201,169,106,0.45)]"
-                >
-                  Open the Studio
-                  <ArrowRight size={15} />
-                </Link>
-              </div>
-            </div>
-
-            <div className="reveal lg:col-span-6">
-              <div className="bg-[color:var(--ivory)] text-[color:var(--charcoal)] p-8 md:p-10 shadow-[var(--shadow-elegant)]">
-                <div className="flex items-center justify-between mb-8">
-                  <span className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--charcoal-soft)]">
-                    Your Experience
+            {/* Build Your Own — visually distinct teal card pointing to Studio */}
+            <Link to="/builder" className="group block reveal-stagger sm:col-span-2 lg:col-span-1">
+              <div className="lift-layer-sm relative overflow-hidden aspect-[4/5] mb-5 bg-[color:var(--teal)] text-[color:var(--ivory)] flex flex-col justify-between p-7">
+                <div>
+                  <span className="inline-flex items-center gap-2 text-[10.5px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
+                    <Sparkles size={13} /> The Studio
                   </span>
-                  <span className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--teal)]">
-                    Step 4 of 9
-                  </span>
-                </div>
-                <div className="space-y-5">
-                  {[
-                    { label: "Group", value: "Two travelers · Anniversary" },
-                    { label: "Region", value: "Douro & Northern Portugal" },
-                    { label: "Duration", value: "3 days · slow pace" },
-                    { label: "Style", value: "Wine, gastronomy, hidden viewpoints" },
-                  ].map((row) => (
-                    <div
-                      key={row.label}
-                      className="flex justify-between items-baseline gap-4 pb-3 border-b border-[color:var(--border)]"
-                    >
-                      <span className="text-[10px] uppercase tracking-[0.25em] text-[color:var(--charcoal-soft)]">
-                        {row.label}
-                      </span>
-                      <span className="serif text-base text-right">{row.value}</span>
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-8 p-5 bg-[color:var(--sand)] border-l-2 border-[color:var(--gold)]">
-                  <p className="serif italic text-[color:var(--teal)] text-[15px] leading-relaxed">
-                    "Day one begins with a quiet drive into Douro — a family vineyard waits with
-                    fresh bread, olives and a pour from the cellar."
+                  <h3 className="serif text-[1.85rem] mt-6 leading-[1.1]">
+                    Build your <span className="italic">own.</span>
+                  </h3>
+                  <p className="mt-4 text-[15px] text-[color:var(--ivory)]/90 leading-[1.7] font-light">
+                    Don't see exactly what you want? Design a private journey from scratch — guided by a local, finalized in days.
                   </p>
                 </div>
+                <span className="inline-flex items-center gap-2 text-[12px] uppercase tracking-[0.22em] text-[color:var(--gold-soft)] group-hover:translate-x-1 transition-transform">
+                  Open the Studio <ArrowRight size={14} />
+                </span>
+                <div className="absolute -bottom-12 -right-12 w-40 h-40 rounded-full border border-[color:var(--gold)]/30 pointer-events-none" />
               </div>
-            </div>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* 5 — DIFFERENTIATION
+          Four pillars. Minimal mobile-first grid: 2-up on mobile, 4-up on
+          desktop. Icon + one-word title + one short line. */}
+      <section className="py-24 md:py-36 bg-[color:var(--ivory)]" aria-labelledby="pillars-title">
+        <div className="container-x">
+          <div className="reveal text-center max-w-2xl mx-auto mb-14 md:mb-16">
+            <span className="eyebrow">Why YES</span>
+            <h2 id="pillars-title" className="serif text-[2.25rem] md:text-5xl mt-5 leading-[1.08]">
+              The difference, <span className="italic">in four words.</span>
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12 md:gap-y-10 max-w-5xl mx-auto">
+            {pillars.map((p) => {
+              const Icon = p.icon;
+              return (
+                <div key={p.title} className="reveal-stagger flex flex-col items-start text-left">
+                  <span className="inline-flex items-center justify-center w-11 h-11 md:w-12 md:h-12 text-[color:var(--teal)] border border-[color:var(--gold)]/40 mb-5">
+                    <Icon size={18} strokeWidth={1.5} />
+                  </span>
+                  <h3 className="serif text-[1.35rem] md:text-[1.45rem] text-[color:var(--charcoal)] leading-[1.15]">
+                    {p.title}
+                  </h3>
+                  <p className="mt-3 text-[14.5px] text-[color:var(--charcoal-soft)] leading-[1.65] font-light max-w-[28ch]">
+                    {p.line}
+                  </p>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
 
       {/* 6 — MULTI-DAY JOURNEYS */}
-      <section className="bg-[color:var(--ivory)] py-32 md:py-44">
+      <section className="bg-[color:var(--sand)] py-24 md:py-40">
         <div className="container-x">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             <div className="reveal lg:order-2">
               <span className="eyebrow">Multi-Day Journeys</span>
-              <h2 className="serif text-4xl md:text-5xl mt-5">
+              <h2 className="serif text-[2.25rem] md:text-5xl mt-5 leading-[1.08]">
                 A few days, <br />
                 <span className="italic">one continuous story.</span>
               </h2>
-              <p className="mt-7 text-[17px] text-[color:var(--charcoal-soft)] leading-[1.75] max-w-lg">
+              <p className="mt-6 text-[16px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.75] max-w-lg font-light">
                 Linger longer. Travel slower. Wake in a vineyard, lunch in a fishing village,
                 fall asleep above the Douro — connected by quiet roads and people who know them
                 by name.
               </p>
-              <div className="mt-9 flex flex-wrap gap-3">
+              <div className="mt-8 flex flex-wrap gap-3">
                 {["Coast & Vineyards", "Lisbon to Douro", "Alentejo Slow"].map((tag) => (
                   <span
                     key={tag}
-                    className="text-[12px] uppercase tracking-[0.2em] px-4 py-2 border border-[color:var(--charcoal)]/20 text-[color:var(--charcoal)]"
+                    className="text-[11.5px] uppercase tracking-[0.2em] px-4 py-2 border border-[color:var(--charcoal)]/20 text-[color:var(--charcoal)]"
                   >
                     {tag}
                   </span>
@@ -795,7 +796,7 @@ function HomePage() {
               </div>
               <Link
                 to="/multi-day"
-                className="cta-primary mt-10 inline-flex items-center gap-2 px-8 py-[16px] text-[12.5px] uppercase tracking-[0.2em] font-semibold"
+                className="cta-primary mt-9 inline-flex items-center gap-2 px-8 py-[16px] text-[12.5px] uppercase tracking-[0.2em] font-semibold"
               >
                 Discover Multi-Day Journeys
                 <ArrowRight size={15} />
@@ -816,22 +817,25 @@ function HomePage() {
         </div>
       </section>
 
-      {/* 7 — LOCAL STORIES / HIDDEN GEMS */}
-      <section className="py-32 md:py-44 bg-[color:var(--sand)]">
+      {/* 7 — LOCAL STORIES / HIDDEN GEMS
+          The editorial / emotional beat — "the Portugal we travel ourselves".
+          Sits between Multi-Day and Social Proof to warm the reader before
+          the review block. */}
+      <section className="py-24 md:py-40 bg-[color:var(--ivory)]">
         <div className="container-x">
-          <div className="reveal text-center max-w-2xl mx-auto mb-16 md:mb-20">
+          <div className="reveal text-center max-w-2xl mx-auto mb-14 md:mb-20">
             <span className="eyebrow">Local Stories &amp; Hidden Gems</span>
-            <h2 className="serif text-[2.5rem] md:text-5xl lg:text-[3.4rem] mt-6">
+            <h2 className="serif text-[2.25rem] md:text-5xl lg:text-[3.4rem] mt-5 leading-[1.08]">
               The Portugal <span className="italic">we travel ourselves</span>
             </h2>
-            <p className="mt-6 text-[16px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.75] max-w-xl mx-auto font-light">
+            <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.7] max-w-xl mx-auto font-light">
               Notes from the road — the places we keep returning to, away from the crowds.
             </p>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-7">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 md:gap-7">
             {editorial.map((e) => (
               <article key={e.title} className="group reveal-stagger">
-                <div className="relative overflow-hidden aspect-[4/5] mb-5 shadow-[0_10px_30px_-22px_rgba(46,46,46,0.35)] group-hover:shadow-[0_24px_50px_-22px_rgba(41,91,97,0.28)] transition-shadow duration-700">
+                <div className="relative overflow-hidden aspect-[4/5] mb-4 md:mb-5 shadow-[0_10px_30px_-22px_rgba(46,46,46,0.35)] group-hover:shadow-[0_24px_50px_-22px_rgba(41,91,97,0.28)] transition-shadow duration-700">
                   <img
                     src={e.img}
                     alt={e.title}
@@ -839,21 +843,20 @@ function HomePage() {
                     className="w-full h-full object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.08]"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal)]/88 via-[color:var(--charcoal)]/25 to-transparent" />
-                  <div className="absolute inset-0 bg-[color:var(--teal)]/0 group-hover:bg-[color:var(--teal)]/10 transition-colors duration-700" />
-                  <div className="absolute left-5 right-5 bottom-5">
-                    <span className="block h-px w-8 bg-[color:var(--gold)] mb-3 opacity-90" />
-                    <h3 className="serif text-[1.4rem] md:text-[1.5rem] leading-[1.15] text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
+                  <div className="absolute left-4 right-4 bottom-4 md:left-5 md:right-5 md:bottom-5">
+                    <span className="block h-px w-7 md:w-8 bg-[color:var(--gold)] mb-2.5 md:mb-3 opacity-90" />
+                    <h3 className="serif text-[1.1rem] md:text-[1.5rem] leading-[1.15] text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
                       {e.title}
                     </h3>
                   </div>
                 </div>
-                <p className="text-[15.5px] text-[color:var(--charcoal)] leading-[1.7] font-light max-w-[34ch]">
+                <p className="text-[14px] md:text-[15.5px] text-[color:var(--charcoal)] leading-[1.65] font-light max-w-[34ch]">
                   {e.line}
                 </p>
               </article>
             ))}
           </div>
-          <div className="reveal mt-16 text-center">
+          <div className="reveal mt-12 md:mt-16 text-center">
             <Link
               to="/local-stories"
               className="inline-flex items-center gap-2 text-[13px] uppercase tracking-[0.2em] text-[color:var(--teal)] hover:text-[color:var(--teal-2)] transition-colors font-medium"
@@ -864,105 +867,53 @@ function HomePage() {
         </div>
       </section>
 
-      {/* 8 — CORPORATE & CELEBRATIONS */}
-      <section className="bg-[color:var(--charcoal-deep)] text-[color:var(--ivory)] py-32 md:py-40">
+      {/* 8 — SOCIAL PROOF
+          Headline anchors the volume of reviews. Three handcrafted quote
+          cards stand in for the Trustpilot widget until a business profile
+          is connected — each carries the platform name in the figcaption to
+          read as a real platform review. */}
+      <section className="py-24 md:py-36 bg-[color:var(--sand)]" aria-labelledby="reviews-title">
         <div className="container-x">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div className="reveal">
-              <span className="inline-flex items-center gap-3 text-[11px] uppercase tracking-[0.3em] text-[color:var(--ivory)]/85">
-                <span className="h-px w-8 bg-[color:var(--gold)]" />
-                Corporate &amp; Celebrations
-              </span>
-              <h2 className="serif text-4xl md:text-5xl mt-7">
-                Fully private. <br />
-                <span className="italic">Fully managed.</span>
-              </h2>
-              <p className="mt-7 text-[17px] text-[color:var(--ivory)]/95 leading-[1.75] max-w-lg">
-                From an intimate proposal to a 200-guest incentive program — designed
-                end-to-end by a single team. Quietly extraordinary, never ordinary.
-              </p>
-              <div className="mt-10 grid grid-cols-2 gap-x-8 gap-y-4 max-w-md">
-                {[
-                  "Corporate programs",
-                  "Incentive travel",
-                  "Proposals",
-                  "Anniversaries",
-                  "Milestones",
-                  "Private celebrations",
-                ].map((item) => (
-                  <div
-                    key={item}
-                    className="flex items-center gap-2.5 text-[14.5px] text-[color:var(--ivory)]/95"
-                  >
-                    <span className="h-1 w-1 bg-[color:var(--gold)] rounded-full" />
-                    {item}
-                  </div>
-                ))}
-              </div>
-              <div className="mt-10 flex flex-wrap gap-3">
-                <Link
-                  to="/corporate"
-                  className="cta-primary inline-flex items-center gap-2 px-8 py-[16px] text-[12.5px] uppercase tracking-[0.2em] font-semibold"
-                >
-                  For Companies
-                  <ArrowRight size={15} />
-                </Link>
-                <Link
-                  to="/proposals"
-                  className="cta-secondary-dark inline-flex items-center gap-2 px-8 py-[16px] text-[12.5px] uppercase tracking-[0.2em] font-semibold"
-                >
-                  For Celebrations
-                </Link>
-              </div>
-            </div>
-            <div className="reveal grid grid-cols-2 gap-4">
-              <div className="overflow-hidden group">
-                <img
-                  src={catCorporate}
-                  alt="Corporate private experience"
-                  loading="lazy"
-                  className="w-full aspect-[3/4] object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-105"
-                />
-              </div>
-              <div className="overflow-hidden group mt-10">
-                <img
-                  src={catProposals}
-                  alt="Private celebration"
-                  loading="lazy"
-                  className="w-full aspect-[3/4] object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-105"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 9 — REVIEWS */}
-      <section className="py-28 md:py-36 bg-[color:var(--ivory)]">
-        <div className="container-x">
-          <div className="reveal text-center max-w-2xl mx-auto mb-16">
+          <div className="reveal text-center max-w-2xl mx-auto mb-14 md:mb-16">
             <span className="eyebrow">Voices</span>
-            <h2 className="serif text-4xl md:text-5xl mt-6">
-              What guests <span className="italic">tell us after</span>
+            <h2 id="reviews-title" className="serif text-[2.25rem] md:text-5xl mt-5 leading-[1.08]">
+              700+ verified <span className="italic">5-star reviews</span>
             </h2>
+            <p
+              className="mt-5 flex items-center justify-center gap-1.5 text-[color:var(--gold)]"
+              role="img"
+              aria-label="Average rating 5 out of 5 stars"
+            >
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} size={15} fill="currentColor" strokeWidth={0} aria-hidden="true" />
+              ))}
+              <span className="ml-2 text-[13px] tracking-[0.18em] uppercase text-[color:var(--charcoal-soft)]">
+                Across Google · TripAdvisor · Trustpilot
+              </span>
+            </p>
           </div>
-          <div className="grid md:grid-cols-3 gap-7">
+          <div className="grid md:grid-cols-3 gap-6 md:gap-7">
             {reviews.map((r, i) => (
               <figure key={i} className="group reveal-stagger h-full">
-                <div className="lift-layer-sm bg-[color:var(--card)] border border-[color:var(--border)] group-hover:border-[color:var(--teal)]/25 group-hover:shadow-[0_24px_50px_-24px_rgba(41,91,97,0.2)] p-8 md:p-9 h-full">
+                <div className="lift-layer-sm bg-[color:var(--card)] border border-[color:var(--border)] group-hover:border-[color:var(--teal)]/25 group-hover:shadow-[0_24px_50px_-24px_rgba(41,91,97,0.2)] p-7 md:p-9 h-full flex flex-col">
                   <div className="flex gap-0.5 text-[color:var(--gold)] mb-5">
                     {[...Array(5)].map((_, idx) => (
                       <Star key={idx} size={13} fill="currentColor" />
                     ))}
                   </div>
-                  <blockquote className="serif italic text-[19px] md:text-[20px] leading-[1.6] text-[color:var(--charcoal)]">
+                  <blockquote className="serif italic text-[17px] md:text-[20px] leading-[1.6] text-[color:var(--charcoal)] flex-1">
                     "{r.quote}"
                   </blockquote>
-                  <figcaption className="mt-7 pt-5 border-t border-[color:var(--border)]">
-                    <p className="text-[14px] font-medium text-[color:var(--charcoal)]">{r.name}</p>
-                    <p className="text-[12.5px] text-[color:var(--charcoal-soft)] mt-1">
-                      {r.location}
-                    </p>
+                  <figcaption className="mt-6 pt-5 border-t border-[color:var(--border)] flex items-center justify-between gap-3">
+                    <div>
+                      <p className="text-[14px] font-medium text-[color:var(--charcoal)]">{r.name}</p>
+                      <p className="text-[12.5px] text-[color:var(--charcoal-soft)] mt-0.5">
+                        {r.location}
+                      </p>
+                    </div>
+                    <span className="text-[10.5px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)] shrink-0">
+                      via {r.platform}
+                    </span>
                   </figcaption>
                 </div>
               </figure>
@@ -971,10 +922,10 @@ function HomePage() {
         </div>
       </section>
 
-      {/* 10 — FAQ (placed right before the final CTA) */}
+      {/* 9 — FAQ (placed right before the final CTA) */}
       <FAQ />
 
-      {/* 11 — FINAL CTA */}
+      {/* 10 — FINAL CTA */}
       <section className="pb-28 md:pb-36 bg-[color:var(--ivory)]">
         <div className="container-x">
           <div className="reveal relative bg-[color:var(--sand)] p-12 md:p-20 overflow-hidden">
