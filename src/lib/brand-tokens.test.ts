@@ -4,7 +4,11 @@ import { join, relative, sep } from "node:path";
 import {
   BRAND_COLORS,
   BRAND_LOGO_VARIANTS,
+  BRAND_LOGO_THEMES,
   BRAND_HEX_EXEMPT_PATH_PREFIXES,
+  DEFAULT_BRAND_LOGO_THEME,
+  assertBrandLogoTheme,
+  isBrandLogoTheme,
   type BrandColorToken,
   type BrandLogoTheme,
 } from "@/lib/brand-tokens";
@@ -95,25 +99,39 @@ describe("Brand lock — Logo component", () => {
   }
 
   it("Logo.tsx exposes EXACTLY the locked theme keys (no more, no less)", () => {
-    // Find the LogoTheme union and assert it's a verbatim list of the
-    // locked themes. Prevents silently adding a "gold-on-ivory"
-    // variant without a brand decision.
-    const unionMatch = logoSrc.match(/type\s+LogoTheme\s*=\s*([^;]+);/);
-    if (!unionMatch) {
+    // Logo.tsx delegates its theme union to `BrandLogoTheme` (the
+    // single source of truth in brand-tokens.ts). What we lock here is
+    // that the local `SOURCES` map has a row for every locked theme
+    // and no extra rows — so a brand decision to add/remove a variant
+    // can only happen by editing brand-tokens.ts AND Logo.tsx
+    // together.
+    const sourcesMatch = logoSrc.match(
+      /SOURCES[\s\S]*?=\s*{([\s\S]*?)};/,
+    );
+    if (!sourcesMatch) {
       throw new Error(
-        "Logo.tsx must declare `type LogoTheme = …;` so the brand lock " +
-          "can verify the supported variants.",
+        "Logo.tsx must declare a `SOURCES` map keyed by BrandLogoTheme " +
+          "so the brand lock can verify the supported variants.",
       );
     }
-    const declared = unionMatch[1]
-      .split("|")
-      .map((s) => s.trim().replace(/^["']|["']$/g, ""))
-      .filter(Boolean)
+    const declared = Array.from(
+      sourcesMatch[1].matchAll(/["']([^"']+)["']\s*:/g),
+    )
+      .map((m) => m[1])
       .sort();
     const locked = (Object.keys(BRAND_LOGO_VARIANTS) as BrandLogoTheme[])
       .slice()
       .sort();
     expect(declared).toEqual(locked);
+  });
+
+  it("Logo.tsx routes its theme prop through the runtime guard", () => {
+    // Hard requirement: Logo MUST call `assertBrandLogoTheme(...)` so
+    // any value that escapes the type system is caught at render time.
+    expect(
+      /assertBrandLogoTheme\s*\(/.test(logoSrc),
+      "Logo.tsx must call `assertBrandLogoTheme(...)` on its theme prop",
+    ).toBe(true);
   });
 });
 
@@ -232,5 +250,67 @@ describe("Brand lock — token shape", () => {
     const _l: BrandLogoTheme = "teal-on-ivory";
     expect(_c).toBe("teal");
     expect(_l).toBe("teal-on-ivory");
+  });
+});
+
+/* ---------------------------------------------------------------- */
+/* 4. Runtime guard for BrandLogoTheme                                */
+/* ---------------------------------------------------------------- */
+
+import { vi } from "vitest";
+
+describe("Brand lock — assertBrandLogoTheme runtime guard", () => {
+  it("returns valid themes unchanged", () => {
+    for (const theme of BRAND_LOGO_THEMES) {
+      expect(assertBrandLogoTheme(theme, "Test")).toBe(theme);
+    }
+  });
+
+  it("isBrandLogoTheme narrows correctly", () => {
+    expect(isBrandLogoTheme("teal-on-ivory")).toBe(true);
+    expect(isBrandLogoTheme("gold-on-charcoal")).toBe(true);
+    expect(isBrandLogoTheme("gold-on-ivory")).toBe(false);
+    expect(isBrandLogoTheme(undefined)).toBe(false);
+    expect(isBrandLogoTheme(null)).toBe(false);
+    expect(isBrandLogoTheme(42)).toBe(false);
+    expect(isBrandLogoTheme({})).toBe(false);
+  });
+
+  it("DEFAULT_BRAND_LOGO_THEME is itself a valid theme", () => {
+    expect(BRAND_LOGO_THEMES).toContain(DEFAULT_BRAND_LOGO_THEME);
+  });
+
+  it("throws in dev/test on an unsupported theme and includes the component name", () => {
+    // Vitest sets NODE_ENV=test → the guard treats this as dev and throws.
+    const errSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    try {
+      expect(() =>
+        assertBrandLogoTheme("emerald-on-mauve", "Logo"),
+      ).toThrowError(/\[brand-lock\] <Logo> received an unsupported brand theme/);
+      expect(errSpy).toHaveBeenCalled();
+      const msg = String(errSpy.mock.calls[0]?.[0] ?? "");
+      expect(msg).toContain("emerald-on-mauve");
+      expect(msg).toContain("teal-on-ivory");
+      expect(msg).toContain("gold-on-charcoal");
+    } finally {
+      errSpy.mockRestore();
+    }
+  });
+
+  it("formats null / undefined / non-string values clearly in the error", () => {
+    const errSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    try {
+      expect(() => assertBrandLogoTheme(undefined, "Footer")).toThrowError(
+        /received an unsupported brand theme: undefined/,
+      );
+      expect(() => assertBrandLogoTheme(null, "Navbar")).toThrowError(
+        /received an unsupported brand theme: null/,
+      );
+      expect(() => assertBrandLogoTheme(123, "Hero")).toThrowError(
+        /received an unsupported brand theme: number 123/,
+      );
+    } finally {
+      errSpy.mockRestore();
+    }
   });
 });
