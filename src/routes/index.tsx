@@ -1253,7 +1253,7 @@ function HomePage() {
                     {o.line}
                   </p>
                   <span className="mt-7 inline-flex items-center gap-2 text-[11.5px] uppercase tracking-[0.24em] font-semibold text-[color:var(--teal)] group-hover:translate-x-1 transition-transform">
-                    Plan this occasion <ArrowRight size={12} />
+                    Design & confirm instantly <ArrowRight size={12} />
                   </span>
                 </Link>
               </li>
