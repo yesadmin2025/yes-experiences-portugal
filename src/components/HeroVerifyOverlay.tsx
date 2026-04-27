@@ -646,6 +646,7 @@ export function HeroVerifyOverlay() {
         };
       }),
     };
+    if (!validateBeforeDownload(payload, "JSON")) return;
     const blob = new Blob([JSON.stringify(payload, null, 2)], {
       type: "application/json",
     });
