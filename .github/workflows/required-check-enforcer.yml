@@ -339,6 +339,9 @@ jobs:
           fi
           echo "── URL validation results ─────────────────────────────────"
           echo "  verdict             : ${verdict}"
+          if [[ -n "${early_exit_reason}" ]]; then
+            echo "  early-exit          : ${early_exit_reason}"
+          fi
           echo "  ── inputs ──"
           echo "  SERVER_URL          : \"${SERVER_URL}\""
           echo "  REPO                : \"${REPO}\""
@@ -357,6 +360,12 @@ jobs:
             for e in "${validation_errors[@]}"; do
               echo "  - ${e}"
             done
+            if [[ -n "${early_exit_reason}" ]]; then
+              echo "  ── note ──"
+              echo "  URL-shape checks (rules 4–6a) were SKIPPED. Fix the"
+              echo "  foundational input error(s) above and re-run to see"
+              echo "  any remaining URL-shape failures."
+            fi
           fi
           echo "────────────────────────────────────────────────────────────"
 
