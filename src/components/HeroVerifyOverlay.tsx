@@ -620,14 +620,17 @@ export function HeroVerifyOverlay() {
 
   const handleExportCsv = () => {
     if (typeof window === "undefined") return;
-    if (!runDiffSelfCheck()) {
-      const proceed = window.confirm(
+    const selfCheckResult = runDiffSelfCheck();
+    let confirmedOverride = false;
+    if (!selfCheckResult.ok) {
+      confirmedOverride = window.confirm(
         "Export self-check FAILED: on-screen diff and CSV disagree.\n\n" +
           "See console + the red row in the overlay for details.\n\n" +
           "Download anyway?",
       );
-      if (!proceed) return;
+      if (!confirmedOverride) return;
     }
+    const audit = buildAuditMeta(selfCheckResult, confirmedOverride);
     const diffByKey = new Map(fieldDiffs.map((d) => [d.key, d.segments]));
     const header = [
       "key",
@@ -666,10 +669,34 @@ export function HeroVerifyOverlay() {
         .map(csvCell)
         .join(",");
     });
+
+    // Audit-metadata preamble. Each line starts with `#` so most CSV
+    // tools (DuckDB, pandas with comment="#", many BI tools) skip them
+    // automatically while still preserving the audit trail in the file.
+    // The full self-check payload (including divergence segments) is
+    // also encoded as a single JSON line so nothing is lost compared to
+    // the JSON export.
+    const auditPreamble = [
+      `# hero-verify report`,
+      `# schema=hero-verify-report/v3`,
+      `# generated_at=${new Date().toISOString()}`,
+      `# url=${window.location.href}`,
+      `# hero_copy_version=${HERO_COPY_VERSION}`,
+      `# self_check_outcome=${audit.selfCheck.outcome}`,
+      `# self_check_ok=${audit.selfCheck.ok}`,
+      `# self_check_ran_at=${audit.selfCheck.ranAt}`,
+      `# self_check_checked_fields=${audit.selfCheck.checkedFields}`,
+      `# self_check_divergent_fields=${audit.selfCheck.divergentFields}`,
+      `# audit_json=${JSON.stringify(audit)}`,
+    ].join("\r\n");
+
     // Prepend a UTF-8 BOM so Excel opens the em-dash etc. correctly, and
     // use CRLF line endings per the CSV spec.
     const csv =
-      "\uFEFF" + [header.map(csvCell).join(","), ...rows].join("\r\n");
+      "\uFEFF" +
+      auditPreamble +
+      "\r\n" +
+      [header.map(csvCell).join(","), ...rows].join("\r\n");
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
     triggerDownload(
       blob,
