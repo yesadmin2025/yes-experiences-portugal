@@ -55,8 +55,21 @@ const RESET = "\x1b[0m";
 
 async function fetchHtml(url) {
   const res = await fetch(url, {
+    redirect: "manual",
     headers: { "Accept-Encoding": "gzip, deflate, br", "User-Agent": "hero-copy-qa/1.0" },
   });
+  // Lovable preview hosts (id-preview--*.lovable.app) require auth — they
+  // 302-redirect anonymous requests to /auth-bridge. We cannot verify from
+  // a script; surface this so the operator does the check in the browser.
+  if (res.status >= 300 && res.status < 400) {
+    const location = res.headers.get("location") || "";
+    if (location.includes("/auth-bridge")) {
+      const err = new Error("Login required (auth-bridge redirect)");
+      err.requiresLogin = true;
+      throw err;
+    }
+    throw new Error(`Unexpected redirect ${res.status} → ${location}`);
+  }
   if (!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
   return await res.text();
 }
