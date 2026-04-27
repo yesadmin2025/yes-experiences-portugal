@@ -167,24 +167,46 @@ jobs:
 
           MARKER='<!-- required-check-enforcer -->'
 
-          # Resolve the line number of the homepage-structure job's
-          # `name:` field at the PR's head SHA via a structural YAML
-          # walk (scripts/resolve-workflow-job-name-line.mjs). The
-          # helper exits non-zero with a precise diagnostic if the
-          # `jobs:` block, the job key, or its `name:` field is
-          # missing — `set -e` then fails this step before posting a
-          # comment with a wrong-line link. No silent fallback.
-          NAME_LINE=$(node scripts/resolve-workflow-job-name-line.mjs \
-            .github/workflows/homepage-structure.yml \
-            homepage-structure)
+          # Single source of truth for the workflow YAML path + job
+          # key the comment links to. Echoed below AND used to call the
+          # resolver, so the banner can never disagree with the link.
+          # Keep these in sync with the values passed to the enforcer
+          # script in the previous step.
+          TARGET_WORKFLOW='.github/workflows/homepage-structure.yml'
+          TARGET_JOB_KEY='homepage-structure'
 
-          WORKFLOW_FILE_URL="${SERVER_URL}/${REPO}/blob/${HEAD_SHA}/.github/workflows/homepage-structure.yml"
+          # Resolved-inputs banner — first thing in the step log so an
+          # operator who jumps straight to the log can verify what we
+          # parsed without scrolling. If a comment links to the wrong
+          # line, this banner is the first place to look.
+          echo "── Resolved inputs (PR comment step) ───────────────────────"
+          echo "  Repository       : ${REPO}"
+          echo "  PR number        : ${PR_NUMBER}"
+          echo "  Head SHA         : ${HEAD_SHA}"
+          echo "  Workflow YAML    : ${TARGET_WORKFLOW}"
+          echo "  Workflow job key : ${TARGET_JOB_KEY}"
+          echo "  Mode             : ${MODE}"
+          echo "────────────────────────────────────────────────────────────"
+
+          # Resolve the line number of the target job's `name:` field
+          # at the PR's head SHA via a structural YAML walk
+          # (scripts/resolve-workflow-job-name-line.mjs). The helper
+          # exits non-zero with a precise diagnostic if the `jobs:`
+          # block, the job key, or its `name:` field is missing —
+          # `set -e` then fails this step before posting a comment
+          # with a wrong-line link. No silent fallback.
+          NAME_LINE=$(node scripts/resolve-workflow-job-name-line.mjs \
+            "${TARGET_WORKFLOW}" \
+            "${TARGET_JOB_KEY}")
+          echo "Resolved \`jobs.${TARGET_JOB_KEY}.name\` to line ${NAME_LINE} of ${TARGET_WORKFLOW}"
+
+          WORKFLOW_FILE_URL="${SERVER_URL}/${REPO}/blob/${HEAD_SHA}/${TARGET_WORKFLOW}"
           WORKFLOW_JOB_URL="${WORKFLOW_FILE_URL}#L${NAME_LINE}"
           # GitHub Actions UI listing of all runs for this workflow —
           # the fastest place to confirm the job's reported check name
           # ("Playwright — homepage structure (mobile breakpoints)")
           # against what's in branch protection.
-          WORKFLOW_RUNS_URL="${SERVER_URL}/${REPO}/actions/workflows/homepage-structure.yml"
+          WORKFLOW_RUNS_URL="${SERVER_URL}/${REPO}/actions/workflows/$(basename "${TARGET_WORKFLOW}")"
 
           # Fence the script output in a code block; truncate to keep
           # the comment under GitHub's 65,536-char body limit with
