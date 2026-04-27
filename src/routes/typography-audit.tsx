@@ -157,48 +157,120 @@ const sampleToken = (doc: Document, win: Window, t: Token): Sample => {
   };
 };
 
-// ─── Per-route audit (loads route in hidden iframe) ───────────────
-type RouteResult = { path: string; status: "pending" | "loading" | "done" | "error"; samples: Sample[]; error?: string };
+// ─── Per-route audit (loads route in hidden iframe with retry + SSR fallback) ──
+type AuditVia = "iframe" | "ssr-fallback";
+type RouteResult = {
+  path: string;
+  status: "pending" | "loading" | "done" | "error";
+  samples: Sample[];
+  error?: string;
+  attempts?: number;          // total attempts taken (1–3)
+  via?: AuditVia;             // which path produced the final samples
+  attemptLog?: string[];      // per-attempt failure reasons (visible in UI)
+};
+
+// Sample a route once via the shared iframe with a hard timeout.
+// Returns { ok: true, samples } or { ok: false, error }.
+type AttemptResult = { ok: true; samples: Sample[] } | { ok: false; error: string };
+
+const sampleViaIframe = (
+  iframe: HTMLIFrameElement,
+  path: string,
+  timeoutMs: number,
+  ssrFallback: boolean,
+): Promise<AttemptResult> => new Promise((resolve) => {
+  let settled = false;
+  const settle = (r: AttemptResult) => {
+    if (settled) return;
+    settled = true;
+    iframe.removeEventListener("load", onLoad);
+    clearTimeout(timer);
+    resolve(r);
+  };
+  const onLoad = async () => {
+    try {
+      const win = iframe.contentWindow;
+      const doc = iframe.contentDocument;
+      if (!win || !doc) return settle({ ok: false, error: "iframe blocked (cross-origin or sandbox)" });
+
+      // Wait for webfonts so we sample the LOADED font, not fallback.
+      // Race against a 3s soft cap so a stuck font.ready doesn't eat the budget.
+      if (doc.fonts && (doc.fonts as FontFaceSet & { ready?: Promise<unknown> }).ready) {
+        await Promise.race([
+          doc.fonts.ready.catch(() => undefined),
+          new Promise((r) => setTimeout(r, 3000)),
+        ]);
+      }
+      // Let async hero hooks (parallax, scroll-scale, hydration) settle.
+      await new Promise((r) => setTimeout(r, 250));
+      const samples = TOKENS.map((t) => sampleToken(doc, win, t));
+
+      // Sanity guard: if EVERY token is "not present", treat as a failed render
+      // (likely a hydration crash or a stripped-down SSR shell that lost layout).
+      const anyFound = samples.some((s) => s.found);
+      if (!anyFound) return settle({ ok: false, error: "no tokens found in document — likely hydration failure" });
+      settle({ ok: true, samples });
+    } catch (e) {
+      settle({ ok: false, error: e instanceof Error ? e.message : String(e) });
+    }
+  };
+  iframe.addEventListener("load", onLoad);
+
+  if (ssrFallback) {
+    // Load via srcdoc so the iframe contains the SSR HTML even if the runtime would crash.
+    fetch(`${path}${path.includes("?") ? "&" : "?"}__audit=${Date.now()}`, { credentials: "same-origin" })
+      .then(async (res) => {
+        if (!res.ok) throw new Error(`SSR fetch ${res.status}`);
+        const html = await res.text();
+        // Inject a <base> so relative asset URLs resolve and a no-script marker
+        // so we can tell this was the fallback path.
+        const withBase = html.replace(
+          /<head([^>]*)>/i,
+          `<head$1><base href="${location.origin}/"><meta name="x-audit-via" content="ssr-fallback">`,
+        );
+        iframe.srcdoc = withBase;
+      })
+      .catch((err) => settle({ ok: false, error: `SSR fetch failed: ${err instanceof Error ? err.message : String(err)}` }));
+  } else {
+    // Cache-bust so the iframe re-renders fresh on every attempt.
+    iframe.removeAttribute("srcdoc");
+    iframe.src = `${path}${path.includes("?") ? "&" : "?"}__audit=${Date.now()}`;
+  }
+
+  const timer = setTimeout(() => settle({ ok: false, error: `timeout after ${Math.round(timeoutMs / 1000)}s` }), timeoutMs);
+});
 
 function TypographyAuditPage() {
   const [results, setResults] = useState<RouteResult[]>(() => ROUTES.map((p) => ({ path: p, status: "pending", samples: [] })));
   const [running, setRunning] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
+  // 3-stage pipeline per route: iframe → iframe (longer timeout) → SSR HTML fallback.
+  // Each stage's failure reason is appended to attemptLog for visibility.
   const auditRoute = useCallback(async (path: string): Promise<RouteResult> => {
     const iframe = iframeRef.current;
     if (!iframe) return { path, status: "error", samples: [], error: "iframe missing" };
-    return new Promise((resolve) => {
-      const onLoad = async () => {
-        iframe.removeEventListener("load", onLoad);
-        try {
-          const win = iframe.contentWindow;
-          const doc = iframe.contentDocument;
-          if (!win || !doc) {
-            resolve({ path, status: "error", samples: [], error: "iframe blocked" });
-            return;
-          }
-          // Wait for webfonts before sampling so we read the LOADED font, not fallback
-          if (doc.fonts && (doc.fonts as FontFaceSet & { ready?: Promise<unknown> }).ready) {
-            try { await doc.fonts.ready; } catch { /* ignore */ }
-          }
-          // Give async hero hooks (parallax, scroll-scale) one frame to settle.
-          await new Promise((r) => setTimeout(r, 250));
-          const samples = TOKENS.map((t) => sampleToken(doc, win, t));
-          resolve({ path, status: "done", samples });
-        } catch (e) {
-          resolve({ path, status: "error", samples: [], error: e instanceof Error ? e.message : String(e) });
-        }
-      };
-      iframe.addEventListener("load", onLoad);
-      // Cache-bust each navigation so the iframe re-evaluates fresh
-      iframe.src = `${path}${path.includes("?") ? "&" : "?"}__audit=${Date.now()}`;
-      // Hard timeout per route
-      setTimeout(() => {
-        iframe.removeEventListener("load", onLoad);
-        resolve({ path, status: "error", samples: [], error: "timeout (10s)" });
-      }, 10000);
-    });
+
+    const stages: Array<{ label: string; timeout: number; via: AuditVia; ssr: boolean; backoffBefore: number }> = [
+      { label: "iframe attempt 1", timeout: 8000, via: "iframe", ssr: false, backoffBefore: 0 },
+      { label: "iframe attempt 2", timeout: 12000, via: "iframe", ssr: false, backoffBefore: 600 },
+      { label: "SSR HTML fallback", timeout: 8000, via: "ssr-fallback", ssr: true, backoffBefore: 400 },
+    ];
+
+    const log: string[] = [];
+    for (let i = 0; i < stages.length; i++) {
+      const stage = stages[i];
+      if (stage.backoffBefore) await new Promise((r) => setTimeout(r, stage.backoffBefore));
+      const r = await sampleViaIframe(iframe, path, stage.timeout, stage.ssr);
+      if (r.ok) {
+        return { path, status: "done", samples: r.samples, attempts: i + 1, via: stage.via, attemptLog: log };
+      }
+      log.push(`${stage.label}: ${r.error}`);
+    }
+    return {
+      path, status: "error", samples: [],
+      error: "all 3 attempts failed", attempts: stages.length, attemptLog: log,
+    };
   }, []);
 
   const runAudit = useCallback(async () => {
@@ -234,8 +306,15 @@ function TypographyAuditPage() {
 
   return (
     <div className="min-h-screen bg-[var(--cream)] text-[color:var(--charcoal-deep)] font-[var(--font-sans)]">
-      {/* Hidden iframe used to load each route in isolation */}
-      <iframe ref={iframeRef} title="audit-target" className="fixed -left-[9999px] -top-[9999px] h-[900px] w-[1280px]" sandbox="allow-same-origin allow-scripts" />
+      {/* Hidden iframe used to load each route in isolation. allow-same-origin
+          is required so we can read computed styles via getComputedStyle, and
+          srcdoc is used by the SSR-HTML fallback path. */}
+      <iframe
+        ref={iframeRef}
+        title="audit-target"
+        className="fixed -left-[9999px] -top-[9999px] h-[900px] w-[1280px]"
+        sandbox="allow-same-origin allow-scripts allow-forms"
+      />
 
       <header className="border-b border-[color:var(--border)] px-6 py-8 md:px-10">
         <div className="mx-auto max-w-[1240px]">
@@ -311,9 +390,24 @@ function RouteSection({ result }: { result: RouteResult }) {
   return (
     <section className="overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-black/5">
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-black/5 px-5 py-4">
-        <div className="flex items-baseline gap-3">
+        <div className="flex flex-wrap items-baseline gap-3">
           <code className="rounded bg-black/5 px-2 py-1 text-sm font-semibold">{result.path}</code>
           <StatusBadge status={result.status} />
+          {result.via && (
+            <span
+              className={`rounded-full px-2 py-0.5 text-[10px] uppercase tracking-[0.14em] ${
+                result.via === "ssr-fallback" ? "bg-amber-100 text-amber-800" : "bg-zinc-100 text-zinc-700"
+              }`}
+              title={result.via === "ssr-fallback" ? "Live runtime failed; sampled SSR HTML instead" : "Sampled live runtime"}
+            >
+              via {result.via}
+            </span>
+          )}
+          {result.attempts && result.attempts > 1 && (
+            <span className="rounded-full bg-amber-50 px-2 py-0.5 text-[10px] uppercase tracking-[0.14em] text-amber-800">
+              {result.attempts} attempts
+            </span>
+          )}
         </div>
         <div className="flex gap-2 text-[11px] uppercase tracking-[0.12em]">
           <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-emerald-800">{passing} ok</span>
@@ -321,9 +415,14 @@ function RouteSection({ result }: { result: RouteResult }) {
           {missing > 0 && <span className="rounded-full bg-zinc-100 px-2.5 py-1 text-zinc-700">{missing} n/a</span>}
         </div>
       </header>
-      {result.error && (
-        <div className="border-b border-rose-100 bg-rose-50 px-5 py-3 text-sm text-rose-800">
-          Error: {result.error}
+      {(result.error || (result.attemptLog && result.attemptLog.length > 0)) && (
+        <div className={`border-b px-5 py-3 text-sm ${result.error ? "border-rose-100 bg-rose-50 text-rose-800" : "border-amber-100 bg-amber-50/60 text-amber-900"}`}>
+          {result.error && <div className="font-medium">Error: {result.error}</div>}
+          {result.attemptLog && result.attemptLog.length > 0 && (
+            <ul className="mt-1 space-y-0.5 text-[12px]">
+              {result.attemptLog.map((line, i) => <li key={i}>↳ {line}</li>)}
+            </ul>
+          )}
         </div>
       )}
       <div className="overflow-x-auto">
