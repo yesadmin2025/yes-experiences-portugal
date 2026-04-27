@@ -65,6 +65,45 @@ function timingSafeEqual(a: string, b: string): boolean {
 }
 
 /**
+ * Redact sensitive fields from a URL before logging. Strips the entire query
+ * string and fragment so callers can never leak `?token=...` or other
+ * sensitive overrides via worker logs. Returns only `<origin><pathname>`,
+ * or `"<unparseable-url>"` if the input is not a valid URL.
+ */
+function redactUrlForLog(raw: string): string {
+  try {
+    const u = new URL(raw);
+    return `${u.origin}${u.pathname}`;
+  } catch {
+    return "<unparseable-url>";
+  }
+}
+
+/**
+ * Emit a structured log line for a rejected request. Never includes the
+ * presented token, the raw query string, request headers, or the
+ * caller-supplied `?url=` / `?path=` values verbatim. Only the request method,
+ * route pathname, response status, and a stable reason code are recorded.
+ */
+function logRejection(
+  method: string,
+  requestUrl: string,
+  status: number,
+  reason: string,
+): void {
+  // eslint-disable-next-line no-console
+  console.warn(
+    JSON.stringify({
+      evt: "verify_hero_reject",
+      method,
+      route: redactUrlForLog(requestUrl),
+      status,
+      reason,
+    }),
+  );
+}
+
+/**
  * Every routable path generated from `src/routes/` (excluding `__root` and the
  * api/* server routes). Keep this list in sync when new top-level routes are
  * added — it powers the multi-page hero verification mode.
