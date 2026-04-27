@@ -671,94 +671,20 @@ export function HeroVerifyOverlay() {
     );
   };
 
-  const handleExportJson = () => {
-    if (typeof window === "undefined") return;
-    // Run the self-check, then keep its result for embedding regardless
-    // of the outcome — audit logs need both passes AND blocked attempts.
-    const selfCheckResult = runDiffSelfCheck();
-    let confirmedOverride = false;
-    if (!selfCheckResult.ok) {
-      confirmedOverride = window.confirm(
-        "Export self-check FAILED: on-screen diff and JSON disagree.\n\n" +
-          "See console + the red row in the overlay for details.\n\n" +
-          "Download anyway?",
-      );
-      if (!confirmedOverride) return;
-    }
+  /**
+   * Build the v3 export payload from current state. Pure (apart from
+   * reading window/location/viewport), so we can call it from both
+   * exporters AND from the "Regenerate export payload" button without
+   * triggering a download. `selfCheckResult` and `confirmedOverride`
+   * feed into the embedded audit metadata.
+   */
+  const buildExportPayload = (
+    selfCheckResult: SelfCheckResult,
+    confirmedOverride: boolean,
+  ) => {
     const audit = buildAuditMeta(selfCheckResult, confirmedOverride);
     const diffByKey = new Map(fieldDiffs.map((d) => [d.key, d.segments]));
-    const payload = {
-      schema: "hero-verify-report/v3",
-      generatedAt: new Date().toISOString(),
-      url: window.location.href,
-      pathname: window.location.pathname,
-      heroCopyVersion: HERO_COPY_VERSION,
-      viewport: {
-        width: window.innerWidth,
-        height: window.innerHeight,
-        devicePixelRatio: window.devicePixelRatio,
-      },
-      ok:
-        summary.mismatch === 0 && summary.missing === 0 && summary.loose === 0,
-      summary,
-      audit,
-      fields: reports.map((r) => {
-        const segments = diffByKey.get(r.key) ?? null;
-        return {
-          key: r.key,
-          status: r.status,
-          expected: r.expected,
-          actual: r.actual,
-          diff:
-            r.status === "match" || segments === null
-              ? []
-              : segments.map((s) => ({ type: s.type, text: s.text })),
-          diffInline:
-            r.status === "match" || segments === null
-              ? ""
-              : diffToInline(segments),
-        };
-      }),
-    };
-    // Hard guard first: a missing/wrong `schema` tag is non-recoverable
-    // and must never reach the user's filesystem, even with override.
-    if (!assertSchemaTag(payload, "JSON")) return;
-    if (!validateBeforeDownload(payload, "JSON")) return;
-    const blob = new Blob([JSON.stringify(payload, null, 2)], {
-      type: "application/json",
-    });
-    triggerDownload(
-      blob,
-      `hero-verify-${HERO_COPY_VERSION}-${stamp()}.json`,
-    );
-  };
-
-  // CSV escape: wrap every field in double quotes and double any embedded
-  // quote, per RFC 4180. Newlines inside fields are preserved verbatim
-  // because they are inside a quoted field.
-  const csvCell = (v: string | null | undefined) => {
-    const s = v === null || v === undefined ? "" : String(v);
-    return `"${s.replace(/"/g, '""')}"`;
-  };
-
-  const handleExportCsv = () => {
-    if (typeof window === "undefined") return;
-    const selfCheckResult = runDiffSelfCheck();
-    let confirmedOverride = false;
-    if (!selfCheckResult.ok) {
-      confirmedOverride = window.confirm(
-        "Export self-check FAILED: on-screen diff and CSV disagree.\n\n" +
-          "See console + the red row in the overlay for details.\n\n" +
-          "Download anyway?",
-      );
-      if (!confirmedOverride) return;
-    }
-    const audit = buildAuditMeta(selfCheckResult, confirmedOverride);
-    const diffByKey = new Map(fieldDiffs.map((d) => [d.key, d.segments]));
-
-    // Build the same v3 payload shape the JSON exporter uses, so we can
-    // validate the CSV against the same schema before serialization.
-    const payload = {
+    return {
       schema: "hero-verify-report/v3" as const,
       generatedAt: new Date().toISOString(),
       url: window.location.href,
@@ -793,6 +719,97 @@ export function HeroVerifyOverlay() {
         };
       }),
     };
+  };
+
+  /**
+   * Re-build the payload from current state and re-run BOTH guards
+   * (tag + full schema) without writing anything to disk. Wired to the
+   * "Regenerate export payload" button that appears once an export has
+   * been blocked by the tag guard. Lets the user fix the underlying
+   * cause (e.g. edit hero copy, reload generated audit) and confirm the
+   * fix without committing a new download.
+   *
+   * `format` defaults to whatever was last attempted so the legend rows
+   * stay coherent with the user's original intent.
+   */
+  const handleRegeneratePayload = () => {
+    if (typeof window === "undefined") return;
+    const format: "JSON" | "CSV" = schemaTagCheck?.format ?? "JSON";
+    const selfCheckResult = runDiffSelfCheck();
+    const payload = buildExportPayload(selfCheckResult, false);
+    // eslint-disable-next-line no-console
+    console.info(
+      `[hero-verify] regenerated export payload (${format}) — re-running guards`,
+      { schema: payload.schema },
+    );
+    const tagOk = assertSchemaTag(payload, format);
+    if (!tagOk) return;
+    // Tag is good — also refresh the full schema-check status row so
+    // the user can see the whole pipeline went green after the fix.
+    const result = validateReportV3(payload);
+    if (result.ok) {
+      setSchemaCheck({ ok: true, at: Date.now(), format });
+    } else {
+      setSchemaCheck({
+        ok: false,
+        at: Date.now(),
+        format,
+        issues: result.issues,
+      });
+    }
+  };
+
+  const handleExportJson = () => {
+    if (typeof window === "undefined") return;
+    // Run the self-check, then keep its result for embedding regardless
+    // of the outcome — audit logs need both passes AND blocked attempts.
+    const selfCheckResult = runDiffSelfCheck();
+    let confirmedOverride = false;
+    if (!selfCheckResult.ok) {
+      confirmedOverride = window.confirm(
+        "Export self-check FAILED: on-screen diff and JSON disagree.\n\n" +
+          "See console + the red row in the overlay for details.\n\n" +
+          "Download anyway?",
+      );
+      if (!confirmedOverride) return;
+    }
+    const payload = buildExportPayload(selfCheckResult, confirmedOverride);
+    // Hard guard first: a missing/wrong `schema` tag is non-recoverable
+    // and must never reach the user's filesystem, even with override.
+    if (!assertSchemaTag(payload, "JSON")) return;
+    if (!validateBeforeDownload(payload, "JSON")) return;
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {
+      type: "application/json",
+    });
+    triggerDownload(
+      blob,
+      `hero-verify-${HERO_COPY_VERSION}-${stamp()}.json`,
+    );
+  };
+
+  // CSV escape: wrap every field in double quotes and double any embedded
+  // quote, per RFC 4180. Newlines inside fields are preserved verbatim
+  // because they are inside a quoted field.
+  const csvCell = (v: string | null | undefined) => {
+    const s = v === null || v === undefined ? "" : String(v);
+    return `"${s.replace(/"/g, '""')}"`;
+  };
+
+  const handleExportCsv = () => {
+    if (typeof window === "undefined") return;
+    const selfCheckResult = runDiffSelfCheck();
+    let confirmedOverride = false;
+    if (!selfCheckResult.ok) {
+      confirmedOverride = window.confirm(
+        "Export self-check FAILED: on-screen diff and CSV disagree.\n\n" +
+          "See console + the red row in the overlay for details.\n\n" +
+          "Download anyway?",
+      );
+      if (!confirmedOverride) return;
+    }
+    const payload = buildExportPayload(selfCheckResult, confirmedOverride);
+    const audit = payload.audit;
+    const diffByKey = new Map(fieldDiffs.map((d) => [d.key, d.segments]));
     if (!assertSchemaTag(payload, "CSV")) return;
     if (!validateBeforeDownload(payload, "CSV")) return;
 
@@ -1197,6 +1214,26 @@ export function HeroVerifyOverlay() {
                   `"schema" must be a string — got ${typeof schemaTagCheck.actual}.`}
                 {schemaTagCheck.reason === "mismatch" &&
                   `"schema" was "${String(schemaTagCheck.actual)}" — download blocked.`}
+                <div style={{ marginTop: 6 }}>
+                  <button
+                    type="button"
+                    onClick={handleRegeneratePayload}
+                    style={{
+                      background: "rgba(239,68,68,0.2)",
+                      color: "rgb(254, 226, 226)",
+                      border: "1px solid rgba(239,68,68,0.6)",
+                      borderRadius: 4,
+                      padding: "3px 8px",
+                      fontSize: 11,
+                      fontWeight: 600,
+                      cursor: "pointer",
+                      letterSpacing: "0.02em",
+                    }}
+                    title="Rebuild the export payload from current state and re-run the schema-tag guard without downloading."
+                  >
+                    ↻ Regenerate export payload
+                  </button>
+                </div>
               </div>
             )}
           </div>
