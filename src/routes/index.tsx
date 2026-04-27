@@ -172,6 +172,45 @@ const pillars = [
   },
 ];
 
+const startPaths = [
+  {
+    icon: BookOpen,
+    eyebrow: "Signature",
+    title: "A Signature Experience",
+    line: "Ready to book. Instantly confirmed.",
+    cta: "Explore",
+    to: "/experiences",
+    accent: "ivory" as const,
+  },
+  {
+    icon: Wand2,
+    eyebrow: "Tailored",
+    title: "Tailor a Signature",
+    line: "Start from a signature and shape it your way.",
+    cta: "Tailor",
+    to: "/experiences",
+    accent: "ivory" as const,
+  },
+  {
+    icon: Sparkles,
+    eyebrow: "From scratch",
+    title: "Design in the Studio",
+    line: "Build it step by step, in real time.",
+    cta: "Open Studio",
+    to: "/builder",
+    accent: "teal" as const,
+  },
+  {
+    icon: Gift,
+    eyebrow: "Occasions",
+    title: "Celebrations & Corporate",
+    line: "Proposals, events and team experiences — designed your way.",
+    cta: "Plan Occasion",
+    to: "/proposals",
+    accent: "ivory" as const,
+  },
+];
+
 const reviews = [
   {
     quote:
