@@ -144,7 +144,7 @@ export function CtaScrollDebugOverlay({ targetRef }: Props) {
         </div>
 
         <div className="flex items-baseline gap-2 mb-2">
-          <span className="text-[20px] font-light tabular-nums text-[color:var(--gold-soft,color:var(--gold-soft))]">
+          <span className="text-[20px] font-light tabular-nums text-[color:var(--gold-soft)]">
             {snap.scale.toFixed(4)}
           </span>
           <span className="text-white/45 text-[10px]">scale</span>
