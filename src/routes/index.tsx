@@ -304,7 +304,7 @@ function HomePage() {
                 to="/experiences"
                 data-cta-stagger
                 data-hero-field="secondaryCta"
-                className="cta-secondary-dark cta-attention cta-breathe group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-start text-left pl-6 pr-12 py-6 md:py-5 text-[12px] md:text-[12.5px] lg:text-[13px] tracking-[0.22em] md:tracking-[0.2em] uppercase font-light leading-[1.55] border-[1.5px]"
+                className="cta-secondary-dark cta-attention cta-breathe group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-start text-left pl-6 pr-12 py-6 md:py-5 text-[12px] md:text-[12.5px] lg:text-[13px] tracking-[0.22em] md:tracking-[0.2em] uppercase font-light leading-[1.55]"
               >
                 <span className="block">{HERO_COPY.secondaryCta}</span>
                 <ArrowRight
@@ -314,14 +314,15 @@ function HomePage() {
               </Link>
             </div>
 
-            {/* Microcopy — same left edge as headline + buttons.
-                Mobile vertical rhythm: 48px from CTAs so it reads as a
-                clear, separate reassurance line, not glued to the
-                buttons. Slightly looser leading for calm readability. */}
-            <div className="hero-rhythm-cta-to-microcopy max-w-sm sm:max-w-xl opacity-0 animate-[heroFade_1.4s_ease-out_1.5s_forwards]">
+            {/* Microcopy — centered on mobile to mirror the brand
+                signature below it (both read as quiet, balanced
+                reassurance lines). On desktop it returns to the
+                left-edge column so it still aligns with the headline
+                and CTAs. */}
+            <div className="hero-rhythm-cta-to-microcopy max-w-sm sm:max-w-xl mx-auto sm:mx-0 opacity-0 animate-[heroFade_1.4s_ease-out_1.5s_forwards]">
               <p
                 data-hero-field="microcopy"
-                className="text-[13px] md:text-[14px] text-[color:var(--ivory)]/95 leading-[1.8] md:leading-[1.75] font-light tracking-[0.01em] text-left"
+                className="text-[13px] md:text-[14px] text-[color:var(--ivory)]/95 leading-[1.8] md:leading-[1.75] font-light tracking-[0.01em] text-center sm:text-left"
               >
                 {HERO_COPY.microcopy}
               </p>
@@ -330,24 +331,26 @@ function HomePage() {
             {/* Brand line — final centered editorial signature.
                 Split intentionally onto two lines (clause / verdict) so it
                 reads as a brand sign-off, not a sentence continuation.
-                Decorative gold rules flank the two-line block, vertically
-                centered to keep the composition balanced. */}
+                Decorative gold rules flank the two-line block at a
+                slightly longer length and lower opacity, giving the
+                whole signature a balanced, deliberate composition
+                instead of two short ticks. */}
             <div className="hero-rhythm-microcopy-to-signature mb-4 md:mb-2 flex justify-center opacity-0 animate-[heroFade_1.4s_ease-out_1.75s_forwards]">
               <div
                 data-hero-field="brandLine"
-                className="inline-flex items-center gap-4 text-[color:var(--gold-soft)]"
+                className="inline-flex items-center gap-5 md:gap-6 text-[color:var(--gold-soft)]"
               >
-                <span className="h-px w-6 md:w-8 bg-[color:var(--gold)] shrink-0" />
+                <span className="h-px w-10 md:w-14 bg-gradient-to-r from-transparent to-[color:var(--gold)] shrink-0 opacity-80" />
                 {/* Hidden full string for SEO / regression parity */}
                 <span className="sr-only">{HERO_COPY.brandLine}</span>
                 <span
                   aria-hidden="true"
-                  className="hero-rhythm-signature-line-gap flex flex-col items-center text-[10.5px] md:text-[11px] uppercase tracking-[0.32em] leading-[1.4] text-center"
+                  className="hero-rhythm-signature-line-gap flex flex-col items-center text-[10.5px] md:text-[11px] uppercase tracking-[0.32em] leading-[1.45] text-center"
                 >
                   <span>Whatever you have in mind,</span>
-                  <span className="text-[color:var(--gold)] tracking-[0.38em]">We say YES.</span>
+                  <span className="text-[color:var(--gold)] tracking-[0.4em] text-[11.5px] md:text-[12px]">We say YES.</span>
                 </span>
-                <span className="h-px w-6 md:w-8 bg-[color:var(--gold)] shrink-0" />
+                <span className="h-px w-10 md:w-14 bg-gradient-to-l from-transparent to-[color:var(--gold)] shrink-0 opacity-80" />
               </div>
             </div>
 
