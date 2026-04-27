@@ -5,6 +5,66 @@ import { HERO_COPY_SPEC } from "@/content/hero-copy.spec";
 const PUBLISHED_URL = "https://dreamscape-builder-co.lovable.app";
 
 /**
+ * Allowlist of origins permitted as `?url=` overrides. Any value outside this
+ * set is rejected before a fetch is issued (SSRF defence). HTTPS-only.
+ */
+const ALLOWED_ORIGINS = new Set<string>([
+  new URL(PUBLISHED_URL).origin,
+]);
+
+/**
+ * Validate a caller-supplied base URL. Must parse, must be https, and must
+ * have an origin present in ALLOWED_ORIGINS. Returns null on rejection.
+ */
+function validateTargetUrl(raw: string): string | null {
+  let parsed: URL;
+  try {
+    parsed = new URL(raw);
+  } catch {
+    return null;
+  }
+  if (parsed.protocol !== "https:") return null;
+  if (!ALLOWED_ORIGINS.has(parsed.origin)) return null;
+  // Normalise: strip query/hash, keep pathname only as base.
+  return parsed.origin + (parsed.pathname === "/" ? "" : parsed.pathname);
+}
+
+/**
+ * Validate a caller-supplied path. Must be a relative path beginning with `/`
+ * and must not contain a scheme (e.g. `https://attacker.com`) or
+ * protocol-relative form (`//attacker.com`). Returns null on rejection.
+ */
+function validatePath(raw: string): string | null {
+  if (typeof raw !== "string" || raw.length === 0) return null;
+  if (raw.length > 256) return null;
+  if (!raw.startsWith("/")) return null;
+  if (raw.startsWith("//")) return null; // protocol-relative
+  if (raw.includes("://")) return null;
+  // Sentinel-base check: resolving against a placeholder origin must not
+  // change the origin (which would indicate the path overrode the base).
+  try {
+    const sentinel = "http://verify-hero.invalid";
+    const resolved = new URL(raw, sentinel);
+    if (resolved.origin !== sentinel) return null;
+  } catch {
+    return null;
+  }
+  return raw;
+}
+
+/**
+ * Constant-time string comparison to avoid leaking auth tokens via timing.
+ */
+function timingSafeEqual(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) {
+    diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  }
+  return diff === 0;
+}
+
+/**
  * Every routable path generated from `src/routes/` (excluding `__root` and the
  * api/* server routes). Keep this list in sync when new top-level routes are
  * added — it powers the multi-page hero verification mode.
@@ -236,11 +296,63 @@ export const Route = createFileRoute("/api/verify-hero")({
     handlers: {
       GET: async ({ request }) => {
         const url = new URL(request.url);
-        const target = url.searchParams.get("url") ?? PUBLISHED_URL;
+
+        // ---- Auth: require shared secret before any fetch logic runs ----
+        const expectedToken = process.env.VERIFY_HERO_TOKEN;
+        if (!expectedToken) {
+          // Fail closed if the server is misconfigured rather than allowing
+          // unauthenticated access by default.
+          return Response.json(
+            { ok: false, error: "endpoint_disabled" },
+            { status: 503, headers: { "cache-control": "no-store" } },
+          );
+        }
+        const authHeader = request.headers.get("authorization") ?? "";
+        const bearer = authHeader.startsWith("Bearer ")
+          ? authHeader.slice("Bearer ".length)
+          : "";
+        const queryToken = url.searchParams.get("token") ?? "";
+        const presented = bearer || queryToken;
+        if (!presented || !timingSafeEqual(presented, expectedToken)) {
+          return Response.json(
+            { ok: false, error: "unauthorized" },
+            { status: 401, headers: { "cache-control": "no-store" } },
+          );
+        }
+
+        // ---- Input validation: ?url= must be in allowlist, ?path= must be relative ----
+        const rawTarget = url.searchParams.get("url");
+        const target = rawTarget === null
+          ? PUBLISHED_URL
+          : validateTargetUrl(rawTarget);
+        if (target === null) {
+          return Response.json(
+            {
+              ok: false,
+              error: "invalid_url_param",
+              detail: "?url= must be https and match an allowlisted origin.",
+            },
+            { status: 400, headers: { "cache-control": "no-store" } },
+          );
+        }
+
         const all = url.searchParams.get("all");
         const strictParam = url.searchParams.get("strict");
         const strict = strictParam === "1" || strictParam === "true";
-        const singlePath = url.searchParams.get("path") ?? "/";
+
+        const rawPath = url.searchParams.get("path");
+        const singlePath = rawPath === null ? "/" : validatePath(rawPath);
+        if (singlePath === null) {
+          return Response.json(
+            {
+              ok: false,
+              error: "invalid_path_param",
+              detail:
+                "?path= must be a relative path beginning with '/' and may not contain a scheme.",
+            },
+            { status: 400, headers: { "cache-control": "no-store" } },
+          );
+        }
 
         const paths: readonly string[] =
           all === "1" || all === "true" ? ALL_ROUTES : [singlePath];
