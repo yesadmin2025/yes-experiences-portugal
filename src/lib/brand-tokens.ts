@@ -65,4 +65,7 @@ export const BRAND_HEX_EXEMPT_PATH_PREFIXES = [
   "src/generated/",
   // Tailwind config mirror — defines color palette from the same tokens.
   "src/tailwind.config.lov.json",
+  // Brand QA reference page — intentionally hard-codes the approved
+  // palette as the source of truth for the runtime audit script.
+  "src/routes/brand-qa.tsx",
 ] as const;
