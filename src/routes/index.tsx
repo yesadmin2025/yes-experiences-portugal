@@ -824,7 +824,7 @@ function HomePage() {
       <section className="py-24 md:py-40 bg-[color:var(--sand)]" aria-labelledby="signatures-title">
         <div className="container-x">
           <div className="reveal text-center max-w-2xl mx-auto mb-14 md:mb-20">
-            <span className="eyebrow">Ready-to-Book Experiences</span>
+            <span className="eyebrow">Signature Experiences</span>
             <h2
               id="signatures-title"
               className="serif text-[2.25rem] md:text-5xl mt-5 leading-[1.08]"
