@@ -719,11 +719,14 @@ export function HeroCopyDiff() {
         try {
           const next = refresh();
           console.info(
-            "%c[hero-copy] post-boundary diff refresh: ok",
+            forced
+              ? "%c[hero-copy] post-boundary diff refresh: ok (forced)"
+              : "%c[hero-copy] post-boundary diff refresh: ok",
             "color:#10b981",
             {
               prev,
               next: pathname,
+              forced,
               status: next.status,
               changed: next.rows.length,
               baselineVersion: next.baselineVersion,
