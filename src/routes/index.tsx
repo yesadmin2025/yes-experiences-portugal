@@ -277,6 +277,32 @@ function HomePage() {
               <span className="h-px w-6 bg-[color:var(--gold)]" />
               {HERO_COPY.brandLine}
             </p>
+
+            {/* Hidden hero-copy version probe.
+                Not visible to users, but discoverable in DevTools or via
+                document.querySelector('[data-hero-copy-version]'). Mirrors
+                the X-Hero-Copy-Version response header and the
+                yes-hero-copy-version meta tag, so you can confirm an SSR
+                refresh actually shipped the new copy without leaving the
+                preview. */}
+            <div
+              data-hero-copy-version={HERO_COPY_VERSION}
+              data-testid="hero-copy-version"
+              aria-hidden="true"
+              style={{
+                position: "absolute",
+                width: 1,
+                height: 1,
+                padding: 0,
+                margin: -1,
+                overflow: "hidden",
+                clip: "rect(0,0,0,0)",
+                whiteSpace: "nowrap",
+                border: 0,
+              }}
+            >
+              hero-copy-version:{HERO_COPY_VERSION}
+            </div>
           </div>
         </div>
       </section>
