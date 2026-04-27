@@ -411,11 +411,34 @@ export function HeroVerifyOverlay() {
    * types, or segment text — we surface it visibly so you don't ship a
    * report that disagrees with what you can see on screen.
    *
-   * Returns true when everything matches; false otherwise (and writes a
-   * console.warn + a transient `divergences` state for the legend).
+   * Returns the structured result so callers can also embed it in the
+   * exported file as audit-log metadata.
    */
-  const runDiffSelfCheck = (): boolean => {
-    if (typeof document === "undefined") return true;
+  type SelfCheckDivergence = {
+    key: string;
+    reason: string;
+    live: DiffSegment[] | null;
+    exported: DiffSegment[] | null;
+  };
+  type SelfCheckResult = {
+    ok: boolean;
+    at: number;
+    checkedFields: number;
+    divergentFields: number;
+    divergences: SelfCheckDivergence[];
+  };
+
+  const runDiffSelfCheck = (): SelfCheckResult => {
+    if (typeof document === "undefined") {
+      const noop: SelfCheckResult = {
+        ok: true,
+        at: Date.now(),
+        checkedFields: 0,
+        divergentFields: 0,
+        divergences: [],
+      };
+      return noop;
+    }
     const liveReports = computeReports();
     const liveDiffs = new Map(
       liveReports.map((r) => {
@@ -425,13 +448,7 @@ export function HeroVerifyOverlay() {
     );
     const exportedDiffs = new Map(fieldDiffs.map((d) => [d.key, d.segments]));
 
-    type Divergence = {
-      key: string;
-      reason: string;
-      live: DiffSegment[] | null;
-      exported: DiffSegment[] | null;
-    };
-    const divergences: Divergence[] = [];
+    const divergences: SelfCheckDivergence[] = [];
 
     // Union of keys from both sides — catches missing entries on either.
     const allKeys = new Set<HeroSpecKey>([
@@ -475,40 +492,84 @@ export function HeroVerifyOverlay() {
       }
     }
 
-    if (divergences.length > 0) {
+    const result: SelfCheckResult = {
+      ok: divergences.length === 0,
+      at: Date.now(),
+      checkedFields: allKeys.size,
+      divergentFields: divergences.length,
+      divergences,
+    };
+
+    if (!result.ok) {
       // eslint-disable-next-line no-console
       console.warn(
         "[hero-verify] export self-check FAILED — on-screen diff and export diverge",
         divergences,
       );
-      setSelfCheck({ ok: false, at: Date.now(), divergences });
-      return false;
+    } else {
+      // eslint-disable-next-line no-console
+      console.info(
+        "[hero-verify] export self-check OK — on-screen diff matches export byte-for-byte",
+      );
     }
 
-    // eslint-disable-next-line no-console
-    console.info(
-      "[hero-verify] export self-check OK — on-screen diff matches export byte-for-byte",
-    );
-    setSelfCheck({ ok: true, at: Date.now(), divergences: [] });
-    return true;
+    setSelfCheck({
+      ok: result.ok,
+      at: result.at,
+      divergences: divergences.map(({ key, reason }) => ({ key, reason })),
+    });
+    return result;
   };
+
+  // Build the audit metadata block embedded in every export. Captures
+  // the full self-check result, whether the user confirmed an override
+  // when the check failed, and totals for quick dashboard scanning.
+  const buildAuditMeta = (
+    selfCheckResult: SelfCheckResult,
+    confirmedOverride: boolean,
+  ) => ({
+    selfCheck: {
+      ok: selfCheckResult.ok,
+      ranAt: new Date(selfCheckResult.at).toISOString(),
+      checkedFields: selfCheckResult.checkedFields,
+      divergentFields: selfCheckResult.divergentFields,
+      // Outcome makes the audit trail unambiguous in CI logs:
+      //   passed     = self-check OK, exported normally
+      //   confirmed  = self-check FAILED, user clicked "Download anyway"
+      //   blocked    = self-check FAILED, user cancelled (no file produced)
+      outcome: selfCheckResult.ok
+        ? ("passed" as const)
+        : confirmedOverride
+        ? ("confirmed" as const)
+        : ("blocked" as const),
+      divergences: selfCheckResult.divergences.map((d) => ({
+        key: d.key,
+        reason: d.reason,
+        live: d.live,
+        exported: d.exported,
+      })),
+    },
+  });
 
 
   const handleExportJson = () => {
     if (typeof window === "undefined") return;
-    // Block the export if the live DOM diff and the about-to-be-exported
-    // diff disagree. The user can still re-trigger after acknowledging.
-    if (!runDiffSelfCheck()) {
-      const proceed = window.confirm(
+    // Run the self-check, then keep its result for embedding regardless
+    // of the outcome — audit logs need both passes AND blocked attempts.
+    const selfCheckResult = runDiffSelfCheck();
+    let confirmedOverride = false;
+    if (!selfCheckResult.ok) {
+      confirmedOverride = window.confirm(
         "Export self-check FAILED: on-screen diff and JSON disagree.\n\n" +
           "See console + the red row in the overlay for details.\n\n" +
           "Download anyway?",
       );
-      if (!proceed) return;
+      if (!confirmedOverride) return;
     }
+    const audit = buildAuditMeta(selfCheckResult, confirmedOverride);
     const diffByKey = new Map(fieldDiffs.map((d) => [d.key, d.segments]));
     const payload = {
-      schema: "hero-verify-report/v2",
+      schema: "hero-verify-report/v3",
       generatedAt: new Date().toISOString(),
       url: window.location.href,
       pathname: window.location.pathname,
@@ -521,6 +582,7 @@ export function HeroVerifyOverlay() {
       ok:
         summary.mismatch === 0 && summary.missing === 0 && summary.loose === 0,
       summary,
+      audit,
       fields: reports.map((r) => {
         const segments = diffByKey.get(r.key) ?? null;
         return {
@@ -528,13 +590,10 @@ export function HeroVerifyOverlay() {
           status: r.status,
           expected: r.expected,
           actual: r.actual,
-          // Full structured diff (one entry per run). Empty for matched
-          // and missing fields (where there is nothing to compare).
           diff:
             r.status === "match" || segments === null
               ? []
               : segments.map((s) => ({ type: s.type, text: s.text })),
-          // Inline preview string with [-removed-] and {+added+} markers.
           diffInline:
             r.status === "match" || segments === null
               ? ""
@@ -561,14 +620,17 @@ export function HeroVerifyOverlay() {
 
   const handleExportCsv = () => {
     if (typeof window === "undefined") return;
-    if (!runDiffSelfCheck()) {
-      const proceed = window.confirm(
+    const selfCheckResult = runDiffSelfCheck();
+    let confirmedOverride = false;
+    if (!selfCheckResult.ok) {
+      confirmedOverride = window.confirm(
         "Export self-check FAILED: on-screen diff and CSV disagree.\n\n" +
           "See console + the red row in the overlay for details.\n\n" +
           "Download anyway?",
       );
-      if (!proceed) return;
+      if (!confirmedOverride) return;
     }
+    const audit = buildAuditMeta(selfCheckResult, confirmedOverride);
     const diffByKey = new Map(fieldDiffs.map((d) => [d.key, d.segments]));
     const header = [
       "key",
@@ -607,10 +669,34 @@ export function HeroVerifyOverlay() {
         .map(csvCell)
         .join(",");
     });
+
+    // Audit-metadata preamble. Each line starts with `#` so most CSV
+    // tools (DuckDB, pandas with comment="#", many BI tools) skip them
+    // automatically while still preserving the audit trail in the file.
+    // The full self-check payload (including divergence segments) is
+    // also encoded as a single JSON line so nothing is lost compared to
+    // the JSON export.
+    const auditPreamble = [
+      `# hero-verify report`,
+      `# schema=hero-verify-report/v3`,
+      `# generated_at=${new Date().toISOString()}`,
+      `# url=${window.location.href}`,
+      `# hero_copy_version=${HERO_COPY_VERSION}`,
+      `# self_check_outcome=${audit.selfCheck.outcome}`,
+      `# self_check_ok=${audit.selfCheck.ok}`,
+      `# self_check_ran_at=${audit.selfCheck.ranAt}`,
+      `# self_check_checked_fields=${audit.selfCheck.checkedFields}`,
+      `# self_check_divergent_fields=${audit.selfCheck.divergentFields}`,
+      `# audit_json=${JSON.stringify(audit)}`,
+    ].join("\r\n");
+
     // Prepend a UTF-8 BOM so Excel opens the em-dash etc. correctly, and
     // use CRLF line endings per the CSV spec.
     const csv =
-      "\uFEFF" + [header.map(csvCell).join(","), ...rows].join("\r\n");
+      "\uFEFF" +
+      auditPreamble +
+      "\r\n" +
+      [header.map(csvCell).join(","), ...rows].join("\r\n");
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
     triggerDownload(
       blob,
