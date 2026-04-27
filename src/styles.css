@@ -1127,32 +1127,46 @@
   will-change: filter;
 }
 
-/* Teal-on-ivory (Navbar header) — recipe lives in
-   --logo-filter-teal-on-ivory so it can be retuned globally without
-   touching this rule. */
+/* Teal-on-ivory (Navbar header). Recipe + scale live in tokens so they
+   can be retuned globally without touching this rule. The transform
+   merges with the GPU-layer translateZ(0) from .logo-mark — both compose
+   into a single matrix3d, no extra layer cost. transform-origin is set
+   to `left center` so the logo grows/shrinks against its leading edge,
+   keeping it visually anchored to the container's left gutter. */
 .logo-mark--teal-on-ivory {
   filter: var(--logo-filter-teal-on-ivory);
+  transform: translateZ(0) scale(var(--logo-scale-teal-on-ivory));
+  transform-origin: left center;
 }
 
-/* Gold-on-charcoal (Footer over --charcoal-deep) — recipe lives in
-   --logo-filter-gold-on-charcoal. */
+/* Gold-on-charcoal (Footer over --charcoal-deep). Same pattern; the
+   scale token defaults to 0.95 to compensate for the gold mark's
+   optical bloom on the dark surface so its stroke mass visually
+   matches the teal mark on white. */
 .logo-mark--gold-on-charcoal {
   filter: var(--logo-filter-gold-on-charcoal);
+  transform: translateZ(0) scale(var(--logo-scale-gold-on-charcoal));
+  transform-origin: left center;
 }
 
 /* Reduced-motion / low-power: surrender the compositor layer and the
-   filter so the browser uses the cheapest CPU path. The image stays
-   readable; we just stop paying for HiDPI sharpening on devices that
-   asked for less work. */
+   filter so the browser uses the cheapest CPU path. Optical scale stays
+   — it's typography correction, not motion. */
 @media (prefers-reduced-motion: reduce) {
   .logo-mark {
     will-change: auto;
-    transform: none;
     isolation: auto;
+  }
+  .logo-mark--teal-on-ivory {
+    transform: scale(var(--logo-scale-teal-on-ivory));
+  }
+  .logo-mark--gold-on-charcoal {
+    transform: scale(var(--logo-scale-gold-on-charcoal));
   }
   .logo-mark--teal-on-ivory,
   .logo-mark--gold-on-charcoal {
     filter: none;
   }
 }
+
 
