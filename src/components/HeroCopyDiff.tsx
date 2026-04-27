@@ -190,8 +190,40 @@ const SR_ONLY: React.CSSProperties = {
   border: 0,
 };
 
+/**
+ * Should the hidden control panel be shown? It is invisible by default;
+ * reveal it with EITHER:
+ *   • `?hero-debug` (or `?hero-debug=1`) on the URL, OR
+ *   • `Shift + H + R` pressed together (toggles)
+ *
+ * The "shown" preference is remembered in sessionStorage so it survives
+ * client-side navigation within the tab. Never on by default.
+ */
+const PANEL_VISIBILITY_KEY = "hero-copy:panel-visible";
+
+function readInitialPanelVisibility(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    const params = new URLSearchParams(window.location.search);
+    if (params.has("hero-debug")) return true;
+    return sessionStorage.getItem(PANEL_VISIBILITY_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
+function persistPanelVisibility(next: boolean) {
+  try {
+    if (next) sessionStorage.setItem(PANEL_VISIBILITY_KEY, "1");
+    else sessionStorage.removeItem(PANEL_VISIBILITY_KEY);
+  } catch {
+    /* ignore */
+  }
+}
+
 export function HeroCopyDiff() {
   const [state, setState] = useState<DiffState | null>(null);
+  const [panelVisible, setPanelVisible] = useState(false);
 
   const refresh = useCallback(() => {
     const next = buildDiffState();
@@ -199,13 +231,28 @@ export function HeroCopyDiff() {
     return next;
   }, []);
 
+  const resetBaseline = useCallback(() => {
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch {
+      /* ignore */
+    }
+    console.info(
+      "%c[hero-copy] baseline cleared via UI",
+      "color:#9ca3af",
+    );
+    refresh();
+  }, [refresh]);
+
   useEffect(() => {
     if (typeof window === "undefined") return;
+
+    setPanelVisible(readInitialPanelVisibility());
 
     window.__heroCopy = {
       diff: () => {
         const next = refresh();
-        runDiff(); // keep the existing console output behaviour
+        runDiff();
         return next.rows;
       },
       snapshot: currentSnapshot,
@@ -232,50 +279,203 @@ export function HeroCopyDiff() {
       },
     };
 
-    // Initial run: log to console (existing behaviour) AND populate the
-    // hidden DOM probe so it's inspectable without opening DevTools console.
     runDiff();
     refresh();
+
+    // Shift+H+R toggles the panel. Three keys at once = no accidental triggers.
+    const pressed = new Set<string>();
+    const onKeyDown = (e: KeyboardEvent) => {
+      pressed.add(e.key.toLowerCase());
+      if (
+        (e.shiftKey || pressed.has("shift")) &&
+        pressed.has("h") &&
+        pressed.has("r")
+      ) {
+        setPanelVisible((v) => {
+          const next = !v;
+          persistPanelVisibility(next);
+          return next;
+        });
+        pressed.clear();
+      }
+    };
+    const onKeyUp = (e: KeyboardEvent) => {
+      pressed.delete(e.key.toLowerCase());
+    };
+    window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("keyup", onKeyUp);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("keyup", onKeyUp);
+    };
   }, [refresh]);
 
-  // SSR / pre-hydration: render nothing so the hidden probe only appears
-  // once a real client-side comparison has happened. Avoids a misleading
-  // "no-baseline" snapshot baked into the SSR HTML.
   if (!state) return null;
 
   const changedFields = state.rows.map((r) => r.field).join(",");
 
   return (
-    <div
-      data-hero-copy-diff=""
-      data-testid="hero-copy-diff"
-      data-diff-status={state.status}
-      data-diff-baseline-version={state.baselineVersion ?? ""}
-      data-diff-current-version={state.currentVersion}
-      data-diff-changed-count={String(state.rows.length)}
-      data-diff-changed-fields={changedFields}
-      data-diff-ran-at={state.ranAt}
-      data-diff-json={JSON.stringify(state)}
-      aria-hidden="true"
-      style={SR_ONLY}
-    >
-      <span data-diff-summary>
-        [hero-copy diff] status={state.status} changed={state.rows.length}{" "}
-        {state.baselineVersion ?? "—"} → {state.currentVersion}
-      </span>
-      {state.rows.map((row) => (
-        <span
-          key={row.field}
-          data-diff-row={row.field}
-          data-diff-change={row.change}
-          data-diff-before={row.before ?? ""}
-          data-diff-after={row.after ?? ""}
-        >
-          {" | "}
-          {row.field} ({row.change}): {JSON.stringify(row.before)} →{" "}
-          {JSON.stringify(row.after)}
+    <>
+      <div
+        data-hero-copy-diff=""
+        data-testid="hero-copy-diff"
+        data-diff-status={state.status}
+        data-diff-baseline-version={state.baselineVersion ?? ""}
+        data-diff-current-version={state.currentVersion}
+        data-diff-changed-count={String(state.rows.length)}
+        data-diff-changed-fields={changedFields}
+        data-diff-ran-at={state.ranAt}
+        data-diff-json={JSON.stringify(state)}
+        aria-hidden="true"
+        style={SR_ONLY}
+      >
+        <span data-diff-summary>
+          [hero-copy diff] status={state.status} changed={state.rows.length}{" "}
+          {state.baselineVersion ?? "—"} → {state.currentVersion}
         </span>
-      ))}
-    </div>
+        {state.rows.map((row) => (
+          <span
+            key={row.field}
+            data-diff-row={row.field}
+            data-diff-change={row.change}
+            data-diff-before={row.before ?? ""}
+            data-diff-after={row.after ?? ""}
+          >
+            {" | "}
+            {row.field} ({row.change}): {JSON.stringify(row.before)} →{" "}
+            {JSON.stringify(row.after)}
+          </span>
+        ))}
+      </div>
+
+      {/* Hidden control panel.
+          Invisible by default. Reveal with `?hero-debug` in the URL or
+          Shift+H+R. Use it to clear the baseline (and rerun the diff)
+          without opening DevTools. */}
+      {panelVisible ? (
+        <div
+          data-hero-copy-panel=""
+          role="region"
+          aria-label="Hero copy debug panel"
+          style={{
+            position: "fixed",
+            bottom: 16,
+            right: 16,
+            zIndex: 2147483647,
+            background: "rgba(15,15,15,0.92)",
+            color: "#fafafa",
+            border: "1px solid rgba(255,255,255,0.18)",
+            borderRadius: 8,
+            padding: "10px 12px",
+            font: "12px/1.4 ui-sans-serif, system-ui, -apple-system, sans-serif",
+            boxShadow: "0 10px 30px rgba(0,0,0,0.45)",
+            minWidth: 220,
+            maxWidth: 320,
+            backdropFilter: "blur(8px)",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              marginBottom: 6,
+              gap: 8,
+            }}
+          >
+            <strong style={{ letterSpacing: "0.04em" }}>hero-copy debug</strong>
+            <button
+              type="button"
+              onClick={() => {
+                setPanelVisible(false);
+                persistPanelVisibility(false);
+              }}
+              aria-label="Hide debug panel"
+              style={{
+                background: "transparent",
+                color: "#fafafa",
+                border: "1px solid rgba(255,255,255,0.25)",
+                borderRadius: 4,
+                padding: "1px 6px",
+                cursor: "pointer",
+                fontSize: 11,
+              }}
+            >
+              ×
+            </button>
+          </div>
+          <div style={{ opacity: 0.75, marginBottom: 8 }}>
+            status: <code>{state.status}</code>
+            <br />
+            baseline: <code>{state.baselineVersion ?? "—"}</code>
+            <br />
+            current: <code>{state.currentVersion}</code>
+            <br />
+            changed: <code>{state.rows.length}</code>
+          </div>
+          <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+            <button
+              type="button"
+              onClick={resetBaseline}
+              data-action="reset-baseline"
+              style={{
+                background: "#dc2626",
+                color: "#fff",
+                border: 0,
+                borderRadius: 4,
+                padding: "6px 10px",
+                cursor: "pointer",
+                fontSize: 11,
+                fontWeight: 600,
+              }}
+            >
+              Reset baseline
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                refresh();
+                runDiff();
+              }}
+              data-action="rerun-diff"
+              style={{
+                background: "rgba(255,255,255,0.12)",
+                color: "#fff",
+                border: "1px solid rgba(255,255,255,0.2)",
+                borderRadius: 4,
+                padding: "6px 10px",
+                cursor: "pointer",
+                fontSize: 11,
+              }}
+            >
+              Re-run diff
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                const snap = currentSnapshot();
+                writeBaseline(snap);
+                refresh();
+              }}
+              data-action="accept-current"
+              style={{
+                background: "rgba(255,255,255,0.12)",
+                color: "#fff",
+                border: "1px solid rgba(255,255,255,0.2)",
+                borderRadius: 4,
+                padding: "6px 10px",
+                cursor: "pointer",
+                fontSize: 11,
+              }}
+            >
+              Accept as baseline
+            </button>
+          </div>
+          <div style={{ marginTop: 8, opacity: 0.55, fontSize: 10 }}>
+            Toggle: Shift+H+R · or ?hero-debug
+          </div>
+        </div>
+      ) : null}
+    </>
   );
 }
