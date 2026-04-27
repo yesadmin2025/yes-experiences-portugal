@@ -678,6 +678,46 @@ export function HeroVerifyOverlay() {
     }
     const audit = buildAuditMeta(selfCheckResult, confirmedOverride);
     const diffByKey = new Map(fieldDiffs.map((d) => [d.key, d.segments]));
+
+    // Build the same v3 payload shape the JSON exporter uses, so we can
+    // validate the CSV against the same schema before serialization.
+    const payload = {
+      schema: "hero-verify-report/v3" as const,
+      generatedAt: new Date().toISOString(),
+      url: window.location.href,
+      pathname: window.location.pathname,
+      heroCopyVersion: HERO_COPY_VERSION,
+      viewport: {
+        width: window.innerWidth,
+        height: window.innerHeight,
+        devicePixelRatio: window.devicePixelRatio,
+      },
+      ok:
+        summary.mismatch === 0 &&
+        summary.missing === 0 &&
+        summary.loose === 0,
+      summary,
+      audit,
+      fields: reports.map((r) => {
+        const segments = diffByKey.get(r.key) ?? null;
+        return {
+          key: r.key,
+          status: r.status,
+          expected: r.expected,
+          actual: r.actual,
+          diff:
+            r.status === "match" || segments === null
+              ? []
+              : segments.map((s) => ({ type: s.type, text: s.text })),
+          diffInline:
+            r.status === "match" || segments === null
+              ? ""
+              : diffToInline(segments),
+        };
+      }),
+    };
+    if (!validateBeforeDownload(payload, "CSV")) return;
+
     const header = [
       "key",
       "status",
