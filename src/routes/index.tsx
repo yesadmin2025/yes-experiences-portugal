@@ -934,26 +934,26 @@ function HomePage() {
             <div className="relative max-w-2xl">
               <span className="eyebrow">Begin</span>
               <h2 className="serif text-4xl md:text-5xl mt-6">
-                Your Portugal story <br />
-                <span className="italic text-[color:var(--teal)]">starts with a single step.</span>
+                Create your experience. <br />
+                <span className="italic text-[color:var(--teal)]">Confirm it instantly.</span>
               </h2>
               <p className="mt-7 text-[17px] text-[color:var(--charcoal-soft)] leading-[1.75] max-w-lg">
-                Open the Experience Studio and design a private journey around you —
-                or speak with a local experience designer for a fully bespoke proposal.
+                Open the Studio and design your private journey in real time —
+                or speak with a local who'll shape it alongside you.
               </p>
               <div className="mt-10 flex flex-wrap gap-4">
                 <Link
                   to="/builder"
                   className="cta-primary inline-flex items-center gap-2 px-9 py-[18px] text-[12.5px] uppercase tracking-[0.22em] font-semibold"
                 >
-                  Design &amp; Secure Your Experience
+                  Create &amp; Confirm Now
                   <ArrowRight size={15} />
                 </Link>
                 <Link
                   to="/contact"
                   className="cta-secondary-light inline-flex items-center gap-2 px-9 py-[18px] text-[12.5px] uppercase tracking-[0.22em] font-semibold"
                 >
-                  Speak with our team
+                  Speak with a local
                 </Link>
               </div>
 
