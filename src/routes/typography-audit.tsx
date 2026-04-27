@@ -898,6 +898,12 @@ function SettingsPanel({
     | { fileName: string; mode: "applied" | "validated" | "rejected" | "current"; report: ValidationReport }
     | null
   >(null);
+  // Set by the "Validate, apply & publish" button after a successful run.
+  // The actual publish happens in the Lovable editor — we just surface a CTA.
+  // We store the settings snapshot that produced this CTA so any later edit
+  // (slider, toggle, reset, import) automatically dismisses the stale banner.
+  const [publishReadyFor, setPublishReadyFor] = useState<AuditSettings | null>(null);
+  const publishReady = publishReadyFor !== null && publishReadyFor === settings;
 
   const handleImportFile = async (file: File, dryRun: boolean, autoFix: boolean) => {
     setImportReport(null);
@@ -1094,6 +1100,61 @@ function SettingsPanel({
           </button>
           <button
             type="button"
+            onClick={() => {
+              // One-click "ship it" flow:
+              //   1. Validate current panel values.
+              //   2. If errors exist, run autoFixSettings ONCE regardless of the
+              //      "Auto-fix on import" toggle (the user explicitly asked for
+              //      a fix-and-ship action by clicking this button).
+              //   3. Apply the fix, re-validate, and surface a publish CTA on
+              //      success. The actual publish is a Lovable editor action —
+              //      we render a clear next-step banner instead of pretending
+              //      the app can publish itself.
+              const initial = validateCurrentSettings(settings);
+              const hasErrors = initial.issues.some((i) => i.level === "error");
+              let finalSettings = settings;
+              let finalReport = initial;
+              let autoFixNotes: string[] = [];
+              if (hasErrors) {
+                const { fixed, changes } = autoFixSettings(settings);
+                onChange(fixed);
+                finalSettings = fixed;
+                finalReport = validateCurrentSettings(fixed);
+                autoFixNotes = changes;
+              }
+              const augmented: ValidationReport = autoFixNotes.length
+                ? {
+                    ...finalReport,
+                    issues: [
+                      ...finalReport.issues,
+                      ...autoFixNotes.map((c): ValidationIssue => ({
+                        level: "info",
+                        path: "auto-fix",
+                        message: c,
+                      })),
+                    ],
+                  }
+                : finalReport;
+              setImportReport({
+                fileName: hasErrors ? "current panel values · auto-fixed" : "current panel values",
+                mode: "current",
+                report: augmented,
+              });
+              // Show the publish CTA only when the post-fix report is clean
+              // (no errors). Warnings are fine — the user has been informed.
+              // We anchor it to the exact AuditSettings reference that was
+              // applied; any subsequent edit to `settings` invalidates the CTA.
+              const clean = !augmented.issues.some((i) => i.level === "error");
+              setPublishReadyFor(clean ? finalSettings : null);
+            }}
+            disabled={disabled}
+            className="rounded-md border border-emerald-300 bg-emerald-50 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-emerald-900 hover:bg-emerald-100 disabled:opacity-50"
+            title="Validate the current settings, auto-fix any errors, apply the result, then offer to open the Publish dialog."
+          >
+            Validate, apply &amp; publish
+          </button>
+          <button
+            type="button"
             onClick={onReset}
             disabled={disabled}
             className="rounded-md border border-[color:var(--border)] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] disabled:opacity-50"
@@ -1141,6 +1202,32 @@ function SettingsPanel({
           />
         );
       })()}
+
+      {publishReady && (
+        <div
+          role="status"
+          className="mt-3 flex flex-wrap items-center justify-between gap-3 rounded-md border border-emerald-300 bg-emerald-50 p-3 text-[12px] text-emerald-900"
+        >
+          <div className="flex flex-col">
+            <span className="font-semibold">Settings applied · ready to publish</span>
+            <span className="text-[11px] opacity-75">
+              Frontend changes go live only after you publish. Use your editor's Publish button to push the updated reliability settings.
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="hidden text-[11px] opacity-75 md:inline">
+              Desktop: Publish (top-right) · Mobile: ⋯ menu → Publish
+            </span>
+            <button
+              type="button"
+              onClick={() => setPublishReadyFor(null)}
+              className="rounded-md border border-emerald-300 bg-white/70 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] hover:bg-white"
+            >
+              Dismiss
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="mt-5 grid gap-4 md:grid-cols-3">
         {STAGE_META.map(({ key, label, hint }) => {
