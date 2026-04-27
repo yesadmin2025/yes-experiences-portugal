@@ -265,7 +265,7 @@ function HomePage() {
 
             <p className="mt-9 md:mt-11 text-[10.5px] uppercase tracking-[0.32em] text-[color:var(--gold-soft)] flex items-center gap-3 opacity-0 animate-[heroFade_1.4s_ease-out_1.75s_forwards]">
               <span className="h-px w-6 bg-[color:var(--gold)]" />
-              Whatever you have in mind, we say YES
+              Whatever you have in mind, we say YES.
             </p>
           </div>
         </div>
