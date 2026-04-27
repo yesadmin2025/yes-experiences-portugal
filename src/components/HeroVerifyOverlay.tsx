@@ -554,19 +554,22 @@ export function HeroVerifyOverlay() {
 
   const handleExportJson = () => {
     if (typeof window === "undefined") return;
-    // Block the export if the live DOM diff and the about-to-be-exported
-    // diff disagree. The user can still re-trigger after acknowledging.
-    if (!runDiffSelfCheck()) {
-      const proceed = window.confirm(
+    // Run the self-check, then keep its result for embedding regardless
+    // of the outcome — audit logs need both passes AND blocked attempts.
+    const selfCheckResult = runDiffSelfCheck();
+    let confirmedOverride = false;
+    if (!selfCheckResult.ok) {
+      confirmedOverride = window.confirm(
         "Export self-check FAILED: on-screen diff and JSON disagree.\n\n" +
           "See console + the red row in the overlay for details.\n\n" +
           "Download anyway?",
       );
-      if (!proceed) return;
+      if (!confirmedOverride) return;
     }
+    const audit = buildAuditMeta(selfCheckResult, confirmedOverride);
     const diffByKey = new Map(fieldDiffs.map((d) => [d.key, d.segments]));
     const payload = {
-      schema: "hero-verify-report/v2",
+      schema: "hero-verify-report/v3",
       generatedAt: new Date().toISOString(),
       url: window.location.href,
       pathname: window.location.pathname,
@@ -579,6 +582,7 @@ export function HeroVerifyOverlay() {
       ok:
         summary.mismatch === 0 && summary.missing === 0 && summary.loose === 0,
       summary,
+      audit,
       fields: reports.map((r) => {
         const segments = diffByKey.get(r.key) ?? null;
         return {
@@ -586,13 +590,10 @@ export function HeroVerifyOverlay() {
           status: r.status,
           expected: r.expected,
           actual: r.actual,
-          // Full structured diff (one entry per run). Empty for matched
-          // and missing fields (where there is nothing to compare).
           diff:
             r.status === "match" || segments === null
               ? []
               : segments.map((s) => ({ type: s.type, text: s.text })),
-          // Inline preview string with [-removed-] and {+added+} markers.
           diffInline:
             r.status === "match" || segments === null
               ? ""
