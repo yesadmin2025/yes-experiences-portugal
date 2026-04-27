@@ -1029,7 +1029,76 @@ function HomePage() {
         </div>
       </section>
 
-      {/* 7 — LOCAL STORIES / HIDDEN GEMS
+      {/* 7 — CELEBRATIONS & CORPORATE
+          Surfaces the "moments that matter" path: proposals, celebrations
+          and corporate. Three soft entry points that all lead to dedicated
+          routes, with the same "start from idea, tailor a signature, or
+          design from scratch" framing as the rest of the site. */}
+      <section
+        className="py-24 md:py-36 bg-[color:var(--ivory)] border-y border-[color:var(--border)]"
+        aria-labelledby="occasions-title"
+      >
+        <div className="container-x">
+          <div className="reveal text-center max-w-2xl mx-auto mb-14 md:mb-16">
+            <span className="eyebrow">For moments that matter</span>
+            <h2
+              id="occasions-title"
+              className="serif text-[2.25rem] md:text-5xl mt-5 leading-[1.08]"
+            >
+              Proposals. Celebrations. <br />
+              <span className="italic">Teams worth remembering.</span>
+            </h2>
+            <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
+              Start from an idea, tailor a signature, or design from scratch — every occasion, entirely your own.
+            </p>
+          </div>
+
+          <ul className="grid sm:grid-cols-3 gap-5 md:gap-6 list-none p-0 max-w-5xl mx-auto">
+            {[
+              {
+                eyebrow: "Proposals",
+                title: "A moment they'll never forget",
+                line: "A hidden viewpoint, a private dinner, a perfectly timed pause — quietly extraordinary.",
+                to: "/proposals" as const,
+              },
+              {
+                eyebrow: "Celebrations",
+                title: "Birthdays, anniversaries, milestones",
+                line: "Gather the people who matter, in places that feel made for the occasion.",
+                to: "/proposals" as const,
+              },
+              {
+                eyebrow: "Corporate",
+                title: "Teams, incentives, retreats",
+                line: "Refined private programs that feel nothing like a hotel ballroom.",
+                to: "/corporate" as const,
+              },
+            ].map((o) => (
+              <li key={o.eyebrow} className="reveal-stagger h-full">
+                <Link
+                  to={o.to}
+                  className="group flex flex-col h-full p-7 md:p-8 bg-[color:var(--card)] border border-[color:var(--border)] hover:border-[color:var(--teal)]/30 hover:shadow-[0_24px_50px_-24px_rgba(41,91,97,0.18)] transition-all duration-500"
+                >
+                  <span className="text-[10.5px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
+                    {o.eyebrow}
+                  </span>
+                  <h3 className="serif text-[1.4rem] md:text-[1.5rem] mt-3 text-[color:var(--charcoal)] leading-[1.2]">
+                    {o.title}
+                  </h3>
+                  <p className="mt-3 text-[14.5px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light flex-1">
+                    {o.line}
+                  </p>
+                  <span className="mt-7 inline-flex items-center gap-2 text-[11.5px] uppercase tracking-[0.24em] font-semibold text-[color:var(--teal)] group-hover:translate-x-1 transition-transform">
+                    Plan this occasion <ArrowRight size={12} />
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* 8 — LOCAL STORIES / HIDDEN GEMS
           The editorial / emotional beat — "the Portugal we travel ourselves".
           Sits between Multi-Day and Social Proof to warm the reader before
           the review block. */}
