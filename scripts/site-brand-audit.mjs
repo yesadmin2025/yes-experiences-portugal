@@ -119,7 +119,10 @@ function composite(fgHex, alpha, bgHex) {
 // We classify by looking at the immediate left context of the hex.
 function rewriteFile(text, ext) {
   const fixes = [];
-  // Match every hex; capture its index so we can inspect surrounding chars.
+  // Files marked with `brand-audit-ignore-file` are reference docs (e.g. the
+  // brand QA page) where literal hexes are the source of truth.
+  if (text.includes("brand-audit-ignore-file")) return { text, fixes };
+
   const re = /#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})\b/g;
   let out = "";
   let last = 0;
@@ -136,26 +139,26 @@ function rewriteFile(text, ext) {
       continue;
     }
 
-    // Look back to see if we're inside a Tailwind arbitrary-value bracket.
-    // Find the most recent `[` since the last whitespace; if found and not
-    // closed by `]` before the hex, we're inside a Tailwind arbitrary value.
-    const left = text.slice(Math.max(0, m.index - 80), m.index);
+    // Look back ~120 chars to classify the surrounding context.
+    const left = text.slice(Math.max(0, m.index - 120), m.index);
+
+    // Skip hexes that already live inside a var(--token, #fallback) — those
+    // are intentional fallbacks; rewriting them to a nested var() corrupts
+    // the call. Detect by finding an unclosed `var(` to the left.
+    const lastVar = left.lastIndexOf("var(");
+    const lastVarClose = left.lastIndexOf(")");
+    if (lastVar > lastVarClose) {
+      out += raw;
+      continue;
+    }
+
+    // Tailwind arbitrary value: an unclosed `[` to the left of the hex means
+    // we're inside `text-[...]` / `bg-[...]` etc. Use `color:var(--token)`.
     const lastBracket = left.lastIndexOf("[");
     const lastClose = left.lastIndexOf("]");
     const inTwArbitrary = lastBracket > lastClose;
 
-    let replacement;
-    if (inTwArbitrary) {
-      // Tailwind arbitrary value: wrap in `color:var(--token)`. Preserve any
-      // trailing `/alpha` opacity modifier that comes after the closing `]`.
-      replacement = `color:var(--${token})`;
-    } else if (ext === ".css") {
-      replacement = `var(--${token})`;
-    } else {
-      // JS/TS string-ish context — wrap in var() but leave outer quotes intact.
-      replacement = `var(--${token})`;
-    }
-    out += replacement;
+    out += inTwArbitrary ? `color:var(--${token})` : `var(--${token})`;
     fixes.push({ raw, token, index: m.index });
   }
   out += text.slice(last);
