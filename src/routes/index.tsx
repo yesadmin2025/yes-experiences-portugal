@@ -910,7 +910,7 @@ function HomePage() {
               Designed by you. <span className="italic">Confirmed instantly.</span>
             </h2>
             <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
-              You're not requesting a tour. You're creating an experience — and confirming it in real time.
+              A local is always available to guide you, if you want it.
             </p>
           </div>
 
