@@ -817,7 +817,7 @@ function HomePage() {
         </div>
       </section>
 
-      {/* 5 — SIGNATURE EXPERIENCES (book or tailor)
+      {/* 5 — SIGNATURE EXPERIENCES (confirm or tailor)
           Three signature starting points. Each can be booked as-is OR
           tailored — that dual nature is communicated in the section
           intro and reinforced by the dual CTA on each card. */}
