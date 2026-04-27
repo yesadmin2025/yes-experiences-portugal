@@ -149,4 +149,40 @@ describe("scripts/hero-copy-qa.mjs --report-json-strict", () => {
     },
     90_000,
   );
+
+  it(
+    "--report-json-schema prints the strict-validator schema, exits 0, and pins to hero-copy-qa@1",
+    () => {
+      // Offline-safe: --report-json-schema must NOT touch the network. We run
+      // it without --production-only/--preview-only and still expect EXIT_OK.
+      const { status, stdout, stderr } = runScript(SCRIPT_PATH, [
+        "--report-json-schema",
+      ]);
+
+      expect(status, `expected EXIT_OK; stderr=\n${stderr}`).toBe(EXIT_OK);
+
+      let parsed: unknown;
+      expect(() => {
+        parsed = JSON.parse(stdout);
+      }, `stdout was not valid JSON:\n${stdout}`).not.toThrow();
+
+      const doc = parsed as { schema?: unknown; shape?: Record<string, unknown> };
+      // The whole point of this flag: tests can pin against the schema name
+      // emitted by --report-json + --report-json-strict. If buildReport ever
+      // bumps to hero-copy-qa@2 without updating consumers, this fails loudly.
+      expect(doc.schema).toBe("hero-copy-qa@1");
+
+      // Sanity-check the shape payload so a regression that prints an empty
+      // or partial schema doesn't sneak through.
+      expect(doc.shape).toBeTypeOf("object");
+      expect(Array.isArray(doc.shape?.topKeys)).toBe(true);
+      expect(doc.shape?.topKeys).toContain("schema");
+      expect(doc.shape?.topKeys).toContain("targets");
+      expect(doc.shape?.topKeys).toContain("totals");
+      expect(doc.shape?.modes).toEqual(["one-shot", "watch"]);
+      expect(doc.shape?.targetStatuses).toContain("drift");
+      expect(doc.shape?.targetStatuses).toContain("fetch_failed");
+    },
+    15_000,
+  );
 });
