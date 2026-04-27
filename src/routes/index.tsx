@@ -168,7 +168,7 @@ const pillars = [
   {
     icon: Zap,
     title: "Instant",
-    line: "From idea to confirmed itinerary in days, not weeks — with a real human behind every reply.",
+    line: "Real-time creation. Instant confirmation. No requests, no waiting — your experience is locked the moment you say yes.",
   },
 ];
 
