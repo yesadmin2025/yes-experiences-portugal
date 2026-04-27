@@ -100,13 +100,13 @@ describe("performJump", () => {
     const origQuery = doc.querySelector.bind(doc);
     doc.querySelector = ((sel: string) => {
       const el = origQuery(sel);
-      if (el) (el as HTMLElement).scrollIntoView = scrollIntoView;
+      if (el) (el as HTMLElement).scrollIntoView = scrollIntoView as unknown as HTMLElement["scrollIntoView"];
       return el;
     }) as typeof doc.querySelector;
     const origGetById = doc.getElementById.bind(doc);
     doc.getElementById = ((id: string) => {
       const el = origGetById(id);
-      if (el) (el as HTMLElement).scrollIntoView = scrollIntoView;
+      if (el) (el as HTMLElement).scrollIntoView = scrollIntoView as unknown as HTMLElement["scrollIntoView"];
       return el;
     }) as typeof doc.getElementById;
 
