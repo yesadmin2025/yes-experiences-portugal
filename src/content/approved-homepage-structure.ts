@@ -228,9 +228,7 @@ export const MOBILE_LAYOUT_INVARIANTS = {
 /* ------------------------------------------------------------------ */
 
 /** Returns the approved section that matches a given aria-labelledby id. */
-export function findApprovedSectionByAriaLabel(
-  id: string,
-): ApprovedSection | undefined {
+export function findApprovedSectionByAriaLabel(id: string): ApprovedSection | undefined {
   return APPROVED_HOMEPAGE_SECTIONS.find((s) => s.ariaLabelledBy === id);
 }
 

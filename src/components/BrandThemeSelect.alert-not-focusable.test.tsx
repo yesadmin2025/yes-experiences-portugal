@@ -22,14 +22,7 @@
  */
 import { describe, it, expect, vi, afterEach, beforeEach } from "vitest";
 import { useState } from "react";
-import {
-  render,
-  screen,
-  fireEvent,
-  cleanup,
-  act,
-  within,
-} from "@testing-library/react";
+import { render, screen, fireEvent, cleanup, act, within } from "@testing-library/react";
 import { BrandThemeSelect } from "./BrandThemeSelect";
 import type { BrandLogoTheme } from "@/lib/brand-tokens";
 
@@ -39,12 +32,7 @@ afterEach(() => {
 
 function ControlledHarness({ initialValue }: { initialValue: unknown }) {
   const [value, setValue] = useState<unknown>(initialValue);
-  return (
-    <BrandThemeSelect
-      value={value}
-      onChange={(next: BrandLogoTheme) => setValue(next)}
-    />
-  );
+  return <BrandThemeSelect value={value} onChange={(next: BrandLogoTheme) => setValue(next)} />;
 }
 
 describe("BrandThemeSelect — error panel is never focusable (regression)", () => {

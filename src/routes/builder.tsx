@@ -68,25 +68,93 @@ const durationOpts = [
 ];
 
 const styleOpts = [
-  { id: "wine", name: "Wine & Vineyards", icon: Wine, story: "Your local guide introduces you to a family-run winery far from tourist routes — the winemaker pours from the cellar himself." },
-  { id: "gastronomy", name: "Gastronomy", icon: UtensilsCrossed, story: "A long table is set in the chef's kitchen — tonight's menu was decided this morning at the market." },
-  { id: "nature", name: "Nature & Outdoors", icon: Mountain, story: "You walk a quiet ridge known mostly to local shepherds — the valley unfolds below, all yours." },
-  { id: "heritage", name: "Heritage & Culture", icon: Landmark, story: "An artisan opens his atelier doors — three generations of craft, told over coffee." },
-  { id: "coastal", name: "Coastal & Sea", icon: Waves, story: "You follow hidden coastal roads known mostly to locals — the kind that end at a fishermen's lunch." },
+  {
+    id: "wine",
+    name: "Wine & Vineyards",
+    icon: Wine,
+    story:
+      "Your local guide introduces you to a family-run winery far from tourist routes — the winemaker pours from the cellar himself.",
+  },
+  {
+    id: "gastronomy",
+    name: "Gastronomy",
+    icon: UtensilsCrossed,
+    story:
+      "A long table is set in the chef's kitchen — tonight's menu was decided this morning at the market.",
+  },
+  {
+    id: "nature",
+    name: "Nature & Outdoors",
+    icon: Mountain,
+    story:
+      "You walk a quiet ridge known mostly to local shepherds — the valley unfolds below, all yours.",
+  },
+  {
+    id: "heritage",
+    name: "Heritage & Culture",
+    icon: Landmark,
+    story: "An artisan opens his atelier doors — three generations of craft, told over coffee.",
+  },
+  {
+    id: "coastal",
+    name: "Coastal & Sea",
+    icon: Waves,
+    story:
+      "You follow hidden coastal roads known mostly to locals — the kind that end at a fishermen's lunch.",
+  },
 ];
 
 const highlightOpts = [
-  { id: "market", name: "Local market at dawn", story: "Your day begins in a vibrant local market where real life unfolds — pastries, fresh fish, the day's first conversations." },
-  { id: "viewpoint", name: "Secret viewpoint", story: "A bend in the road most travelers miss — the whole valley opens up, and nobody else is there." },
-  { id: "tasting", name: "Private tasting", story: "Just for you, in a cellar most never see — five wines, five stories, told by the maker." },
-  { id: "longlunch", name: "Long lunch with locals", story: "Three hours, four courses, a family table you'd swear you'd known for years." },
-  { id: "atelier", name: "Artisan atelier visit", story: "Hands at work — tiles, leather, ceramics — the Portugal that still makes things by hand." },
+  {
+    id: "market",
+    name: "Local market at dawn",
+    story:
+      "Your day begins in a vibrant local market where real life unfolds — pastries, fresh fish, the day's first conversations.",
+  },
+  {
+    id: "viewpoint",
+    name: "Secret viewpoint",
+    story:
+      "A bend in the road most travelers miss — the whole valley opens up, and nobody else is there.",
+  },
+  {
+    id: "tasting",
+    name: "Private tasting",
+    story:
+      "Just for you, in a cellar most never see — five wines, five stories, told by the maker.",
+  },
+  {
+    id: "longlunch",
+    name: "Long lunch with locals",
+    story: "Three hours, four courses, a family table you'd swear you'd known for years.",
+  },
+  {
+    id: "atelier",
+    name: "Artisan atelier visit",
+    story:
+      "Hands at work — tiles, leather, ceramics — the Portugal that still makes things by hand.",
+  },
 ];
 
 const paceOpts = [
-  { id: "slow", name: "Slow & lingering", icon: Moon, line: "Two stops a day. Long meals. Time to breathe." },
-  { id: "balanced", name: "Balanced", icon: Sun, line: "Three to four moments. Room for the unplanned." },
-  { id: "rich", name: "Rich & full", icon: Music, line: "A fuller day — for travelers who want to see and taste it all." },
+  {
+    id: "slow",
+    name: "Slow & lingering",
+    icon: Moon,
+    line: "Two stops a day. Long meals. Time to breathe.",
+  },
+  {
+    id: "balanced",
+    name: "Balanced",
+    icon: Sun,
+    line: "Three to four moments. Room for the unplanned.",
+  },
+  {
+    id: "rich",
+    name: "Rich & full",
+    icon: Music,
+    line: "A fuller day — for travelers who want to see and taste it all.",
+  },
 ];
 
 const enhancementOpts = [
@@ -98,9 +166,27 @@ const enhancementOpts = [
 ];
 
 const tierOpts = [
-  { id: "signature", name: "Signature", priceFrom: 1850, line: "Our refined standard — private, curated, beautifully timed.", icon: Sparkles },
-  { id: "atelier", name: "Atelier", priceFrom: 3400, line: "Higher-touch — premium properties, deeper access, finer details.", icon: Gem },
-  { id: "couture", name: "Couture", priceFrom: 6200, line: "Fully bespoke — anything is possible, nothing is fixed.", icon: Heart },
+  {
+    id: "signature",
+    name: "Signature",
+    priceFrom: 1850,
+    line: "Our refined standard — private, curated, beautifully timed.",
+    icon: Sparkles,
+  },
+  {
+    id: "atelier",
+    name: "Atelier",
+    priceFrom: 3400,
+    line: "Higher-touch — premium properties, deeper access, finer details.",
+    icon: Gem,
+  },
+  {
+    id: "couture",
+    name: "Couture",
+    priceFrom: 6200,
+    line: "Fully bespoke — anything is possible, nothing is fixed.",
+    icon: Heart,
+  },
 ];
 
 /* ---------- Map regions ---------- */
@@ -175,7 +261,7 @@ function BuilderPage() {
     }));
 
   const canNext =
-    (step === 0) ||
+    step === 0 ||
     (step === 1 && s.groupType) ||
     (step === 2 && s.guests) ||
     (step === 3 && s.region) ||
@@ -183,14 +269,15 @@ function BuilderPage() {
     (step === 5 && s.styles.length > 0) ||
     (step === 6 && s.highlights.length > 0) ||
     (step === 7 && s.pace) ||
-    (step === 8) ||
+    step === 8 ||
     (step === 9 && s.tier) ||
     step === 10;
 
   /* Live story compiles from selections */
   const liveStory = useMemo(() => {
     const lines: string[] = [];
-    if (s.region) lines.push(`Your story unfolds in ${regionOpts.find((r) => r.id === s.region)?.name}.`);
+    if (s.region)
+      lines.push(`Your story unfolds in ${regionOpts.find((r) => r.id === s.region)?.name}.`);
     if (s.duration) {
       const d = durationOpts.find((d) => d.id === s.duration);
       if (d) lines.push(`Across ${d.label.toLowerCase()}, at a pace that feels right.`);
@@ -218,11 +305,17 @@ function BuilderPage() {
     const tier = tierOpts.find((t) => t.id === s.tier);
     if (!tier) return null;
     const guestMult =
-      s.guests === "1-2" ? 1 :
-      s.guests === "3-6" ? 1.6 :
-      s.guests === "7-15" ? 2.8 :
-      s.guests === "16-40" ? 5 :
-      s.guests === "40+" ? 9 : 1;
+      s.guests === "1-2"
+        ? 1
+        : s.guests === "3-6"
+          ? 1.6
+          : s.guests === "7-15"
+            ? 2.8
+            : s.guests === "16-40"
+              ? 5
+              : s.guests === "40+"
+                ? 9
+                : 1;
     const dayMult = Math.max(1, days);
     const enhanceMult = 1 + s.enhancements.length * 0.08;
     return Math.round((tier.priceFrom * guestMult * dayMult * enhanceMult) / 50) * 50;
@@ -306,7 +399,11 @@ function BuilderPage() {
               )}
 
               {step === 1 && (
-                <Step eyebrow="Step 2 · Group" title="Who's traveling?" sub="The energy of your group shapes everything that follows.">
+                <Step
+                  eyebrow="Step 2 · Group"
+                  title="Who's traveling?"
+                  sub="The energy of your group shapes everything that follows."
+                >
                   <Cards
                     options={groupTypes}
                     selected={s.groupType ? [s.groupType] : []}
@@ -316,7 +413,11 @@ function BuilderPage() {
               )}
 
               {step === 2 && (
-                <Step eyebrow="Step 3 · Guests" title="How many of you?" sub="From a single guest to large private groups — always entirely private.">
+                <Step
+                  eyebrow="Step 3 · Guests"
+                  title="How many of you?"
+                  sub="From a single guest to large private groups — always entirely private."
+                >
                   <PillCards
                     options={guestSizes}
                     selected={s.guests ? [s.guests] : []}
@@ -326,9 +427,17 @@ function BuilderPage() {
               )}
 
               {step === 3 && (
-                <Step eyebrow="Step 4 · Region" title="Where in Portugal?" sub="Pick a starting region. We'll weave in nearby gems most travelers never reach.">
+                <Step
+                  eyebrow="Step 4 · Region"
+                  title="Where in Portugal?"
+                  sub="Pick a starting region. We'll weave in nearby gems most travelers never reach."
+                >
                   <PillCards
-                    options={regionOpts.map((r) => ({ id: r.id, label: r.name, sub: "Private access" }))}
+                    options={regionOpts.map((r) => ({
+                      id: r.id,
+                      label: r.name,
+                      sub: "Private access",
+                    }))}
                     selected={s.region ? [s.region] : []}
                     onSelect={(id) => update("region", id)}
                   />
@@ -336,7 +445,11 @@ function BuilderPage() {
               )}
 
               {step === 4 && (
-                <Step eyebrow="Step 5 · Duration" title="How long do you have?" sub="From a single afternoon to a full week-long story.">
+                <Step
+                  eyebrow="Step 5 · Duration"
+                  title="How long do you have?"
+                  sub="From a single afternoon to a full week-long story."
+                >
                   <PillCards
                     options={durationOpts}
                     selected={s.duration ? [s.duration] : []}
@@ -346,7 +459,11 @@ function BuilderPage() {
               )}
 
               {step === 5 && (
-                <Step eyebrow="Step 6 · Style" title="What inspires you?" sub="Pick what speaks to you — choose one or several.">
+                <Step
+                  eyebrow="Step 6 · Style"
+                  title="What inspires you?"
+                  sub="Pick what speaks to you — choose one or several."
+                >
                   <Cards
                     options={styleOpts}
                     selected={s.styles}
@@ -357,9 +474,17 @@ function BuilderPage() {
               )}
 
               {step === 6 && (
-                <Step eyebrow="Step 7 · Highlights" title="A few signature moments" sub="Quiet, unforgettable details — the kind only locals know to suggest.">
+                <Step
+                  eyebrow="Step 7 · Highlights"
+                  title="A few signature moments"
+                  sub="Quiet, unforgettable details — the kind only locals know to suggest."
+                >
                   <PillCards
-                    options={highlightOpts.map((h) => ({ id: h.id, label: h.name, sub: "Insider moment" }))}
+                    options={highlightOpts.map((h) => ({
+                      id: h.id,
+                      label: h.name,
+                      sub: "Insider moment",
+                    }))}
                     selected={s.highlights}
                     onSelect={(id) => toggle("highlights", id)}
                     multi
@@ -368,7 +493,11 @@ function BuilderPage() {
               )}
 
               {step === 7 && (
-                <Step eyebrow="Step 8 · Pace" title="How fast does your day move?" sub="The most important decision most travelers never make.">
+                <Step
+                  eyebrow="Step 8 · Pace"
+                  title="How fast does your day move?"
+                  sub="The most important decision most travelers never make."
+                >
                   <Cards
                     options={paceOpts}
                     selected={s.pace ? [s.pace] : []}
@@ -378,7 +507,11 @@ function BuilderPage() {
               )}
 
               {step === 8 && (
-                <Step eyebrow="Step 9 · Enhancements" title="Add a refined touch" sub="Optional — for moments worth elevating.">
+                <Step
+                  eyebrow="Step 9 · Enhancements"
+                  title="Add a refined touch"
+                  sub="Optional — for moments worth elevating."
+                >
                   <Cards
                     options={enhancementOpts}
                     selected={s.enhancements}
@@ -389,7 +522,11 @@ function BuilderPage() {
               )}
 
               {step === 9 && (
-                <Step eyebrow="Step 10 · Experience tier" title="Choose the level of refinement" sub="Each tier is fully private. Each is bespoke. The difference is depth.">
+                <Step
+                  eyebrow="Step 10 · Experience tier"
+                  title="Choose the level of refinement"
+                  sub="Each tier is fully private. Each is bespoke. The difference is depth."
+                >
                   <div className="space-y-4">
                     {tierOpts.map((t) => {
                       const active = s.tier === t.id;
@@ -406,11 +543,15 @@ function BuilderPage() {
                         >
                           <Icon
                             size={28}
-                            className={active ? "text-[color:var(--teal)]" : "text-[color:var(--gold)]"}
+                            className={
+                              active ? "text-[color:var(--teal)]" : "text-[color:var(--gold)]"
+                            }
                           />
                           <div className="flex-1">
                             <div className="flex items-baseline justify-between gap-3">
-                              <h3 className="serif text-2xl text-[color:var(--charcoal)]">{t.name}</h3>
+                              <h3 className="serif text-2xl text-[color:var(--charcoal)]">
+                                {t.name}
+                              </h3>
                               <span className="text-xs uppercase tracking-[0.2em] text-[color:var(--charcoal-soft)]">
                                 from €{t.priceFrom.toLocaleString()}
                               </span>
@@ -426,13 +567,22 @@ function BuilderPage() {
                 </Step>
               )}
 
-              {step === 10 && <SummaryView s={s} days={days} investment={investment} liveStory={liveStory} isMultiDay={isMultiDay} />}
+              {step === 10 && (
+                <SummaryView
+                  s={s}
+                  days={days}
+                  investment={investment}
+                  liveStory={liveStory}
+                  isMultiDay={isMultiDay}
+                />
+              )}
 
               {/* Mid-flow concierge note — subtle, optional */}
               {step > 0 && step < 10 && step === 5 && (
                 <div className="mt-10 border-l-2 border-[color:var(--gold)] pl-5 py-1">
                   <p className="text-[13px] text-[color:var(--charcoal-soft)] italic leading-relaxed">
-                    Need a local eye? Our designer can help perfect the route — without slowing you down.
+                    Need a local eye? Our designer can help perfect the route — without slowing you
+                    down.
                   </p>
                 </div>
               )}
@@ -463,7 +613,12 @@ function BuilderPage() {
             <aside className="lg:col-span-5 xl:col-span-4">
               <div className="lg:sticky lg:top-[160px] space-y-6">
                 <LiveStory lines={liveStory} name={s.name} />
-                <DynamicMap region={s.region} highlights={s.highlights} days={days} isMultiDay={isMultiDay} />
+                <DynamicMap
+                  region={s.region}
+                  highlights={s.highlights}
+                  days={days}
+                  isMultiDay={isMultiDay}
+                />
               </div>
             </aside>
           </div>
@@ -475,11 +630,25 @@ function BuilderPage() {
 
 /* ---------- Subcomponents ---------- */
 
-function Step({ eyebrow, title, sub, children }: { eyebrow: string; title: string; sub: string; children: React.ReactNode }) {
+function Step({
+  eyebrow,
+  title,
+  sub,
+  children,
+}: {
+  eyebrow: string;
+  title: string;
+  sub: string;
+  children: React.ReactNode;
+}) {
   return (
     <div>
-      <span className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">{eyebrow}</span>
-      <h2 className="serif text-3xl md:text-4xl mt-3 leading-tight text-[color:var(--charcoal)]">{title}</h2>
+      <span className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
+        {eyebrow}
+      </span>
+      <h2 className="serif text-3xl md:text-4xl mt-3 leading-tight text-[color:var(--charcoal)]">
+        {title}
+      </h2>
       <p className="mt-3 text-[color:var(--charcoal-soft)] max-w-lg">{sub}</p>
       <div className="mt-10">{children}</div>
     </div>
@@ -494,7 +663,17 @@ interface CardOpt {
   line?: string;
 }
 
-function Cards({ options, selected, onSelect, multi = false }: { options: CardOpt[]; selected: string[]; onSelect: (id: string) => void; multi?: boolean }) {
+function Cards({
+  options,
+  selected,
+  onSelect,
+  multi = false,
+}: {
+  options: CardOpt[];
+  selected: string[];
+  onSelect: (id: string) => void;
+  multi?: boolean;
+}) {
   return (
     <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
       {options.slice(0, 5).map((o) => {
@@ -511,11 +690,16 @@ function Cards({ options, selected, onSelect, multi = false }: { options: CardOp
             }`}
           >
             {Icon && (
-              <Icon size={26} className={active ? "text-[color:var(--teal)]" : "text-[color:var(--gold)]"} />
+              <Icon
+                size={26}
+                className={active ? "text-[color:var(--teal)]" : "text-[color:var(--gold)]"}
+              />
             )}
             <h3 className="serif text-lg mt-4 text-[color:var(--charcoal)]">{o.name ?? o.label}</h3>
             {o.line && (
-              <p className="mt-2 text-xs text-[color:var(--charcoal-soft)] leading-relaxed">{o.line}</p>
+              <p className="mt-2 text-xs text-[color:var(--charcoal-soft)] leading-relaxed">
+                {o.line}
+              </p>
             )}
             {active && (
               <span className="absolute top-3 right-3 h-5 w-5 rounded-full bg-[color:var(--teal)] flex items-center justify-center">
@@ -532,7 +716,17 @@ function Cards({ options, selected, onSelect, multi = false }: { options: CardOp
   );
 }
 
-function PillCards({ options, selected, onSelect, multi = false }: { options: { id: string; label: string; sub?: string }[]; selected: string[]; onSelect: (id: string) => void; multi?: boolean }) {
+function PillCards({
+  options,
+  selected,
+  onSelect,
+  multi = false,
+}: {
+  options: { id: string; label: string; sub?: string }[];
+  selected: string[];
+  onSelect: (id: string) => void;
+  multi?: boolean;
+}) {
   return (
     <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
       {options.slice(0, 5).map((o) => {
@@ -578,7 +772,9 @@ function LiveStory({ lines, name }: { lines: string[]; name: string }) {
         <Sparkles size={13} className="text-[color:var(--gold)]" />
       </div>
       {name && (
-        <p className="serif italic text-2xl text-[color:var(--teal)] mb-4 leading-tight">"{name}"</p>
+        <p className="serif italic text-2xl text-[color:var(--teal)] mb-4 leading-tight">
+          "{name}"
+        </p>
       )}
       {lines.length === 0 ? (
         <p className="text-sm text-[color:var(--charcoal-soft)] leading-relaxed italic">
@@ -600,7 +796,17 @@ function LiveStory({ lines, name }: { lines: string[]; name: string }) {
   );
 }
 
-function DynamicMap({ region, highlights, days, isMultiDay }: { region: string | null; highlights: string[]; days: number; isMultiDay: boolean }) {
+function DynamicMap({
+  region,
+  highlights,
+  days,
+  isMultiDay,
+}: {
+  region: string | null;
+  highlights: string[];
+  days: number;
+  isMultiDay: boolean;
+}) {
   const center = region ? regionMap[region] : null;
   // Generate stops: start from region center, fan out based on highlight count
   const stops = useMemo(() => {
@@ -656,7 +862,15 @@ function DynamicMap({ region, highlights, days, isMultiDay }: { region: string |
           {center && (
             <g>
               <circle cx={center.x} cy={center.y} r="2.4" fill="var(--teal)" />
-              <circle cx={center.x} cy={center.y} r="4.5" fill="none" stroke="var(--teal)" strokeWidth="0.4" opacity="0.4" />
+              <circle
+                cx={center.x}
+                cy={center.y}
+                r="4.5"
+                fill="none"
+                stroke="var(--teal)"
+                strokeWidth="0.4"
+                opacity="0.4"
+              />
             </g>
           )}
 
@@ -688,10 +902,15 @@ function DynamicMap({ region, highlights, days, isMultiDay }: { region: string |
       {isMultiDay && stops.length > 0 && (
         <div className="mt-4 flex flex-wrap gap-3">
           {Array.from({ length: days }).map((_, i) => (
-            <div key={i} className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-[color:var(--charcoal-soft)]">
+            <div
+              key={i}
+              className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-[color:var(--charcoal-soft)]"
+            >
               <span
                 className="h-2 w-2 rounded-full"
-                style={{ background: `var(--${i === 0 ? "teal" : i === 1 ? "teal-2" : i === 2 ? "gold" : "charcoal-soft"})` }}
+                style={{
+                  background: `var(--${i === 0 ? "teal" : i === 1 ? "teal-2" : i === 2 ? "gold" : "charcoal-soft"})`,
+                }}
               />
               Day {i + 1}
             </div>
@@ -704,11 +923,25 @@ function DynamicMap({ region, highlights, days, isMultiDay }: { region: string |
 
 /* ---------- Summary view ---------- */
 
-function SummaryView({ s, days, investment, liveStory, isMultiDay }: { s: BuilderState; days: number; investment: number | null; liveStory: string[]; isMultiDay: boolean }) {
+function SummaryView({
+  s,
+  days,
+  investment,
+  liveStory,
+  isMultiDay,
+}: {
+  s: BuilderState;
+  days: number;
+  investment: number | null;
+  liveStory: string[];
+  isMultiDay: boolean;
+}) {
   const tier = tierOpts.find((t) => t.id === s.tier);
   return (
     <div>
-      <span className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">Your Portugal Story</span>
+      <span className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
+        Your Portugal Story
+      </span>
       <h2 className="serif text-4xl md:text-5xl mt-3 leading-tight text-[color:var(--charcoal)]">
         {s.name || "Your bespoke experience"}
       </h2>
@@ -718,11 +951,16 @@ function SummaryView({ s, days, investment, liveStory, isMultiDay }: { s: Builde
 
       {/* Emotional story */}
       <div className="mt-10 bg-[color:var(--sand)] p-8 md:p-10 border-l-2 border-[color:var(--gold)]">
-        <p className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--teal)] mb-4">The Story</p>
+        <p className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--teal)] mb-4">
+          The Story
+        </p>
         <div className="space-y-4">
           {liveStory.length > 0 ? (
             liveStory.map((l, i) => (
-              <p key={i} className="serif italic text-xl leading-relaxed text-[color:var(--charcoal)]">
+              <p
+                key={i}
+                className="serif italic text-xl leading-relaxed text-[color:var(--charcoal)]"
+              >
                 {l}
               </p>
             ))
@@ -736,7 +974,9 @@ function SummaryView({ s, days, investment, liveStory, isMultiDay }: { s: Builde
 
       {/* Timeline */}
       <div className="mt-10">
-        <p className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--teal)] mb-5">Timeline preview</p>
+        <p className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--teal)] mb-5">
+          Timeline preview
+        </p>
         <div className="space-y-3">
           {Array.from({ length: Math.max(1, days) }).map((_, di) => (
             <div key={di} className="border-l-2 border-[color:var(--gold)] pl-5">
@@ -745,13 +985,37 @@ function SummaryView({ s, days, investment, liveStory, isMultiDay }: { s: Builde
               </div>
               <ul className="space-y-2">
                 {[
-                  { t: "Morning", l: s.highlights.includes("market") ? "A local market at dawn" : "Slow start, then on the road to your first stop" },
-                  { t: "Midday", l: s.styles.includes("gastronomy") ? "Long lunch at a local table" : "A signature private experience" },
-                  { t: "Afternoon", l: s.styles.includes("wine") ? "Family winery & cellar tasting" : s.styles.includes("coastal") ? "A hidden coastal road, ending at the sea" : "An insider stop" },
-                  { t: "Evening", l: s.highlights.includes("viewpoint") ? "Sunset at a secret viewpoint" : "Quiet return — a glass somewhere beautiful" },
+                  {
+                    t: "Morning",
+                    l: s.highlights.includes("market")
+                      ? "A local market at dawn"
+                      : "Slow start, then on the road to your first stop",
+                  },
+                  {
+                    t: "Midday",
+                    l: s.styles.includes("gastronomy")
+                      ? "Long lunch at a local table"
+                      : "A signature private experience",
+                  },
+                  {
+                    t: "Afternoon",
+                    l: s.styles.includes("wine")
+                      ? "Family winery & cellar tasting"
+                      : s.styles.includes("coastal")
+                        ? "A hidden coastal road, ending at the sea"
+                        : "An insider stop",
+                  },
+                  {
+                    t: "Evening",
+                    l: s.highlights.includes("viewpoint")
+                      ? "Sunset at a secret viewpoint"
+                      : "Quiet return — a glass somewhere beautiful",
+                  },
                 ].map((m) => (
                   <li key={m.t} className="flex gap-4 text-sm">
-                    <span className="text-[color:var(--charcoal-soft)] uppercase tracking-[0.2em] text-[10px] w-20 pt-1">{m.t}</span>
+                    <span className="text-[color:var(--charcoal-soft)] uppercase tracking-[0.2em] text-[10px] w-20 pt-1">
+                      {m.t}
+                    </span>
                     <span className="text-[color:var(--charcoal)] flex-1">{m.l}</span>
                   </li>
                 ))}
@@ -772,11 +1036,15 @@ function SummaryView({ s, days, investment, liveStory, isMultiDay }: { s: Builde
               {investment ? `from €${investment.toLocaleString()}` : "Choose a tier to estimate"}
             </p>
             <p className="mt-2 text-sm text-[color:var(--ivory)]/75">
-              {tier ? `${tier.name} tier · ${days || 1} day${days > 1 ? "s" : ""} · fully private` : "Tier not selected"}
+              {tier
+                ? `${tier.name} tier · ${days || 1} day${days > 1 ? "s" : ""} · fully private`
+                : "Tier not selected"}
             </p>
           </div>
           <div className="text-right">
-            <p className="text-[10px] uppercase tracking-[0.25em] text-[color:var(--gold-soft)]">All inclusive</p>
+            <p className="text-[10px] uppercase tracking-[0.25em] text-[color:var(--gold-soft)]">
+              All inclusive
+            </p>
             <p className="text-sm text-[color:var(--ivory)]/85 mt-2">
               Private guide · transport · access · curation
             </p>
@@ -818,7 +1086,8 @@ function SummaryView({ s, days, investment, liveStory, isMultiDay }: { s: Builde
 
       <p className="mt-8 text-xs uppercase tracking-[0.25em] text-[color:var(--charcoal-soft)] flex items-center gap-2">
         <Sparkles size={12} className="text-[color:var(--gold)]" />
-        {isMultiDay ? "Multi-day private journey" : "Private day experience"} · scalable from 1 guest to large private groups
+        {isMultiDay ? "Multi-day private journey" : "Private day experience"} · scalable from 1
+        guest to large private groups
       </p>
     </div>
   );

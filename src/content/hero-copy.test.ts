@@ -33,9 +33,7 @@ function describeFirstDiff(actual: string, expected: string): string {
     const e = expected.charCodeAt(i);
     if (a !== e) {
       const fmt = (cp: number) =>
-        Number.isNaN(cp)
-          ? "<EOF>"
-          : `U+${cp.toString(16).padStart(4, "0").toUpperCase()}`;
+        Number.isNaN(cp) ? "<EOF>" : `U+${cp.toString(16).padStart(4, "0").toUpperCase()}`;
       return `first diff at index ${i}: actual=${fmt(a)} vs expected=${fmt(e)}`;
     }
   }
@@ -63,10 +61,7 @@ describe("Hero copy — source-level byte-exact lock", () => {
     // words ("No forms", "No waiting") — what we forbid is the positive
     // assertion of any of them. Strip "no <word>" pairs first, then
     // assert no remaining occurrence.
-    const stripped = HERO_COPY_SPEC.microcopy.replace(
-      /\bno\s+\w+/gi,
-      "",
-    );
+    const stripped = HERO_COPY_SPEC.microcopy.replace(/\bno\s+\w+/gi, "");
     const forbidden = [
       "form",
       "forms",

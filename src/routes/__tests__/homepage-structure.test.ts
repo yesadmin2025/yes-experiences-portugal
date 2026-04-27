@@ -115,9 +115,7 @@ function resolveApprovedToSource(): {
   return APPROVED_HOMEPAGE_SECTIONS.map((spec) => {
     let match: SectionMatch | null = null;
     if (spec.ariaLabelledBy) {
-      match =
-        allSections.find((s) => s.ariaLabelledBy === spec.ariaLabelledBy) ??
-        null;
+      match = allSections.find((s) => s.ariaLabelledBy === spec.ariaLabelledBy) ?? null;
     } else if (spec.marker) {
       const candidates = allSections.filter((s) => {
         const marker = markerAbove(SOURCE, s.index);
@@ -136,10 +134,7 @@ function resolveApprovedToSource(): {
  * `md:py-32` and `lg:py-40` are deliberately ignored because the spec
  * is the mobile floor.
  */
-function parseMobileSpacing(
-  className: string,
-  kind: "py" | "pb",
-): number | null {
+function parseMobileSpacing(className: string, kind: "py" | "pb"): number | null {
   const tokens = className.split(/\s+/).filter(Boolean);
   let max: number | null = null;
   for (const t of tokens) {
@@ -195,9 +190,7 @@ describe("Approved homepage structure (source lock)", () => {
       indices,
       "Approved sections appear out of order in src/routes/index.tsx. " +
         "Expected order: " +
-        APPROVED_HOMEPAGE_SECTIONS.map((s) => `#${s.order} ${s.name}`).join(
-          " → ",
-        ),
+        APPROVED_HOMEPAGE_SECTIONS.map((s) => `#${s.order} ${s.name}`).join(" → "),
     ).toEqual(sorted);
   });
 
@@ -236,8 +229,7 @@ describe("Approved homepage structure (source lock)", () => {
   describe("layout invariants", () => {
     it("uses .container-x in at least every non-hero section", () => {
       if (!MOBILE_LAYOUT_INVARIANTS.containerXWrapperPerSection) return;
-      const count = (SOURCE.match(/className="[^"]*\bcontainer-x\b/g) ?? [])
-        .length;
+      const count = (SOURCE.match(/className="[^"]*\bcontainer-x\b/g) ?? []).length;
       const floor = APPROVED_SECTION_COUNT - 1;
       expect(
         count,
@@ -246,8 +238,8 @@ describe("Approved homepage structure (source lock)", () => {
     });
 
     it("hero uses overflow-hidden so the slow zoom never causes horizontal scroll", () => {
-      const hero = findSections(SOURCE).find(
-        (s) => (markerAbove(SOURCE, s.index) ?? "").includes("HERO"),
+      const hero = findSections(SOURCE).find((s) =>
+        (markerAbove(SOURCE, s.index) ?? "").includes("HERO"),
       );
       expect(hero).toBeDefined();
       expect(

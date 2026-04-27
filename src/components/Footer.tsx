@@ -32,9 +32,12 @@ export function Footer() {
                 className="block h-[60px] md:h-[64px] lg:h-[68px] w-auto select-none"
               />
             </Link>
-            <p className="mt-8 text-[14.5px] text-[color:var(--ivory)]/85 leading-[1.8] max-w-xs" style={{ fontWeight: 320, letterSpacing: "0.005em" }}>
-              Private, designed Portugal experiences — crafted around your story by passionate
-              local experts.
+            <p
+              className="mt-8 text-[14.5px] text-[color:var(--ivory)]/85 leading-[1.8] max-w-xs"
+              style={{ fontWeight: 320, letterSpacing: "0.005em" }}
+            >
+              Private, designed Portugal experiences — crafted around your story by passionate local
+              experts.
             </p>
           </div>
 
@@ -80,9 +83,15 @@ export function Footer() {
               </li>
             ))}
           </ul>
-          <div className="w-full flex flex-col md:flex-row justify-between items-center gap-4 text-[12px] text-[color:var(--ivory)]/75" style={{ fontWeight: 350 }}>
+          <div
+            className="w-full flex flex-col md:flex-row justify-between items-center gap-4 text-[12px] text-[color:var(--ivory)]/75"
+            style={{ fontWeight: 350 }}
+          >
             <p>© {new Date().getFullYear()} YES experiences Portugal. All rights reserved.</p>
-            <p className="tracking-[0.32em] uppercase text-[color:var(--gold)]" style={{ fontWeight: 400 }}>
+            <p
+              className="tracking-[0.32em] uppercase text-[color:var(--gold)]"
+              style={{ fontWeight: 400 }}
+            >
               Designed in Portugal
             </p>
           </div>
@@ -92,16 +101,13 @@ export function Footer() {
   );
 }
 
-function FooterCol({
-  title,
-  links,
-}: {
-  title: string;
-  links: { to: string; label: string }[];
-}) {
+function FooterCol({ title, links }: { title: string; links: { to: string; label: string }[] }) {
   return (
     <div>
-      <h4 className="font-sans text-[11px] uppercase tracking-[0.32em] text-[color:var(--gold)] mb-6" style={{ fontWeight: 400 }}>
+      <h4
+        className="font-sans text-[11px] uppercase tracking-[0.32em] text-[color:var(--gold)] mb-6"
+        style={{ fontWeight: 400 }}
+      >
         {title}
       </h4>
       <ul className="space-y-3.5 text-[14.5px]" style={{ fontWeight: 350 }}>

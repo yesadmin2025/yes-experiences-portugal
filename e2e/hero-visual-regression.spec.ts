@@ -55,9 +55,7 @@ async function prepareHero(page: Page) {
   });
 
   // One frame to let style injection settle.
-  await page.evaluate(
-    () => new Promise<void>((r) => requestAnimationFrame(() => r())),
-  );
+  await page.evaluate(() => new Promise<void>((r) => requestAnimationFrame(() => r())));
 }
 
 /**
@@ -65,11 +63,7 @@ async function prepareHero(page: Page) {
  * (rather than locator.screenshot) so the diff also catches positional
  * drift relative to its container, not just intrinsic re-renders.
  */
-async function snapshotRegion(
-  page: Page,
-  locator: Locator,
-  name: string,
-) {
+async function snapshotRegion(page: Page, locator: Locator, name: string) {
   await expect(locator).toBeVisible();
   // Scroll into view so the box is fully within the viewport before clipping.
   await locator.scrollIntoViewIfNeeded();
@@ -148,8 +142,7 @@ test.describe("Hero — visual regression", () => {
       // Side-by-side: same baseline (top), with a horizontal gap
       // somewhere between 12px and 48px.
       expect(Math.abs(layout.tops[0] - layout.tops[1])).toBeLessThanOrEqual(2);
-      const gap =
-        layout.lefts[1] - (layout.lefts[0] + layout.widths[0]);
+      const gap = layout.lefts[1] - (layout.lefts[0] + layout.widths[0]);
       expect(gap).toBeGreaterThanOrEqual(12);
       expect(gap).toBeLessThanOrEqual(48);
     }

@@ -134,10 +134,7 @@ function writeBaseline(snapshot: Snapshot) {
 
 function diffSnapshots(before: Snapshot, after: Snapshot): DiffRow[] {
   const rows: DiffRow[] = [];
-  const keys = new Set<string>([
-    ...Object.keys(before.copy),
-    ...Object.keys(after.copy),
-  ]);
+  const keys = new Set<string>([...Object.keys(before.copy), ...Object.keys(after.copy)]);
   for (const field of keys) {
     const b = before.copy[field];
     const a = after.copy[field];
@@ -166,11 +163,7 @@ function runDiff(): DiffRow[] {
   }
 
   if (before.version === after.version) {
-    console.debug(
-      "%c[hero-copy] no changes",
-      "color:#9ca3af",
-      `version=${after.version}`,
-    );
+    console.debug("%c[hero-copy] no changes", "color:#9ca3af", `version=${after.version}`);
     return [];
   }
 
@@ -182,9 +175,7 @@ function runDiff(): DiffRow[] {
   );
   // Use console.table so before/after are easy to scan and copy.
   console.table(rows);
-  console.info(
-    "Call __heroCopy.setBaseline() to accept these changes as the new baseline.",
-  );
+  console.info("Call __heroCopy.setBaseline() to accept these changes as the new baseline.");
   console.groupEnd();
 
   return rows;
@@ -332,10 +323,8 @@ export function evaluateRefreshDecision(input: {
   const { isIndex, forced, baselineVersion, currentVersion } = input;
   if (!isIndex) return { shouldRefresh: false, reason: "not-index" };
   if (forced) return { shouldRefresh: true, reason: "forced" };
-  if (baselineVersion === null)
-    return { shouldRefresh: true, reason: "no-baseline" };
-  if (baselineVersion === currentVersion)
-    return { shouldRefresh: false, reason: "version-match" };
+  if (baselineVersion === null) return { shouldRefresh: true, reason: "no-baseline" };
+  if (baselineVersion === currentVersion) return { shouldRefresh: false, reason: "version-match" };
   return { shouldRefresh: true, reason: "version-diff" };
 }
 
@@ -463,13 +452,10 @@ export function HeroCopyDiff() {
     return next;
   }, []);
 
-  const recordAction = useCallback(
-    (action: BaselineAction, version: string | null) => {
-      writeLastAction(action, version);
-      setLastAction(readLastAction());
-    },
-    [],
-  );
+  const recordAction = useCallback((action: BaselineAction, version: string | null) => {
+    writeLastAction(action, version);
+    setLastAction(readLastAction());
+  }, []);
 
   const resetBaseline = useCallback(() => {
     try {
@@ -482,10 +468,7 @@ export function HeroCopyDiff() {
     clearPersistedOutlines();
     clearRenderedOutlines();
     recordAction("reset", null);
-    console.info(
-      "%c[hero-copy] baseline cleared via UI",
-      "color:#9ca3af",
-    );
+    console.info("%c[hero-copy] baseline cleared via UI", "color:#9ca3af");
     refresh();
   }, [refresh, recordAction]);
 
@@ -495,9 +478,7 @@ export function HeroCopyDiff() {
     const ok = await copyTextToClipboard(payload);
     setCopyStatus(ok ? "ok" : "fail");
     console.info(
-      ok
-        ? "%c[hero-copy] diff JSON copied to clipboard"
-        : "%c[hero-copy] copy to clipboard failed",
+      ok ? "%c[hero-copy] diff JSON copied to clipboard" : "%c[hero-copy] copy to clipboard failed",
       ok ? "color:#10b981" : "color:#ef4444",
       snap,
     );
@@ -528,11 +509,7 @@ export function HeroCopyDiff() {
         clearPersistedOutlines();
         clearRenderedOutlines();
         recordAction("accepted", snap.version);
-        console.info(
-          "%c[hero-copy] baseline updated",
-          "color:#10b981",
-          `version=${snap.version}`,
-        );
+        console.info("%c[hero-copy] baseline updated", "color:#10b981", `version=${snap.version}`);
         refresh();
         return snap;
       },
@@ -557,11 +534,7 @@ export function HeroCopyDiff() {
     const pressed = new Set<string>();
     const onKeyDown = (e: KeyboardEvent) => {
       pressed.add(e.key.toLowerCase());
-      if (
-        (e.shiftKey || pressed.has("shift")) &&
-        pressed.has("h") &&
-        pressed.has("r")
-      ) {
+      if ((e.shiftKey || pressed.has("shift")) && pressed.has("h") && pressed.has("r")) {
         setPanelVisible((v) => {
           const next = !v;
           persistPanelVisibility(next);
@@ -719,17 +692,13 @@ export function HeroCopyDiff() {
 
     clearPersistedOutlines();
     clearRenderedOutlines();
-    console.info(
-      "%c[hero-copy] route boundary",
-      "color:#9ca3af",
-      {
-        prev,
-        next: pathname,
-        hadPersisted,
-        hadRendered,
-        cleared: hadOutlines,
-      },
-    );
+    console.info("%c[hero-copy] route boundary", "color:#9ca3af", {
+      prev,
+      next: pathname,
+      hadPersisted,
+      hadRendered,
+      cleared: hadOutlines,
+    });
 
     // Re-run the diff if we just landed back on the index so any genuine
     // copy change since the baseline is re-detected and (if so) freshly
@@ -749,11 +718,7 @@ export function HeroCopyDiff() {
       const baselineVersion = baselineSnap?.version ?? null;
       const currentVersion = HERO_COPY_VERSION;
 
-      if (
-        !forced &&
-        baselineVersion !== null &&
-        baselineVersion === currentVersion
-      ) {
+      if (!forced && baselineVersion !== null && baselineVersion === currentVersion) {
         console.info(
           "%c[hero-copy] post-boundary diff refresh: skipped (version guard)",
           "color:#9ca3af",
@@ -784,19 +749,19 @@ export function HeroCopyDiff() {
             },
           );
         } catch (err) {
-          console.warn(
-            "%c[hero-copy] post-boundary diff refresh: failed",
-            "color:#ef4444",
-            { prev, next: pathname, error: err },
-          );
+          console.warn("%c[hero-copy] post-boundary diff refresh: failed", "color:#ef4444", {
+            prev,
+            next: pathname,
+            error: err,
+          });
         }
       }
     } else {
-      console.info(
-        "%c[hero-copy] post-boundary diff refresh: skipped",
-        "color:#9ca3af",
-        { prev, next: pathname, reason: "leaving index route" },
-      );
+      console.info("%c[hero-copy] post-boundary diff refresh: skipped", "color:#9ca3af", {
+        prev,
+        next: pathname,
+        reason: "leaving index route",
+      });
     }
 
     if (hadOutlines) {
@@ -853,8 +818,7 @@ export function HeroCopyDiff() {
   };
 
   // camelCase → kebab-case for clean data-* attribute names.
-  const toKebab = (s: string) =>
-    s.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
+  const toKebab = (s: string) => s.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
 
   for (const row of state.rows) {
     fieldFlags[`data-changed-${toKebab(row.field)}`] = row.change;
@@ -863,13 +827,11 @@ export function HeroCopyDiff() {
   }
 
   const categoryFlags: Record<string, string> = {};
-  (Object.keys(categoryHits) as Array<keyof typeof categoryHits>).forEach(
-    (cat) => {
-      if (categoryHits[cat].length > 0) {
-        categoryFlags[`data-changed-${cat}`] = categoryHits[cat].join(",");
-      }
-    },
-  );
+  (Object.keys(categoryHits) as Array<keyof typeof categoryHits>).forEach((cat) => {
+    if (categoryHits[cat].length > 0) {
+      categoryFlags[`data-changed-${cat}`] = categoryHits[cat].join(",");
+    }
+  });
 
   return (
     <>
@@ -906,8 +868,7 @@ export function HeroCopyDiff() {
             data-diff-after={row.after ?? ""}
           >
             {" | "}
-            {row.field} ({row.change}): {JSON.stringify(row.before)} →{" "}
-            {JSON.stringify(row.after)}
+            {row.field} ({row.change}): {JSON.stringify(row.before)} → {JSON.stringify(row.after)}
           </span>
         ))}
       </div>
@@ -1049,8 +1010,7 @@ export function HeroCopyDiff() {
                     padding: "1px 6px",
                     borderRadius: 3,
                     fontWeight: 600,
-                    background:
-                      lastAction.action === "accepted" ? "#10b981" : "#dc2626",
+                    background: lastAction.action === "accepted" ? "#10b981" : "#dc2626",
                     color: "#fff",
                     marginRight: 6,
                     textTransform: "uppercase",
@@ -1060,9 +1020,7 @@ export function HeroCopyDiff() {
                 >
                   {lastAction.action}
                 </span>
-                <code title={lastAction.at}>
-                  {formatRelativeTime(lastAction.at)}
-                </code>
+                <code title={lastAction.at}>{formatRelativeTime(lastAction.at)}</code>
                 {lastAction.version ? (
                   <>
                     {" "}
@@ -1191,11 +1149,7 @@ export function HeroCopyDiff() {
  *
  * Renders as a discreet ghost button. Drop it anywhere on the index page.
  */
-export function HeroCopyDiffResetButton({
-  className,
-}: {
-  className?: string;
-}) {
+export function HeroCopyDiffResetButton({ className }: { className?: string }) {
   const [status, setStatus] = useState<"idle" | "armed">("idle");
 
   const onClick = useCallback(() => {
@@ -1208,8 +1162,7 @@ export function HeroCopyDiffResetButton({
     setStatus("armed");
 
     toast("Hero copy diff reset", {
-      description:
-        "Persisted outlines cleared. Next navigation will force a full diff refresh.",
+      description: "Persisted outlines cleared. Next navigation will force a full diff refresh.",
       duration: 2400,
       id: "hero-copy-reset",
     });

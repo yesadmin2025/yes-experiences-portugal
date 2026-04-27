@@ -1,9 +1,6 @@
 import logoTealAsset from "@/assets/yes-logo-approved.png";
 import logoGoldAsset from "@/assets/yes-logo-approved-gold-silk.png";
-import {
-  assertBrandLogoTheme,
-  type BrandLogoTheme,
-} from "@/lib/brand-tokens";
+import { assertBrandLogoTheme, type BrandLogoTheme } from "@/lib/brand-tokens";
 
 const SOURCES: Record<BrandLogoTheme, string> = {
   "teal-on-ivory": logoTealAsset,
@@ -45,10 +42,7 @@ export function Logo({
   // the guard see runtime values that escaped the type system (e.g. a
   // `theme={someString}` where `someString` is `string`, not the
   // narrower union).
-  const safeTheme: BrandLogoTheme = assertBrandLogoTheme(
-    theme ?? "teal-on-ivory",
-    "Logo",
-  );
+  const safeTheme: BrandLogoTheme = assertBrandLogoTheme(theme ?? "teal-on-ivory", "Logo");
   return (
     <img
       src={SOURCES[safeTheme]}

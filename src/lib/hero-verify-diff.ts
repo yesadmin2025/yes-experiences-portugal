@@ -73,40 +73,21 @@ function diffSpecDrift(
   before: SpecDrift | undefined,
   after: SpecDrift | undefined,
 ) {
-  const beforeMap = new Map(
-    (before?.drifted ?? []).map((d) => [d.key, d.actual]),
-  );
-  const afterMap = new Map(
-    (after?.drifted ?? []).map((d) => [d.key, d.actual]),
-  );
+  const beforeMap = new Map((before?.drifted ?? []).map((d) => [d.key, d.actual]));
+  const afterMap = new Map((after?.drifted ?? []).map((d) => [d.key, d.actual]));
   const keys = new Set([...beforeMap.keys(), ...afterMap.keys()]);
   for (const k of keys) {
     pushIfChanged(out, "spec_drift", k, beforeMap.get(k), afterMap.get(k));
   }
-  pushIfChanged(
-    out,
-    "spec_drift",
-    "ok",
-    before?.ok ?? true,
-    after?.ok ?? true,
-  );
+  pushIfChanged(out, "spec_drift", "ok", before?.ok ?? true, after?.ok ?? true);
 }
 
-export function diffReports(
-  before: VerifyResponse,
-  after: VerifyResponse,
-): FieldChange[] {
+export function diffReports(before: VerifyResponse, after: VerifyResponse): FieldChange[] {
   const out: FieldChange[] = [];
 
   // Top-level report fields.
   pushIfChanged(out, "report", "ok", before.ok, after.ok);
-  pushIfChanged(
-    out,
-    "report",
-    "sourceVersion",
-    before.sourceVersion,
-    after.sourceVersion,
-  );
+  pushIfChanged(out, "report", "sourceVersion", before.sourceVersion, after.sourceVersion);
   pushIfChanged(
     out,
     "report",
@@ -157,13 +138,7 @@ export function diffReports(
     pushIfChanged(out, "page", `${path} → ok`, b.ok, a.ok);
     pushIfChanged(out, "page", `${path} → httpStatus`, b.httpStatus, a.httpStatus);
     pushIfChanged(out, "page", `${path} → liveVersion`, b.liveVersion, a.liveVersion);
-    pushIfChanged(
-      out,
-      "page",
-      `${path} → versionMatch`,
-      b.versionMatch,
-      a.versionMatch,
-    );
+    pushIfChanged(out, "page", `${path} → versionMatch`, b.versionMatch, a.versionMatch);
     pushIfChanged(
       out,
       "page",

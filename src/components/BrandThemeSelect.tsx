@@ -1,9 +1,5 @@
 import { useId, useMemo, useState } from "react";
-import {
-  BRAND_LOGO_THEMES,
-  isBrandLogoTheme,
-  type BrandLogoTheme,
-} from "@/lib/brand-tokens";
+import { BRAND_LOGO_THEMES, isBrandLogoTheme, type BrandLogoTheme } from "@/lib/brand-tokens";
 
 /**
  * Detect dev/test at module scope so the component renders the same
@@ -13,8 +9,7 @@ import {
  */
 const IS_DEV: boolean = (() => {
   try {
-    const flag = (import.meta as unknown as { env?: { DEV?: boolean } }).env
-      ?.DEV;
+    const flag = (import.meta as unknown as { env?: { DEV?: boolean } }).env?.DEV;
     if (typeof flag === "boolean") return flag;
   } catch {
     /* ignore */
@@ -68,10 +63,7 @@ export function BrandThemeSelect({
   const fallback: BrandLogoTheme = BRAND_LOGO_THEMES[0];
   const effective: BrandLogoTheme = valid ? value : fallback;
 
-  const allowedList = useMemo(
-    () => BRAND_LOGO_THEMES.map((t) => `"${t}"`).join(", "),
-    [],
-  );
+  const allowedList = useMemo(() => BRAND_LOGO_THEMES.map((t) => `"${t}"`).join(", "), []);
 
   const received =
     value === undefined
@@ -111,10 +103,7 @@ export function BrandThemeSelect({
 
   return (
     <div className={className} data-testid="brand-theme-select">
-      <label
-        htmlFor={selectId}
-        className="block text-sm font-medium text-foreground mb-1"
-      >
+      <label htmlFor={selectId} className="block text-sm font-medium text-foreground mb-1">
         {label}
       </label>
       <select
@@ -127,9 +116,7 @@ export function BrandThemeSelect({
         className={
           "w-full rounded-md border bg-background px-3 py-2 text-sm " +
           "focus:outline-none focus:ring-2 focus:ring-ring " +
-          (showDevError
-            ? "border-destructive ring-1 ring-destructive"
-            : "border-input")
+          (showDevError ? "border-destructive ring-1 ring-destructive" : "border-input")
         }
       >
         {BRAND_LOGO_THEMES.map((theme) => (
@@ -146,9 +133,7 @@ export function BrandThemeSelect({
           data-testid="brand-theme-select-error"
           className="mt-2 rounded-md border border-destructive bg-destructive/10 p-3 text-sm text-destructive"
         >
-          <div className="font-semibold">
-            [brand-lock] Unsupported brand theme (dev only)
-          </div>
+          <div className="font-semibold">[brand-lock] Unsupported brand theme (dev only)</div>
           <div className="mt-1">
             <code>&lt;{componentName}&gt;</code> received:{" "}
             <code className="break-all">{received}</code>
@@ -157,8 +142,8 @@ export function BrandThemeSelect({
             Allowed values: <code>{allowedList}</code>
           </div>
           <div className="mt-1 opacity-80">
-            Falling back to <code>"{fallback}"</code> for the picker. This
-            warning is suppressed in production builds.
+            Falling back to <code>"{fallback}"</code> for the picker. This warning is suppressed in
+            production builds.
           </div>
         </div>
       ) : null}

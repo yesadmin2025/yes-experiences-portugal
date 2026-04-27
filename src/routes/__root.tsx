@@ -31,17 +31,37 @@ export const Route = createRootRoute({
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "YesExperiences Portugal" },
-      { name: "description", content: "YES Experiences Portugal is a premium platform for booking and customizing unique travel experiences." },
+      {
+        name: "description",
+        content:
+          "YES Experiences Portugal is a premium platform for booking and customizing unique travel experiences.",
+      },
       { name: "author", content: "Lovable" },
       { property: "og:title", content: "YesExperiences Portugal" },
-      { property: "og:description", content: "YES Experiences Portugal is a premium platform for booking and customizing unique travel experiences." },
+      {
+        property: "og:description",
+        content:
+          "YES Experiences Portugal is a premium platform for booking and customizing unique travel experiences.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
       { name: "twitter:title", content: "YesExperiences Portugal" },
-      { name: "twitter:description", content: "YES Experiences Portugal is a premium platform for booking and customizing unique travel experiences." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/2670b86d-71c2-4642-b31c-a8a73881bac5/id-preview-c5c14dbf--5351efc5-c55a-4e41-b282-a4a019690d38.lovable.app-1777108965507.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/2670b86d-71c2-4642-b31c-a8a73881bac5/id-preview-c5c14dbf--5351efc5-c55a-4e41-b282-a4a019690d38.lovable.app-1777108965507.png" },
+      {
+        name: "twitter:description",
+        content:
+          "YES Experiences Portugal is a premium platform for booking and customizing unique travel experiences.",
+      },
+      {
+        property: "og:image",
+        content:
+          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/2670b86d-71c2-4642-b31c-a8a73881bac5/id-preview-c5c14dbf--5351efc5-c55a-4e41-b282-a4a019690d38.lovable.app-1777108965507.png",
+      },
+      {
+        name: "twitter:image",
+        content:
+          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/2670b86d-71c2-4642-b31c-a8a73881bac5/id-preview-c5c14dbf--5351efc5-c55a-4e41-b282-a4a019690d38.lovable.app-1777108965507.png",
+      },
     ],
     links: [
       {

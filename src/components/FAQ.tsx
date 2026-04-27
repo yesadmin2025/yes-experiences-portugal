@@ -60,18 +60,13 @@ export function FAQ() {
       <div className="container-x">
         <div className="reveal max-w-3xl mx-auto text-center">
           <span className="eyebrow">Before you book</span>
-          <h2
-            id="faq-title"
-            className="serif text-4xl md:text-5xl mt-5"
-          >
+          <h2 id="faq-title" className="serif text-4xl md:text-5xl mt-5">
             Everything You Need to Know{" "}
-            <span className="italic text-[color:var(--teal)]">
-              Before You Book
-            </span>
+            <span className="italic text-[color:var(--teal)]">Before You Book</span>
           </h2>
           <p className="mt-5 text-[color:var(--charcoal-soft)] leading-relaxed">
-            Clear answers to help you design and secure your private Portugal
-            experience with confidence.
+            Clear answers to help you design and secure your private Portugal experience with
+            confidence.
           </p>
           <div className="gold-divider mt-8 mx-auto w-24" />
         </div>

@@ -43,7 +43,11 @@ const APPROVED_HEXES = new Set(Object.keys(HEX_TO_TOKEN));
 // ── color math ──────────────────────────────────────────────────────────
 function hexToRgb(hex) {
   let h = hex.replace("#", "");
-  if (h.length === 3) h = h.split("").map((c) => c + c).join("");
+  if (h.length === 3)
+    h = h
+      .split("")
+      .map((c) => c + c)
+      .join("");
   return [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16));
 }
 function srgbToLin(c) {
@@ -109,11 +113,26 @@ const pairs = [
   { name: "Ivory CTA label on teal fill", fg: APPROVED.ivory, bg: APPROVED.teal, min: 4.5 },
   { name: "Charcoal mobile link on white", fg: APPROVED.charcoal, bg: WHITE, min: 4.5 },
   // Non-text decorative borders: WCAG 1.4.11 needs ≥ 3:1 for actionable frames.
-  { name: "Hamburger frame (charcoal-soft) on white", fg: APPROVED["charcoal-soft"], bg: WHITE, min: 3.0 },
-  { name: "Gold border on teal (desktop CTA frame)", fg: APPROVED.gold, bg: APPROVED.teal, min: 3.0 },
+  {
+    name: "Hamburger frame (charcoal-soft) on white",
+    fg: APPROVED["charcoal-soft"],
+    bg: WHITE,
+    min: 3.0,
+  },
+  {
+    name: "Gold border on teal (desktop CTA frame)",
+    fg: APPROVED.gold,
+    bg: APPROVED.teal,
+    min: 3.0,
+  },
   // Header bottom hairline is a decorative divider, not a frame around an
   // action — 1.3:1 visibility is enough.
-  { name: "Header bottom hairline (charcoal/15) on white", fg: CHARCOAL_15_ON_WHITE, bg: WHITE, min: 1.3 },
+  {
+    name: "Header bottom hairline (charcoal/15) on white",
+    fg: CHARCOAL_15_ON_WHITE,
+    bg: WHITE,
+    min: 1.3,
+  },
 ];
 const results = pairs.map((p) => ({ ...p, ratio: contrast(p.fg, p.bg) }));
 

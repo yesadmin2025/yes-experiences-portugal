@@ -43,20 +43,13 @@ async function gotoHero(page: Page) {
 }
 
 test.describe("Hero CTA — typography & spacing contract", () => {
-  test("eyebrow row sits comfortably above the H1 (no cramped stack)", async ({
-    page,
-  }) => {
+  test("eyebrow row sits comfortably above the H1 (no cramped stack)", async ({ page }) => {
     await gotoHero(page);
 
-    const eyebrow = page
-      .locator("span", { hasText: "Private · By locals · Any occasion" })
-      .first();
+    const eyebrow = page.locator("span", { hasText: "Private · By locals · Any occasion" }).first();
     const h1 = page.locator("h1.hero-h1");
 
-    const [eyebrowBox, h1Box] = await Promise.all([
-      eyebrow.boundingBox(),
-      h1.boundingBox(),
-    ]);
+    const [eyebrowBox, h1Box] = await Promise.all([eyebrow.boundingBox(), h1.boundingBox()]);
     expect(eyebrowBox, "eyebrow should be laid out").not.toBeNull();
     expect(h1Box, "hero H1 should be laid out").not.toBeNull();
 
@@ -70,9 +63,7 @@ test.describe("Hero CTA — typography & spacing contract", () => {
     ).toBeGreaterThanOrEqual(48);
   });
 
-  test("CTA buttons have enough vertical padding to feel uncramped", async ({
-    page,
-  }) => {
+  test("CTA buttons have enough vertical padding to feel uncramped", async ({ page }) => {
     await gotoHero(page);
 
     const primary = page.getByRole("link", {
@@ -112,9 +103,7 @@ test.describe("Hero CTA — typography & spacing contract", () => {
       // explicitly require >= 1.4 of the font-size so uppercase tracked
       // labels never feel cramped vertically.
       const lh =
-        styles.lineHeight === "normal"
-          ? styles.fontSize * 1.2
-          : parseFloat(styles.lineHeight);
+        styles.lineHeight === "normal" ? styles.fontSize * 1.2 : parseFloat(styles.lineHeight);
       const ratio = lh / styles.fontSize;
       expect(
         ratio,
@@ -126,9 +115,7 @@ test.describe("Hero CTA — typography & spacing contract", () => {
     }
   });
 
-  test("two CTA buttons keep a comfortable gap between them", async ({
-    page,
-  }) => {
+  test("two CTA buttons keep a comfortable gap between them", async ({ page }) => {
     await gotoHero(page);
 
     const primary = page.getByRole("link", {
@@ -140,10 +127,7 @@ test.describe("Hero CTA — typography & spacing contract", () => {
       exact: true,
     });
 
-    const [a, b] = await Promise.all([
-      primary.boundingBox(),
-      secondary.boundingBox(),
-    ]);
+    const [a, b] = await Promise.all([primary.boundingBox(), secondary.boundingBox()]);
     expect(a).not.toBeNull();
     expect(b).not.toBeNull();
 
@@ -160,9 +144,7 @@ test.describe("Hero CTA — typography & spacing contract", () => {
     ).toBeGreaterThanOrEqual(16);
   });
 
-  test("hero CTA cluster — visual snapshot regression guard", async ({
-    page,
-  }) => {
+  test("hero CTA cluster — visual snapshot regression guard", async ({ page }) => {
     await gotoHero(page);
 
     // Pause CSS animations / hide blinking elements that would otherwise

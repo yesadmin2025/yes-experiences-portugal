@@ -116,15 +116,7 @@ function Field({
   );
 }
 
-function Info({
-  icon,
-  label,
-  value,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  value: string;
-}) {
+function Info({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
     <div className="flex items-start gap-3">
       <span className="mt-1 h-9 w-9 rounded-full bg-[color:var(--sand)] flex items-center justify-center text-[color:var(--teal)]">

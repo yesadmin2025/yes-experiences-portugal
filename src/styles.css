@@ -10,28 +10,32 @@
     font-style: normal;
     font-weight: 300 700;
     font-display: swap;
-    src: url("https://fonts.gstatic.com/s/cormorantgaramond/v16/co3YmX5slCNuHLi8bLeY9MK7whWMhyjQAllvuQWJ5heb_w.woff2") format("woff2");
+    src: url("https://fonts.gstatic.com/s/cormorantgaramond/v16/co3YmX5slCNuHLi8bLeY9MK7whWMhyjQAllvuQWJ5heb_w.woff2")
+      format("woff2");
   }
   @font-face {
     font-family: "Cormorant Garamond";
     font-style: italic;
     font-weight: 300 700;
     font-display: swap;
-    src: url("https://fonts.gstatic.com/s/cormorantgaramond/v16/co3VmX5slCNuHLi8bLeY9MK7whWMhyjYBHnvvQWJ5hSL.woff2") format("woff2");
+    src: url("https://fonts.gstatic.com/s/cormorantgaramond/v16/co3VmX5slCNuHLi8bLeY9MK7whWMhyjYBHnvvQWJ5hSL.woff2")
+      format("woff2");
   }
   @font-face {
     font-family: "Inter";
     font-style: normal;
     font-weight: 100 900;
     font-display: swap;
-    src: url("https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7W0Q5nw.woff2") format("woff2");
+    src: url("https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7W0Q5nw.woff2")
+      format("woff2");
   }
   @font-face {
     font-family: "Kaushan Script";
     font-style: normal;
     font-weight: 400;
     font-display: swap;
-    src: url("https://fonts.gstatic.com/s/kaushanscript/v19/vm8vdRfvXFLG3OLnsO15WYS5DF7_.ttf") format("truetype");
+    src: url("https://fonts.gstatic.com/s/kaushanscript/v19/vm8vdRfvXFLG3OLnsO15WYS5DF7_.ttf")
+      format("truetype");
   }
 }
 
@@ -87,15 +91,15 @@
   --radius: 0.5rem;
 
   /* Brand */
-  --teal: #295B61;
-  --teal-2: #2A7C82;
-  --gold: #C9A96A;
-  --gold-soft: #E1CFA6;
-  --ivory: #FAF8F3;
-  --sand: #F4EFE7;
-  --charcoal: #2E2E2E;
-  --charcoal-soft: #5A5A5A;
-  --charcoal-deep: #1F1F1F;
+  --teal: #295b61;
+  --teal-2: #2a7c82;
+  --gold: #c9a96a;
+  --gold-soft: #e1cfa6;
+  --ivory: #faf8f3;
+  --sand: #f4efe7;
+  --charcoal: #2e2e2e;
+  --charcoal-soft: #5a5a5a;
+  --charcoal-deep: #1f1f1f;
 
   /* Semantic */
   --background: var(--ivory);
@@ -253,7 +257,12 @@
      than a heavy template. Optical kerning + ligatures on for crisp
      serif joins. Contrast stays AA via charcoal-deep.
      ───────────────────────────────────────────────────────────── */
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: var(--font-serif);
     font-weight: 400;
     letter-spacing: -0.014em;
@@ -263,13 +272,38 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-  h1 { font-weight: 380; letter-spacing: -0.022em; line-height: 1.04; }
-  h2 { font-weight: 400; letter-spacing: -0.018em; line-height: 1.1; }
-  h3 { font-weight: 410; letter-spacing: -0.014em; line-height: 1.2; }
-  h4 { font-weight: 440; letter-spacing: -0.01em;  line-height: 1.3; }
-  h5, h6 { font-weight: 460; letter-spacing: -0.008em; line-height: 1.35; }
-  h1 em, h2 em, h3 em,
-  h1 .italic, h2 .italic, h3 .italic {
+  h1 {
+    font-weight: 380;
+    letter-spacing: -0.022em;
+    line-height: 1.04;
+  }
+  h2 {
+    font-weight: 400;
+    letter-spacing: -0.018em;
+    line-height: 1.1;
+  }
+  h3 {
+    font-weight: 410;
+    letter-spacing: -0.014em;
+    line-height: 1.2;
+  }
+  h4 {
+    font-weight: 440;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+  }
+  h5,
+  h6 {
+    font-weight: 460;
+    letter-spacing: -0.008em;
+    line-height: 1.35;
+  }
+  h1 em,
+  h2 em,
+  h3 em,
+  h1 .italic,
+  h2 .italic,
+  h3 .italic {
     font-weight: 350;
   }
   /* Subtle, tactile link hover across the page */
@@ -371,10 +405,10 @@
   .hero-cta-button {
     height: 72px;
     padding: 18px 48px 18px 24px;
-    font-size: 11px;            /* +0.25px — still calm, slightly more solid */
+    font-size: 11px; /* +0.25px — still calm, slightly more solid */
     line-height: 1.25;
-    font-weight: 680;           /* 650 → 680 — premium, weight-anchored */
-    letter-spacing: 0.085em;    /* 0.12em → 0.085em — buttons read as a single, solid label */
+    font-weight: 680; /* 650 → 680 — premium, weight-anchored */
+    letter-spacing: 0.085em; /* 0.12em → 0.085em — buttons read as a single, solid label */
     text-transform: uppercase;
     font-family: var(--font-sans);
     font-feature-settings: "ss01", "cv11", "cpsp";
@@ -401,7 +435,8 @@
   .eyebrow {
     @apply inline-flex items-center gap-3 text-[11px] uppercase tracking-[0.28em] text-[color:var(--charcoal-soft)];
   }
-  .eyebrow::before, .eyebrow::after {
+  .eyebrow::before,
+  .eyebrow::after {
     content: "";
     width: 28px;
     height: 1px;
@@ -409,7 +444,13 @@
   }
   .gold-divider {
     height: 1px;
-    background: linear-gradient(to right, transparent, var(--gold) 20%, var(--gold) 80%, transparent);
+    background: linear-gradient(
+      to right,
+      transparent,
+      var(--gold) 20%,
+      var(--gold) 80%,
+      transparent
+    );
   }
   .serif {
     font-family: var(--font-serif);
@@ -448,8 +489,13 @@
      drifts 0 → peak → 0 over a slow cycle. Peak is var-driven so it
      can be retuned without editing keyframes. */
   @keyframes ctaRimBreathe {
-    0%, 100% { opacity: 0; }
-    50%      { opacity: var(--cta-breathe-peak, 0.55); }
+    0%,
+    100% {
+      opacity: 0;
+    }
+    50% {
+      opacity: var(--cta-breathe-peak, 0.55);
+    }
   }
 
   /* One-shot attention pulse — fires ONCE shortly after the hero copy
@@ -464,10 +510,22 @@
      Total duration 1.6s, runs exactly once, then leaves no residual
      state — hover behavior is untouched after the pulse completes. */
   @keyframes ctaAttentionHalo {
-    0%   { opacity: 0;    transform: scale(0.92); }
-    35%  { opacity: 0.85; transform: scale(1.18); }
-    70%  { opacity: 0.25; transform: scale(1.06); }
-    100% { opacity: 0;    transform: scale(0.92); }
+    0% {
+      opacity: 0;
+      transform: scale(0.92);
+    }
+    35% {
+      opacity: 0.85;
+      transform: scale(1.18);
+    }
+    70% {
+      opacity: 0.25;
+      transform: scale(1.06);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(0.92);
+    }
   }
 
   /* Opt-in utility — apply alongside .cta-primary / .cta-secondary-dark
@@ -516,10 +574,7 @@
     box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--gold) 50%, transparent);
     opacity: 0;
     pointer-events: none;
-    animation:
-      ctaRimBreathe
-      var(--cta-breathe-duration, 6s)
-      var(--cta-breathe-easing, ease-in-out)
+    animation: ctaRimBreathe var(--cta-breathe-duration, 6s) var(--cta-breathe-easing, ease-in-out)
       infinite;
   }
   /* Stagger hook — add `data-cta-stagger` to push the breathing into
@@ -600,7 +655,11 @@
        highlight; lock to a small explicit radius so the geometry reads
        as deliberately squared rather than accidentally pill-like. */
     border-radius: 2px;
-    background-image: linear-gradient(180deg, var(--teal) 0%, color-mix(in oklab, var(--teal) 88%, var(--teal-2) 12%) 100%);
+    background-image: linear-gradient(
+      180deg,
+      var(--teal) 0%,
+      color-mix(in oklab, var(--teal) 88%, var(--teal-2) 12%) 100%
+    );
     color: #ffffff;
     /* Hairline gold border — premium restraint over heavy frame.
        1px @ 55% gold reads as a refined edge, not a hardware bezel.
@@ -612,16 +671,13 @@
     box-shadow:
       /* Inner top-light highlight — material lift, kept subtle */
       inset 0 1px 0 0 color-mix(in oklab, var(--gold-soft) 35%, transparent),
-      /* Inner bottom shadow for dimensional weight */
-      inset 0 -1px 0 0 rgba(0, 0, 0, 0.18),
-      /* Tight contact shadow */
-      0 1px 2px rgba(15, 15, 15, 0.18),
+      /* Inner bottom shadow for dimensional weight */ inset 0 -1px 0 0 rgba(0, 0, 0, 0.18),
+      /* Tight contact shadow */ 0 1px 2px rgba(15, 15, 15, 0.18),
       /* Soft, wide, atmospheric gold halo — the gold "thickness"
          lives entirely in this diffuse glow, not in a hard ring.
          Wide spread, low opacity, no tight 1px ring. */
-      0 0 28px -6px color-mix(in oklab, var(--gold) 22%, transparent),
-      /* Atmospheric teal depth shadows */
-      0 10px 24px -12px rgba(41, 91, 97, 0.42),
+        0 0 28px -6px color-mix(in oklab, var(--gold) 22%, transparent),
+      /* Atmospheric teal depth shadows */ 0 10px 24px -12px rgba(41, 91, 97, 0.42),
       0 22px 48px -24px rgba(41, 91, 97, 0.32);
     /* Pointer-aware micro-tilt + scroll-driven scale.
        --hero-px / --hero-py (-1 → 1) shift the button ≤1.5px with the
@@ -629,11 +685,7 @@
        useCtaScrollScale on the hero CTA group: the button starts a touch
        compact and grows subtly as the user scrolls into the page. Both
        fall back to neutral defaults outside the hero. */
-    transform: translate3d(
-        calc(var(--hero-px, 0) * 1.5px),
-        calc(var(--hero-py, 0) * 1px),
-        0
-      )
+    transform: translate3d(calc(var(--hero-px, 0) * 1.5px), calc(var(--hero-py, 0) * 1px), 0)
       scale(var(--cta-scroll-scale, 1));
     transition:
       background-color 520ms cubic-bezier(0.16, 1, 0.3, 1),
@@ -677,29 +729,26 @@
        and opacity for visibility independently — the type itself is
        still font-light, so the glow does the lifting, not the weight. */
     text-shadow:
-      0 0 var(--cta-primary-halo-blur) color-mix(in oklab, var(--gold) var(--cta-primary-halo-opacity), transparent),
-      0 0 var(--cta-primary-bloom-blur) color-mix(in oklab, var(--gold) var(--cta-primary-bloom-opacity), transparent);
+      0 0 var(--cta-primary-halo-blur)
+        color-mix(in oklab, var(--gold) var(--cta-primary-halo-opacity), transparent),
+      0 0 var(--cta-primary-bloom-blur)
+        color-mix(in oklab, var(--gold) var(--cta-primary-bloom-opacity), transparent);
     box-shadow:
       inset 0 1px 0 0 color-mix(in oklab, var(--gold-soft) 44%, transparent),
-      inset 0 -1px 0 0 rgba(0, 0, 0, 0.20),
-      0 1px 3px rgba(15, 15, 15, 0.20),
+      inset 0 -1px 0 0 rgba(0, 0, 0, 0.2),
+      0 1px 3px rgba(15, 15, 15, 0.2),
       /* Airier gold halo — narrower spread (-6px), lower opacity (28%)
          so the lift doesn't add visual weight. The button feels
          buoyant, not bigger. */
-      0 0 32px -6px color-mix(in oklab, var(--gold) 28%, transparent),
+        0 0 32px -6px color-mix(in oklab, var(--gold) 28%, transparent),
       /* Atmospheric depth — softened so the lift reads as elevation,
-         not mass. */
-      0 12px 26px -14px rgba(41, 91, 97, 0.45),
-      0 24px 50px -28px rgba(201, 169, 106, 0.30);
+         not mass. */ 0 12px
+        26px -14px rgba(41, 91, 97, 0.45),
+      0 24px 50px -28px rgba(201, 169, 106, 0.3);
     /* Lift -3px (was -4) — gentler elevation. Composed with parallax
        tilt and the scroll-driven base scale; hover pop reduced to
        ×1.012 (was ×1.02) so the button rises rather than swells. */
-    transform:
-      translate3d(
-        calc(var(--hero-px, 0) * 1.5px),
-        calc(var(--hero-py, 0) * 1px - 3px),
-        0
-      )
+    transform: translate3d(calc(var(--hero-px, 0) * 1.5px), calc(var(--hero-py, 0) * 1px - 3px), 0)
       scale(calc(var(--cta-scroll-scale, 1) * 1.012));
   }
   .cta-primary:hover::before {
@@ -753,22 +802,17 @@
     -webkit-backdrop-filter: blur(4px);
     /* No text-shadow at rest — clean ivory type. */
     box-shadow:
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.10),
-      inset 0 -1px 0 0 rgba(0, 0, 0, 0.20),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.1),
+      inset 0 -1px 0 0 rgba(0, 0, 0, 0.2),
       /* Soft, wide, atmospheric gold halo — pure shadow, no rim ring.
          Lighter than primary so the secondary stays subordinate. */
-      0 0 24px -6px color-mix(in oklab, var(--gold) 16%, transparent),
-      /* Atmospheric depth */
-      0 8px 22px -10px rgba(0, 0, 0, 0.45),
+        0 0 24px -6px color-mix(in oklab, var(--gold) 16%, transparent),
+      /* Atmospheric depth */ 0 8px 22px -10px rgba(0, 0, 0, 0.45),
       0 18px 40px -22px rgba(0, 0, 0, 0.35);
     /* Same pointer-aware tilt as the primary, plus the shared
        --cta-scroll-scale so both CTAs grow together as the user
        scrolls. Falls back to neutral defaults outside the hero. */
-    transform: translate3d(
-        calc(var(--hero-px, 0) * 1.5px),
-        calc(var(--hero-py, 0) * 1px),
-        0
-      )
+    transform: translate3d(calc(var(--hero-px, 0) * 1.5px), calc(var(--hero-py, 0) * 1px), 0)
       scale(var(--cta-scroll-scale, 1));
     transition:
       background-color 520ms cubic-bezier(0.16, 1, 0.3, 1),
@@ -810,24 +854,21 @@
        primary by default — retune the tokens at :root or
        .hero-cta-group to push it harder if needed. */
     text-shadow:
-      0 0 var(--cta-secondary-halo-blur) color-mix(in oklab, var(--gold) var(--cta-secondary-halo-opacity), transparent),
-      0 0 var(--cta-secondary-bloom-blur) color-mix(in oklab, var(--gold) var(--cta-secondary-bloom-opacity), transparent);
+      0 0 var(--cta-secondary-halo-blur)
+        color-mix(in oklab, var(--gold) var(--cta-secondary-halo-opacity), transparent),
+      0 0 var(--cta-secondary-bloom-blur)
+        color-mix(in oklab, var(--gold) var(--cta-secondary-bloom-opacity), transparent);
     /* Lift -3px + ×1.012 — matches the primary's gentler elevation.
        Scroll scale preserved. */
-    transform:
-      translate3d(
-        calc(var(--hero-px, 0) * 1.5px),
-        calc(var(--hero-py, 0) * 1px - 3px),
-        0
-      )
+    transform: translate3d(calc(var(--hero-px, 0) * 1.5px), calc(var(--hero-py, 0) * 1px - 3px), 0)
       scale(calc(var(--cta-scroll-scale, 1) * 1.012));
     box-shadow:
       inset 0 1px 0 0 rgba(255, 255, 255, 0.12),
-      inset 0 -1px 0 0 rgba(0, 0, 0, 0.20),
-      /* Airier gold halo — narrower spread, lower opacity. */
-      0 0 28px -6px color-mix(in oklab, var(--gold) 20%, transparent),
+      inset 0 -1px 0 0 rgba(0, 0, 0, 0.2),
+      /* Airier gold halo — narrower spread, lower opacity. */ 0 0 28px -6px
+        color-mix(in oklab, var(--gold) 20%, transparent),
       0 12px 28px -16px rgba(0, 0, 0, 0.45),
-      0 24px 48px -28px rgba(0, 0, 0, 0.40);
+      0 24px 48px -28px rgba(0, 0, 0, 0.4);
   }
   .cta-secondary-dark:hover::before {
     opacity: 1;
@@ -861,11 +902,14 @@
   .hero-cta-button.cta-primary {
     color: var(--ivory);
     border-color: color-mix(in oklab, var(--gold) 62%, transparent);
-    background-image:
-      linear-gradient(180deg, color-mix(in oklab, var(--teal-2) 40%, var(--teal) 60%) 0%, var(--teal) 100%);
+    background-image: linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--teal-2) 40%, var(--teal) 60%) 0%,
+      var(--teal) 100%
+    );
     box-shadow:
       inset 0 1px 0 0 color-mix(in oklab, var(--gold-soft) 44%, transparent),
-      inset 0 -1px 0 0 rgba(0, 0, 0, 0.20),
+      inset 0 -1px 0 0 rgba(0, 0, 0, 0.2),
       0 0 0 1px color-mix(in oklab, var(--gold) 12%, transparent),
       0 12px 28px -14px color-mix(in oklab, var(--gold) 46%, transparent),
       0 26px 58px -30px rgba(41, 91, 97, 0.55);
@@ -875,7 +919,7 @@
     background-color: color-mix(in oklab, var(--charcoal-deep) 54%, transparent);
     box-shadow:
       inset 0 1px 0 0 color-mix(in oklab, var(--gold-soft) 20%, transparent),
-      inset 0 -1px 0 0 rgba(0, 0, 0, 0.20),
+      inset 0 -1px 0 0 rgba(0, 0, 0, 0.2),
       0 0 0 1px color-mix(in oklab, var(--gold) 12%, transparent),
       0 12px 28px -14px color-mix(in oklab, var(--gold) 38%, transparent),
       0 24px 54px -30px rgba(0, 0, 0, 0.58);
@@ -947,7 +991,7 @@
     box-shadow:
       inset 0 1px 0 0 rgba(255, 255, 255, 0.7),
       inset 0 0 0 1px color-mix(in oklab, var(--gold) 20%, transparent),
-      0 10px 24px -14px rgba(201, 169, 106, 0.40),
+      0 10px 24px -14px rgba(201, 169, 106, 0.4),
       0 18px 40px -24px rgba(46, 46, 46, 0.22);
   }
   .cta-secondary-light:hover::before {
@@ -982,7 +1026,10 @@
     .cta-primary,
     .cta-secondary-dark,
     .cta-secondary-light {
-      transition: background-color 200ms ease, border-color 200ms ease, color 200ms ease;
+      transition:
+        background-color 200ms ease,
+        border-color 200ms ease,
+        color 200ms ease;
       transform: none;
     }
     .cta-primary:hover,
@@ -1009,25 +1056,53 @@
    settle (translateY easing to 0) — keeps the editorial cadence intact
    while eliminating any sub-AAA legibility window during the fade. */
 @keyframes heroFade {
-  0%   { opacity: 0;    transform: translateY(14px); }
-  35%  { opacity: 0.85; transform: translateY(6px); }
-  55%  { opacity: 0.98; transform: translateY(2px); }
-  100% { opacity: 1;    transform: translateY(0); }
+  0% {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  35% {
+    opacity: 0.85;
+    transform: translateY(6px);
+  }
+  55% {
+    opacity: 0.98;
+    transform: translateY(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes heroZoom {
-  from { transform: scale(1.08); }
-  to   { transform: scale(1); }
+  from {
+    transform: scale(1.08);
+  }
+  to {
+    transform: scale(1);
+  }
 }
 
 @keyframes headerFade {
-  from { opacity: 0; transform: translateY(-6px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes softFadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Reveal-on-scroll utility (IntersectionObserver toggles .is-visible) */
@@ -1090,7 +1165,9 @@
   .group:hover .lift-layer,
   .group:hover .lift-layer-sm {
     transform: none !important;
-    transition: box-shadow 300ms ease, border-color 300ms ease !important;
+    transition:
+      box-shadow 300ms ease,
+      border-color 300ms ease !important;
   }
 }
 
@@ -1142,7 +1219,7 @@
      valid CSS — the last understood value wins per browser. */
   image-rendering: auto;
   image-rendering: -webkit-optimize-contrast; /* Safari ≤ 16 */
-  image-rendering: high-quality;              /* Chrome 105+, modern */
+  image-rendering: high-quality; /* Chrome 105+, modern */
 
   /* Pin to its own compositor layer at integer device pixels. */
   transform: translateZ(0);
@@ -1199,5 +1276,3 @@
     filter: none;
   }
 }
-
-

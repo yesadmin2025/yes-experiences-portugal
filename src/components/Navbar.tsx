@@ -60,7 +60,10 @@ export function Navbar() {
               Tracking tightened slightly (0.20em) so all 8 labels fit on one
               row at lg+ without wrapping. The CTA button is the calm,
               conversion-focused anchor — teal fill, fine gold border. */}
-          <nav className="hidden lg:flex items-center h-full gap-7 xl:gap-9 text-[11px] uppercase tracking-[0.22em] leading-none" style={{ fontWeight: 380 }}>
+          <nav
+            className="hidden lg:flex items-center h-full gap-7 xl:gap-9 text-[11px] uppercase tracking-[0.22em] leading-none"
+            style={{ fontWeight: 380 }}
+          >
             {desktopLinks.map((n) => (
               <Link
                 key={n.to}
@@ -76,7 +79,10 @@ export function Navbar() {
               className="ml-2 group inline-flex items-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-white border border-[color:var(--gold)] hover:border-[color:var(--gold-soft)] px-5 py-3 text-[10.5px] tracking-[0.2em] uppercase transition-all duration-500 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             >
               Design &amp; Secure
-              <ArrowRight size={13} className="group-hover:translate-x-0.5 transition-transform duration-300" />
+              <ArrowRight
+                size={13}
+                className="group-hover:translate-x-0.5 transition-transform duration-300"
+              />
             </Link>
           </nav>
 
@@ -99,10 +105,7 @@ export function Navbar() {
       </div>
 
       {open && (
-        <div
-          id="mobile-nav"
-          className="lg:hidden bg-white border-t border-black/[0.05]"
-        >
+        <div id="mobile-nav" className="lg:hidden bg-white border-t border-black/[0.05]">
           <div className="container-x py-7 flex flex-col gap-5 text-sm">
             {mobileLinks.map((n) => (
               <Link

@@ -75,9 +75,7 @@ export default class CtaParitySummaryReporter implements Reporter {
 
     // Sort by viewport width so the table reads mobile → tablet → desktop.
     this.collected.sort(
-      (a, b) =>
-        a.viewportWidth - b.viewportWidth ||
-        a.viewportHeight - b.viewportHeight,
+      (a, b) => a.viewportWidth - b.viewportWidth || a.viewportHeight - b.viewportHeight,
     );
 
     const md = this.renderMarkdown();
@@ -107,24 +105,27 @@ export default class CtaParitySummaryReporter implements Reporter {
 
   private renderMarkdown(): string {
     const lines: string[] = [];
-    const totalFailed = this.collected.reduce(
-      (n, c) => n + c.report.failedCount,
-      0,
-    );
-    const overall = totalFailed === 0 ? "✅ all viewports passed" : `❌ ${totalFailed} drift${totalFailed === 1 ? "" : "s"} detected`;
+    const totalFailed = this.collected.reduce((n, c) => n + c.report.failedCount, 0);
+    const overall =
+      totalFailed === 0
+        ? "✅ all viewports passed"
+        : `❌ ${totalFailed} drift${totalFailed === 1 ? "" : "s"} detected`;
 
     lines.push("## Hero CTA parity — per-viewport summary");
     lines.push("");
     lines.push(`**Status:** ${overall}`);
     lines.push("");
-    lines.push("Each row compares the **primary** CTA (Create Your Story) vs the **secondary** CTA (Explore Signature Experiences). The two buttons must mirror each other in geometry, typography, and icon layout — only fill/border/color may differ.");
+    lines.push(
+      "Each row compares the **primary** CTA (Create Your Story) vs the **secondary** CTA (Explore Signature Experiences). The two buttons must mirror each other in geometry, typography, and icon layout — only fill/border/color may differ.",
+    );
     lines.push("");
 
     for (const c of this.collected) {
-      const headline = c.report.failedCount === 0 ? "✅ pass" : `❌ ${c.report.failedCount}/${c.report.totalCount} failing`;
-      lines.push(
-        `### ${c.viewportLabel} — ${c.viewportWidth}×${c.viewportHeight} — ${headline}`,
-      );
+      const headline =
+        c.report.failedCount === 0
+          ? "✅ pass"
+          : `❌ ${c.report.failedCount}/${c.report.totalCount} failing`;
+      lines.push(`### ${c.viewportLabel} — ${c.viewportWidth}×${c.viewportHeight} — ${headline}`);
       lines.push("");
       lines.push("| Field | Primary | Secondary | Δ | Tolerance | Status |");
       lines.push("| --- | ---: | ---: | ---: | ---: | :---: |");

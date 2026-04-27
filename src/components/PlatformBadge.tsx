@@ -17,20 +17,12 @@ import viatorLogo from "@/assets/platform-viator.png";
 import getyourguideLogo from "@/assets/platform-getyourguide.png";
 import trustpilotLogo from "@/assets/platform-trustpilot.svg";
 
-export type Platform =
-  | "google"
-  | "tripadvisor"
-  | "viator"
-  | "getyourguide"
-  | "trustpilot";
+export type Platform = "google" | "tripadvisor" | "viator" | "getyourguide" | "trustpilot";
 
 // Per-mark optical scale relative to the container height. Wordmarks read
 // large at full height because they're wide; monograms need extra height
 // to feel balanced against them.
-const SOURCES: Record<
-  Platform,
-  { src: string; label: string; scale: number }
-> = {
+const SOURCES: Record<Platform, { src: string; label: string; scale: number }> = {
   google: { src: googleLogo, label: "Google", scale: 1 },
   tripadvisor: { src: tripadvisorLogo, label: "Tripadvisor", scale: 1 },
   viator: { src: viatorLogo, label: "Viator", scale: 0.6 },
@@ -44,10 +36,8 @@ const SOURCES: Record<
 // lifts it to ~#6B charcoal. Slight contrast boost preserves edge clarity
 // on small marks. Hover deepens to dark charcoal (var(--charcoal)) for a quiet
 // premium response.
-const MONO_FILTER =
-  "brightness(0) invert(0.42) contrast(1.05)";
-const MONO_FILTER_HOVER =
-  "brightness(0) invert(0.18) contrast(1.05)";
+const MONO_FILTER = "brightness(0) invert(0.42) contrast(1.05)";
+const MONO_FILTER_HOVER = "brightness(0) invert(0.18) contrast(1.05)";
 
 export function PlatformBadge({
   platform,

@@ -29,11 +29,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { HERO_COPY_VERSION } from "@/content/hero-copy";
 import { HERO_COPY_SPEC, type HeroSpecKey } from "@/content/hero-copy.spec";
-import {
-  validateReportV3,
-  formatIssues,
-  type ValidationIssue,
-} from "@/lib/hero-verify-schema";
+import { validateReportV3, formatIssues, type ValidationIssue } from "@/lib/hero-verify-schema";
 
 type FieldStatus = "match" | "loose" | "mismatch" | "missing";
 
@@ -108,15 +104,11 @@ type DiffSegment = { type: "equal" | "removed" | "added"; text: string };
 function diffChars(a: string, b: string): DiffSegment[] {
   const n = a.length;
   const m = b.length;
-  const dp: number[][] = Array.from({ length: n + 1 }, () =>
-    new Array<number>(m + 1).fill(0),
-  );
+  const dp: number[][] = Array.from({ length: n + 1 }, () => new Array<number>(m + 1).fill(0));
   for (let i = 1; i <= n; i++) {
     for (let j = 1; j <= m; j++) {
       dp[i][j] =
-        a[i - 1] === b[j - 1]
-          ? dp[i - 1][j - 1] + 1
-          : Math.max(dp[i - 1][j], dp[i][j - 1]);
+        a[i - 1] === b[j - 1] ? dp[i - 1][j - 1] + 1 : Math.max(dp[i - 1][j], dp[i][j - 1]);
     }
   }
   const reversed: DiffSegment[] = [];
@@ -173,9 +165,7 @@ function DiffLine({
   side: "expected" | "actual";
 }) {
   const visible = segments.filter(
-    (s) =>
-      s.type === "equal" ||
-      (side === "expected" ? s.type === "removed" : s.type === "added"),
+    (s) => s.type === "equal" || (side === "expected" ? s.type === "removed" : s.type === "added"),
   );
   return (
     <div
@@ -203,9 +193,7 @@ function DiffLine({
             key={idx}
             title={isAdded ? "added in actual" : "missing from actual"}
             style={{
-              background: isAdded
-                ? "rgba(34, 197, 94, 0.35)"
-                : "rgba(239, 68, 68, 0.35)",
+              background: isAdded ? "rgba(34, 197, 94, 0.35)" : "rgba(239, 68, 68, 0.35)",
               color: isAdded ? "rgb(187, 247, 208)" : "rgb(254, 202, 202)",
               textDecoration: isAdded ? "underline" : "line-through",
               borderRadius: 2,
@@ -227,14 +215,10 @@ function computeReports(): FieldReport[] {
     // Prefer a *direct* match on the field, but tolerate the eyebrow's
     // composite container that lists multiple fields (it has space-
     // separated values in data-hero-field).
-    const direct = document.querySelector<HTMLElement>(
-      `[data-hero-field="${key}"]`,
-    );
+    const direct = document.querySelector<HTMLElement>(`[data-hero-field="${key}"]`);
     const el =
       direct ??
-      Array.from(
-        document.querySelectorAll<HTMLElement>("[data-hero-field]"),
-      ).find((node) =>
+      Array.from(document.querySelectorAll<HTMLElement>("[data-hero-field]")).find((node) =>
         (node.dataset.heroField ?? "").split(/\s+/).includes(key),
       ) ??
       null;
@@ -386,8 +370,7 @@ export function HeroVerifyOverlay() {
   // Shared file-download helper. Creates an <a download> on the fly so the
   // browser saves the blob with our chosen filename. SSR-safe.
   const triggerDownload = (blob: Blob, filename: string) => {
-    if (typeof window === "undefined" || typeof document === "undefined")
-      return;
+    if (typeof window === "undefined" || typeof document === "undefined") return;
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -477,10 +460,7 @@ export function HeroVerifyOverlay() {
     const divergences: SelfCheckDivergence[] = [];
 
     // Union of keys from both sides — catches missing entries on either.
-    const allKeys = new Set<HeroSpecKey>([
-      ...liveDiffs.keys(),
-      ...exportedDiffs.keys(),
-    ]);
+    const allKeys = new Set<HeroSpecKey>([...liveDiffs.keys(), ...exportedDiffs.keys()]);
 
     for (const key of allKeys) {
       const live = liveDiffs.get(key) ?? null;
@@ -550,10 +530,7 @@ export function HeroVerifyOverlay() {
   // Build the audit metadata block embedded in every export. Captures
   // the full self-check result, whether the user confirmed an override
   // when the check failed, and totals for quick dashboard scanning.
-  const buildAuditMeta = (
-    selfCheckResult: SelfCheckResult,
-    confirmedOverride: boolean,
-  ) => ({
+  const buildAuditMeta = (selfCheckResult: SelfCheckResult, confirmedOverride: boolean) => ({
     selfCheck: {
       ok: selfCheckResult.ok,
       ranAt: new Date(selfCheckResult.at).toISOString(),
@@ -566,8 +543,8 @@ export function HeroVerifyOverlay() {
       outcome: selfCheckResult.ok
         ? ("passed" as const)
         : confirmedOverride
-        ? ("confirmed" as const)
-        : ("blocked" as const),
+          ? ("confirmed" as const)
+          : ("blocked" as const),
       divergences: selfCheckResult.divergences.map((d) => ({
         key: d.key,
         reason: d.reason,
@@ -586,14 +563,9 @@ export function HeroVerifyOverlay() {
    * version tag means downstream audit tools cannot route the file.
    */
   const EXPECTED_SCHEMA_TAG = "hero-verify-report/v3" as const;
-  const assertSchemaTag = (
-    payload: unknown,
-    format: "JSON" | "CSV",
-  ): boolean => {
+  const assertSchemaTag = (payload: unknown, format: "JSON" | "CSV"): boolean => {
     const tag =
-      payload && typeof payload === "object"
-        ? (payload as { schema?: unknown }).schema
-        : undefined;
+      payload && typeof payload === "object" ? (payload as { schema?: unknown }).schema : undefined;
     let reason: "missing" | "wrong-type" | "mismatch" | null = null;
     if (tag === undefined || tag === null) reason = "missing";
     else if (typeof tag !== "string") reason = "wrong-type";
@@ -615,10 +587,10 @@ export function HeroVerifyOverlay() {
           ? `"schema" field is ${typeof tag}, not a string. Expected "${EXPECTED_SCHEMA_TAG}".`
           : `"schema" field is "${String(tag)}" — expected "${EXPECTED_SCHEMA_TAG}".`;
     // eslint-disable-next-line no-console
-    console.error(
-      `[hero-verify] schema-tag guard BLOCKED ${format} download — ${human}`,
-      { actual: tag, expected: EXPECTED_SCHEMA_TAG },
-    );
+    console.error(`[hero-verify] schema-tag guard BLOCKED ${format} download — ${human}`, {
+      actual: tag,
+      expected: EXPECTED_SCHEMA_TAG,
+    });
     setSchemaTagCheck({
       ok: false,
       at: Date.now(),
@@ -644,10 +616,7 @@ export function HeroVerifyOverlay() {
    * Returns `true` if valid, or if the user explicitly confirms an
    * override; `false` to abort.
    */
-  const validateBeforeDownload = (
-    payload: unknown,
-    format: "JSON" | "CSV",
-  ): boolean => {
+  const validateBeforeDownload = (payload: unknown, format: "JSON" | "CSV"): boolean => {
     const result = validateReportV3(payload);
     if (result.ok) {
       // eslint-disable-next-line no-console
@@ -678,10 +647,7 @@ export function HeroVerifyOverlay() {
    * triggering a download. `selfCheckResult` and `confirmedOverride`
    * feed into the embedded audit metadata.
    */
-  const buildExportPayload = (
-    selfCheckResult: SelfCheckResult,
-    confirmedOverride: boolean,
-  ) => {
+  const buildExportPayload = (selfCheckResult: SelfCheckResult, confirmedOverride: boolean) => {
     const audit = buildAuditMeta(selfCheckResult, confirmedOverride);
     const diffByKey = new Map(fieldDiffs.map((d) => [d.key, d.segments]));
     return {
@@ -695,10 +661,7 @@ export function HeroVerifyOverlay() {
         height: window.innerHeight,
         devicePixelRatio: window.devicePixelRatio,
       },
-      ok:
-        summary.mismatch === 0 &&
-        summary.missing === 0 &&
-        summary.loose === 0,
+      ok: summary.mismatch === 0 && summary.missing === 0 && summary.loose === 0,
       summary,
       audit,
       fields: reports.map((r) => {
@@ -712,10 +675,7 @@ export function HeroVerifyOverlay() {
             r.status === "match" || segments === null
               ? []
               : segments.map((s) => ({ type: s.type, text: s.text })),
-          diffInline:
-            r.status === "match" || segments === null
-              ? ""
-              : diffToInline(segments),
+          diffInline: r.status === "match" || segments === null ? "" : diffToInline(segments),
         };
       }),
     };
@@ -742,10 +702,10 @@ export function HeroVerifyOverlay() {
   const handleRerunSelfCheck = () => {
     const r = runDiffSelfCheck();
     // eslint-disable-next-line no-console
-    console.info(
-      `[hero-verify] manual self-check re-run — ${r.ok ? "OK" : "FAILED"}`,
-      { divergentFields: r.divergentFields, checkedFields: r.checkedFields },
-    );
+    console.info(`[hero-verify] manual self-check re-run — ${r.ok ? "OK" : "FAILED"}`, {
+      divergentFields: r.divergentFields,
+      checkedFields: r.checkedFields,
+    });
   };
 
   /**
@@ -768,12 +728,7 @@ export function HeroVerifyOverlay() {
       // or contenteditable region — they may want native shortcuts.
       const target = e.target as HTMLElement | null;
       const tag = target?.tagName;
-      if (
-        target?.isContentEditable ||
-        tag === "INPUT" ||
-        tag === "TEXTAREA" ||
-        tag === "SELECT"
-      ) {
+      if (target?.isContentEditable || tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") {
         return;
       }
       e.preventDefault();
@@ -796,10 +751,9 @@ export function HeroVerifyOverlay() {
     const selfCheckResult = runDiffSelfCheck();
     const payload = buildExportPayload(selfCheckResult, false);
     // eslint-disable-next-line no-console
-    console.info(
-      `[hero-verify] regenerated export payload (${format}) — re-running guards`,
-      { schema: payload.schema },
-    );
+    console.info(`[hero-verify] regenerated export payload (${format}) — re-running guards`, {
+      schema: payload.schema,
+    });
     const tagOk = assertSchemaTag(payload, format);
     if (!tagOk) return;
     // Tag is good — also refresh the full schema-check status row so
@@ -839,10 +793,7 @@ export function HeroVerifyOverlay() {
     const blob = new Blob([JSON.stringify(payload, null, 2)], {
       type: "application/json",
     });
-    triggerDownload(
-      blob,
-      `hero-verify-${HERO_COPY_VERSION}-${stamp()}.json`,
-    );
+    triggerDownload(blob, `hero-verify-${HERO_COPY_VERSION}-${stamp()}.json`);
   };
 
   // CSV escape: wrap every field in double quotes and double any embedded
@@ -885,26 +836,23 @@ export function HeroVerifyOverlay() {
       const segments = diffByKey.get(r.key) ?? null;
       const showDiff = r.status !== "match" && segments !== null;
       const removed = showDiff
-        ? segments.filter((s) => s.type === "removed").map((s) => s.text).join(" | ")
+        ? segments
+            .filter((s) => s.type === "removed")
+            .map((s) => s.text)
+            .join(" | ")
         : "";
       const added = showDiff
-        ? segments.filter((s) => s.type === "added").map((s) => s.text).join(" | ")
+        ? segments
+            .filter((s) => s.type === "added")
+            .map((s) => s.text)
+            .join(" | ")
         : "";
       const inline = showDiff ? diffToInline(segments) : "";
       // The full structured diff is JSON-encoded into a single CSV cell
       // so spreadsheet users can parse it back if they need the exact
       // segment-by-segment breakdown.
       const segmentsJson = showDiff ? JSON.stringify(segments) : "";
-      return [
-        r.key,
-        r.status,
-        r.expected,
-        r.actual ?? "",
-        inline,
-        removed,
-        added,
-        segmentsJson,
-      ]
+      return [r.key, r.status, r.expected, r.actual ?? "", inline, removed, added, segmentsJson]
         .map(csvCell)
         .join(",");
     });
@@ -932,18 +880,10 @@ export function HeroVerifyOverlay() {
     // Prepend a UTF-8 BOM so Excel opens the em-dash etc. correctly, and
     // use CRLF line endings per the CSV spec.
     const csv =
-      "\uFEFF" +
-      auditPreamble +
-      "\r\n" +
-      [header.map(csvCell).join(","), ...rows].join("\r\n");
+      "\uFEFF" + auditPreamble + "\r\n" + [header.map(csvCell).join(","), ...rows].join("\r\n");
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
-    triggerDownload(
-      blob,
-      `hero-verify-${HERO_COPY_VERSION}-${stamp()}.csv`,
-    );
+    triggerDownload(blob, `hero-verify-${HERO_COPY_VERSION}-${stamp()}.csv`);
   };
-
-
 
   if (!enabled) return null;
 
@@ -955,8 +895,7 @@ export function HeroVerifyOverlay() {
         inset: 0,
         pointerEvents: "none",
         zIndex: 2147483000,
-        fontFamily:
-          'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
+        fontFamily: 'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
       }}
       data-hero-verify-overlay="active"
     >
@@ -1042,9 +981,7 @@ export function HeroVerifyOverlay() {
             marginBottom: 8,
           }}
         >
-          <strong style={{ fontSize: 12, letterSpacing: "0.08em" }}>
-            HERO VERIFY
-          </strong>
+          <strong style={{ fontSize: 12, letterSpacing: "0.08em" }}>HERO VERIFY</strong>
           <span
             style={{
               fontSize: 10,
@@ -1087,12 +1024,8 @@ export function HeroVerifyOverlay() {
               width: 8,
               height: 8,
               borderRadius: "50%",
-              background: liveMode
-                ? "rgb(34, 197, 94)"
-                : "rgb(148, 163, 184)",
-              boxShadow: liveMode
-                ? "0 0 0 3px rgba(34,197,94,0.25)"
-                : "none",
+              background: liveMode ? "rgb(34, 197, 94)" : "rgb(148, 163, 184)",
+              boxShadow: liveMode ? "0 0 0 3px rgba(34,197,94,0.25)" : "none",
               animation: liveMode ? "heroVerifyPulse 1.6s ease-in-out infinite" : "none",
             }}
           />
@@ -1118,51 +1051,44 @@ export function HeroVerifyOverlay() {
             marginBottom: 10,
           }}
         >
-          {(["match", "loose", "mismatch", "missing"] as FieldStatus[]).map(
-            (s) => (
-              <div key={s} style={{ display: "contents" }}>
-                <span
-                  style={{
-                    width: 10,
-                    height: 10,
-                    background: STATUS_COLOR[s],
-                    borderRadius: 2,
-                    alignSelf: "center",
-                  }}
-                />
-                <span style={{ opacity: 0.9 }}>{STATUS_LABEL[s]}</span>
-                <span
-                  style={{
-                    opacity: 0.95,
-                    fontVariantNumeric: "tabular-nums",
-                  }}
-                >
-                  {summary[s]}
-                </span>
-              </div>
-            ),
-          )}
+          {(["match", "loose", "mismatch", "missing"] as FieldStatus[]).map((s) => (
+            <div key={s} style={{ display: "contents" }}>
+              <span
+                style={{
+                  width: 10,
+                  height: 10,
+                  background: STATUS_COLOR[s],
+                  borderRadius: 2,
+                  alignSelf: "center",
+                }}
+              />
+              <span style={{ opacity: 0.9 }}>{STATUS_LABEL[s]}</span>
+              <span
+                style={{
+                  opacity: 0.95,
+                  fontVariantNumeric: "tabular-nums",
+                }}
+              >
+                {summary[s]}
+              </span>
+            </div>
+          ))}
         </div>
         <details>
-          <summary style={{ cursor: "pointer", opacity: 0.85 }}>
-            Field details
-          </summary>
+          <summary style={{ cursor: "pointer", opacity: 0.85 }}>Field details</summary>
           <ul style={{ marginTop: 8, paddingLeft: 14 }}>
             {reports.map((r) => {
               // Reuse the SAME memoized segments as the JSON/CSV exports
               // so the on-screen diff and the downloaded artifacts cannot
               // drift. The pre-export self-check verifies this invariant.
               const showDiff =
-                r.actual !== null &&
-                (r.status === "mismatch" || r.status === "loose");
+                r.actual !== null && (r.status === "mismatch" || r.status === "loose");
               const segments = showDiff
-                ? fieldDiffs.find((d) => d.key === r.key)?.segments ?? null
+                ? (fieldDiffs.find((d) => d.key === r.key)?.segments ?? null)
                 : null;
               return (
                 <li key={r.key} style={{ marginBottom: 10 }}>
-                  <span style={{ color: STATUS_COLOR[r.status] }}>
-                    {STATUS_GLYPH[r.status]}
-                  </span>{" "}
+                  <span style={{ color: STATUS_COLOR[r.status] }}>{STATUS_GLYPH[r.status]}</span>{" "}
                   <strong>{r.key}</strong>
                   {showDiff && segments ? (
                     <div
@@ -1202,12 +1128,8 @@ export function HeroVerifyOverlay() {
               borderRadius: 6,
               fontSize: 11,
               lineHeight: 1.45,
-              background: selfCheck.ok
-                ? "rgba(34,197,94,0.12)"
-                : "rgba(239,68,68,0.16)",
-              border: `1px solid ${
-                selfCheck.ok ? "rgba(34,197,94,0.45)" : "rgba(239,68,68,0.55)"
-              }`,
+              background: selfCheck.ok ? "rgba(34,197,94,0.12)" : "rgba(239,68,68,0.16)",
+              border: `1px solid ${selfCheck.ok ? "rgba(34,197,94,0.45)" : "rgba(239,68,68,0.55)"}`,
               color: selfCheck.ok ? "rgb(187, 247, 208)" : "rgb(254, 202, 202)",
             }}
           >
@@ -1239,17 +1161,11 @@ export function HeroVerifyOverlay() {
               borderRadius: 6,
               fontSize: 11,
               lineHeight: 1.45,
-              background: schemaTagCheck.ok
-                ? "rgba(34,197,94,0.12)"
-                : "rgba(239,68,68,0.16)",
+              background: schemaTagCheck.ok ? "rgba(34,197,94,0.12)" : "rgba(239,68,68,0.16)",
               border: `1px solid ${
-                schemaTagCheck.ok
-                  ? "rgba(34,197,94,0.45)"
-                  : "rgba(239,68,68,0.55)"
+                schemaTagCheck.ok ? "rgba(34,197,94,0.45)" : "rgba(239,68,68,0.55)"
               }`,
-              color: schemaTagCheck.ok
-                ? "rgb(187, 247, 208)"
-                : "rgb(254, 202, 202)",
+              color: schemaTagCheck.ok ? "rgb(187, 247, 208)" : "rgb(254, 202, 202)",
             }}
           >
             <strong style={{ letterSpacing: "0.04em" }}>
@@ -1258,9 +1174,7 @@ export function HeroVerifyOverlay() {
                 : `✕ Schema tag BLOCKED (${schemaTagCheck.format})`}
             </strong>
             <span style={{ opacity: 0.75, marginLeft: 6 }}>
-              {schemaTagCheck.ok
-                ? schemaTagCheck.tag
-                : `expected "hero-verify-report/v3"`}
+              {schemaTagCheck.ok ? schemaTagCheck.tag : `expected "hero-verify-report/v3"`}
               {" · "}
               {new Date(schemaTagCheck.at).toLocaleTimeString()}
             </span>
@@ -1322,15 +1236,11 @@ export function HeroVerifyOverlay() {
               borderRadius: 6,
               fontSize: 11,
               lineHeight: 1.45,
-              background: schemaCheck.ok
-                ? "rgba(34,197,94,0.12)"
-                : "rgba(239,68,68,0.16)",
+              background: schemaCheck.ok ? "rgba(34,197,94,0.12)" : "rgba(239,68,68,0.16)",
               border: `1px solid ${
                 schemaCheck.ok ? "rgba(34,197,94,0.45)" : "rgba(239,68,68,0.55)"
               }`,
-              color: schemaCheck.ok
-                ? "rgb(187, 247, 208)"
-                : "rgb(254, 202, 202)",
+              color: schemaCheck.ok ? "rgb(187, 247, 208)" : "rgb(254, 202, 202)",
             }}
           >
             <strong style={{ letterSpacing: "0.04em" }}>

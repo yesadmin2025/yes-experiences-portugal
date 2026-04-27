@@ -73,10 +73,7 @@ describe("Brand lock — CSS custom properties", () => {
 /* ---------------------------------------------------------------- */
 
 describe("Brand lock — Logo component", () => {
-  const logoSrc = readFileSync(
-    join(ROOT, "src", "components", "Logo.tsx"),
-    "utf8",
-  );
+  const logoSrc = readFileSync(join(ROOT, "src", "components", "Logo.tsx"), "utf8");
 
   for (const [theme, filename] of Object.entries(BRAND_LOGO_VARIANTS)) {
     it(`Logo.tsx imports the locked asset for "${theme}"`, () => {
@@ -84,9 +81,7 @@ describe("Brand lock — Logo component", () => {
       // filename appears in some `import … from "@/assets/<filename>"`
       // statement. This survives variable-name refactors but not file
       // swaps — which is exactly what we want to lock.
-      const re = new RegExp(
-        `import\\s+\\w+\\s+from\\s+["']@/assets/${escapeRegex(filename)}["']`,
-      );
+      const re = new RegExp(`import\\s+\\w+\\s+from\\s+["']@/assets/${escapeRegex(filename)}["']`);
       if (!re.test(logoSrc)) {
         throw new Error(
           `Logo.tsx must import the locked asset for theme "${theme}" ` +
@@ -105,23 +100,17 @@ describe("Brand lock — Logo component", () => {
     // and no extra rows — so a brand decision to add/remove a variant
     // can only happen by editing brand-tokens.ts AND Logo.tsx
     // together.
-    const sourcesMatch = logoSrc.match(
-      /SOURCES[\s\S]*?=\s*{([\s\S]*?)};/,
-    );
+    const sourcesMatch = logoSrc.match(/SOURCES[\s\S]*?=\s*{([\s\S]*?)};/);
     if (!sourcesMatch) {
       throw new Error(
         "Logo.tsx must declare a `SOURCES` map keyed by BrandLogoTheme " +
           "so the brand lock can verify the supported variants.",
       );
     }
-    const declared = Array.from(
-      sourcesMatch[1].matchAll(/["']([^"']+)["']\s*:/g),
-    )
+    const declared = Array.from(sourcesMatch[1].matchAll(/["']([^"']+)["']\s*:/g))
       .map((m) => m[1])
       .sort();
-    const locked = (Object.keys(BRAND_LOGO_VARIANTS) as BrandLogoTheme[])
-      .slice()
-      .sort();
+    const locked = (Object.keys(BRAND_LOGO_VARIANTS) as BrandLogoTheme[]).slice().sort();
     expect(declared).toEqual(locked);
   });
 
@@ -140,16 +129,7 @@ describe("Brand lock — Logo component", () => {
 /* ---------------------------------------------------------------- */
 
 describe("Brand lock — no hard-coded brand hex outside locked surfaces", () => {
-  const allowedExt = new Set([
-    ".ts",
-    ".tsx",
-    ".js",
-    ".jsx",
-    ".css",
-    ".json",
-    ".md",
-    ".html",
-  ]);
+  const allowedExt = new Set([".ts", ".tsx", ".js", ".jsx", ".css", ".json", ".md", ".html"]);
   const skipDirs = new Set(["node_modules", ".git", "dist", "build"]);
 
   function* walk(dir: string): Generator<string> {
@@ -175,9 +155,7 @@ describe("Brand lock — no hard-coded brand hex outside locked surfaces", () =>
   // a whole hex literal (so #C9A96A matches but a longer #C9A96A12
   // does not — we don't want to flag opacity-suffixed variants used
   // intentionally elsewhere).
-  const hexes = (Object.values(BRAND_COLORS) as string[]).map((h) =>
-    h.toLowerCase(),
-  );
+  const hexes = (Object.values(BRAND_COLORS) as string[]).map((h) => h.toLowerCase());
   const hexAlternation = hexes
     .map((h) => h.replace("#", "#"))
     .map(escapeRegex)
@@ -204,10 +182,7 @@ describe("Brand lock — no hard-coded brand hex outside locked surfaces", () =>
             `  - ${o.file}:${o.line} contains locked hex \`${o.hex}\` — use the matching CSS token (e.g. var(--teal)) instead.`,
         )
         .join("\n");
-      const more =
-        offenders.length > 20
-          ? `\n  …and ${offenders.length - 20} more.`
-          : "";
+      const more = offenders.length > 20 ? `\n  …and ${offenders.length - 20} more.` : "";
       throw new Error(
         `Brand hex leaked into ${offenders.length} location(s) outside ` +
           `the locked surfaces. Replace each literal with the ` +
@@ -284,9 +259,9 @@ describe("Brand lock — assertBrandLogoTheme runtime guard", () => {
     // Vitest sets NODE_ENV=test → the guard treats this as dev and throws.
     const errSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     try {
-      expect(() =>
-        assertBrandLogoTheme("emerald-on-mauve", "Logo"),
-      ).toThrowError(/\[brand-lock\] <Logo> received an unsupported brand theme/);
+      expect(() => assertBrandLogoTheme("emerald-on-mauve", "Logo")).toThrowError(
+        /\[brand-lock\] <Logo> received an unsupported brand theme/,
+      );
       expect(errSpy).toHaveBeenCalled();
       const msg = String(errSpy.mock.calls[0]?.[0] ?? "");
       expect(msg).toContain("emerald-on-mauve");

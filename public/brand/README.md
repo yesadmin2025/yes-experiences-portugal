@@ -25,40 +25,40 @@ value on the board is verified at build time against `src/styles.css` —
 the build fails if any token drifts. Hand this single page to printers,
 designers, or partners as the source of truth.
 
-| Token            | Hex       | Role                              |
-| ---------------- | --------- | --------------------------------- |
-| `--teal`         | `#295B61` | Primary brand color               |
-| `--teal-2`       | `#2A7C82` | Secondary teal (hover, accents)   |
-| `--gold`         | `#C9A96A` | Accent (rules, dividers)          |
-| `--gold-soft`    | `#E1CFA6` | Soft accent (microcopy)           |
-| `--charcoal`     | `#2E2E2E` | Primary text / dark surface       |
-| `--charcoal-soft`| `#6B6B6B` | Secondary text                    |
-| `--ivory`        | `#FAF8F3` | Primary background                |
-| `--sand`         | `#F4EFE7` | Quiet surface                     |
+| Token             | Hex       | Role                            |
+| ----------------- | --------- | ------------------------------- |
+| `--teal`          | `#295B61` | Primary brand color             |
+| `--teal-2`        | `#2A7C82` | Secondary teal (hover, accents) |
+| `--gold`          | `#C9A96A` | Accent (rules, dividers)        |
+| `--gold-soft`     | `#E1CFA6` | Soft accent (microcopy)         |
+| `--charcoal`      | `#2E2E2E` | Primary text / dark surface     |
+| `--charcoal-soft` | `#6B6B6B` | Secondary text                  |
+| `--ivory`         | `#FAF8F3` | Primary background              |
+| `--sand`          | `#F4EFE7` | Quiet surface                   |
 
 ## Variants (6)
 
 Every variant is delivered with a **fully transparent background**, so the
 mark composites onto any surface cleanly.
 
-| File slug                                       | Lockup     | Color         | Recommended use                            |
-| ----------------------------------------------- | ---------- | ------------- | ------------------------------------------ |
-| `yes-experiences-portugal-centered-full`        | Centered   | Full color    | Default. Light backgrounds (ivory, white). |
-| `yes-experiences-portugal-centered-mono-dark`   | Centered   | Mono charcoal | Single-color print, light backgrounds.     |
-| `yes-experiences-portugal-centered-mono-light`  | Centered   | Mono ivory    | Reversed, dark backgrounds (charcoal).     |
-| `yes-experiences-portugal-horizontal-full`      | Horizontal | Full color    | Headers, signage, wide layouts.            |
-| `yes-experiences-portugal-horizontal-mono-dark` | Horizontal | Mono charcoal | Single-color print, light backgrounds.     |
-| `yes-experiences-portugal-horizontal-mono-light`| Horizontal | Mono ivory    | Reversed, dark backgrounds.                |
+| File slug                                        | Lockup     | Color         | Recommended use                            |
+| ------------------------------------------------ | ---------- | ------------- | ------------------------------------------ |
+| `yes-experiences-portugal-centered-full`         | Centered   | Full color    | Default. Light backgrounds (ivory, white). |
+| `yes-experiences-portugal-centered-mono-dark`    | Centered   | Mono charcoal | Single-color print, light backgrounds.     |
+| `yes-experiences-portugal-centered-mono-light`   | Centered   | Mono ivory    | Reversed, dark backgrounds (charcoal).     |
+| `yes-experiences-portugal-horizontal-full`       | Horizontal | Full color    | Headers, signage, wide layouts.            |
+| `yes-experiences-portugal-horizontal-mono-dark`  | Horizontal | Mono charcoal | Single-color print, light backgrounds.     |
+| `yes-experiences-portugal-horizontal-mono-light` | Horizontal | Mono ivory    | Reversed, dark backgrounds.                |
 
 ### Color tokens used
 
-| Role         | Hex       | CSS token         |
-| ------------ | --------- | ----------------- |
-| YES (full)   | `#295B61` | `--teal`          |
-| experiences  | `#2E2E2E` | `--charcoal`      |
-| Accent rules / PORTUGAL | `#C9A96A` | `--gold` |
-| Mono dark    | `#2E2E2E` | `--charcoal`      |
-| Mono light   | `#FAF8F3` | `--ivory`         |
+| Role                    | Hex       | CSS token    |
+| ----------------------- | --------- | ------------ |
+| YES (full)              | `#295B61` | `--teal`     |
+| experiences             | `#2E2E2E` | `--charcoal` |
+| Accent rules / PORTUGAL | `#C9A96A` | `--gold`     |
+| Mono dark               | `#2E2E2E` | `--charcoal` |
+| Mono light              | `#FAF8F3` | `--ivory`    |
 
 The teal matches the hero-CTA fill on the live site exactly.
 

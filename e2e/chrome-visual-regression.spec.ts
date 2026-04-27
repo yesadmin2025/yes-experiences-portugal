@@ -59,7 +59,10 @@ test.describe("Navbar chrome", () => {
     test.skip(testInfo.project.name !== "desktop-chromium", "desktop only");
     await page.goto("/");
     await settle(page);
-    await page.getByRole("link", { name: /Design.*Secure$/i }).first().hover();
+    await page
+      .getByRole("link", { name: /Design.*Secure$/i })
+      .first()
+      .hover();
     await page.waitForTimeout(550); // 500ms transition
     await expect(page).toHaveScreenshot("navbar-desktop-cta-hover.png", {
       clip: NAVBAR_CLIP_DESKTOP,

@@ -13,13 +13,7 @@
  */
 import { describe, it, expect, vi, afterEach, beforeEach } from "vitest";
 import { useState } from "react";
-import {
-  render,
-  screen,
-  fireEvent,
-  cleanup,
-  act,
-} from "@testing-library/react";
+import { render, screen, fireEvent, cleanup, act } from "@testing-library/react";
 import { BrandThemeSelect } from "./BrandThemeSelect";
 import type { BrandLogoTheme } from "@/lib/brand-tokens";
 
@@ -31,12 +25,7 @@ afterEach(() => {
  * and updates state on every valid `onChange`, just like the route. */
 function ControlledHarness({ initialValue }: { initialValue: unknown }) {
   const [value, setValue] = useState<unknown>(initialValue);
-  return (
-    <BrandThemeSelect
-      value={value}
-      onChange={(next: BrandLogoTheme) => setValue(next)}
-    />
-  );
+  return <BrandThemeSelect value={value} onChange={(next: BrandLogoTheme) => setValue(next)} />;
 }
 
 describe("BrandThemeSelect — keyboard transition from invalid → valid", () => {
@@ -58,10 +47,7 @@ describe("BrandThemeSelect — keyboard transition from invalid → valid", () =
     expect(select).toHaveAttribute("aria-invalid", "true");
     const initialDescribedBy = select.getAttribute("aria-describedby");
     expect(initialDescribedBy).toBeTruthy();
-    expect(document.getElementById(initialDescribedBy!)).toHaveAttribute(
-      "role",
-      "alert",
-    );
+    expect(document.getElementById(initialDescribedBy!)).toHaveAttribute("role", "alert");
     expect(screen.getByRole("alert")).toHaveTextContent(/Unsupported brand theme/i);
 
     // ----- Move focus with the keyboard -----
@@ -90,9 +76,7 @@ describe("BrandThemeSelect — keyboard transition from invalid → valid", () =
     // The alert is unmounted — assistive tech will not announce stale
     // error text after the user has corrected the value.
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
-    expect(
-      screen.queryByTestId("brand-theme-select-error"),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByTestId("brand-theme-select-error")).not.toBeInTheDocument();
 
     // Focus stays on the select so the keyboard user is not thrown back
     // to the top of the page after the correction.
@@ -101,9 +85,7 @@ describe("BrandThemeSelect — keyboard transition from invalid → valid", () =
     // The runtime guard logged exactly the invalid initial render and
     // nothing after the value became valid.
     expect(errorSpy).toHaveBeenCalled();
-    const messages = errorSpy.mock.calls.map(
-      (c: unknown[]) => String(c[0] ?? ""),
-    );
+    const messages = errorSpy.mock.calls.map((c: unknown[]) => String(c[0] ?? ""));
     // The invalid initial value was logged.
     expect(
       messages.some((m: string) =>
@@ -143,9 +125,7 @@ describe("BrandThemeSelect — keyboard transition from invalid → valid", () =
 
     // No brand-lock console.error should fire on a clean valid → valid path.
     expect(
-      errorSpy.mock.calls.some((c: unknown[]) =>
-        /\[brand-lock\]/.test(String(c[0] ?? "")),
-      ),
+      errorSpy.mock.calls.some((c: unknown[]) => /\[brand-lock\]/.test(String(c[0] ?? ""))),
     ).toBe(false);
   });
 });

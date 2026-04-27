@@ -8,9 +8,7 @@ const PUBLISHED_URL = "https://dreamscape-builder-co.lovable.app";
  * Allowlist of origins permitted as `?url=` overrides. Any value outside this
  * set is rejected before a fetch is issued (SSRF defence). HTTPS-only.
  */
-const ALLOWED_ORIGINS = new Set<string>([
-  new URL(PUBLISHED_URL).origin,
-]);
+const ALLOWED_ORIGINS = new Set<string>([new URL(PUBLISHED_URL).origin]);
 
 /**
  * Validate a caller-supplied base URL. Must parse, must be https, and must
@@ -93,10 +91,7 @@ function newRequestId(): string {
   } catch {
     // fall through to fallback
   }
-  return (
-    Math.random().toString(36).slice(2, 10) +
-    Math.random().toString(36).slice(2, 10)
-  );
+  return Math.random().toString(36).slice(2, 10) + Math.random().toString(36).slice(2, 10);
 }
 
 type AuditOutcome = "ok" | "reject" | "error";
@@ -136,7 +131,6 @@ function logAudit(
   if (outcome === "ok") console.info(line);
   else console.warn(line);
 }
-
 
 /**
  * Every routable path generated from `src/routes/` (excluding `__root` and the
@@ -228,8 +222,7 @@ async function verifyPage(targetUrl: string, path: string): Promise<PageReport> 
       ...base,
       httpStatus: res.status,
       liveVersion,
-      versionMatch:
-        liveVersion === null ? null : liveVersion === HERO_COPY_VERSION,
+      versionMatch: liveVersion === null ? null : liveVersion === HERO_COPY_VERSION,
       checks,
       missing,
       ok: missing.length === 0 && res.status === 200,
@@ -252,9 +245,7 @@ async function verifyPage(targetUrl: string, path: string): Promise<PageReport> 
  * unauthorised wording changes are caught at the source, not after publish.
  */
 function detectSpecDrift() {
-  const drifted = HERO_KEYS.filter(
-    (k) => HERO_COPY[k] !== HERO_COPY_SPEC[k],
-  ).map((k) => ({
+  const drifted = HERO_KEYS.filter((k) => HERO_COPY[k] !== HERO_COPY_SPEC[k]).map((k) => ({
     key: k,
     expected: HERO_COPY_SPEC[k],
     actual: HERO_COPY[k],
@@ -262,13 +253,7 @@ function detectSpecDrift() {
   return { ok: drifted.length === 0, drifted };
 }
 
-
-type FailureReason =
-  | "fetch_error"
-  | "non_200"
-  | "missing_strings"
-  | "stale_version"
-  | "spec_drift";
+type FailureReason = "fetch_error" | "non_200" | "missing_strings" | "stale_version" | "spec_drift";
 
 type FailedRouteSummary = {
   path: string;
@@ -292,10 +277,7 @@ type Summary = {
   message: string;
 };
 
-function buildSummary(
-  pages: PageReport[],
-  specDrift: SpecDriftResult,
-): Summary {
+function buildSummary(pages: PageReport[], specDrift: SpecDriftResult): Summary {
   const failed = pages.filter((p) => !p.ok);
   const failedRoutes: FailedRouteSummary[] = failed.map((p) => {
     const reasons: FailureReason[] = [];
@@ -318,14 +300,10 @@ function buildSummary(
 
   const parts: string[] = [];
   if (!specDrift.ok) {
-    parts.push(
-      `Source HERO_COPY drifted from spec: ${specDriftKeys.join(", ")}`,
-    );
+    parts.push(`Source HERO_COPY drifted from spec: ${specDriftKeys.join(", ")}`);
   }
   if (failed.length > 0) {
-    parts.push(
-      `${failed.length} of ${pages.length} page(s) failed: ${failedPaths.join(", ")}`,
-    );
+    parts.push(`${failed.length} of ${pages.length} page(s) failed: ${failedPaths.join(", ")}`);
   }
   const message =
     parts.length === 0
@@ -387,9 +365,7 @@ export const Route = createFileRoute("/api/verify-hero")({
             );
           }
           const authHeader = request.headers.get("authorization") ?? "";
-          const bearer = authHeader.startsWith("Bearer ")
-            ? authHeader.slice("Bearer ".length)
-            : "";
+          const bearer = authHeader.startsWith("Bearer ") ? authHeader.slice("Bearer ".length) : "";
           const queryToken = url.searchParams.get("token") ?? "";
           const presented = bearer || queryToken;
           if (!presented || !timingSafeEqual(presented, expectedToken)) {
@@ -402,9 +378,7 @@ export const Route = createFileRoute("/api/verify-hero")({
 
           // ---- Input validation ----
           const rawTarget = url.searchParams.get("url");
-          const target = rawTarget === null
-            ? PUBLISHED_URL
-            : validateTargetUrl(rawTarget);
+          const target = rawTarget === null ? PUBLISHED_URL : validateTargetUrl(rawTarget);
           if (target === null) {
             logAudit(rid, request.method, request.url, 400, "reject", "invalid_url_param");
             return Response.json(
@@ -430,34 +404,20 @@ export const Route = createFileRoute("/api/verify-hero")({
           const paths: readonly string[] =
             all === "1" || all === "true" ? ALL_ROUTES : [singlePath];
 
-          const pages = await Promise.all(
-            paths.map((p) => verifyPage(target, p)),
-          );
+          const pages = await Promise.all(paths.map((p) => verifyPage(target, p)));
 
           const specDrift = detectSpecDrift();
           const pagesOk = pages.every((p) => p.ok);
           const ok = pagesOk && specDrift.ok;
-          const failedCount =
-            pages.filter((p) => !p.ok).length + (specDrift.ok ? 0 : 1);
+          const failedCount = pages.filter((p) => !p.ok).length + (specDrift.ok ? 0 : 1);
           const summary = buildSummary(pages, specDrift);
 
           if (paths.length === 1) {
             const only = pages[0];
             const failureStatus = strict ? 422 : only.error ? 502 : 409;
             const status = only.ok ? 200 : failureStatus;
-            const reason = only.ok
-              ? "verified"
-              : only.error
-                ? "fetch_error"
-                : "missing_strings";
-            logAudit(
-              rid,
-              request.method,
-              request.url,
-              status,
-              only.ok ? "ok" : "reject",
-              reason,
-            );
+            const reason = only.ok ? "verified" : only.error ? "fetch_error" : "missing_strings";
+            logAudit(rid, request.method, request.url, status, only.ok ? "ok" : "reject", reason);
             return Response.json(
               {
                 ok: only.ok,

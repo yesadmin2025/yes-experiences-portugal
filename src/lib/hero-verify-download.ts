@@ -73,19 +73,14 @@ export function triggerDownload(blob: Blob, filename: string): void {
   URL.revokeObjectURL(url);
 }
 
-export function buildFilename(
-  result: VerifyResponse,
-  ext: "json" | "csv",
-): string {
+export function buildFilename(result: VerifyResponse, ext: "json" | "csv"): string {
   const stamp = new Date().toISOString().replace(/[:.]/g, "-");
   const scope = isMulti(result) ? "all" : "single";
   const status = result.ok ? "ok" : "fail";
   return `hero-verify-${scope}-${status}-${stamp}.${ext}`;
 }
 
-function csvEscape(
-  value: string | number | boolean | null | undefined,
-): string {
+function csvEscape(value: string | number | boolean | null | undefined): string {
   if (value === null || value === undefined) return "";
   const s = String(value);
   if (/[",\n\r]/.test(s)) return `"${s.replace(/"/g, '""')}"`;

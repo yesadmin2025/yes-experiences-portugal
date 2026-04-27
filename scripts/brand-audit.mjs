@@ -40,7 +40,14 @@ const HEX = /#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})\b/g;
 
 function normalize(h) {
   let s = h.toLowerCase();
-  if (s.length === 4) s = "#" + s.slice(1).split("").map((c) => c + c).join("");
+  if (s.length === 4)
+    s =
+      "#" +
+      s
+        .slice(1)
+        .split("")
+        .map((c) => c + c)
+        .join("");
   return s;
 }
 
