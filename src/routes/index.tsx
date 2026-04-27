@@ -883,9 +883,9 @@ function HomePage() {
                       {p.line}
                     </p>
                     <span
-                      className={`mt-7 inline-flex items-center gap-2 text-[11.5px] uppercase tracking-[0.24em] font-medium group-hover:translate-x-1 transition-transform duration-300 ${styles.cta}`}
+                      className={`mt-7 inline-flex items-center gap-2 text-[14px] tracking-[0.005em] font-medium group-hover:translate-x-1 transition-transform duration-300 ${styles.cta}`}
                     >
-                      {p.cta} <ArrowRight size={13} />
+                      {p.cta} <ArrowRight size={14} />
                     </span>
                   </Link>
                 </li>
@@ -1002,16 +1002,16 @@ function HomePage() {
                   <div className="mt-5 pt-5 border-t border-[color:var(--border)] flex items-center gap-5">
                     <Link
                       to="/experiences"
-                      className="inline-flex items-center gap-2 text-[11.5px] uppercase tracking-[0.24em] font-semibold text-[color:var(--teal)] hover:text-[color:var(--teal-2)] transition-colors"
+                      className="inline-flex items-center gap-2 text-[14px] tracking-[0.005em] font-medium text-[color:var(--teal)] hover:text-[color:var(--teal-2)] transition-colors"
                     >
-                      Confirm instantly <ArrowRight size={12} />
+                      Confirm instantly <ArrowRight size={13} />
                     </Link>
                     <span className="h-3 w-px bg-[color:var(--border)]" aria-hidden="true" />
                     <Link
                       to="/builder"
-                      className="inline-flex items-center gap-2 text-[11.5px] uppercase tracking-[0.24em] font-medium text-[color:var(--charcoal-soft)] hover:text-[color:var(--teal)] transition-colors"
+                      className="inline-flex items-center gap-2 text-[14px] tracking-[0.005em] font-medium text-[color:var(--charcoal-soft)] hover:text-[color:var(--teal)] transition-colors"
                     >
-                      Tailor & confirm <ArrowRight size={12} />
+                      Tailor &amp; confirm <ArrowRight size={13} />
                     </Link>
                   </div>
                 </div>
@@ -1072,7 +1072,7 @@ function HomePage() {
               </ul>
               <Link
                 to="/builder"
-                className="inline-flex items-center gap-2 mt-10 px-9 py-[18px] text-[12.5px] uppercase tracking-[0.22em] font-semibold bg-[color:var(--gold)] text-[color:var(--charcoal-deep)] hover:bg-[color:var(--gold-soft)] transition-colors"
+                className="inline-flex items-center gap-2 mt-10 px-9 py-[16px] text-[15px] tracking-[0.005em] font-medium bg-[color:var(--gold)] text-[color:var(--charcoal-deep)] hover:bg-[color:var(--gold-soft)] transition-colors"
               >
                 Open the Studio <ArrowRight size={15} />
               </Link>
@@ -1258,8 +1258,8 @@ function HomePage() {
                   <p className="mt-3 text-[14.5px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light flex-1">
                     {o.line}
                   </p>
-                  <span className="mt-7 inline-flex items-center gap-2 text-[11.5px] uppercase tracking-[0.24em] font-semibold text-[color:var(--teal)] group-hover:translate-x-1 transition-transform">
-                    Design & confirm instantly <ArrowRight size={12} />
+                  <span className="mt-7 inline-flex items-center gap-2 text-[14px] tracking-[0.005em] font-medium text-[color:var(--teal)] group-hover:translate-x-1 transition-transform">
+                    Design &amp; confirm instantly <ArrowRight size={13} />
                   </span>
                 </Link>
               </li>
@@ -1310,7 +1310,7 @@ function HomePage() {
           <div className="reveal mt-12 md:mt-16 text-center">
             <Link
               to="/local-stories"
-              className="inline-flex items-center gap-2 text-[13px] uppercase tracking-[0.2em] text-[color:var(--teal)] hover:text-[color:var(--teal-2)] transition-colors font-medium"
+              className="inline-flex items-center gap-2 text-[14px] tracking-[0.005em] text-[color:var(--teal)] hover:text-[color:var(--teal-2)] transition-colors font-medium"
             >
               Read all local stories <ArrowRight size={14} />
             </Link>
