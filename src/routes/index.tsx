@@ -656,53 +656,94 @@ function HomePage() {
           <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6 list-none p-0 max-w-6xl mx-auto">
             {startPaths.map((p) => {
               const Icon = p.icon;
-              const isTeal = p.accent === "teal";
+              // Four distinct visual treatments — each card reads as a
+              // different "product" at a glance, while keeping the same
+              // grid layout and content structure.
+              const styles = {
+                ivory: {
+                  card: "bg-[color:var(--card)] border border-[color:var(--border)] text-[color:var(--charcoal)] hover:border-[color:var(--teal)]/40 hover:shadow-[0_24px_50px_-24px_rgba(41,91,97,0.18)]",
+                  iconWrap: "border-[color:var(--gold)]/40 text-[color:var(--teal)]",
+                  eyebrow: "text-[color:var(--gold)]",
+                  title: "text-[color:var(--charcoal)]",
+                  line: "text-[color:var(--charcoal-soft)]",
+                  cta: "text-[color:var(--teal)]",
+                  rail: "bg-gradient-to-r from-[color:var(--gold)]/0 via-[color:var(--gold)]/0 to-[color:var(--gold)]/0",
+                  ribbon: null as string | null,
+                },
+                sand: {
+                  card: "bg-[color:var(--sand)] border border-[color:var(--gold)]/25 text-[color:var(--charcoal)] hover:border-[color:var(--gold)]/60 hover:shadow-[0_24px_50px_-24px_rgba(178,140,71,0.22)]",
+                  iconWrap: "border-[color:var(--gold)]/60 text-[color:var(--gold)] bg-[color:var(--ivory)]",
+                  eyebrow: "text-[color:var(--gold)]",
+                  title: "text-[color:var(--charcoal)]",
+                  line: "text-[color:var(--charcoal-soft)]",
+                  cta: "text-[color:var(--gold)]",
+                  rail: "bg-gradient-to-r from-[color:var(--gold)]/0 via-[color:var(--gold)]/40 to-[color:var(--gold)]/0",
+                  ribbon: null,
+                },
+                teal: {
+                  card: "bg-[color:var(--teal)] text-[color:var(--ivory)] hover:bg-[color:var(--teal-2)] shadow-[0_18px_40px_-20px_rgba(41,91,97,0.55)]",
+                  iconWrap: "border-[color:var(--gold)]/50 text-[color:var(--gold-soft)] bg-[color:var(--teal-2)]/40",
+                  eyebrow: "text-[color:var(--gold)]",
+                  title: "text-[color:var(--ivory)]",
+                  line: "text-[color:var(--ivory)]/85",
+                  cta: "text-[color:var(--gold-soft)]",
+                  rail: "bg-gradient-to-r from-[color:var(--gold)]/40 via-[color:var(--gold)] to-[color:var(--gold)]/40",
+                  ribbon: "Most flexible",
+                },
+                charcoal: {
+                  card: "bg-[color:var(--charcoal-deep)] text-[color:var(--ivory)] hover:bg-[color:var(--charcoal)] border border-[color:var(--gold)]/20",
+                  iconWrap: "border-[color:var(--gold)]/50 text-[color:var(--gold-soft)] bg-[color:var(--charcoal)]/60",
+                  eyebrow: "text-[color:var(--gold)]",
+                  title: "text-[color:var(--ivory)]",
+                  line: "text-[color:var(--ivory)]/80",
+                  cta: "text-[color:var(--gold-soft)]",
+                  rail: "bg-gradient-to-r from-[color:var(--gold)]/0 via-[color:var(--gold)]/30 to-[color:var(--gold)]/0",
+                  ribbon: null,
+                },
+              }[p.accent];
+
               return (
                 <li key={p.title} className="reveal-stagger h-full">
                   <Link
                     to={p.to}
-                    className={`group relative flex flex-col h-full p-7 md:p-8 transition-all duration-500 ${
-                      isTeal
-                        ? "bg-[color:var(--teal)] text-[color:var(--ivory)] hover:bg-[color:var(--teal-2)]"
-                        : "bg-[color:var(--card)] border border-[color:var(--border)] text-[color:var(--charcoal)] hover:border-[color:var(--teal)]/30 hover:shadow-[0_24px_50px_-24px_rgba(41,91,97,0.18)]"
-                    }`}
+                    className={`group relative flex flex-col h-full p-7 md:p-8 transition-all duration-500 overflow-hidden ${styles.card}`}
                   >
+                    {/* Top hairline rail — subtle accent that visually
+                        anchors each card to its own identity. */}
                     <span
-                      className={`inline-flex items-center justify-center w-11 h-11 mb-6 border ${
-                        isTeal
-                          ? "border-[color:var(--gold)]/40 text-[color:var(--gold-soft)]"
-                          : "border-[color:var(--gold)]/40 text-[color:var(--teal)]"
-                      }`}
+                      aria-hidden="true"
+                      className={`absolute top-0 left-0 right-0 h-px ${styles.rail}`}
+                    />
+                    {styles.ribbon && (
+                      <span
+                        aria-hidden="true"
+                        className="absolute top-4 right-4 text-[9.5px] uppercase tracking-[0.26em] px-2.5 py-1 bg-[color:var(--gold)] text-[color:var(--charcoal-deep)] font-semibold"
+                      >
+                        {styles.ribbon}
+                      </span>
+                    )}
+                    <span
+                      className={`inline-flex items-center justify-center w-11 h-11 mb-6 border ${styles.iconWrap}`}
                     >
                       <Icon size={18} strokeWidth={1.5} />
                     </span>
                     <span
-                      className={`text-[10.5px] uppercase tracking-[0.3em] ${
-                        isTeal ? "text-[color:var(--gold)]" : "text-[color:var(--gold)]"
-                      }`}
+                      className={`text-[10.5px] uppercase tracking-[0.3em] ${styles.eyebrow}`}
                     >
                       {p.eyebrow}
                     </span>
                     <h3
-                      className={`serif text-[1.4rem] md:text-[1.5rem] mt-3 leading-[1.15] ${
-                        isTeal ? "text-[color:var(--ivory)]" : "text-[color:var(--charcoal)]"
-                      }`}
+                      className={`serif text-[1.4rem] md:text-[1.5rem] mt-3 leading-[1.15] ${styles.title}`}
                     >
                       {p.title}
                     </h3>
                     <p
-                      className={`mt-3 text-[14.5px] leading-[1.65] font-light flex-1 ${
-                        isTeal
-                          ? "text-[color:var(--ivory)]/85"
-                          : "text-[color:var(--charcoal-soft)]"
-                      }`}
+                      className={`mt-3 text-[14.5px] leading-[1.65] font-light flex-1 ${styles.line}`}
                     >
                       {p.line}
                     </p>
                     <span
-                      className={`mt-7 inline-flex items-center gap-2 text-[11.5px] uppercase tracking-[0.24em] font-medium group-hover:translate-x-1 transition-transform duration-300 ${
-                        isTeal ? "text-[color:var(--gold-soft)]" : "text-[color:var(--teal)]"
-                      }`}
+                      className={`mt-7 inline-flex items-center gap-2 text-[11.5px] uppercase tracking-[0.24em] font-medium group-hover:translate-x-1 transition-transform duration-300 ${styles.cta}`}
                     >
                       {p.cta} <ArrowRight size={13} />
                     </span>
