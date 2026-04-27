@@ -47,6 +47,56 @@ const CHECKS = [
   { key: "microcopy", label: "Microcopy", value: HERO_COPY.microcopy },
 ];
 
+// Preflight: the rendered app exposes the live runtime strings via
+// `data-hero-*` attributes on a hidden probe element (see src/routes/index.tsx
+// around line 574). We parse those attributes from the served HTML and assert
+// each one is byte-for-byte equal to the source-of-truth value. If this fails,
+// the substring checks below would lie — passing because the OLD copy still
+// matches, even though something else has drifted.
+const PROBE_ATTRS = [
+  { attr: "data-hero-eyebrow", key: "eyebrow", expected: HERO_COPY.eyebrow },
+  {
+    attr: "data-hero-headline",
+    key: "headline",
+    expected: `${HERO_COPY.headlineLine1} ${HERO_COPY.headlineLine2}`,
+  },
+  { attr: "data-hero-subheadline", key: "subheadline", expected: HERO_COPY.subheadline },
+  { attr: "data-hero-primary-cta", key: "primaryCta", expected: HERO_COPY.primaryCta },
+  { attr: "data-hero-secondary-cta", key: "secondaryCta", expected: HERO_COPY.secondaryCta },
+  { attr: "data-hero-microcopy", key: "microcopy", expected: HERO_COPY.microcopy },
+];
+
+// Decode the small set of HTML entities React emits inside attribute values.
+function decodeAttr(value) {
+  return value
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&#x27;/g, "'")
+    .replace(/&#x2F;/g, "/");
+}
+
+function readProbeAttr(html, attr) {
+  // Match: data-hero-foo="..." (double-quoted is what React renders).
+  const re = new RegExp(`${attr}="([^"]*)"`);
+  const m = html.match(re);
+  return m ? decodeAttr(m[1]) : null;
+}
+
+function runPreflight(html) {
+  return PROBE_ATTRS.map((p) => {
+    const actual = readProbeAttr(html, p.attr);
+    return {
+      ...p,
+      actual,
+      pass: actual !== null && actual === p.expected,
+      missing: actual === null,
+    };
+  });
+}
+
 const GREEN = "\x1b[32m";
 const RED = "\x1b[31m";
 const DIM = "\x1b[2m";
@@ -109,11 +159,39 @@ for (const target of TARGETS) {
     continue;
   }
 
+  // Preflight: rendered runtime strings must equal source-of-truth.
+  console.log(`  ${DIM}Preflight — runtime strings vs src/content/hero-copy.ts${RESET}`);
+  const preflight = runPreflight(html);
+  const probeFound = preflight.some((p) => !p.missing);
+  if (!probeFound) {
+    console.log(
+      `    ${RED}✗ No data-hero-* probe attributes found in served HTML — cannot verify runtime parity.${RESET}`,
+    );
+    totalFailures++;
+  } else {
+    for (const p of preflight) {
+      if (p.pass) {
+        console.log(`    ${GREEN}✓${RESET} ${p.attr.padEnd(24)} matches source-of-truth`);
+      } else if (p.missing) {
+        console.log(
+          `    ${RED}✗${RESET} ${p.attr.padEnd(24)} ${RED}attribute missing from rendered HTML${RESET}`,
+        );
+        totalFailures++;
+      } else {
+        console.log(`    ${RED}✗${RESET} ${p.attr.padEnd(24)} ${RED}DRIFT${RESET}`);
+        console.log(`        expected: ${DIM}"${p.expected}"${RESET}`);
+        console.log(`        runtime:  ${DIM}"${p.actual}"${RESET}`);
+        totalFailures++;
+      }
+    }
+  }
+
+  console.log(`  ${DIM}Substring checks — exact strings present in served HTML${RESET}`);
   const results = runChecks(html);
   for (const r of results) {
     const icon = r.pass ? `${GREEN}✓${RESET}` : `${RED}✗${RESET}`;
     const status = r.pass ? "" : `  ${RED}MISSING${RESET}`;
-    console.log(`  ${icon} ${r.label.padEnd(20)} ${DIM}"${r.value}"${RESET}${status}`);
+    console.log(`    ${icon} ${r.label.padEnd(20)} ${DIM}"${r.value}"${RESET}${status}`);
     if (!r.pass) totalFailures++;
   }
   console.log("");
