@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useRouterState } from "@tanstack/react-router";
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
 
 /**
@@ -529,6 +530,43 @@ export function HeroCopyDiff() {
       touched.forEach((el) => el.removeAttribute("data-hero-diff-highlight"));
     };
   }, [state]);
+
+  // ---- Clear outlines on route entry / exit ------------------------------
+  // Watch the current pathname via the router. Whenever we cross the
+  // boundary into or out of "/", wipe both the persisted payload AND any
+  // rendered outlines, then re-run the diff so a fresh state is computed
+  // for whatever copy is now live. This guarantees that navigating away
+  // from /index and back never shows stale highlights from a previous
+  // session-level diff.
+  const pathname = useRouterState({
+    select: (s) => s.location.pathname,
+  });
+  const prevPathnameRef = useRef<string | null>(null);
+  useEffect(() => {
+    const prev = prevPathnameRef.current;
+    prevPathnameRef.current = pathname;
+
+    // Skip the very first render — we don't want a "fresh visit" to wipe
+    // outlines that were just restored from sessionStorage on this mount.
+    if (prev === null) return;
+
+    const wasIndex = prev === "/";
+    const isIndex = pathname === "/";
+    if (wasIndex === isIndex) return; // no boundary crossed
+
+    clearPersistedOutlines();
+    clearRenderedOutlines();
+    console.info(
+      "%c[hero-copy] cleared outlines on route boundary",
+      "color:#9ca3af",
+      `${prev} → ${pathname}`,
+    );
+
+    // Re-run the diff if we just landed back on the index so any genuine
+    // copy change since the baseline is re-detected and (if so) freshly
+    // outlined and persisted from scratch.
+    if (isIndex) refresh();
+  }, [pathname, refresh]);
 
   if (!state) return null;
 
