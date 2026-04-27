@@ -451,8 +451,21 @@ function printTransitions(transitions) {
 }
 
 let previousSummary = null;
+let lastSummary = null;
+let runCount = 0;
 let running = false;
 let pending = false;
+
+// Compute the would-be exit code from a run's summary, mirroring one-shot
+// semantics so --fail-fast / --max-runs / SIGINT all use the same contract.
+function exitCodeFor(summary) {
+  if (!summary || summary.length === 0) return EXIT.OK;
+  const hasDrift = summary.some((s) => s.status === "drift");
+  const hasFetchFail = summary.some((s) => s.status === "fetch_failed");
+  if (hasDrift) return EXIT.DRIFT;
+  if (hasFetchFail) return EXIT.FETCH_ERROR;
+  return EXIT.OK;
+}
 
 async function tick(reason) {
   if (running) {
@@ -465,18 +478,43 @@ async function tick(reason) {
     `${DIM}[${fmtTimestamp()}]${RESET} ${BOLD}qa:hero-copy --watch${RESET} ${DIM}(${reason})${RESET}`,
   );
   console.log(
-    `${DIM}target=${CLI.target} debounce=${CLI.debounceMs}ms targets=[${TARGETS.map((t) => t.name).join(", ")}]${RESET}\n`,
+    `${DIM}target=${CLI.target} debounce=${CLI.debounceMs}ms failFast=${CLI.failFast} maxRuns=${CLI.maxRuns === Infinity ? "∞" : CLI.maxRuns} targets=[${TARGETS.map((t) => t.name).join(", ")}]${RESET}\n`,
   );
+  let runFailedRuntime = false;
   try {
     const { summary } = await runOnce();
     const transitions = diffSummaries(previousSummary, summary);
     printTransitions(transitions);
     previousSummary = summary;
+    lastSummary = summary;
   } catch (err) {
-    console.log(`${RED}Run failed: ${err.message}${RESET}\n`);
+    console.log(`${RED}Run failed (script error): ${err?.stack || err.message}${RESET}\n`);
+    runFailedRuntime = true;
   }
-  console.log(`${DIM}Watching ${WATCHED_FILES.length} file(s). Press Ctrl-C to exit.${RESET}`);
+  runCount++;
+  console.log(
+    `${DIM}Run #${runCount} complete. Watching ${WATCHED_FILES.length} file(s). Press Ctrl-C to exit.${RESET}`,
+  );
   running = false;
+
+  // Termination triggers (CI-friendly):
+  //   --fail-fast: exit on first run with drift/fetch failure
+  //   --max-runs:  exit after N runs, with code derived from the last run
+  //   runtime err: exit RUNTIME_ERROR immediately (test/script bug)
+  if (runFailedRuntime) {
+    process.exit(EXIT.RUNTIME_ERROR);
+  }
+  const code = exitCodeFor(lastSummary);
+  if (CLI.failFast && code !== EXIT.OK) {
+    console.log(`${RED}${BOLD}--fail-fast: exiting with code ${code}.${RESET}`);
+    process.exit(code);
+  }
+  if (runCount >= CLI.maxRuns) {
+    const label = code === EXIT.OK ? GREEN : RED;
+    console.log(`${label}${BOLD}--max-runs reached (${CLI.maxRuns}): exiting with code ${code}.${RESET}`);
+    process.exit(code);
+  }
+
   if (pending) {
     pending = false;
     setTimeout(() => tick("queued change"), 50);
@@ -498,6 +536,14 @@ for (const file of WATCHED_FILES) {
     console.log(`${YELLOW}⚠ Could not watch ${file}: ${err.message}${RESET}`);
   }
 }
+
+// SIGINT (Ctrl-C) gets a clean exit reflecting the last completed run, so a
+// CI operator who interrupts a long-running watch still gets a meaningful code.
+process.on("SIGINT", () => {
+  const code = exitCodeFor(lastSummary);
+  console.log(`\n${DIM}SIGINT received — exiting with code ${code} (based on last run).${RESET}`);
+  process.exit(code);
+});
 
 await tick("initial run");
 
