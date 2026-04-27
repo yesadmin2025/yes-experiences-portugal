@@ -641,6 +641,9 @@ for (const file of WATCHED_FILES) {
 process.on("SIGINT", () => {
   const code = exitCodeFor(lastSummary);
   console.log(`\n${DIM}SIGINT received — exiting with code ${code} (based on last run).${RESET}`);
+  emitReport(
+    buildReport({ summary: lastSummary, mode: "watch", runIndex: runCount, exitCode: code }),
+  );
   process.exit(code);
 });
 
