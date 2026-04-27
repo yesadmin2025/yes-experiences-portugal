@@ -221,9 +221,39 @@ function persistPanelVisibility(next: boolean) {
   }
 }
 
+async function copyTextToClipboard(text: string): Promise<boolean> {
+  // Modern path — works on https + localhost.
+  try {
+    if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+  } catch {
+    /* fall through to legacy path */
+  }
+  // Legacy fallback for older browsers / non-secure contexts.
+  try {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.position = "fixed";
+    ta.style.top = "0";
+    ta.style.left = "0";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    const ok = document.execCommand("copy");
+    document.body.removeChild(ta);
+    return ok;
+  } catch {
+    return false;
+  }
+}
+
 export function HeroCopyDiff() {
   const [state, setState] = useState<DiffState | null>(null);
   const [panelVisible, setPanelVisible] = useState(false);
+  const [copyStatus, setCopyStatus] = useState<"idle" | "ok" | "fail">("idle");
 
   const refresh = useCallback(() => {
     const next = buildDiffState();
@@ -243,6 +273,21 @@ export function HeroCopyDiff() {
     );
     refresh();
   }, [refresh]);
+
+  const exportDiff = useCallback(async () => {
+    const snap = buildDiffState();
+    const payload = JSON.stringify(snap, null, 2);
+    const ok = await copyTextToClipboard(payload);
+    setCopyStatus(ok ? "ok" : "fail");
+    console.info(
+      ok
+        ? "%c[hero-copy] diff JSON copied to clipboard"
+        : "%c[hero-copy] copy to clipboard failed",
+      ok ? "color:#10b981" : "color:#ef4444",
+      snap,
+    );
+    window.setTimeout(() => setCopyStatus("idle"), 2000);
+  }, []);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -483,6 +528,55 @@ export function HeroCopyDiff() {
         ))}
       </div>
 
+      {/* Sr-only export button.
+          Always present in the DOM, visually hidden from sighted users
+          (no layout impact) but discoverable by:
+            • Tab navigation (it's focusable and slides into view on focus)
+            • Screen readers (announced as "Copy hero-copy diff JSON …")
+            • Test runners via [data-testid="hero-copy-export"]
+            • Console: document.querySelector('[data-testid="hero-copy-export"]').click()
+       */}
+      <button
+        type="button"
+        data-hero-copy-export=""
+        data-testid="hero-copy-export"
+        data-copy-status={copyStatus}
+        onClick={exportDiff}
+        className="hero-copy-export-btn"
+        style={SR_ONLY}
+      >
+        {copyStatus === "ok"
+          ? "Diff JSON copied"
+          : copyStatus === "fail"
+            ? "Copy failed — see console"
+            : `Copy hero-copy diff JSON (${state.rows.length} change${
+                state.rows.length === 1 ? "" : "s"
+              })`}
+      </button>
+      <style>{`
+        .hero-copy-export-btn:focus-visible,
+        .hero-copy-export-btn:hover {
+          position: fixed !important;
+          width: auto !important;
+          height: auto !important;
+          clip: auto !important;
+          margin: 0 !important;
+          padding: 8px 12px !important;
+          overflow: visible !important;
+          white-space: normal !important;
+          bottom: 16px !important;
+          right: 16px !important;
+          z-index: 2147483646 !important;
+          background: #0f0f0f !important;
+          color: #fafafa !important;
+          border: 1px solid rgba(255,255,255,0.25) !important;
+          border-radius: 6px !important;
+          font: 12px/1.4 ui-sans-serif, system-ui, -apple-system, sans-serif !important;
+          cursor: pointer !important;
+          box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+        }
+      `}</style>
+
       {/* Hidden control panel.
           Invisible by default. Reveal with `?hero-debug` in the URL or
           Shift+H+R. Use it to clear the baseline (and rerun the diff)
@@ -604,6 +698,31 @@ export function HeroCopyDiff() {
               }}
             >
               Accept as baseline
+            </button>
+            <button
+              type="button"
+              onClick={exportDiff}
+              data-action="copy-diff"
+              style={{
+                background:
+                  copyStatus === "ok"
+                    ? "#10b981"
+                    : copyStatus === "fail"
+                      ? "#dc2626"
+                      : "rgba(255,255,255,0.12)",
+                color: "#fff",
+                border: "1px solid rgba(255,255,255,0.2)",
+                borderRadius: 4,
+                padding: "6px 10px",
+                cursor: "pointer",
+                fontSize: 11,
+              }}
+            >
+              {copyStatus === "ok"
+                ? "Copied ✓"
+                : copyStatus === "fail"
+                  ? "Copy failed"
+                  : "Copy diff JSON"}
             </button>
           </div>
           <div style={{ marginTop: 8, opacity: 0.55, fontSize: 10 }}>
