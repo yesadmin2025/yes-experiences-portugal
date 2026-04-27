@@ -350,6 +350,18 @@ jobs:
           fi
           echo "── URL validation results ─────────────────────────────────"
           echo "  verdict             : ${verdict}"
+          # Dedicated, machine-greppable line that names exactly which
+          # phase-1 rule(s) tripped the early-exit guard. Always
+          # printed (value is "none" when phase 1 passed) so log
+          # scrapers and humans alike get a stable field instead of
+          # having to infer it from the presence/absence of other
+          # lines. Joined with "," when multiple rules failed.
+          if (( ${#failed_foundational_rules[@]} > 0 )); then
+            failed_foundational_csv=$(IFS=,; echo "${failed_foundational_rules[*]}")
+          else
+            failed_foundational_csv="none"
+          fi
+          echo "  failed_foundational : ${failed_foundational_csv}"
           if [[ -n "${early_exit_reason}" ]]; then
             echo "  early-exit          : ${early_exit_reason}"
           fi
