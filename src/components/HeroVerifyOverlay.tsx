@@ -29,6 +29,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { HERO_COPY_VERSION } from "@/content/hero-copy";
 import { HERO_COPY_SPEC, type HeroSpecKey } from "@/content/hero-copy.spec";
+import {
+  validateReportV3,
+  formatIssues,
+  type ValidationIssue,
+} from "@/lib/hero-verify-schema";
 
 type FieldStatus = "match" | "loose" | "mismatch" | "missing";
 
@@ -283,6 +288,13 @@ export function HeroVerifyOverlay() {
     at: number;
     divergences: { key: string; reason: string }[];
   } | null>(null);
+  // Most recent schema-validation result for the export payload.
+  // `null` until an export is attempted; surfaced in the legend.
+  const [schemaCheck, setSchemaCheck] = useState<
+    | { ok: true; at: number; format: "JSON" | "CSV" }
+    | { ok: false; at: number; format: "JSON" | "CSV"; issues: ValidationIssue[] }
+    | null
+  >(null);
 
   // Activate only when ?verify=hero is present.
   useEffect(() => {
@@ -551,6 +563,39 @@ export function HeroVerifyOverlay() {
     },
   });
 
+  /**
+   * Validate the assembled payload against `hero-verify-report/v3`
+   * BEFORE we trigger any download. The CSV path also validates because
+   * its rows are derived from this same in-memory shape.
+   * Returns `true` if valid, or if the user explicitly confirms an
+   * override; `false` to abort.
+   */
+  const validateBeforeDownload = (
+    payload: unknown,
+    format: "JSON" | "CSV",
+  ): boolean => {
+    const result = validateReportV3(payload);
+    if (result.ok) {
+      // eslint-disable-next-line no-console
+      console.info(
+        `[hero-verify] schema-check OK — payload conforms to hero-verify-report/v3 (${format})`,
+      );
+      setSchemaCheck({ ok: true, at: Date.now(), format });
+      return true;
+    }
+    // eslint-disable-next-line no-console
+    console.warn(
+      `[hero-verify] schema-check FAILED for ${format} — payload does not conform to hero-verify-report/v3`,
+      result.issues,
+    );
+    setSchemaCheck({ ok: false, at: Date.now(), format, issues: result.issues });
+    if (typeof window === "undefined") return false;
+    return window.confirm(
+      `Schema check FAILED for ${format} (hero-verify-report/v3):\n\n` +
+        formatIssues(result.issues).slice(0, 600) +
+        "\n\nDownload anyway?",
+    );
+  };
 
   const handleExportJson = () => {
     if (typeof window === "undefined") return;
@@ -601,6 +646,7 @@ export function HeroVerifyOverlay() {
         };
       }),
     };
+    if (!validateBeforeDownload(payload, "JSON")) return;
     const blob = new Blob([JSON.stringify(payload, null, 2)], {
       type: "application/json",
     });
@@ -632,6 +678,46 @@ export function HeroVerifyOverlay() {
     }
     const audit = buildAuditMeta(selfCheckResult, confirmedOverride);
     const diffByKey = new Map(fieldDiffs.map((d) => [d.key, d.segments]));
+
+    // Build the same v3 payload shape the JSON exporter uses, so we can
+    // validate the CSV against the same schema before serialization.
+    const payload = {
+      schema: "hero-verify-report/v3" as const,
+      generatedAt: new Date().toISOString(),
+      url: window.location.href,
+      pathname: window.location.pathname,
+      heroCopyVersion: HERO_COPY_VERSION,
+      viewport: {
+        width: window.innerWidth,
+        height: window.innerHeight,
+        devicePixelRatio: window.devicePixelRatio,
+      },
+      ok:
+        summary.mismatch === 0 &&
+        summary.missing === 0 &&
+        summary.loose === 0,
+      summary,
+      audit,
+      fields: reports.map((r) => {
+        const segments = diffByKey.get(r.key) ?? null;
+        return {
+          key: r.key,
+          status: r.status,
+          expected: r.expected,
+          actual: r.actual,
+          diff:
+            r.status === "match" || segments === null
+              ? []
+              : segments.map((s) => ({ type: s.type, text: s.text })),
+          diffInline:
+            r.status === "match" || segments === null
+              ? ""
+              : diffToInline(segments),
+        };
+      }),
+    };
+    if (!validateBeforeDownload(payload, "CSV")) return;
+
     const header = [
       "key",
       "status",
@@ -987,6 +1073,47 @@ export function HeroVerifyOverlay() {
                 ))}
                 {selfCheck.divergences.length > 4 && (
                   <li>+{selfCheck.divergences.length - 4} more (see console)</li>
+                )}
+              </ul>
+            )}
+          </div>
+        )}
+        {schemaCheck && (
+          <div
+            style={{
+              marginTop: 8,
+              padding: "6px 8px",
+              borderRadius: 6,
+              fontSize: 11,
+              lineHeight: 1.45,
+              background: schemaCheck.ok
+                ? "rgba(34,197,94,0.12)"
+                : "rgba(239,68,68,0.16)",
+              border: `1px solid ${
+                schemaCheck.ok ? "rgba(34,197,94,0.45)" : "rgba(239,68,68,0.55)"
+              }`,
+              color: schemaCheck.ok
+                ? "rgb(187, 247, 208)"
+                : "rgb(254, 202, 202)",
+            }}
+          >
+            <strong style={{ letterSpacing: "0.04em" }}>
+              {schemaCheck.ok
+                ? `✓ Schema OK (${schemaCheck.format})`
+                : `✕ Schema FAILED (${schemaCheck.format})`}
+            </strong>
+            <span style={{ opacity: 0.75, marginLeft: 6 }}>
+              hero-verify-report/v3 · {new Date(schemaCheck.at).toLocaleTimeString()}
+            </span>
+            {!schemaCheck.ok && schemaCheck.issues.length > 0 && (
+              <ul style={{ margin: "4px 0 0", paddingLeft: 16 }}>
+                {schemaCheck.issues.slice(0, 4).map((i, idx) => (
+                  <li key={idx}>
+                    <strong>{i.path}</strong>: {i.message}
+                  </li>
+                ))}
+                {schemaCheck.issues.length > 4 && (
+                  <li>+{schemaCheck.issues.length - 4} more (see console)</li>
                 )}
               </ul>
             )}
