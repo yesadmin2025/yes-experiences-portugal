@@ -198,7 +198,7 @@ export const Route = createFileRoute("/api/verify-hero")({
             checkedAt: new Date().toISOString(),
           },
           {
-            status: ok ? 200 : 409,
+            status: ok ? 200 : multiFailureStatus,
             headers: { "cache-control": "no-store" },
           },
         );
