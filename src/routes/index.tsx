@@ -885,6 +885,9 @@ function HomePage() {
               );
             })}
           </ul>
+
+          <RouteValidationStrip />
+
         </div>
       </section>
 
