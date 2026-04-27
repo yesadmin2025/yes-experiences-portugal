@@ -25,6 +25,11 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      qa_report_retention_days:
+        description: "Retention (days) for hero-copy QA JSON reports. GitHub max is 90."
+        required: false
+        default: "14"
 
 # Cancel in-flight runs for the same PR when new commits are pushed.
 concurrency:
@@ -119,3 +124,60 @@ jobs:
           name: hero-copy-playwright-report
           path: playwright-report/
           retention-days: 14
+
+  qa-report:
+    name: hero-copy-qa — preview/prod drift JSON report
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # Independent of unit/e2e: the source-level lock can pass while a
+    # deployed environment still drifts (cached HTML, stale build, CDN
+    # purge lag), so this job runs in parallel and produces a CI-grade
+    # JSON artifact regardless of the byte-exact lock outcome.
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Pin emitter schema (offline)
+        # Air-gapped sanity check: --report-json-schema makes no network
+        # calls, prints the validator schema, and exits 0. We assert the
+        # schema name BEFORE running the network preflight so a bumped
+        # contract fails this job loudly even if production is down.
+        run: |
+          SCHEMA="$(node scripts/hero-copy-qa.mjs --report-json-schema | jq -r .schema)"
+          echo "Emitter schema: $SCHEMA"
+          test "$SCHEMA" = "hero-copy-qa@1"
+
+      - name: Run hero-copy QA (strict, JSON to file)
+        # --report-json-strict turns any silent emitter divergence into
+        # EXIT.RUNTIME_ERROR (3) so a malformed report can never be
+        # uploaded as if it were valid. The JSON file is uploaded below
+        # regardless of exit code via `if: always()`.
+        run: |
+          mkdir -p qa-reports
+          node scripts/hero-copy-qa.mjs \
+            --report-json=qa-reports/hero-copy-qa.json \
+            --report-json-strict
+        env:
+          CI: "true"
+
+      - name: Upload hero-copy QA JSON report
+        # Always upload — drift, fetch failures, and runtime errors are
+        # exactly the cases where the JSON is most useful for triage.
+        # Retention is configurable from `workflow_dispatch` (default 14
+        # days); for pull_request / push runs GitHub falls back to the
+        # repo's default retention if the input is empty.
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hero-copy-qa-report
+          path: qa-reports/hero-copy-qa.json
+          retention-days: ${{ inputs.qa_report_retention_days || '14' }}
+          if-no-files-found: warn
