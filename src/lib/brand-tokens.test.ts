@@ -99,26 +99,41 @@ describe("Brand lock — Logo component", () => {
   }
 
   it("Logo.tsx exposes EXACTLY the locked theme keys (no more, no less)", () => {
-    // Find the LogoTheme union and assert it's a verbatim list of the
-    // locked themes. Prevents silently adding a "gold-on-ivory"
-    // variant without a brand decision.
-    const unionMatch = logoSrc.match(/type\s+LogoTheme\s*=\s*([^;]+);/);
-    if (!unionMatch) {
+    // Logo.tsx delegates its theme union to `BrandLogoTheme` (the
+    // single source of truth in brand-tokens.ts). What we lock here is
+    // that the local `SOURCES` map has a row for every locked theme
+    // and no extra rows — so a brand decision to add/remove a variant
+    // can only happen by editing brand-tokens.ts AND Logo.tsx
+    // together.
+    const sourcesMatch = logoSrc.match(
+      /SOURCES[\s\S]*?=\s*{([\s\S]*?)};/,
+    );
+    if (!sourcesMatch) {
       throw new Error(
-        "Logo.tsx must declare `type LogoTheme = …;` so the brand lock " +
-          "can verify the supported variants.",
+        "Logo.tsx must declare a `SOURCES` map keyed by BrandLogoTheme " +
+          "so the brand lock can verify the supported variants.",
       );
     }
-    const declared = unionMatch[1]
-      .split("|")
-      .map((s) => s.trim().replace(/^["']|["']$/g, ""))
-      .filter(Boolean)
+    const declared = Array.from(
+      sourcesMatch[1].matchAll(/["']([^"']+)["']\s*:/g),
+    )
+      .map((m) => m[1])
       .sort();
     const locked = (Object.keys(BRAND_LOGO_VARIANTS) as BrandLogoTheme[])
       .slice()
       .sort();
     expect(declared).toEqual(locked);
   });
+
+  it("Logo.tsx routes its theme prop through the runtime guard", () => {
+    // Hard requirement: Logo MUST call `assertBrandLogoTheme(...)` so
+    // any value that escapes the type system is caught at render time.
+    expect(
+      /assertBrandLogoTheme\s*\(/.test(logoSrc),
+      "Logo.tsx must call `assertBrandLogoTheme(...)` on its theme prop",
+    ).toBe(true);
+  });
+});
 });
 
 /* ---------------------------------------------------------------- */
