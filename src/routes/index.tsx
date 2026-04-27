@@ -681,12 +681,12 @@ function HomePage() {
       <section className="py-24 md:py-40 bg-[color:var(--sand)]">
         <div className="container-x">
           <div className="reveal text-center max-w-2xl mx-auto mb-14 md:mb-20">
-            <span className="eyebrow">The experiences</span>
+            <span className="eyebrow">Starting points</span>
             <h2 className="serif text-[2.25rem] md:text-5xl mt-5 leading-[1.08]">
-              Three ways <span className="italic">to travel Portugal</span>
+              Inspiration, <span className="italic">not fixed itineraries.</span>
             </h2>
             <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
-              All private. All tailored. All hosted by a local team that knows where to take you.
+              Experience them as they are — or shape them entirely around you. Every starting point is yours to redesign.
             </p>
           </div>
 
