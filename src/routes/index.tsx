@@ -319,7 +319,7 @@ function HomePage() {
                 Mobile vertical rhythm: 48px from CTAs so it reads as a
                 clear, separate reassurance line, not glued to the
                 buttons. Slightly looser leading for calm readability. */}
-            <div className="mt-12 md:mt-8 max-w-sm sm:max-w-xl opacity-0 animate-[heroFade_1.4s_ease-out_1.5s_forwards]">
+            <div className="mt-10 md:mt-8 max-w-sm sm:max-w-xl opacity-0 animate-[heroFade_1.4s_ease-out_1.5s_forwards]">
               <p
                 data-hero-field="microcopy"
                 className="text-[13px] md:text-[14px] text-[color:var(--ivory)]/95 leading-[1.8] md:leading-[1.75] font-light tracking-[0.01em] text-left"
@@ -329,20 +329,27 @@ function HomePage() {
             </div>
 
             {/* Brand line — final centered editorial signature.
-                Mobile vertical rhythm: 64px from microcopy so it lands
-                as an unmistakable closing statement rather than a
-                continuation of the paragraph above. Sits inside the
-                same max-w-sm rail on mobile so the centering is
-                anchored to the hero column, not the viewport. */}
-            <div className="mt-16 md:mt-16 flex justify-center max-w-sm sm:max-w-none opacity-0 animate-[heroFade_1.4s_ease-out_1.75s_forwards]">
-              <p
+                Split intentionally onto two lines (clause / verdict) so it
+                reads as a brand sign-off, not a sentence continuation.
+                Decorative gold rules flank the two-line block, vertically
+                centered to keep the composition balanced. */}
+            <div className="mt-14 md:mt-16 mb-4 md:mb-2 flex justify-center opacity-0 animate-[heroFade_1.4s_ease-out_1.75s_forwards]">
+              <div
                 data-hero-field="brandLine"
-                className="text-[10.5px] uppercase tracking-[0.32em] text-[color:var(--gold-soft)] inline-flex items-center gap-3 text-center"
+                className="inline-flex items-center gap-4 text-[color:var(--gold-soft)]"
               >
-                <span className="h-px w-6 bg-[color:var(--gold)]" />
-                <span>{HERO_COPY.brandLine}</span>
-                <span className="h-px w-6 bg-[color:var(--gold)]" />
-              </p>
+                <span className="h-px w-6 md:w-8 bg-[color:var(--gold)] shrink-0" />
+                {/* Hidden full string for SEO / regression parity */}
+                <span className="sr-only">{HERO_COPY.brandLine}</span>
+                <span
+                  aria-hidden="true"
+                  className="flex flex-col items-center gap-1.5 text-[10.5px] md:text-[11px] uppercase tracking-[0.32em] leading-[1.4] text-center"
+                >
+                  <span>Whatever you have in mind,</span>
+                  <span className="text-[color:var(--gold)] tracking-[0.38em]">We say YES.</span>
+                </span>
+                <span className="h-px w-6 md:w-8 bg-[color:var(--gold)] shrink-0" />
+              </div>
             </div>
 
             {/* Hidden hero-copy probe.
