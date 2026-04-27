@@ -145,53 +145,53 @@ const pillars = [
 const startPaths = [
   {
     icon: BookOpen,
-    eyebrow: "Ready to confirm",
+    eyebrow: "Instant · Ready",
     title: "Signature Experiences",
-    line: "Start from a curated experience and confirm instantly.",
-    cta: "Explore signatures",
+    line: "Choose a curated experience and confirm it instantly.",
+    cta: "Explore & confirm",
     to: "/experiences",
     destination: "Signatures",
     expectedTo: "/experiences",
     ariaLabel:
-      "Explore Signature Experiences — opens the Signatures catalog page",
+      "Explore Signature Experiences — opens the Signatures catalog page, every experience confirms instantly",
     accent: "ivory" as const,
   },
   {
     icon: Wand2,
-    eyebrow: "Tailored",
+    eyebrow: "Instant · Tailored",
     title: "Tailor a Signature",
-    line: "Start from a signature and shape every detail your way.",
-    cta: "Start tailoring",
+    line: "Reshape any signature in real time and confirm instantly — no request, no waiting.",
+    cta: "Tailor & confirm",
     to: "/experiences",
     destination: "Tailoring",
     expectedTo: "/experiences",
     ariaLabel:
-      "Start Tailoring a Signature — opens the Signatures catalog where each experience can be tailored",
+      "Tailor a Signature — open the Signatures catalog, reshape every detail and confirm instantly",
     accent: "sand" as const,
   },
   {
     icon: Sparkles,
-    eyebrow: "From scratch",
+    eyebrow: "Instant · From scratch",
     title: "Design in the Studio",
-    line: "Create everything from a blank slate, in real time.",
-    cta: "Open the Studio",
+    line: "Build from a blank slate in real time and confirm the moment it feels right.",
+    cta: "Open & confirm",
     to: "/builder",
     destination: "Studio",
     expectedTo: "/builder",
-    ariaLabel: "Open the Studio — design your experience from scratch in real time",
+    ariaLabel: "Open the Studio — design your experience from scratch in real time and confirm instantly",
     accent: "teal" as const,
   },
   {
     icon: Gift,
-    eyebrow: "Occasions",
+    eyebrow: "Instant · Occasions",
     title: "Celebrations & Groups",
-    line: "Proposals, anniversaries, corporate and private groups.",
-    cta: "Start your occasion",
+    line: "Proposals, anniversaries, corporate and private groups — designed live, confirmed instantly.",
+    cta: "Design & confirm",
     to: "/proposals",
     destination: "Celebrations",
     expectedTo: "/proposals",
     ariaLabel:
-      "Start your Celebration or Group experience — opens the Proposals, Celebrations and Groups page",
+      "Design your Celebration or Group experience — opens the Proposals, Celebrations and Groups page, confirms instantly",
     accent: "charcoal" as const,
   },
 ];
@@ -760,8 +760,17 @@ function HomePage() {
             <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
               Start from a signature, tailor one to fit, design from scratch in the Studio, or shape a moment that matters.
             </p>
-            <p className="mt-3 text-[12.5px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)]">
-              Instant confirmation. No forms. No waiting.
+            <p className="mt-3 text-[12.5px] uppercase tracking-[0.22em] text-[color:var(--gold)]">
+              Instant confirmation across all experiences.
+            </p>
+            <p className="mt-3 text-[13.5px] italic font-light text-[color:var(--charcoal-soft)]">
+              Prefer guidance?{" "}
+              <Link
+                to="/contact"
+                className="underline decoration-[color:var(--gold)]/60 underline-offset-4 hover:text-[color:var(--teal)] transition-colors"
+              >
+                A local designer can shape it with you.
+              </Link>
             </p>
           </div>
 
@@ -969,10 +978,10 @@ function HomePage() {
               <span className="italic">Or tailor them, your way.</span>
             </h2>
             <p className="mt-3 text-[12px] uppercase tracking-[0.24em] text-[color:var(--gold)]">
-              Our signature experiences
+              Instant confirmation across all experiences.
             </p>
             <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
-              Three private experiences crafted by our locals — ready to confirm in seconds, or shaped entirely around you.
+              Three private experiences crafted by our locals — confirm them as they are, or reshape every detail. Either way, it's yours in seconds.
             </p>
           </div>
 
@@ -1000,14 +1009,14 @@ function HomePage() {
                       to="/experiences"
                       className="inline-flex items-center gap-2 text-[11.5px] uppercase tracking-[0.24em] font-semibold text-[color:var(--teal)] hover:text-[color:var(--teal-2)] transition-colors"
                     >
-                      Confirm it <ArrowRight size={12} />
+                      Confirm instantly <ArrowRight size={12} />
                     </Link>
                     <span className="h-3 w-px bg-[color:var(--border)]" aria-hidden="true" />
                     <Link
                       to="/builder"
                       className="inline-flex items-center gap-2 text-[11.5px] uppercase tracking-[0.24em] font-medium text-[color:var(--charcoal-soft)] hover:text-[color:var(--teal)] transition-colors"
                     >
-                      Tailor it <ArrowRight size={12} />
+                      Tailor & confirm <ArrowRight size={12} />
                     </Link>
                   </div>
                 </div>
@@ -1072,6 +1081,15 @@ function HomePage() {
               >
                 Open the Studio <ArrowRight size={15} />
               </Link>
+              <p className="mt-5 text-[13px] italic font-light text-[color:var(--ivory)]/75 max-w-md">
+                Prefer guidance?{" "}
+                <Link
+                  to="/contact"
+                  className="underline decoration-[color:var(--gold)]/60 underline-offset-4 hover:text-[color:var(--gold-soft)] transition-colors"
+                >
+                  A local designer can shape it with you.
+                </Link>
+              </p>
             </div>
 
             <div className="reveal lg:col-span-5">
@@ -1206,6 +1224,9 @@ function HomePage() {
             <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
               Start from an idea, tailor a signature, or design from scratch — every occasion, entirely your own.
             </p>
+            <p className="mt-3 text-[12px] uppercase tracking-[0.24em] text-[color:var(--gold)]">
+              Instant confirmation across all experiences.
+            </p>
           </div>
 
           <ul className="grid sm:grid-cols-3 gap-5 md:gap-6 list-none p-0 max-w-5xl mx-auto">
@@ -1244,7 +1265,7 @@ function HomePage() {
                     {o.line}
                   </p>
                   <span className="mt-7 inline-flex items-center gap-2 text-[11.5px] uppercase tracking-[0.24em] font-semibold text-[color:var(--teal)] group-hover:translate-x-1 transition-transform">
-                    Plan this occasion <ArrowRight size={12} />
+                    Design & confirm instantly <ArrowRight size={12} />
                   </span>
                 </Link>
               </li>
@@ -1374,8 +1395,10 @@ function HomePage() {
                 <span className="italic text-[color:var(--teal)]">Confirm it instantly.</span>
               </h2>
               <p className="mt-7 text-[17px] text-[color:var(--charcoal-soft)] leading-[1.75] max-w-lg">
-                Open the Studio and design your private journey in real time —
-                or speak with a local who'll shape it alongside you.
+                Choose a signature, tailor one, or design from scratch in the Studio — every path confirms instantly.
+              </p>
+              <p className="mt-3 text-[12px] uppercase tracking-[0.24em] text-[color:var(--gold)]">
+                Instant confirmation across all experiences.
               </p>
               <div className="mt-10 flex flex-wrap gap-4">
                 <Link
@@ -1392,6 +1415,15 @@ function HomePage() {
                   Explore Signature Experiences
                 </Link>
               </div>
+              <p className="mt-6 text-[13.5px] italic font-light text-[color:var(--charcoal-soft)]">
+                Prefer guidance?{" "}
+                <Link
+                  to="/contact"
+                  className="underline decoration-[color:var(--gold)]/60 underline-offset-4 hover:text-[color:var(--teal)] transition-colors"
+                >
+                  A local designer can shape it with you.
+                </Link>
+              </p>
 
               <div className="mt-11 flex flex-wrap gap-x-8 gap-y-3 text-[12px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)]">
                 <span className="inline-flex items-center gap-2">
