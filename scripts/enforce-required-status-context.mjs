@@ -291,11 +291,7 @@ async function main() {
   //   #add-status-check-contexts
   let after;
   try {
-    after = await gh(
-      "POST",
-      `repos/${REPO}/branches/${BRANCH}/protection/required_status_checks/contexts`,
-      { contexts: [expected] },
-    );
+    after = await gh("POST", writePath, writeBody);
   } catch (err) {
     fail(
       2,
