@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
+import { HERO_COPY_SPEC } from "@/content/hero-copy.spec";
 
 const PUBLISHED_URL = "https://dreamscape-builder-co.lovable.app";
 
