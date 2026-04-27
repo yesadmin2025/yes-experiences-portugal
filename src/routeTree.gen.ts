@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as ProposalsRouteImport } from './routes/proposals'
 import { Route as MultiDayRouteImport } from './routes/multi-day'
 import { Route as LocalStoriesRouteImport } from './routes/local-stories'
+import { Route as HeroVerifyRouteImport } from './routes/hero-verify'
 import { Route as ExperiencesRouteImport } from './routes/experiences'
 import { Route as DayToursRouteImport } from './routes/day-tours'
 import { Route as CorporateRouteImport } from './routes/corporate'
@@ -35,6 +36,11 @@ const MultiDayRoute = MultiDayRouteImport.update({
 const LocalStoriesRoute = LocalStoriesRouteImport.update({
   id: '/local-stories',
   path: '/local-stories',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HeroVerifyRoute = HeroVerifyRouteImport.update({
+  id: '/hero-verify',
+  path: '/hero-verify',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ExperiencesRoute = ExperiencesRouteImport.update({
@@ -92,6 +98,7 @@ export interface FileRoutesByFullPath {
   '/corporate': typeof CorporateRoute
   '/day-tours': typeof DayToursRoute
   '/experiences': typeof ExperiencesRoute
+  '/hero-verify': typeof HeroVerifyRoute
   '/local-stories': typeof LocalStoriesRoute
   '/multi-day': typeof MultiDayRoute
   '/proposals': typeof ProposalsRoute
@@ -106,6 +113,7 @@ export interface FileRoutesByTo {
   '/corporate': typeof CorporateRoute
   '/day-tours': typeof DayToursRoute
   '/experiences': typeof ExperiencesRoute
+  '/hero-verify': typeof HeroVerifyRoute
   '/local-stories': typeof LocalStoriesRoute
   '/multi-day': typeof MultiDayRoute
   '/proposals': typeof ProposalsRoute
@@ -121,6 +129,7 @@ export interface FileRoutesById {
   '/corporate': typeof CorporateRoute
   '/day-tours': typeof DayToursRoute
   '/experiences': typeof ExperiencesRoute
+  '/hero-verify': typeof HeroVerifyRoute
   '/local-stories': typeof LocalStoriesRoute
   '/multi-day': typeof MultiDayRoute
   '/proposals': typeof ProposalsRoute
@@ -137,6 +146,7 @@ export interface FileRouteTypes {
     | '/corporate'
     | '/day-tours'
     | '/experiences'
+    | '/hero-verify'
     | '/local-stories'
     | '/multi-day'
     | '/proposals'
@@ -151,6 +161,7 @@ export interface FileRouteTypes {
     | '/corporate'
     | '/day-tours'
     | '/experiences'
+    | '/hero-verify'
     | '/local-stories'
     | '/multi-day'
     | '/proposals'
@@ -165,6 +176,7 @@ export interface FileRouteTypes {
     | '/corporate'
     | '/day-tours'
     | '/experiences'
+    | '/hero-verify'
     | '/local-stories'
     | '/multi-day'
     | '/proposals'
@@ -180,6 +192,7 @@ export interface RootRouteChildren {
   CorporateRoute: typeof CorporateRoute
   DayToursRoute: typeof DayToursRoute
   ExperiencesRoute: typeof ExperiencesRoute
+  HeroVerifyRoute: typeof HeroVerifyRoute
   LocalStoriesRoute: typeof LocalStoriesRoute
   MultiDayRoute: typeof MultiDayRoute
   ProposalsRoute: typeof ProposalsRoute
@@ -207,6 +220,13 @@ declare module '@tanstack/react-router' {
       path: '/local-stories'
       fullPath: '/local-stories'
       preLoaderRoute: typeof LocalStoriesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hero-verify': {
+      id: '/hero-verify'
+      path: '/hero-verify'
+      fullPath: '/hero-verify'
+      preLoaderRoute: typeof HeroVerifyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/experiences': {
@@ -284,6 +304,7 @@ const rootRouteChildren: RootRouteChildren = {
   CorporateRoute: CorporateRoute,
   DayToursRoute: DayToursRoute,
   ExperiencesRoute: ExperiencesRoute,
+  HeroVerifyRoute: HeroVerifyRoute,
   LocalStoriesRoute: LocalStoriesRoute,
   MultiDayRoute: MultiDayRoute,
   ProposalsRoute: ProposalsRoute,
