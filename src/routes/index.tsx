@@ -760,8 +760,17 @@ function HomePage() {
             <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
               Start from a signature, tailor one to fit, design from scratch in the Studio, or shape a moment that matters.
             </p>
-            <p className="mt-3 text-[12.5px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)]">
-              Instant confirmation. No forms. No waiting.
+            <p className="mt-3 text-[12.5px] uppercase tracking-[0.22em] text-[color:var(--gold)]">
+              Instant confirmation across all experiences.
+            </p>
+            <p className="mt-3 text-[13.5px] italic font-light text-[color:var(--charcoal-soft)]">
+              Prefer guidance?{" "}
+              <Link
+                to="/contact"
+                className="underline decoration-[color:var(--gold)]/60 underline-offset-4 hover:text-[color:var(--teal)] transition-colors"
+              >
+                A local designer can shape it with you.
+              </Link>
             </p>
           </div>
 
