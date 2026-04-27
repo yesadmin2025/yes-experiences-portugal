@@ -148,6 +148,12 @@ export function HeroVerifyOverlay() {
   const [enabled, setEnabled] = useState(false);
   const [reports, setReports] = useState<FieldReport[]>([]);
   const [tick, setTick] = useState(0);
+  // Live mode: when on, a MutationObserver watches every [data-hero-field]
+  // node and re-runs verification on any text/subtree change. This keeps
+  // the overlay current as you edit hero copy (HMR replaces the rendered
+  // text in place). Default ON; togglable from the legend.
+  const [liveMode, setLiveMode] = useState(true);
+  const [lastUpdated, setLastUpdated] = useState<number | null>(null);
 
   // Activate only when ?verify=hero is present.
   useEffect(() => {
@@ -179,9 +185,36 @@ export function HeroVerifyOverlay() {
     };
   }, [enabled]);
 
+  // Live mode: observe DOM mutations on hero-field nodes and any added/
+  // removed nodes anywhere in the document body (HMR can swap whole
+  // subtrees). Debounced via requestAnimationFrame so a burst of HMR
+  // mutations triggers a single re-verify.
+  useEffect(() => {
+    if (!enabled || !liveMode) return;
+    if (typeof MutationObserver === "undefined") return;
+    let raf = 0;
+    const schedule = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => setTick((t) => t + 1));
+    };
+    const observer = new MutationObserver(schedule);
+    // Watch the whole body for added/removed nodes (HMR), and characterData
+    // + subtree so any text edit inside an existing hero-field node fires.
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+      characterData: true,
+    });
+    return () => {
+      cancelAnimationFrame(raf);
+      observer.disconnect();
+    };
+  }, [enabled, liveMode]);
+
   useEffect(() => {
     if (!enabled) return;
     setReports(computeReports());
+    setLastUpdated(Date.now());
   }, [enabled, tick]);
 
   const summary = useMemo(() => {
