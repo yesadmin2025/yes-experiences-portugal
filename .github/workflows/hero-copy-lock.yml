@@ -163,6 +163,11 @@ jobs:
         # Skipped for non-workflow_dispatch events (push / pull_request)
         # because the inputs context is unavailable there and the
         # defaults are hard-coded to safe values (14).
+        #
+        # All validation rules / constants / messages live in
+        # scripts/ci/retention-lib.sh — DO NOT inline them here. The
+        # post-precedence validator below sources the SAME library so
+        # the two steps cannot drift.
         if: ${{ github.event_name == 'workflow_dispatch' }}
         env:
           QA_REPORT_RETENTION: ${{ inputs.qa_report_retention_days }}
@@ -170,44 +175,22 @@ jobs:
           QA_META_RETENTION:   ${{ inputs.qa_meta_retention_days }}
         run: |
           set -e
-          MAX=90
+          # shellcheck source=scripts/ci/retention-lib.sh
+          source scripts/ci/retention-lib.sh
+
           FAILED=0
-
-          validate() {
-            local name="$1"
-            local value="$2"
-            if [ -z "$value" ]; then
-              echo "✓ $name: (empty — falling back to default chain)"
-              return 0
-            fi
-            # Must be a positive integer (no leading zeros beyond a bare
-            # '0' which is also rejected, no signs, no decimals, no
-            # whitespace).
-            if ! printf '%s' "$value" | grep -Eq '^[1-9][0-9]*$'; then
-              echo "::error title=Invalid retention input::$name='$value' is not a positive integer. Allowed: empty (use default) or an integer in 1..$MAX."
-              FAILED=1
-              return 0
-            fi
-            if [ "$value" -gt "$MAX" ]; then
-              echo "::error title=Retention exceeds GitHub maximum::$name='$value' exceeds GitHub's hard cap of $MAX days. Please re-run the workflow with $name <= $MAX."
-              FAILED=1
-              return 0
-            fi
-            echo "✓ $name: $value day(s)"
-          }
-
-          validate "qa_report_retention_days" "$QA_REPORT_RETENTION"
-          validate "qa_logs_retention_days"   "$QA_LOGS_RETENTION"
-          validate "qa_meta_retention_days"   "$QA_META_RETENTION"
+          retention_validate_input "qa_report_retention_days" "$QA_REPORT_RETENTION" || FAILED=1
+          retention_validate_input "qa_logs_retention_days"   "$QA_LOGS_RETENTION"   || FAILED=1
+          retention_validate_input "qa_meta_retention_days"   "$QA_META_RETENTION"   || FAILED=1
 
           if [ "$FAILED" -ne 0 ]; then
             echo ""
             echo "One or more retention-days inputs are invalid. See the ::error annotations above."
-            echo "GitHub allows 1..$MAX days for actions/upload-artifact@v4."
+            echo "GitHub allows 1..$RETENTION_MAX days for actions/upload-artifact@v4."
             exit 1
           fi
           echo ""
-          echo "All retention inputs valid (≤ $MAX days)."
+          echo "All retention inputs valid (≤ $RETENTION_MAX days)."
 
 
       - name: Setup Bun
