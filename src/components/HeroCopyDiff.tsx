@@ -904,6 +904,7 @@ export function HeroCopyDiff() {
                 // painted on the DOM so the visual disappears immediately.
                 clearPersistedOutlines();
                 clearRenderedOutlines();
+                recordAction("accepted", snap.version);
                 console.info(
                   "%c[hero-copy] baseline accepted via UI — outlines cleared",
                   "color:#10b981",
