@@ -4,7 +4,11 @@ import { join, relative, sep } from "node:path";
 import {
   BRAND_COLORS,
   BRAND_LOGO_VARIANTS,
+  BRAND_LOGO_THEMES,
   BRAND_HEX_EXEMPT_PATH_PREFIXES,
+  DEFAULT_BRAND_LOGO_THEME,
+  assertBrandLogoTheme,
+  isBrandLogoTheme,
   type BrandColorToken,
   type BrandLogoTheme,
 } from "@/lib/brand-tokens";
