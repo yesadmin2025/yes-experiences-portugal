@@ -53,33 +53,6 @@ export const Route = createFileRoute("/")({
   component: HomePage,
 });
 
-const types = [
-  {
-    title: "Private Day Experiences",
-    line: "A starting point for a single, unhurried day — take it as it is, or shape it entirely around you.",
-    img: catPrivate,
-    to: "/day-tours",
-  },
-  {
-    title: "Multi-Day Journeys",
-    line: "Several days woven into one story — coast to vineyard, city to village. Yours to follow, or to redesign.",
-    img: catMultiday,
-    to: "/multi-day",
-  },
-  {
-    title: "Corporate & Incentive",
-    line: "Refined private programs for teams who deserve more than a hotel ballroom.",
-    img: catCorporate,
-    to: "/corporate",
-  },
-  {
-    title: "Proposals & Celebrations",
-    line: "Quietly extraordinary moments — proposals, anniversaries, milestones to remember.",
-    img: catProposals,
-    to: "/proposals",
-  },
-];
-
 const signatures = [
   {
     title: "A Day in Hidden Douro",
