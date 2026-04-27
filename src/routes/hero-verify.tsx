@@ -161,6 +161,27 @@ function HeroVerifyPage() {
               ? "Run check on all pages"
               : "Run check now"}
         </button>
+
+        {result && (
+          <div className="flex flex-wrap gap-2 pt-2">
+            <button
+              onClick={downloadJson}
+              className="inline-flex items-center justify-center rounded-md border border-border bg-background px-3 py-1.5 text-xs font-medium hover:bg-accent"
+            >
+              Download JSON
+            </button>
+            <button
+              onClick={downloadCsv}
+              className="inline-flex items-center justify-center rounded-md border border-border bg-background px-3 py-1.5 text-xs font-medium hover:bg-accent"
+            >
+              Download CSV
+            </button>
+            <span className="self-center text-xs text-muted-foreground">
+              Use these in CI logs or to share results.
+            </span>
+          </div>
+        )}
+
         <p className="text-xs text-muted-foreground">
           Source version: <code>{HERO_COPY_VERSION}</code>
         </p>
