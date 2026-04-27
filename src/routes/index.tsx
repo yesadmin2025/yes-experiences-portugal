@@ -646,7 +646,7 @@ function HomePage() {
               Choose how <span className="italic">you want to start.</span>
             </h2>
             <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
-              Book ready-to-go, tailor an experience, build from scratch, or plan a moment that matters.
+              Start from a signature, tailor one to fit, design from scratch in the Studio, or shape a moment that matters.
             </p>
             <p className="mt-3 text-[12.5px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)]">
               Instant confirmation. No forms. No waiting.
