@@ -411,11 +411,34 @@ export function HeroVerifyOverlay() {
    * types, or segment text — we surface it visibly so you don't ship a
    * report that disagrees with what you can see on screen.
    *
-   * Returns true when everything matches; false otherwise (and writes a
-   * console.warn + a transient `divergences` state for the legend).
+   * Returns the structured result so callers can also embed it in the
+   * exported file as audit-log metadata.
    */
-  const runDiffSelfCheck = (): boolean => {
-    if (typeof document === "undefined") return true;
+  type SelfCheckDivergence = {
+    key: string;
+    reason: string;
+    live: DiffSegment[] | null;
+    exported: DiffSegment[] | null;
+  };
+  type SelfCheckResult = {
+    ok: boolean;
+    at: number;
+    checkedFields: number;
+    divergentFields: number;
+    divergences: SelfCheckDivergence[];
+  };
+
+  const runDiffSelfCheck = (): SelfCheckResult => {
+    if (typeof document === "undefined") {
+      const noop: SelfCheckResult = {
+        ok: true,
+        at: Date.now(),
+        checkedFields: 0,
+        divergentFields: 0,
+        divergences: [],
+      };
+      return noop;
+    }
     const liveReports = computeReports();
     const liveDiffs = new Map(
       liveReports.map((r) => {
@@ -425,13 +448,7 @@ export function HeroVerifyOverlay() {
     );
     const exportedDiffs = new Map(fieldDiffs.map((d) => [d.key, d.segments]));
 
-    type Divergence = {
-      key: string;
-      reason: string;
-      live: DiffSegment[] | null;
-      exported: DiffSegment[] | null;
-    };
-    const divergences: Divergence[] = [];
+    const divergences: SelfCheckDivergence[] = [];
 
     // Union of keys from both sides — catches missing entries on either.
     const allKeys = new Set<HeroSpecKey>([
@@ -475,23 +492,64 @@ export function HeroVerifyOverlay() {
       }
     }
 
-    if (divergences.length > 0) {
+    const result: SelfCheckResult = {
+      ok: divergences.length === 0,
+      at: Date.now(),
+      checkedFields: allKeys.size,
+      divergentFields: divergences.length,
+      divergences,
+    };
+
+    if (!result.ok) {
       // eslint-disable-next-line no-console
       console.warn(
         "[hero-verify] export self-check FAILED — on-screen diff and export diverge",
         divergences,
       );
-      setSelfCheck({ ok: false, at: Date.now(), divergences });
-      return false;
+    } else {
+      // eslint-disable-next-line no-console
+      console.info(
+        "[hero-verify] export self-check OK — on-screen diff matches export byte-for-byte",
+      );
     }
 
-    // eslint-disable-next-line no-console
-    console.info(
-      "[hero-verify] export self-check OK — on-screen diff matches export byte-for-byte",
-    );
-    setSelfCheck({ ok: true, at: Date.now(), divergences: [] });
-    return true;
+    setSelfCheck({
+      ok: result.ok,
+      at: result.at,
+      divergences: divergences.map(({ key, reason }) => ({ key, reason })),
+    });
+    return result;
   };
+
+  // Build the audit metadata block embedded in every export. Captures
+  // the full self-check result, whether the user confirmed an override
+  // when the check failed, and totals for quick dashboard scanning.
+  const buildAuditMeta = (
+    selfCheckResult: SelfCheckResult,
+    confirmedOverride: boolean,
+  ) => ({
+    selfCheck: {
+      ok: selfCheckResult.ok,
+      ranAt: new Date(selfCheckResult.at).toISOString(),
+      checkedFields: selfCheckResult.checkedFields,
+      divergentFields: selfCheckResult.divergentFields,
+      // Outcome makes the audit trail unambiguous in CI logs:
+      //   passed     = self-check OK, exported normally
+      //   confirmed  = self-check FAILED, user clicked "Download anyway"
+      //   blocked    = self-check FAILED, user cancelled (no file produced)
+      outcome: selfCheckResult.ok
+        ? ("passed" as const)
+        : confirmedOverride
+        ? ("confirmed" as const)
+        : ("blocked" as const),
+      divergences: selfCheckResult.divergences.map((d) => ({
+        key: d.key,
+        reason: d.reason,
+        live: d.live,
+        exported: d.exported,
+      })),
+    },
+  });
 
 
   const handleExportJson = () => {
