@@ -1224,6 +1224,9 @@ function HomePage() {
             <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
               Start from an idea, tailor a signature, or design from scratch — every occasion, entirely your own.
             </p>
+            <p className="mt-3 text-[12px] uppercase tracking-[0.24em] text-[color:var(--gold)]">
+              Instant confirmation across all experiences.
+            </p>
           </div>
 
           <ul className="grid sm:grid-cols-3 gap-5 md:gap-6 list-none p-0 max-w-5xl mx-auto">
