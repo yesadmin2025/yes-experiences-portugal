@@ -514,8 +514,33 @@ jobs:
         # all). This step makes that consequence loud and unambiguous
         # in the job log — otherwise a reviewer scanning the run would
         # see "step skipped" three times with no obvious reason.
+        #
+        # The annotation surfaces the EXACT resolved effective
+        # retention numbers (post-precedence) for each of the three
+        # artifacts, so a reviewer can immediately see which value(s)
+        # tripped the validator without having to scroll back to the
+        # `retention` step's `🔎 retention.outputs:` line. When the
+        # resolver itself crashed before emitting outputs (e.g. a non-
+        # numeric value made it through), the corresponding output is
+        # the empty string — render it as `<unresolved>` so the
+        # annotation stays unambiguous instead of showing a bare `=`.
         if: always() && steps.retention.outcome != 'success'
+        env:
+          REPORT_EFF: ${{ steps.retention.outputs.report }}
+          LOGS_EFF:   ${{ steps.retention.outputs.logs }}
+          META_EFF:   ${{ steps.retention.outputs.meta }}
+          RETENTION_OUTCOME: ${{ steps.retention.outcome }}
         run: |
-          echo "::warning title=Artifact uploads skipped::Retention validation did not succeed (outcome=${{ steps.retention.outcome }}); hero-copy-qa-report, hero-copy-qa-logs, and hero-copy-qa-meta were NOT uploaded for this run. Fix the retention input(s) and re-run the workflow."
+          fmt() { if [ -z "$1" ]; then printf '<unresolved>'; else printf '%s day(s)' "$1"; fi; }
+          REPORT_FMT="$(fmt "$REPORT_EFF")"
+          LOGS_FMT="$(fmt "$LOGS_EFF")"
+          META_FMT="$(fmt "$META_EFF")"
+          echo "::warning title=Artifact uploads skipped (retention outcome=${RETENTION_OUTCOME})::Retention validation did not succeed; hero-copy-qa-report, hero-copy-qa-logs, and hero-copy-qa-meta were NOT uploaded for this run. Resolved effective retentions at skip time — hero-copy-qa-report=${REPORT_FMT}, hero-copy-qa-logs=${LOGS_FMT}, hero-copy-qa-meta=${META_FMT} (GitHub max=90, workflow default=14). Fix the retention input(s) and re-run the workflow."
+          echo ""
+          echo "Resolved effective retentions at skip time:"
+          echo "  hero-copy-qa-report : ${REPORT_FMT}"
+          echo "  hero-copy-qa-logs   : ${LOGS_FMT}"
+          echo "  hero-copy-qa-meta   : ${META_FMT}"
+          echo "  (GitHub max=90, workflow default=14)"
           exit 1
 
