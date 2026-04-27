@@ -82,6 +82,24 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
+    # Surface the URL-validation outputs at the JOB level so downstream
+    # jobs can branch on them via `needs.enforce.outputs.*` without
+    # re-running validation or scraping the log. These are written by
+    # the `comment` step BEFORE it exits non-zero, so they are
+    # populated even on validation failure.
+    #
+    # IMPORTANT: downstream jobs that consume these MUST set
+    # `if: always() && needs.enforce.result != 'skipped'` (or a more
+    # specific condition) — the comment step exits with code 11/12/13
+    # on URL-validation failure, which marks this job as `failure`,
+    # and the default `needs:` semantics would otherwise skip them.
+    outputs:
+      url_validation_status:            ${{ steps.comment.outputs.url_validation_status }}
+      url_validation_exit_code:         ${{ steps.comment.outputs.url_validation_exit_code }}
+      url_validation_phase1_failed:     ${{ steps.comment.outputs.url_validation_phase1_failed }}
+      url_validation_phase2_failed:     ${{ steps.comment.outputs.url_validation_phase2_failed }}
+      url_validation_phase1_rules:      ${{ steps.comment.outputs.url_validation_phase1_rules }}
+      url_validation_phase2_error_count: ${{ steps.comment.outputs.url_validation_phase2_error_count }}
 
     steps:
       - name: Checkout
