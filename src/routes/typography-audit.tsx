@@ -614,6 +614,33 @@ function SettingsPanel({
           <span className="rounded-full bg-zinc-100 px-2.5 py-1 text-zinc-700">≤{(totalBudget / 1000).toFixed(1)}s/route worst-case</span>
           <button
             type="button"
+            onClick={() => {
+              const payload = {
+                $schema: "yes:typography-audit:settings",
+                version: 1,
+                exportedAt: new Date().toISOString(),
+                settings,
+              };
+              const blob = new Blob([JSON.stringify(payload, null, 2)], {
+                type: "application/json",
+              });
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement("a");
+              const stamp = new Date().toISOString().replace(/[:.]/g, "-");
+              a.href = url;
+              a.download = `typography-audit-settings-${stamp}.json`;
+              document.body.appendChild(a);
+              a.click();
+              a.remove();
+              URL.revokeObjectURL(url);
+            }}
+            className="rounded-md border border-[color:var(--border)] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] hover:bg-zinc-50"
+            title="Download current reliability settings as JSON"
+          >
+            Export JSON
+          </button>
+          <button
+            type="button"
             onClick={onReset}
             disabled={disabled}
             className="rounded-md border border-[color:var(--border)] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] disabled:opacity-50"
