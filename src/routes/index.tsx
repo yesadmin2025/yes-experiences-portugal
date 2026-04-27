@@ -131,21 +131,21 @@ const editorial = [
 const howItWorks = [
   {
     step: "01",
-    icon: Sparkles,
-    title: "Start with a spark",
-    line: "A place you've dreamed of. A moment to mark. An idea, half-formed. Begin from anywhere — we'll take it from there.",
+    icon: BookOpen,
+    title: "Pick a starting point",
+    line: "A signature experience, an idea, or a blank canvas in the Studio. Begin wherever feels right.",
   },
   {
     step: "02",
     icon: PenLine,
-    title: "Shape it, your way",
-    line: "Choose the pace, the stops, the people you meet. Adjust in real time, with local knowledge guiding every choice.",
+    title: "Shape it in real time",
+    line: "Adjust the pace, the stops, the people you meet — guided by local knowledge as you go.",
   },
   {
     step: "03",
     icon: Zap,
-    title: "Confirm. Instantly.",
-    line: "No forms. No waiting. No back-and-forth. The moment it feels right, it's yours — confirmed on the spot.",
+    title: "Confirm instantly",
+    line: "No forms. No waiting. No back-and-forth. The moment it feels right, it's yours.",
   },
 ];
 
