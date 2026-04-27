@@ -29,6 +29,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { HERO_COPY_VERSION } from "@/content/hero-copy";
 import { HERO_COPY_SPEC, type HeroSpecKey } from "@/content/hero-copy.spec";
+import {
+  validateReportV3,
+  formatIssues,
+  type ValidationIssue,
+} from "@/lib/hero-verify-schema";
 
 type FieldStatus = "match" | "loose" | "mismatch" | "missing";
 
