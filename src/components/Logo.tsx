@@ -1,28 +1,45 @@
-import logoTeal from "@/assets/yes-logo-approved.png";
+import logoTealAsset from "@/assets/yes-logo-approved.png";
+import logoGoldAsset from "@/assets/yes-logo-approved-gold-silk.png";
+
+type LogoTheme = "teal-on-ivory" | "gold-on-charcoal";
+
+const SOURCES: Record<LogoTheme, string> = {
+  "teal-on-ivory": logoTealAsset,
+  "gold-on-charcoal": logoGoldAsset,
+};
 
 /**
- * Logo — shared brand wordmark used by Navbar and Footer.
- * Kept as a thin wrapper so future swaps (SVG variant, monochrome, etc.)
- * happen in one place. Sizing is controlled by the parent via className.
+ * Logo — shared brand wordmark.
+ *
+ * Theme drives both the artwork and the matching .logo-mark--* utility
+ * class, so consumers can never accidentally pair (e.g.) the teal artwork
+ * with the gold-on-charcoal filter recipe. Sizing is controlled by the
+ * parent via `className`.
  */
 export function Logo({
+  theme = "teal-on-ivory",
   className = "block h-[60px] md:h-[64px] lg:h-[68px] w-auto select-none",
   alt = "YES experiences PORTUGAL",
+  loading,
+  fetchPriority,
 }: {
+  theme?: LogoTheme;
   className?: string;
   alt?: string;
+  loading?: "eager" | "lazy";
+  fetchPriority?: "high" | "low" | "auto";
 }) {
   return (
     <img
-      src={logoTeal}
+      src={SOURCES[theme]}
       width={909}
       height={579}
       alt={alt}
-      className={className}
+      className={`logo-mark logo-mark--${theme} ${className}`}
       draggable={false}
-      fetchPriority="high"
+      loading={loading}
+      fetchPriority={fetchPriority}
       decoding="async"
-      style={{ imageRendering: "auto", filter: "drop-shadow(0 1px 0 rgba(255,255,255,0.4))" }}
     />
   );
 }
