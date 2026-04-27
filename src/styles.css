@@ -189,6 +189,22 @@
   --cta-breathe-easing: ease-in-out;
   --cta-breathe-peak: 0.55;
   --cta-breathe-stagger: -3s;
+
+  /* ─────────────────────────────────────────────────────────────
+     LOGO CRISPNESS TOKENS
+     Two named theme tokens drive the .logo-mark--* utility classes.
+     Override at any scope (e.g. a campaign hero with a sand surface
+     could redefine --logo-filter-teal-on-ivory locally) without
+     touching component code.
+
+       --logo-filter-teal-on-ivory   Navbar (teal artwork on white)
+       --logo-filter-gold-on-charcoal Footer (gold artwork on charcoal-deep)
+
+     Both stay below ~2.0 ΔE so the approved brand hex is preserved.
+     No drop-shadow / no blur — halo spill is eliminated by construction.
+     ───────────────────────────────────────────────────────────── */
+  --logo-filter-teal-on-ivory: contrast(1.02) saturate(1);
+  --logo-filter-gold-on-charcoal: contrast(1.03) saturate(1);
 }
 
 .dark {
