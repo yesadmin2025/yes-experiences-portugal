@@ -1,25 +1,16 @@
 import { test, expect, type Page } from "@playwright/test";
+import { HERO_COPY } from "../src/content/hero-copy";
 
 /**
  * Hero copy lock — asserts every approved hero string is present
  * verbatim. Any drift in tone, punctuation or wording fails CI.
  *
- * If the brand copy changes intentionally, update HERO_COPY below in
- * the same PR as the route change. Treat this file as the single
- * source of truth for approved hero copy.
+ * Strings are imported from `src/content/hero-copy.ts`, the single
+ * source of truth shared with the home route. Edit copy there only —
+ * never duplicate it in this file.
  */
 
-export const HERO_COPY = {
-  eyebrow: "Private · By locals · Any occasion",
-  headlineLine1: "Portugal is the stage.",
-  headlineLine2: "You write the story.",
-  subheadline:
-    "Designed by you, guided by local knowledge — from a private day to something worth celebrating.",
-  primaryCta: "Create Your Story",
-  secondaryCta: "Explore Signature Experiences",
-  microcopy: "Instant confirmation. Personalized by you. No waiting, no forms.",
-  brandLine: "Whatever you have in mind, we say YES.",
-} as const;
+export { HERO_COPY };
 
 async function gotoHero(page: Page) {
   await page.goto("/");
