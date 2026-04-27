@@ -1,5 +1,15 @@
 import { useRef, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import {
+  HASH_ALIASES,
+  performJump,
+  resolveTarget,
+  type CheckItem,
+} from "@/lib/preview-check-jump";
+
+// Re-export for backward compatibility / tests that import from the route.
+export { HASH_ALIASES, resolveTarget, performJump };
+export type { CheckItem };
 
 export const Route = createFileRoute("/preview-check")({
   head: () => ({
