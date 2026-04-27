@@ -21,6 +21,64 @@ import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
  */
 
 const STORAGE_KEY = "hero-copy:baseline";
+const LAST_ACTION_KEY = "hero-copy:last-action";
+
+type BaselineAction = "accepted" | "reset";
+
+type LastBaselineAction = {
+  action: BaselineAction;
+  at: string; // ISO timestamp
+  version: string | null; // baseline version captured (accept) or cleared (reset)
+};
+
+function readLastAction(): LastBaselineAction | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = localStorage.getItem(LAST_ACTION_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (
+      parsed &&
+      typeof parsed === "object" &&
+      (parsed.action === "accepted" || parsed.action === "reset") &&
+      typeof parsed.at === "string"
+    ) {
+      return parsed as LastBaselineAction;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+function writeLastAction(action: BaselineAction, version: string | null) {
+  if (typeof window === "undefined") return;
+  try {
+    const payload: LastBaselineAction = {
+      action,
+      at: new Date().toISOString(),
+      version,
+    };
+    localStorage.setItem(LAST_ACTION_KEY, JSON.stringify(payload));
+  } catch {
+    /* ignore */
+  }
+}
+
+function formatRelativeTime(iso: string): string {
+  const then = new Date(iso).getTime();
+  if (Number.isNaN(then)) return iso;
+  const delta = Math.max(0, Date.now() - then);
+  const s = Math.floor(delta / 1000);
+  if (s < 5) return "just now";
+  if (s < 60) return `${s}s ago`;
+  const m = Math.floor(s / 60);
+  if (m < 60) return `${m}m ago`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `${h}h ago`;
+  const d = Math.floor(h / 24);
+  return `${d}d ago`;
+}
 
 type Snapshot = {
   version: string;
