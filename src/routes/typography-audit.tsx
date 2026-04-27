@@ -574,3 +574,171 @@ function StatusBadge({ status }: { status: RouteResult["status"] }) {
   } as const;
   return <span className={`rounded-full px-2.5 py-1 text-[10px] uppercase tracking-[0.14em] ${map[status]}`}>{status}</span>;
 }
+
+// ─── Settings panel ──────────────────────────────────────────────
+type StageKey = "iframeAttempt1" | "iframeAttempt2" | "ssrFallback";
+const STAGE_META: Array<{ key: StageKey; label: string; hint: string }> = [
+  { key: "iframeAttempt1", label: "Stage 1 · iframe (fast)",    hint: "First live render. Short timeout — fails fast on cold/slow routes so we can retry." },
+  { key: "iframeAttempt2", label: "Stage 2 · iframe (patient)", hint: "Second live render with a longer budget. Good for routes that legitimately take time to hydrate." },
+  { key: "ssrFallback",    label: "Stage 3 · SSR HTML",          hint: "Last resort. Fetches the SSR HTML and samples it via srcdoc — bypasses runtime crashes entirely." },
+];
+
+function SettingsPanel({
+  settings, onChange, onReset, disabled,
+}: {
+  settings: AuditSettings;
+  onChange: (next: AuditSettings) => void;
+  onReset: () => void;
+  disabled?: boolean;
+}) {
+  const updateStage = (key: StageKey, patch: Partial<StageSettings>) => {
+    onChange({ ...settings, [key]: { ...settings[key], ...patch } });
+  };
+  const enabledCount = STAGE_META.filter(({ key }) => settings[key].enabled).length;
+  const totalBudget = STAGE_META.reduce(
+    (sum, { key }) => sum + (settings[key].enabled ? settings[key].timeoutMs + settings[key].backoffMs : 0),
+    0,
+  );
+
+  return (
+    <div className="mt-6 rounded-xl border border-[color:var(--border)] bg-white/80 p-5 md:p-6">
+      <div className="flex flex-wrap items-baseline justify-between gap-3">
+        <div>
+          <h2 className="font-[var(--font-serif)] text-xl">Reliability tuning</h2>
+          <p className="mt-1 text-[12px] text-black/60">
+            Per-stage retry behaviour. Settings are saved to your browser and applied to the next audit run.
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center gap-3 text-[11px] uppercase tracking-[0.12em]">
+          <span className="rounded-full bg-zinc-100 px-2.5 py-1 text-zinc-700">{enabledCount}/3 stages on</span>
+          <span className="rounded-full bg-zinc-100 px-2.5 py-1 text-zinc-700">≤{(totalBudget / 1000).toFixed(1)}s/route worst-case</span>
+          <button
+            type="button"
+            onClick={onReset}
+            disabled={disabled}
+            className="rounded-md border border-[color:var(--border)] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] disabled:opacity-50"
+          >
+            Reset to defaults
+          </button>
+        </div>
+      </div>
+
+      <div className="mt-5 grid gap-4 md:grid-cols-3">
+        {STAGE_META.map(({ key, label, hint }) => {
+          const cfg = settings[key];
+          return (
+            <fieldset
+              key={key}
+              className={`rounded-lg border p-4 transition ${cfg.enabled ? "border-[color:var(--border)] bg-white" : "border-dashed border-zinc-300 bg-zinc-50 opacity-70"}`}
+            >
+              <legend className="px-1.5 text-[11px] font-semibold uppercase tracking-[0.12em]">{label}</legend>
+              <label className="mt-2 flex items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={cfg.enabled}
+                  onChange={(e) => updateStage(key, { enabled: e.target.checked })}
+                  disabled={disabled}
+                  className="h-4 w-4"
+                />
+                <span>Enabled</span>
+              </label>
+              <p className="mt-1 text-[11px] text-black/55">{hint}</p>
+
+              <NumField
+                label="Timeout"
+                suffix="ms"
+                value={cfg.timeoutMs}
+                onChange={(v) => updateStage(key, { timeoutMs: v })}
+                min={500}
+                max={60000}
+                step={500}
+                disabled={disabled || !cfg.enabled}
+              />
+              <NumField
+                label="Backoff before"
+                suffix="ms"
+                value={cfg.backoffMs}
+                onChange={(v) => updateStage(key, { backoffMs: v })}
+                min={0}
+                max={5000}
+                step={100}
+                disabled={disabled || !cfg.enabled}
+              />
+            </fieldset>
+          );
+        })}
+      </div>
+
+      <div className="mt-5 grid gap-4 md:grid-cols-2">
+        <NumField
+          label="Fonts.ready soft cap"
+          suffix="ms"
+          value={settings.fontsReadyCapMs}
+          onChange={(v) => onChange({ ...settings, fontsReadyCapMs: v })}
+          min={500}
+          max={10000}
+          step={250}
+          disabled={disabled}
+          hint="Don't wait longer than this for document.fonts.ready before sampling."
+        />
+        <NumField
+          label="Post-load settle"
+          suffix="ms"
+          value={settings.postLoadSettleMs}
+          onChange={(v) => onChange({ ...settings, postLoadSettleMs: v })}
+          min={0}
+          max={2000}
+          step={50}
+          disabled={disabled}
+          hint="Pause after the iframe loads so hydration / parallax hooks settle before reading styles."
+        />
+      </div>
+
+      {enabledCount === 0 && (
+        <p className="mt-4 rounded-md bg-rose-50 px-3 py-2 text-sm text-rose-800">
+          ⚠ All stages are disabled — every route will fail. Enable at least one stage.
+        </p>
+      )}
+    </div>
+  );
+}
+
+function NumField({
+  label, value, onChange, min, max, step, suffix, hint, disabled,
+}: {
+  label: string; value: number; onChange: (v: number) => void;
+  min: number; max: number; step: number; suffix?: string; hint?: string; disabled?: boolean;
+}) {
+  return (
+    <label className={`mt-3 block ${disabled ? "opacity-50" : ""}`}>
+      <span className="text-[11px] font-semibold uppercase tracking-[0.1em] text-black/70">{label}</span>
+      <span className="mt-1 flex items-center gap-2">
+        <input
+          type="range"
+          value={value}
+          min={min}
+          max={max}
+          step={step}
+          disabled={disabled}
+          onChange={(e) => onChange(Number(e.target.value))}
+          className="h-1.5 flex-1 accent-[color:var(--charcoal-deep)]"
+        />
+        <input
+          type="number"
+          value={value}
+          min={min}
+          max={max}
+          step={step}
+          disabled={disabled}
+          onChange={(e) => {
+            const n = Number(e.target.value);
+            if (Number.isFinite(n)) onChange(Math.max(min, Math.min(max, n)));
+          }}
+          className="w-20 rounded border border-zinc-300 px-2 py-1 text-right text-sm tabular-nums"
+        />
+        {suffix && <span className="text-[11px] text-black/60">{suffix}</span>}
+      </span>
+      {hint && <span className="mt-1 block text-[11px] text-black/55">{hint}</span>}
+    </label>
+  );
+}
