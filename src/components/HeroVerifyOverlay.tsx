@@ -746,7 +746,6 @@ export function HeroVerifyOverlay() {
     if (!tagOk) return;
     // Tag is good — also refresh the full schema-check status row so
     // the user can see the whole pipeline went green after the fix.
-    validateReportV3(payload);
     const result = validateReportV3(payload);
     if (result.ok) {
       setSchemaCheck({ ok: true, at: Date.now(), format });
