@@ -748,6 +748,48 @@ export function HeroVerifyOverlay() {
     );
   };
 
+  /**
+   * Keyboard shortcut: Ctrl+Shift+R (Cmd+Shift+R on macOS) re-runs the
+   * diff self-check from anywhere in the preview. We deliberately AVOID
+   * plain Ctrl+R because the browser owns that for page reload — using
+   * Shift as a modifier keeps the binding non-conflicting and matches
+   * the "↺ Re-run self-check" button label. Only listens while the
+   * overlay is enabled (i.e. ?verify=hero is active).
+   */
+  useEffect(() => {
+    if (!enabled) return;
+    if (typeof window === "undefined") return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      const isReKey = e.key === "R" || e.key === "r";
+      if (!isReKey) return;
+      if (!e.shiftKey) return;
+      if (!(e.ctrlKey || e.metaKey)) return;
+      // Don't hijack the binding while the user is typing in an input
+      // or contenteditable region — they may want native shortcuts.
+      const target = e.target as HTMLElement | null;
+      const tag = target?.tagName;
+      if (
+        target?.isContentEditable ||
+        tag === "INPUT" ||
+        tag === "TEXTAREA" ||
+        tag === "SELECT"
+      ) {
+        return;
+      }
+      e.preventDefault();
+      e.stopPropagation();
+      handleRerunSelfCheck();
+    };
+    window.addEventListener("keydown", onKeyDown, { capture: true });
+    return () => {
+      window.removeEventListener("keydown", onKeyDown, { capture: true });
+    };
+    // handleRerunSelfCheck closes over current state via runDiffSelfCheck,
+    // which itself reads the latest `reports`/`fieldDiffs` through closure
+    // each invocation; re-binding on every render is fine because the
+    // listener is cheap and removeEventListener is symmetrical.
+  });
+
   const handleRegeneratePayload = () => {
     if (typeof window === "undefined") return;
     const format: "JSON" | "CSV" = schemaTagCheck?.format ?? "JSON";
