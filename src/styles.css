@@ -205,6 +205,16 @@
      ───────────────────────────────────────────────────────────── */
   --logo-filter-teal-on-ivory: contrast(1.02) saturate(1);
   --logo-filter-gold-on-charcoal: contrast(1.03) saturate(1);
+
+  /* Optical-size compensation per theme.
+     The two source PNGs render at different perceived weights even at
+     identical pixel heights — the gold strokes "bloom" against the dark
+     charcoal surface (low-luminance contrast = chromatic spread), so the
+     gold mark reads ~5% heavier than the teal one. We counter by scaling
+     the gold variant down to ~95% so its stroke mass matches the teal
+     variant on the white header. The teal variant stays at 100%. */
+  --logo-scale-teal-on-ivory: 1;
+  --logo-scale-gold-on-charcoal: 0.95;
 }
 
 .dark {
