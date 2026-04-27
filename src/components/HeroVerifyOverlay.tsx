@@ -561,6 +561,14 @@ export function HeroVerifyOverlay() {
 
   const handleExportCsv = () => {
     if (typeof window === "undefined") return;
+    if (!runDiffSelfCheck()) {
+      const proceed = window.confirm(
+        "Export self-check FAILED: on-screen diff and CSV disagree.\n\n" +
+          "See console + the red row in the overlay for details.\n\n" +
+          "Download anyway?",
+      );
+      if (!proceed) return;
+    }
     const diffByKey = new Map(fieldDiffs.map((d) => [d.key, d.segments]));
     const header = [
       "key",
