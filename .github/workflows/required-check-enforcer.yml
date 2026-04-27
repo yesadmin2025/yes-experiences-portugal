@@ -295,10 +295,32 @@ jobs:
           # consolidated results block below must always print so the
           # operator sees the verdict, the inputs that failed, and a
           # clear "skipped" marker for the checks that never ran.
+          # Phase-2 derived components — populated only when phase 2
+          # actually runs. Defaults of "(skipped)" make it unambiguous in
+          # the consolidated log when phase 1 short-circuited the run.
+          normalized_server_url="(skipped)"
+          normalized_repo="(skipped)"
+          file_url_blob_path="(skipped)"
+          job_url_anchor="(skipped)"
+          runs_url_path="(skipped)"
+
           if (( ${#failed_foundational_rules[@]} > 0 )); then
             early_exit_reason="foundational input(s) malformed — skipped URL-shape checks"
           else
             # ── Phase 2: URL-shape checks ─────────────────────────────
+            # Normalize foundational values used to BUILD the phase-2
+            # regexes so the consolidated log shows the exact strings
+            # interpolated into each pattern (trailing slashes stripped
+            # from SERVER_URL, REPO surfaced verbatim). Also extract the
+            # path/anchor pieces from each URL so an operator can diff
+            # the derived parts against the inputs without re-parsing
+            # the full URL by eye.
+            normalized_server_url="${SERVER_URL%/}"
+            normalized_repo="${REPO}"
+            file_url_blob_path="${WORKFLOW_FILE_URL#${normalized_server_url}/${normalized_repo}/}"
+            job_url_anchor="${WORKFLOW_JOB_URL##*#}"
+            runs_url_path="${WORKFLOW_RUNS_URL#${normalized_server_url}/${normalized_repo}/}"
+
             # 4. Workflow file URL — must embed REPO and HEAD_SHA exactly.
             file_pattern="^${SERVER_URL}/${REPO}/blob/[0-9a-f]{40}/.+\.ya?ml$"
             if ! [[ "${WORKFLOW_FILE_URL}" =~ $file_pattern ]]; then
