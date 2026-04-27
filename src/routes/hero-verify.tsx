@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
 import {
   buildFilename,
@@ -13,6 +13,13 @@ import {
   type SpecDrift,
   type VerifyResponse,
 } from "@/lib/hero-verify-download";
+import {
+  clearHistory,
+  loadHistory,
+  saveRun,
+  type HistoryEntry,
+} from "@/lib/hero-verify-history";
+import { diffReports, type FieldChange } from "@/lib/hero-verify-diff";
 
 export const Route = createFileRoute("/hero-verify")({
   head: () => ({
