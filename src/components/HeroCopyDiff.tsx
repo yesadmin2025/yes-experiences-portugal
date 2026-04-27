@@ -274,6 +274,21 @@ export function HeroCopyDiff() {
     refresh();
   }, [refresh]);
 
+  const exportDiff = useCallback(async () => {
+    const snap = buildDiffState();
+    const payload = JSON.stringify(snap, null, 2);
+    const ok = await copyTextToClipboard(payload);
+    setCopyStatus(ok ? "ok" : "fail");
+    console.info(
+      ok
+        ? "%c[hero-copy] diff JSON copied to clipboard"
+        : "%c[hero-copy] copy to clipboard failed",
+      ok ? "color:#10b981" : "color:#ef4444",
+      snap,
+    );
+    window.setTimeout(() => setCopyStatus("idle"), 2000);
+  }, []);
+
   useEffect(() => {
     if (typeof window === "undefined") return;
 
