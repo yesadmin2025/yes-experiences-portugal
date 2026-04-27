@@ -23,24 +23,7 @@ import editMarket from "@/assets/edit-market.jpg";
 import editViewpoint from "@/assets/edit-viewpoint.jpg";
 import { ArrowRight, Star, MapPin, Compass, Clock } from "lucide-react";
 import { PlatformBadge } from "@/components/PlatformBadge";
-
-const HERO_COPY = {
-  eyebrow: "PRIVATE · BY LOCALS · ANY OCCASION",
-  headlineLine1: "Portugal is the stage.",
-  headlineLine2: "You write the story.",
-  subheadline:
-    "Designed by you, guided by local knowledge — from a private day to something worth celebrating.",
-  primaryCta: "Create Your Story",
-  secondaryCta: "Explore Signature Experiences",
-  microcopy: "Instant confirmation. Personalized by you. No waiting, no forms.",
-  brandLine: "Whatever you have in mind, we say YES.",
-} as const;
-
-const HERO_COPY_VERSION = Object.values(HERO_COPY)
-  .join("|")
-  .split("")
-  .reduce((hash, char) => (hash * 31 + char.charCodeAt(0)) >>> 0, 0)
-  .toString(36);
+import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
 
 export const Route = createFileRoute("/")({
   headers: () => ({
