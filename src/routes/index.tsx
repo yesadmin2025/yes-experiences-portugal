@@ -21,7 +21,7 @@ import editCoastal from "@/assets/edit-coastal-road.jpg";
 import editWinery from "@/assets/edit-winery.jpg";
 import editMarket from "@/assets/edit-market.jpg";
 import editViewpoint from "@/assets/edit-viewpoint.jpg";
-import { ArrowRight, Star, MapPin, Compass, Clock } from "lucide-react";
+import { ArrowRight, Star, MapPin, Compass, Clock, Sparkles } from "lucide-react";
 import { PlatformBadge } from "@/components/PlatformBadge";
 import { HeroMetaProbe } from "@/components/HeroMetaProbe";
 import { HeroCopyDiff } from "@/components/HeroCopyDiff";
@@ -292,11 +292,11 @@ function HomePage() {
               <Link
                 to="/builder"
                 data-hero-field="primaryCta"
-                className="cta-primary cta-attention cta-breathe group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-center text-center pl-9 pr-12 py-6 md:py-5 text-[12px] md:text-[12.5px] lg:text-[13px] tracking-[0.22em] md:tracking-[0.2em] uppercase font-light leading-[1.55]"
+                className="cta-primary cta-attention cta-breathe group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-start text-left pl-6 pr-12 py-6 md:py-5 text-[12px] md:text-[12.5px] lg:text-[13px] tracking-[0.22em] md:tracking-[0.2em] uppercase font-light leading-[1.55]"
               >
                 <span className="block">{HERO_COPY.primaryCta}</span>
                 <ArrowRight
-                  size={13}
+                  size={14}
                   className="absolute right-5 top-1/2 -translate-y-1/2 group-hover:translate-x-1 transition-transform duration-300"
                 />
               </Link>
@@ -304,12 +304,13 @@ function HomePage() {
                 to="/experiences"
                 data-cta-stagger
                 data-hero-field="secondaryCta"
-                className="cta-secondary-dark cta-attention cta-breathe group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-center text-center pl-9 pr-12 py-6 md:py-5 text-[12px] md:text-[12.5px] lg:text-[13px] tracking-[0.22em] md:tracking-[0.2em] uppercase font-light leading-[1.55] border-[1.5px]"
+                className="cta-secondary-dark cta-attention cta-breathe group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-start text-left pl-6 pr-12 py-6 md:py-5 text-[11.5px] md:text-[12px] lg:text-[12.5px] tracking-[0.2em] md:tracking-[0.18em] uppercase font-light leading-[1.55] border-[1.5px]"
               >
                 <span className="block">{HERO_COPY.secondaryCta}</span>
-                <ArrowRight
+                <Sparkles
                   size={13}
-                  className="absolute right-5 top-1/2 -translate-y-1/2 group-hover:translate-x-1 transition-transform duration-300"
+                  strokeWidth={1.25}
+                  className="absolute right-5 top-1/2 -translate-y-1/2 opacity-80 group-hover:opacity-100 group-hover:rotate-12 transition-all duration-300"
                 />
               </Link>
             </div>
