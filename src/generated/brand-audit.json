@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-04-27T09:35:44.501Z",
-  "filesScanned": 54,
+  "generatedAt": "2026-04-27T10:17:34.152Z",
+  "filesScanned": 59,
   "approvedPalette": {
     "teal": "#295B61",
     "teal-2": "#2A7C82",
@@ -11,17 +11,22 @@
     "charcoal": "#2E2E2E",
     "charcoal-soft": "#6B6B6B"
   },
-  "allowlist": ["#000000", "#ffffff", "#1f1f1f", "#cccccc"],
+  "allowlist": [
+    "#000000",
+    "#ffffff",
+    "#1f1f1f",
+    "#cccccc"
+  ],
   "counts": {
-    "total": 77,
-    "approved": 25,
-    "allowlisted": 19,
-    "mismatch": 33
+    "total": 100,
+    "approved": 40,
+    "allowlisted": 25,
+    "mismatch": 35
   },
   "findings": [
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 162,
+      "line": 159,
       "col": 14,
       "raw": "#9ca3af",
       "normalized": "#9ca3af",
@@ -30,16 +35,16 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 171,
-      "col": 14,
+      "line": 166,
+      "col": 54,
       "raw": "#9ca3af",
       "normalized": "#9ca3af",
-      "snippet": "\"color:#9ca3af\",",
+      "snippet": "console.debug(\"%c[hero-copy] no changes\", \"color:#9ca3af\", `version=${after.version}`);",
       "status": "mismatch"
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 180,
+      "line": 173,
       "col": 12,
       "raw": "#f59e0b",
       "normalized": "#f59e0b",
@@ -48,16 +53,16 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 487,
-      "col": 14,
+      "line": 471,
+      "col": 66,
       "raw": "#9ca3af",
       "normalized": "#9ca3af",
-      "snippet": "\"color:#9ca3af\",",
+      "snippet": "console.info(\"%c[hero-copy] baseline cleared via UI\", \"color:#9ca3af\");",
       "status": "mismatch"
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 501,
+      "line": 482,
       "col": 19,
       "raw": "#10b981",
       "normalized": "#10b981",
@@ -66,7 +71,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 501,
+      "line": 482,
       "col": 37,
       "raw": "#ef4444",
       "normalized": "#ef4444",
@@ -75,16 +80,16 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 533,
-      "col": 18,
+      "line": 512,
+      "col": 63,
       "raw": "#10b981",
       "normalized": "#10b981",
-      "snippet": "\"color:#10b981\",",
+      "snippet": "console.info(\"%c[hero-copy] baseline updated\", \"color:#10b981\", `version=${snap.version}`);",
       "status": "mismatch"
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 548,
+      "line": 525,
       "col": 63,
       "raw": "#9ca3af",
       "normalized": "#9ca3af",
@@ -93,7 +98,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 601,
+      "line": 574,
       "col": 31,
       "raw": "#f59e0b",
       "normalized": "#f59e0b",
@@ -102,7 +107,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 607,
+      "line": 580,
       "col": 63,
       "raw": "#10b981",
       "normalized": "#10b981",
@@ -111,7 +116,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 608,
+      "line": 581,
       "col": 63,
       "raw": "#ef4444",
       "normalized": "#ef4444",
@@ -120,7 +125,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 609,
+      "line": 582,
       "col": 63,
       "raw": "#f59e0b",
       "normalized": "#f59e0b",
@@ -129,7 +134,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 677,
+      "line": 650,
       "col": 14,
       "raw": "#f59e0b",
       "normalized": "#f59e0b",
@@ -138,16 +143,16 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 724,
-      "col": 14,
+      "line": 695,
+      "col": 57,
       "raw": "#9ca3af",
       "normalized": "#9ca3af",
-      "snippet": "\"color:#9ca3af\",",
+      "snippet": "console.info(\"%c[hero-copy] route boundary\", \"color:#9ca3af\", {",
       "status": "mismatch"
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 759,
+      "line": 724,
       "col": 18,
       "raw": "#9ca3af",
       "normalized": "#9ca3af",
@@ -156,7 +161,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 775,
+      "line": 740,
       "col": 20,
       "raw": "#10b981",
       "normalized": "#10b981",
@@ -165,25 +170,25 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 789,
-      "col": 20,
+      "line": 752,
+      "col": 83,
       "raw": "#ef4444",
       "normalized": "#ef4444",
-      "snippet": "\"color:#ef4444\",",
+      "snippet": "console.warn(\"%c[hero-copy] post-boundary diff refresh: failed\", \"color:#ef4444\", {",
       "status": "mismatch"
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 797,
-      "col": 16,
+      "line": 760,
+      "col": 80,
       "raw": "#9ca3af",
       "normalized": "#9ca3af",
-      "snippet": "\"color:#9ca3af\",",
+      "snippet": "console.info(\"%c[hero-copy] post-boundary diff refresh: skipped\", \"color:#9ca3af\", {",
       "status": "mismatch"
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 954,
+      "line": 915,
       "col": 23,
       "raw": "#0f0f0f",
       "normalized": "#0f0f0f",
@@ -192,7 +197,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 955,
+      "line": 916,
       "col": 18,
       "raw": "#fafafa",
       "normalized": "#fafafa",
@@ -201,7 +206,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 979,
+      "line": 940,
       "col": 21,
       "raw": "#fafafa",
       "normalized": "#fafafa",
@@ -210,7 +215,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 1009,
+      "line": 970,
       "col": 25,
       "raw": "#fafafa",
       "normalized": "#fafafa",
@@ -219,25 +224,25 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 1053,
-      "col": 59,
+      "line": 1013,
+      "col": 69,
       "raw": "#10b981",
       "normalized": "#10b981",
-      "snippet": "lastAction.action === \"accepted\" ? \"#10b981\" : \"#dc2626\",",
+      "snippet": "background: lastAction.action === \"accepted\" ? \"#10b981\" : \"#dc2626\",",
       "status": "mismatch"
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 1053,
-      "col": 71,
+      "line": 1013,
+      "col": 81,
       "raw": "#dc2626",
       "normalized": "#dc2626",
-      "snippet": "lastAction.action === \"accepted\" ? \"#10b981\" : \"#dc2626\",",
+      "snippet": "background: lastAction.action === \"accepted\" ? \"#10b981\" : \"#dc2626\",",
       "status": "mismatch"
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 1054,
+      "line": 1014,
       "col": 29,
       "raw": "#fff",
       "normalized": "#ffffff",
@@ -246,7 +251,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 1086,
+      "line": 1044,
       "col": 30,
       "raw": "#dc2626",
       "normalized": "#dc2626",
@@ -255,7 +260,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 1087,
+      "line": 1045,
       "col": 25,
       "raw": "#fff",
       "normalized": "#ffffff",
@@ -264,7 +269,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 1107,
+      "line": 1065,
       "col": 25,
       "raw": "#fff",
       "normalized": "#ffffff",
@@ -273,7 +278,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 1131,
+      "line": 1089,
       "col": 26,
       "raw": "#10b981",
       "normalized": "#10b981",
@@ -282,7 +287,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 1139,
+      "line": 1097,
       "col": 25,
       "raw": "#fff",
       "normalized": "#ffffff",
@@ -291,7 +296,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 1156,
+      "line": 1114,
       "col": 24,
       "raw": "#10b981",
       "normalized": "#10b981",
@@ -300,7 +305,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 1158,
+      "line": 1116,
       "col": 26,
       "raw": "#dc2626",
       "normalized": "#dc2626",
@@ -309,7 +314,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 1160,
+      "line": 1118,
       "col": 25,
       "raw": "#fff",
       "normalized": "#ffffff",
@@ -318,7 +323,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 1219,
+      "line": 1172,
       "col": 14,
       "raw": "#f59e0b",
       "normalized": "#f59e0b",
@@ -345,7 +350,7 @@
     },
     {
       "file": "src/lib/brand-tokens.test.ts",
-      "line": 175,
+      "line": 155,
       "col": 30,
       "raw": "#C9A96A",
       "normalized": "#c9a96a",
@@ -435,7 +440,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 70,
+      "line": 62,
       "col": 10,
       "raw": "#295B61",
       "normalized": "#295b61",
@@ -444,7 +449,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 71,
+      "line": 63,
       "col": 14,
       "raw": "#2A7C82",
       "normalized": "#2a7c82",
@@ -453,7 +458,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 72,
+      "line": 64,
       "col": 10,
       "raw": "#C9A96A",
       "normalized": "#c9a96a",
@@ -462,7 +467,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 73,
+      "line": 65,
       "col": 17,
       "raw": "#E1CFA6",
       "normalized": "#e1cfa6",
@@ -471,7 +476,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 74,
+      "line": 66,
       "col": 11,
       "raw": "#FAF8F3",
       "normalized": "#faf8f3",
@@ -480,7 +485,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 75,
+      "line": 67,
       "col": 10,
       "raw": "#F4EFE7",
       "normalized": "#f4efe7",
@@ -489,7 +494,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 76,
+      "line": 68,
       "col": 14,
       "raw": "#2E2E2E",
       "normalized": "#2e2e2e",
@@ -498,7 +503,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 77,
+      "line": 69,
       "col": 21,
       "raw": "#6B6B6B",
       "normalized": "#6b6b6b",
@@ -507,7 +512,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 87,
+      "line": 79,
       "col": 6,
       "raw": "#000",
       "normalized": "#000000",
@@ -516,7 +521,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 88,
+      "line": 80,
       "col": 6,
       "raw": "#000000",
       "normalized": "#000000",
@@ -525,7 +530,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 89,
+      "line": 81,
       "col": 6,
       "raw": "#fff",
       "normalized": "#ffffff",
@@ -534,7 +539,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 90,
+      "line": 82,
       "col": 6,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -543,7 +548,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 91,
+      "line": 83,
       "col": 6,
       "raw": "#1f1f1f",
       "normalized": "#1f1f1f",
@@ -552,7 +557,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 92,
+      "line": 84,
       "col": 6,
       "raw": "#ccc",
       "normalized": "#cccccc",
@@ -561,7 +566,7 @@
     },
     {
       "file": "src/routes/index.tsx",
-      "line": 258,
+      "line": 274,
       "col": 25,
       "raw": "#2e7d32",
       "normalized": "#2e7d32",
@@ -570,7 +575,7 @@
     },
     {
       "file": "src/routes/index.tsx",
-      "line": 258,
+      "line": 274,
       "col": 37,
       "raw": "#c62828",
       "normalized": "#c62828",
@@ -579,88 +584,88 @@
     },
     {
       "file": "src/styles.css",
-      "line": 90,
-      "col": 11,
-      "raw": "#295B61",
-      "normalized": "#295b61",
-      "snippet": "--teal: #295B61;",
-      "status": "approved"
-    },
-    {
-      "file": "src/styles.css",
-      "line": 91,
-      "col": 13,
-      "raw": "#2A7C82",
-      "normalized": "#2a7c82",
-      "snippet": "--teal-2: #2A7C82;",
-      "status": "approved"
-    },
-    {
-      "file": "src/styles.css",
-      "line": 92,
-      "col": 11,
-      "raw": "#C9A96A",
-      "normalized": "#c9a96a",
-      "snippet": "--gold: #C9A96A;",
-      "status": "approved"
-    },
-    {
-      "file": "src/styles.css",
-      "line": 93,
-      "col": 16,
-      "raw": "#E1CFA6",
-      "normalized": "#e1cfa6",
-      "snippet": "--gold-soft: #E1CFA6;",
-      "status": "approved"
-    },
-    {
-      "file": "src/styles.css",
       "line": 94,
-      "col": 12,
-      "raw": "#FAF8F3",
-      "normalized": "#faf8f3",
-      "snippet": "--ivory: #FAF8F3;",
+      "col": 11,
+      "raw": "#295b61",
+      "normalized": "#295b61",
+      "snippet": "--teal: #295b61;",
       "status": "approved"
     },
     {
       "file": "src/styles.css",
       "line": 95,
-      "col": 11,
-      "raw": "#F4EFE7",
-      "normalized": "#f4efe7",
-      "snippet": "--sand: #F4EFE7;",
+      "col": 13,
+      "raw": "#2a7c82",
+      "normalized": "#2a7c82",
+      "snippet": "--teal-2: #2a7c82;",
       "status": "approved"
     },
     {
       "file": "src/styles.css",
       "line": 96,
-      "col": 15,
-      "raw": "#2E2E2E",
-      "normalized": "#2e2e2e",
-      "snippet": "--charcoal: #2E2E2E;",
+      "col": 11,
+      "raw": "#c9a96a",
+      "normalized": "#c9a96a",
+      "snippet": "--gold: #c9a96a;",
       "status": "approved"
     },
     {
       "file": "src/styles.css",
       "line": 97,
-      "col": 20,
-      "raw": "#5A5A5A",
-      "normalized": "#5a5a5a",
-      "snippet": "--charcoal-soft: #5A5A5A;",
-      "status": "mismatch"
+      "col": 16,
+      "raw": "#e1cfa6",
+      "normalized": "#e1cfa6",
+      "snippet": "--gold-soft: #e1cfa6;",
+      "status": "approved"
     },
     {
       "file": "src/styles.css",
       "line": 98,
+      "col": 12,
+      "raw": "#faf8f3",
+      "normalized": "#faf8f3",
+      "snippet": "--ivory: #faf8f3;",
+      "status": "approved"
+    },
+    {
+      "file": "src/styles.css",
+      "line": 99,
+      "col": 11,
+      "raw": "#f4efe7",
+      "normalized": "#f4efe7",
+      "snippet": "--sand: #f4efe7;",
+      "status": "approved"
+    },
+    {
+      "file": "src/styles.css",
+      "line": 100,
+      "col": 15,
+      "raw": "#2e2e2e",
+      "normalized": "#2e2e2e",
+      "snippet": "--charcoal: #2e2e2e;",
+      "status": "approved"
+    },
+    {
+      "file": "src/styles.css",
+      "line": 101,
       "col": 20,
-      "raw": "#1F1F1F",
+      "raw": "#5a5a5a",
+      "normalized": "#5a5a5a",
+      "snippet": "--charcoal-soft: #5a5a5a;",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/styles.css",
+      "line": 102,
+      "col": 20,
+      "raw": "#1f1f1f",
       "normalized": "#1f1f1f",
-      "snippet": "--charcoal-deep: #1F1F1F;",
+      "snippet": "--charcoal-deep: #1f1f1f;",
       "status": "allowlisted"
     },
     {
       "file": "src/styles.css",
-      "line": 103,
+      "line": 107,
       "col": 11,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -669,7 +674,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 105,
+      "line": 109,
       "col": 14,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -678,7 +683,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 116,
+      "line": 120,
       "col": 29,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -687,7 +692,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 223,
+      "line": 227,
       "col": 11,
       "raw": "#1f1f1f",
       "normalized": "#1f1f1f",
@@ -696,7 +701,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 604,
+      "line": 663,
       "col": 12,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -705,11 +710,218 @@
     },
     {
       "file": "src/styles.css",
-      "line": 806,
+      "line": 850,
       "col": 12,
       "raw": "#ffffff",
       "normalized": "#ffffff",
       "snippet": "color: #ffffff;",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 290,
+      "col": 17,
+      "raw": "#000",
+      "normalized": "#000000",
+      "snippet": "\"black\": \"#000\",",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 291,
+      "col": 17,
+      "raw": "#fff",
+      "normalized": "#ffffff",
+      "snippet": "\"white\": \"#fff\",",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 293,
+      "col": 22,
+      "raw": "#2E2E2E",
+      "normalized": "#2e2e2e",
+      "snippet": "\"foreground\": \"#2E2E2E\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 294,
+      "col": 16,
+      "raw": "#ffffff",
+      "normalized": "#ffffff",
+      "snippet": "\"card\": \"#ffffff\",",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 295,
+      "col": 27,
+      "raw": "#2E2E2E",
+      "normalized": "#2e2e2e",
+      "snippet": "\"card-foreground\": \"#2E2E2E\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 296,
+      "col": 19,
+      "raw": "#ffffff",
+      "normalized": "#ffffff",
+      "snippet": "\"popover\": \"#ffffff\",",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 297,
+      "col": 30,
+      "raw": "#2E2E2E",
+      "normalized": "#2e2e2e",
+      "snippet": "\"popover-foreground\": \"#2E2E2E\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 299,
+      "col": 30,
+      "raw": "#FAF8F3",
+      "normalized": "#faf8f3",
+      "snippet": "\"primary-foreground\": \"#FAF8F3\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 300,
+      "col": 21,
+      "raw": "#F4EFE7",
+      "normalized": "#f4efe7",
+      "snippet": "\"secondary\": \"#F4EFE7\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 301,
+      "col": 32,
+      "raw": "#2E2E2E",
+      "normalized": "#2e2e2e",
+      "snippet": "\"secondary-foreground\": \"#2E2E2E\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 302,
+      "col": 17,
+      "raw": "#F4EFE7",
+      "normalized": "#f4efe7",
+      "snippet": "\"muted\": \"#F4EFE7\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 303,
+      "col": 28,
+      "raw": "#5A5A5A",
+      "normalized": "#5a5a5a",
+      "snippet": "\"muted-foreground\": \"#5A5A5A\",",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 304,
+      "col": 18,
+      "raw": "#C9A96A",
+      "normalized": "#c9a96a",
+      "snippet": "\"accent\": \"#C9A96A\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 305,
+      "col": 29,
+      "raw": "#2E2E2E",
+      "normalized": "#2e2e2e",
+      "snippet": "\"accent-foreground\": \"#2E2E2E\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 307,
+      "col": 34,
+      "raw": "#ffffff",
+      "normalized": "#ffffff",
+      "snippet": "\"destructive-foreground\": \"#ffffff\",",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 311,
+      "col": 16,
+      "raw": "#C9A96A",
+      "normalized": "#c9a96a",
+      "snippet": "\"gold\": \"#C9A96A\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 312,
+      "col": 21,
+      "raw": "#E1CFA6",
+      "normalized": "#e1cfa6",
+      "snippet": "\"gold-soft\": \"#E1CFA6\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 314,
+      "col": 18,
+      "raw": "#2A7C82",
+      "normalized": "#2a7c82",
+      "snippet": "\"teal-2\": \"#2A7C82\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 315,
+      "col": 17,
+      "raw": "#FAF8F3",
+      "normalized": "#faf8f3",
+      "snippet": "\"ivory\": \"#FAF8F3\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 316,
+      "col": 16,
+      "raw": "#F4EFE7",
+      "normalized": "#f4efe7",
+      "snippet": "\"sand\": \"#F4EFE7\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 317,
+      "col": 20,
+      "raw": "#2E2E2E",
+      "normalized": "#2e2e2e",
+      "snippet": "\"charcoal\": \"#2E2E2E\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 318,
+      "col": 25,
+      "raw": "#5A5A5A",
+      "normalized": "#5a5a5a",
+      "snippet": "\"charcoal-soft\": \"#5A5A5A\",",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 319,
+      "col": 25,
+      "raw": "#1F1F1F",
+      "normalized": "#1f1f1f",
+      "snippet": "\"charcoal-deep\": \"#1F1F1F\"",
       "status": "allowlisted"
     }
   ]
