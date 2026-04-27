@@ -200,6 +200,7 @@ const SR_ONLY: React.CSSProperties = {
  * client-side navigation within the tab. Never on by default.
  */
 const PANEL_VISIBILITY_KEY = "hero-copy:panel-visible";
+const OUTLINES_KEY = "hero-copy:last-outlines";
 
 function readInitialPanelVisibility(): boolean {
   if (typeof window === "undefined") return false;
@@ -216,6 +217,54 @@ function persistPanelVisibility(next: boolean) {
   try {
     if (next) sessionStorage.setItem(PANEL_VISIBILITY_KEY, "1");
     else sessionStorage.removeItem(PANEL_VISIBILITY_KEY);
+  } catch {
+    /* ignore */
+  }
+}
+
+/**
+ * Persisted outline payload. Keyed by the baseline version it was diffed
+ * against, so restoring it after a reload is safe: if the baseline has
+ * since been reset/changed, the saved outlines are discarded.
+ */
+type PersistedOutlines = {
+  baselineVersion: string;
+  currentVersion: string;
+  outlines: { field: string; change: DiffRow["change"] }[];
+  savedAt: string;
+};
+
+function readPersistedOutlines(): PersistedOutlines | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = sessionStorage.getItem(OUTLINES_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (
+      parsed &&
+      typeof parsed === "object" &&
+      typeof parsed.baselineVersion === "string" &&
+      Array.isArray(parsed.outlines)
+    ) {
+      return parsed as PersistedOutlines;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+function writePersistedOutlines(payload: PersistedOutlines) {
+  try {
+    sessionStorage.setItem(OUTLINES_KEY, JSON.stringify(payload));
+  } catch {
+    /* ignore */
+  }
+}
+
+function clearPersistedOutlines() {
+  try {
+    sessionStorage.removeItem(OUTLINES_KEY);
   } catch {
     /* ignore */
   }
