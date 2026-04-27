@@ -957,6 +957,24 @@
     transform: translateY(-0.5px);
   }
 
+  /* CTA TYPOGRAPHY NORMALIZATION — site-wide.
+     Per brand brief: button text avoids wide letter-spacing and
+     aggressive uppercase. Sentence case, medium weight, normal
+     tracking. Overrides per-instance Tailwind utilities like
+     `uppercase tracking-[0.22em]` so every non-hero CTA on every
+     page renders with the same calm, premium typography.
+     Hero CTAs (.hero-cta-button) are intentionally exempt — their
+     editorial typography is locked by the hero copy spec. */
+  .cta-primary:not(.hero-cta-button),
+  .cta-secondary-dark:not(.hero-cta-button),
+  .cta-secondary-light:not(.hero-cta-button) {
+    text-transform: none !important;
+    letter-spacing: 0.005em !important;
+    font-weight: 500 !important;
+    font-size: 14.5px;
+    line-height: 1.2;
+  }
+
   /* Reduced-motion: keep the depth (shadows, gradients, sheen at rest)
      but disable lift, sweep, breathing, and pointer tilt — users get a
      calm color/border shift only. */
