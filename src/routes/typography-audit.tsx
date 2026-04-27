@@ -308,9 +308,9 @@ function TypographyAuditPage() {
     const opts: SampleOpts = { fontsReadyCapMs: s.fontsReadyCapMs, postLoadSettleMs: s.postLoadSettleMs };
 
     const stages: Array<{ label: string; cfg: StageSettings; via: AuditVia; ssr: boolean }> = [
-      { label: "iframe attempt 1",  cfg: s.iframeAttempt1, via: "iframe",        ssr: false },
-      { label: "iframe attempt 2",  cfg: s.iframeAttempt2, via: "iframe",        ssr: false },
-      { label: "SSR HTML fallback", cfg: s.ssrFallback,    via: "ssr-fallback",  ssr: true  },
+      { label: "iframe attempt 1",  cfg: s.iframeAttempt1, via: "iframe" as AuditVia,       ssr: false },
+      { label: "iframe attempt 2",  cfg: s.iframeAttempt2, via: "iframe" as AuditVia,       ssr: false },
+      { label: "SSR HTML fallback", cfg: s.ssrFallback,    via: "ssr-fallback" as AuditVia, ssr: true  },
     ].filter((stage) => stage.cfg.enabled);
 
     if (stages.length === 0) {
