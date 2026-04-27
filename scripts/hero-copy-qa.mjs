@@ -86,6 +86,11 @@ const EXIT = Object.freeze({
 //                                        is redirected to stderr so stdout is
 //                                        machine-parseable). Otherwise treated
 //                                        as a file path written on each run.
+//   --report-json-strict                 validate every emitted report against
+//                                        the declared schema; if anything ever
+//                                        diverges from the contract the script
+//                                        exits EXIT.RUNTIME_ERROR (it's a
+//                                        script bug, not content drift).
 //
 // Without --strict-flags, unknown flags are warnings (back-compat); with it,
 // CI can guarantee no silent typos.
