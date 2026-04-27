@@ -25,6 +25,11 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      qa_report_retention_days:
+        description: "Retention (days) for hero-copy QA JSON reports. GitHub max is 90."
+        required: false
+        default: "14"
 
 # Cancel in-flight runs for the same PR when new commits are pushed.
 concurrency:
