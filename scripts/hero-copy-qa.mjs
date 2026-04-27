@@ -82,6 +82,7 @@ function runChecks(html) {
 }
 
 let totalFailures = 0;
+let manualChecks = 0;
 
 console.log(`${BOLD}Home hero copy localization QA${RESET}`);
 console.log(`${DIM}Source of truth: src/content/hero-copy.ts${RESET}\n`);
@@ -92,6 +93,17 @@ for (const target of TARGETS) {
   try {
     html = await fetchHtml(target.url);
   } catch (err) {
+    if (err.requiresLogin) {
+      console.log(
+        `  ${BOLD}⚠ MANUAL CHECK REQUIRED${RESET} — preview is auth-gated; open the URL in a logged-in browser and visually verify each line below:`,
+      );
+      for (const c of CHECKS) {
+        console.log(`    ${DIM}• ${c.label.padEnd(20)} "${c.value}"${RESET}`);
+      }
+      console.log("");
+      manualChecks++;
+      continue;
+    }
     console.log(`  ${RED}✗ Fetch failed: ${err.message}${RESET}\n`);
     totalFailures++;
     continue;
@@ -110,6 +122,11 @@ for (const target of TARGETS) {
 if (totalFailures > 0) {
   console.log(`${RED}${BOLD}✗ ${totalFailures} check(s) failed — do not release.${RESET}`);
   process.exit(1);
+} else if (manualChecks > 0) {
+  console.log(
+    `${GREEN}${BOLD}✓ Production verified.${RESET} ${BOLD}${manualChecks} target(s) need manual visual check before release.${RESET}`,
+  );
+  process.exit(0);
 } else {
   console.log(`${GREEN}${BOLD}✓ All hero copy verified across preview and production.${RESET}`);
   process.exit(0);
