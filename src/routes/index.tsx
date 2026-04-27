@@ -234,7 +234,11 @@ function HomePage() {
             <p className="mt-7 md:mt-9 text-[18px] md:text-[22px] text-[color:var(--ivory)]/90 max-w-xl leading-[1.7] font-light opacity-0 animate-[heroFade_1.4s_ease-out_0.95s_forwards]">
               Designed by you, guided by local knowledge — from a private day to something worth celebrating.
             </p>
-...
+
+            <div
+              ref={ctaGroupRef}
+              className="cta-magnet-group mt-10 md:mt-12 flex flex-col sm:flex-row flex-wrap gap-5 sm:gap-6 opacity-0 animate-[heroFade_1.4s_ease-out_1.25s_forwards]"
+            >
               <Link
                 to="/builder"
                 className="cta-primary cta-attention cta-breathe group inline-flex items-center justify-center gap-3 px-9 py-[18px] text-[12px] md:text-[12.5px] lg:text-[13px] tracking-[0.22em] md:tracking-[0.2em] uppercase font-light leading-[1.55]"
@@ -242,7 +246,6 @@ function HomePage() {
                 Create Your Story
                 <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform duration-300" />
               </Link>
-...
               <Link
                 to="/experiences"
                 data-cta-stagger
