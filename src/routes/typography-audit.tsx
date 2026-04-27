@@ -1226,6 +1226,16 @@ function ImportReportCard({
               Apply now
             </button>
           )}
+          {onAutoFix && (
+            <button
+              type="button"
+              onClick={onAutoFix}
+              className="rounded-md border border-current/30 bg-white/70 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] hover:bg-white"
+              title={`Apply ${autoFixChanges?.length ?? 0} automatic correction${(autoFixChanges?.length ?? 0) === 1 ? "" : "s"}`}
+            >
+              Auto-fix ({autoFixChanges?.length ?? 0})
+            </button>
+          )}
           <button
             type="button"
             onClick={onDismiss}
@@ -1235,6 +1245,19 @@ function ImportReportCard({
           </button>
         </div>
       </div>
+
+      {onAutoFix && autoFixChanges && autoFixChanges.length > 0 && (
+        <details className="mt-2 rounded-md border border-current/20 bg-white/50 px-3 py-2">
+          <summary className="cursor-pointer text-[11px] font-semibold uppercase tracking-[0.12em]">
+            Preview {autoFixChanges.length} proposed change{autoFixChanges.length === 1 ? "" : "s"}
+          </summary>
+          <ul className="mt-2 space-y-1 text-[12px]">
+            {autoFixChanges.map((c, i) => (
+              <li key={i} className="font-mono leading-snug">{c}</li>
+            ))}
+          </ul>
+        </details>
+      )}
 
       {report.issues.length > 0 && (
         <ul className="mt-2 space-y-1">
