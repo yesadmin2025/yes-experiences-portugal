@@ -33,26 +33,26 @@ export function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="fixed top-0 inset-x-0 z-50 bg-white border-b border-black/[0.06] shadow-[0_1px_0_0_rgba(201,169,106,0.18),0_10px_28px_-18px_rgba(15,23,42,0.10)] opacity-0 animate-[headerFade_900ms_ease-out_forwards]">
+    <header className="fixed top-0 inset-x-0 z-50 bg-white border-b border-black/[0.05] shadow-[0_1px_0_0_rgba(201,169,106,0.16),0_12px_32px_-22px_rgba(15,23,42,0.10)] opacity-0 animate-[headerFade_900ms_ease-out_forwards]">
       <div className="container-x">
-        <div className="flex items-center justify-between h-[88px] md:h-[100px] lg:h-[108px]">
-          {/* Official master logo — uploaded brand asset, used as-is.
-              Sized for premium presence with breathing room in the header. */}
+        <div className="flex items-center justify-between h-[92px] md:h-[104px] lg:h-[112px] py-2 md:py-2.5">
+          {/* Official master logo — exact approved teal (#295B61) via SVG.
+              Sized for premium presence with calibrated breathing room
+              against the header edges. */}
           <Link
             to="/"
-            className="flex-shrink-0 inline-flex items-center h-full rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+            className="flex-shrink-0 inline-flex items-center h-full pr-3 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             aria-label="YES experiences PORTUGAL — Home"
           >
             <img
               src={logoTeal}
-              width={909}
-              height={579}
+              width={1200}
+              height={900}
               alt="YES experiences PORTUGAL"
-              className="block h-[64px] md:h-[76px] lg:h-[84px] w-auto select-none"
+              className="block h-[60px] md:h-[72px] lg:h-[80px] w-auto select-none"
               draggable={false}
               fetchPriority="high"
               decoding="async"
-              style={{ imageRendering: "auto" }}
             />
           </Link>
 
