@@ -314,6 +314,58 @@ export function HeroCopyDiff() {
 
   const changedFields = state.rows.map((r) => r.field).join(",");
 
+  // ---- Per-field flags ---------------------------------------------------
+  // Two layers, both rendered on the container so DevTools "find by
+  // attribute" can pinpoint a single field without walking children:
+  //
+  //   1. data-changed-<field>="added|removed|changed"  (one per HERO_COPY key)
+  //      e.g. data-changed-headline-line1="changed"
+  //   2. data-changed-<category>="<comma-list of fields>"
+  //      Categories group semantically related fields:
+  //        title       → eyebrow, headlineLine1, headlineLine2
+  //        description → subheadline, microcopy, brandLine
+  //        cta         → primaryCta, secondaryCta
+  //
+  // Unchanged fields/categories simply omit the attribute so a CSS
+  // selector like `[data-hero-copy-diff][data-changed-primary-cta]`
+  // matches only when that exact thing changed.
+  const FIELD_CATEGORIES: Record<string, "title" | "description" | "cta"> = {
+    eyebrow: "title",
+    headlineLine1: "title",
+    headlineLine2: "title",
+    subheadline: "description",
+    microcopy: "description",
+    brandLine: "description",
+    primaryCta: "cta",
+    secondaryCta: "cta",
+  };
+
+  const fieldFlags: Record<string, string> = {};
+  const categoryHits: Record<"title" | "description" | "cta", string[]> = {
+    title: [],
+    description: [],
+    cta: [],
+  };
+
+  // camelCase → kebab-case for clean data-* attribute names.
+  const toKebab = (s: string) =>
+    s.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
+
+  for (const row of state.rows) {
+    fieldFlags[`data-changed-${toKebab(row.field)}`] = row.change;
+    const category = FIELD_CATEGORIES[row.field];
+    if (category) categoryHits[category].push(row.field);
+  }
+
+  const categoryFlags: Record<string, string> = {};
+  (Object.keys(categoryHits) as Array<keyof typeof categoryHits>).forEach(
+    (cat) => {
+      if (categoryHits[cat].length > 0) {
+        categoryFlags[`data-changed-${cat}`] = categoryHits[cat].join(",");
+      }
+    },
+  );
+
   return (
     <>
       <div
@@ -324,8 +376,13 @@ export function HeroCopyDiff() {
         data-diff-current-version={state.currentVersion}
         data-diff-changed-count={String(state.rows.length)}
         data-diff-changed-fields={changedFields}
+        data-diff-changed-categories={Object.keys(categoryFlags)
+          .map((k) => k.replace(/^data-changed-/, ""))
+          .join(",")}
         data-diff-ran-at={state.ranAt}
         data-diff-json={JSON.stringify(state)}
+        {...fieldFlags}
+        {...categoryFlags}
         aria-hidden="true"
         style={SR_ONLY}
       >
@@ -337,6 +394,8 @@ export function HeroCopyDiff() {
           <span
             key={row.field}
             data-diff-row={row.field}
+            data-diff-field={toKebab(row.field)}
+            data-diff-category={FIELD_CATEGORIES[row.field] ?? "other"}
             data-diff-change={row.change}
             data-diff-before={row.before ?? ""}
             data-diff-after={row.after ?? ""}
