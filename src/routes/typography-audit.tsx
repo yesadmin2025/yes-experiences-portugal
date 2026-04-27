@@ -306,8 +306,15 @@ function TypographyAuditPage() {
 
   return (
     <div className="min-h-screen bg-[var(--cream)] text-[color:var(--charcoal-deep)] font-[var(--font-sans)]">
-      {/* Hidden iframe used to load each route in isolation */}
-      <iframe ref={iframeRef} title="audit-target" className="fixed -left-[9999px] -top-[9999px] h-[900px] w-[1280px]" sandbox="allow-same-origin allow-scripts" />
+      {/* Hidden iframe used to load each route in isolation. allow-same-origin
+          is required so we can read computed styles via getComputedStyle, and
+          srcdoc is used by the SSR-HTML fallback path. */}
+      <iframe
+        ref={iframeRef}
+        title="audit-target"
+        className="fixed -left-[9999px] -top-[9999px] h-[900px] w-[1280px]"
+        sandbox="allow-same-origin allow-scripts allow-forms"
+      />
 
       <header className="border-b border-[color:var(--border)] px-6 py-8 md:px-10">
         <div className="mx-auto max-w-[1240px]">
