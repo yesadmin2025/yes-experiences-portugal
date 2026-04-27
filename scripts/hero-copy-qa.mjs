@@ -67,28 +67,37 @@ const PROBE_ATTRS = [
   { attr: "data-hero-microcopy", key: "microcopy", expected: HERO_COPY.microcopy },
 ];
 
-// Decode the small set of HTML entities React emits inside attribute values.
-function decodeAttr(value) {
-  return value
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&#x27;/g, "'")
-    .replace(/&#x2F;/g, "/");
-}
-
-function readProbeAttr(html, attr) {
-  // Match: data-hero-foo="..." (double-quoted is what React renders).
-  const re = new RegExp(`${attr}="([^"]*)"`);
-  const m = html.match(re);
-  return m ? decodeAttr(m[1]) : null;
+// Tolerant DOM-based attribute extraction.
+//
+// Parses the served HTML once with node-html-parser, then for each probe
+// attribute selects the element carrying it and reads the value via the
+// parser's getAttribute() — which handles:
+//   - any attribute order on the element
+//   - single, double, or unquoted attribute values
+//   - arbitrary surrounding whitespace, line breaks, or formatting
+//   - HTML entity decoding (&amp; &quot; &#39; numeric refs, etc.)
+//   - mixed case (HTML attributes are case-insensitive)
+//   - the attribute appearing on any element in the document
+//
+// If multiple elements carry the same data-hero-* attribute (the page also
+// renders some of these on the visible probe + a hidden mirror), we read the
+// FIRST occurrence — they are written from the same HERO_COPY source so they
+// must agree, and disagreement is itself a drift signal worth surfacing.
+function readProbeAttr(root, attr) {
+  const el = root.querySelector(`[${attr}]`);
+  if (!el) return null;
+  const value = el.getAttribute(attr);
+  return value ?? null;
 }
 
 function runPreflight(html) {
+  const root = parseHtml(html, {
+    lowerCaseTagName: false,
+    comment: false,
+    blockTextElements: { script: false, style: false },
+  });
   return PROBE_ATTRS.map((p) => {
-    const actual = readProbeAttr(html, p.attr);
+    const actual = readProbeAttr(root, p.attr);
     return {
       ...p,
       actual,
