@@ -241,6 +241,14 @@ jobs:
           # consolidated log block so an operator can tell "no errors
           # reported for the URLs" apart from "URL checks never ran".
           early_exit_reason=""
+          # Names of the specific phase-1 rules that tripped the
+          # early-exit guard. Kept as a separate array (not just
+          # parsed back out of validation_errors) so the consolidated
+          # log can surface a single, unambiguous "failed_foundational
+          # _rules" line — no string-matching on human-readable error
+          # text, no ambiguity when phase 2 also reports errors in a
+          # future refactor.
+          failed_foundational_rules=()
 
           # Always derive basenames up front so the consolidated log
           # block below can print them, even when we early-exit before
@@ -265,17 +273,20 @@ jobs:
           # explicitly with a clearer message than the regex would give.
           if ! [[ "${HEAD_SHA}" =~ ^[0-9a-f]{40}$ ]]; then
             validation_errors+=("HEAD_SHA is not a 40-char lowercase hex sha: \"${HEAD_SHA}\"")
+            failed_foundational_rules+=("HEAD_SHA")
           fi
 
           # 2. Repo must be "owner/repo" — disallow slashes in either
           # half so we can't accidentally smuggle path segments through.
           if ! [[ "${REPO}" =~ ^[A-Za-z0-9._-]+/[A-Za-z0-9._-]+$ ]]; then
             validation_errors+=("REPO is not in owner/repo form: \"${REPO}\"")
+            failed_foundational_rules+=("REPO")
           fi
 
           # 3. Server URL must be https://<host> with no trailing slash.
           if ! [[ "${SERVER_URL}" =~ ^https://[A-Za-z0-9.-]+$ ]]; then
             validation_errors+=("SERVER_URL is not a bare https://<host>: \"${SERVER_URL}\"")
+            failed_foundational_rules+=("SERVER_URL")
           fi
 
           # ── Early-exit guard ────────────────────────────────────────
@@ -284,7 +295,7 @@ jobs:
           # consolidated results block below must always print so the
           # operator sees the verdict, the inputs that failed, and a
           # clear "skipped" marker for the checks that never ran.
-          if (( ${#validation_errors[@]} > 0 )); then
+          if (( ${#failed_foundational_rules[@]} > 0 )); then
             early_exit_reason="foundational input(s) malformed — skipped URL-shape checks"
           else
             # ── Phase 2: URL-shape checks ─────────────────────────────
@@ -339,6 +350,18 @@ jobs:
           fi
           echo "── URL validation results ─────────────────────────────────"
           echo "  verdict             : ${verdict}"
+          # Dedicated, machine-greppable line that names exactly which
+          # phase-1 rule(s) tripped the early-exit guard. Always
+          # printed (value is "none" when phase 1 passed) so log
+          # scrapers and humans alike get a stable field instead of
+          # having to infer it from the presence/absence of other
+          # lines. Joined with "," when multiple rules failed.
+          if (( ${#failed_foundational_rules[@]} > 0 )); then
+            failed_foundational_csv=$(IFS=,; echo "${failed_foundational_rules[*]}")
+          else
+            failed_foundational_csv="none"
+          fi
+          echo "  failed_foundational : ${failed_foundational_csv}"
           if [[ -n "${early_exit_reason}" ]]; then
             echo "  early-exit          : ${early_exit_reason}"
           fi
