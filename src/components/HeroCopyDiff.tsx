@@ -739,6 +739,7 @@ export function HeroCopyDiff() {
               onClick={() => {
                 const snap = currentSnapshot();
                 writeBaseline(snap);
+                clearPersistedOutlines();
                 refresh();
               }}
               data-action="accept-current"
