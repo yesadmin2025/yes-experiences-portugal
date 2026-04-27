@@ -1287,7 +1287,7 @@ export function HeroVerifyOverlay() {
                       cursor: "pointer",
                       letterSpacing: "0.02em",
                     }}
-                    title="Re-measure the live DOM and refresh the on-screen diff self-check, without rebuilding the export payload."
+                    title="Re-measure the live DOM and refresh the on-screen diff self-check, without rebuilding the export payload. Shortcut: Ctrl+Shift+R (Cmd+Shift+R on macOS)."
                   >
                     ↺ Re-run self-check
                   </button>
