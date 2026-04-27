@@ -62,9 +62,25 @@ jobs:
         # 1024×768 to catch drift across the `md:` breakpoint where the
         # CTA row reflows. The rhythm spec pins the gaps between
         # secondary CTA, microcopy, and the two-line signature.
-        run: bunx playwright test e2e/hero-visual-regression.spec.ts e2e/hero-cta-parity.spec.ts e2e/hero-cta-parity-tablet.spec.ts e2e/hero-mobile-rhythm.spec.ts --reporter=github,html
+        #
+        # Reporters (github + html + cta-parity-summary) are configured
+        # in playwright.config.ts — do NOT add --reporter here, or the
+        # per-viewport CTA parity step summary will be dropped.
+        run: bunx playwright test e2e/hero-visual-regression.spec.ts e2e/hero-cta-parity.spec.ts e2e/hero-cta-parity-tablet.spec.ts e2e/hero-mobile-rhythm.spec.ts
         env:
           CI: "true"
+
+      - name: Upload CTA parity summary
+        # Mirrors the per-viewport pass/fail + deltas table written to
+        # the GitHub step summary, so reviewers can download it from the
+        # workflow run page even if the step summary was truncated.
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cta-parity-summary
+          path: playwright-report/cta-parity-summary.md
+          if-no-files-found: ignore
+          retention-days: 14
 
       - name: Upload Playwright report (diffs + traces)
         if: always()
