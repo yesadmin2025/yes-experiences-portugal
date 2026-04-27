@@ -401,6 +401,13 @@ function HomePage() {
                 localStorage baseline and logs changed fields. Manual
                 controls live on `window.__heroCopy`. Renders nothing. */}
             <HeroCopyDiff />
+
+            {/* On-page reset: clears persisted outlines and arms a one-shot
+                flag so the next navigation back to "/" forces a full diff
+                refresh, bypassing the version guard. */}
+            <div className="mt-6 opacity-0 animate-[heroFade_1.4s_ease-out_2s_forwards]">
+              <HeroCopyDiffResetButton />
+            </div>
           </div>
         </div>
       </section>
