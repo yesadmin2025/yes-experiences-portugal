@@ -51,9 +51,17 @@ const CHECKS: CheckItem[] = [
 
 function PreviewCheckPage() {
   const [checked, setChecked] = useState<Record<string, boolean>>({});
+  const iframeRefs = useRef<Record<string, HTMLIFrameElement | null>>({});
 
   const toggle = (id: string) =>
     setChecked((prev) => ({ ...prev, [id]: !prev[id] }));
+
+  const jumpTo = (item: CheckItem) => {
+    const el = iframeRefs.current[item.id];
+    if (!el || !item.hash) return;
+    // Re-assigning src forces the iframe to navigate to the anchor and scroll.
+    el.src = item.src + item.hash + "?t=" + Date.now();
+  };
 
   const completed = CHECKS.filter((c) => checked[c.id]).length;
 
