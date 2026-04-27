@@ -1328,7 +1328,7 @@ function HomePage() {
           <div className="reveal text-center max-w-2xl mx-auto mb-14 md:mb-16">
             <span className="eyebrow">Voices</span>
             <h2 id="reviews-title" className="serif text-[2.25rem] md:text-5xl mt-5 leading-[1.08]">
-              700+ verified <span className="italic">5-star reviews</span>
+              700+ <span className="italic">5-star reviews</span>
             </h2>
             <p
               className="mt-5 flex items-center justify-center gap-1.5 text-[color:var(--gold)]"
