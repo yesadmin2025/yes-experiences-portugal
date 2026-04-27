@@ -342,7 +342,7 @@ function HomePage() {
                 <span className="sr-only">{HERO_COPY.brandLine}</span>
                 <span
                   aria-hidden="true"
-                  className="flex flex-col items-center gap-1.5 text-[10.5px] md:text-[11px] uppercase tracking-[0.32em] leading-[1.4] text-center"
+                  className="hero-rhythm-signature-line-gap flex flex-col items-center text-[10.5px] md:text-[11px] uppercase tracking-[0.32em] leading-[1.4] text-center"
                 >
                   <span>Whatever you have in mind,</span>
                   <span className="text-[color:var(--gold)] tracking-[0.38em]">We say YES.</span>
