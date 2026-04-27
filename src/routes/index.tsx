@@ -102,19 +102,19 @@ const howItWorks = [
   {
     step: "01",
     icon: BookOpen,
-    title: "Start with an idea, place or experience",
-    line: "Begin from a curated experience or a blank slate — wherever feels right.",
+    title: "Start with an idea, a place or a plan",
+    line: "A signature, a region, or a blank slate — wherever feels right.",
   },
   {
     step: "02",
     icon: PenLine,
-    title: "Shape it instantly, your way",
-    line: "Adjust the pace, the stops, the people you meet — in real time.",
+    title: "Shape it your way, in real time",
+    line: "Adjust the pace, the stops, the people you meet — as you go.",
   },
   {
     step: "03",
     icon: Zap,
-    title: "Confirm without waiting",
+    title: "Confirm instantly — no waiting",
     line: "No forms. No requests. The moment it feels right, it's yours.",
   },
 ];
