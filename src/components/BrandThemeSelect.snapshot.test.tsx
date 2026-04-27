@@ -89,14 +89,15 @@ describe("BrandThemeSelect — a11y attribute snapshots", () => {
           "tag": "LABEL",
           "text": "Brand theme",
         },
-        "select": {
-          "accessibleName": "Brand theme",
-          "ariaDescribedBy": null,
-          "ariaInvalid": null,
-          "disabled": false,
-          "role": null,
-          "tabIndex": 0,
-        },
+          "select": {
+            "accessibleName": "Brand theme",
+            "ariaDescribedBy": null,
+            "ariaInvalid": null,
+            "disabled": false,
+            "role": null,
+            "tabIndex": 0,
+            "tag": "SELECT",
+          },
       }
     `);
   });
@@ -130,14 +131,15 @@ describe("BrandThemeSelect — a11y attribute snapshots", () => {
             "tag": "LABEL",
             "text": "Brand theme",
           },
-          "select": {
-            "accessibleName": "Brand theme",
-            "ariaDescribedBy": "<linked-to-alert>",
-            "ariaInvalid": "true",
-            "disabled": false,
-            "role": null,
-            "tabIndex": 0,
-          },
+            "select": {
+              "accessibleName": "Brand theme",
+              "ariaDescribedBy": "<linked-to-alert>",
+              "ariaInvalid": "true",
+              "disabled": false,
+              "role": null,
+              "tabIndex": 0,
+              "tag": "SELECT",
+            },
         }
       `);
     });
