@@ -61,7 +61,7 @@ export function Navbar() {
               Tracking tightened slightly (0.20em) so all 8 labels fit on one
               row at lg+ without wrapping. The CTA button is the calm,
               conversion-focused anchor — teal fill, fine gold border. */}
-          <nav className="hidden lg:flex items-center h-full gap-7 xl:gap-9 text-[11px] uppercase tracking-[0.2em] font-normal leading-none">
+          <nav className="hidden lg:flex items-center h-full gap-8 xl:gap-10 text-[11px] uppercase tracking-[0.22em] font-normal leading-none">
             {desktopLinks.map((n) => (
               <Link
                 key={n.to}
