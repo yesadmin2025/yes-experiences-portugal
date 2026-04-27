@@ -133,7 +133,8 @@ type FailureReason =
   | "fetch_error"
   | "non_200"
   | "missing_strings"
-  | "stale_version";
+  | "stale_version"
+  | "spec_drift";
 
 type FailedRouteSummary = {
   path: string;
@@ -144,16 +145,23 @@ type FailedRouteSummary = {
   liveVersion: string | null;
 };
 
+type SpecDriftEntry = { key: string; expected: string; actual: string };
+type SpecDriftResult = { ok: boolean; drifted: SpecDriftEntry[] };
+
 type Summary = {
   totalPages: number;
   passedPages: number;
   failedPages: number;
   failedRoutes: FailedRouteSummary[];
   failedPaths: string[];
+  specDriftKeys: string[];
   message: string;
 };
 
-function buildSummary(pages: PageReport[]): Summary {
+function buildSummary(
+  pages: PageReport[],
+  specDrift: SpecDriftResult,
+): Summary {
   const failed = pages.filter((p) => !p.ok);
   const failedRoutes: FailedRouteSummary[] = failed.map((p) => {
     const reasons: FailureReason[] = [];
@@ -172,10 +180,23 @@ function buildSummary(pages: PageReport[]): Summary {
   });
 
   const failedPaths = failedRoutes.map((r) => r.path);
+  const specDriftKeys = specDrift.drifted.map((d) => d.key);
+
+  const parts: string[] = [];
+  if (!specDrift.ok) {
+    parts.push(
+      `Source HERO_COPY drifted from spec: ${specDriftKeys.join(", ")}`,
+    );
+  }
+  if (failed.length > 0) {
+    parts.push(
+      `${failed.length} of ${pages.length} page(s) failed: ${failedPaths.join(", ")}`,
+    );
+  }
   const message =
-    failed.length === 0
-      ? `All ${pages.length} page(s) passed verification.`
-      : `${failed.length} of ${pages.length} page(s) failed: ${failedPaths.join(", ")}`;
+    parts.length === 0
+      ? `All ${pages.length} page(s) match the frozen hero copy spec.`
+      : parts.join(" — ");
 
   return {
     totalPages: pages.length,
@@ -183,6 +204,7 @@ function buildSummary(pages: PageReport[]): Summary {
     failedPages: failed.length,
     failedRoutes,
     failedPaths,
+    specDriftKeys,
     message,
   };
 }
