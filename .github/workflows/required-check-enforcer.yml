@@ -273,46 +273,72 @@ jobs:
           fi
 
           # 6. Runs URL — uses the workflow's basename, not its full path.
+          # Compute the basenames up front so the consolidated log
+          # block below can always print them, even when the shape
+          # regex fails (or any earlier rule failed). Defensive `?` /
+          # `#` strips defend against a future change that adds a query
+          # string or fragment to the runs URL.
+          expected_basename=$(basename "${TARGET_WORKFLOW}")
+          runs_basename="${WORKFLOW_RUNS_URL##*/}"
+          runs_basename="${runs_basename%%\?*}"
+          runs_basename="${runs_basename%%#*}"
+
           runs_pattern="^${SERVER_URL}/${REPO}/actions/workflows/[A-Za-z0-9._-]+\.ya?ml$"
           if ! [[ "${WORKFLOW_RUNS_URL}" =~ $runs_pattern ]]; then
             validation_errors+=("WORKFLOW_RUNS_URL does not match expected shape: \"${WORKFLOW_RUNS_URL}\"")
-          else
-            # 6a. The basename embedded in the runs URL must match the
-            # basename of TARGET_WORKFLOW exactly. Catches a class of
-            # bugs where someone refactors the basename derivation
-            # (e.g. drops the extension, lowercases, or substitutes a
-            # hard-coded string) and the URL still passes the shape
-            # regex above but points at a DIFFERENT workflow's runs
-            # listing — silently misleading every reviewer who clicks.
-            expected_basename=$(basename "${TARGET_WORKFLOW}")
-            # Strip query string + fragment defensively, even though
-            # the runs URL is not expected to carry either today.
-            runs_basename="${WORKFLOW_RUNS_URL##*/}"
-            runs_basename="${runs_basename%%\?*}"
-            runs_basename="${runs_basename%%#*}"
-            if [[ "${runs_basename}" != "${expected_basename}" ]]; then
-              validation_errors+=(
-                "WORKFLOW_RUNS_URL basename \"${runs_basename}\" does not match basename of TARGET_WORKFLOW \"${expected_basename}\" (TARGET_WORKFLOW=\"${TARGET_WORKFLOW}\", URL=\"${WORKFLOW_RUNS_URL}\")"
-              )
-            fi
+          fi
+          # 6a. The basename embedded in the runs URL must match the
+          # basename of TARGET_WORKFLOW exactly. Catches a class of
+          # bugs where someone refactors the basename derivation
+          # (e.g. drops the extension, lowercases, or substitutes a
+          # hard-coded string) and the URL still passes the shape
+          # regex above but points at a DIFFERENT workflow's runs
+          # listing — silently misleading every reviewer who clicks.
+          if [[ "${runs_basename}" != "${expected_basename}" ]]; then
+            validation_errors+=(
+              "WORKFLOW_RUNS_URL basename \"${runs_basename}\" does not match basename of TARGET_WORKFLOW \"${expected_basename}\" (TARGET_WORKFLOW=\"${TARGET_WORKFLOW}\", URL=\"${WORKFLOW_RUNS_URL}\")"
+            )
           fi
 
+          # ── Consolidated URL validation results ─────────────────────
+          # ONE place that lists every input AND every derived value
+          # involved in URL construction. Always printed (success or
+          # failure) so an operator chasing a wrong link can read this
+          # single block instead of stitching together the earlier
+          # banners. Field order mirrors the construction order, so
+          # reading top-to-bottom is also a derivation walkthrough.
           if (( ${#validation_errors[@]} > 0 )); then
-            echo "❌ Refusing to post PR comment — ${#validation_errors[@]} URL validation error(s):"
+            verdict="❌ FAIL (${#validation_errors[@]} error(s))"
+          else
+            verdict="✅ PASS"
+          fi
+          echo "── URL validation results ─────────────────────────────────"
+          echo "  verdict             : ${verdict}"
+          echo "  ── inputs ──"
+          echo "  SERVER_URL          : \"${SERVER_URL}\""
+          echo "  REPO                : \"${REPO}\""
+          echo "  HEAD_SHA            : \"${HEAD_SHA}\""
+          echo "  TARGET_WORKFLOW     : \"${TARGET_WORKFLOW}\""
+          echo "  TARGET_JOB_KEY      : \"${TARGET_JOB_KEY}\""
+          echo "  NAME_LINE           : \"${NAME_LINE}\""
+          echo "  ── derived ──"
+          echo "  expected_basename   : \"${expected_basename}\""
+          echo "  runs_basename       : \"${runs_basename}\""
+          echo "  WORKFLOW_FILE_URL   : \"${WORKFLOW_FILE_URL}\""
+          echo "  WORKFLOW_JOB_URL    : \"${WORKFLOW_JOB_URL}\""
+          echo "  WORKFLOW_RUNS_URL   : \"${WORKFLOW_RUNS_URL}\""
+          if (( ${#validation_errors[@]} > 0 )); then
+            echo "  ── errors ──"
             for e in "${validation_errors[@]}"; do
               echo "  - ${e}"
             done
-            echo ""
-            echo "Inputs that produced the malformed URL(s):"
-            echo "  SERVER_URL       = \"${SERVER_URL}\""
-            echo "  REPO             = \"${REPO}\""
-            echo "  HEAD_SHA         = \"${HEAD_SHA}\""
-            echo "  TARGET_WORKFLOW  = \"${TARGET_WORKFLOW}\""
-            echo "  NAME_LINE        = \"${NAME_LINE}\""
+          fi
+          echo "────────────────────────────────────────────────────────────"
+
+          if (( ${#validation_errors[@]} > 0 )); then
+            echo "❌ Refusing to post PR comment — see URL validation results above."
             exit 2
           fi
-
-          echo "✅ Deep-link URLs validated against expected GitHub patterns."
 
           # Fence the script output in a code block; truncate to keep
           # the comment under GitHub's 65,536-char body limit with
