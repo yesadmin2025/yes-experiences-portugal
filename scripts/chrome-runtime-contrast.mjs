@@ -123,11 +123,20 @@ const CHROME_FILES = [
   },
 ];
 
-// Threshold for a pair, based on token semantics.
-function thresholdFor(role, label) {
-  if (role === "border") return 3.0; // WCAG 1.4.11
-  // Treat tiny uppercase labels (footer column headers, brand line) as Large.
-  if (/uppercase|tracking-\[0\.3em\]/.test(label)) return 3.0;
+// Threshold for a pair, based on token semantics + class context.
+//   - Frames around interactive elements (full `border` class) need ≥ 3:1
+//     for WCAG 1.4.11 non-text contrast.
+//   - Single-edge dividers (`border-t`, `border-b`, `border-l`, `border-r`)
+//     are decorative section separators, not actionable frames; WCAG only
+//     requires they be visible. We use 1.3:1 as the visibility floor.
+//   - Tiny uppercase labels (footer headers, brand line) qualify as Large
+//     text → 3:1.
+function thresholdFor(role, snippet) {
+  if (role === "border") {
+    const isDivider = /\bborder-[tblr]\b/.test(snippet) && !/\bborder\b\s/.test(snippet);
+    return isDivider ? 1.3 : 3.0;
+  }
+  if (/uppercase|tracking-\[0\.3em\]/.test(snippet)) return 3.0;
   return 4.5;
 }
 
