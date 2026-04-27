@@ -164,7 +164,7 @@ const startPaths = [
     icon: Sparkles,
     eyebrow: "From scratch",
     title: "Design in the Studio",
-    line: "Create everything from a blank canvas, in real time.",
+    line: "Create everything from a blank slate, in real time.",
     cta: "Open the Studio",
     to: "/builder",
     accent: "teal" as const,
