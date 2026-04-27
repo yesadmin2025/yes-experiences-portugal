@@ -25,12 +25,7 @@ export const heroSpecKeySchema = z.enum([
   "microcopy",
 ]);
 
-export const fieldStatusSchema = z.enum([
-  "match",
-  "loose",
-  "mismatch",
-  "missing",
-]);
+export const fieldStatusSchema = z.enum(["match", "loose", "mismatch", "missing"]);
 
 export const diffSegmentSchema = z.object({
   type: z.enum(["equal", "removed", "added"]),

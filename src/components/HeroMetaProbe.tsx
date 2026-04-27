@@ -28,9 +28,7 @@ function readHeadSnapshot(): MetaSnapshot {
   const metas = document.head.querySelectorAll("meta");
   metas.forEach((el) => {
     const key =
-      el.getAttribute("name") ??
-      el.getAttribute("property") ??
-      el.getAttribute("http-equiv");
+      el.getAttribute("name") ?? el.getAttribute("property") ?? el.getAttribute("http-equiv");
     const value = el.getAttribute("content");
     if (!key || value == null) return;
     // Mirror everything that's clearly hero/SEO related so future additions

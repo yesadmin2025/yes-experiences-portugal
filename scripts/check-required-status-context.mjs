@@ -43,8 +43,7 @@ const REPO = process.env.GITHUB_REPOSITORY;
 const API = process.env.GITHUB_API_URL ?? "https://api.github.com";
 const TOKEN = process.env.BRANCH_PROTECTION_TOKEN;
 const BRANCH = process.env.PROTECTED_BRANCH ?? "main";
-const WORKFLOW_PATH =
-  process.env.WORKFLOW_PATH ?? ".github/workflows/homepage-structure.yml";
+const WORKFLOW_PATH = process.env.WORKFLOW_PATH ?? ".github/workflows/homepage-structure.yml";
 const JOB_KEY = process.env.WORKFLOW_JOB_KEY ?? "homepage-structure";
 
 function fail(code, msg) {
@@ -93,10 +92,7 @@ function extractJobName(yamlText, jobKey) {
     // If we hit another top-level key, the job key is absent.
     if (/^[A-Za-z_]/.test(lines[k])) break;
   }
-  if (j < 0)
-    throw new Error(
-      `Job key "${jobKey}" not found under jobs: in ${WORKFLOW_PATH}.`,
-    );
+  if (j < 0) throw new Error(`Job key "${jobKey}" not found under jobs: in ${WORKFLOW_PATH}.`);
 
   // Within the job, find `    name: …` at exactly 4-space indent.
   // Stop scanning when we leave the job (indent ≤ 2 on a non-blank line).
@@ -138,9 +134,7 @@ function hexDump(label, str) {
     const ascii = [...slice]
       .map((b) => (b >= 0x20 && b < 0x7f ? String.fromCharCode(b) : "."))
       .join("");
-    lines.push(
-      `  ${i.toString(16).padStart(4, "0")}  ${hex.padEnd(48)}  ${ascii}`,
-    );
+    lines.push(`  ${i.toString(16).padStart(4, "0")}  ${hex.padEnd(48)}  ${ascii}`);
   }
   return `${label} (utf-8, ${buf.length} bytes):\n${lines.join("\n")}`;
 }
@@ -156,10 +150,9 @@ async function gh(path) {
   });
   if (!res.ok) {
     const body = await res.text();
-    throw Object.assign(
-      new Error(`GitHub API ${res.status} on ${path}: ${body.slice(0, 500)}`),
-      { status: res.status },
-    );
+    throw Object.assign(new Error(`GitHub API ${res.status} on ${path}: ${body.slice(0, 500)}`), {
+      status: res.status,
+    });
   }
   return res.json();
 }

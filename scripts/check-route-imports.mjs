@@ -21,7 +21,23 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
 const ROUTES_DIR = join(ROOT, "src", "routes");
 const SRC_DIR = join(ROOT, "src");
-const EXTS = [".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".css", ".json", ".svg", ".png", ".jpg", ".jpeg", ".webp", ".avif", ".gif"];
+const EXTS = [
+  ".ts",
+  ".tsx",
+  ".js",
+  ".jsx",
+  ".mjs",
+  ".cjs",
+  ".css",
+  ".json",
+  ".svg",
+  ".png",
+  ".jpg",
+  ".jpeg",
+  ".webp",
+  ".avif",
+  ".gif",
+];
 
 function walk(dir) {
   const out = [];
@@ -37,7 +53,8 @@ function walk(dir) {
 function resolveImport(spec, fromFile) {
   let basePath;
   if (spec.startsWith("@/")) basePath = join(SRC_DIR, spec.slice(2));
-  else if (spec.startsWith("./") || spec.startsWith("../")) basePath = resolve(dirname(fromFile), spec);
+  else if (spec.startsWith("./") || spec.startsWith("../"))
+    basePath = resolve(dirname(fromFile), spec);
   else return { skipped: true };
 
   basePath = basePath.replace(/[?#].*$/, "");
@@ -141,4 +158,6 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log(`✓ Route imports OK (${files.length} route file${files.length === 1 ? "" : "s"} scanned, ${warnings.length} warning${warnings.length === 1 ? "" : "s"})`);
+console.log(
+  `✓ Route imports OK (${files.length} route file${files.length === 1 ? "" : "s"} scanned, ${warnings.length} warning${warnings.length === 1 ? "" : "s"})`,
+);

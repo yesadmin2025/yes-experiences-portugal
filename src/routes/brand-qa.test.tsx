@@ -13,11 +13,7 @@
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, fireEvent, cleanup } from "@testing-library/react";
-import {
-  BrandThemeSelectorView,
-  themeSearchSchema,
-  INVALID_THEME_SENTINEL,
-} from "./brand-qa";
+import { BrandThemeSelectorView, themeSearchSchema, INVALID_THEME_SENTINEL } from "./brand-qa";
 
 afterEach(() => {
   cleanup();
@@ -53,12 +49,10 @@ describe("/brand-qa — themeSearchSchema (URL contract)", () => {
   });
 
   it("never throws for non-string input — falls back to sentinel", () => {
-    expect(() =>
-      themeSearchSchema.parse({ theme: 42 as unknown as string }),
-    ).not.toThrow();
-    expect(themeSearchSchema.parse({ theme: 42 as unknown as string })).toEqual(
-      { theme: INVALID_THEME_SENTINEL },
-    );
+    expect(() => themeSearchSchema.parse({ theme: 42 as unknown as string })).not.toThrow();
+    expect(themeSearchSchema.parse({ theme: 42 as unknown as string })).toEqual({
+      theme: INVALID_THEME_SENTINEL,
+    });
   });
 });
 
@@ -79,13 +73,9 @@ describe("/brand-qa — BrandThemeSelectorView with valid ?theme=", () => {
     const preview = screen.getByTestId("brand-theme-preview");
     expect(preview.querySelector("img")).not.toBeNull();
     // The "preview hidden" placeholder is NOT present.
-    expect(
-      screen.queryByTestId("brand-theme-preview-hidden"),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByTestId("brand-theme-preview-hidden")).not.toBeInTheDocument();
     // The dev error panel is NOT present.
-    expect(
-      screen.queryByTestId("brand-theme-select-error"),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByTestId("brand-theme-select-error")).not.toBeInTheDocument();
     // URL echo reflects the value.
     expect(screen.getByTestId("brand-theme-current-param")).toHaveTextContent(
       "?theme=teal-on-ivory",
@@ -103,9 +93,7 @@ describe("/brand-qa — BrandThemeSelectorView with valid ?theme=", () => {
 
     const preview = screen.getByTestId("brand-theme-preview");
     expect(preview.querySelector("img")).not.toBeNull();
-    expect(
-      screen.queryByTestId("brand-theme-select-error"),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByTestId("brand-theme-select-error")).not.toBeInTheDocument();
   });
 
   it("treats a missing ?theme as the default (valid) preview", () => {
@@ -117,12 +105,8 @@ describe("/brand-qa — BrandThemeSelectorView with valid ?theme=", () => {
       />,
     );
 
-    expect(
-      screen.getByTestId("brand-theme-preview").querySelector("img"),
-    ).not.toBeNull();
-    expect(
-      screen.queryByTestId("brand-theme-select-error"),
-    ).not.toBeInTheDocument();
+    expect(screen.getByTestId("brand-theme-preview").querySelector("img")).not.toBeNull();
+    expect(screen.queryByTestId("brand-theme-select-error")).not.toBeInTheDocument();
   });
 });
 
@@ -151,12 +135,8 @@ describe("/brand-qa — BrandThemeSelectorView with invalid ?theme=", () => {
     );
 
     // Preview is hidden — no <img>, placeholder visible.
-    expect(
-      screen.getByTestId("brand-theme-preview").querySelector("img"),
-    ).toBeNull();
-    expect(
-      screen.getByTestId("brand-theme-preview-hidden"),
-    ).toBeInTheDocument();
+    expect(screen.getByTestId("brand-theme-preview").querySelector("img")).toBeNull();
+    expect(screen.getByTestId("brand-theme-preview-hidden")).toBeInTheDocument();
   });
 
   it("surfaces the dev-only error panel inside <BrandThemeSelect>", () => {
@@ -192,12 +172,8 @@ describe("/brand-qa — BrandThemeSelectorView with invalid ?theme=", () => {
       />,
     );
 
-    expect(
-      screen.getByTestId("brand-theme-select-error"),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByTestId("brand-theme-preview").querySelector("img"),
-    ).toBeNull();
+    expect(screen.getByTestId("brand-theme-select-error")).toBeInTheDocument();
+    expect(screen.getByTestId("brand-theme-preview").querySelector("img")).toBeNull();
   });
 });
 
@@ -215,9 +191,7 @@ describe("/brand-qa — BrandThemeSelectorView write-back", () => {
       />,
     );
 
-    const select = screen
-      .getByTestId("brand-theme-select")
-      .querySelector("select")!;
+    const select = screen.getByTestId("brand-theme-select").querySelector("select")!;
     fireEvent.change(select, { target: { value: "gold-on-charcoal" } });
 
     expect(onSetTheme).toHaveBeenCalledWith("gold-on-charcoal");
@@ -248,9 +222,7 @@ describe("/brand-qa — BrandThemeSelectorView write-back", () => {
     );
 
     // Silence the guard's console.error from the invalid initial state.
-    const spy = vi
-      .spyOn(console, "error")
-      .mockImplementation(() => undefined);
+    const spy = vi.spyOn(console, "error").mockImplementation(() => undefined);
     try {
       fireEvent.click(screen.getByText(/Clear \?theme/i));
       expect(onSetRawTheme).toHaveBeenCalledWith(undefined);

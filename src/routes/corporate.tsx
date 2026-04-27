@@ -27,15 +27,20 @@ function Page() {
             Corporate & <span className="italic text-[color:var(--teal)]">Incentive Travel</span>
           </h1>
           <p className="mt-5 max-w-xl mx-auto text-[color:var(--charcoal-soft)]">
-            Authentic Portuguese character, designed for international teams, executive groups
-            and incentive programs.
+            Authentic Portuguese character, designed for international teams, executive groups and
+            incentive programs.
           </p>
         </div>
       </section>
 
       <section className="py-20">
         <div className="container-x grid lg:grid-cols-2 gap-12 items-center">
-          <img src={img} alt="Corporate group meeting" loading="lazy" className="w-full aspect-[5/4] object-cover" />
+          <img
+            src={img}
+            alt="Corporate group meeting"
+            loading="lazy"
+            className="w-full aspect-[5/4] object-cover"
+          />
           <div>
             <h2 className="serif text-3xl md:text-4xl">Designed with intention.</h2>
             <p className="mt-5 text-[color:var(--charcoal-soft)] leading-relaxed">

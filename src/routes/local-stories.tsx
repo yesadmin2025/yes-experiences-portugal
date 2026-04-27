@@ -30,26 +30,22 @@ export const Route = createFileRoute("/local-stories")({
 const stories = [
   {
     title: "Hidden Coastal Roads",
-    line:
-      "The drive from Sintra to Cabo da Roca that no guidebook quite gets right — pine-scented bends, an empty cove, a shack where the fishermen eat lunch.",
+    line: "The drive from Sintra to Cabo da Roca that no guidebook quite gets right — pine-scented bends, an empty cove, a shack where the fishermen eat lunch.",
     img: editCoastal,
   },
   {
     title: "Family Wineries",
-    line:
-      "Three generations, one cellar door, a glass poured by the winemaker himself. No tasting menu, no script — just the year's vintage and an unhurried afternoon.",
+    line: "Three generations, one cellar door, a glass poured by the winemaker himself. No tasting menu, no script — just the year's vintage and an unhurried afternoon.",
     img: editWinery,
   },
   {
     title: "Local Markets at Dawn",
-    line:
-      "Where breakfast is a pastel de nata and the day's plan is written on a napkin. We know the bakers, the cheesemakers, the woman who still salts her own olives.",
+    line: "Where breakfast is a pastel de nata and the day's plan is written on a napkin. We know the bakers, the cheesemakers, the woman who still salts her own olives.",
     img: editMarket,
   },
   {
     title: "Secret Viewpoints",
-    line:
-      "A bend in the road. A stone wall. The whole valley below — and nobody else. The kind of place you only find if someone who lives here points the way.",
+    line: "A bend in the road. A stone wall. The whole valley below — and nobody else. The kind of place you only find if someone who lives here points the way.",
     img: editViewpoint,
   },
 ];
@@ -66,9 +62,8 @@ function Page() {
             <span className="italic text-[color:var(--teal)]">we travel ourselves</span>
           </h1>
           <p className="mt-6 max-w-xl mx-auto text-[15px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.75] font-light">
-            Notes from the road — written by the locals who design our private
-            experiences. Hidden places, family kitchens, quiet corners of a country
-            we know by heart.
+            Notes from the road — written by the locals who design our private experiences. Hidden
+            places, family kitchens, quiet corners of a country we know by heart.
           </p>
         </div>
       </section>

@@ -32,10 +32,10 @@ import { test, expect, type Page } from "@playwright/test";
 // transition into the md ladder. Anything ≥1024 is desktop and not
 // covered by this mobile-only spec.
 const MOBILE_BREAKPOINTS = [
-  { name: "iPhone SE",    width: 375, height: 667, expectedNavH: 60 }, // < md → 60px
-  { name: "Pixel 5",      width: 393, height: 851, expectedNavH: 60 }, // < md → 60px
-  { name: "iPhone 12",    width: 390, height: 844, expectedNavH: 60 }, // < md → 60px
-  { name: "iPad portrait",width: 768, height: 1024, expectedNavH: 64 }, // md → 64px
+  { name: "iPhone SE", width: 375, height: 667, expectedNavH: 60 }, // < md → 60px
+  { name: "Pixel 5", width: 393, height: 851, expectedNavH: 60 }, // < md → 60px
+  { name: "iPhone 12", width: 390, height: 844, expectedNavH: 60 }, // < md → 60px
+  { name: "iPad portrait", width: 768, height: 1024, expectedNavH: 64 }, // md → 64px
 ] as const;
 
 // Must match `--logo-scale-gold-on-charcoal` in src/styles.css.
@@ -63,10 +63,7 @@ async function measureLogo(page: Page, selector: string) {
 
 test.describe("Footer logo proportions match navbar (mobile)", () => {
   // Run only on the mobile project — desktop has its own chrome regression.
-  test.skip(
-    ({}, testInfo) => testInfo.project.name !== "mobile-chromium",
-    "mobile-only spec"
-  );
+  test.skip((_, testInfo) => testInfo.project.name !== "mobile-chromium", "mobile-only spec");
 
   for (const bp of MOBILE_BREAKPOINTS) {
     test(`@ ${bp.name} (${bp.width}×${bp.height})`, async ({ page }) => {
@@ -81,17 +78,14 @@ test.describe("Footer logo proportions match navbar (mobile)", () => {
       const footer = page.locator("footer").first();
       await footer.scrollIntoViewIfNeeded();
       await page.waitForTimeout(150);
-      const footerLogo = await measureLogo(
-        page,
-        "footer img.logo-mark--gold-on-charcoal"
-      );
+      const footerLogo = await measureLogo(page, "footer img.logo-mark--gold-on-charcoal");
 
       // ── Assertion 1: navbar logo height matches the responsive ladder.
       // This catches accidental Tailwind class drift (e.g. someone changes
       // h-[60px] → h-[56px] in only one component).
       expect(
         Math.abs(navLogo.height - bp.expectedNavH),
-        `Navbar logo at ${bp.name} should render at ~${bp.expectedNavH}px, got ${navLogo.height.toFixed(2)}px`
+        `Navbar logo at ${bp.name} should render at ~${bp.expectedNavH}px, got ${navLogo.height.toFixed(2)}px`,
       ).toBeLessThanOrEqual(HEIGHT_TOLERANCE_PX);
 
       // ── Assertion 2: footer logo height = navbar height × gold scale.
@@ -101,7 +95,7 @@ test.describe("Footer logo proportions match navbar (mobile)", () => {
         Math.abs(footerLogo.height - expectedFooterH),
         `Footer logo at ${bp.name} should render at ~${expectedFooterH.toFixed(2)}px ` +
           `(${bp.expectedNavH}px × ${EXPECTED_GOLD_SCALE} scale), got ${footerLogo.height.toFixed(2)}px. ` +
-          `If you intentionally changed --logo-scale-gold-on-charcoal, update EXPECTED_GOLD_SCALE in this spec.`
+          `If you intentionally changed --logo-scale-gold-on-charcoal, update EXPECTED_GOLD_SCALE in this spec.`,
       ).toBeLessThanOrEqual(HEIGHT_TOLERANCE_PX);
 
       // ── Assertion 3: aspect ratios match (no squash in either chrome).
@@ -109,11 +103,11 @@ test.describe("Footer logo proportions match navbar (mobile)", () => {
       const expectedAspect = 909 / 579;
       expect(
         Math.abs(navLogo.aspect - expectedAspect),
-        `Navbar logo aspect ${navLogo.aspect.toFixed(4)} drifted from artwork ${expectedAspect.toFixed(4)}`
+        `Navbar logo aspect ${navLogo.aspect.toFixed(4)} drifted from artwork ${expectedAspect.toFixed(4)}`,
       ).toBeLessThanOrEqual(ASPECT_TOLERANCE);
       expect(
         Math.abs(footerLogo.aspect - expectedAspect),
-        `Footer logo aspect ${footerLogo.aspect.toFixed(4)} drifted from artwork ${expectedAspect.toFixed(4)}`
+        `Footer logo aspect ${footerLogo.aspect.toFixed(4)} drifted from artwork ${expectedAspect.toFixed(4)}`,
       ).toBeLessThanOrEqual(ASPECT_TOLERANCE);
 
       // ── Assertion 4: aspects match each other within a tighter budget.
@@ -122,7 +116,7 @@ test.describe("Footer logo proportions match navbar (mobile)", () => {
       expect(
         Math.abs(navLogo.aspect - footerLogo.aspect),
         `Navbar (${navLogo.aspect.toFixed(4)}) and footer (${footerLogo.aspect.toFixed(4)}) ` +
-          `aspect ratios drifted apart at ${bp.name}`
+          `aspect ratios drifted apart at ${bp.name}`,
       ).toBeLessThanOrEqual(ASPECT_TOLERANCE);
     });
   }

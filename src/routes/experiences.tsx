@@ -23,12 +23,48 @@ export const Route = createFileRoute("/experiences")({
 });
 
 const items = [
-  { title: "Douro Wine Estates", region: "Porto · Douro", duration: "Full Day", img: expWine, theme: "Wine" },
-  { title: "Algarve Coastal Drive", region: "Algarve", duration: "Full Day", img: expCoastal, theme: "Coastal" },
-  { title: "Lisbon Hidden Tables", region: "Lisbon", duration: "Evening", img: expGastronomy, theme: "Gastronomy" },
-  { title: "Sintra Forest Walks", region: "Lisbon", duration: "Half Day", img: expNature, theme: "Nature" },
-  { title: "Sunset on the Cliffs", region: "Algarve", duration: "Evening", img: expRomantic, theme: "Romantic" },
-  { title: "Old Lisbon by Foot", region: "Lisbon", duration: "Half Day", img: expStreet, theme: "Heritage" },
+  {
+    title: "Douro Wine Estates",
+    region: "Porto · Douro",
+    duration: "Full Day",
+    img: expWine,
+    theme: "Wine",
+  },
+  {
+    title: "Algarve Coastal Drive",
+    region: "Algarve",
+    duration: "Full Day",
+    img: expCoastal,
+    theme: "Coastal",
+  },
+  {
+    title: "Lisbon Hidden Tables",
+    region: "Lisbon",
+    duration: "Evening",
+    img: expGastronomy,
+    theme: "Gastronomy",
+  },
+  {
+    title: "Sintra Forest Walks",
+    region: "Lisbon",
+    duration: "Half Day",
+    img: expNature,
+    theme: "Nature",
+  },
+  {
+    title: "Sunset on the Cliffs",
+    region: "Algarve",
+    duration: "Evening",
+    img: expRomantic,
+    theme: "Romantic",
+  },
+  {
+    title: "Old Lisbon by Foot",
+    region: "Lisbon",
+    duration: "Half Day",
+    img: expStreet,
+    theme: "Heritage",
+  },
 ];
 
 function ExperiencesPage() {
@@ -77,7 +113,10 @@ function ExperiencesPage() {
                   className="mt-5 inline-flex items-center gap-2 text-sm text-[color:var(--teal)] hover:text-[color:var(--teal-2)]"
                 >
                   Tailor this experience
-                  <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight
+                    size={14}
+                    className="group-hover:translate-x-1 transition-transform"
+                  />
                 </Link>
               </article>
             ))}

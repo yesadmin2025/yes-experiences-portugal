@@ -45,7 +45,9 @@ const ROUTE = "/";
  *   - `pb` floor contributes only to the bottom of its own section
  *   - `min-h-vh` (hero) and `null` contribute 0 (measured separately)
  */
-function bottomFloorPx(rule: (typeof APPROVED_HOMEPAGE_SECTIONS)[number]["requiredSpacing"]): number {
+function bottomFloorPx(
+  rule: (typeof APPROVED_HOMEPAGE_SECTIONS)[number]["requiredSpacing"],
+): number {
   if (rule === null) return 0;
   if (rule.kind === "min-h-vh") return 0;
   // Both `py` and `pb` apply at the bottom of the section.
@@ -86,12 +88,10 @@ for (const vp of MOBILE_BREAKPOINTS) {
       await gotoHomeStable(page);
     });
 
-    test("has exactly the approved number of top-level sections", async ({
-      page,
-    }) => {
-      const count = await page.locator("main > section, body section").evaluate(
-        () => document.querySelectorAll("section").length,
-      );
+    test("has exactly the approved number of top-level sections", async ({ page }) => {
+      const count = await page
+        .locator("main > section, body section")
+        .evaluate(() => document.querySelectorAll("section").length);
       expect(count).toBe(APPROVED_SECTION_COUNT);
     });
 
@@ -119,9 +119,7 @@ for (const vp of MOBILE_BREAKPOINTS) {
       }
     });
 
-    test("real vertical gaps between adjacent sections meet the spec floors", async ({
-      page,
-    }) => {
+    test("real vertical gaps between adjacent sections meet the spec floors", async ({ page }) => {
       // Force layout, then collect bounding boxes for every <section>.
       const boxes = await page.evaluate(() => {
         const list = Array.from(document.querySelectorAll("section"));
@@ -152,17 +150,17 @@ for (const vp of MOBILE_BREAKPOINTS) {
         // section's padding floor contributes:
         //   prev contributes its bottom-padding floor
         //   next contributes its top-padding floor
-        const seamFloor = bottomFloorPx(prevSpec.requiredSpacing) +
-          topFloorPx(nextSpec.requiredSpacing);
+        const seamFloor =
+          bottomFloorPx(prevSpec.requiredSpacing) + topFloorPx(nextSpec.requiredSpacing);
 
         if (seamFloor === 0) continue; // hero seam etc. — not measured here
 
         // Each section must be AT LEAST as tall as the sum of its own
         // top + bottom padding floors (otherwise the floor was nuked).
-        const prevSelfMin = bottomFloorPx(prevSpec.requiredSpacing) +
-          topFloorPx(prevSpec.requiredSpacing);
-        const nextSelfMin = bottomFloorPx(nextSpec.requiredSpacing) +
-          topFloorPx(nextSpec.requiredSpacing);
+        const prevSelfMin =
+          bottomFloorPx(prevSpec.requiredSpacing) + topFloorPx(prevSpec.requiredSpacing);
+        const nextSelfMin =
+          bottomFloorPx(nextSpec.requiredSpacing) + topFloorPx(nextSpec.requiredSpacing);
 
         if (prevBox.height + 0.5 < prevSelfMin) {
           failures.push(
@@ -181,8 +179,9 @@ for (const vp of MOBILE_BREAKPOINTS) {
         // visible content of `next`. Because adjacent sections touch
         // (prev.bottom === next.top), the combined padding IS the gap
         // between content. Sub-pixel tolerance: allow 0.5px rounding.
-        const measuredSeam = (prevBox.bottom - prevBox.top) >= prevSelfMin &&
-          (nextBox.bottom - nextBox.top) >= nextSelfMin;
+        const measuredSeam =
+          prevBox.bottom - prevBox.top >= prevSelfMin &&
+          nextBox.bottom - nextBox.top >= nextSelfMin;
         if (!measuredSeam) {
           failures.push(
             `Seam between section ${prevSpec.order} (“${prevSpec.name}”) and ` +
@@ -208,9 +207,7 @@ for (const vp of MOBILE_BREAKPOINTS) {
       }
     });
 
-    test("page does not horizontally overflow the viewport", async ({
-      page,
-    }) => {
+    test("page does not horizontally overflow the viewport", async ({ page }) => {
       const overflow = await page.evaluate(() => {
         return {
           scrollWidth: document.documentElement.scrollWidth,
@@ -218,9 +215,7 @@ for (const vp of MOBILE_BREAKPOINTS) {
         };
       });
       // Allow 1px rounding tolerance for sub-pixel layouts.
-      expect(overflow.scrollWidth).toBeLessThanOrEqual(
-        overflow.clientWidth + 1,
-      );
+      expect(overflow.scrollWidth).toBeLessThanOrEqual(overflow.clientWidth + 1);
     });
   });
 }

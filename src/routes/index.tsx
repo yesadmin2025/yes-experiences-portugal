@@ -5,10 +5,7 @@ import { SiteLayout } from "@/components/SiteLayout";
 import { FAQ } from "@/components/FAQ";
 import { useHeroParallax } from "@/hooks/use-hero-parallax";
 import { useCtaScrollScale } from "@/hooks/use-cta-scroll-scale";
-import {
-  CtaScrollDebugOverlay,
-  useCtaScrollDebugToggle,
-} from "@/components/CtaScrollDebugOverlay";
+import { CtaScrollDebugOverlay, useCtaScrollDebugToggle } from "@/components/CtaScrollDebugOverlay";
 import heroImg from "@/assets/hero-coast.jpg";
 import multiDayImg from "@/assets/multi-day.jpg";
 import expWine from "@/assets/exp-wine.jpg";
@@ -18,7 +15,19 @@ import editCoastal from "@/assets/edit-coastal-road.jpg";
 import editWinery from "@/assets/edit-winery.jpg";
 import editMarket from "@/assets/edit-market.jpg";
 import editViewpoint from "@/assets/edit-viewpoint.jpg";
-import { ArrowRight, Star, Compass, Sparkles, PenLine, Heart, Lock, Wand2, Zap, BookOpen, Gift } from "lucide-react";
+import {
+  ArrowRight,
+  Star,
+  Compass,
+  Sparkles,
+  PenLine,
+  Heart,
+  Lock,
+  Wand2,
+  Zap,
+  BookOpen,
+  Gift,
+} from "lucide-react";
 import { PlatformBadge } from "@/components/PlatformBadge";
 import { HeroMetaProbe } from "@/components/HeroMetaProbe";
 import { HeroCopyDiff } from "@/components/HeroCopyDiff";
@@ -41,12 +50,18 @@ export const Route = createFileRoute("/")({
         name: "description",
         content: HERO_COPY.subheadline,
       },
-      { property: "og:title", content: "Portugal is the stage. You write the story. — YES experiences" },
+      {
+        property: "og:title",
+        content: "Portugal is the stage. You write the story. — YES experiences",
+      },
       {
         property: "og:description",
         content: HERO_COPY.subheadline,
       },
-      { property: "twitter:title", content: "Portugal is the stage. You write the story. — YES experiences" },
+      {
+        property: "twitter:title",
+        content: "Portugal is the stage. You write the story. — YES experiences",
+      },
       { property: "twitter:description", content: HERO_COPY.subheadline },
       { property: "og:image", content: heroImg },
       { property: "twitter:image", content: heroImg },
@@ -179,7 +194,8 @@ const startPaths = [
     to: "/builder",
     destination: "Studio",
     expectedTo: "/builder",
-    ariaLabel: "Open the Studio — design your experience from scratch in real time and confirm instantly",
+    ariaLabel:
+      "Open the Studio — design your experience from scratch in real time and confirm instantly",
     accent: "teal" as const,
   },
   {
@@ -252,7 +268,7 @@ function RouteValidationStrip() {
       ok: p.to === p.expectedTo,
     }));
     const allOk = results.every((r) => r.ok);
-    /* eslint-disable no-console */
+
     console.groupCollapsed(
       `%c[YES] Decision-card route check — ${allOk ? "PASS ✓" : "FAIL ✗"}`,
       `color:${allOk ? "#2e7d32" : "#c62828"};font-weight:600`,
@@ -265,7 +281,6 @@ function RouteValidationStrip() {
       );
     });
     console.groupEnd();
-    /* eslint-enable no-console */
   }, []);
 
   if (!show) return null;
@@ -289,9 +304,7 @@ function RouteValidationStrip() {
       <p className="flex items-center gap-2 text-[10.5px] uppercase tracking-[0.24em]">
         <span
           aria-hidden="true"
-          className={`inline-block w-2 h-2 rounded-full ${
-            allOk ? "bg-emerald-600" : "bg-red-600"
-          }`}
+          className={`inline-block w-2 h-2 rounded-full ${allOk ? "bg-emerald-600" : "bg-red-600"}`}
         />
         Route validation — {allOk ? "all 4 paths OK" : "MISMATCH detected"}
       </p>
@@ -403,14 +416,16 @@ function HomePage() {
                 subheadline, CTAs and microcopy (single hero content grid).
                 Locked to one line on mobile via whitespace-nowrap +
                 a smaller base size + tighter tracking. */}
-            <span
-              className="inline-flex items-center gap-2.5 sm:gap-3.5 whitespace-nowrap text-[10px] sm:text-[12px] md:text-[13px] uppercase tracking-[0.16em] sm:tracking-[0.26em] md:tracking-[0.3em] text-[color:var(--gold-soft)] opacity-0 animate-[heroFade_1.1s_ease-out_0.3s_forwards]"
-            >
-              <span aria-hidden="true" className="text-[color:var(--gold)]">✦</span>
+            <span className="inline-flex items-center gap-2.5 sm:gap-3.5 whitespace-nowrap text-[10px] sm:text-[12px] md:text-[13px] uppercase tracking-[0.16em] sm:tracking-[0.26em] md:tracking-[0.3em] text-[color:var(--gold-soft)] opacity-0 animate-[heroFade_1.1s_ease-out_0.3s_forwards]">
+              <span aria-hidden="true" className="text-[color:var(--gold)]">
+                ✦
+              </span>
               <span data-hero-field="eyebrow" className="whitespace-nowrap">
                 {HERO_COPY.eyebrow}
               </span>
-              <span aria-hidden="true" className="text-[color:var(--gold)]">✦</span>
+              <span aria-hidden="true" className="text-[color:var(--gold)]">
+                ✦
+              </span>
             </span>
 
             {/* Headline — sits on a calm 32px gap from the eyebrow on
@@ -497,7 +512,13 @@ function HomePage() {
                 {HERO_COPY.microcopy}
               </p>
               <p className="mt-3 text-[12.5px] md:text-[13px] text-[color:var(--ivory)]/75 italic font-light leading-[1.7] text-center sm:text-left">
-                Prefer guidance? <Link to="/contact" className="underline decoration-[color:var(--gold)]/60 underline-offset-4 hover:text-[color:var(--gold-soft)] transition-colors">A local designer can shape it with you.</Link>
+                Prefer guidance?{" "}
+                <Link
+                  to="/contact"
+                  className="underline decoration-[color:var(--gold)]/60 underline-offset-4 hover:text-[color:var(--gold-soft)] transition-colors"
+                >
+                  A local designer can shape it with you.
+                </Link>
               </p>
             </div>
 
@@ -573,7 +594,9 @@ function HomePage() {
             >
               <span data-probe-field="version">hero-copy-version:{HERO_COPY_VERSION}</span>
               {" | "}
-              <span data-probe-field="headline">{HERO_COPY.headlineLine1} {HERO_COPY.headlineLine2}</span>
+              <span data-probe-field="headline">
+                {HERO_COPY.headlineLine1} {HERO_COPY.headlineLine2}
+              </span>
               {" | "}
               <span data-probe-field="subheadline">{HERO_COPY.subheadline}</span>
             </div>
@@ -615,11 +638,7 @@ function HomePage() {
                 // so it survives a "View Source" capture without HTML-escaping
                 // mangling the quotes.
                 dangerouslySetInnerHTML={{
-                  __html: JSON.stringify(
-                    { version: HERO_COPY_VERSION, copy: HERO_COPY },
-                    null,
-                    2,
-                  ),
+                  __html: JSON.stringify({ version: HERO_COPY_VERSION, copy: HERO_COPY }, null, 2),
                 }}
               />
             </div>
@@ -810,8 +829,7 @@ function HomePage() {
                   title: "text-[color:var(--charcoal)]",
                   line: "text-[color:var(--charcoal-soft)]",
                   cta: "text-[color:var(--gold)]",
-                  rail:
-                    "h-[2px] bg-gradient-to-r from-[color:var(--gold)]/0 via-[color:var(--gold)]/70 to-[color:var(--gold)]/0",
+                  rail: "h-[2px] bg-gradient-to-r from-[color:var(--gold)]/0 via-[color:var(--gold)]/70 to-[color:var(--gold)]/0",
                   ribbon: null,
                 },
                 // 3 · Studio — teal flagship card, full bright-gold band
@@ -837,8 +855,7 @@ function HomePage() {
                   title: "text-[color:var(--ivory)]",
                   line: "text-[color:var(--ivory)]/80",
                   cta: "text-[color:var(--ivory)]",
-                  rail:
-                    "h-px bg-[image:repeating-linear-gradient(90deg,var(--gold)_0_6px,transparent_6px_12px)]",
+                  rail: "h-px bg-[image:repeating-linear-gradient(90deg,var(--gold)_0_6px,transparent_6px_12px)]",
                   ribbon: null,
                 },
               }[p.accent];
@@ -875,9 +892,7 @@ function HomePage() {
                     >
                       <Icon size={18} strokeWidth={1.5} />
                     </span>
-                    <span
-                      className={`text-[10.5px] uppercase tracking-[0.3em] ${styles.eyebrow}`}
-                    >
+                    <span className={`text-[10.5px] uppercase tracking-[0.3em] ${styles.eyebrow}`}>
                       {p.eyebrow}
                     </span>
                     <h3
@@ -902,7 +917,6 @@ function HomePage() {
           </ul>
 
           <RouteValidationStrip />
-
         </div>
       </section>
 
@@ -910,11 +924,17 @@ function HomePage() {
           Mobile-first 3-step editorial layout. Sets expectations + removes
           friction immediately after the trust signal. Generous vertical
           rhythm; numbers + icons + short copy, never paragraphs. */}
-      <section className="py-24 md:py-36 bg-[color:var(--ivory)]" aria-labelledby="how-it-works-title">
+      <section
+        className="py-24 md:py-36 bg-[color:var(--ivory)]"
+        aria-labelledby="how-it-works-title"
+      >
         <div className="container-x">
           <div className="reveal text-center max-w-2xl mx-auto mb-14 md:mb-20">
             <span className="eyebrow">How you create it</span>
-            <h2 id="how-it-works-title" className="serif text-[2.25rem] md:text-5xl mt-5 leading-[1.08]">
+            <h2
+              id="how-it-works-title"
+              className="serif text-[2.25rem] md:text-5xl mt-5 leading-[1.08]"
+            >
               Designed by you. <span className="italic">Confirmed instantly.</span>
             </h2>
             <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
@@ -984,7 +1004,8 @@ function HomePage() {
               <span className="italic">Or shape them your way.</span>
             </h2>
             <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
-              Three private plans crafted by our locals — confirm as they are, or reshape every detail. Either way, it's yours in seconds.
+              Three private plans crafted by our locals — confirm as they are, or reshape every
+              detail. Either way, it's yours in seconds.
             </p>
           </div>
 
@@ -1001,9 +1022,7 @@ function HomePage() {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/80 via-[color:var(--charcoal)]/15 to-transparent" />
                   </div>
-                  <h3 className="serif text-[1.5rem] text-[color:var(--charcoal)]">
-                    {s.title}
-                  </h3>
+                  <h3 className="serif text-[1.5rem] text-[color:var(--charcoal)]">{s.title}</h3>
                   <p className="mt-3 text-[15px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
                     {s.line}
                   </p>
@@ -1061,20 +1080,30 @@ function HomePage() {
                 <span className="italic text-[color:var(--gold-soft)]">In real time.</span>
               </h2>
               <p className="mt-6 text-[16px] md:text-[17.5px] text-[color:var(--ivory)]/90 leading-[1.75] max-w-xl font-light">
-                Open the Studio and design your private experience step by step — choose your places, your pace,
-                your moments. Adjust as you go. Confirm the second it feels right.
+                Open the Studio and design your private experience step by step — choose your
+                places, your pace, your moments. Adjust as you go. Confirm the second it feels
+                right.
               </p>
               <ul className="mt-8 space-y-3 text-[14.5px] text-[color:var(--ivory)]/85 max-w-md">
                 <li className="flex items-start gap-3">
-                  <span className="mt-2 h-px w-5 bg-[color:var(--gold)] shrink-0" aria-hidden="true" />
+                  <span
+                    className="mt-2 h-px w-5 bg-[color:var(--gold)] shrink-0"
+                    aria-hidden="true"
+                  />
                   <span>Real-time creation — see it take shape as you build.</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="mt-2 h-px w-5 bg-[color:var(--gold)] shrink-0" aria-hidden="true" />
+                  <span
+                    className="mt-2 h-px w-5 bg-[color:var(--gold)] shrink-0"
+                    aria-hidden="true"
+                  />
                   <span>Local knowledge guiding every choice you make.</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="mt-2 h-px w-5 bg-[color:var(--gold)] shrink-0" aria-hidden="true" />
+                  <span
+                    className="mt-2 h-px w-5 bg-[color:var(--gold)] shrink-0"
+                    aria-hidden="true"
+                  />
                   <span>Instant confirmation — no forms, no waiting, no requests.</span>
                 </li>
               </ul>
@@ -1168,9 +1197,8 @@ function HomePage() {
                 <span className="italic">one continuous story.</span>
               </h2>
               <p className="mt-6 text-[16px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.75] max-w-lg font-light">
-                Linger longer. Travel slower. Wake in a vineyard, lunch in a fishing village,
-                fall asleep above the Douro — connected by quiet roads and people who know them
-                by name.
+                Linger longer. Travel slower. Wake in a vineyard, lunch in a fishing village, fall
+                asleep above the Douro — connected by quiet roads and people who know them by name.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 {["Coast & Vineyards", "Lisbon to Douro", "Alentejo Slow"].map((tag) => (
@@ -1365,7 +1393,9 @@ function HomePage() {
                   </blockquote>
                   <figcaption className="mt-6 pt-5 border-t border-[color:var(--border)] flex items-center justify-between gap-3">
                     <div>
-                      <p className="text-[14px] font-medium text-[color:var(--charcoal)]">{r.name}</p>
+                      <p className="text-[14px] font-medium text-[color:var(--charcoal)]">
+                        {r.name}
+                      </p>
                       <p className="text-[12.5px] text-[color:var(--charcoal-soft)] mt-0.5">
                         {r.location}
                       </p>
@@ -1397,7 +1427,8 @@ function HomePage() {
                 <span className="italic text-[color:var(--teal)]">Confirm it instantly.</span>
               </h2>
               <p className="mt-7 text-[17px] text-[color:var(--charcoal-soft)] leading-[1.75] max-w-lg">
-                Choose a signature, tailor one, or design from scratch — every path confirms instantly.
+                Choose a signature, tailor one, or design from scratch — every path confirms
+                instantly.
               </p>
               <div className="mt-10 flex flex-wrap gap-4">
                 <Link

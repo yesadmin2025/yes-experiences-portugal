@@ -1,19 +1,11 @@
-import {
-  createFileRoute,
-  Link,
-  useNavigate,
-} from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { z } from "zod";
 import { fallback, zodValidator } from "@tanstack/zod-adapter";
 import auditReport from "@/generated/brand-audit.json";
 import { BrandThemeSelect } from "@/components/BrandThemeSelect";
 import { Logo } from "@/components/Logo";
-import {
-  BRAND_LOGO_THEMES,
-  isBrandLogoTheme,
-  type BrandLogoTheme,
-} from "@/lib/brand-tokens";
+import { BRAND_LOGO_THEMES, isBrandLogoTheme, type BrandLogoTheme } from "@/lib/brand-tokens";
 
 /**
  * Sentinel value used when the URL carries a `?theme=` that is not a
@@ -102,15 +94,14 @@ function normalizeHex(input: string): string | null {
     const rgb = s.match(/rgba?\(\s*(\d+)\D+(\d+)\D+(\d+)/);
     if (!rgb) return null;
     const [, r, g, b] = rgb;
-    return (
-      "#" +
-      [r, g, b]
-        .map((n) => Number(n).toString(16).padStart(2, "0"))
-        .join("")
-    );
+    return "#" + [r, g, b].map((n) => Number(n).toString(16).padStart(2, "0")).join("");
   }
   let hex = m[1];
-  if (hex.length === 3) hex = hex.split("").map((c) => c + c).join("");
+  if (hex.length === 3)
+    hex = hex
+      .split("")
+      .map((c) => c + c)
+      .join("");
   return "#" + hex;
 }
 
@@ -138,11 +129,8 @@ type AuditReport = {
 const audit = auditReport as AuditReport;
 
 function BrandQAPage() {
-  const [live, setLive] = useState<Record<TokenName, string | null>>(() =>
-    Object.fromEntries(TOKEN_NAMES.map((k) => [k, null])) as Record<
-      TokenName,
-      string | null
-    >,
+  const [live, setLive] = useState<Record<TokenName, string | null>>(
+    () => Object.fromEntries(TOKEN_NAMES.map((k) => [k, null])) as Record<TokenName, string | null>,
   );
 
   // Read the actually-rendered values of each --token from :root.
@@ -184,14 +172,11 @@ function BrandQAPage() {
         <header className="mb-10 flex items-start justify-between gap-6">
           <div>
             <p className="eyebrow">Internal · Brand QA</p>
-            <h1 className="mt-3 text-3xl md:text-4xl">
-              Live palette audit
-            </h1>
+            <h1 className="mt-3 text-3xl md:text-4xl">Live palette audit</h1>
             <p className="mt-2 max-w-2xl text-sm text-[color:var(--charcoal-soft)]">
-              Reads CSS custom properties from <code>:root</code> and
-              compares them against the approved brand palette. Also
-              verifies every hex code we knowingly reference resolves to
-              an approved token (or an allowlisted neutral).
+              Reads CSS custom properties from <code>:root</code> and compares them against the
+              approved brand palette. Also verifies every hex code we knowingly reference resolves
+              to an approved token (or an allowlisted neutral).
             </p>
           </div>
           <span
@@ -255,17 +240,13 @@ function BrandQAPage() {
             <h2 className="text-xl">Build-time scan</h2>
             <p className="text-xs text-[color:var(--charcoal-soft)]">
               {audit.filesScanned} files · {audit.counts.total} hex refs ·{" "}
-              <span className="text-[color:var(--teal)]">
-                {audit.counts.approved} approved
-              </span>
+              <span className="text-[color:var(--teal)]">{audit.counts.approved} approved</span>
               {" · "}
               {audit.counts.allowlisted} allowlisted
               {" · "}
               <span
                 className={
-                  audit.counts.mismatch
-                    ? "text-red-700"
-                    : "text-[color:var(--charcoal-soft)]"
+                  audit.counts.mismatch ? "text-red-700" : "text-[color:var(--charcoal-soft)]"
                 }
               >
                 {audit.counts.mismatch} mismatch
@@ -304,9 +285,7 @@ function BrandQAPage() {
                           <code>{f.normalized}</code>
                         </span>
                       </td>
-                      <td className="px-4 py-2 font-mono text-xs text-red-900/80">
-                        {f.snippet}
-                      </td>
+                      <td className="px-4 py-2 font-mono text-xs text-red-900/80">{f.snippet}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -328,10 +307,7 @@ function BrandQAPage() {
               </thead>
               <tbody>
                 {findings.map((f, i) => (
-                  <tr
-                    key={i}
-                    className="border-t border-[color:var(--border)]"
-                  >
+                  <tr key={i} className="border-t border-[color:var(--border)]">
                     <td className="px-4 py-2 font-mono text-xs">
                       {f.file}:{f.line}
                     </td>
@@ -347,13 +323,9 @@ function BrandQAPage() {
                     </td>
                     <td className="px-4 py-2 text-xs">
                       {f.status === "approved" ? (
-                        <span className="text-[color:var(--teal)]">
-                          Approved
-                        </span>
+                        <span className="text-[color:var(--teal)]">Approved</span>
                       ) : f.status === "allowlisted" ? (
-                        <span className="text-[color:var(--charcoal-soft)]">
-                          Allowlisted
-                        </span>
+                        <span className="text-[color:var(--charcoal-soft)]">Allowlisted</span>
                       ) : (
                         <span className="text-red-700">Mismatch</span>
                       )}
@@ -365,9 +337,8 @@ function BrandQAPage() {
           </details>
 
           <p className="mt-3 text-xs text-[color:var(--charcoal-soft)]">
-            Generated by <code>scripts/brand-audit.mjs</code> on{" "}
-            <code>predev</code> / <code>prebuild</code>. Run manually with{" "}
-            <code>bun run brand:audit</code>.
+            Generated by <code>scripts/brand-audit.mjs</code> on <code>predev</code> /{" "}
+            <code>prebuild</code>. Run manually with <code>bun run brand:audit</code>.
           </p>
         </section>
 
@@ -425,10 +396,9 @@ export function BrandThemeSelectorView({
     <section className="mb-12" data-testid="brand-theme-panel">
       <h2 className="mb-4 text-xl">Brand theme selector (runtime-guarded)</h2>
       <p className="mb-4 max-w-2xl text-sm text-[color:var(--charcoal-soft)]">
-        Bound to <code>?theme=</code>. The picker only emits values from{" "}
-        <code>BrandLogoTheme</code>. Unsupported URL or prop values trip the
-        same dev-only error panel and the underlying <code>&lt;Logo&gt;</code>{" "}
-        guard (throws in dev, falls back in production).
+        Bound to <code>?theme=</code>. The picker only emits values from <code>BrandLogoTheme</code>
+        . Unsupported URL or prop values trip the same dev-only error panel and the underlying{" "}
+        <code>&lt;Logo&gt;</code> guard (throws in dev, falls back in production).
       </p>
 
       <div className="grid gap-6 md:grid-cols-2">

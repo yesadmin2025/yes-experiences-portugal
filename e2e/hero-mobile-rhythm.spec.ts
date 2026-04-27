@@ -54,8 +54,7 @@ async function gotoHeroMobile(page: Page) {
       ),
     );
     return (
-      els.length >= 2 &&
-      els.every((el) => getComputedStyle(el as HTMLElement).opacity === "1")
+      els.length >= 2 && els.every((el) => getComputedStyle(el as HTMLElement).opacity === "1")
     );
   });
 
@@ -86,24 +85,14 @@ test.describe("Hero — mobile vertical rhythm tokens", () => {
     const tokens = await page.evaluate(() => {
       const cs = getComputedStyle(document.documentElement);
       return {
-        ctaToMicrocopy: cs
-          .getPropertyValue("--hero-rhythm-cta-to-microcopy")
-          .trim(),
-        microcopyToSignature: cs
-          .getPropertyValue("--hero-rhythm-microcopy-to-signature")
-          .trim(),
-        signatureLineGap: cs
-          .getPropertyValue("--hero-rhythm-signature-line-gap")
-          .trim(),
+        ctaToMicrocopy: cs.getPropertyValue("--hero-rhythm-cta-to-microcopy").trim(),
+        microcopyToSignature: cs.getPropertyValue("--hero-rhythm-microcopy-to-signature").trim(),
+        signatureLineGap: cs.getPropertyValue("--hero-rhythm-signature-line-gap").trim(),
       };
     });
     expect(tokens.ctaToMicrocopy).toBe(`${EXPECTED_MOBILE.ctaToMicrocopyPx}px`);
-    expect(tokens.microcopyToSignature).toBe(
-      `${EXPECTED_MOBILE.microcopyToSignaturePx}px`,
-    );
-    expect(tokens.signatureLineGap).toBe(
-      `${EXPECTED_MOBILE.signatureLineGapPx}px`,
-    );
+    expect(tokens.microcopyToSignature).toBe(`${EXPECTED_MOBILE.microcopyToSignaturePx}px`);
+    expect(tokens.signatureLineGap).toBe(`${EXPECTED_MOBILE.signatureLineGapPx}px`);
   });
 
   test("rendered gaps between CTA, microcopy, and signature match the locked tokens", async ({
@@ -131,9 +120,7 @@ test.describe("Hero — mobile vertical rhythm tokens", () => {
       const micro = get('[data-hero-field="microcopy"]');
       const sig = get('[data-hero-field="brandLine"]');
       const sigLines = Array.from(
-        document.querySelectorAll(
-          '[data-hero-field="brandLine"] [aria-hidden="true"] > span',
-        ),
+        document.querySelectorAll('[data-hero-field="brandLine"] [aria-hidden="true"] > span'),
       ) as HTMLElement[];
       const line1 = sigLines[0]?.getBoundingClientRect();
       const line2 = sigLines[1]?.getBoundingClientRect();
@@ -150,25 +137,15 @@ test.describe("Hero — mobile vertical rhythm tokens", () => {
     const ctaToMicrocopy = measurements.microTop - measurements.ctaBottom;
     const microcopyToSignature = measurements.sigTop - measurements.microBottom;
 
-    expectClose(
-      "CTA → microcopy gap",
-      ctaToMicrocopy,
-      EXPECTED_MOBILE.ctaToMicrocopyPx,
-    );
+    expectClose("CTA → microcopy gap", ctaToMicrocopy, EXPECTED_MOBILE.ctaToMicrocopyPx);
     expectClose(
       "microcopy → signature gap",
       microcopyToSignature,
       EXPECTED_MOBILE.microcopyToSignaturePx,
     );
 
-    expect(
-      measurements.line1Bottom,
-      "signature line 1 must render",
-    ).not.toBeNull();
-    expect(
-      measurements.line2Top,
-      "signature line 2 must render",
-    ).not.toBeNull();
+    expect(measurements.line1Bottom, "signature line 1 must render").not.toBeNull();
+    expect(measurements.line2Top, "signature line 2 must render").not.toBeNull();
     const signatureLineGap =
       (measurements.line2Top as number) - (measurements.line1Bottom as number);
     expectClose(
@@ -178,28 +155,20 @@ test.describe("Hero — mobile vertical rhythm tokens", () => {
     );
   });
 
-  test("rhythm utility classes are still wired to the correct elements", async ({
-    page,
-  }) => {
+  test("rhythm utility classes are still wired to the correct elements", async ({ page }) => {
     await gotoHeroMobile(page);
 
     // If someone removes the utility class from the wrapper, the
     // !important token override goes away and the lock is lost — fail
     // loudly here rather than silently regressing the layout.
     await expect(
-      page.locator(
-        '.hero-rhythm-cta-to-microcopy [data-hero-field="microcopy"]',
-      ),
+      page.locator('.hero-rhythm-cta-to-microcopy [data-hero-field="microcopy"]'),
     ).toHaveCount(1);
     await expect(
-      page.locator(
-        '.hero-rhythm-microcopy-to-signature [data-hero-field="brandLine"]',
-      ),
+      page.locator('.hero-rhythm-microcopy-to-signature [data-hero-field="brandLine"]'),
     ).toHaveCount(1);
     await expect(
-      page.locator(
-        '[data-hero-field="brandLine"] .hero-rhythm-signature-line-gap',
-      ),
+      page.locator('[data-hero-field="brandLine"] .hero-rhythm-signature-line-gap'),
     ).toHaveCount(1);
   });
 });

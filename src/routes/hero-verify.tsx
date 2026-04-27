@@ -13,12 +13,7 @@ import {
   type SpecDrift,
   type VerifyResponse,
 } from "@/lib/hero-verify-download";
-import {
-  clearHistory,
-  loadHistory,
-  saveRun,
-  type HistoryEntry,
-} from "@/lib/hero-verify-history";
+import { clearHistory, loadHistory, saveRun, type HistoryEntry } from "@/lib/hero-verify-history";
 import { diffReports, type FieldChange } from "@/lib/hero-verify-diff";
 
 export const Route = createFileRoute("/hero-verify")({
@@ -110,12 +105,10 @@ function HeroVerifyPage() {
 
   return (
     <main className="mx-auto max-w-3xl px-6 py-12 font-sans">
-      <h1 className="text-2xl font-semibold tracking-tight">
-        Verify Live Hero Copy
-      </h1>
+      <h1 className="text-2xl font-semibold tracking-tight">Verify Live Hero Copy</h1>
       <p className="mt-2 text-sm text-muted-foreground">
-        After clicking <strong>Publish → Update</strong>, run this check to
-        confirm the live deployment matches the current source strings.
+        After clicking <strong>Publish → Update</strong>, run this check to confirm the live
+        deployment matches the current source strings.
       </p>
 
       <div className="mt-6 space-y-3">
@@ -137,8 +130,7 @@ function HeroVerifyPage() {
             onChange={(e) => setCheckAllPages(e.target.checked)}
             className="size-4"
           />
-          Check all builder-generated pages (every route must contain all 7
-          hero strings)
+          Check all builder-generated pages (every route must contain all 7 hero strings)
         </label>
 
         <button
@@ -146,11 +138,7 @@ function HeroVerifyPage() {
           disabled={loading}
           className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition disabled:opacity-50"
         >
-          {loading
-            ? "Checking…"
-            : checkAllPages
-              ? "Run check on all pages"
-              : "Run check now"}
+          {loading ? "Checking…" : checkAllPages ? "Run check on all pages" : "Run check now"}
         </button>
 
         {result && (
@@ -204,22 +192,16 @@ function HeroVerifyPage() {
       </div>
 
       {compareMode && compareEntries && diff && (
-        <DiffView
-          before={compareEntries[0]}
-          after={compareEntries[1]}
-          changes={diff}
-        />
+        <DiffView before={compareEntries[0]} after={compareEntries[1]} changes={diff} />
       )}
 
       {result?.specDrift && !result.specDrift.ok && (
         <section className="mt-6 rounded-lg border border-amber-500/40 bg-amber-500/5 p-4">
-          <strong className="text-sm">
-            Source HERO_COPY drifted from frozen spec
-          </strong>
+          <strong className="text-sm">Source HERO_COPY drifted from frozen spec</strong>
           <p className="mt-1 text-xs text-muted-foreground">
-            The strings in <code>src/content/hero-copy.ts</code> no longer match
-            the approved spec in <code>src/content/hero-copy.spec.ts</code>.
-            Live-page checks below use the spec, not the source.
+            The strings in <code>src/content/hero-copy.ts</code> no longer match the approved spec
+            in <code>src/content/hero-copy.spec.ts</code>. Live-page checks below use the spec, not
+            the source.
           </p>
           <ul className="mt-3 space-y-2 text-xs">
             {result.specDrift.drifted.map((d) => (
@@ -256,9 +238,7 @@ function StatusBanner({
   return (
     <div
       className={`rounded-lg border p-4 ${
-        ok
-          ? "border-green-500/40 bg-green-500/5"
-          : "border-red-500/40 bg-red-500/5"
+        ok ? "border-green-500/40 bg-green-500/5" : "border-red-500/40 bg-red-500/5"
       }`}
     >
       <div className="flex items-center gap-2">
@@ -289,21 +269,15 @@ function SinglePageReport({ result }: { result: SingleResponse }) {
           <dt className="text-muted-foreground">Live version</dt>
           <dd>
             <code>{result.liveVersion ?? "(not exposed)"}</code>
-            {result.versionMatch === false && (
-              <span className="ml-2 text-red-600">stale</span>
-            )}
-            {result.versionMatch === true && (
-              <span className="ml-2 text-green-600">match</span>
-            )}
+            {result.versionMatch === false && <span className="ml-2 text-red-600">stale</span>}
+            {result.versionMatch === true && <span className="ml-2 text-green-600">match</span>}
           </dd>
           <dt className="text-muted-foreground">Target</dt>
           <dd className="truncate">{result.target}</dd>
           <dt className="text-muted-foreground">Checked at</dt>
           <dd>{new Date(result.checkedAt).toLocaleTimeString()}</dd>
         </dl>
-        {result.error && (
-          <p className="mt-3 text-xs text-red-600">{result.error}</p>
-        )}
+        {result.error && <p className="mt-3 text-xs text-red-600">{result.error}</p>}
       </StatusBanner>
 
       <ul className="divide-y divide-border rounded-lg border border-border">
@@ -343,9 +317,7 @@ function MultiPageReport({ result }: { result: MultiResponse }) {
           <li
             key={page.path}
             className={`rounded-lg border p-3 ${
-              page.ok
-                ? "border-border bg-background"
-                : "border-red-500/40 bg-red-500/5"
+              page.ok ? "border-border bg-background" : "border-red-500/40 bg-red-500/5"
             }`}
           >
             <div className="flex items-center justify-between gap-3">
@@ -359,16 +331,12 @@ function MultiPageReport({ result }: { result: MultiResponse }) {
                     HTTP {page.httpStatus || "—"}
                   </span>
                 </div>
-                {page.error && (
-                  <p className="mt-1 text-xs text-red-600">{page.error}</p>
-                )}
+                {page.error && <p className="mt-1 text-xs text-red-600">{page.error}</p>}
               </div>
               <span
                 className={`text-xs font-medium ${page.ok ? "text-green-600" : "text-red-600"}`}
               >
-                {page.ok
-                  ? "OK"
-                  : `${page.missing.length}/${page.checks.length || 7} missing`}
+                {page.ok ? "OK" : `${page.missing.length}/${page.checks.length || 7} missing`}
               </span>
             </div>
             {!page.ok && page.missing.length > 0 && (
@@ -402,9 +370,7 @@ function CheckRow({ check }: { check: CheckResult }) {
           {HERO_COPY[check.key as keyof typeof HERO_COPY]}
         </div>
       </div>
-      <span
-        className={`text-xs font-medium ${check.found ? "text-green-600" : "text-red-600"}`}
-      >
+      <span className={`text-xs font-medium ${check.found ? "text-green-600" : "text-red-600"}`}>
         {check.found ? "found" : "MISSING"}
       </span>
     </li>
@@ -449,10 +415,7 @@ function DiffView({
 
       {(["report", "spec_drift", "page"] as const).map((scope) =>
         grouped[scope].length === 0 ? null : (
-          <div
-            key={scope}
-            className="rounded-lg border border-border overflow-hidden"
-          >
+          <div key={scope} className="rounded-lg border border-border overflow-hidden">
             <div className="bg-muted/40 px-3 py-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
               {scope === "report"
                 ? "Report-level"

@@ -50,10 +50,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
           const target = entry.target as HTMLElement;
           // Only apply our cadence when no inline delay is already set, so
           // route-level overrides still win.
-          if (
-            target.classList.contains("reveal-stagger") &&
-            !target.style.transitionDelay
-          ) {
+          if (target.classList.contains("reveal-stagger") && !target.style.transitionDelay) {
             const idx = indexByEl.get(target) ?? 0;
             target.style.transitionDelay = `${idx * STAGGER_MS}ms`;
           }

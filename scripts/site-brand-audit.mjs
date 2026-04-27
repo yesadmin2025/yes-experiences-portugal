@@ -78,14 +78,25 @@ function walk(dir, out = []) {
 
 function normalize(hex) {
   let h = hex.toLowerCase();
-  if (h.length === 4) h = "#" + h.slice(1).split("").map((c) => c + c).join("");
+  if (h.length === 4)
+    h =
+      "#" +
+      h
+        .slice(1)
+        .split("")
+        .map((c) => c + c)
+        .join("");
   return h;
 }
 
 // ── color math ──────────────────────────────────────────────────────────
 function hexToRgb(hex) {
   let h = hex.replace("#", "");
-  if (h.length === 3) h = h.split("").map((c) => c + c).join("");
+  if (h.length === 3)
+    h = h
+      .split("")
+      .map((c) => c + c)
+      .join("");
   return [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16));
 }
 function srgbToLin(c) {
@@ -200,13 +211,28 @@ const pairs = [
   { name: "Charcoal-soft muted on white", fg: APPROVED["charcoal-soft"], bg: WHITE, min: 4.5 },
   { name: "Teal hover/active on white", fg: APPROVED.teal, bg: WHITE, min: 4.5 },
   { name: "Ivory text on teal surface", fg: APPROVED.ivory, bg: APPROVED.teal, min: 4.5 },
-  { name: "Ivory text on charcoal-deep (footer)", fg: APPROVED.ivory, bg: APPROVED["charcoal-deep"], min: 4.5 },
+  {
+    name: "Ivory text on charcoal-deep (footer)",
+    fg: APPROVED.ivory,
+    bg: APPROVED["charcoal-deep"],
+    min: 4.5,
+  },
   { name: "Charcoal text on ivory page bg", fg: APPROVED.charcoal, bg: APPROVED.ivory, min: 4.5 },
   { name: "Charcoal text on sand surface", fg: APPROVED.charcoal, bg: APPROVED.sand, min: 4.5 },
   // Non-text decorative frames — WCAG 1.4.11 needs ≥ 3:1 for actionable controls.
-  { name: "Hamburger frame (charcoal-soft) on white", fg: APPROVED["charcoal-soft"], bg: WHITE, min: 3.0 },
+  {
+    name: "Hamburger frame (charcoal-soft) on white",
+    fg: APPROVED["charcoal-soft"],
+    bg: WHITE,
+    min: 3.0,
+  },
   { name: "Gold frame on teal (CTA accent)", fg: APPROVED.gold, bg: APPROVED.teal, min: 3.0 },
-  { name: "Header divider hairline (charcoal/15) on white", fg: CHARCOAL_15_ON_WHITE, bg: WHITE, min: 1.3 },
+  {
+    name: "Header divider hairline (charcoal/15) on white",
+    fg: CHARCOAL_15_ON_WHITE,
+    bg: WHITE,
+    min: 1.3,
+  },
 ];
 const results = pairs.map((p) => ({ ...p, ratio: contrast(p.fg, p.bg) }));
 
@@ -236,9 +262,7 @@ let failed = 0;
 for (const r of results) {
   const ok = r.ratio >= r.min;
   if (!ok) failed++;
-  console.log(
-    `  ${ok ? "✓" : "✘"} ${r.name.padEnd(52)} ${r.ratio.toFixed(2)}:1  (min ${r.min})`,
-  );
+  console.log(`  ${ok ? "✓" : "✘"} ${r.name.padEnd(52)} ${r.ratio.toFixed(2)}:1  (min ${r.min})`);
 }
 console.log("");
 

@@ -13,13 +13,7 @@
  *      id so assistive tech reads the explanation alongside the field.
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import {
-  render,
-  screen,
-  fireEvent,
-  cleanup,
-  within,
-} from "@testing-library/react";
+import { render, screen, fireEvent, cleanup, within } from "@testing-library/react";
 import { BrandThemeSelect } from "./BrandThemeSelect";
 
 afterEach(() => {
@@ -31,9 +25,7 @@ afterEach(() => {
 /* ------------------------------------------------------------------ */
 describe("BrandThemeSelect — accessible labels", () => {
   it("associates the default visible label with the <select> via htmlFor/id", () => {
-    render(
-      <BrandThemeSelect value="teal-on-ivory" onChange={vi.fn()} />,
-    );
+    render(<BrandThemeSelect value="teal-on-ivory" onChange={vi.fn()} />);
 
     // getByLabelText only succeeds when label.htmlFor === select.id.
     const select = screen.getByLabelText("Brand theme");
@@ -43,11 +35,7 @@ describe("BrandThemeSelect — accessible labels", () => {
 
   it("respects a custom `label` prop and keeps the association", () => {
     render(
-      <BrandThemeSelect
-        value="teal-on-ivory"
-        onChange={vi.fn()}
-        label="Pick a brand variant"
-      />,
+      <BrandThemeSelect value="teal-on-ivory" onChange={vi.fn()} label="Pick a brand variant" />,
     );
 
     const select = screen.getByLabelText("Pick a brand variant");
@@ -55,9 +43,7 @@ describe("BrandThemeSelect — accessible labels", () => {
   });
 
   it("each <option> carries its theme key as accessible text", () => {
-    render(
-      <BrandThemeSelect value="teal-on-ivory" onChange={vi.fn()} />,
-    );
+    render(<BrandThemeSelect value="teal-on-ivory" onChange={vi.fn()} />);
 
     const select = screen.getByLabelText("Brand theme");
     const options = within(select).getAllByRole("option") as HTMLOptionElement[];
@@ -72,9 +58,7 @@ describe("BrandThemeSelect — accessible labels", () => {
 /* ------------------------------------------------------------------ */
 describe("BrandThemeSelect — keyboard navigation", () => {
   it("is reachable by Tab (no negative tabindex, not disabled)", () => {
-    render(
-      <BrandThemeSelect value="teal-on-ivory" onChange={vi.fn()} />,
-    );
+    render(<BrandThemeSelect value="teal-on-ivory" onChange={vi.fn()} />);
 
     const select = screen.getByLabelText("Brand theme") as HTMLSelectElement;
     // Native <select> defaults to tabIndex 0; we must not have opted out.
@@ -90,9 +74,7 @@ describe("BrandThemeSelect — keyboard navigation", () => {
 
   it("emits a typed BrandLogoTheme onChange when the value is changed via keyboard", () => {
     const onChange = vi.fn();
-    render(
-      <BrandThemeSelect value="teal-on-ivory" onChange={onChange} />,
-    );
+    render(<BrandThemeSelect value="teal-on-ivory" onChange={onChange} />);
 
     const select = screen.getByLabelText("Brand theme") as HTMLSelectElement;
     select.focus();
@@ -109,9 +91,7 @@ describe("BrandThemeSelect — keyboard navigation", () => {
   });
 
   it("type-ahead keystrokes do not throw and leave focus on the select", () => {
-    render(
-      <BrandThemeSelect value="teal-on-ivory" onChange={vi.fn()} />,
-    );
+    render(<BrandThemeSelect value="teal-on-ivory" onChange={vi.fn()} />);
     const select = screen.getByLabelText("Brand theme") as HTMLSelectElement;
     select.focus();
 
@@ -140,9 +120,7 @@ describe("BrandThemeSelect — ARIA error announcement (invalid theme)", () => {
   });
 
   it("renders the error panel with role='alert' so AT announces it", () => {
-    render(
-      <BrandThemeSelect value="emerald-on-mauve" onChange={vi.fn()} />,
-    );
+    render(<BrandThemeSelect value="emerald-on-mauve" onChange={vi.fn()} />);
 
     // role="alert" implies aria-live="assertive" + aria-atomic="true"
     // — screen readers announce the contents on insertion without
@@ -155,9 +133,7 @@ describe("BrandThemeSelect — ARIA error announcement (invalid theme)", () => {
   });
 
   it("marks the <select> as aria-invalid and points aria-describedby at the alert", () => {
-    render(
-      <BrandThemeSelect value="emerald-on-mauve" onChange={vi.fn()} />,
-    );
+    render(<BrandThemeSelect value="emerald-on-mauve" onChange={vi.fn()} />);
 
     const select = screen.getByLabelText("Brand theme");
     expect(select).toHaveAttribute("aria-invalid", "true");
@@ -174,16 +150,12 @@ describe("BrandThemeSelect — ARIA error announcement (invalid theme)", () => {
   });
 
   it("clears aria-invalid and aria-describedby when the value is valid again", () => {
-    const { rerender } = render(
-      <BrandThemeSelect value="emerald-on-mauve" onChange={vi.fn()} />,
-    );
+    const { rerender } = render(<BrandThemeSelect value="emerald-on-mauve" onChange={vi.fn()} />);
     let select = screen.getByLabelText("Brand theme");
     expect(select).toHaveAttribute("aria-invalid", "true");
     expect(select).toHaveAttribute("aria-describedby");
 
-    rerender(
-      <BrandThemeSelect value="teal-on-ivory" onChange={vi.fn()} />,
-    );
+    rerender(<BrandThemeSelect value="teal-on-ivory" onChange={vi.fn()} />);
     select = screen.getByLabelText("Brand theme");
     expect(select).not.toHaveAttribute("aria-invalid");
     expect(select).not.toHaveAttribute("aria-describedby");
@@ -191,9 +163,7 @@ describe("BrandThemeSelect — ARIA error announcement (invalid theme)", () => {
   });
 
   it("the alert remains keyboard-discoverable: focusing the select exposes the description via aria-describedby", () => {
-    render(
-      <BrandThemeSelect value="emerald-on-mauve" onChange={vi.fn()} />,
-    );
+    render(<BrandThemeSelect value="emerald-on-mauve" onChange={vi.fn()} />);
     const select = screen.getByLabelText("Brand theme") as HTMLSelectElement;
     select.focus();
     expect(select).toHaveFocus();
@@ -203,8 +173,6 @@ describe("BrandThemeSelect — ARIA error announcement (invalid theme)", () => {
     // both the label and the error explanation.
     expect(select).toHaveAccessibleName("Brand theme");
     const describedBy = select.getAttribute("aria-describedby")!;
-    expect(document.getElementById(describedBy)).toHaveTextContent(
-      /Unsupported brand theme/i,
-    );
+    expect(document.getElementById(describedBy)).toHaveTextContent(/Unsupported brand theme/i);
   });
 });

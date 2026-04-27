@@ -70,8 +70,7 @@ const REPO = process.env.GITHUB_REPOSITORY;
 const API = process.env.GITHUB_API_URL ?? "https://api.github.com";
 const TOKEN = process.env.BRANCH_PROTECTION_TOKEN;
 const BRANCH = process.env.PROTECTED_BRANCH ?? "main";
-const WORKFLOW_PATH =
-  process.env.WORKFLOW_PATH ?? ".github/workflows/homepage-structure.yml";
+const WORKFLOW_PATH = process.env.WORKFLOW_PATH ?? ".github/workflows/homepage-structure.yml";
 const JOB_KEY = process.env.WORKFLOW_JOB_KEY ?? "homepage-structure";
 const MODE = (process.env.MODE ?? "check").toLowerCase();
 
@@ -122,10 +121,7 @@ function extractJobName(yamlText, jobKey) {
     }
     if (/^[A-Za-z_]/.test(lines[k])) break; // hit a sibling top-level key
   }
-  if (j < 0)
-    throw new Error(
-      `Job key "${jobKey}" not found under jobs: in ${WORKFLOW_PATH}.`,
-    );
+  if (j < 0) throw new Error(`Job key "${jobKey}" not found under jobs: in ${WORKFLOW_PATH}.`);
 
   for (let k = j + 1; k < lines.length; k++) {
     const line = lines[k];
@@ -159,9 +155,7 @@ function hexDump(label, str) {
     const ascii = [...slice]
       .map((b) => (b >= 0x20 && b < 0x7f ? String.fromCharCode(b) : "."))
       .join("");
-    lines.push(
-      `  ${i.toString(16).padStart(4, "0")}  ${hex.padEnd(48)}  ${ascii}`,
-    );
+    lines.push(`  ${i.toString(16).padStart(4, "0")}  ${hex.padEnd(48)}  ${ascii}`);
   }
   return `${label} (utf-8, ${buf.length} bytes):\n${lines.join("\n")}`;
 }

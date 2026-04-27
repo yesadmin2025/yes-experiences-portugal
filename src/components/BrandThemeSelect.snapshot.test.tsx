@@ -28,16 +28,11 @@ afterEach(() => {
  */
 function captureA11yWiring() {
   const select = screen.getByLabelText("Brand theme") as HTMLSelectElement;
-  const label = document.querySelector(
-    `label[for="${select.id}"]`,
-  ) as HTMLLabelElement | null;
+  const label = document.querySelector(`label[for="${select.id}"]`) as HTMLLabelElement | null;
   const describedById = select.getAttribute("aria-describedby");
-  const describedByNode = describedById
-    ? document.getElementById(describedById)
-    : null;
+  const describedByNode = describedById ? document.getElementById(describedById) : null;
 
-  const linkToken = (matched: boolean) =>
-    matched ? "<linked-to-alert>" : "<unlinked>";
+  const linkToken = (matched: boolean) => (matched ? "<linked-to-alert>" : "<unlinked>");
 
   return {
     label: {
@@ -54,10 +49,7 @@ function captureA11yWiring() {
       ariaDescribedBy:
         describedById === null
           ? null
-          : linkToken(
-              describedByNode !== null &&
-                describedByNode.getAttribute("role") === "alert",
-            ),
+          : linkToken(describedByNode !== null && describedByNode.getAttribute("role") === "alert"),
       accessibleName: label?.textContent ?? null,
     },
     alert:
@@ -68,18 +60,14 @@ function captureA11yWiring() {
             isLiveRegion:
               describedByNode.getAttribute("role") === "alert" ||
               describedByNode.getAttribute("aria-live") !== null,
-            mentionsBrandLock: /\[brand-lock\]/.test(
-              describedByNode.textContent ?? "",
-            ),
+            mentionsBrandLock: /\[brand-lock\]/.test(describedByNode.textContent ?? ""),
           },
   };
 }
 
 describe("BrandThemeSelect — a11y attribute snapshots", () => {
   it("valid state: no aria-invalid, no aria-describedby, no alert", () => {
-    render(
-      <BrandThemeSelect value="teal-on-ivory" onChange={vi.fn()} />,
-    );
+    render(<BrandThemeSelect value="teal-on-ivory" onChange={vi.fn()} />);
 
     expect(captureA11yWiring()).toMatchInlineSnapshot(`
       {
@@ -106,18 +94,14 @@ describe("BrandThemeSelect — a11y attribute snapshots", () => {
     // Silence the runtime guard's console.error in dev mode.
     let errorSpy: ReturnType<typeof vi.spyOn>;
     beforeEach(() => {
-      errorSpy = vi
-        .spyOn(console, "error")
-        .mockImplementation(() => undefined);
+      errorSpy = vi.spyOn(console, "error").mockImplementation(() => undefined);
     });
     afterEach(() => {
       errorSpy.mockRestore();
     });
 
     it("invalid state: aria-invalid=true and aria-describedby links to a role=alert", () => {
-      render(
-        <BrandThemeSelect value="emerald-on-mauve" onChange={vi.fn()} />,
-      );
+      render(<BrandThemeSelect value="emerald-on-mauve" onChange={vi.fn()} />);
 
       expect(captureA11yWiring()).toMatchInlineSnapshot(`
         {

@@ -63,10 +63,7 @@ function describeFirstDiff(actual: string, expected: string): string {
           : `U+${cp.toString(16).padStart(4, "0").toUpperCase()} (${JSON.stringify(
               String.fromCharCode(cp),
             )})`;
-      return (
-        `first divergence at index ${i}: ` +
-        `actual=${fmt(a)} vs expected=${fmt(e)}`
-      );
+      return `first divergence at index ${i}: ` + `actual=${fmt(a)} vs expected=${fmt(e)}`;
     }
   }
   return "no character-level divergence (lengths differ at end)";
@@ -74,9 +71,7 @@ function describeFirstDiff(actual: string, expected: string): string {
 
 test.describe("Hero — byte-exact DOM copy lock", () => {
   for (const key of FIELDS_TO_CHECK) {
-    test(`data-hero-field="${key}" textContent equals HERO_COPY_SPEC.${key}`, async ({
-      page,
-    }) => {
+    test(`data-hero-field="${key}" textContent equals HERO_COPY_SPEC.${key}`, async ({ page }) => {
       await gotoHero(page);
 
       // Resolve the *innermost* node carrying this exact key. The
@@ -88,9 +83,7 @@ test.describe("Hero — byte-exact DOM copy lock", () => {
         `expected exactly one [data-hero-field="${key}"] node in the DOM`,
       ).toHaveCount(1);
 
-      const actual = (await node.evaluate(
-        (el) => (el as HTMLElement).textContent ?? "",
-      )) as string;
+      const actual = (await node.evaluate((el) => (el as HTMLElement).textContent ?? "")) as string;
       const expected = HERO_COPY_SPEC[key];
 
       expect(
@@ -102,9 +95,7 @@ test.describe("Hero — byte-exact DOM copy lock", () => {
     });
   }
 
-  test("microcopy contains no positive form/waiting/request language", async ({
-    page,
-  }) => {
+  test("microcopy contains no positive form/waiting/request language", async ({ page }) => {
     // The approved microcopy is allowed to NEGATE these words
     // ("No forms", "No waiting"). What we forbid is the positive
     // assertion of any of them. Strip "no <word>" pairs first, then

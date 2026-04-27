@@ -137,9 +137,7 @@ export function CtaScrollDebugOverlay({ targetRef }: Props) {
     >
       <div className="rounded-md bg-black/80 backdrop-blur-md px-3 py-2.5 shadow-2xl ring-1 ring-white/10 min-w-[220px]">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-white/60 uppercase tracking-[0.18em] text-[9.5px]">
-            cta-scroll
-          </span>
+          <span className="text-white/60 uppercase tracking-[0.18em] text-[9.5px]">cta-scroll</span>
           <span className="text-white/40 text-[9.5px]">Shift+D</span>
         </div>
 

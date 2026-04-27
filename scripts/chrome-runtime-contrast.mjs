@@ -45,7 +45,11 @@ const WHITE = "#FFFFFF";
 // ── color math ──────────────────────────────────────────────────────────
 const rgb = (hex) => {
   let h = hex.replace("#", "");
-  if (h.length === 3) h = h.split("").map((c) => c + c).join("");
+  if (h.length === 3)
+    h = h
+      .split("")
+      .map((c) => c + c)
+      .join("");
   return [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16));
 };
 const lin = (c) => {
@@ -171,9 +175,7 @@ function extractPairs(file, surfaceMap) {
         localSurface = bgAlpha
           ? composite(bgHex, Number(bgAlpha) / 100, surfaceMap.surface)
           : bgHex;
-        localLabel = bgAlpha
-          ? `${bgToken}/${bgAlpha} on ${surfaceMap.surfaceLabel}`
-          : bgToken;
+        localLabel = bgAlpha ? `${bgToken}/${bgAlpha} on ${surfaceMap.surfaceLabel}` : bgToken;
       }
     } else {
       // No local bg — check nested-surface hints (e.g. teal CTA pill).

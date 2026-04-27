@@ -23,13 +23,7 @@
  */
 import { describe, it, expect, vi, afterEach, beforeEach } from "vitest";
 import { useState } from "react";
-import {
-  render,
-  screen,
-  fireEvent,
-  cleanup,
-  act,
-} from "@testing-library/react";
+import { render, screen, fireEvent, cleanup, act } from "@testing-library/react";
 import { BrandThemeSelect } from "./BrandThemeSelect";
 import type { BrandLogoTheme } from "@/lib/brand-tokens";
 
@@ -63,9 +57,8 @@ function ControlledHarness({
 }
 
 function pushTheme(value: unknown) {
-  const setter = (
-    globalThis as unknown as { __setBrandThemeForTest?: (v: unknown) => void }
-  ).__setBrandThemeForTest;
+  const setter = (globalThis as unknown as { __setBrandThemeForTest?: (v: unknown) => void })
+    .__setBrandThemeForTest;
   if (!setter) throw new Error("Harness setter not registered");
   act(() => setter(value));
 }
@@ -156,11 +149,7 @@ describe("BrandThemeSelect — focus retention during invalid → valid correcti
 
   it("focus stays on the select when an unrelated prop (className, label) changes during correction", () => {
     const { rerender } = render(
-      <ControlledHarness
-        initialValue="emerald-on-mauve"
-        label="Brand theme"
-        className="initial"
-      />,
+      <ControlledHarness initialValue="emerald-on-mauve" label="Brand theme" className="initial" />,
     );
 
     const select = screen.getByLabelText("Brand theme") as HTMLSelectElement;

@@ -1,9 +1,5 @@
 import { test, expect } from "@playwright/test";
-import {
-  gotoHero,
-  measureCta,
-  runParityChecks,
-} from "./cta-parity-helpers";
+import { gotoHero, measureCta, runParityChecks } from "./cta-parity-helpers";
 
 /**
  * Hero CTA — parity contract (mobile).
@@ -46,10 +42,7 @@ test.describe("Hero CTA — primary vs secondary parity (mobile)", () => {
     await expect(primary).toBeVisible();
     await expect(secondary).toBeVisible();
 
-    const [p, s] = await Promise.all([
-      measureCta(primary),
-      measureCta(secondary),
-    ]);
+    const [p, s] = await Promise.all([measureCta(primary), measureCta(secondary)]);
 
     const vp = page.viewportSize() ?? { width: 0, height: 0 };
     await runParityChecks(
@@ -64,9 +57,7 @@ test.describe("Hero CTA — primary vs secondary parity (mobile)", () => {
     );
   });
 
-  test("both CTAs render an arrow icon (not a decorative replacement)", async ({
-    page,
-  }) => {
+  test("both CTAs render an arrow icon (not a decorative replacement)", async ({ page }) => {
     await gotoHero(page);
 
     // lucide-react renders <svg class="lucide lucide-arrow-right ...">
@@ -78,10 +69,9 @@ test.describe("Hero CTA — primary vs secondary parity (mobile)", () => {
       const svg = cta.locator("svg").first();
       await expect(svg).toBeVisible();
       const cls = await svg.getAttribute("class");
-      expect(
-        cls ?? "",
-        `${name} should render an ArrowRight icon (got class="${cls}")`,
-      ).toMatch(/lucide-arrow-right/);
+      expect(cls ?? "", `${name} should render an ArrowRight icon (got class="${cls}")`).toMatch(
+        /lucide-arrow-right/,
+      );
     }
   });
 });

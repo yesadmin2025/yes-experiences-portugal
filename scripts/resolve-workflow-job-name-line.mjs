@@ -48,10 +48,7 @@ function fail(code, msg) {
 const [, , workflowPath, jobKey] = process.argv;
 
 if (!workflowPath || !jobKey) {
-  fail(
-    2,
-    "Usage: resolve-workflow-job-name-line.mjs <workflow-yaml-path> <job-key>",
-  );
+  fail(2, "Usage: resolve-workflow-job-name-line.mjs <workflow-yaml-path> <job-key>");
 }
 
 let yamlText;

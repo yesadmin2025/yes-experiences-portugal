@@ -62,15 +62,10 @@ export const DEFAULT_BRAND_LOGO_THEME: BrandLogoTheme = "teal-on-ivory";
  * `BRAND_LOGO_VARIANTS`. Exported so call sites (forms, settings UIs,
  * URL parsers) can validate against it without re-typing the union.
  */
-export const BRAND_LOGO_THEMES = Object.keys(
-  BRAND_LOGO_VARIANTS,
-) as BrandLogoTheme[];
+export const BRAND_LOGO_THEMES = Object.keys(BRAND_LOGO_VARIANTS) as BrandLogoTheme[];
 
 export function isBrandLogoTheme(value: unknown): value is BrandLogoTheme {
-  return (
-    typeof value === "string" &&
-    (BRAND_LOGO_THEMES as readonly string[]).includes(value)
-  );
+  return typeof value === "string" && (BRAND_LOGO_THEMES as readonly string[]).includes(value);
 }
 
 /**
@@ -87,10 +82,7 @@ export function isBrandLogoTheme(value: unknown): value is BrandLogoTheme {
  * `componentName` is included in the message so the error points
  * straight at the component that mis-routed the value.
  */
-export function assertBrandLogoTheme(
-  value: unknown,
-  componentName = "<unknown>",
-): BrandLogoTheme {
+export function assertBrandLogoTheme(value: unknown, componentName = "<unknown>"): BrandLogoTheme {
   if (isBrandLogoTheme(value)) return value;
   const allowed = BRAND_LOGO_THEMES.map((t) => `"${t}"`).join(", ");
   const received =
@@ -102,7 +94,7 @@ export function assertBrandLogoTheme(
   const message =
     `[brand-lock] <${componentName}> received an unsupported brand ` +
     `theme: ${received}. Allowed values: ${allowed}.`;
-  // eslint-disable-next-line no-console
+
   console.error(message);
   if (isDevEnvironment()) {
     // Throw so React surfaces the failing component in the dev error
@@ -118,8 +110,7 @@ function isDevEnvironment(): boolean {
   // false in `vite build`. Wrapped in try/catch because some bundlers
   // throw on the bare `import.meta` access in non-ESM contexts.
   try {
-    const envFlag = (import.meta as unknown as { env?: { DEV?: boolean } })
-      .env?.DEV;
+    const envFlag = (import.meta as unknown as { env?: { DEV?: boolean } }).env?.DEV;
     if (typeof envFlag === "boolean") return envFlag;
   } catch {
     /* fall through to NODE_ENV */

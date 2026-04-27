@@ -36,11 +36,7 @@ type IntentDetail = {
   ts: number;
 };
 
-type GtagFn = (
-  command: "event",
-  eventName: string,
-  params?: Record<string, unknown>,
-) => void;
+type GtagFn = (command: "event", eventName: string, params?: Record<string, unknown>) => void;
 
 type DataLayerEntry = Record<string, unknown>;
 
@@ -170,8 +166,8 @@ export function MobileStickyCTA() {
     if (next) trackIntent(buildDetail("say_yes_open"));
   };
 
-  const handleChoice = (cta: Exclude<IntentCta, "say_yes_open">) =>
-    (e: React.MouseEvent<HTMLAnchorElement>) => {
+  const handleChoice =
+    (cta: Exclude<IntentCta, "say_yes_open">) => (e: React.MouseEvent<HTMLAnchorElement>) => {
       if (submittingRef.current) {
         e.preventDefault();
         e.stopPropagation();
@@ -190,7 +186,9 @@ export function MobileStickyCTA() {
       <div
         className={[
           "lg:hidden fixed inset-0 z-30 print:hidden transition-opacity duration-300",
-          sheetOpen && visible ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none",
+          sheetOpen && visible
+            ? "opacity-100 pointer-events-auto"
+            : "opacity-0 pointer-events-none",
         ].join(" ")}
         aria-hidden={!(sheetOpen && visible)}
         onClick={() => setSheetOpen(false)}

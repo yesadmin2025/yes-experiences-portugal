@@ -25,52 +25,36 @@ async function gotoHero(page: Page) {
 test.describe("Hero — approved copy lock", () => {
   test("eyebrow matches approved copy exactly", async ({ page }) => {
     await gotoHero(page);
-    await expect(
-      page.getByText(HERO_COPY.eyebrow, { exact: true }).first(),
-    ).toBeVisible();
+    await expect(page.getByText(HERO_COPY.eyebrow, { exact: true }).first()).toBeVisible();
   });
 
-  test("headline (both lines) matches approved copy exactly", async ({
-    page,
-  }) => {
+  test("headline (both lines) matches approved copy exactly", async ({ page }) => {
     await gotoHero(page);
     const h1 = page.locator("h1.hero-h1");
     const text = (await h1.innerText()).replace(/\s+/g, " ").trim();
-    expect(text).toBe(
-      `${HERO_COPY.headlineLine1} ${HERO_COPY.headlineLine2}`,
-    );
+    expect(text).toBe(`${HERO_COPY.headlineLine1} ${HERO_COPY.headlineLine2}`);
   });
 
   test("subheadline matches approved copy exactly", async ({ page }) => {
     await gotoHero(page);
-    await expect(
-      page.getByText(HERO_COPY.subheadline, { exact: true }),
-    ).toBeVisible();
+    await expect(page.getByText(HERO_COPY.subheadline, { exact: true })).toBeVisible();
   });
 
   test("primary and secondary CTAs match approved labels", async ({ page }) => {
     await gotoHero(page);
-    await expect(
-      page.getByRole("link", { name: HERO_COPY.primaryCta, exact: true }),
-    ).toBeVisible();
+    await expect(page.getByRole("link", { name: HERO_COPY.primaryCta, exact: true })).toBeVisible();
     await expect(
       page.getByRole("link", { name: HERO_COPY.secondaryCta, exact: true }),
     ).toBeVisible();
   });
 
-  test("microcopy under the buttons matches approved copy exactly", async ({
-    page,
-  }) => {
+  test("microcopy under the buttons matches approved copy exactly", async ({ page }) => {
     await gotoHero(page);
-    await expect(
-      page.getByText(HERO_COPY.microcopy, { exact: true }),
-    ).toBeVisible();
+    await expect(page.getByText(HERO_COPY.microcopy, { exact: true })).toBeVisible();
   });
 
   test("brand YES line matches approved copy exactly", async ({ page }) => {
     await gotoHero(page);
-    await expect(
-      page.getByText(HERO_COPY.brandLine, { exact: true }),
-    ).toBeVisible();
+    await expect(page.getByText(HERO_COPY.brandLine, { exact: true })).toBeVisible();
   });
 });

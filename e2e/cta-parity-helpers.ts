@@ -109,9 +109,7 @@ export async function measureCta(cta: Locator): Promise<CtaMetrics> {
     const iconRect = icon.getBoundingClientRect();
 
     const lh =
-      cs.lineHeight === "normal"
-        ? parseFloat(cs.fontSize) * 1.2
-        : parseFloat(cs.lineHeight);
+      cs.lineHeight === "normal" ? parseFloat(cs.fontSize) * 1.2 : parseFloat(cs.lineHeight);
 
     return {
       width: rect.width,
@@ -122,8 +120,7 @@ export async function measureCta(cta: Locator): Promise<CtaMetrics> {
       paddingLeft: parseFloat(cs.paddingLeft),
       fontSize: parseFloat(cs.fontSize),
       lineHeight: lh,
-      letterSpacing:
-        cs.letterSpacing === "normal" ? 0 : parseFloat(cs.letterSpacing),
+      letterSpacing: cs.letterSpacing === "normal" ? 0 : parseFloat(cs.letterSpacing),
       textTransform: cs.textTransform,
       textAlign: cs.textAlign,
       iconWidth: iconRect.width,
@@ -149,12 +146,7 @@ export async function runParityChecks(
 ): Promise<CtaParityReport> {
   const checks: ParityCheck[] = [];
 
-  const numeric = (
-    label: string,
-    a: number,
-    b: number,
-    tolerance = PX_TOLERANCE,
-  ) => {
+  const numeric = (label: string, a: number, b: number, tolerance = PX_TOLERANCE) => {
     const delta = Math.abs(a - b);
     checks.push({
       kind: "numeric",
