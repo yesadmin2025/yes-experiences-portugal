@@ -41,35 +41,51 @@ RETENTION_MAX=90      # GitHub's hard cap for actions/upload-artifact@v4
 RETENTION_DEFAULT=14  # Workflow fallback when every precedence slot empty
 
 # ─────────────────────────────────────────────────────────────────────
-# ::error annotation title convention (DO NOT drift from this).
+# ::error annotation convention (DO NOT drift from this).
 #
-# All retention-related annotations use the shape:
+# Every retention-related annotation MUST surface BOTH the stage and
+# the failing input/artifact name in BOTH the title and the body, so
+# a reviewer skimming the GitHub Checks "Annotations" panel can tell
+# at a glance which value failed and at which stage — without having
+# to expand the annotation body.
 #
-#     Retention <stage>: <reason>
+# Title shape:
+#
+#     Retention <stage> [<name>]: <reason>
+#
+# Body shape (always begins with the same `<stage> <name>` prefix):
+#
+#     <stage> '<name>'=... <details about the failure> ...
 #
 # where <stage> is one of:
 #   - "input"     → the failing value came directly from a user input
-#                   (workflow_dispatch). Body mentions the input name.
+#                   (workflow_dispatch). <name> is the input name
+#                   (e.g. qa_report_retention_days).
 #   - "effective" → the failing value is the result of resolving the
-#                   precedence chain. Body mentions "after precedence"
-#                   and the workflow default, signalling a workflow bug
-#                   rather than a user mistake.
+#                   precedence chain. <name> is the artifact label
+#                   (e.g. hero-copy-qa-report retention). Body also
+#                   mentions "after precedence" and the workflow
+#                   default, signalling a workflow bug rather than a
+#                   user mistake.
 #
 # and <reason> is one of:
 #   - "not a positive integer"
 #   - "exceeds GitHub maximum"
 #
-# This means the four possible failure annotations are:
-#   Retention input: not a positive integer
-#   Retention input: exceeds GitHub maximum
-#   Retention effective: not a positive integer
-#   Retention effective: exceeds GitHub maximum
+# This means the four possible failure annotations look like:
+#   Retention input [qa_report_retention_days]: not a positive integer
+#   Retention input [qa_logs_retention_days]: exceeds GitHub maximum
+#   Retention effective [hero-copy-qa-report retention]: not a positive integer
+#   Retention effective [hero-copy-qa-meta retention]: exceeds GitHub maximum
 #
 # When grouped in the GitHub Checks UI ("Annotations" panel), the
 # common "Retention " prefix keeps them clustered together while the
-# stage segment makes the user-vs-workflow distinction immediately
-# scannable. Do not introduce ad-hoc titles for new failure modes —
-# extend the <stage>/<reason> vocabulary instead.
+# `<stage> [<name>]` segment makes the user-vs-workflow distinction
+# AND the specific failing value immediately scannable. Do not
+# introduce ad-hoc titles for new failure modes — extend the
+# <stage>/<name>/<reason> vocabulary instead, and keep the body
+# prefixed with the same `<stage> '<name>'` so title and body cannot
+# disagree about which value failed.
 # ─────────────────────────────────────────────────────────────────────
 
 # ─────────────────────────────────────────────────────────────────────
