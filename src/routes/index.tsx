@@ -237,10 +237,10 @@ function HomePage() {
                 visual drift around the words. */}
             <span
               data-hero-field="eyebrow"
-              className="inline-flex items-center gap-2 sm:gap-3 whitespace-nowrap text-[9.5px] sm:text-[10.5px] md:text-[11px] uppercase tracking-[0.26em] sm:tracking-[0.3em] md:tracking-[0.34em] text-[color:var(--gold-soft)] opacity-0 animate-[heroFade_1.1s_ease-out_0.3s_forwards]"
+              className="inline-flex items-center gap-2 sm:gap-3 whitespace-nowrap text-[8.5px] sm:text-[10.5px] md:text-[11px] uppercase tracking-[0.18em] sm:tracking-[0.3em] md:tracking-[0.34em] text-[color:var(--gold-soft)] opacity-0 animate-[heroFade_1.1s_ease-out_0.3s_forwards]"
             >
               <span className="text-[color:var(--gold)]">✦</span>
-              <span>{HERO_COPY.eyebrow}</span>
+              <span className="whitespace-nowrap">{HERO_COPY.eyebrow}</span>
               <span className="text-[color:var(--gold)]">✦</span>
             </span>
 
