@@ -1385,14 +1385,11 @@ function HomePage() {
             <div className="relative max-w-2xl">
               <span className="eyebrow">Begin</span>
               <h2 className="serif text-4xl md:text-5xl mt-6">
-                Create your experience. <br />
+                Write your story. <br />
                 <span className="italic text-[color:var(--teal)]">Confirm it instantly.</span>
               </h2>
               <p className="mt-7 text-[17px] text-[color:var(--charcoal-soft)] leading-[1.75] max-w-lg">
-                Choose a signature, tailor one, or design from scratch in the Studio — every path confirms instantly.
-              </p>
-              <p className="mt-3 text-[12px] uppercase tracking-[0.24em] text-[color:var(--gold)]">
-                Instant confirmation across all experiences.
+                Choose a signature, tailor one, or design from scratch — every path confirms instantly.
               </p>
               <div className="mt-10 flex flex-wrap gap-4">
                 <Link
