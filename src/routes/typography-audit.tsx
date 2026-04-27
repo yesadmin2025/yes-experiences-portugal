@@ -898,6 +898,9 @@ function SettingsPanel({
     | { fileName: string; mode: "applied" | "validated" | "rejected" | "current"; report: ValidationReport }
     | null
   >(null);
+  // Set by the "Validate, apply & publish" button after a successful run.
+  // The actual publish happens in the Lovable editor — we just surface a CTA.
+  const [publishReady, setPublishReady] = useState(false);
 
   const handleImportFile = async (file: File, dryRun: boolean, autoFix: boolean) => {
     setImportReport(null);
