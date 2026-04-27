@@ -102,6 +102,21 @@ function HeroVerifyPage() {
     }
   }, [targetOverride, checkAllPages]);
 
+  const downloadJson = useCallback(() => {
+    if (!result) return;
+    const blob = new Blob([JSON.stringify(result, null, 2)], {
+      type: "application/json",
+    });
+    triggerDownload(blob, buildFilename(result, "json"));
+  }, [result]);
+
+  const downloadCsv = useCallback(() => {
+    if (!result) return;
+    const csv = toCsv(result);
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    triggerDownload(blob, buildFilename(result, "csv"));
+  }, [result]);
+
   return (
     <main className="mx-auto max-w-3xl px-6 py-12 font-sans">
       <h1 className="text-2xl font-semibold tracking-tight">
