@@ -219,6 +219,82 @@ jobs:
           echo "  Workflow runs : ${WORKFLOW_RUNS_URL}"
           echo "────────────────────────────────────────────────────────────"
 
+          # ── URL shape validation ────────────────────────────────────
+          # Verify the three URLs match the exact GitHub patterns we
+          # expect BEFORE assembling the comment body. A malformed URL
+          # in a sticky PR comment is hard to notice — it just renders
+          # as a broken link reviewers click once and forget about.
+          # Failing here forces the workflow red so the comment is
+          # never posted with garbage.
+          #
+          # Patterns enforced:
+          #   file  https://<host>/<owner>/<repo>/blob/<sha40>/<path>
+          #   job   <file-url>#L<positive-int>
+          #   runs  https://<host>/<owner>/<repo>/actions/workflows/<file>.ya?ml
+          #
+          # `[[ … =~ … ]]` is bash's POSIX-extended-regex match. We
+          # anchor with ^ and $ so partial matches don't sneak through.
+          validation_errors=()
+
+          # 1. Sanity-check the head SHA is exactly 40 hex chars. If
+          # this is wrong, every constructed URL is wrong, so check it
+          # explicitly with a clearer message than the regex would give.
+          if ! [[ "${HEAD_SHA}" =~ ^[0-9a-f]{40}$ ]]; then
+            validation_errors+=("HEAD_SHA is not a 40-char lowercase hex sha: \"${HEAD_SHA}\"")
+          fi
+
+          # 2. Repo must be "owner/repo" — disallow slashes in either
+          # half so we can't accidentally smuggle path segments through.
+          if ! [[ "${REPO}" =~ ^[A-Za-z0-9._-]+/[A-Za-z0-9._-]+$ ]]; then
+            validation_errors+=("REPO is not in owner/repo form: \"${REPO}\"")
+          fi
+
+          # 3. Server URL must be https://<host> with no trailing slash.
+          if ! [[ "${SERVER_URL}" =~ ^https://[A-Za-z0-9.-]+$ ]]; then
+            validation_errors+=("SERVER_URL is not a bare https://<host>: \"${SERVER_URL}\"")
+          fi
+
+          # 4. Workflow file URL — must embed REPO and HEAD_SHA exactly.
+          file_pattern="^${SERVER_URL}/${REPO}/blob/[0-9a-f]{40}/.+\.ya?ml$"
+          if ! [[ "${WORKFLOW_FILE_URL}" =~ $file_pattern ]]; then
+            validation_errors+=("WORKFLOW_FILE_URL does not match expected shape: \"${WORKFLOW_FILE_URL}\"")
+          elif [[ "${WORKFLOW_FILE_URL}" != *"/${HEAD_SHA}/"* ]]; then
+            validation_errors+=("WORKFLOW_FILE_URL does not embed HEAD_SHA \"${HEAD_SHA}\": \"${WORKFLOW_FILE_URL}\"")
+          fi
+
+          # 5. Job URL — file URL plus #L<positive-int>. Reject #L0 and
+          # negative/zero-padded numbers because GitHub's anchor parser
+          # treats them as invalid and the link silently jumps to top.
+          job_pattern="^${SERVER_URL}/${REPO}/blob/[0-9a-f]{40}/.+\.ya?ml#L[1-9][0-9]*$"
+          if ! [[ "${WORKFLOW_JOB_URL}" =~ $job_pattern ]]; then
+            validation_errors+=("WORKFLOW_JOB_URL does not match expected shape: \"${WORKFLOW_JOB_URL}\"")
+          elif [[ "${WORKFLOW_JOB_URL}" != "${WORKFLOW_FILE_URL}#L${NAME_LINE}" ]]; then
+            validation_errors+=("WORKFLOW_JOB_URL does not equal WORKFLOW_FILE_URL#L${NAME_LINE}: \"${WORKFLOW_JOB_URL}\"")
+          fi
+
+          # 6. Runs URL — uses the workflow's basename, not its full path.
+          runs_pattern="^${SERVER_URL}/${REPO}/actions/workflows/[A-Za-z0-9._-]+\.ya?ml$"
+          if ! [[ "${WORKFLOW_RUNS_URL}" =~ $runs_pattern ]]; then
+            validation_errors+=("WORKFLOW_RUNS_URL does not match expected shape: \"${WORKFLOW_RUNS_URL}\"")
+          fi
+
+          if (( ${#validation_errors[@]} > 0 )); then
+            echo "❌ Refusing to post PR comment — ${#validation_errors[@]} URL validation error(s):"
+            for e in "${validation_errors[@]}"; do
+              echo "  - ${e}"
+            done
+            echo ""
+            echo "Inputs that produced the malformed URL(s):"
+            echo "  SERVER_URL       = \"${SERVER_URL}\""
+            echo "  REPO             = \"${REPO}\""
+            echo "  HEAD_SHA         = \"${HEAD_SHA}\""
+            echo "  TARGET_WORKFLOW  = \"${TARGET_WORKFLOW}\""
+            echo "  NAME_LINE        = \"${NAME_LINE}\""
+            exit 2
+          fi
+
+          echo "✅ Deep-link URLs validated against expected GitHub patterns."
+
           # Fence the script output in a code block; truncate to keep
           # the comment under GitHub's 65,536-char body limit with
           # generous headroom.
