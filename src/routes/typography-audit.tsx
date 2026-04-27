@@ -1409,25 +1409,53 @@ function ImportReportCard({
         </details>
       )}
 
-      {report.issues.length > 0 && (
-        <ul className="mt-2 space-y-1">
-          {report.issues.map((issue, idx) => (
-            <li key={idx} className="flex items-start gap-2 leading-snug">
-              <span
-                className={`mt-0.5 inline-flex w-14 shrink-0 justify-center rounded-sm px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.1em] ${
-                  issue.level === "error"   ? "bg-rose-200 text-rose-900" :
-                  issue.level === "warning" ? "bg-amber-200 text-amber-900" :
-                                              "bg-zinc-200 text-zinc-800"
-                }`}
+      {(() => {
+        // Auto-fix adjustments are stamped onto the report by the
+        // "Validate, apply & publish" flow as info issues with path "auto-fix".
+        // Lift them into a dedicated, collapsible section so users can scan
+        // *what changed* separately from regular validation notes.
+        const appliedFixes = report.issues.filter((i) => i.path === "auto-fix");
+        const otherIssues  = report.issues.filter((i) => i.path !== "auto-fix");
+        return (
+          <>
+            {appliedFixes.length > 0 && (
+              <details
+                open
+                className="mt-2 rounded-md border border-current/20 bg-white/50 px-3 py-2"
               >
-                {issue.level}
-              </span>
-              <code className="shrink-0 rounded bg-white/70 px-1.5 py-0.5 text-[11px]">{issue.path}</code>
-              <span className="text-[12px]">{issue.message}</span>
-            </li>
-          ))}
-        </ul>
-      )}
+                <summary className="cursor-pointer text-[11px] font-semibold uppercase tracking-[0.12em]">
+                  What changed? {appliedFixes.length} auto-fix adjustment{appliedFixes.length === 1 ? "" : "s"} applied
+                </summary>
+                <ul className="mt-2 space-y-1 text-[12px]">
+                  {appliedFixes.map((fix, i) => (
+                    <li key={i} className="font-mono leading-snug">{fix.message}</li>
+                  ))}
+                </ul>
+              </details>
+            )}
+
+            {otherIssues.length > 0 && (
+              <ul className="mt-2 space-y-1">
+                {otherIssues.map((issue, idx) => (
+                  <li key={idx} className="flex items-start gap-2 leading-snug">
+                    <span
+                      className={`mt-0.5 inline-flex w-14 shrink-0 justify-center rounded-sm px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.1em] ${
+                        issue.level === "error"   ? "bg-rose-200 text-rose-900" :
+                        issue.level === "warning" ? "bg-amber-200 text-amber-900" :
+                                                    "bg-zinc-200 text-zinc-800"
+                      }`}
+                    >
+                      {issue.level}
+                    </span>
+                    <code className="shrink-0 rounded bg-white/70 px-1.5 py-0.5 text-[11px]">{issue.path}</code>
+                    <span className="text-[12px]">{issue.message}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </>
+        );
+      })()}
     </div>
   );
 }
