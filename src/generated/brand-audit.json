@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-04-27T07:30:42.038Z",
-  "filesScanned": 43,
+  "generatedAt": "2026-04-27T08:11:53.963Z",
+  "filesScanned": 47,
   "approvedPalette": {
     "teal": "#295B61",
     "teal-2": "#2A7C82",
@@ -18,10 +18,10 @@
     "#cccccc"
   ],
   "counts": {
-    "total": 88,
-    "approved": 30,
-    "allowlisted": 24,
-    "mismatch": 34
+    "total": 100,
+    "approved": 40,
+    "allowlisted": 25,
+    "mismatch": 35
   },
   "findings": [
     {
@@ -331,8 +331,116 @@
       "status": "mismatch"
     },
     {
-      "file": "src/routes/brand-qa.tsx",
+      "file": "src/lib/brand-tokens.test.ts",
+      "line": 49,
+      "col": 30,
+      "raw": "#c9a96a",
+      "normalized": "#c9a96a",
+      "snippet": "// case-sensitively so #c9a96a vs #C9A96A is treated as drift.",
+      "status": "approved"
+    },
+    {
+      "file": "src/lib/brand-tokens.test.ts",
+      "line": 49,
+      "col": 41,
+      "raw": "#C9A96A",
+      "normalized": "#c9a96a",
+      "snippet": "// case-sensitively so #c9a96a vs #C9A96A is treated as drift.",
+      "status": "approved"
+    },
+    {
+      "file": "src/lib/brand-tokens.test.ts",
+      "line": 175,
+      "col": 30,
+      "raw": "#C9A96A",
+      "normalized": "#c9a96a",
+      "snippet": "// a whole hex literal (so #C9A96A matches but a longer #C9A96A12",
+      "status": "approved"
+    },
+    {
+      "file": "src/lib/brand-tokens.ts",
+      "line": 26,
+      "col": 10,
+      "raw": "#295B61",
+      "normalized": "#295b61",
+      "snippet": "teal: \"#295B61\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/lib/brand-tokens.ts",
+      "line": 27,
+      "col": 14,
+      "raw": "#2A7C82",
+      "normalized": "#2a7c82",
+      "snippet": "\"teal-2\": \"#2A7C82\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/lib/brand-tokens.ts",
+      "line": 28,
+      "col": 10,
+      "raw": "#C9A96A",
+      "normalized": "#c9a96a",
+      "snippet": "gold: \"#C9A96A\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/lib/brand-tokens.ts",
+      "line": 29,
+      "col": 17,
+      "raw": "#E1CFA6",
+      "normalized": "#e1cfa6",
+      "snippet": "\"gold-soft\": \"#E1CFA6\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/lib/brand-tokens.ts",
+      "line": 30,
+      "col": 11,
+      "raw": "#FAF8F3",
+      "normalized": "#faf8f3",
+      "snippet": "ivory: \"#FAF8F3\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/lib/brand-tokens.ts",
+      "line": 31,
+      "col": 10,
+      "raw": "#F4EFE7",
+      "normalized": "#f4efe7",
+      "snippet": "sand: \"#F4EFE7\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/lib/brand-tokens.ts",
       "line": 32,
+      "col": 14,
+      "raw": "#2E2E2E",
+      "normalized": "#2e2e2e",
+      "snippet": "charcoal: \"#2E2E2E\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/lib/brand-tokens.ts",
+      "line": 33,
+      "col": 21,
+      "raw": "#5A5A5A",
+      "normalized": "#5a5a5a",
+      "snippet": "\"charcoal-soft\": \"#5A5A5A\",",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/lib/brand-tokens.ts",
+      "line": 34,
+      "col": 21,
+      "raw": "#1F1F1F",
+      "normalized": "#1f1f1f",
+      "snippet": "\"charcoal-deep\": \"#1F1F1F\",",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/routes/brand-qa.tsx",
+      "line": 35,
       "col": 10,
       "raw": "#295B61",
       "normalized": "#295b61",
@@ -341,7 +449,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 33,
+      "line": 36,
       "col": 14,
       "raw": "#2A7C82",
       "normalized": "#2a7c82",
@@ -350,7 +458,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 34,
+      "line": 37,
       "col": 10,
       "raw": "#C9A96A",
       "normalized": "#c9a96a",
@@ -359,7 +467,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 35,
+      "line": 38,
       "col": 17,
       "raw": "#E1CFA6",
       "normalized": "#e1cfa6",
@@ -368,7 +476,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 36,
+      "line": 39,
       "col": 11,
       "raw": "#FAF8F3",
       "normalized": "#faf8f3",
@@ -377,7 +485,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 37,
+      "line": 40,
       "col": 10,
       "raw": "#F4EFE7",
       "normalized": "#f4efe7",
@@ -386,7 +494,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 38,
+      "line": 41,
       "col": 14,
       "raw": "#2E2E2E",
       "normalized": "#2e2e2e",
@@ -395,7 +503,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 39,
+      "line": 42,
       "col": 21,
       "raw": "#6B6B6B",
       "normalized": "#6b6b6b",
@@ -404,7 +512,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 49,
+      "line": 52,
       "col": 6,
       "raw": "#000",
       "normalized": "#000000",
@@ -413,7 +521,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 50,
+      "line": 53,
       "col": 6,
       "raw": "#000000",
       "normalized": "#000000",
@@ -422,7 +530,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 51,
+      "line": 54,
       "col": 6,
       "raw": "#fff",
       "normalized": "#ffffff",
@@ -431,7 +539,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 52,
+      "line": 55,
       "col": 6,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -440,7 +548,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 53,
+      "line": 56,
       "col": 6,
       "raw": "#1f1f1f",
       "normalized": "#1f1f1f",
@@ -449,7 +557,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 54,
+      "line": 57,
       "col": 6,
       "raw": "#ccc",
       "normalized": "#cccccc",
