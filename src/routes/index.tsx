@@ -131,21 +131,21 @@ const editorial = [
 const howItWorks = [
   {
     step: "01",
-    icon: MessageSquare,
-    title: "Tell us your story",
-    line: "A short conversation — who's traveling, what you love, the pace that feels right. No forms, no friction.",
+    icon: Sparkles,
+    title: "Start with a spark",
+    line: "A place you've dreamed of. A moment to mark. An idea, half-formed. Begin from anywhere — we'll take it from there.",
   },
   {
     step: "02",
     icon: PenLine,
-    title: "We design it around you",
-    line: "Your local experience designer crafts a fully private journey — places, people, timing — and refines it until it's exactly right.",
+    title: "Shape it, your way",
+    line: "Choose the pace, the stops, the people you meet. Adjust in real time, with local knowledge guiding every choice.",
   },
   {
     step: "03",
-    icon: Plane,
-    title: "You travel, we host",
-    line: "Drivers, guides, hosts and a single point of contact — every detail handled so you can simply be present.",
+    icon: Zap,
+    title: "Confirm. Instantly.",
+    line: "No forms. No waiting. No back-and-forth. The moment it feels right, it's yours — confirmed on the spot.",
   },
 ];
 
