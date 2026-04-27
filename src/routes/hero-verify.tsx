@@ -1,6 +1,18 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useCallback, useState } from "react";
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
+import {
+  buildFilename,
+  isMulti,
+  toCsv,
+  triggerDownload,
+  type CheckResult,
+  type MultiResponse,
+  type PageReport,
+  type SingleResponse,
+  type SpecDrift,
+  type VerifyResponse,
+} from "@/lib/hero-verify-download";
 
 type CheckResult = {
   key: string;
