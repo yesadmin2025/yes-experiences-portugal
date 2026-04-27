@@ -385,6 +385,14 @@ export function HeroCopyDiff() {
     return next;
   }, []);
 
+  const recordAction = useCallback(
+    (action: BaselineAction, version: string | null) => {
+      writeLastAction(action, version);
+      setLastAction(readLastAction());
+    },
+    [],
+  );
+
   const resetBaseline = useCallback(() => {
     try {
       localStorage.removeItem(STORAGE_KEY);
@@ -395,12 +403,13 @@ export function HeroCopyDiff() {
     // saved "before" version no longer exists to diff against.
     clearPersistedOutlines();
     clearRenderedOutlines();
+    recordAction("reset", null);
     console.info(
       "%c[hero-copy] baseline cleared via UI",
       "color:#9ca3af",
     );
     refresh();
-  }, [refresh]);
+  }, [refresh, recordAction]);
 
   const exportDiff = useCallback(async () => {
     const snap = buildDiffState();
