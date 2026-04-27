@@ -1078,6 +1078,47 @@ export function HeroVerifyOverlay() {
             )}
           </div>
         )}
+        {schemaCheck && (
+          <div
+            style={{
+              marginTop: 8,
+              padding: "6px 8px",
+              borderRadius: 6,
+              fontSize: 11,
+              lineHeight: 1.45,
+              background: schemaCheck.ok
+                ? "rgba(34,197,94,0.12)"
+                : "rgba(239,68,68,0.16)",
+              border: `1px solid ${
+                schemaCheck.ok ? "rgba(34,197,94,0.45)" : "rgba(239,68,68,0.55)"
+              }`,
+              color: schemaCheck.ok
+                ? "rgb(187, 247, 208)"
+                : "rgb(254, 202, 202)",
+            }}
+          >
+            <strong style={{ letterSpacing: "0.04em" }}>
+              {schemaCheck.ok
+                ? `✓ Schema OK (${schemaCheck.format})`
+                : `✕ Schema FAILED (${schemaCheck.format})`}
+            </strong>
+            <span style={{ opacity: 0.75, marginLeft: 6 }}>
+              hero-verify-report/v3 · {new Date(schemaCheck.at).toLocaleTimeString()}
+            </span>
+            {!schemaCheck.ok && schemaCheck.issues.length > 0 && (
+              <ul style={{ margin: "4px 0 0", paddingLeft: 16 }}>
+                {schemaCheck.issues.slice(0, 4).map((i, idx) => (
+                  <li key={idx}>
+                    <strong>{i.path}</strong>: {i.message}
+                  </li>
+                ))}
+                {schemaCheck.issues.length > 4 && (
+                  <li>+{schemaCheck.issues.length - 4} more (see console)</li>
+                )}
+              </ul>
+            )}
+          </div>
+        )}
         <div style={{ display: "flex", gap: 6, marginTop: 10 }}>
           <button
             type="button"
