@@ -446,6 +446,57 @@ const parseSettingsJson = (text: string): AuditSettings => {
   return report.parsed;
 };
 
+// Validate the in-memory settings object the panel is currently holding.
+// Reuses the same range/sanity rules as `validateSettingsJson` so the user
+// gets a consistent report whether they're checking a file or the live state.
+const validateCurrentSettings = (s: AuditSettings): ValidationReport => {
+  const issues: ValidationIssue[] = [];
+  const warn = (path: string, message: string) => issues.push({ level: "warning", path, message });
+  const err  = (path: string, message: string) => issues.push({ level: "error", path, message });
+  const info = (path: string, message: string) => issues.push({ level: "info", path, message });
+
+  const checkNum = (path: string, v: number, range: FieldRange) => {
+    if (!Number.isFinite(v))   err(path, `Not a finite number (${String(v)}).`);
+    else if (v < range.min)    err(path, `Below minimum (${v} < ${range.min}).`);
+    else if (v > range.max)    err(path, `Above maximum (${v} > ${range.max}).`);
+    else if (!Number.isInteger(v)) warn(path, `Non-integer value (${v}) — will be rounded on save.`);
+  };
+
+  for (const key of STAGE_KEYS) {
+    const stage = s[key];
+    checkNum(`${key}.timeoutMs`, stage.timeoutMs, FIELD_RANGES.stageTimeoutMs);
+    checkNum(`${key}.backoffMs`, stage.backoffMs, FIELD_RANGES.stageBackoffMs);
+    if (stage.enabled && stage.timeoutMs < 1000) {
+      warn(`${key}.timeoutMs`, `Very short timeout (${stage.timeoutMs}ms) — slow routes may fail this stage.`);
+    }
+  }
+  checkNum("fontsReadyCapMs",  s.fontsReadyCapMs,  FIELD_RANGES.fontsReadyCapMs);
+  checkNum("postLoadSettleMs", s.postLoadSettleMs, FIELD_RANGES.postLoadSettleMs);
+
+  const enabled = STAGE_KEYS.filter((k) => s[k].enabled);
+  if (enabled.length === 0) {
+    err("settings", "All stages are disabled — every route will be skipped at runtime.");
+  } else if (enabled.length === 1) {
+    warn("settings", `Only "${enabled[0]}" is enabled — no fallback if it times out.`);
+  }
+
+  const worstCaseMs = STAGE_KEYS.reduce(
+    (sum, k) => sum + (s[k].enabled ? s[k].timeoutMs + s[k].backoffMs : 0),
+    0,
+  );
+  info("settings", `Worst-case budget per route: ${(worstCaseMs / 1000).toFixed(1)}s across ${enabled.length} stage${enabled.length === 1 ? "" : "s"}.`);
+  if (worstCaseMs > 30000) {
+    warn("settings", `Worst-case per-route budget is high (${(worstCaseMs / 1000).toFixed(1)}s) — full audits will be slow.`);
+  }
+
+  if (s.fontsReadyCapMs > 0 && s.fontsReadyCapMs < 500) {
+    warn("fontsReadyCapMs", `Very short font-ready cap (${s.fontsReadyCapMs}ms) may sample before web fonts load.`);
+  }
+
+  const ok = !issues.some((i) => i.level === "error");
+  return { ok, shape: "bare", issues, parsed: s };
+};
+
 function TypographyAuditPage() {
   const [results, setResults] = useState<RouteResult[]>(() => ROUTES.map((p) => ({ path: p, status: "pending", samples: [] })));
   const [running, setRunning] = useState(false);
