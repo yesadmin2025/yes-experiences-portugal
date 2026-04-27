@@ -437,6 +437,28 @@ jobs:
               echo "  any remaining URL-shape failures."
             fi
           fi
+          # One-line phase summary at the very bottom of the block so an
+          # operator scrolling to the end (or grepping for "summary") can
+          # tell at a glance which phase(s) failed and why, without
+          # re-reading the verdict + errors + early-exit fields above.
+          # Phase-2 error count = total errors minus phase-1 failures
+          # (every phase-1 failure pushes one entry into validation_errors,
+          # and phase 2 only runs when phase 1 had zero failures).
+          phase1_failed_count=${#failed_foundational_rules[@]}
+          phase2_failed_count=$(( ${#validation_errors[@]} - phase1_failed_count ))
+          if (( phase1_failed_count > 0 && phase2_failed_count > 0 )); then
+            # Should be unreachable today (phase 2 is gated on phase-1
+            # success) but kept for future-proofing if the gate is ever
+            # relaxed. Surfaces both failure sources unambiguously.
+            phase_summary="summary: ❌ phase 1 + phase 2 failed — phase 1: ${failed_foundational_csv}; phase 2: ${phase2_failed_count} URL-shape error(s)"
+          elif (( phase1_failed_count > 0 )); then
+            phase_summary="summary: ❌ phase 1 failed (${failed_foundational_csv}) — phase 2 skipped"
+          elif (( phase2_failed_count > 0 )); then
+            phase_summary="summary: ❌ phase 2 failed — ${phase2_failed_count} URL-shape error(s) (phase 1 OK)"
+          else
+            phase_summary="summary: ✅ phase 1 + phase 2 passed"
+          fi
+          echo "  ${phase_summary}"
           echo "────────────────────────────────────────────────────────────"
 
           if (( ${#validation_errors[@]} > 0 )); then
