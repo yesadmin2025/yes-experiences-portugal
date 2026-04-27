@@ -142,6 +142,7 @@ jobs:
           fi
 
       - name: Post / update PR drift-status comment
+        id: comment
         # Only meaningful on pull_request events — push/dispatch runs
         # don't have a PR to comment on. Always runs (even if enforce
         # exited non-zero) so authors see the diagnostics inline.
