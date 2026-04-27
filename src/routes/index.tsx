@@ -322,6 +322,11 @@ function HomePage() {
               {" | "}
               <span data-probe-field="subheadline">{HERO_COPY.subheadline}</span>
             </div>
+
+            {/* Live <head> mirror — exposes the actual title + meta tags
+                that TanStack Router injected for this route. Stays in
+                sync via a MutationObserver on document.head. */}
+            <HeroMetaProbe />
           </div>
         </div>
       </section>
