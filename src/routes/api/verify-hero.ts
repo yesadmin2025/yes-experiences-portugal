@@ -229,9 +229,12 @@ export const Route = createFileRoute("/api/verify-hero")({
           paths.map((p) => verifyPage(target, p)),
         );
 
-        const ok = pages.every((p) => p.ok);
-        const failedCount = pages.filter((p) => !p.ok).length;
-        const summary = buildSummary(pages);
+        const specDrift = detectSpecDrift();
+        const pagesOk = pages.every((p) => p.ok);
+        const ok = pagesOk && specDrift.ok;
+        const failedCount =
+          pages.filter((p) => !p.ok).length + (specDrift.ok ? 0 : 1);
+        const summary = buildSummary(pages, specDrift);
 
         // Backwards-compatible single-page shape when not in `all` mode.
         if (paths.length === 1) {
