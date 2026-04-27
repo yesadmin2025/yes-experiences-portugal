@@ -438,27 +438,30 @@ process.on("unhandledRejection", (err) => {
 const WATCH = CLI.watch;
 
 if (!WATCH) {
-  const { totalFailures, manualChecks, fetchFailures } = await runOnce();
+  const { summary, totalFailures, manualChecks, fetchFailures } = await runOnce();
   // Drift takes priority over fetch errors so a true content failure is never
   // masked by a flaky network call. Pure fetch-only failure → EXIT.FETCH_ERROR.
   const driftFailures = totalFailures - fetchFailures;
+  let exitCode;
   if (driftFailures > 0) {
     console.log(`${RED}${BOLD}✗ ${driftFailures} drift check(s) failed — do not release.${RESET}`);
-    process.exit(EXIT.DRIFT);
+    exitCode = EXIT.DRIFT;
   } else if (fetchFailures > 0) {
     console.log(
       `${RED}${BOLD}✗ ${fetchFailures} target(s) unreachable — verification incomplete.${RESET}`,
     );
-    process.exit(EXIT.FETCH_ERROR);
+    exitCode = EXIT.FETCH_ERROR;
   } else if (manualChecks > 0) {
     console.log(
       `${GREEN}${BOLD}✓ Production verified.${RESET} ${BOLD}${manualChecks} target(s) need manual visual check before release.${RESET}`,
     );
-    process.exit(EXIT.OK);
+    exitCode = EXIT.OK;
   } else {
     console.log(`${GREEN}${BOLD}✓ All hero copy verified across preview and production.${RESET}`);
-    process.exit(EXIT.OK);
+    exitCode = EXIT.OK;
   }
+  emitReport(buildReport({ summary, mode: "one-shot", runIndex: 1, exitCode }));
+  process.exit(exitCode);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
