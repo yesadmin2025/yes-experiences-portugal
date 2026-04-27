@@ -21,6 +21,64 @@ import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
  */
 
 const STORAGE_KEY = "hero-copy:baseline";
+const LAST_ACTION_KEY = "hero-copy:last-action";
+
+type BaselineAction = "accepted" | "reset";
+
+type LastBaselineAction = {
+  action: BaselineAction;
+  at: string; // ISO timestamp
+  version: string | null; // baseline version captured (accept) or cleared (reset)
+};
+
+function readLastAction(): LastBaselineAction | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = localStorage.getItem(LAST_ACTION_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (
+      parsed &&
+      typeof parsed === "object" &&
+      (parsed.action === "accepted" || parsed.action === "reset") &&
+      typeof parsed.at === "string"
+    ) {
+      return parsed as LastBaselineAction;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+function writeLastAction(action: BaselineAction, version: string | null) {
+  if (typeof window === "undefined") return;
+  try {
+    const payload: LastBaselineAction = {
+      action,
+      at: new Date().toISOString(),
+      version,
+    };
+    localStorage.setItem(LAST_ACTION_KEY, JSON.stringify(payload));
+  } catch {
+    /* ignore */
+  }
+}
+
+function formatRelativeTime(iso: string): string {
+  const then = new Date(iso).getTime();
+  if (Number.isNaN(then)) return iso;
+  const delta = Math.max(0, Date.now() - then);
+  const s = Math.floor(delta / 1000);
+  if (s < 5) return "just now";
+  if (s < 60) return `${s}s ago`;
+  const m = Math.floor(s / 60);
+  if (m < 60) return `${m}m ago`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `${h}h ago`;
+  const d = Math.floor(h / 24);
+  return `${d}d ago`;
+}
 
 type Snapshot = {
   version: string;
@@ -317,12 +375,23 @@ export function HeroCopyDiff() {
   const [state, setState] = useState<DiffState | null>(null);
   const [panelVisible, setPanelVisible] = useState(false);
   const [copyStatus, setCopyStatus] = useState<"idle" | "ok" | "fail">("idle");
+  const [lastAction, setLastAction] = useState<LastBaselineAction | null>(null);
+  // Re-render the panel periodically so the relative timestamp stays fresh.
+  const [, setNowTick] = useState(0);
 
   const refresh = useCallback(() => {
     const next = buildDiffState();
     setState(next);
     return next;
   }, []);
+
+  const recordAction = useCallback(
+    (action: BaselineAction, version: string | null) => {
+      writeLastAction(action, version);
+      setLastAction(readLastAction());
+    },
+    [],
+  );
 
   const resetBaseline = useCallback(() => {
     try {
@@ -334,12 +403,13 @@ export function HeroCopyDiff() {
     // saved "before" version no longer exists to diff against.
     clearPersistedOutlines();
     clearRenderedOutlines();
+    recordAction("reset", null);
     console.info(
       "%c[hero-copy] baseline cleared via UI",
       "color:#9ca3af",
     );
     refresh();
-  }, [refresh]);
+  }, [refresh, recordAction]);
 
   const exportDiff = useCallback(async () => {
     const snap = buildDiffState();
@@ -360,6 +430,10 @@ export function HeroCopyDiff() {
     if (typeof window === "undefined") return;
 
     setPanelVisible(readInitialPanelVisibility());
+    setLastAction(readLastAction());
+
+    // Tick once a minute so the relative timestamp ("3m ago") stays current.
+    const tickId = window.setInterval(() => setNowTick((n) => n + 1), 60_000);
 
     window.__heroCopy = {
       diff: () => {
@@ -375,6 +449,7 @@ export function HeroCopyDiff() {
         // New baseline → previously persisted outlines no longer apply.
         clearPersistedOutlines();
         clearRenderedOutlines();
+        recordAction("accepted", snap.version);
         console.info(
           "%c[hero-copy] baseline updated",
           "color:#10b981",
@@ -391,6 +466,7 @@ export function HeroCopyDiff() {
         }
         clearPersistedOutlines();
         clearRenderedOutlines();
+        recordAction("reset", null);
         console.info("%c[hero-copy] baseline cleared", "color:#9ca3af");
         refresh();
       },
@@ -424,8 +500,9 @@ export function HeroCopyDiff() {
     return () => {
       window.removeEventListener("keydown", onKeyDown);
       window.removeEventListener("keyup", onKeyUp);
+      window.clearInterval(tickId);
     };
-  }, [refresh]);
+  }, [refresh, recordAction]);
 
   // ---- Outlines on changed UI elements -----------------------------------
   // When the diff reports changes, find every rendered hero element tagged
@@ -779,6 +856,57 @@ export function HeroCopyDiff() {
             <br />
             changed: <code>{state.rows.length}</code>
           </div>
+          <div
+            data-last-baseline-action={lastAction?.action ?? ""}
+            data-last-baseline-action-at={lastAction?.at ?? ""}
+            data-last-baseline-action-version={lastAction?.version ?? ""}
+            style={{
+              marginBottom: 8,
+              padding: "6px 8px",
+              borderRadius: 4,
+              background: "rgba(255,255,255,0.06)",
+              border: "1px solid rgba(255,255,255,0.12)",
+              fontSize: 11,
+              lineHeight: 1.4,
+            }}
+          >
+            <div style={{ opacity: 0.6, marginBottom: 2 }}>last action</div>
+            {lastAction ? (
+              <>
+                <span
+                  style={{
+                    display: "inline-block",
+                    padding: "1px 6px",
+                    borderRadius: 3,
+                    fontWeight: 600,
+                    background:
+                      lastAction.action === "accepted" ? "#10b981" : "#dc2626",
+                    color: "#fff",
+                    marginRight: 6,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.04em",
+                    fontSize: 10,
+                  }}
+                >
+                  {lastAction.action}
+                </span>
+                <code title={lastAction.at}>
+                  {formatRelativeTime(lastAction.at)}
+                </code>
+                {lastAction.version ? (
+                  <>
+                    {" "}
+                    · v=<code>{lastAction.version}</code>
+                  </>
+                ) : null}
+                <div style={{ opacity: 0.5, fontSize: 10, marginTop: 2 }}>
+                  {new Date(lastAction.at).toLocaleString()}
+                </div>
+              </>
+            ) : (
+              <span style={{ opacity: 0.6 }}>none recorded yet</span>
+            )}
+          </div>
           <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
             <button
               type="button"
@@ -827,6 +955,7 @@ export function HeroCopyDiff() {
                 // painted on the DOM so the visual disappears immediately.
                 clearPersistedOutlines();
                 clearRenderedOutlines();
+                recordAction("accepted", snap.version);
                 console.info(
                   "%c[hero-copy] baseline accepted via UI — outlines cleared",
                   "color:#10b981",
