@@ -1156,6 +1156,51 @@ export function HeroVerifyOverlay() {
             )}
           </div>
         )}
+        {schemaTagCheck && (
+          <div
+            style={{
+              marginTop: 8,
+              padding: "6px 8px",
+              borderRadius: 6,
+              fontSize: 11,
+              lineHeight: 1.45,
+              background: schemaTagCheck.ok
+                ? "rgba(34,197,94,0.12)"
+                : "rgba(239,68,68,0.16)",
+              border: `1px solid ${
+                schemaTagCheck.ok
+                  ? "rgba(34,197,94,0.45)"
+                  : "rgba(239,68,68,0.55)"
+              }`,
+              color: schemaTagCheck.ok
+                ? "rgb(187, 247, 208)"
+                : "rgb(254, 202, 202)",
+            }}
+          >
+            <strong style={{ letterSpacing: "0.04em" }}>
+              {schemaTagCheck.ok
+                ? `✓ Schema tag OK (${schemaTagCheck.format})`
+                : `✕ Schema tag BLOCKED (${schemaTagCheck.format})`}
+            </strong>
+            <span style={{ opacity: 0.75, marginLeft: 6 }}>
+              {schemaTagCheck.ok
+                ? schemaTagCheck.tag
+                : `expected "hero-verify-report/v3"`}
+              {" · "}
+              {new Date(schemaTagCheck.at).toLocaleTimeString()}
+            </span>
+            {!schemaTagCheck.ok && (
+              <div style={{ marginTop: 4 }}>
+                {schemaTagCheck.reason === "missing" &&
+                  `Payload has no "schema" field — download blocked.`}
+                {schemaTagCheck.reason === "wrong-type" &&
+                  `"schema" must be a string — got ${typeof schemaTagCheck.actual}.`}
+                {schemaTagCheck.reason === "mismatch" &&
+                  `"schema" was "${String(schemaTagCheck.actual)}" — download blocked.`}
+              </div>
+            )}
+          </div>
+        )}
         {schemaCheck && (
           <div
             style={{
