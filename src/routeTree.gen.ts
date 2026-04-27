@@ -20,6 +20,7 @@ import { Route as BuilderRouteImport } from './routes/builder'
 import { Route as BrandQaRouteImport } from './routes/brand-qa'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiVerifyHeroRouteImport } from './routes/api/verify-hero'
 
 const ProposalsRoute = ProposalsRouteImport.update({
   id: '/proposals',
@@ -76,6 +77,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiVerifyHeroRoute = ApiVerifyHeroRouteImport.update({
+  id: '/api/verify-hero',
+  path: '/api/verify-hero',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -89,6 +95,7 @@ export interface FileRoutesByFullPath {
   '/local-stories': typeof LocalStoriesRoute
   '/multi-day': typeof MultiDayRoute
   '/proposals': typeof ProposalsRoute
+  '/api/verify-hero': typeof ApiVerifyHeroRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -102,6 +109,7 @@ export interface FileRoutesByTo {
   '/local-stories': typeof LocalStoriesRoute
   '/multi-day': typeof MultiDayRoute
   '/proposals': typeof ProposalsRoute
+  '/api/verify-hero': typeof ApiVerifyHeroRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -116,6 +124,7 @@ export interface FileRoutesById {
   '/local-stories': typeof LocalStoriesRoute
   '/multi-day': typeof MultiDayRoute
   '/proposals': typeof ProposalsRoute
+  '/api/verify-hero': typeof ApiVerifyHeroRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -131,6 +140,7 @@ export interface FileRouteTypes {
     | '/local-stories'
     | '/multi-day'
     | '/proposals'
+    | '/api/verify-hero'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -144,6 +154,7 @@ export interface FileRouteTypes {
     | '/local-stories'
     | '/multi-day'
     | '/proposals'
+    | '/api/verify-hero'
   id:
     | '__root__'
     | '/'
@@ -157,6 +168,7 @@ export interface FileRouteTypes {
     | '/local-stories'
     | '/multi-day'
     | '/proposals'
+    | '/api/verify-hero'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -171,6 +183,7 @@ export interface RootRouteChildren {
   LocalStoriesRoute: typeof LocalStoriesRoute
   MultiDayRoute: typeof MultiDayRoute
   ProposalsRoute: typeof ProposalsRoute
+  ApiVerifyHeroRoute: typeof ApiVerifyHeroRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -252,6 +265,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/verify-hero': {
+      id: '/api/verify-hero'
+      path: '/api/verify-hero'
+      fullPath: '/api/verify-hero'
+      preLoaderRoute: typeof ApiVerifyHeroRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -267,6 +287,7 @@ const rootRouteChildren: RootRouteChildren = {
   LocalStoriesRoute: LocalStoriesRoute,
   MultiDayRoute: MultiDayRoute,
   ProposalsRoute: ProposalsRoute,
+  ApiVerifyHeroRoute: ApiVerifyHeroRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
