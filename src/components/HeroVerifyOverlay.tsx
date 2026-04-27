@@ -367,13 +367,42 @@ export function HeroVerifyOverlay() {
 
   const stamp = () => new Date().toISOString().replace(/[:.]/g, "-");
 
+  // Compute diff segments once per field (only for fields where a diff
+  // is meaningful). Memoized so JSON/CSV exports and the on-screen
+  // diff list share the exact same data.
+  const fieldDiffs = useMemo(
+    () =>
+      reports.map((r) => {
+        const hasBoth = r.actual !== null;
+        const segments = hasBoth ? diffChars(r.expected, r.actual ?? "") : null;
+        return { key: r.key, segments };
+      }),
+    [reports],
+  );
+
+  // A compact one-line representation of a diff suitable for a CSV cell:
+  // equal text is left as-is, removed runs wrap in [-…-], added in {+…+}.
+  // Whitespace inside changed runs becomes · for visibility.
+  const diffToInline = (segments: DiffSegment[] | null): string => {
+    if (!segments) return "";
+    let out = "";
+    for (const s of segments) {
+      if (s.type === "equal") out += s.text;
+      else if (s.type === "removed") out += `[-${s.text.replace(/ /g, "·")}-]`;
+      else out += `{+${s.text.replace(/ /g, "·")}+}`;
+    }
+    return out;
+  };
+
   // Build the export payload + trigger a JSON file download. Captures the
   // page URL, viewport, version hash, per-field expected/actual/status,
-  // and the summary counts so the file is self-contained for CI logs.
+  // diff segments, and summary counts so the file is self-contained for
+  // CI logs and post-hoc auditing.
   const handleExportJson = () => {
     if (typeof window === "undefined") return;
+    const diffByKey = new Map(fieldDiffs.map((d) => [d.key, d.segments]));
     const payload = {
-      schema: "hero-verify-report/v1",
+      schema: "hero-verify-report/v2",
       generatedAt: new Date().toISOString(),
       url: window.location.href,
       pathname: window.location.pathname,
@@ -386,12 +415,26 @@ export function HeroVerifyOverlay() {
       ok:
         summary.mismatch === 0 && summary.missing === 0 && summary.loose === 0,
       summary,
-      fields: reports.map((r) => ({
-        key: r.key,
-        status: r.status,
-        expected: r.expected,
-        actual: r.actual,
-      })),
+      fields: reports.map((r) => {
+        const segments = diffByKey.get(r.key) ?? null;
+        return {
+          key: r.key,
+          status: r.status,
+          expected: r.expected,
+          actual: r.actual,
+          // Full structured diff (one entry per run). Empty for matched
+          // and missing fields (where there is nothing to compare).
+          diff:
+            r.status === "match" || segments === null
+              ? []
+              : segments.map((s) => ({ type: s.type, text: s.text })),
+          // Inline preview string with [-removed-] and {+added+} markers.
+          diffInline:
+            r.status === "match" || segments === null
+              ? ""
+              : diffToInline(segments),
+        };
+      }),
     };
     const blob = new Blob([JSON.stringify(payload, null, 2)], {
       type: "application/json",
@@ -412,19 +455,55 @@ export function HeroVerifyOverlay() {
 
   const handleExportCsv = () => {
     if (typeof window === "undefined") return;
-    const header = ["key", "status", "expected", "actual"];
-    const rows = reports.map((r) =>
-      [r.key, r.status, r.expected, r.actual ?? ""].map(csvCell).join(","),
-    );
+    const diffByKey = new Map(fieldDiffs.map((d) => [d.key, d.segments]));
+    const header = [
+      "key",
+      "status",
+      "expected",
+      "actual",
+      "diff_inline",
+      "removed",
+      "added",
+      "diff_segments_json",
+    ];
+    const rows = reports.map((r) => {
+      const segments = diffByKey.get(r.key) ?? null;
+      const showDiff = r.status !== "match" && segments !== null;
+      const removed = showDiff
+        ? segments.filter((s) => s.type === "removed").map((s) => s.text).join(" | ")
+        : "";
+      const added = showDiff
+        ? segments.filter((s) => s.type === "added").map((s) => s.text).join(" | ")
+        : "";
+      const inline = showDiff ? diffToInline(segments) : "";
+      // The full structured diff is JSON-encoded into a single CSV cell
+      // so spreadsheet users can parse it back if they need the exact
+      // segment-by-segment breakdown.
+      const segmentsJson = showDiff ? JSON.stringify(segments) : "";
+      return [
+        r.key,
+        r.status,
+        r.expected,
+        r.actual ?? "",
+        inline,
+        removed,
+        added,
+        segmentsJson,
+      ]
+        .map(csvCell)
+        .join(",");
+    });
     // Prepend a UTF-8 BOM so Excel opens the em-dash etc. correctly, and
     // use CRLF line endings per the CSV spec.
-    const csv = "\uFEFF" + [header.map(csvCell).join(","), ...rows].join("\r\n");
+    const csv =
+      "\uFEFF" + [header.map(csvCell).join(","), ...rows].join("\r\n");
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
     triggerDownload(
       blob,
       `hero-verify-${HERO_COPY_VERSION}-${stamp()}.csv`,
     );
   };
+
 
 
   if (!enabled) return null;
