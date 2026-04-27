@@ -111,6 +111,64 @@ async function verifyPage(targetUrl: string, path: string): Promise<PageReport> 
   }
 }
 
+type FailureReason =
+  | "fetch_error"
+  | "non_200"
+  | "missing_strings"
+  | "stale_version";
+
+type FailedRouteSummary = {
+  path: string;
+  url: string;
+  httpStatus: number;
+  reasons: FailureReason[];
+  missingKeys: string[];
+  liveVersion: string | null;
+};
+
+type Summary = {
+  totalPages: number;
+  passedPages: number;
+  failedPages: number;
+  failedRoutes: FailedRouteSummary[];
+  failedPaths: string[];
+  message: string;
+};
+
+function buildSummary(pages: PageReport[]): Summary {
+  const failed = pages.filter((p) => !p.ok);
+  const failedRoutes: FailedRouteSummary[] = failed.map((p) => {
+    const reasons: FailureReason[] = [];
+    if (p.error) reasons.push("fetch_error");
+    if (!p.error && p.httpStatus !== 200) reasons.push("non_200");
+    if (p.missing.length > 0) reasons.push("missing_strings");
+    if (p.versionMatch === false) reasons.push("stale_version");
+    return {
+      path: p.path,
+      url: p.url,
+      httpStatus: p.httpStatus,
+      reasons,
+      missingKeys: p.missing.map((m) => m.key),
+      liveVersion: p.liveVersion,
+    };
+  });
+
+  const failedPaths = failedRoutes.map((r) => r.path);
+  const message =
+    failed.length === 0
+      ? `All ${pages.length} page(s) passed verification.`
+      : `${failed.length} of ${pages.length} page(s) failed: ${failedPaths.join(", ")}`;
+
+  return {
+    totalPages: pages.length,
+    passedPages: pages.length - failed.length,
+    failedPages: failed.length,
+    failedRoutes,
+    failedPaths,
+    message,
+  };
+}
+
 /**
  * GET /api/verify-hero
  *
@@ -121,9 +179,17 @@ async function verifyPage(targetUrl: string, path: string): Promise<PageReport> 
  * Query params:
  *   ?url=<base>   Override the base URL (e.g. preview deployment).
  *   ?all=1        Fan out across every route in ALL_ROUTES and require every
- *                 page to contain all 7 hero strings verbatim. Loud failure
- *                 on any missing string or non-200 response.
+ *                 page to contain all 7 hero strings verbatim.
  *   ?path=/x      Check a single specific path instead of "/".
+ *   ?strict=1     Escalate any failure to HTTP 422 (instead of 409) and
+ *                 include a top-level `summary` object listing failed routes
+ *                 and reason codes — designed for CI / curl `--fail` checks.
+ *
+ * Status codes:
+ *   200  all checks passed
+ *   409  one or more strings missing (default failure code)
+ *   422  failure under ?strict=1
+ *   502  network/fetch error reaching the target
  */
 export const Route = createFileRoute("/api/verify-hero")({
   server: {
@@ -132,6 +198,8 @@ export const Route = createFileRoute("/api/verify-hero")({
         const url = new URL(request.url);
         const target = url.searchParams.get("url") ?? PUBLISHED_URL;
         const all = url.searchParams.get("all");
+        const strictParam = url.searchParams.get("strict");
+        const strict = strictParam === "1" || strictParam === "true";
         const singlePath = url.searchParams.get("path") ?? "/";
 
         const paths: readonly string[] =
@@ -145,13 +213,16 @@ export const Route = createFileRoute("/api/verify-hero")({
 
         const ok = pages.every((p) => p.ok);
         const failedCount = pages.filter((p) => !p.ok).length;
+        const summary = buildSummary(pages);
 
         // Backwards-compatible single-page shape when not in `all` mode.
         if (paths.length === 1) {
           const only = pages[0];
+          const failureStatus = strict ? 422 : only.error ? 502 : 409;
           return Response.json(
             {
               ok: only.ok,
+              strict,
               target: only.url,
               httpStatus: only.httpStatus,
               sourceVersion: HERO_COPY_VERSION,
@@ -159,29 +230,33 @@ export const Route = createFileRoute("/api/verify-hero")({
               versionMatch: only.versionMatch,
               checks: only.checks,
               missing: only.missing,
+              summary,
               checkedAt: new Date().toISOString(),
               ...(only.error ? { error: only.error } : {}),
             },
             {
-              status: only.ok ? 200 : only.error ? 502 : 409,
+              status: only.ok ? 200 : failureStatus,
               headers: { "cache-control": "no-store" },
             },
           );
         }
 
+        const multiFailureStatus = strict ? 422 : 409;
         return Response.json(
           {
             ok,
+            strict,
             mode: "all",
             base: target,
             sourceVersion: HERO_COPY_VERSION,
             totalPages: pages.length,
             failedCount,
+            summary,
             pages,
             checkedAt: new Date().toISOString(),
           },
           {
-            status: ok ? 200 : 409,
+            status: ok ? 200 : multiFailureStatus,
             headers: { "cache-control": "no-store" },
           },
         );
