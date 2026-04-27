@@ -195,6 +195,47 @@ export function HeroVerifyOverlay() {
     return counts;
   }, [reports]);
 
+  // Build the export payload + trigger a JSON file download. Captures the
+  // page URL, viewport, version hash, per-field expected/actual/status,
+  // and the summary counts so the file is self-contained for CI logs.
+  const handleExport = () => {
+    if (typeof window === "undefined" || typeof document === "undefined")
+      return;
+    const payload = {
+      schema: "hero-verify-report/v1",
+      generatedAt: new Date().toISOString(),
+      url: window.location.href,
+      pathname: window.location.pathname,
+      heroCopyVersion: HERO_COPY_VERSION,
+      viewport: {
+        width: window.innerWidth,
+        height: window.innerHeight,
+        devicePixelRatio: window.devicePixelRatio,
+      },
+      ok:
+        summary.mismatch === 0 && summary.missing === 0 && summary.loose === 0,
+      summary,
+      fields: reports.map((r) => ({
+        key: r.key,
+        status: r.status,
+        expected: r.expected,
+        actual: r.actual,
+      })),
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    const stamp = new Date().toISOString().replace(/[:.]/g, "-");
+    a.href = url;
+    a.download = `hero-verify-${HERO_COPY_VERSION}-${stamp}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   if (!enabled) return null;
 
   return (
