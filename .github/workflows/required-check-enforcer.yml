@@ -689,13 +689,16 @@ EOF
 
   url-validation-phase1-failure-handler:
     name: URL validation — phase 1 failure handler
-    needs: enforce
+    needs: [enforce, url-validation-exit-code-guard]
     # Triggers on phase-1-only (11) AND combined (13). Numeric compare
     # via string equality is intentional — GitHub Actions expression
-    # context coerces both sides to strings.
+    # context coerces both sides to strings. Gated on the guard so a
+    # bogus exit code (e.g. empty, "1") cannot accidentally trigger
+    # this handler via the equality check.
     if: |
       always()
       && needs.enforce.result != 'skipped'
+      && needs.url-validation-exit-code-guard.result == 'success'
       && (needs.enforce.outputs.url_validation_exit_code == '11'
           || needs.enforce.outputs.url_validation_exit_code == '13')
     runs-on: ubuntu-latest
