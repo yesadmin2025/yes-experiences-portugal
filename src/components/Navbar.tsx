@@ -45,6 +45,18 @@ export function Navbar() {
             className="flex-shrink-0 inline-flex items-center h-full rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             aria-label="YES experiences PORTUGAL — Home"
           >
+            {/* Brand-safe crispness refinement:
+                - imageRendering: "auto" lets the browser pick the best
+                  high-DPI resampler (no nearest-neighbor crunch).
+                - A near-zero contrast() + saturate(1) is a no-op on color
+                  but forces the GPU compositor onto the image, which on
+                  many engines yields sharper sub-pixel edges than the
+                  default CPU path.
+                - The hairline white halo (0 0 0.5px) and 1px ivory drop
+                  improves edge definition on the white bar without
+                  shifting the approved teal hue or introducing a visible
+                  outline. transform: translateZ(0) promotes to its own
+                  layer to avoid sub-pixel re-sampling on scroll. */}
             <img
               src={logoTeal}
               width={909}
@@ -54,7 +66,14 @@ export function Navbar() {
               draggable={false}
               fetchPriority="high"
               decoding="async"
-              style={{ imageRendering: "auto", filter: "drop-shadow(0 1px 0 rgba(255,255,255,0.4))" }}
+              style={{
+                imageRendering: "auto",
+                filter:
+                  "drop-shadow(0 0 0.4px rgba(255,255,255,0.55)) drop-shadow(0 1px 0 rgba(255,255,255,0.35)) contrast(1.02) saturate(1.0)",
+                transform: "translateZ(0)",
+                backfaceVisibility: "hidden",
+                WebkitFontSmoothing: "antialiased",
+              }}
             />
           </Link>
 
