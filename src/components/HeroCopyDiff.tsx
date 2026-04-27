@@ -375,6 +375,9 @@ export function HeroCopyDiff() {
   const [state, setState] = useState<DiffState | null>(null);
   const [panelVisible, setPanelVisible] = useState(false);
   const [copyStatus, setCopyStatus] = useState<"idle" | "ok" | "fail">("idle");
+  const [lastAction, setLastAction] = useState<LastBaselineAction | null>(null);
+  // Re-render the panel periodically so the relative timestamp stays fresh.
+  const [, setNowTick] = useState(0);
 
   const refresh = useCallback(() => {
     const next = buildDiffState();
