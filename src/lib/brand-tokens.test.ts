@@ -238,3 +238,65 @@ describe("Brand lock — token shape", () => {
     expect(_l).toBe("teal-on-ivory");
   });
 });
+
+/* ---------------------------------------------------------------- */
+/* 4. Runtime guard for BrandLogoTheme                                */
+/* ---------------------------------------------------------------- */
+
+import { vi } from "vitest";
+
+describe("Brand lock — assertBrandLogoTheme runtime guard", () => {
+  it("returns valid themes unchanged", () => {
+    for (const theme of BRAND_LOGO_THEMES) {
+      expect(assertBrandLogoTheme(theme, "Test")).toBe(theme);
+    }
+  });
+
+  it("isBrandLogoTheme narrows correctly", () => {
+    expect(isBrandLogoTheme("teal-on-ivory")).toBe(true);
+    expect(isBrandLogoTheme("gold-on-charcoal")).toBe(true);
+    expect(isBrandLogoTheme("gold-on-ivory")).toBe(false);
+    expect(isBrandLogoTheme(undefined)).toBe(false);
+    expect(isBrandLogoTheme(null)).toBe(false);
+    expect(isBrandLogoTheme(42)).toBe(false);
+    expect(isBrandLogoTheme({})).toBe(false);
+  });
+
+  it("DEFAULT_BRAND_LOGO_THEME is itself a valid theme", () => {
+    expect(BRAND_LOGO_THEMES).toContain(DEFAULT_BRAND_LOGO_THEME);
+  });
+
+  it("throws in dev/test on an unsupported theme and includes the component name", () => {
+    // Vitest sets NODE_ENV=test → the guard treats this as dev and throws.
+    const errSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    try {
+      expect(() =>
+        assertBrandLogoTheme("emerald-on-mauve", "Logo"),
+      ).toThrowError(/\[brand-lock\] <Logo> received an unsupported brand theme/);
+      expect(errSpy).toHaveBeenCalled();
+      const msg = String(errSpy.mock.calls[0]?.[0] ?? "");
+      expect(msg).toContain("emerald-on-mauve");
+      expect(msg).toContain("teal-on-ivory");
+      expect(msg).toContain("gold-on-charcoal");
+    } finally {
+      errSpy.mockRestore();
+    }
+  });
+
+  it("formats null / undefined / non-string values clearly in the error", () => {
+    const errSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    try {
+      expect(() => assertBrandLogoTheme(undefined, "Footer")).toThrowError(
+        /received an unsupported brand theme: undefined/,
+      );
+      expect(() => assertBrandLogoTheme(null, "Navbar")).toThrowError(
+        /received an unsupported brand theme: null/,
+      );
+      expect(() => assertBrandLogoTheme(123, "Hero")).toThrowError(
+        /received an unsupported brand theme: number 123/,
+      );
+    } finally {
+      errSpy.mockRestore();
+    }
+  });
+});
