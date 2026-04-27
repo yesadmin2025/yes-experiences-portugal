@@ -304,13 +304,12 @@ function HomePage() {
                 to="/experiences"
                 data-cta-stagger
                 data-hero-field="secondaryCta"
-                className="cta-secondary-dark cta-attention cta-breathe group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-start text-left pl-6 pr-12 py-6 md:py-5 text-[11.5px] md:text-[12px] lg:text-[12.5px] tracking-[0.2em] md:tracking-[0.18em] uppercase font-light leading-[1.55] border-[1.5px]"
+                className="cta-secondary-dark cta-attention cta-breathe group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-start text-left pl-6 pr-12 py-6 md:py-5 text-[12px] md:text-[12.5px] lg:text-[13px] tracking-[0.22em] md:tracking-[0.2em] uppercase font-light leading-[1.55] border-[1.5px]"
               >
                 <span className="block">{HERO_COPY.secondaryCta}</span>
-                <Sparkles
-                  size={13}
-                  strokeWidth={1.25}
-                  className="absolute right-5 top-1/2 -translate-y-1/2 opacity-80 group-hover:opacity-100 group-hover:rotate-12 transition-all duration-300"
+                <ArrowRight
+                  size={14}
+                  className="absolute right-5 top-1/2 -translate-y-1/2 group-hover:translate-x-1 transition-transform duration-300"
                 />
               </Link>
             </div>
