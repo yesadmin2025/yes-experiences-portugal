@@ -318,7 +318,7 @@ function HomePage() {
                 Mobile vertical rhythm: 48px from CTAs so it reads as a
                 clear, separate reassurance line, not glued to the
                 buttons. Slightly looser leading for calm readability. */}
-            <div className="mt-10 md:mt-8 max-w-sm sm:max-w-xl opacity-0 animate-[heroFade_1.4s_ease-out_1.5s_forwards]">
+            <div className="hero-rhythm-cta-to-microcopy max-w-sm sm:max-w-xl opacity-0 animate-[heroFade_1.4s_ease-out_1.5s_forwards]">
               <p
                 data-hero-field="microcopy"
                 className="text-[13px] md:text-[14px] text-[color:var(--ivory)]/95 leading-[1.8] md:leading-[1.75] font-light tracking-[0.01em] text-left"
