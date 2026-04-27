@@ -643,9 +643,15 @@ export function HeroCopyDiff() {
     clearPersistedOutlines();
     clearRenderedOutlines();
     console.info(
-      "%c[hero-copy] cleared outlines on route boundary",
+      "%c[hero-copy] route boundary",
       "color:#9ca3af",
-      `${prev} → ${pathname}`,
+      {
+        prev,
+        next: pathname,
+        hadPersisted,
+        hadRendered,
+        cleared: hadOutlines,
+      },
     );
 
     // Re-run the diff if we just landed back on the index so any genuine
