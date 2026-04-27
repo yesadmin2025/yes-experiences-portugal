@@ -160,11 +160,26 @@ jobs:
         # EXIT.RUNTIME_ERROR (3) so a malformed report can never be
         # uploaded as if it were valid. The JSON file is uploaded below
         # regardless of exit code via `if: always()`.
+        #
+        # We tee stdout + stderr to separate log files for triage. The
+        # script's real exit code is captured via PIPESTATUS[0] (tee
+        # would otherwise mask a non-zero exit and let drift slip
+        # through as a green check). The exit code itself is also
+        # written to disk so reviewers downloading the logs artifact
+        # see the precise EXIT.* without needing the GitHub UI.
         run: |
-          mkdir -p qa-reports
+          mkdir -p qa-reports qa-logs
+          set +e
           node scripts/hero-copy-qa.mjs \
             --report-json=qa-reports/hero-copy-qa.json \
-            --report-json-strict
+            --report-json-strict \
+            > >(tee qa-logs/stdout.log) \
+            2> >(tee qa-logs/stderr.log >&2)
+          EXIT_CODE=${PIPESTATUS[0]}
+          set -e
+          echo "$EXIT_CODE" > qa-logs/exit-code.txt
+          echo "hero-copy-qa exit code: $EXIT_CODE"
+          exit "$EXIT_CODE"
         env:
           CI: "true"
 
@@ -174,10 +189,31 @@ jobs:
         # Retention is configurable from `workflow_dispatch` (default 14
         # days); for pull_request / push runs GitHub falls back to the
         # repo's default retention if the input is empty.
+        #
+        # `if-no-files-found: ignore` because a hard runtime crash before
+        # the first emit leaves no JSON on disk — we don't want a noisy
+        # "no files found" warning competing with the real failure in
+        # the logs artifact below.
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: hero-copy-qa-report
           path: qa-reports/hero-copy-qa.json
           retention-days: ${{ inputs.qa_report_retention_days || '14' }}
+          if-no-files-found: ignore
+
+      - name: Upload hero-copy QA logs (stdout/stderr + exit code)
+        # Separate artifact so triage doesn't have to download the JSON
+        # to read the human-readable log, and vice versa. Captures the
+        # full stderr stream — which is where --report-json=<path> sends
+        # the human log when stdout is being used for machine output —
+        # plus the exit code file written above. Always uploaded so a
+        # crashing/empty-JSON run still ships its log trail.
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hero-copy-qa-logs
+          path: qa-logs/
+          retention-days: ${{ inputs.qa_report_retention_days || '14' }}
           if-no-files-found: warn
+
