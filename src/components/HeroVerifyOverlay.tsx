@@ -195,12 +195,28 @@ export function HeroVerifyOverlay() {
     return counts;
   }, [reports]);
 
+  // Shared file-download helper. Creates an <a download> on the fly so the
+  // browser saves the blob with our chosen filename. SSR-safe.
+  const triggerDownload = (blob: Blob, filename: string) => {
+    if (typeof window === "undefined" || typeof document === "undefined")
+      return;
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const stamp = () => new Date().toISOString().replace(/[:.]/g, "-");
+
   // Build the export payload + trigger a JSON file download. Captures the
   // page URL, viewport, version hash, per-field expected/actual/status,
   // and the summary counts so the file is self-contained for CI logs.
-  const handleExport = () => {
-    if (typeof window === "undefined" || typeof document === "undefined")
-      return;
+  const handleExportJson = () => {
+    if (typeof window === "undefined") return;
     const payload = {
       schema: "hero-verify-report/v1",
       generatedAt: new Date().toISOString(),
@@ -225,16 +241,36 @@ export function HeroVerifyOverlay() {
     const blob = new Blob([JSON.stringify(payload, null, 2)], {
       type: "application/json",
     });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    const stamp = new Date().toISOString().replace(/[:.]/g, "-");
-    a.href = url;
-    a.download = `hero-verify-${HERO_COPY_VERSION}-${stamp}.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    triggerDownload(
+      blob,
+      `hero-verify-${HERO_COPY_VERSION}-${stamp()}.json`,
+    );
   };
+
+  // CSV escape: wrap every field in double quotes and double any embedded
+  // quote, per RFC 4180. Newlines inside fields are preserved verbatim
+  // because they are inside a quoted field.
+  const csvCell = (v: string | null | undefined) => {
+    const s = v === null || v === undefined ? "" : String(v);
+    return `"${s.replace(/"/g, '""')}"`;
+  };
+
+  const handleExportCsv = () => {
+    if (typeof window === "undefined") return;
+    const header = ["key", "status", "expected", "actual"];
+    const rows = reports.map((r) =>
+      [r.key, r.status, r.expected, r.actual ?? ""].map(csvCell).join(","),
+    );
+    // Prepend a UTF-8 BOM so Excel opens the em-dash etc. correctly, and
+    // use CRLF line endings per the CSV spec.
+    const csv = "\uFEFF" + [header.map(csvCell).join(","), ...rows].join("\r\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    triggerDownload(
+      blob,
+      `hero-verify-${HERO_COPY_VERSION}-${stamp()}.csv`,
+    );
+  };
+
 
   if (!enabled) return null;
 
