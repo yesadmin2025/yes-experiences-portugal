@@ -111,6 +111,64 @@ async function verifyPage(targetUrl: string, path: string): Promise<PageReport> 
   }
 }
 
+type FailureReason =
+  | "fetch_error"
+  | "non_200"
+  | "missing_strings"
+  | "stale_version";
+
+type FailedRouteSummary = {
+  path: string;
+  url: string;
+  httpStatus: number;
+  reasons: FailureReason[];
+  missingKeys: string[];
+  liveVersion: string | null;
+};
+
+type Summary = {
+  totalPages: number;
+  passedPages: number;
+  failedPages: number;
+  failedRoutes: FailedRouteSummary[];
+  failedPaths: string[];
+  message: string;
+};
+
+function buildSummary(pages: PageReport[]): Summary {
+  const failed = pages.filter((p) => !p.ok);
+  const failedRoutes: FailedRouteSummary[] = failed.map((p) => {
+    const reasons: FailureReason[] = [];
+    if (p.error) reasons.push("fetch_error");
+    if (!p.error && p.httpStatus !== 200) reasons.push("non_200");
+    if (p.missing.length > 0) reasons.push("missing_strings");
+    if (p.versionMatch === false) reasons.push("stale_version");
+    return {
+      path: p.path,
+      url: p.url,
+      httpStatus: p.httpStatus,
+      reasons,
+      missingKeys: p.missing.map((m) => m.key),
+      liveVersion: p.liveVersion,
+    };
+  });
+
+  const failedPaths = failedRoutes.map((r) => r.path);
+  const message =
+    failed.length === 0
+      ? `All ${pages.length} page(s) passed verification.`
+      : `${failed.length} of ${pages.length} page(s) failed: ${failedPaths.join(", ")}`;
+
+  return {
+    totalPages: pages.length,
+    passedPages: pages.length - failed.length,
+    failedPages: failed.length,
+    failedRoutes,
+    failedPaths,
+    message,
+  };
+}
+
 /**
  * GET /api/verify-hero
  *
