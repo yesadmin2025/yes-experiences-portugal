@@ -53,12 +53,16 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: "check (read-only) or apply (additive write)"
+        description: >-
+          check (read-only, fail on drift)
+          | apply-dry-run (read-only, report what apply WOULD POST)
+          | apply (additive write — requires write token)
         required: true
         default: "check"
         type: choice
         options:
           - check
+          - apply-dry-run
           - apply
 
 concurrency:
