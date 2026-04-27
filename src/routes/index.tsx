@@ -722,11 +722,13 @@ function HomePage() {
                     to={p.to}
                     className={`group relative flex flex-col h-full p-7 md:p-8 transition-all duration-500 overflow-hidden ${styles.card}`}
                   >
-                    {/* Top hairline rail — subtle accent that visually
-                        anchors each card to its own identity. */}
+                    {/* Top rail — distinct accent pattern per card
+                        (solid teal · soft-gold gradient · thick gold ·
+                        dotted gold) so each path is identifiable at a
+                        glance even before reading the title. */}
                     <span
                       aria-hidden="true"
-                      className={`absolute top-0 left-0 right-0 h-px ${styles.rail}`}
+                      className={`absolute top-0 left-0 right-0 ${styles.rail}`}
                     />
                     {styles.ribbon && (
                       <span
