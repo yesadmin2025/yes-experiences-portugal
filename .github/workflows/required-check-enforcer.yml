@@ -462,9 +462,46 @@ jobs:
           echo "  ${phase_summary}"
           echo "────────────────────────────────────────────────────────────"
 
+          # Emit machine-readable step outputs so downstream jobs can
+          # `needs.<job>.outputs.*` and react precisely to URL-validation
+          # failures WITHOUT scraping this step's log. Always written
+          # (pass and fail), so consumers can branch on a stable schema.
+          #
+          # Exit codes are distinct per failure source so a workflow
+          # gate (or `continue-on-error: false` consumer) can `case` on
+          # the numeric code without needing the outputs at all:
+          #   0   url validation passed
+          #   11  phase-1 failure only       (foundational inputs)
+          #   12  phase-2 failure only       (URL-shape / basename)
+          #   13  phase-1 + phase-2 failed   (currently unreachable —
+          #                                   reserved for the day the
+          #                                   early-exit guard is relaxed)
+          if (( phase1_failed_count > 0 && phase2_failed_count > 0 )); then
+            url_validation_status="phase1_and_phase2_failed"
+            url_validation_exit_code=13
+          elif (( phase1_failed_count > 0 )); then
+            url_validation_status="phase1_failed"
+            url_validation_exit_code=11
+          elif (( phase2_failed_count > 0 )); then
+            url_validation_status="phase2_failed"
+            url_validation_exit_code=12
+          else
+            url_validation_status="passed"
+            url_validation_exit_code=0
+          fi
+          {
+            echo "url_validation_status=${url_validation_status}"
+            echo "url_validation_exit_code=${url_validation_exit_code}"
+            echo "url_validation_phase1_failed=$([[ ${phase1_failed_count} -gt 0 ]] && echo true || echo false)"
+            echo "url_validation_phase2_failed=$([[ ${phase2_failed_count} -gt 0 ]] && echo true || echo false)"
+            echo "url_validation_phase1_rules=${failed_foundational_csv}"
+            echo "url_validation_phase2_error_count=${phase2_failed_count}"
+          } >> "$GITHUB_OUTPUT"
+
           if (( ${#validation_errors[@]} > 0 )); then
             echo "❌ Refusing to post PR comment — see URL validation results above."
-            exit 2
+            echo "   step output url_validation_status=${url_validation_status}, exit code=${url_validation_exit_code}"
+            exit "${url_validation_exit_code}"
           fi
 
           # Fence the script output in a code block; truncate to keep
