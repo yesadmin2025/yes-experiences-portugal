@@ -37,42 +37,103 @@ const ALL_TARGETS = [
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Exit code contract — stable for CI consumers.
+//
+//   0   OK              All checks passed (one-shot) or watch exited cleanly
+//                       after meeting --max-runs / receiving SIGINT with no
+//                       drift in the most recent run.
+//   1   DRIFT           Substring or preflight checks failed against a target
+//                       (one-shot), or watch exited with drift present in the
+//                       most recent run (--fail-fast or --max-runs).
+//   2   FLAG_MISCONFIG  Bad CLI flag value, unknown flag under --strict-flags,
+//                       or empty target filter. The run never started.
+//   3   RUNTIME_ERROR   Uncaught exception inside the script (bug, fs watcher
+//                       crash, unhandled rejection, etc).
+//   4   FETCH_ERROR     Network/HTTP failure prevented verifying a target
+//                       (one-shot only — watch keeps polling and surfaces
+//                       this as a transient error in the UI).
+//
+// Watch mode normally runs forever (exit code only delivered on Ctrl-C or
+// when --max-runs is hit). Use --fail-fast and/or --max-runs=N to make watch
+// suitable for a CI step that should terminate.
+// ─────────────────────────────────────────────────────────────────────────────
+const EXIT = Object.freeze({
+  OK: 0,
+  DRIFT: 1,
+  FLAG_MISCONFIG: 2,
+  RUNTIME_ERROR: 3,
+  FETCH_ERROR: 4,
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
 // CLI argument parsing.
 //
-// Supported flags (all optional; primarily affect --watch but --target also
-// applies to one-shot mode so the same filter works for both invocations):
+// Supported flags (all optional):
 //
-//   --watch                       enable watch mode
-//   --target=<preview|production|all>   filter which deployments to check
-//                                       (also: --preview-only, --production-only)
-//   --debounce=<ms>               override watch-mode debounce (default 200ms,
-//                                       clamped to [0, 10000])
+//   --watch                              enable watch mode
+//   --target=<preview|production|all>    filter which deployments to check
+//                                        (shorthand: --preview-only, --production-only)
+//   --debounce=<ms>                      watch-mode debounce (default 200ms,
+//                                        clamped to [0, 10000])
+//   --fail-fast                          watch: exit EXIT.DRIFT on first
+//                                        failing run
+//   --max-runs=<n>                       watch: exit after N runs (>=1).
+//                                        Exit code reflects the LAST run.
+//   --strict-flags                       treat unknown flags / bad values as
+//                                        EXIT.FLAG_MISCONFIG instead of warning
 //
-// Unknown flags are ignored with a warning so future additions don't break
-// older muscle-memory invocations.
+// Without --strict-flags, unknown flags are warnings (back-compat); with it,
+// CI can guarantee no silent typos.
 // ─────────────────────────────────────────────────────────────────────────────
 function parseArgs(argv) {
-  const opts = { watch: false, target: "all", debounceMs: 200 };
+  const opts = {
+    watch: false,
+    target: "all",
+    debounceMs: 200,
+    failFast: false,
+    maxRuns: Infinity,
+    strictFlags: false,
+  };
+  const errors = [];
+  const strict = argv.includes("--strict-flags");
+  const warn = (msg) => {
+    if (strict) errors.push(msg);
+    else console.log(`\x1b[33m⚠ ${msg}\x1b[0m`);
+  };
   for (const raw of argv) {
     if (raw === "--watch") opts.watch = true;
+    else if (raw === "--strict-flags") opts.strictFlags = true;
+    else if (raw === "--fail-fast") opts.failFast = true;
     else if (raw === "--preview-only") opts.target = "preview";
     else if (raw === "--production-only" || raw === "--prod-only") opts.target = "production";
     else if (raw.startsWith("--target=")) {
       const v = raw.slice("--target=".length).toLowerCase();
       if (["preview", "production", "all"].includes(v)) opts.target = v;
-      else console.log(`\x1b[33m⚠ Ignoring --target=${v} (expected preview|production|all)\x1b[0m`);
+      else warn(`Invalid --target=${v} (expected preview|production|all)`);
     } else if (raw.startsWith("--debounce=")) {
-      const n = Number(raw.slice("--debounce=".length));
+      const v = raw.slice("--debounce=".length);
+      const n = Number(v);
       if (Number.isFinite(n) && n >= 0) opts.debounceMs = Math.min(10000, Math.floor(n));
-      else console.log(`\x1b[33m⚠ Ignoring --debounce=${raw.slice(11)} (expected non-negative number)\x1b[0m`);
+      else warn(`Invalid --debounce=${v} (expected non-negative number)`);
+    } else if (raw.startsWith("--max-runs=")) {
+      const v = raw.slice("--max-runs=".length);
+      const n = Number(v);
+      if (Number.isInteger(n) && n >= 1) opts.maxRuns = n;
+      else warn(`Invalid --max-runs=${v} (expected positive integer)`);
     } else if (raw.startsWith("--")) {
-      console.log(`\x1b[33m⚠ Unknown flag ${raw} ignored\x1b[0m`);
+      warn(`Unknown flag ${raw}`);
     }
   }
-  return opts;
+  return { opts, errors };
 }
 
-const CLI = parseArgs(process.argv.slice(2));
+const { opts: CLI, errors: CLI_ERRORS } = parseArgs(process.argv.slice(2));
+
+if (CLI_ERRORS.length > 0) {
+  console.log(`\x1b[31mFlag errors (--strict-flags):\x1b[0m`);
+  for (const e of CLI_ERRORS) console.log(`  • ${e}`);
+  process.exit(EXIT.FLAG_MISCONFIG);
+}
 
 const TARGETS = ALL_TARGETS.filter((t) => {
   if (CLI.target === "all") return true;
@@ -81,7 +142,7 @@ const TARGETS = ALL_TARGETS.filter((t) => {
 
 if (TARGETS.length === 0) {
   console.log(`\x1b[31mNo targets matched filter --target=${CLI.target}\x1b[0m`);
-  process.exit(2);
+  process.exit(EXIT.FLAG_MISCONFIG);
 }
 
 // The localization checklist — every string here must appear verbatim in the
