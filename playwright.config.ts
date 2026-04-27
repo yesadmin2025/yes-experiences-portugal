@@ -45,10 +45,12 @@ export default defineConfig({
       use: { ...devices["Desktop Chrome"], viewport: { width: 1366, height: 768 } },
     },
   ],
-  webServer: {
-    command: "bun run dev",
-    url: "http://localhost:5173",
-    reuseExistingServer: !process.env.CI,
-    timeout: 120_000,
-  },
+  webServer: process.env.PLAYWRIGHT_BASE_URL
+    ? undefined
+    : {
+        command: "bun run dev",
+        url: "http://localhost:8080",
+        reuseExistingServer: !process.env.CI,
+        timeout: 120_000,
+      },
 });
