@@ -190,6 +190,21 @@ async function gh(method, path, body) {
 }
 
 async function main() {
+  // Echo the inputs we resolved BEFORE doing any work. When a comment
+  // links to the wrong file or the wrong job, the first thing an
+  // operator wants to know is "what did the script actually parse?"
+  // — so log it unconditionally up front.
+  process.stdout.write(
+    `── Resolved inputs ──────────────────────────────────────────\n` +
+      `  Repository       : ${REPO}\n` +
+      `  Protected branch : ${BRANCH}\n` +
+      `  Workflow YAML    : ${WORKFLOW_PATH}\n` +
+      `  Workflow job key : ${JOB_KEY}\n` +
+      `  Mode             : ${MODE}\n` +
+      `  GitHub API base  : ${API}\n` +
+      `─────────────────────────────────────────────────────────────\n`,
+  );
+
   // 1. Read expected job name from the workflow file in the checkout.
   let yamlText;
   try {
@@ -203,6 +218,15 @@ async function main() {
   } catch (err) {
     fail(2, err.message);
   }
+
+  // Confirm what we extracted, and where from. Hex-stringify so
+  // invisible-char drift (em-dash vs hyphen-minus) is obvious in the
+  // log without waiting for the failure path.
+  process.stdout.write(
+    `Parsed job name from \`${WORKFLOW_PATH}\` → \`jobs.${JOB_KEY}.name\`:\n` +
+      `  "${expected}"\n` +
+      `  utf-8 bytes: ${Buffer.from(expected, "utf8").toString("hex")}\n\n`,
+  );
 
   // 2. Fetch configured contexts on the protected branch.
   let before;
