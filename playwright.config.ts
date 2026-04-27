@@ -18,20 +18,44 @@ export default defineConfig({
   workers: 1,
   reporter: process.env.CI ? "github" : "list",
   use: {
-    baseURL: "http://localhost:5173",
+    baseURL: process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:8080",
     trace: "retain-on-failure",
     video: "retain-on-failure",
+    // Allow overriding the Chromium executable (useful in sandboxes
+    // where the Playwright-bundled headless shell is missing system libs).
+    launchOptions: process.env.PLAYWRIGHT_CHROMIUM_PATH
+      ? { executablePath: process.env.PLAYWRIGHT_CHROMIUM_PATH }
+      : undefined,
+  },
+  // Snapshot config — visual regression tests. A 0.2% pixel-diff budget
+  // tolerates sub-pixel font rendering jitter without hiding real layout
+  // breakage; an 8-pixel max diff per channel keeps anti-aliasing noise
+  // from registering as a regression.
+  expect: {
+    toHaveScreenshot: {
+      maxDiffPixelRatio: 0.002,
+      threshold: 0.15,
+      animations: "disabled",
+      caret: "hide",
+      scale: "css",
+    },
   },
   projects: [
     {
       name: "mobile-chromium",
       use: { ...devices["Pixel 5"] },
     },
+    {
+      name: "desktop-chromium",
+      use: { ...devices["Desktop Chrome"], viewport: { width: 1366, height: 768 } },
+    },
   ],
-  webServer: {
-    command: "bun run dev",
-    url: "http://localhost:5173",
-    reuseExistingServer: !process.env.CI,
-    timeout: 120_000,
-  },
+  webServer: process.env.PLAYWRIGHT_BASE_URL
+    ? undefined
+    : {
+        command: "bun run dev",
+        url: "http://localhost:8080",
+        reuseExistingServer: !process.env.CI,
+        timeout: 120_000,
+      },
 });
