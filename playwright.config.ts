@@ -16,14 +16,20 @@ export default defineConfig({
   timeout: 30_000,
   fullyParallel: false,
   workers: 1,
-  reporter: [
-    [process.env.CI ? "github" : "list"],
-    // Hero CTA parity summary — renders pass/fail + measured deltas per
-    // viewport into $GITHUB_STEP_SUMMARY (CI), stdout (always), and
-    // playwright-report/cta-parity-summary.md (downloadable artifact).
-    // No-op when the parity specs aren't part of the run.
-    ["./e2e/reporters/cta-parity-summary.ts"],
-  ],
+  // Reporters: console output (github on CI / list locally), HTML report
+  // for trace/diff drill-down on CI, and the custom CTA parity summary
+  // that writes a per-viewport pass/fail + deltas table to
+  // $GITHUB_STEP_SUMMARY, stdout, and playwright-report/. Defining all
+  // reporters here (rather than via --reporter on the CLI) means the
+  // workflow can't accidentally drop the parity summary by passing its
+  // own --reporter flag.
+  reporter: process.env.CI
+    ? [
+        ["github"],
+        ["html", { open: "never", outputFolder: "playwright-report" }],
+        ["./e2e/reporters/cta-parity-summary.ts"],
+      ]
+    : [["list"], ["./e2e/reporters/cta-parity-summary.ts"]],
   use: {
     baseURL: process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:8080",
     trace: "retain-on-failure",
