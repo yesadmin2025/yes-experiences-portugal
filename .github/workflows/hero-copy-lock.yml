@@ -1,4 +1,8 @@
 name: Hero Copy Lock
+# Touched 2026-04-27 to trigger an initial run so GitHub registers the
+# two job names (`Vitest — source-level byte-exact lock` and
+# `Playwright — hero copy byte-exact DOM lock`) as selectable status
+# checks in branch-protection rules. Safe to delete on the next edit.
 
 # Runs the hero-copy guards on every pull request:
 #   1. Vitest source-level byte-exact lock (src/content/hero-copy.test.ts)
