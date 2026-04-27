@@ -497,6 +497,70 @@ const validateCurrentSettings = (s: AuditSettings): ValidationReport => {
   return { ok, shape: "bare", issues, parsed: s };
 };
 
+// Build a corrected AuditSettings from a (possibly broken) source: clamp every
+// numeric field into its allowed range, round non-integers, fall back to
+// defaults for missing/invalid values, and re-enable Stage 1 if every stage was
+// disabled. Returns both the fixed settings and a human-readable list of the
+// changes that were made (for transparency in the UI).
+type AutoFix = { fixed: AuditSettings; changes: string[] };
+
+const autoFixSettings = (s: AuditSettings): AutoFix => {
+  const changes: string[] = [];
+
+  const clampNum = (path: string, v: unknown, fb: number, range: FieldRange): number => {
+    const n = typeof v === "number" ? v : Number(v);
+    if (!Number.isFinite(n)) {
+      changes.push(`${path}: invalid (${String(v)}) → reset to default ${fb}`);
+      return fb;
+    }
+    let out = n;
+    if (out < range.min) {
+      changes.push(`${path}: ${out} < ${range.min} → clamped to ${range.min}`);
+      out = range.min;
+    } else if (out > range.max) {
+      changes.push(`${path}: ${out} > ${range.max} → clamped to ${range.max}`);
+      out = range.max;
+    }
+    if (!Number.isInteger(out)) {
+      const rounded = Math.round(out);
+      changes.push(`${path}: ${out} → rounded to ${rounded}`);
+      out = rounded;
+    }
+    return out;
+  };
+
+  const fixStage = (key: StageKey, fb: StageSettings): StageSettings => {
+    const stage = s[key] ?? fb;
+    let enabled = stage.enabled;
+    if (typeof enabled !== "boolean") {
+      changes.push(`${key}.enabled: invalid → reset to ${fb.enabled}`);
+      enabled = fb.enabled;
+    }
+    return {
+      enabled,
+      timeoutMs: clampNum(`${key}.timeoutMs`, stage.timeoutMs, fb.timeoutMs, FIELD_RANGES.stageTimeoutMs),
+      backoffMs: clampNum(`${key}.backoffMs`, stage.backoffMs, fb.backoffMs, FIELD_RANGES.stageBackoffMs),
+    };
+  };
+
+  const fixed: AuditSettings = {
+    iframeAttempt1: fixStage("iframeAttempt1", DEFAULT_SETTINGS.iframeAttempt1),
+    iframeAttempt2: fixStage("iframeAttempt2", DEFAULT_SETTINGS.iframeAttempt2),
+    ssrFallback:    fixStage("ssrFallback",    DEFAULT_SETTINGS.ssrFallback),
+    fontsReadyCapMs:  clampNum("fontsReadyCapMs",  s.fontsReadyCapMs,  DEFAULT_SETTINGS.fontsReadyCapMs,  FIELD_RANGES.fontsReadyCapMs),
+    postLoadSettleMs: clampNum("postLoadSettleMs", s.postLoadSettleMs, DEFAULT_SETTINGS.postLoadSettleMs, FIELD_RANGES.postLoadSettleMs),
+  };
+
+  // Cross-field repair: a fully-disabled config means the audit silently does
+  // nothing. Re-enable Stage 1 so the pipeline has at least one shot.
+  if (!STAGE_KEYS.some((k) => fixed[k].enabled)) {
+    fixed.iframeAttempt1 = { ...fixed.iframeAttempt1, enabled: true };
+    changes.push("iframeAttempt1.enabled: all stages were off → re-enabled Stage 1");
+  }
+
+  return { fixed, changes };
+};
+
 function TypographyAuditPage() {
   const [results, setResults] = useState<RouteResult[]>(() => ROUTES.map((p) => ({ path: p, status: "pending", samples: [] })));
   const [running, setRunning] = useState(false);
@@ -976,22 +1040,44 @@ function SettingsPanel({
         </div>
       </div>
 
-      {importReport && (
-        <ImportReportCard
-          fileName={importReport.fileName}
-          mode={importReport.mode}
-          report={importReport.report}
-          onApply={
-            importReport.mode === "validated" && importReport.report.ok && importReport.report.parsed
-              ? () => {
-                  onChange(importReport.report.parsed!);
-                  setImportReport({ ...importReport, mode: "applied" });
-                }
-              : undefined
-          }
-          onDismiss={() => setImportReport(null)}
-        />
-      )}
+      {importReport && (() => {
+        // Source for auto-fix: the parsed (clamped) result if available, else
+        // the live settings (so "Validate current" can also auto-fix).
+        const source = importReport.report.parsed ?? settings;
+        const autoFix = autoFixSettings(source);
+        // Only offer auto-fix when it would actually change something AND we
+        // either have errors or are clearly off the happy path.
+        const canAutoFix =
+          autoFix.changes.length > 0 &&
+          (importReport.report.issues.some((i) => i.level === "error" || i.level === "warning"));
+        return (
+          <ImportReportCard
+            fileName={importReport.fileName}
+            mode={importReport.mode}
+            report={importReport.report}
+            onApply={
+              importReport.mode === "validated" && importReport.report.ok && importReport.report.parsed
+                ? () => {
+                    onChange(importReport.report.parsed!);
+                    setImportReport({ ...importReport, mode: "applied" });
+                  }
+                : undefined
+            }
+            onAutoFix={canAutoFix ? () => {
+              onChange(autoFix.fixed);
+              // Re-validate against the freshly applied values so the card
+              // reflects the new (hopefully clean) state.
+              setImportReport({
+                fileName: importReport.fileName,
+                mode: "applied",
+                report: validateCurrentSettings(autoFix.fixed),
+              });
+            } : undefined}
+            autoFixChanges={canAutoFix ? autoFix.changes : undefined}
+            onDismiss={() => setImportReport(null)}
+          />
+        );
+      })()}
 
       <div className="mt-5 grid gap-4 md:grid-cols-3">
         {STAGE_META.map(({ key, label, hint }) => {
@@ -1074,12 +1160,16 @@ function SettingsPanel({
 }
 
 function ImportReportCard({
-  fileName, mode, report, onApply, onDismiss,
+  fileName, mode, report, onApply, onAutoFix, autoFixChanges, onDismiss,
 }: {
   fileName: string;
   mode: "applied" | "validated" | "rejected" | "current";
   report: ValidationReport;
   onApply?: () => void;
+  /** Apply a one-click corrected settings object derived from this report. */
+  onAutoFix?: () => void;
+  /** Human-readable list of changes the auto-fix would make. */
+  autoFixChanges?: string[];
   onDismiss: () => void;
 }) {
   const errors   = report.issues.filter((i) => i.level === "error");
@@ -1136,6 +1226,16 @@ function ImportReportCard({
               Apply now
             </button>
           )}
+          {onAutoFix && (
+            <button
+              type="button"
+              onClick={onAutoFix}
+              className="rounded-md border border-current/30 bg-white/70 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] hover:bg-white"
+              title={`Apply ${autoFixChanges?.length ?? 0} automatic correction${(autoFixChanges?.length ?? 0) === 1 ? "" : "s"}`}
+            >
+              Auto-fix ({autoFixChanges?.length ?? 0})
+            </button>
+          )}
           <button
             type="button"
             onClick={onDismiss}
@@ -1145,6 +1245,19 @@ function ImportReportCard({
           </button>
         </div>
       </div>
+
+      {onAutoFix && autoFixChanges && autoFixChanges.length > 0 && (
+        <details className="mt-2 rounded-md border border-current/20 bg-white/50 px-3 py-2">
+          <summary className="cursor-pointer text-[11px] font-semibold uppercase tracking-[0.12em]">
+            Preview {autoFixChanges.length} proposed change{autoFixChanges.length === 1 ? "" : "s"}
+          </summary>
+          <ul className="mt-2 space-y-1 text-[12px]">
+            {autoFixChanges.map((c, i) => (
+              <li key={i} className="font-mono leading-snug">{c}</li>
+            ))}
+          </ul>
+        </details>
+      )}
 
       {report.issues.length > 0 && (
         <ul className="mt-2 space-y-1">
