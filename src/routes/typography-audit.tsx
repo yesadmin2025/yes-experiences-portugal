@@ -952,6 +952,21 @@ function SettingsPanel({
           </button>
           <button
             type="button"
+            onClick={() => {
+              const report = validateCurrentSettings(settings);
+              setImportReport({
+                fileName: "current panel values",
+                mode: "current",
+                report,
+              });
+            }}
+            className="rounded-md border border-[color:var(--border)] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] hover:bg-zinc-50"
+            title="Check the values currently in the panel against the same rules used for imports."
+          >
+            Validate current
+          </button>
+          <button
+            type="button"
             onClick={onReset}
             disabled={disabled}
             className="rounded-md border border-[color:var(--border)] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] disabled:opacity-50"
