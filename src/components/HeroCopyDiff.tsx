@@ -310,6 +310,82 @@ export function HeroCopyDiff() {
     };
   }, [refresh]);
 
+  // ---- Temporary outline on changed UI elements --------------------------
+  // When the diff reports changes, find every rendered hero element tagged
+  // with `data-hero-field="<field>"` (space-separated lists supported, e.g.
+  // the <h1> tagged "headlineLine1 headlineLine2") and apply a temporary
+  // highlight class. Auto-removed after 6s, or earlier if the diff is
+  // re-run with no changes. Pure presentation, zero impact on layout.
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    if (!state || state.rows.length === 0) return;
+
+    const STYLE_ID = "hero-copy-diff-highlight-style";
+    if (!document.getElementById(STYLE_ID)) {
+      const style = document.createElement("style");
+      style.id = STYLE_ID;
+      style.textContent = `
+        [data-hero-diff-highlight] {
+          outline: 2px dashed #f59e0b !important;
+          outline-offset: 4px !important;
+          border-radius: 4px;
+          transition: outline-color 0.2s ease;
+          animation: hero-diff-pulse 1.4s ease-in-out infinite;
+        }
+        [data-hero-diff-highlight="added"]   { outline-color: #10b981 !important; }
+        [data-hero-diff-highlight="removed"] { outline-color: #ef4444 !important; }
+        [data-hero-diff-highlight="changed"] { outline-color: #f59e0b !important; }
+        @keyframes hero-diff-pulse {
+          0%, 100% { outline-offset: 4px; }
+          50%      { outline-offset: 7px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          [data-hero-diff-highlight] { animation: none !important; }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
+    const changedByField = new Map<string, DiffRow["change"]>();
+    for (const row of state.rows) changedByField.set(row.field, row.change);
+
+    const tagged = document.querySelectorAll<HTMLElement>("[data-hero-field]");
+    const touched: HTMLElement[] = [];
+    tagged.forEach((el) => {
+      const fields = (el.dataset.heroField ?? "").split(/\s+/).filter(Boolean);
+      // Pick the "strongest" change for elements that map to multiple fields:
+      // changed > added > removed (any of them is enough to highlight).
+      let hit: DiffRow["change"] | undefined;
+      for (const f of fields) {
+        const c = changedByField.get(f);
+        if (c) {
+          if (c === "changed" || !hit) hit = c;
+        }
+      }
+      if (hit) {
+        el.setAttribute("data-hero-diff-highlight", hit);
+        touched.push(el);
+      }
+    });
+
+    if (touched.length === 0) return;
+
+    console.info(
+      "%c[hero-copy] outlining changed UI elements",
+      "color:#f59e0b",
+      touched.map((el) => el.dataset.heroField),
+    );
+
+    const timer = window.setTimeout(() => {
+      touched.forEach((el) => el.removeAttribute("data-hero-diff-highlight"));
+    }, 6000);
+
+    return () => {
+      window.clearTimeout(timer);
+      touched.forEach((el) => el.removeAttribute("data-hero-diff-highlight"));
+    };
+  }, [state]);
+
   if (!state) return null;
 
   const changedFields = state.rows.map((r) => r.field).join(",");
