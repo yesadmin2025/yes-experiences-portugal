@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
+import { HERO_COPY_SPEC } from "@/content/hero-copy.spec";
 
 const PUBLISHED_URL = "https://dreamscape-builder-co.lovable.app";
 
@@ -81,8 +82,8 @@ async function verifyPage(targetUrl: string, path: string): Promise<PageReport> 
 
     const checks: CheckResult[] = HERO_KEYS.map((key) => ({
       key,
-      expected: HERO_COPY[key],
-      found: decoded.includes(HERO_COPY[key]),
+      expected: HERO_COPY_SPEC[key],
+      found: decoded.includes(HERO_COPY_SPEC[key]),
     }));
 
     const missing = checks
@@ -104,18 +105,36 @@ async function verifyPage(targetUrl: string, path: string): Promise<PageReport> 
       ...base,
       httpStatus: 0,
       checks: [],
-      missing: HERO_KEYS.map((key) => ({ key, expected: HERO_COPY[key] })),
+      missing: HERO_KEYS.map((key) => ({ key, expected: HERO_COPY_SPEC[key] })),
       ok: false,
       error: (err as Error).message,
     };
   }
 }
 
+/**
+ * Compare the in-source HERO_COPY against the frozen HERO_COPY_SPEC. If any
+ * string drifts, the verifier reports it before even hitting the network — so
+ * unauthorised wording changes are caught at the source, not after publish.
+ */
+function detectSpecDrift() {
+  const drifted = HERO_KEYS.filter(
+    (k) => HERO_COPY[k] !== HERO_COPY_SPEC[k],
+  ).map((k) => ({
+    key: k,
+    expected: HERO_COPY_SPEC[k],
+    actual: HERO_COPY[k],
+  }));
+  return { ok: drifted.length === 0, drifted };
+}
+
+
 type FailureReason =
   | "fetch_error"
   | "non_200"
   | "missing_strings"
-  | "stale_version";
+  | "stale_version"
+  | "spec_drift";
 
 type FailedRouteSummary = {
   path: string;
@@ -126,16 +145,23 @@ type FailedRouteSummary = {
   liveVersion: string | null;
 };
 
+type SpecDriftEntry = { key: string; expected: string; actual: string };
+type SpecDriftResult = { ok: boolean; drifted: SpecDriftEntry[] };
+
 type Summary = {
   totalPages: number;
   passedPages: number;
   failedPages: number;
   failedRoutes: FailedRouteSummary[];
   failedPaths: string[];
+  specDriftKeys: string[];
   message: string;
 };
 
-function buildSummary(pages: PageReport[]): Summary {
+function buildSummary(
+  pages: PageReport[],
+  specDrift: SpecDriftResult,
+): Summary {
   const failed = pages.filter((p) => !p.ok);
   const failedRoutes: FailedRouteSummary[] = failed.map((p) => {
     const reasons: FailureReason[] = [];
@@ -154,10 +180,23 @@ function buildSummary(pages: PageReport[]): Summary {
   });
 
   const failedPaths = failedRoutes.map((r) => r.path);
+  const specDriftKeys = specDrift.drifted.map((d) => d.key);
+
+  const parts: string[] = [];
+  if (!specDrift.ok) {
+    parts.push(
+      `Source HERO_COPY drifted from spec: ${specDriftKeys.join(", ")}`,
+    );
+  }
+  if (failed.length > 0) {
+    parts.push(
+      `${failed.length} of ${pages.length} page(s) failed: ${failedPaths.join(", ")}`,
+    );
+  }
   const message =
-    failed.length === 0
-      ? `All ${pages.length} page(s) passed verification.`
-      : `${failed.length} of ${pages.length} page(s) failed: ${failedPaths.join(", ")}`;
+    parts.length === 0
+      ? `All ${pages.length} page(s) match the frozen hero copy spec.`
+      : parts.join(" — ");
 
   return {
     totalPages: pages.length,
@@ -165,6 +204,7 @@ function buildSummary(pages: PageReport[]): Summary {
     failedPages: failed.length,
     failedRoutes,
     failedPaths,
+    specDriftKeys,
     message,
   };
 }
@@ -211,9 +251,12 @@ export const Route = createFileRoute("/api/verify-hero")({
           paths.map((p) => verifyPage(target, p)),
         );
 
-        const ok = pages.every((p) => p.ok);
-        const failedCount = pages.filter((p) => !p.ok).length;
-        const summary = buildSummary(pages);
+        const specDrift = detectSpecDrift();
+        const pagesOk = pages.every((p) => p.ok);
+        const ok = pagesOk && specDrift.ok;
+        const failedCount =
+          pages.filter((p) => !p.ok).length + (specDrift.ok ? 0 : 1);
+        const summary = buildSummary(pages, specDrift);
 
         // Backwards-compatible single-page shape when not in `all` mode.
         if (paths.length === 1) {
@@ -226,6 +269,7 @@ export const Route = createFileRoute("/api/verify-hero")({
               target: only.url,
               httpStatus: only.httpStatus,
               sourceVersion: HERO_COPY_VERSION,
+              specDrift,
               liveVersion: only.liveVersion,
               versionMatch: only.versionMatch,
               checks: only.checks,
@@ -249,6 +293,7 @@ export const Route = createFileRoute("/api/verify-hero")({
             mode: "all",
             base: target,
             sourceVersion: HERO_COPY_VERSION,
+            specDrift,
             totalPages: pages.length,
             failedCount,
             summary,
