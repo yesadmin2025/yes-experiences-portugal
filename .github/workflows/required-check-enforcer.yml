@@ -276,6 +276,25 @@ jobs:
           runs_pattern="^${SERVER_URL}/${REPO}/actions/workflows/[A-Za-z0-9._-]+\.ya?ml$"
           if ! [[ "${WORKFLOW_RUNS_URL}" =~ $runs_pattern ]]; then
             validation_errors+=("WORKFLOW_RUNS_URL does not match expected shape: \"${WORKFLOW_RUNS_URL}\"")
+          else
+            # 6a. The basename embedded in the runs URL must match the
+            # basename of TARGET_WORKFLOW exactly. Catches a class of
+            # bugs where someone refactors the basename derivation
+            # (e.g. drops the extension, lowercases, or substitutes a
+            # hard-coded string) and the URL still passes the shape
+            # regex above but points at a DIFFERENT workflow's runs
+            # listing — silently misleading every reviewer who clicks.
+            expected_basename=$(basename "${TARGET_WORKFLOW}")
+            # Strip query string + fragment defensively, even though
+            # the runs URL is not expected to carry either today.
+            runs_basename="${WORKFLOW_RUNS_URL##*/}"
+            runs_basename="${runs_basename%%\?*}"
+            runs_basename="${runs_basename%%#*}"
+            if [[ "${runs_basename}" != "${expected_basename}" ]]; then
+              validation_errors+=(
+                "WORKFLOW_RUNS_URL basename \"${runs_basename}\" does not match basename of TARGET_WORKFLOW \"${expected_basename}\" (TARGET_WORKFLOW=\"${TARGET_WORKFLOW}\", URL=\"${WORKFLOW_RUNS_URL}\")"
+              )
+            fi
           fi
 
           if (( ${#validation_errors[@]} > 0 )); then
