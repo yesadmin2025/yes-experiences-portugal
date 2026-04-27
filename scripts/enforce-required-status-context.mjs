@@ -38,11 +38,26 @@
  *   PROTECTED_BRANCH            Defaults to "main".
  *   WORKFLOW_PATH               Defaults to ".github/workflows/homepage-structure.yml".
  *   WORKFLOW_JOB_KEY            Defaults to "homepage-structure".
- *   MODE                        "check" (default) | "apply".
+ *   MODE                        "check" (default) | "apply" | "apply-dry-run".
+ *
+ * Modes
+ * -----
+ *   check          Read-only. Exit 1 on drift, never writes. Token only
+ *                  needs Administration: Read.
+ *   apply-dry-run  Read-only. Reports the EXACT POST payload that
+ *                  `apply` mode WOULD send (the missing context, the
+ *                  endpoint URL, the request body), then exits 0.
+ *                  Useful for previewing self-heal behavior from the
+ *                  Actions UI before granting write permission.
+ *                  Token only needs Administration: Read.
+ *   apply          Mutating. Issues an additive POST to add the
+ *                  missing context. Token needs Administration:
+ *                  Read and write.
  *
  * Exit codes
  * ----------
- *   0  Already in sync, OR (MODE=apply) was missing and got added.
+ *   0  Already in sync, OR MODE=apply added the missing context, OR
+ *      MODE=apply-dry-run completed (drift reported but not applied).
  *   1  Drift detected and MODE=check (read-only).
  *   2  Setup error — missing token, no protection configured, file
  *      missing, parse error, etc.
@@ -60,10 +75,15 @@ const WORKFLOW_PATH =
 const JOB_KEY = process.env.WORKFLOW_JOB_KEY ?? "homepage-structure";
 const MODE = (process.env.MODE ?? "check").toLowerCase();
 
-if (!["check", "apply"].includes(MODE)) {
-  process.stderr.write(`❌ MODE must be "check" or "apply", got "${MODE}".\n`);
+const VALID_MODES = ["check", "apply", "apply-dry-run"];
+if (!VALID_MODES.includes(MODE)) {
+  process.stderr.write(
+    `❌ MODE must be one of ${VALID_MODES.map((m) => `"${m}"`).join(", ")}, got "${MODE}".\n`,
+  );
   process.exit(2);
 }
+
+const IS_WRITE = MODE === "apply";
 
 function fail(code, msg) {
   process.stderr.write(`❌ ${msg}\n`);
@@ -75,9 +95,9 @@ if (!TOKEN) {
   fail(
     2,
     `BRANCH_PROTECTION_TOKEN secret is missing. The default GITHUB_TOKEN ` +
-      `cannot ${MODE === "apply" ? "modify" : "read"} branch protection — ` +
+      `cannot ${IS_WRITE ? "modify" : "read"} branch protection — ` +
       `provide a PAT or GitHub App token with ` +
-      `\`Administration: ${MODE === "apply" ? "Read and write" : "Read"}\` ` +
+      `\`Administration: ${IS_WRITE ? "Read and write" : "Read"}\` ` +
       `on this repository.`,
   );
 }
@@ -236,6 +256,30 @@ async function main() {
     fail(1, report);
   }
 
+  // Compose the EXACT request that `apply` mode would send. Used by
+  // both apply-dry-run (print only) and apply (print + send), so the
+  // two paths can never disagree about what would be written.
+  const writePath = `repos/${REPO}/branches/${BRANCH}/protection/required_status_checks/contexts`;
+  const writeBody = { contexts: [expected] };
+
+  if (MODE === "apply-dry-run") {
+    process.stdout.write(`${report}\n\n`);
+    process.stdout.write(
+      `🧪 MODE=apply-dry-run — NO write performed.\n` +
+        `   The following request WOULD be sent in MODE=apply:\n\n` +
+        `     POST ${API}/${writePath}\n` +
+        `     Content-Type: application/json\n` +
+        `     Body: ${JSON.stringify(writeBody)}\n\n` +
+        `   Endpoint is additive — it would add the missing context to the\n` +
+        `   existing list of ${before.length} context${before.length === 1 ? "" : "s"} ` +
+        `without removing or reordering any.\n\n` +
+        `   Predicted contexts after apply (${before.length + 1}): ` +
+        `${JSON.stringify([...before, expected])}\n\n` +
+        `   Re-run this workflow with mode=apply to perform the write.\n`,
+    );
+    return;
+  }
+
   // MODE === "apply" — additive only.
   process.stdout.write(`${report}\n\n`);
   process.stdout.write(`🔧 MODE=apply — adding the missing context (additive).\n`);
@@ -247,11 +291,7 @@ async function main() {
   //   #add-status-check-contexts
   let after;
   try {
-    after = await gh(
-      "POST",
-      `repos/${REPO}/branches/${BRANCH}/protection/required_status_checks/contexts`,
-      { contexts: [expected] },
-    );
+    after = await gh("POST", writePath, writeBody);
   } catch (err) {
     fail(
       2,
