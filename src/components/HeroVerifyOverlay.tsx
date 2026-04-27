@@ -148,6 +148,12 @@ export function HeroVerifyOverlay() {
   const [enabled, setEnabled] = useState(false);
   const [reports, setReports] = useState<FieldReport[]>([]);
   const [tick, setTick] = useState(0);
+  // Live mode: when on, a MutationObserver watches every [data-hero-field]
+  // node and re-runs verification on any text/subtree change. This keeps
+  // the overlay current as you edit hero copy (HMR replaces the rendered
+  // text in place). Default ON; togglable from the legend.
+  const [liveMode, setLiveMode] = useState(true);
+  const [lastUpdated, setLastUpdated] = useState<number | null>(null);
 
   // Activate only when ?verify=hero is present.
   useEffect(() => {
@@ -179,9 +185,36 @@ export function HeroVerifyOverlay() {
     };
   }, [enabled]);
 
+  // Live mode: observe DOM mutations on hero-field nodes and any added/
+  // removed nodes anywhere in the document body (HMR can swap whole
+  // subtrees). Debounced via requestAnimationFrame so a burst of HMR
+  // mutations triggers a single re-verify.
+  useEffect(() => {
+    if (!enabled || !liveMode) return;
+    if (typeof MutationObserver === "undefined") return;
+    let raf = 0;
+    const schedule = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => setTick((t) => t + 1));
+    };
+    const observer = new MutationObserver(schedule);
+    // Watch the whole body for added/removed nodes (HMR), and characterData
+    // + subtree so any text edit inside an existing hero-field node fires.
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+      characterData: true,
+    });
+    return () => {
+      cancelAnimationFrame(raf);
+      observer.disconnect();
+    };
+  }, [enabled, liveMode]);
+
   useEffect(() => {
     if (!enabled) return;
     setReports(computeReports());
+    setLastUpdated(Date.now());
   }, [enabled, tick]);
 
   const summary = useMemo(() => {
@@ -287,6 +320,13 @@ export function HeroVerifyOverlay() {
       }}
       data-hero-verify-overlay="active"
     >
+      {/* Local keyframes — scoped under the overlay only. */}
+      <style>{`
+        @keyframes heroVerifyPulse {
+          0%, 100% { box-shadow: 0 0 0 3px rgba(34,197,94,0.25); }
+          50% { box-shadow: 0 0 0 6px rgba(34,197,94,0.05); }
+        }
+      `}</style>
       {/* Per-field outlines + badges */}
       {reports.map((r) => {
         if (!r.rect) return null;
@@ -375,6 +415,60 @@ export function HeroVerifyOverlay() {
             ?verify=hero
           </span>
         </div>
+        {/* Live mode toggle — when ON, a MutationObserver re-runs
+            verification on any DOM change to hero-field nodes (HMR-safe). */}
+        <label
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            marginBottom: 10,
+            fontSize: 11,
+            cursor: "pointer",
+            userSelect: "none",
+          }}
+        >
+          <input
+            type="checkbox"
+            checked={liveMode}
+            onChange={(e) => setLiveMode(e.target.checked)}
+            style={{ cursor: "pointer" }}
+          />
+          <span>
+            <strong style={{ letterSpacing: "0.04em" }}>Live mode</strong>
+            <span style={{ opacity: 0.65, marginLeft: 6 }}>
+              {liveMode ? "watching DOM" : "manual"}
+            </span>
+          </span>
+          <span
+            aria-hidden="true"
+            style={{
+              marginLeft: "auto",
+              width: 8,
+              height: 8,
+              borderRadius: "50%",
+              background: liveMode
+                ? "rgb(34, 197, 94)"
+                : "rgb(148, 163, 184)",
+              boxShadow: liveMode
+                ? "0 0 0 3px rgba(34,197,94,0.25)"
+                : "none",
+              animation: liveMode ? "heroVerifyPulse 1.6s ease-in-out infinite" : "none",
+            }}
+          />
+        </label>
+        {lastUpdated !== null && (
+          <div
+            style={{
+              fontSize: 10,
+              opacity: 0.55,
+              marginBottom: 8,
+              fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
+            }}
+          >
+            updated {new Date(lastUpdated).toLocaleTimeString()}
+          </div>
+        )}
         <div
           style={{
             display: "grid",
