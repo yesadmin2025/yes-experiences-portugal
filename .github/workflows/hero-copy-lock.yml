@@ -287,11 +287,35 @@ jobs:
         # the human log when stdout is being used for machine output —
         # plus the exit code file written above. Always uploaded so a
         # crashing/empty-JSON run still ships its log trail.
+        #
+        # Retention precedence: qa_logs_retention_days (if set) →
+        # qa_report_retention_days → '14'. This lets ops keep noisy
+        # log artifacts for a shorter window than the structured JSON
+        # report (or vice versa) without forking the workflow.
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: hero-copy-qa-logs
           path: qa-logs/
-          retention-days: ${{ inputs.qa_report_retention_days || '14' }}
+          retention-days: ${{ inputs.qa_logs_retention_days || inputs.qa_report_retention_days || '14' }}
+          if-no-files-found: warn
+
+      - name: Upload hero-copy QA run metadata (meta.json)
+        # Standalone artifact for the run metadata. Tooling that only
+        # needs the GitHub run context (commit SHA, workflow, runner,
+        # node/bun versions, exit code) can fetch this single small
+        # JSON without downloading the full logs tarball.
+        #
+        # Retention precedence: qa_meta_retention_days (if set) →
+        # qa_logs_retention_days → qa_report_retention_days → '14'.
+        # Metadata is the cheapest artifact and most useful for long-
+        # term audit trails, so it's typically set to the longest
+        # retention of the three.
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hero-copy-qa-meta
+          path: qa-meta/meta.json
+          retention-days: ${{ inputs.qa_meta_retention_days || inputs.qa_logs_retention_days || inputs.qa_report_retention_days || '14' }}
           if-no-files-found: warn
 
