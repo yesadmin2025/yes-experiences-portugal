@@ -102,16 +102,19 @@ test.describe("Hero — byte-exact DOM copy lock", () => {
     });
   }
 
-  test("microcopy contains no form/waiting/request language", async ({
+  test("microcopy contains no positive form/waiting/request language", async ({
     page,
   }) => {
-    // Independent guard rail: even if the spec drifts, the rendered
-    // microcopy must never re-introduce vocabulary that suggests
-    // request-based booking. Matches whole words, case-insensitive.
+    // The approved microcopy is allowed to NEGATE these words
+    // ("No forms", "No waiting"). What we forbid is the positive
+    // assertion of any of them. Strip "no <word>" pairs first, then
+    // assert no remaining occurrence — so "Submit a form and wait"
+    // would fail, but "No forms. No waiting." passes.
     await gotoHero(page);
     const microcopy = await page
       .locator(`[data-hero-field="microcopy"]`)
       .evaluate((el) => (el as HTMLElement).textContent ?? "");
+    const stripped = microcopy.replace(/\bno\s+\w+/gi, "");
     const forbidden = [
       "form",
       "forms",
@@ -126,8 +129,8 @@ test.describe("Hero — byte-exact DOM copy lock", () => {
     ];
     for (const word of forbidden) {
       expect(
-        new RegExp(`\\b${word}\\b`, "i").test(microcopy),
-        `microcopy must not contain "${word}" — got: ${JSON.stringify(microcopy)}`,
+        new RegExp(`\\b${word}\\b`, "i").test(stripped),
+        `microcopy must not POSITIVELY contain "${word}" — got after stripping negations: ${JSON.stringify(stripped)} (raw: ${JSON.stringify(microcopy)})`,
       ).toBe(false);
     }
   });
