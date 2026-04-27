@@ -369,19 +369,21 @@ export const Route = createFileRoute("/api/verify-hero")({
   server: {
     handlers: {
       GET: async ({ request }) => {
+        const rid = newRequestId();
+        const auditHeaders = {
+          "cache-control": "no-store",
+          "x-request-id": rid,
+        };
         try {
           const url = new URL(request.url);
 
           // ---- Auth: require shared secret before any fetch logic runs ----
           const expectedToken = process.env.VERIFY_HERO_TOKEN;
           if (!expectedToken) {
-            // Fail closed if the server is misconfigured rather than allowing
-            // unauthenticated access by default. Do not echo configuration
-            // detail back to the caller — only a stable code.
-            logRejection(request.method, request.url, 503, "endpoint_disabled");
+            logAudit(rid, request.method, request.url, 503, "reject", "endpoint_disabled");
             return Response.json(
-              { ok: false, error: "endpoint_disabled" },
-              { status: 503, headers: { "cache-control": "no-store" } },
+              { ok: false, error: "endpoint_disabled", rid },
+              { status: 503, headers: auditHeaders },
             );
           }
           const authHeader = request.headers.get("authorization") ?? "";
@@ -391,29 +393,23 @@ export const Route = createFileRoute("/api/verify-hero")({
           const queryToken = url.searchParams.get("token") ?? "";
           const presented = bearer || queryToken;
           if (!presented || !timingSafeEqual(presented, expectedToken)) {
-            // CRITICAL: never include `presented`, `bearer`, `queryToken`,
-            // request headers, or the raw `request.url` (which carries the
-            // token) in either the response body or the log line.
-            logRejection(request.method, request.url, 401, "unauthorized");
+            logAudit(rid, request.method, request.url, 401, "reject", "unauthorized");
             return Response.json(
-              { ok: false, error: "unauthorized" },
-              { status: 401, headers: { "cache-control": "no-store" } },
+              { ok: false, error: "unauthorized", rid },
+              { status: 401, headers: auditHeaders },
             );
           }
 
-          // ---- Input validation: ?url= must be in allowlist, ?path= must be relative ----
+          // ---- Input validation ----
           const rawTarget = url.searchParams.get("url");
           const target = rawTarget === null
             ? PUBLISHED_URL
             : validateTargetUrl(rawTarget);
           if (target === null) {
-            // Do NOT echo the rejected `?url=` value back to the caller or
-            // into logs — it may itself be an SSRF probe (e.g. an internal
-            // IP). Only the stable error code is returned.
-            logRejection(request.method, request.url, 400, "invalid_url_param");
+            logAudit(rid, request.method, request.url, 400, "reject", "invalid_url_param");
             return Response.json(
-              { ok: false, error: "invalid_url_param" },
-              { status: 400, headers: { "cache-control": "no-store" } },
+              { ok: false, error: "invalid_url_param", rid },
+              { status: 400, headers: auditHeaders },
             );
           }
 
@@ -424,24 +420,16 @@ export const Route = createFileRoute("/api/verify-hero")({
           const rawPath = url.searchParams.get("path");
           const singlePath = rawPath === null ? "/" : validatePath(rawPath);
           if (singlePath === null) {
-            // Same rule: do not echo the rejected `?path=` value.
-            logRejection(
-              request.method,
-              request.url,
-              400,
-              "invalid_path_param",
-            );
+            logAudit(rid, request.method, request.url, 400, "reject", "invalid_path_param");
             return Response.json(
-              { ok: false, error: "invalid_path_param" },
-              { status: 400, headers: { "cache-control": "no-store" } },
+              { ok: false, error: "invalid_path_param", rid },
+              { status: 400, headers: auditHeaders },
             );
           }
 
           const paths: readonly string[] =
             all === "1" || all === "true" ? ALL_ROUTES : [singlePath];
 
-          // Run in parallel; cap concurrency implicitly via Promise.all on a
-          // small fixed list (≤12 paths today).
           const pages = await Promise.all(
             paths.map((p) => verifyPage(target, p)),
           );
@@ -453,13 +441,27 @@ export const Route = createFileRoute("/api/verify-hero")({
             pages.filter((p) => !p.ok).length + (specDrift.ok ? 0 : 1);
           const summary = buildSummary(pages, specDrift);
 
-          // Backwards-compatible single-page shape when not in `all` mode.
           if (paths.length === 1) {
             const only = pages[0];
             const failureStatus = strict ? 422 : only.error ? 502 : 409;
+            const status = only.ok ? 200 : failureStatus;
+            const reason = only.ok
+              ? "verified"
+              : only.error
+                ? "fetch_error"
+                : "missing_strings";
+            logAudit(
+              rid,
+              request.method,
+              request.url,
+              status,
+              only.ok ? "ok" : "reject",
+              reason,
+            );
             return Response.json(
               {
                 ok: only.ok,
+                rid,
                 strict,
                 target: only.url,
                 httpStatus: only.httpStatus,
@@ -473,17 +475,24 @@ export const Route = createFileRoute("/api/verify-hero")({
                 checkedAt: new Date().toISOString(),
                 ...(only.error ? { error: only.error } : {}),
               },
-              {
-                status: only.ok ? 200 : failureStatus,
-                headers: { "cache-control": "no-store" },
-              },
+              { status, headers: auditHeaders },
             );
           }
 
           const multiFailureStatus = strict ? 422 : 409;
+          const status = ok ? 200 : multiFailureStatus;
+          logAudit(
+            rid,
+            request.method,
+            request.url,
+            status,
+            ok ? "ok" : "reject",
+            ok ? "verified_all" : "missing_strings",
+          );
           return Response.json(
             {
               ok,
+              rid,
               strict,
               mode: "all",
               base: target,
@@ -495,24 +504,13 @@ export const Route = createFileRoute("/api/verify-hero")({
               pages,
               checkedAt: new Date().toISOString(),
             },
-            {
-              status: ok ? 200 : multiFailureStatus,
-              headers: { "cache-control": "no-store" },
-            },
+            { status, headers: auditHeaders },
           );
         } catch {
-          // Catch-all: never let an unexpected error bubble up with a stack
-          // trace or the raw request URL. Log only a stable reason code and
-          // a redacted route, and return a generic 500.
-          logRejection(
-            request.method,
-            request.url,
-            500,
-            "unexpected_error",
-          );
+          logAudit(rid, request.method, request.url, 500, "error", "unexpected_error");
           return Response.json(
-            { ok: false, error: "internal_error" },
-            { status: 500, headers: { "cache-control": "no-store" } },
+            { ok: false, error: "internal_error", rid },
+            { status: 500, headers: auditHeaders },
           );
         }
       },
