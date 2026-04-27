@@ -151,9 +151,33 @@ function HeroVerifyPage() {
         </p>
       </div>
 
-      {result && !isMulti(result) && (
-        <SinglePageReport result={result} />
+      {result?.specDrift && !result.specDrift.ok && (
+        <section className="mt-6 rounded-lg border border-amber-500/40 bg-amber-500/5 p-4">
+          <strong className="text-sm">
+            Source HERO_COPY drifted from frozen spec
+          </strong>
+          <p className="mt-1 text-xs text-muted-foreground">
+            The strings in <code>src/content/hero-copy.ts</code> no longer match
+            the approved spec in <code>src/content/hero-copy.spec.ts</code>.
+            Live-page checks below use the spec, not the source.
+          </p>
+          <ul className="mt-3 space-y-2 text-xs">
+            {result.specDrift.drifted.map((d) => (
+              <li key={d.key} className="rounded border border-border p-2">
+                <div className="font-medium">{d.key}</div>
+                <div className="mt-1 text-green-700">
+                  spec: <span className="text-foreground">{d.expected}</span>
+                </div>
+                <div className="text-red-700">
+                  source: <span className="text-foreground">{d.actual}</span>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
       )}
+
+      {result && !isMulti(result) && <SinglePageReport result={result} />}
 
       {result && isMulti(result) && <MultiPageReport result={result} />}
     </main>
