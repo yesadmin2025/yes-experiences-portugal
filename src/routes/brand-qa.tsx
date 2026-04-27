@@ -384,46 +384,76 @@ function BrandQAPage() {
 /* ------------------------------------------------------------------ */
 /* Brand theme selector panel                                         */
 /* ------------------------------------------------------------------ */
-/* Demonstrates the runtime-guarded <BrandThemeSelect>. The "Inject   */
-/* invalid value" button forces an unsupported string into `value`    */
-/* so reviewers can see the dev-only error panel surface.             */
+/* Theme is bound to `?theme=` in the URL via `validateSearch`. The   */
+/* schema forwards unknown values through a sentinel so the picker's  */
+/* runtime guard can show its dev-only error panel — no second copy   */
+/* of the validation lives here.                                      */
 function BrandThemeSelectorPanel() {
-  // Typed as `unknown` so we can also poke invalid values into it.
-  const [theme, setTheme] = useState<unknown>("teal-on-ivory");
+  const navigate = useNavigate({ from: "/brand-qa" });
+  const search = Route.useSearch();
+
+  // Translate the validated search value into what BrandThemeSelect
+  // expects: a valid BrandLogoTheme, or whatever raw thing the URL
+  // carried so the dev error panel can name it.
+  const rawThemeParam = search.theme; // string | undefined
+  const themeForPicker: unknown =
+    rawThemeParam === undefined
+      ? "teal-on-ivory"
+      : rawThemeParam === INVALID_THEME_SENTINEL
+        ? // We lost the original string at the schema boundary; show the
+          // sentinel so the dev panel still flags it as unsupported.
+          INVALID_THEME_SENTINEL
+        : rawThemeParam;
+
+  const setTheme = (next: BrandLogoTheme) => {
+    navigate({
+      search: (prev) => ({ ...prev, theme: next }),
+      replace: true,
+    });
+  };
+
+  const setRawTheme = (raw: string | undefined) => {
+    navigate({
+      search: (prev) => ({ ...prev, theme: raw }),
+      replace: true,
+    });
+  };
 
   return (
     <section className="mb-12">
       <h2 className="mb-4 text-xl">Brand theme selector (runtime-guarded)</h2>
       <p className="mb-4 max-w-2xl text-sm text-[color:var(--charcoal-soft)]">
-        The picker only emits values from <code>BrandLogoTheme</code>. If the
-        controlled <code>value</code> is unsupported (e.g. injected from a
-        stale CMS field or URL param), a dev-only error panel appears below
-        and the underlying <code>&lt;Logo&gt;</code> guard throws in dev /
-        falls back in production.
+        Bound to <code>?theme=</code>. The picker only emits values from{" "}
+        <code>BrandLogoTheme</code>. Unsupported URL or prop values trip the
+        same dev-only error panel and the underlying <code>&lt;Logo&gt;</code>{" "}
+        guard (throws in dev, falls back in production).
       </p>
 
       <div className="grid gap-6 md:grid-cols-2">
         <div className="rounded-lg border border-[color:var(--border)] bg-card p-4">
           <BrandThemeSelect
-            value={theme}
-            onChange={(next: BrandLogoTheme) => setTheme(next)}
+            value={themeForPicker}
+            onChange={setTheme}
             componentName="BrandQA.ThemeSelect"
           />
           <div className="mt-4 flex flex-wrap gap-2">
             <button
               type="button"
-              onClick={() => setTheme("emerald-on-mauve")}
+              onClick={() => setRawTheme("emerald-on-mauve")}
               className="rounded-md border border-destructive px-3 py-1.5 text-xs text-destructive"
             >
-              Inject invalid value
+              Inject invalid ?theme
             </button>
             <button
               type="button"
-              onClick={() => setTheme("teal-on-ivory")}
+              onClick={() => setRawTheme(undefined)}
               className="rounded-md border border-[color:var(--border)] px-3 py-1.5 text-xs"
             >
-              Reset to valid
+              Clear ?theme
             </button>
+            <code className="ml-auto self-center text-xs text-[color:var(--charcoal-soft)]">
+              ?theme={String(rawThemeParam ?? "")}
+            </code>
           </div>
         </div>
 
@@ -431,9 +461,8 @@ function BrandThemeSelectorPanel() {
           {/* Only render the live Logo preview while the theme is valid;
               otherwise the Logo guard would throw in dev and unmount the
               whole panel before the dev-error message could be read. */}
-          {typeof theme === "string" &&
-          (theme === "teal-on-ivory" || theme === "gold-on-charcoal") ? (
-            <Logo theme={theme as BrandLogoTheme} className="h-12 w-auto" />
+          {isBrandLogoTheme(themeForPicker) ? (
+            <Logo theme={themeForPicker} className="h-12 w-auto" />
           ) : (
             <span className="text-xs text-[color:var(--charcoal-soft)]">
               Preview hidden while the selected theme is invalid.
