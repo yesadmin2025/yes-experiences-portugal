@@ -101,11 +101,13 @@ describe("BrandThemeSelect — keyboard transition from invalid → valid", () =
     // The runtime guard logged exactly the invalid initial render and
     // nothing after the value became valid.
     expect(errorSpy).toHaveBeenCalled();
-    const messages = errorSpy.mock.calls.map((c) => String(c[0] ?? ""));
-    expect(messages.some((m) => /\[brand-lock\].*emerald-on-mauve/.test(m))).toBe(
-      true,
+    const messages = errorSpy.mock.calls.map(
+      (c: unknown[]) => String(c[0] ?? ""),
     );
-    expect(messages.some((m) => /gold-on-charcoal/.test(m))).toBe(false);
+    expect(
+      messages.some((m: string) => /\[brand-lock\].*emerald-on-mauve/.test(m)),
+    ).toBe(true);
+    expect(messages.some((m: string) => /gold-on-charcoal/.test(m))).toBe(false);
   });
 
   it("repeated valid → valid keyboard changes never re-introduce aria-invalid", () => {
@@ -130,7 +132,9 @@ describe("BrandThemeSelect — keyboard transition from invalid → valid", () =
 
     // No brand-lock console.error should fire on a clean valid → valid path.
     expect(
-      errorSpy.mock.calls.some((c) => /\[brand-lock\]/.test(String(c[0] ?? ""))),
+      errorSpy.mock.calls.some((c: unknown[]) =>
+        /\[brand-lock\]/.test(String(c[0] ?? "")),
+      ),
     ).toBe(false);
   });
 });
