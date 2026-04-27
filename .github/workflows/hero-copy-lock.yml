@@ -1,0 +1,117 @@
+name: Hero Copy Lock
+
+# Runs the hero-copy guards on every pull request:
+#   1. Vitest source-level byte-exact lock (src/content/hero-copy.test.ts)
+#      — fast, browser-less, fails the moment HERO_COPY drifts from
+#      HERO_COPY_SPEC. Failure output includes the precise codepoint
+#      diff between actual and expected.
+#   2. Playwright DOM byte-exact lock (e2e/hero-copy-byte-exact.spec.ts)
+#      — boots the dev server and asserts each [data-hero-field]
+#      textContent equals the spec byte-for-byte. Uses Playwright's
+#      `github` reporter (configured in playwright.config.ts when
+#      CI=true), which converts each failed assertion into an inline
+#      pull-request annotation — so the byte-diff message lands in the
+#      PR "Files changed" view next to the failing line.
+#
+# Wire this workflow as a required status check in branch protection so
+# any drift in approved hero wording blocks merges.
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Cancel in-flight runs for the same PR when new commits are pushed.
+concurrency:
+  group: hero-copy-lock-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  unit:
+    name: Vitest — source-level byte-exact lock
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Run Vitest suite
+        # The full suite is small and fast; running it (not just the
+        # hero-copy file) catches any sibling unit regression introduced
+        # alongside a hero-copy edit. Vitest's default reporter prints
+        # the throw-message body — including our `describeFirstDiff`
+        # codepoint dump — verbatim into the job log on failure.
+        run: bun run test
+        env:
+          CI: "true"
+
+  e2e:
+    name: Playwright — hero copy byte-exact DOM lock
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: unit
+    # Run the DOM lock even if unit tests passed; if unit tests fail we
+    # already know copy is broken at the source — no point spinning up
+    # a browser. `needs: unit` enforces that ordering.
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package.json', 'bun.lockb') }}
+          restore-keys: |
+            playwright-${{ runner.os }}-
+
+      - name: Install Playwright Chromium + system deps
+        # Always install OS deps (cache only covers the browser binary).
+        run: |
+          if [ "${{ steps.playwright-cache.outputs.cache-hit }}" = "true" ]; then
+            bunx playwright install-deps chromium
+          else
+            bunx playwright install --with-deps chromium
+          fi
+
+      - name: Run hero copy byte-exact spec
+        # Playwright's `github` reporter (set in playwright.config.ts
+        # when CI=true) emits ::error::file=...,line=... annotations for
+        # every failed expect(), with the FULL message body — meaning
+        # our `describeFirstDiff` output (e.g. "first divergence at
+        # index 12: actual=U+201C vs expected=U+0022") shows up inline
+        # in the PR "Files changed" view next to the offending source
+        # line. Do NOT pass --reporter on the CLI here — that overrides
+        # the config and drops the github reporter.
+        run: bunx playwright test e2e/hero-copy-byte-exact.spec.ts
+        env:
+          CI: "true"
+
+      - name: Upload Playwright report (traces + DOM snapshots)
+        # On failure the report includes a full DOM snapshot of the
+        # rendered hero, so reviewers can see exactly what shipped vs
+        # what the spec expected even after the runner is gone.
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hero-copy-playwright-report
+          path: playwright-report/
+          retention-days: 14
