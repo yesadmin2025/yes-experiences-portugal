@@ -81,6 +81,11 @@ const EXIT = Object.freeze({
 //                                        Exit code reflects the LAST run.
 //   --strict-flags                       treat unknown flags / bad values as
 //                                        EXIT.FLAG_MISCONFIG instead of warning
+//   --report-json[=<path|->]             emit a structured JSON report for CI.
+//                                        "-" or no value = stdout (human log
+//                                        is redirected to stderr so stdout is
+//                                        machine-parseable). Otherwise treated
+//                                        as a file path written on each run.
 //
 // Without --strict-flags, unknown flags are warnings (back-compat); with it,
 // CI can guarantee no silent typos.
