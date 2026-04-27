@@ -102,19 +102,19 @@ const howItWorks = [
   {
     step: "01",
     icon: BookOpen,
-    title: "Start with an idea, place or experience",
-    line: "Begin from a curated experience or a blank slate — wherever feels right.",
+    title: "Start with an idea, a place or a plan",
+    line: "A signature, a region, or a blank slate — wherever feels right.",
   },
   {
     step: "02",
     icon: PenLine,
-    title: "Shape it instantly, your way",
-    line: "Adjust the pace, the stops, the people you meet — in real time.",
+    title: "Shape it your way, in real time",
+    line: "Adjust the pace, the stops, the people you meet — as you go.",
   },
   {
     step: "03",
     icon: Zap,
-    title: "Confirm without waiting",
+    title: "Confirm instantly — no waiting",
     line: "No forms. No requests. The moment it feels right, it's yours.",
   },
 ];
@@ -146,9 +146,9 @@ const startPaths = [
   {
     icon: BookOpen,
     eyebrow: "Instant · Ready",
-    title: "Signature Experiences",
-    line: "Choose a curated experience and confirm it instantly.",
-    cta: "Explore & confirm",
+    title: "Explore Signature Experiences",
+    line: "Start from a curated plan and confirm instantly.",
+    cta: "Explore",
     to: "/experiences",
     destination: "Signatures",
     expectedTo: "/experiences",
@@ -160,8 +160,8 @@ const startPaths = [
     icon: Wand2,
     eyebrow: "Instant · Tailored",
     title: "Tailor a Signature",
-    line: "Reshape any signature in real time and confirm instantly — no request, no waiting.",
-    cta: "Tailor & confirm",
+    line: "Adjust a curated plan to match your style.",
+    cta: "Tailor it",
     to: "/experiences",
     destination: "Tailoring",
     expectedTo: "/experiences",
@@ -172,9 +172,9 @@ const startPaths = [
   {
     icon: Sparkles,
     eyebrow: "Instant · From scratch",
-    title: "Design in the Studio",
-    line: "Build from a blank slate in real time and confirm the moment it feels right.",
-    cta: "Open & confirm",
+    title: "Build Your Own (Studio)",
+    line: "Create everything in real time and confirm instantly.",
+    cta: "Open Studio",
     to: "/builder",
     destination: "Studio",
     expectedTo: "/builder",
@@ -185,13 +185,13 @@ const startPaths = [
     icon: Gift,
     eyebrow: "Instant · Occasions",
     title: "Celebrations & Groups",
-    line: "Proposals, anniversaries, corporate and private groups — designed live, confirmed instantly.",
-    cta: "Design & confirm",
+    line: "Proposals, anniversaries, corporate and private groups.",
+    cta: "Plan",
     to: "/proposals",
     destination: "Celebrations",
     expectedTo: "/proposals",
     ariaLabel:
-      "Design your Celebration or Group experience — opens the Proposals, Celebrations and Groups page, confirms instantly",
+      "Plan a Celebration or Group experience — opens the Proposals, Celebrations and Groups page, confirms instantly",
     accent: "charcoal" as const,
   },
 ];
@@ -700,7 +700,7 @@ function HomePage() {
               style={{ transitionDelay: "220ms" }}
               id="trust-bar-summary"
             >
-              700+ verified 5-star reviews across trusted platforms
+              700+ 5-star reviews
             </p>
           </div>
 
@@ -758,19 +758,17 @@ function HomePage() {
               Choose how <span className="italic">you want to start.</span>
             </h2>
             <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
-              Start from a signature, tailor one to fit, design from scratch in the Studio, or shape a moment that matters.
-            </p>
-            <p className="mt-3 text-[12.5px] uppercase tracking-[0.22em] text-[color:var(--gold)]">
-              Instant confirmation across all experiences.
+              Every path confirms instantly. No forms, no waiting.
             </p>
             <p className="mt-3 text-[13.5px] italic font-light text-[color:var(--charcoal-soft)]">
-              Prefer guidance?{" "}
+              A local is always available to guide you, if you want it.{" "}
               <Link
                 to="/contact"
                 className="underline decoration-[color:var(--gold)]/60 underline-offset-4 hover:text-[color:var(--teal)] transition-colors"
               >
-                A local designer can shape it with you.
+                Talk to a designer
               </Link>
+              .
             </p>
           </div>
 
@@ -912,7 +910,7 @@ function HomePage() {
               Designed by you. <span className="italic">Confirmed instantly.</span>
             </h2>
             <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
-              You're not requesting a tour. You're creating an experience — and confirming it in real time.
+              A local is always available to guide you, if you want it.
             </p>
           </div>
 
@@ -975,13 +973,10 @@ function HomePage() {
               className="serif text-[2.25rem] md:text-5xl mt-5 leading-[1.08]"
             >
               Confirm them as they are. <br />
-              <span className="italic">Or tailor them, your way.</span>
+              <span className="italic">Or shape them your way.</span>
             </h2>
-            <p className="mt-3 text-[12px] uppercase tracking-[0.24em] text-[color:var(--gold)]">
-              Instant confirmation across all experiences.
-            </p>
             <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
-              Three private experiences crafted by our locals — confirm them as they are, or reshape every detail. Either way, it's yours in seconds.
+              Three private plans crafted by our locals — confirm as they are, or reshape every detail. Either way, it's yours in seconds.
             </p>
           </div>
 
@@ -1213,19 +1208,18 @@ function HomePage() {
       >
         <div className="container-x">
           <div className="reveal text-center max-w-2xl mx-auto mb-14 md:mb-16">
-            <span className="eyebrow">For moments that matter</span>
+            <span className="eyebrow">Celebrations &amp; Groups</span>
             <h2
               id="occasions-title"
               className="serif text-[2.25rem] md:text-5xl mt-5 leading-[1.08]"
             >
-              Proposals. Celebrations. <br />
-              <span className="italic">Teams worth remembering.</span>
+              For moments <span className="italic">that matter.</span>
             </h2>
-            <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
-              Start from an idea, tailor a signature, or design from scratch — every occasion, entirely your own.
+            <p className="mt-5 text-[12.5px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
+              Proposals · Celebrations · Corporate · Groups
             </p>
-            <p className="mt-3 text-[12px] uppercase tracking-[0.24em] text-[color:var(--gold)]">
-              Instant confirmation across all experiences.
+            <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
+              From intimate plans to larger groups — all designed your way and confirmed instantly.
             </p>
           </div>
 
@@ -1334,7 +1328,7 @@ function HomePage() {
           <div className="reveal text-center max-w-2xl mx-auto mb-14 md:mb-16">
             <span className="eyebrow">Voices</span>
             <h2 id="reviews-title" className="serif text-[2.25rem] md:text-5xl mt-5 leading-[1.08]">
-              700+ verified <span className="italic">5-star reviews</span>
+              700+ <span className="italic">5-star reviews</span>
             </h2>
             <p
               className="mt-5 flex items-center justify-center gap-1.5 text-[color:var(--gold)]"
@@ -1391,21 +1385,18 @@ function HomePage() {
             <div className="relative max-w-2xl">
               <span className="eyebrow">Begin</span>
               <h2 className="serif text-4xl md:text-5xl mt-6">
-                Create your experience. <br />
+                Write your story. <br />
                 <span className="italic text-[color:var(--teal)]">Confirm it instantly.</span>
               </h2>
               <p className="mt-7 text-[17px] text-[color:var(--charcoal-soft)] leading-[1.75] max-w-lg">
-                Choose a signature, tailor one, or design from scratch in the Studio — every path confirms instantly.
-              </p>
-              <p className="mt-3 text-[12px] uppercase tracking-[0.24em] text-[color:var(--gold)]">
-                Instant confirmation across all experiences.
+                Choose a signature, tailor one, or design from scratch — every path confirms instantly.
               </p>
               <div className="mt-10 flex flex-wrap gap-4">
                 <Link
                   to="/builder"
                   className="cta-primary inline-flex items-center gap-2 px-9 py-[18px] text-[12.5px] uppercase tracking-[0.22em] font-semibold"
                 >
-                  Create Your Experience
+                  Create Your Story
                   <ArrowRight size={15} />
                 </Link>
                 <Link
