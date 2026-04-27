@@ -130,11 +130,11 @@ retention_validate_input() {
   # no whitespace). A bare '0' is also rejected (zero-day retention is
   # not meaningful for triage artifacts).
   if ! printf '%s' "$value" | grep -Eq '^[1-9][0-9]*$'; then
-    echo "::error title=Retention input: not a positive integer::$name='$value' is not a positive integer. Allowed: empty (use default) or an integer in 1..$RETENTION_MAX."
+    echo "::error title=Retention input [$name]: not a positive integer::input '$name'='$value' is not a positive integer. Allowed for input '$name': empty (use default) or an integer in 1..$RETENTION_MAX."
     return 1
   fi
   if [ "$value" -gt "$RETENTION_MAX" ]; then
-    echo "::error title=Retention input: exceeds GitHub maximum::$name='$value' exceeds GitHub's hard cap of $RETENTION_MAX days. Please re-run the workflow with $name <= $RETENTION_MAX."
+    echo "::error title=Retention input [$name]: exceeds GitHub maximum::input '$name'='$value' exceeds GitHub's hard cap of $RETENTION_MAX days. Please re-run the workflow with input '$name' <= $RETENTION_MAX."
     return 1
   fi
   echo "✓ $name: $value day(s)"
