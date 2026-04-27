@@ -25,7 +25,7 @@ import { ArrowRight, Star, MapPin, Compass, Clock } from "lucide-react";
 import { PlatformBadge } from "@/components/PlatformBadge";
 
 const HERO_COPY = {
-  eyebrow: "Private · By locals · Any occasion",
+  eyebrow: "PRIVATE · BY LOCALS · ANY OCCASION",
   headlineLine1: "Portugal is the stage.",
   headlineLine2: "You write the story.",
   subheadline:
