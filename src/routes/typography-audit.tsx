@@ -197,15 +197,15 @@ const sampleViaIframe = (
       if (!win || !doc) return settle({ ok: false, error: "iframe blocked (cross-origin or sandbox)" });
 
       // Wait for webfonts so we sample the LOADED font, not fallback.
-      // Race against a 3s soft cap so a stuck font.ready doesn't eat the budget.
+      // Race against a soft cap so a stuck font.ready doesn't eat the budget.
       if (doc.fonts && (doc.fonts as FontFaceSet & { ready?: Promise<unknown> }).ready) {
         await Promise.race([
           doc.fonts.ready.catch(() => undefined),
-          new Promise((r) => setTimeout(r, 3000)),
+          new Promise((r) => setTimeout(r, opts.fontsReadyCapMs)),
         ]);
       }
       // Let async hero hooks (parallax, scroll-scale, hydration) settle.
-      await new Promise((r) => setTimeout(r, 250));
+      await new Promise((r) => setTimeout(r, opts.postLoadSettleMs));
       const samples = TOKENS.map((t) => sampleToken(doc, win, t));
 
       // Sanity guard: if EVERY token is "not present", treat as a failed render
