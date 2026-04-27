@@ -720,6 +720,9 @@ export function HeroVerifyOverlay() {
         };
       }),
     };
+    // Hard guard first: a missing/wrong `schema` tag is non-recoverable
+    // and must never reach the user's filesystem, even with override.
+    if (!assertSchemaTag(payload, "JSON")) return;
     if (!validateBeforeDownload(payload, "JSON")) return;
     const blob = new Blob([JSON.stringify(payload, null, 2)], {
       type: "application/json",
