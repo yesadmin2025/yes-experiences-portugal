@@ -112,11 +112,11 @@ retention_validate_effective() {
   local name="$1"
   local value="$2"
   if ! printf '%s' "$value" | grep -Eq '^[1-9][0-9]*$'; then
-    echo "::error title=Resolved retention is not a positive integer::$name resolved to '$value' after precedence (default=$RETENTION_DEFAULT). This is a workflow bug — the fallback chain produced a non-numeric value."
+    echo "::error title=Retention effective: not a positive integer::$name resolved to '$value' after precedence (default=$RETENTION_DEFAULT). This is a workflow bug — the fallback chain produced a non-numeric value."
     return 1
   fi
   if [ "$value" -gt "$RETENTION_MAX" ]; then
-    echo "::error title=Resolved retention exceeds GitHub maximum::$name resolved to '$value' day(s) after precedence, which exceeds GitHub's hard cap of $RETENTION_MAX. Lower the corresponding input or the workflow default ($RETENTION_DEFAULT)."
+    echo "::error title=Retention effective: exceeds GitHub maximum::$name resolved to '$value' day(s) after precedence, which exceeds GitHub's hard cap of $RETENTION_MAX. Lower the corresponding input or the workflow default ($RETENTION_DEFAULT)."
     return 1
   fi
   echo "✓ effective $name: $value day(s)"
