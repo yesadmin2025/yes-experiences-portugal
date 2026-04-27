@@ -134,7 +134,6 @@ describe("Brand lock — Logo component", () => {
     ).toBe(true);
   });
 });
-});
 
 /* ---------------------------------------------------------------- */
 /* 3. Hex containment                                                */
