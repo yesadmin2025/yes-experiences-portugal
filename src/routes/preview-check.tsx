@@ -31,18 +31,21 @@ const CHECKS: CheckItem[] = [
     label: "Hero",
     description: "Headline, subheadline, eyebrow and primary CTAs are visible and on-brand.",
     src: "/",
+    hash: "#top",
   },
   {
     id: "experiences",
     label: "Experiences list",
     description: "Signature experiences render with images, titles and links.",
-    src: "/experiences",
+    src: "/",
+    hash: "#signatures-title",
   },
   {
     id: "builder",
     label: "Builder CTA",
     description: "The Studio / builder entry point loads and the primary CTA is visible.",
-    src: "/builder",
+    src: "/",
+    hash: "#studio-title",
   },
 ];
 
