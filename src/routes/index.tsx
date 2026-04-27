@@ -314,28 +314,31 @@ function HomePage() {
               </Link>
             </div>
 
-            {/* Microcopy — centered on mobile to mirror the brand
-                signature below it (both read as quiet, balanced
-                reassurance lines). On desktop it returns to the
-                left-edge column so it still aligns with the headline
-                and CTAs. */}
+            {/* Microcopy — pulled tighter to the CTA pair (28px on mobile
+                via locked --hero-rhythm-cta-to-microcopy token) so it
+                reads as a caption attached to the buttons, not a
+                separate paragraph. Weight raised from 300 → 400 and
+                size 13 → 14px for slightly higher contrast/legibility
+                on the mobile dark surface. */}
             <div className="hero-rhythm-cta-to-microcopy max-w-sm sm:max-w-xl mx-auto sm:mx-0 opacity-0 animate-[heroFade_1.4s_ease-out_1.5s_forwards]">
               <p
                 data-hero-field="microcopy"
-                className="text-[13px] md:text-[14px] text-[color:var(--ivory)]/95 leading-[1.8] md:leading-[1.75] font-light tracking-[0.01em] text-center sm:text-left"
+                className="text-[14px] md:text-[14.5px] text-[color:var(--ivory)] leading-[1.75] md:leading-[1.7] font-normal tracking-[0.005em] text-center sm:text-left"
               >
                 {HERO_COPY.microcopy}
               </p>
             </div>
 
             {/* Brand line — final centered editorial signature.
-                Split intentionally onto two lines (clause / verdict) so it
-                reads as a brand sign-off, not a sentence continuation.
-                Decorative gold rules flank the two-line block at a
-                slightly longer length and lower opacity, giving the
-                whole signature a balanced, deliberate composition
-                instead of two short ticks. */}
-            <div className="hero-rhythm-microcopy-to-signature mb-4 md:mb-2 flex justify-center opacity-0 animate-[heroFade_1.4s_ease-out_1.75s_forwards]">
+                Both halves now sit at almost-touching line gap (3px on
+                mobile via --hero-rhythm-signature-line-gap) so they
+                read as ONE signature, not two phrases. Line 2 ("We say
+                YES.") carries slightly more weight + brighter gold than
+                line 1 to land as the closing verdict, exactly as the
+                brand directive requires. mb-2 (was mb-4) trims the
+                empty void beneath the signature on mobile so the hero
+                feels visually anchored. */}
+            <div className="hero-rhythm-microcopy-to-signature mb-2 md:mb-2 flex justify-center opacity-0 animate-[heroFade_1.4s_ease-out_1.75s_forwards]">
               <div
                 data-hero-field="brandLine"
                 className="inline-flex items-center gap-5 md:gap-6 text-[color:var(--gold-soft)]"
@@ -345,10 +348,15 @@ function HomePage() {
                 <span className="sr-only">{HERO_COPY.brandLine}</span>
                 <span
                   aria-hidden="true"
-                  className="hero-rhythm-signature-line-gap flex flex-col items-center text-[10.5px] md:text-[11px] uppercase tracking-[0.32em] leading-[1.45] text-center"
+                  className="hero-rhythm-signature-line-gap flex flex-col items-center text-[10.5px] md:text-[11px] uppercase tracking-[0.32em] leading-[1.2] text-center"
                 >
-                  <span>Whatever you have in mind,</span>
-                  <span className="text-[color:var(--gold)] tracking-[0.4em] text-[11.5px] md:text-[12px]">We say YES.</span>
+                  <span style={{ fontWeight: 450 }}>Whatever you have in mind,</span>
+                  <span
+                    className="text-[color:var(--gold)] tracking-[0.36em] text-[12px] md:text-[12.5px]"
+                    style={{ fontWeight: 600 }}
+                  >
+                    We say YES.
+                  </span>
                 </span>
                 <span className="h-px w-10 md:w-14 bg-gradient-to-l from-transparent to-[color:var(--gold)] shrink-0 opacity-80" />
               </div>
