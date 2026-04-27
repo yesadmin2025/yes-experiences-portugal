@@ -331,15 +331,27 @@
        of "WHATEVER YOU HAVE IN MIND, / WE SAY YES."
      ───────────────────────────────────────────────────────────── */
   :root {
-    --hero-rhythm-cta-to-microcopy: 40px;        /* mobile */
-    --hero-rhythm-microcopy-to-signature: 56px;  /* mobile */
-    --hero-rhythm-signature-line-gap: 6px;       /* mobile */
+    /* Mobile rhythm — tightened pass for the cohesive "signature moment".
+       Each gap was deliberately reduced so the secondary CTA, the
+       microcopy reassurance and the two-line brand sign-off read as
+       ONE flowing closing block instead of three floating elements:
+         - cta-to-microcopy 40 → 28px : microcopy now feels like a
+           caption attached to the buttons, not a separate paragraph.
+         - microcopy-to-signature 56 → 44px : pulls the signature up
+           into the safe-area, removing the empty void that used to
+           sit beneath it on small viewports.
+         - signature-line-gap 6 → 3px : the two halves of "WHATEVER
+           YOU HAVE IN MIND, / WE SAY YES." now read as a single
+           signature unit, exactly as the brand directive requires. */
+    --hero-rhythm-cta-to-microcopy: 28px;
+    --hero-rhythm-microcopy-to-signature: 44px;
+    --hero-rhythm-signature-line-gap: 3px;
   }
   @media (min-width: 768px) {
     :root {
-      --hero-rhythm-cta-to-microcopy: 32px;
-      --hero-rhythm-microcopy-to-signature: 64px;
-      --hero-rhythm-signature-line-gap: 6px;
+      --hero-rhythm-cta-to-microcopy: 24px;
+      --hero-rhythm-microcopy-to-signature: 52px;
+      --hero-rhythm-signature-line-gap: 4px;
     }
   }
   .hero-rhythm-cta-to-microcopy {
