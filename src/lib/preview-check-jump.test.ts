@@ -9,7 +9,8 @@ import {
 function makeDoc(html: string): Document {
   const doc = document.implementation.createHTMLDocument("test");
   doc.body.innerHTML = html;
-  // jsdom marks readyState as 'complete' on freshly created documents.
+  // jsdom leaves freshly created documents in 'loading' state; force complete.
+  Object.defineProperty(doc, "readyState", { value: "complete", configurable: true });
   return doc;
 }
 
