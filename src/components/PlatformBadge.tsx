@@ -39,10 +39,10 @@ const SOURCES: Record<
 };
 
 // Monochrome treatment: strip color, lift midtones, and tone toward soft
-// charcoal (#6B6B6B) so every mark reads as a single neutral weight.
+// charcoal (var(--charcoal-soft)) so every mark reads as a single neutral weight.
 // `brightness(0)` collapses the artwork to pure black, then `invert(.42)`
 // lifts it to ~#6B charcoal. Slight contrast boost preserves edge clarity
-// on small marks. Hover deepens to dark charcoal (#2E2E2E) for a quiet
+// on small marks. Hover deepens to dark charcoal (var(--charcoal)) for a quiet
 // premium response.
 const MONO_FILTER =
   "brightness(0) invert(0.42) contrast(1.05)";

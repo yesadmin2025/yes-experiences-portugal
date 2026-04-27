@@ -23,14 +23,14 @@ export const Route = createFileRoute("/brand-qa")({
  * referenced anywhere in the app) is reported as a failure below.
  */
 const APPROVED = {
-  teal: "#295B61",
-  "teal-2": "#2A7C82",
-  gold: "#C9A96A",
-  "gold-soft": "#E1CFA6",
-  ivory: "#FAF8F3",
-  sand: "#F4EFE7",
-  charcoal: "#2E2E2E",
-  "charcoal-soft": "#6B6B6B",
+  teal: "var(--teal)",
+  "teal-2": "var(--teal-2)",
+  gold: "var(--gold)",
+  "gold-soft": "var(--gold-soft)",
+  ivory: "var(--ivory)",
+  sand: "var(--sand)",
+  charcoal: "var(--charcoal)",
+  "charcoal-soft": "var(--charcoal-soft)",
 } as const;
 
 type TokenName = keyof typeof APPROVED;
@@ -44,7 +44,7 @@ const ALLOWLIST = new Set(
     "#000000",
     "#fff",
     "#ffffff",
-    "#1f1f1f", // dark-mode card surface
+    "color:var(--charcoal-deep)", // dark-mode card surface
     "#ccc", // recharts internal selectors only
   ].map((h) => h.toLowerCase()),
 );
