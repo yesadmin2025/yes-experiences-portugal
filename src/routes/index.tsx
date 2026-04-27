@@ -60,13 +60,13 @@ export const Route = createFileRoute("/")({
 const types = [
   {
     title: "Private Day Experiences",
-    line: "One unhurried day, designed entirely around you — at your pace, in your story.",
+    line: "A starting point for a single, unhurried day — take it as it is, or shape it entirely around you.",
     img: catPrivate,
     to: "/day-tours",
   },
   {
     title: "Multi-Day Journeys",
-    line: "Several days woven into one continuous story — coast to vineyard, city to village.",
+    line: "Several days woven into one story — coast to vineyard, city to village. Yours to follow, or to redesign.",
     img: catMultiday,
     to: "/multi-day",
   },
