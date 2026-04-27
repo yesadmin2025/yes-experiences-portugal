@@ -995,7 +995,7 @@ function SettingsPanel({
             className="hidden"
             onChange={(e) => {
               const file = e.target.files?.[0];
-              if (file) void handleImportFile(file, validateOnlyRef.current);
+              if (file) void handleImportFile(file, validateOnlyRef.current, autoFixOnImportRef.current);
               // Reset so re-selecting the same file still fires onChange.
               e.target.value = "";
             }}
@@ -1013,6 +1013,21 @@ function SettingsPanel({
             />
             <span className="uppercase tracking-[0.12em]">Validate only</span>
           </label>
+          <label
+            className={`flex items-center gap-1.5 rounded-md border border-[color:var(--border)] px-2.5 py-1.5 text-[11px] font-semibold normal-case tracking-normal ${(disabled || validateOnly) ? "opacity-50" : "cursor-pointer hover:bg-zinc-50"}`}
+            title={validateOnly
+              ? "Disabled while \"Validate only\" is on — dry-run never modifies settings."
+              : "When on, imports silently apply auto-fix corrections (clamp out-of-range, fix typos, re-enable Stage 1 if all stages were off) without prompting. Persisted across sessions."}
+          >
+            <input
+              type="checkbox"
+              checked={autoFixOnImport}
+              onChange={(e) => setAutoFixOnImport(e.target.checked)}
+              disabled={disabled || validateOnly}
+              className="h-3.5 w-3.5"
+            />
+            <span className="uppercase tracking-[0.12em]">Auto-fix on import</span>
+          </label>
           <button
             type="button"
             onClick={() => {
@@ -1021,11 +1036,19 @@ function SettingsPanel({
             }}
             disabled={disabled}
             className="rounded-md border border-[color:var(--border)] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] hover:bg-zinc-50 disabled:opacity-50"
-            title={validateOnly
-              ? "Pick a JSON file — it will be checked and reported but not applied."
-              : "Load reliability settings from a JSON file."}
+            title={
+              validateOnly
+                ? "Pick a JSON file — it will be checked and reported but not applied."
+                : autoFixOnImport
+                  ? "Pick a JSON file — corrections will be applied automatically."
+                  : "Load reliability settings from a JSON file."
+            }
           >
-            {validateOnly ? "Validate JSON…" : "Import JSON"}
+            {validateOnly
+              ? "Validate JSON…"
+              : autoFixOnImport
+                ? "Import & auto-fix…"
+                : "Import JSON"}
           </button>
           <button
             type="button"
