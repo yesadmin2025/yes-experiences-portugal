@@ -589,9 +589,21 @@ async function tick(reason) {
   //   --max-runs:  exit after N runs, with code derived from the last run
   //   runtime err: exit RUNTIME_ERROR immediately (test/script bug)
   if (runFailedRuntime) {
+    emitReport(
+      buildReport({
+        summary: lastSummary,
+        mode: "watch",
+        runIndex: runCount,
+        exitCode: EXIT.RUNTIME_ERROR,
+      }),
+    );
     process.exit(EXIT.RUNTIME_ERROR);
   }
   const code = exitCodeFor(lastSummary);
+  // Per-tick report — one JSON line per run, so CI can stream and parse.
+  emitReport(
+    buildReport({ summary: lastSummary, mode: "watch", runIndex: runCount, exitCode: code }),
+  );
   if (CLI.failFast && code !== EXIT.OK) {
     console.log(`${RED}${BOLD}--fail-fast: exiting with code ${code}.${RESET}`);
     process.exit(code);
