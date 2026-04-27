@@ -1395,8 +1395,10 @@ function HomePage() {
                 <span className="italic text-[color:var(--teal)]">Confirm it instantly.</span>
               </h2>
               <p className="mt-7 text-[17px] text-[color:var(--charcoal-soft)] leading-[1.75] max-w-lg">
-                Open the Studio and design your private journey in real time —
-                or speak with a local who'll shape it alongside you.
+                Choose a signature, tailor one, or design from scratch in the Studio — every path confirms instantly.
+              </p>
+              <p className="mt-3 text-[12px] uppercase tracking-[0.24em] text-[color:var(--gold)]">
+                Instant confirmation across all experiences.
               </p>
               <div className="mt-10 flex flex-wrap gap-4">
                 <Link
@@ -1413,6 +1415,15 @@ function HomePage() {
                   Explore Signature Experiences
                 </Link>
               </div>
+              <p className="mt-6 text-[13.5px] italic font-light text-[color:var(--charcoal-soft)]">
+                Prefer guidance?{" "}
+                <Link
+                  to="/contact"
+                  className="underline decoration-[color:var(--gold)]/60 underline-offset-4 hover:text-[color:var(--teal)] transition-colors"
+                >
+                  A local designer can shape it with you.
+                </Link>
+              </p>
 
               <div className="mt-11 flex flex-wrap gap-x-8 gap-y-3 text-[12px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)]">
                 <span className="inline-flex items-center gap-2">
