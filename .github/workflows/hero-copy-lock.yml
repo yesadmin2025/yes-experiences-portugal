@@ -247,6 +247,7 @@ jobs:
           echo "Wrote qa-logs/meta.json:"
           cat qa-logs/meta.json
 
+      - name: Upload hero-copy QA JSON report
         # Always upload — drift, fetch failures, and runtime errors are
         # exactly the cases where the JSON is most useful for triage.
         # Retention is configurable from `workflow_dispatch` (default 14
