@@ -721,11 +721,14 @@ EOF
 
   url-validation-phase2-failure-handler:
     name: URL validation — phase 2 failure handler
-    needs: enforce
-    # Triggers on phase-2-only (12) AND combined (13).
+    needs: [enforce, url-validation-exit-code-guard]
+    # Triggers on phase-2-only (12) AND combined (13). Gated on the
+    # guard so an out-of-contract exit code can never reach the
+    # equality check below.
     if: |
       always()
       && needs.enforce.result != 'skipped'
+      && needs.url-validation-exit-code-guard.result == 'success'
       && (needs.enforce.outputs.url_validation_exit_code == '12'
           || needs.enforce.outputs.url_validation_exit_code == '13')
     runs-on: ubuntu-latest
