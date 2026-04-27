@@ -144,28 +144,28 @@ const pillars = [
 const startPaths = [
   {
     icon: BookOpen,
-    eyebrow: "Ready to book",
-    title: "Ready-to-Book Experiences",
+    eyebrow: "Ready to confirm",
+    title: "Signature Experiences",
     line: "Start from a curated experience and confirm instantly.",
-    cta: "Explore",
+    cta: "Explore signatures",
     to: "/experiences",
     accent: "ivory" as const,
   },
   {
     icon: Wand2,
     eyebrow: "Tailored",
-    title: "Tailor an Experience",
-    line: "Adjust a ready experience to match your style.",
-    cta: "Tailor it",
+    title: "Tailor a Signature",
+    line: "Start from a signature and shape every detail your way.",
+    cta: "Start tailoring",
     to: "/experiences",
-    accent: "ivory" as const,
+    accent: "sand" as const,
   },
   {
     icon: Sparkles,
     eyebrow: "From scratch",
-    title: "Build Your Own (Studio)",
-    line: "Create everything from scratch, in real time.",
-    cta: "Open Studio",
+    title: "Design in the Studio",
+    line: "Create everything from a blank canvas, in real time.",
+    cta: "Open the Studio",
     to: "/builder",
     accent: "teal" as const,
   },
@@ -174,9 +174,9 @@ const startPaths = [
     eyebrow: "Occasions",
     title: "Celebrations & Groups",
     line: "Proposals, anniversaries, corporate and private groups.",
-    cta: "Plan your experience",
+    cta: "Start your occasion",
     to: "/proposals",
-    accent: "ivory" as const,
+    accent: "charcoal" as const,
   },
 ];
 
@@ -646,7 +646,7 @@ function HomePage() {
               Choose how <span className="italic">you want to start.</span>
             </h2>
             <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
-              Book ready-to-go, tailor an experience, build from scratch, or plan a moment that matters.
+              Start from a signature, tailor one to fit, design from scratch in the Studio, or shape a moment that matters.
             </p>
             <p className="mt-3 text-[12.5px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)]">
               Instant confirmation. No forms. No waiting.
@@ -656,53 +656,94 @@ function HomePage() {
           <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6 list-none p-0 max-w-6xl mx-auto">
             {startPaths.map((p) => {
               const Icon = p.icon;
-              const isTeal = p.accent === "teal";
+              // Four distinct visual treatments — each card reads as a
+              // different "product" at a glance, while keeping the same
+              // grid layout and content structure.
+              const styles = {
+                ivory: {
+                  card: "bg-[color:var(--card)] border border-[color:var(--border)] text-[color:var(--charcoal)] hover:border-[color:var(--teal)]/40 hover:shadow-[0_24px_50px_-24px_rgba(41,91,97,0.18)]",
+                  iconWrap: "border-[color:var(--gold)]/40 text-[color:var(--teal)]",
+                  eyebrow: "text-[color:var(--gold)]",
+                  title: "text-[color:var(--charcoal)]",
+                  line: "text-[color:var(--charcoal-soft)]",
+                  cta: "text-[color:var(--teal)]",
+                  rail: "bg-gradient-to-r from-[color:var(--gold)]/0 via-[color:var(--gold)]/0 to-[color:var(--gold)]/0",
+                  ribbon: null as string | null,
+                },
+                sand: {
+                  card: "bg-[color:var(--sand)] border border-[color:var(--gold)]/25 text-[color:var(--charcoal)] hover:border-[color:var(--gold)]/60 hover:shadow-[0_24px_50px_-24px_rgba(178,140,71,0.22)]",
+                  iconWrap: "border-[color:var(--gold)]/60 text-[color:var(--gold)] bg-[color:var(--ivory)]",
+                  eyebrow: "text-[color:var(--gold)]",
+                  title: "text-[color:var(--charcoal)]",
+                  line: "text-[color:var(--charcoal-soft)]",
+                  cta: "text-[color:var(--gold)]",
+                  rail: "bg-gradient-to-r from-[color:var(--gold)]/0 via-[color:var(--gold)]/40 to-[color:var(--gold)]/0",
+                  ribbon: null,
+                },
+                teal: {
+                  card: "bg-[color:var(--teal)] text-[color:var(--ivory)] hover:bg-[color:var(--teal-2)] shadow-[0_18px_40px_-20px_rgba(41,91,97,0.55)]",
+                  iconWrap: "border-[color:var(--gold)]/50 text-[color:var(--gold-soft)] bg-[color:var(--teal-2)]/40",
+                  eyebrow: "text-[color:var(--gold)]",
+                  title: "text-[color:var(--ivory)]",
+                  line: "text-[color:var(--ivory)]/85",
+                  cta: "text-[color:var(--gold-soft)]",
+                  rail: "bg-gradient-to-r from-[color:var(--gold)]/40 via-[color:var(--gold)] to-[color:var(--gold)]/40",
+                  ribbon: "Most flexible",
+                },
+                charcoal: {
+                  card: "bg-[color:var(--charcoal-deep)] text-[color:var(--ivory)] hover:bg-[color:var(--charcoal)] border border-[color:var(--gold)]/20",
+                  iconWrap: "border-[color:var(--gold)]/50 text-[color:var(--gold-soft)] bg-[color:var(--charcoal)]/60",
+                  eyebrow: "text-[color:var(--gold)]",
+                  title: "text-[color:var(--ivory)]",
+                  line: "text-[color:var(--ivory)]/80",
+                  cta: "text-[color:var(--gold-soft)]",
+                  rail: "bg-gradient-to-r from-[color:var(--gold)]/0 via-[color:var(--gold)]/30 to-[color:var(--gold)]/0",
+                  ribbon: null,
+                },
+              }[p.accent];
+
               return (
                 <li key={p.title} className="reveal-stagger h-full">
                   <Link
                     to={p.to}
-                    className={`group relative flex flex-col h-full p-7 md:p-8 transition-all duration-500 ${
-                      isTeal
-                        ? "bg-[color:var(--teal)] text-[color:var(--ivory)] hover:bg-[color:var(--teal-2)]"
-                        : "bg-[color:var(--card)] border border-[color:var(--border)] text-[color:var(--charcoal)] hover:border-[color:var(--teal)]/30 hover:shadow-[0_24px_50px_-24px_rgba(41,91,97,0.18)]"
-                    }`}
+                    className={`group relative flex flex-col h-full p-7 md:p-8 transition-all duration-500 overflow-hidden ${styles.card}`}
                   >
+                    {/* Top hairline rail — subtle accent that visually
+                        anchors each card to its own identity. */}
                     <span
-                      className={`inline-flex items-center justify-center w-11 h-11 mb-6 border ${
-                        isTeal
-                          ? "border-[color:var(--gold)]/40 text-[color:var(--gold-soft)]"
-                          : "border-[color:var(--gold)]/40 text-[color:var(--teal)]"
-                      }`}
+                      aria-hidden="true"
+                      className={`absolute top-0 left-0 right-0 h-px ${styles.rail}`}
+                    />
+                    {styles.ribbon && (
+                      <span
+                        aria-hidden="true"
+                        className="absolute top-4 right-4 text-[9.5px] uppercase tracking-[0.26em] px-2.5 py-1 bg-[color:var(--gold)] text-[color:var(--charcoal-deep)] font-semibold"
+                      >
+                        {styles.ribbon}
+                      </span>
+                    )}
+                    <span
+                      className={`inline-flex items-center justify-center w-11 h-11 mb-6 border ${styles.iconWrap}`}
                     >
                       <Icon size={18} strokeWidth={1.5} />
                     </span>
                     <span
-                      className={`text-[10.5px] uppercase tracking-[0.3em] ${
-                        isTeal ? "text-[color:var(--gold)]" : "text-[color:var(--gold)]"
-                      }`}
+                      className={`text-[10.5px] uppercase tracking-[0.3em] ${styles.eyebrow}`}
                     >
                       {p.eyebrow}
                     </span>
                     <h3
-                      className={`serif text-[1.4rem] md:text-[1.5rem] mt-3 leading-[1.15] ${
-                        isTeal ? "text-[color:var(--ivory)]" : "text-[color:var(--charcoal)]"
-                      }`}
+                      className={`serif text-[1.4rem] md:text-[1.5rem] mt-3 leading-[1.15] ${styles.title}`}
                     >
                       {p.title}
                     </h3>
                     <p
-                      className={`mt-3 text-[14.5px] leading-[1.65] font-light flex-1 ${
-                        isTeal
-                          ? "text-[color:var(--ivory)]/85"
-                          : "text-[color:var(--charcoal-soft)]"
-                      }`}
+                      className={`mt-3 text-[14.5px] leading-[1.65] font-light flex-1 ${styles.line}`}
                     >
                       {p.line}
                     </p>
                     <span
-                      className={`mt-7 inline-flex items-center gap-2 text-[11.5px] uppercase tracking-[0.24em] font-medium group-hover:translate-x-1 transition-transform duration-300 ${
-                        isTeal ? "text-[color:var(--gold-soft)]" : "text-[color:var(--teal)]"
-                      }`}
+                      className={`mt-7 inline-flex items-center gap-2 text-[11.5px] uppercase tracking-[0.24em] font-medium group-hover:translate-x-1 transition-transform duration-300 ${styles.cta}`}
                     >
                       {p.cta} <ArrowRight size={13} />
                     </span>
@@ -776,14 +817,14 @@ function HomePage() {
         </div>
       </section>
 
-      {/* 5 — SIGNATURE EXPERIENCES (book or tailor)
+      {/* 5 — SIGNATURE EXPERIENCES (confirm or tailor)
           Three signature starting points. Each can be booked as-is OR
           tailored — that dual nature is communicated in the section
           intro and reinforced by the dual CTA on each card. */}
       <section className="py-24 md:py-40 bg-[color:var(--sand)]" aria-labelledby="signatures-title">
         <div className="container-x">
           <div className="reveal text-center max-w-2xl mx-auto mb-14 md:mb-20">
-            <span className="eyebrow">Ready-to-Book Experiences</span>
+            <span className="eyebrow">Signature Experiences</span>
             <h2
               id="signatures-title"
               className="serif text-[2.25rem] md:text-5xl mt-5 leading-[1.08]"
