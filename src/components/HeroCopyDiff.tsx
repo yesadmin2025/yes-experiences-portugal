@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouterState } from "@tanstack/react-router";
+import { toast } from "sonner";
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
 
 /**
@@ -631,6 +632,14 @@ export function HeroCopyDiff() {
     const isIndex = pathname === "/";
     if (wasIndex === isIndex) return; // no boundary crossed
 
+    // Detect whether there was actually anything to clear, so we don't
+    // surface a toast for a no-op transition.
+    const hadPersisted = readPersistedOutlines() !== null;
+    const hadRendered =
+      typeof document !== "undefined" &&
+      document.querySelector("[data-hero-diff-highlight]") !== null;
+    const hadOutlines = hadPersisted || hadRendered;
+
     clearPersistedOutlines();
     clearRenderedOutlines();
     console.info(
@@ -643,6 +652,21 @@ export function HeroCopyDiff() {
     // copy change since the baseline is re-detected and (if so) freshly
     // outlined and persisted from scratch.
     if (isIndex) refresh();
+
+    if (hadOutlines) {
+      // Brief, low-noise toast. Auto-dismisses after the diff refresh has
+      // had a moment to settle so the user sees it disappear once a fresh
+      // diff state is in place.
+      const toastId = toast(`Hero outlines cleared`, {
+        description: `Route ${prev} → ${pathname}`,
+        duration: 1800,
+        id: "hero-copy-route-clear",
+        className: "hero-copy-route-toast",
+      });
+      // Belt-and-braces: explicitly dismiss after the refresh tick so the
+      // fade-out is tied to the diff settling, not just the static duration.
+      window.setTimeout(() => toast.dismiss(toastId), 1800);
+    }
   }, [pathname, refresh]);
 
   if (!state) return null;
