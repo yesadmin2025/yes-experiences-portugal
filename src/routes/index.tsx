@@ -278,15 +278,29 @@ function HomePage() {
               {HERO_COPY.brandLine}
             </p>
 
-            {/* Hidden hero-copy version probe.
+            {/* Hidden hero-copy probe.
                 Not visible to users, but discoverable in DevTools or via
                 document.querySelector('[data-hero-copy-version]'). Mirrors
                 the X-Hero-Copy-Version response header and the
-                yes-hero-copy-version meta tag, so you can confirm an SSR
-                refresh actually shipped the new copy without leaving the
-                preview. */}
+                yes-hero-copy-version meta tag, and also exposes the live
+                rendered headline + subheadline so you can confirm a copy
+                change shipped without leaving the preview.
+
+                Quick checks (paste in the browser console):
+                  const el = document.querySelector('[data-hero-copy-version]');
+                  el.dataset.heroCopyVersion;   // hash
+                  el.dataset.heroHeadline;      // "Portugal is the stage. You write the story."
+                  el.dataset.heroSubheadline;   // full subheadline
+            */}
             <div
               data-hero-copy-version={HERO_COPY_VERSION}
+              data-hero-eyebrow={HERO_COPY.eyebrow}
+              data-hero-headline={`${HERO_COPY.headlineLine1} ${HERO_COPY.headlineLine2}`}
+              data-hero-subheadline={HERO_COPY.subheadline}
+              data-hero-primary-cta={HERO_COPY.primaryCta}
+              data-hero-secondary-cta={HERO_COPY.secondaryCta}
+              data-hero-microcopy={HERO_COPY.microcopy}
+              data-hero-brand-line={HERO_COPY.brandLine}
               data-testid="hero-copy-version"
               aria-hidden="true"
               style={{
@@ -301,7 +315,11 @@ function HomePage() {
                 border: 0,
               }}
             >
-              hero-copy-version:{HERO_COPY_VERSION}
+              <span data-probe-field="version">hero-copy-version:{HERO_COPY_VERSION}</span>
+              {" | "}
+              <span data-probe-field="headline">{HERO_COPY.headlineLine1} {HERO_COPY.headlineLine2}</span>
+              {" | "}
+              <span data-probe-field="subheadline">{HERO_COPY.subheadline}</span>
             </div>
           </div>
         </div>
