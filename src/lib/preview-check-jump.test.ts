@@ -84,9 +84,9 @@ describe("resolveTarget", () => {
 });
 
 describe("performJump", () => {
-  let scrollTo: (opts: ScrollToOptions) => void;
-  let scrollIntoView: (opts?: boolean | ScrollIntoViewOptions) => void;
-  let replaceState: (data: unknown, unused: string, url?: string | null) => void;
+  let scrollTo: ReturnType<typeof vi.fn>;
+  let scrollIntoView: ReturnType<typeof vi.fn>;
+  let replaceState: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
     scrollTo = vi.fn();
