@@ -240,6 +240,46 @@ const sampleViaIframe = (
   const timer = setTimeout(() => settle({ ok: false, error: `timeout after ${Math.round(timeoutMs / 1000)}s` }), timeoutMs);
 });
 
+// ─── Settings (persisted to localStorage) ─────────────────────────
+type StageSettings = { enabled: boolean; timeoutMs: number; backoffMs: number };
+type AuditSettings = {
+  iframeAttempt1: StageSettings;
+  iframeAttempt2: StageSettings;
+  ssrFallback: StageSettings;
+  fontsReadyCapMs: number;   // max time to wait for document.fonts.ready
+  postLoadSettleMs: number;  // delay after load before sampling (lets hydration finish)
+};
+
+const DEFAULT_SETTINGS: AuditSettings = {
+  iframeAttempt1: { enabled: true, timeoutMs: 8000,  backoffMs: 0 },
+  iframeAttempt2: { enabled: true, timeoutMs: 12000, backoffMs: 600 },
+  ssrFallback:    { enabled: true, timeoutMs: 8000,  backoffMs: 400 },
+  fontsReadyCapMs: 3000,
+  postLoadSettleMs: 250,
+};
+
+const SETTINGS_KEY = "yes:typography-audit:settings:v1";
+
+const loadSettings = (): AuditSettings => {
+  if (typeof localStorage === "undefined") return DEFAULT_SETTINGS;
+  try {
+    const raw = localStorage.getItem(SETTINGS_KEY);
+    if (!raw) return DEFAULT_SETTINGS;
+    const parsed = JSON.parse(raw) as Partial<AuditSettings>;
+    return {
+      ...DEFAULT_SETTINGS,
+      ...parsed,
+      iframeAttempt1: { ...DEFAULT_SETTINGS.iframeAttempt1, ...(parsed.iframeAttempt1 || {}) },
+      iframeAttempt2: { ...DEFAULT_SETTINGS.iframeAttempt2, ...(parsed.iframeAttempt2 || {}) },
+      ssrFallback:    { ...DEFAULT_SETTINGS.ssrFallback,    ...(parsed.ssrFallback    || {}) },
+    };
+  } catch { return DEFAULT_SETTINGS; }
+};
+
+const persistSettings = (s: AuditSettings) => {
+  try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(s)); } catch { /* quota/private mode */ }
+};
+
 function TypographyAuditPage() {
   const [results, setResults] = useState<RouteResult[]>(() => ROUTES.map((p) => ({ path: p, status: "pending", samples: [] })));
   const [running, setRunning] = useState(false);
