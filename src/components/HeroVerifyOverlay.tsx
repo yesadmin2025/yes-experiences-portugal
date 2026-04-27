@@ -288,6 +288,13 @@ export function HeroVerifyOverlay() {
     at: number;
     divergences: { key: string; reason: string }[];
   } | null>(null);
+  // Most recent schema-validation result for the export payload.
+  // `null` until an export is attempted; surfaced in the legend.
+  const [schemaCheck, setSchemaCheck] = useState<
+    | { ok: true; at: number; format: "JSON" | "CSV" }
+    | { ok: false; at: number; format: "JSON" | "CSV"; issues: ValidationIssue[] }
+    | null
+  >(null);
 
   // Activate only when ?verify=hero is present.
   useEffect(() => {
