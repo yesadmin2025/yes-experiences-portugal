@@ -700,7 +700,7 @@ function HomePage() {
               style={{ transitionDelay: "220ms" }}
               id="trust-bar-summary"
             >
-              700+ verified 5-star reviews across trusted platforms
+              700+ 5-star reviews
             </p>
           </div>
 
