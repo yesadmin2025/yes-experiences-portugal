@@ -76,7 +76,7 @@ export function Navbar() {
             ))}
             <Link
               to="/builder"
-              className="ml-2 group inline-flex items-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-white border border-[color:var(--gold)]/70 hover:border-[color:var(--gold)] px-5 py-3 text-[10.5px] tracking-[0.2em] uppercase transition-all duration-500 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+              className="ml-2 group inline-flex items-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-white border border-[color:var(--gold)] hover:border-[color:var(--gold-soft)] px-5 py-3 text-[10.5px] tracking-[0.2em] uppercase transition-all duration-500 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             >
               Design &amp; Secure
               <ArrowRight size={13} className="group-hover:translate-x-0.5 transition-transform duration-300" />
