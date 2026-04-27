@@ -13,15 +13,11 @@ import multiDayImg from "@/assets/multi-day.jpg";
 import expWine from "@/assets/exp-wine.jpg";
 import expCoastal from "@/assets/exp-coastal.jpg";
 import expStreet from "@/assets/exp-street.jpg";
-import catPrivate from "@/assets/cat-private.jpg";
-import catMultiday from "@/assets/cat-multiday.jpg";
-import catCorporate from "@/assets/cat-corporate.jpg";
-import catProposals from "@/assets/cat-proposals.jpg";
 import editCoastal from "@/assets/edit-coastal-road.jpg";
 import editWinery from "@/assets/edit-winery.jpg";
 import editMarket from "@/assets/edit-market.jpg";
 import editViewpoint from "@/assets/edit-viewpoint.jpg";
-import { ArrowRight, Star, Compass, Sparkles, PenLine, Heart, Lock, Wand2, Zap } from "lucide-react";
+import { ArrowRight, Star, Compass, Sparkles, PenLine, Heart, Lock, Wand2, Zap, BookOpen, Gift } from "lucide-react";
 import { PlatformBadge } from "@/components/PlatformBadge";
 import { HeroMetaProbe } from "@/components/HeroMetaProbe";
 import { HeroCopyDiff } from "@/components/HeroCopyDiff";
@@ -56,33 +52,6 @@ export const Route = createFileRoute("/")({
   }),
   component: HomePage,
 });
-
-const types = [
-  {
-    title: "Private Day Experiences",
-    line: "A starting point for a single, unhurried day — take it as it is, or shape it entirely around you.",
-    img: catPrivate,
-    to: "/day-tours",
-  },
-  {
-    title: "Multi-Day Journeys",
-    line: "Several days woven into one story — coast to vineyard, city to village. Yours to follow, or to redesign.",
-    img: catMultiday,
-    to: "/multi-day",
-  },
-  {
-    title: "Corporate & Incentive",
-    line: "Refined private programs for teams who deserve more than a hotel ballroom.",
-    img: catCorporate,
-    to: "/corporate",
-  },
-  {
-    title: "Proposals & Celebrations",
-    line: "Quietly extraordinary moments — proposals, anniversaries, milestones to remember.",
-    img: catProposals,
-    to: "/proposals",
-  },
-];
 
 const signatures = [
   {
@@ -131,21 +100,21 @@ const editorial = [
 const howItWorks = [
   {
     step: "01",
-    icon: Sparkles,
-    title: "Start with a spark",
-    line: "A place you've dreamed of. A moment to mark. An idea, half-formed. Begin from anywhere — we'll take it from there.",
+    icon: BookOpen,
+    title: "Pick a starting point",
+    line: "A signature experience, an idea, or a blank canvas in the Studio. Begin wherever feels right.",
   },
   {
     step: "02",
     icon: PenLine,
-    title: "Shape it, your way",
-    line: "Choose the pace, the stops, the people you meet. Adjust in real time, with local knowledge guiding every choice.",
+    title: "Shape it in real time",
+    line: "Adjust the pace, the stops, the people you meet — guided by local knowledge as you go.",
   },
   {
     step: "03",
     icon: Zap,
-    title: "Confirm. Instantly.",
-    line: "No forms. No waiting. No back-and-forth. The moment it feels right, it's yours — confirmed on the spot.",
+    title: "Confirm instantly",
+    line: "No forms. No waiting. No back-and-forth. The moment it feels right, it's yours.",
   },
 ];
 
@@ -169,6 +138,45 @@ const pillars = [
     icon: Zap,
     title: "Instant",
     line: "Real-time creation. Instant confirmation. No requests, no waiting — your experience is locked the moment you say yes.",
+  },
+];
+
+const startPaths = [
+  {
+    icon: BookOpen,
+    eyebrow: "Signature",
+    title: "A Signature Experience",
+    line: "Ready to book. Instantly confirmed.",
+    cta: "Explore",
+    to: "/experiences",
+    accent: "ivory" as const,
+  },
+  {
+    icon: Wand2,
+    eyebrow: "Tailored",
+    title: "Tailor a Signature",
+    line: "Start from a signature and shape it your way.",
+    cta: "Tailor",
+    to: "/experiences",
+    accent: "ivory" as const,
+  },
+  {
+    icon: Sparkles,
+    eyebrow: "From scratch",
+    title: "Design in the Studio",
+    line: "Build it step by step, in real time.",
+    cta: "Open Studio",
+    to: "/builder",
+    accent: "teal" as const,
+  },
+  {
+    icon: Gift,
+    eyebrow: "Occasions",
+    title: "Celebrations & Corporate",
+    line: "Proposals, events and team experiences — designed your way.",
+    cta: "Plan Occasion",
+    to: "/proposals",
+    accent: "ivory" as const,
   },
 ];
 
@@ -615,7 +623,92 @@ function HomePage() {
         </div>
       </section>
 
-      {/* 3 — HOW IT WORKS
+      {/* 3 — START PATHS
+          Four explicit product paths, surfaced immediately after the trust
+          signal so the user understands every way they can engage with the
+          brand. Mobile: 2-up grid. Desktop: 4-up. The Studio card is the
+          visually distinct teal card to anchor the "build from scratch"
+          path as the most differentiated option. */}
+      <section
+        className="py-24 md:py-32 bg-[color:var(--ivory)] border-b border-[color:var(--border)]"
+        aria-labelledby="start-paths-title"
+      >
+        <div className="container-x">
+          <div className="reveal text-center max-w-2xl mx-auto mb-12 md:mb-16">
+            <span className="eyebrow">Four ways in</span>
+            <h2
+              id="start-paths-title"
+              className="serif text-[2.25rem] md:text-5xl mt-5 leading-[1.08]"
+            >
+              Choose how <span className="italic">you want to start.</span>
+            </h2>
+            <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
+              Book a signature, tailor one your way, design from scratch, or plan a moment that matters.
+            </p>
+          </div>
+
+          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6 list-none p-0 max-w-6xl mx-auto">
+            {startPaths.map((p) => {
+              const Icon = p.icon;
+              const isTeal = p.accent === "teal";
+              return (
+                <li key={p.title} className="reveal-stagger h-full">
+                  <Link
+                    to={p.to}
+                    className={`group relative flex flex-col h-full p-7 md:p-8 transition-all duration-500 ${
+                      isTeal
+                        ? "bg-[color:var(--teal)] text-[color:var(--ivory)] hover:bg-[color:var(--teal-2)]"
+                        : "bg-[color:var(--card)] border border-[color:var(--border)] text-[color:var(--charcoal)] hover:border-[color:var(--teal)]/30 hover:shadow-[0_24px_50px_-24px_rgba(41,91,97,0.18)]"
+                    }`}
+                  >
+                    <span
+                      className={`inline-flex items-center justify-center w-11 h-11 mb-6 border ${
+                        isTeal
+                          ? "border-[color:var(--gold)]/40 text-[color:var(--gold-soft)]"
+                          : "border-[color:var(--gold)]/40 text-[color:var(--teal)]"
+                      }`}
+                    >
+                      <Icon size={18} strokeWidth={1.5} />
+                    </span>
+                    <span
+                      className={`text-[10.5px] uppercase tracking-[0.3em] ${
+                        isTeal ? "text-[color:var(--gold)]" : "text-[color:var(--gold)]"
+                      }`}
+                    >
+                      {p.eyebrow}
+                    </span>
+                    <h3
+                      className={`serif text-[1.4rem] md:text-[1.5rem] mt-3 leading-[1.15] ${
+                        isTeal ? "text-[color:var(--ivory)]" : "text-[color:var(--charcoal)]"
+                      }`}
+                    >
+                      {p.title}
+                    </h3>
+                    <p
+                      className={`mt-3 text-[14.5px] leading-[1.65] font-light flex-1 ${
+                        isTeal
+                          ? "text-[color:var(--ivory)]/85"
+                          : "text-[color:var(--charcoal-soft)]"
+                      }`}
+                    >
+                      {p.line}
+                    </p>
+                    <span
+                      className={`mt-7 inline-flex items-center gap-2 text-[11.5px] uppercase tracking-[0.24em] font-medium group-hover:translate-x-1 transition-transform duration-300 ${
+                        isTeal ? "text-[color:var(--gold-soft)]" : "text-[color:var(--teal)]"
+                      }`}
+                    >
+                      {p.cta} <ArrowRight size={13} />
+                    </span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      </section>
+
+      {/* 4 — HOW IT WORKS
           Mobile-first 3-step editorial layout. Sets expectations + removes
           friction immediately after the trust signal. Generous vertical
           rhythm; numbers + icons + short copy, never paragraphs. */}
@@ -677,61 +770,149 @@ function HomePage() {
         </div>
       </section>
 
-      {/* 4 — EXPERIENCES (Private Day · Multi-Day · Build Your Own) */}
-      <section className="py-24 md:py-40 bg-[color:var(--sand)]">
+      {/* 5 — SIGNATURE EXPERIENCES (book or tailor)
+          Three signature starting points. Each can be booked as-is OR
+          tailored — that dual nature is communicated in the section
+          intro and reinforced by the dual CTA on each card. */}
+      <section className="py-24 md:py-40 bg-[color:var(--sand)]" aria-labelledby="signatures-title">
         <div className="container-x">
           <div className="reveal text-center max-w-2xl mx-auto mb-14 md:mb-20">
-            <span className="eyebrow">Starting points</span>
-            <h2 className="serif text-[2.25rem] md:text-5xl mt-5 leading-[1.08]">
-              Inspiration, <span className="italic">not fixed itineraries.</span>
+            <span className="eyebrow">Signature experiences</span>
+            <h2
+              id="signatures-title"
+              className="serif text-[2.25rem] md:text-5xl mt-5 leading-[1.08]"
+            >
+              Book them as they are. <br />
+              <span className="italic">Or tailor them, your way.</span>
             </h2>
             <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
-              Experience them as they are — or shape them entirely around you. Every starting point is yours to redesign.
+              Three private experiences crafted by our locals — ready to confirm in seconds, or shaped entirely around you.
             </p>
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-7 max-w-5xl mx-auto">
-            {types.slice(0, 2).map((c) => (
-              <Link key={c.title} to={c.to} className="group block reveal-stagger">
-                <div className="lift-layer-sm">
+            {signatures.map((s) => (
+              <article key={s.title} className="reveal-stagger group flex flex-col">
+                <div className="lift-layer-sm flex flex-col h-full">
                   <div className="relative overflow-hidden aspect-[4/5] mb-5 shadow-[0_10px_30px_-20px_rgba(46,46,46,0.28)] group-hover:shadow-[0_28px_55px_-22px_rgba(41,91,97,0.32)] transition-shadow duration-700">
                     <img
-                      src={c.img}
-                      alt={c.title}
+                      src={s.img}
+                      alt={s.title}
                       loading="lazy"
                       className="w-full h-full object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.08]"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/85 via-[color:var(--charcoal)]/20 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/80 via-[color:var(--charcoal)]/15 to-transparent" />
                   </div>
-                  <h3 className="serif text-[1.5rem] text-[color:var(--charcoal)] group-hover:text-[color:var(--teal)] transition-colors duration-500">
-                    {c.title}
+                  <h3 className="serif text-[1.5rem] text-[color:var(--charcoal)]">
+                    {s.title}
                   </h3>
                   <p className="mt-3 text-[15px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
-                    {c.line}
+                    {s.line}
                   </p>
+                  <div className="mt-5 pt-5 border-t border-[color:var(--border)] flex items-center gap-5">
+                    <Link
+                      to="/experiences"
+                      className="inline-flex items-center gap-2 text-[11.5px] uppercase tracking-[0.24em] font-semibold text-[color:var(--teal)] hover:text-[color:var(--teal-2)] transition-colors"
+                    >
+                      Book it <ArrowRight size={12} />
+                    </Link>
+                    <span className="h-3 w-px bg-[color:var(--border)]" aria-hidden="true" />
+                    <Link
+                      to="/builder"
+                      className="inline-flex items-center gap-2 text-[11.5px] uppercase tracking-[0.24em] font-medium text-[color:var(--charcoal-soft)] hover:text-[color:var(--teal)] transition-colors"
+                    >
+                      Tailor it <ArrowRight size={12} />
+                    </Link>
+                  </div>
                 </div>
-              </Link>
+              </article>
             ))}
-            {/* Build Your Own — visually distinct teal card pointing to Studio */}
-            <Link to="/builder" className="group block reveal-stagger sm:col-span-2 lg:col-span-1">
-              <div className="lift-layer-sm relative overflow-hidden aspect-[4/5] mb-5 bg-[color:var(--teal)] text-[color:var(--ivory)] flex flex-col justify-between p-7">
-                <div>
-                  <span className="inline-flex items-center gap-2 text-[10.5px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
-                    <Sparkles size={13} /> The Studio
-                  </span>
-                  <h3 className="serif text-[1.85rem] mt-6 leading-[1.1]">
-                    Create your <span className="italic">own.</span>
-                  </h3>
-                  <p className="mt-4 text-[15px] text-[color:var(--ivory)]/90 leading-[1.7] font-light">
-                    Design your experience in real time. Confirm it the moment it feels right — no forms, no waiting.
-                  </p>
-                </div>
-                <span className="inline-flex items-center gap-2 text-[12px] uppercase tracking-[0.22em] text-[color:var(--gold-soft)] group-hover:translate-x-1 transition-transform">
-                  Open the Studio <ArrowRight size={14} />
-                </span>
-                <div className="absolute -bottom-12 -right-12 w-40 h-40 rounded-full border border-[color:var(--gold)]/30 pointer-events-none" />
-              </div>
+          </div>
+
+          <div className="reveal mt-14 md:mt-16 text-center">
+            <Link
+              to="/experiences"
+              className="cta-secondary-light inline-flex items-center gap-2 px-8 py-[16px] text-[12.5px] uppercase tracking-[0.2em] font-semibold"
+            >
+              Explore all signatures <ArrowRight size={14} />
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* 6 — BUILD YOUR OWN (Studio)
+          Dedicated, visually distinct block for the from-scratch path.
+          Teal background anchors it as a separate product. */}
+      <section
+        className="bg-[color:var(--teal)] text-[color:var(--ivory)] py-24 md:py-36 relative overflow-hidden"
+        aria-labelledby="studio-title"
+      >
+        <div className="absolute -top-32 -right-32 w-[28rem] h-[28rem] rounded-full border border-[color:var(--gold)]/15 pointer-events-none" />
+        <div className="absolute -bottom-40 -left-32 w-[24rem] h-[24rem] rounded-full border border-[color:var(--gold)]/10 pointer-events-none" />
+        <div className="container-x relative">
+          <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center max-w-6xl mx-auto">
+            <div className="reveal lg:col-span-7">
+              <span className="inline-flex items-center gap-2 text-[10.5px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
+                <Sparkles size={13} /> The Studio
+              </span>
+              <h2
+                id="studio-title"
+                className="serif text-[2.4rem] md:text-5xl lg:text-[3.4rem] mt-5 leading-[1.05]"
+              >
+                Build it from scratch. <br />
+                <span className="italic text-[color:var(--gold-soft)]">In real time.</span>
+              </h2>
+              <p className="mt-6 text-[16px] md:text-[17.5px] text-[color:var(--ivory)]/90 leading-[1.75] max-w-xl font-light">
+                Open the Studio and design your private experience step by step — choose your places, your pace,
+                your moments. Adjust as you go. Confirm the second it feels right.
+              </p>
+              <ul className="mt-8 space-y-3 text-[14.5px] text-[color:var(--ivory)]/85 max-w-md">
+                <li className="flex items-start gap-3">
+                  <span className="mt-2 h-px w-5 bg-[color:var(--gold)] shrink-0" aria-hidden="true" />
+                  <span>Real-time creation — see it take shape as you build.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="mt-2 h-px w-5 bg-[color:var(--gold)] shrink-0" aria-hidden="true" />
+                  <span>Local knowledge guiding every choice you make.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="mt-2 h-px w-5 bg-[color:var(--gold)] shrink-0" aria-hidden="true" />
+                  <span>Instant confirmation — no forms, no waiting, no requests.</span>
+                </li>
+              </ul>
+              <Link
+                to="/builder"
+                className="inline-flex items-center gap-2 mt-10 px-9 py-[18px] text-[12.5px] uppercase tracking-[0.22em] font-semibold bg-[color:var(--gold)] text-[color:var(--charcoal-deep)] hover:bg-[color:var(--gold-soft)] transition-colors"
+              >
+                Open the Studio <ArrowRight size={15} />
+              </Link>
+            </div>
+
+            <div className="reveal lg:col-span-5">
+              <div className="relative">
+                <div className="border border-[color:var(--gold)]/30 p-8 md:p-10 bg-[color:var(--teal-2)]/40 backdrop-blur-sm">
+                  <p className="text-[10.5px] uppercase tracking-[0.32em] text-[color:var(--gold)]">
+                    A studio session, in 4 moves
+                  </p>
+                  <ol className="mt-6 space-y-5 list-none p-0 text-[15px] text-[color:var(--ivory)] font-light">
+                    {[
+                      "Choose a region or theme",
+                      "Add experiences, stops, pace",
+                      "Refine timing and moments",
+                      "Confirm — instantly",
+                    ].map((step, i) => (
+                      <li key={step} className="flex items-baseline gap-4">
+                        <span className="text-[11px] uppercase tracking-[0.3em] text-[color:var(--gold)] font-medium w-6 shrink-0">
+                          0{i + 1}
+                        </span>
+                        <span>{step}</span>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+                <div className="absolute -top-4 -right-4 hidden md:block w-20 h-20 border border-[color:var(--gold)]/40" />
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -817,7 +998,76 @@ function HomePage() {
         </div>
       </section>
 
-      {/* 7 — LOCAL STORIES / HIDDEN GEMS
+      {/* 7 — CELEBRATIONS & CORPORATE
+          Surfaces the "moments that matter" path: proposals, celebrations
+          and corporate. Three soft entry points that all lead to dedicated
+          routes, with the same "start from idea, tailor a signature, or
+          design from scratch" framing as the rest of the site. */}
+      <section
+        className="py-24 md:py-36 bg-[color:var(--ivory)] border-y border-[color:var(--border)]"
+        aria-labelledby="occasions-title"
+      >
+        <div className="container-x">
+          <div className="reveal text-center max-w-2xl mx-auto mb-14 md:mb-16">
+            <span className="eyebrow">For moments that matter</span>
+            <h2
+              id="occasions-title"
+              className="serif text-[2.25rem] md:text-5xl mt-5 leading-[1.08]"
+            >
+              Proposals. Celebrations. <br />
+              <span className="italic">Teams worth remembering.</span>
+            </h2>
+            <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
+              Start from an idea, tailor a signature, or design from scratch — every occasion, entirely your own.
+            </p>
+          </div>
+
+          <ul className="grid sm:grid-cols-3 gap-5 md:gap-6 list-none p-0 max-w-5xl mx-auto">
+            {[
+              {
+                eyebrow: "Proposals",
+                title: "A moment they'll never forget",
+                line: "A hidden viewpoint, a private dinner, a perfectly timed pause — quietly extraordinary.",
+                to: "/proposals" as const,
+              },
+              {
+                eyebrow: "Celebrations",
+                title: "Birthdays, anniversaries, milestones",
+                line: "Gather the people who matter, in places that feel made for the occasion.",
+                to: "/proposals" as const,
+              },
+              {
+                eyebrow: "Corporate",
+                title: "Teams, incentives, retreats",
+                line: "Refined private programs that feel nothing like a hotel ballroom.",
+                to: "/corporate" as const,
+              },
+            ].map((o) => (
+              <li key={o.eyebrow} className="reveal-stagger h-full">
+                <Link
+                  to={o.to}
+                  className="group flex flex-col h-full p-7 md:p-8 bg-[color:var(--card)] border border-[color:var(--border)] hover:border-[color:var(--teal)]/30 hover:shadow-[0_24px_50px_-24px_rgba(41,91,97,0.18)] transition-all duration-500"
+                >
+                  <span className="text-[10.5px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
+                    {o.eyebrow}
+                  </span>
+                  <h3 className="serif text-[1.4rem] md:text-[1.5rem] mt-3 text-[color:var(--charcoal)] leading-[1.2]">
+                    {o.title}
+                  </h3>
+                  <p className="mt-3 text-[14.5px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light flex-1">
+                    {o.line}
+                  </p>
+                  <span className="mt-7 inline-flex items-center gap-2 text-[11.5px] uppercase tracking-[0.24em] font-semibold text-[color:var(--teal)] group-hover:translate-x-1 transition-transform">
+                    Plan this occasion <ArrowRight size={12} />
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* 8 — LOCAL STORIES / HIDDEN GEMS
           The editorial / emotional beat — "the Portugal we travel ourselves".
           Sits between Multi-Day and Social Proof to warm the reader before
           the review block. */}
@@ -946,14 +1196,14 @@ function HomePage() {
                   to="/builder"
                   className="cta-primary inline-flex items-center gap-2 px-9 py-[18px] text-[12.5px] uppercase tracking-[0.22em] font-semibold"
                 >
-                  Create &amp; Confirm Now
+                  Create Your Experience
                   <ArrowRight size={15} />
                 </Link>
                 <Link
-                  to="/contact"
+                  to="/experiences"
                   className="cta-secondary-light inline-flex items-center gap-2 px-9 py-[18px] text-[12.5px] uppercase tracking-[0.22em] font-semibold"
                 >
-                  Speak with a local
+                  Explore Signature Experiences
                 </Link>
               </div>
 
