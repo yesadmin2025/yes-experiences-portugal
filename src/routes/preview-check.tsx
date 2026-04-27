@@ -116,18 +116,33 @@ function PreviewCheckPage() {
                   </p>
                 </div>
               </div>
-              <a
-                href={item.src}
-                target="_blank"
-                rel="noreferrer"
-                className="shrink-0 text-xs underline underline-offset-4 text-muted-foreground hover:text-primary"
-              >
-                Open ↗
-              </a>
+              <div className="shrink-0 flex flex-col items-end gap-2">
+                {item.hash && (
+                  <button
+                    type="button"
+                    onClick={() => jumpTo(item)}
+                    className="text-xs px-2 py-1 rounded-md border border-border bg-background hover:bg-accent hover:text-accent-foreground transition-colors"
+                    aria-label={`Jump preview to ${item.label} section`}
+                  >
+                    Jump to {item.hash}
+                  </button>
+                )}
+                <a
+                  href={item.src + (item.hash ?? "")}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-xs underline underline-offset-4 text-muted-foreground hover:text-primary"
+                >
+                  Open ↗
+                </a>
+              </div>
             </div>
 
             <div className="bg-muted/30">
               <iframe
+                ref={(el) => {
+                  iframeRefs.current[item.id] = el;
+                }}
                 title={`${item.label} preview`}
                 src={item.src + (item.hash ?? "")}
                 loading="lazy"
