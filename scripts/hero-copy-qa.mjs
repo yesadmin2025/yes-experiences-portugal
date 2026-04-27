@@ -141,81 +141,229 @@ function runChecks(html) {
   }));
 }
 
-let totalFailures = 0;
-let manualChecks = 0;
+/**
+ * Run preflight + substring checks against every target. Returns a
+ * structured per-target summary so watch mode can diff results between runs.
+ * Side-effect: prints a human-readable report to stdout.
+ */
+async function runOnce() {
+  console.log(`${BOLD}Home hero copy localization QA${RESET}`);
+  console.log(`${DIM}Source of truth: src/content/hero-copy.ts${RESET}\n`);
 
-console.log(`${BOLD}Home hero copy localization QA${RESET}`);
-console.log(`${DIM}Source of truth: src/content/hero-copy.ts${RESET}\n`);
+  const summary = [];
+  let totalFailures = 0;
+  let manualChecks = 0;
 
-for (const target of TARGETS) {
-  console.log(`${BOLD}${target.name}${RESET} ${DIM}${target.url}${RESET}`);
-  let html;
-  try {
-    html = await fetchHtml(target.url);
-  } catch (err) {
-    if (err.requiresLogin) {
-      console.log(
-        `  ${BOLD}⚠ MANUAL CHECK REQUIRED${RESET} — preview is auth-gated; open the URL in a logged-in browser and visually verify each line below:`,
-      );
-      for (const c of CHECKS) {
-        console.log(`    ${DIM}• ${c.label.padEnd(20)} "${c.value}"${RESET}`);
+  for (const target of TARGETS) {
+    console.log(`${BOLD}${target.name}${RESET} ${DIM}${target.url}${RESET}`);
+    let html;
+    try {
+      html = await fetchHtml(target.url);
+    } catch (err) {
+      if (err.requiresLogin) {
+        console.log(
+          `  ${BOLD}⚠ MANUAL CHECK REQUIRED${RESET} — preview is auth-gated; open the URL in a logged-in browser and visually verify each line below:`,
+        );
+        for (const c of CHECKS) {
+          console.log(`    ${DIM}• ${c.label.padEnd(20)} "${c.value}"${RESET}`);
+        }
+        console.log("");
+        manualChecks++;
+        summary.push({ target: target.name, status: "manual", driftKeys: [] });
+        continue;
       }
-      console.log("");
-      manualChecks++;
+      console.log(`  ${RED}✗ Fetch failed: ${err.message}${RESET}\n`);
+      totalFailures++;
+      summary.push({ target: target.name, status: "fetch_failed", driftKeys: [] });
       continue;
     }
-    console.log(`  ${RED}✗ Fetch failed: ${err.message}${RESET}\n`);
-    totalFailures++;
-    continue;
-  }
 
-  // Preflight: rendered runtime strings must equal source-of-truth.
-  console.log(`  ${DIM}Preflight — runtime strings vs src/content/hero-copy.ts${RESET}`);
-  const preflight = runPreflight(html);
-  const probeFound = preflight.some((p) => !p.missing);
-  if (!probeFound) {
-    console.log(
-      `    ${RED}✗ No data-hero-* probe attributes found in served HTML — cannot verify runtime parity.${RESET}`,
-    );
-    totalFailures++;
-  } else {
-    for (const p of preflight) {
-      if (p.pass) {
-        console.log(`    ${GREEN}✓${RESET} ${p.attr.padEnd(24)} matches source-of-truth`);
-      } else if (p.missing) {
-        console.log(
-          `    ${RED}✗${RESET} ${p.attr.padEnd(24)} ${RED}attribute missing from rendered HTML${RESET}`,
-        );
-        totalFailures++;
-      } else {
-        console.log(`    ${RED}✗${RESET} ${p.attr.padEnd(24)} ${RED}DRIFT${RESET}`);
-        console.log(`        expected: ${DIM}"${p.expected}"${RESET}`);
-        console.log(`        runtime:  ${DIM}"${p.actual}"${RESET}`);
-        totalFailures++;
+    // Preflight: rendered runtime strings must equal source-of-truth.
+    console.log(`  ${DIM}Preflight — runtime strings vs src/content/hero-copy.ts${RESET}`);
+    const preflight = runPreflight(html);
+    const probeFound = preflight.some((p) => !p.missing);
+    const driftKeys = [];
+    if (!probeFound) {
+      console.log(
+        `    ${RED}✗ No data-hero-* probe attributes found in served HTML — cannot verify runtime parity.${RESET}`,
+      );
+      totalFailures++;
+      driftKeys.push("__no_probe__");
+    } else {
+      for (const p of preflight) {
+        if (p.pass) {
+          console.log(`    ${GREEN}✓${RESET} ${p.attr.padEnd(24)} matches source-of-truth`);
+        } else if (p.missing) {
+          console.log(
+            `    ${RED}✗${RESET} ${p.attr.padEnd(24)} ${RED}attribute missing from rendered HTML${RESET}`,
+          );
+          totalFailures++;
+          driftKeys.push(p.key);
+        } else {
+          console.log(`    ${RED}✗${RESET} ${p.attr.padEnd(24)} ${RED}DRIFT${RESET}`);
+          console.log(`        expected: ${DIM}"${p.expected}"${RESET}`);
+          console.log(`        runtime:  ${DIM}"${p.actual}"${RESET}`);
+          totalFailures++;
+          driftKeys.push(p.key);
+        }
       }
     }
+
+    console.log(`  ${DIM}Substring checks — exact strings present in served HTML${RESET}`);
+    const results = runChecks(html);
+    for (const r of results) {
+      const icon = r.pass ? `${GREEN}✓${RESET}` : `${RED}✗${RESET}`;
+      const status = r.pass ? "" : `  ${RED}MISSING${RESET}`;
+      console.log(`    ${icon} ${r.label.padEnd(20)} ${DIM}"${r.value}"${RESET}${status}`);
+      if (!r.pass) totalFailures++;
+    }
+    console.log("");
+
+    summary.push({
+      target: target.name,
+      status: driftKeys.length > 0 ? "drift" : "ok",
+      driftKeys,
+    });
   }
 
-  console.log(`  ${DIM}Substring checks — exact strings present in served HTML${RESET}`);
-  const results = runChecks(html);
-  for (const r of results) {
-    const icon = r.pass ? `${GREEN}✓${RESET}` : `${RED}✗${RESET}`;
-    const status = r.pass ? "" : `  ${RED}MISSING${RESET}`;
-    console.log(`    ${icon} ${r.label.padEnd(20)} ${DIM}"${r.value}"${RESET}${status}`);
-    if (!r.pass) totalFailures++;
+  return { summary, totalFailures, manualChecks };
+}
+
+const WATCH = process.argv.includes("--watch");
+
+if (!WATCH) {
+  const { totalFailures, manualChecks } = await runOnce();
+  if (totalFailures > 0) {
+    console.log(`${RED}${BOLD}✗ ${totalFailures} check(s) failed — do not release.${RESET}`);
+    process.exit(1);
+  } else if (manualChecks > 0) {
+    console.log(
+      `${GREEN}${BOLD}✓ Production verified.${RESET} ${BOLD}${manualChecks} target(s) need manual visual check before release.${RESET}`,
+    );
+    process.exit(0);
+  } else {
+    console.log(`${GREEN}${BOLD}✓ All hero copy verified across preview and production.${RESET}`);
+    process.exit(0);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Watch mode: rerun preflight whenever any source file that affects rendered
+// hero copy changes locally. Highlights drift transitions vs the previous run.
+// ─────────────────────────────────────────────────────────────────────────────
+
+import { watch as fsWatch } from "node:fs";
+import { resolve as resolvePath, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const projectRoot = resolvePath(__dirname, "..");
+
+// Files whose contents could change what gets rendered into the live hero.
+// We watch the source-of-truth and the route that consumes it; together they
+// cover every realistic local change that would introduce drift.
+const WATCHED_FILES = [
+  "src/content/hero-copy.ts",
+  "src/routes/index.tsx",
+].map((p) => resolvePath(projectRoot, p));
+
+const YELLOW = "\x1b[33m";
+const CYAN = "\x1b[36m";
+
+function fmtTimestamp() {
+  return new Date().toLocaleTimeString();
+}
+
+function diffSummaries(prev, curr) {
+  // Returns transitions per target so we can call out NEW DRIFT vs RESOLVED.
+  const transitions = [];
+  for (const c of curr) {
+    const p = prev?.find((x) => x.target === c.target);
+    if (!p) continue;
+    const prevKeys = new Set(p.driftKeys);
+    const currKeys = new Set(c.driftKeys);
+    const newDrift = [...currKeys].filter((k) => !prevKeys.has(k));
+    const resolved = [...prevKeys].filter((k) => !currKeys.has(k));
+    if (newDrift.length || resolved.length || p.status !== c.status) {
+      transitions.push({ target: c.target, prev: p, curr: c, newDrift, resolved });
+    }
+  }
+  return transitions;
+}
+
+function printTransitions(transitions) {
+  if (transitions.length === 0) {
+    console.log(`${DIM}No change vs previous run.${RESET}\n`);
+    return;
+  }
+  console.log(`${BOLD}${CYAN}═══ Drift transitions since previous run ═══${RESET}`);
+  for (const t of transitions) {
+    const arrow = `${DIM}${t.prev.status} → ${t.curr.status}${RESET}`;
+    if (t.curr.status === "drift" && t.prev.status !== "drift") {
+      console.log(
+        `  ${RED}${BOLD}● NEW DRIFT${RESET} on ${BOLD}${t.target}${RESET} (${arrow})`,
+      );
+    } else if (t.curr.status === "ok" && t.prev.status === "drift") {
+      console.log(
+        `  ${GREEN}${BOLD}● RESOLVED${RESET} on ${BOLD}${t.target}${RESET} (${arrow})`,
+      );
+    } else {
+      console.log(`  ${YELLOW}● CHANGED${RESET} on ${BOLD}${t.target}${RESET} (${arrow})`);
+    }
+    if (t.newDrift.length) {
+      console.log(`      ${RED}+ now drifting:${RESET} ${t.newDrift.join(", ")}`);
+    }
+    if (t.resolved.length) {
+      console.log(`      ${GREEN}- now resolved:${RESET} ${t.resolved.join(", ")}`);
+    }
   }
   console.log("");
 }
 
-if (totalFailures > 0) {
-  console.log(`${RED}${BOLD}✗ ${totalFailures} check(s) failed — do not release.${RESET}`);
-  process.exit(1);
-} else if (manualChecks > 0) {
+let previousSummary = null;
+let running = false;
+let pending = false;
+
+async function tick(reason) {
+  if (running) {
+    pending = true;
+    return;
+  }
+  running = true;
+  console.clear();
   console.log(
-    `${GREEN}${BOLD}✓ Production verified.${RESET} ${BOLD}${manualChecks} target(s) need manual visual check before release.${RESET}`,
+    `${DIM}[${fmtTimestamp()}]${RESET} ${BOLD}qa:hero-copy --watch${RESET} ${DIM}(${reason})${RESET}\n`,
   );
-  process.exit(0);
-} else {
-  console.log(`${GREEN}${BOLD}✓ All hero copy verified across preview and production.${RESET}`);
-  process.exit(0);
+  try {
+    const { summary } = await runOnce();
+    const transitions = diffSummaries(previousSummary, summary);
+    printTransitions(transitions);
+    previousSummary = summary;
+  } catch (err) {
+    console.log(`${RED}Run failed: ${err.message}${RESET}\n`);
+  }
+  console.log(`${DIM}Watching ${WATCHED_FILES.length} file(s). Press Ctrl-C to exit.${RESET}`);
+  running = false;
+  if (pending) {
+    pending = false;
+    setTimeout(() => tick("queued change"), 50);
+  }
 }
+
+// Debounce bursty fs events (editors often emit several events per save).
+let debounceTimer = null;
+function scheduleTick(reason) {
+  if (debounceTimer) clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(() => tick(reason), 200);
+}
+
+for (const file of WATCHED_FILES) {
+  try {
+    fsWatch(file, () => scheduleTick(`changed: ${file.replace(projectRoot + "/", "")}`));
+  } catch (err) {
+    console.log(`${YELLOW}⚠ Could not watch ${file}: ${err.message}${RESET}`);
+  }
+}
+
+await tick("initial run");
+
