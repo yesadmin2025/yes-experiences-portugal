@@ -732,6 +732,22 @@ export function HeroVerifyOverlay() {
    * `format` defaults to whatever was last attempted so the legend rows
    * stay coherent with the user's original intent.
    */
+  /**
+   * Standalone "Re-run self-check" action. Just re-runs the diff
+   * self-check and updates the green/red row in the overlay — no
+   * payload rebuild, no schema-tag guard. Useful when the user has
+   * just edited hero copy and wants to refresh the diff before
+   * deciding whether to regenerate the payload.
+   */
+  const handleRerunSelfCheck = () => {
+    const r = runDiffSelfCheck();
+    // eslint-disable-next-line no-console
+    console.info(
+      `[hero-verify] manual self-check re-run — ${r.ok ? "OK" : "FAILED"}`,
+      { divergentFields: r.divergentFields, checkedFields: r.checkedFields },
+    );
+  };
+
   const handleRegeneratePayload = () => {
     if (typeof window === "undefined") return;
     const format: "JSON" | "CSV" = schemaTagCheck?.format ?? "JSON";
@@ -1214,7 +1230,25 @@ export function HeroVerifyOverlay() {
                   `"schema" must be a string — got ${typeof schemaTagCheck.actual}.`}
                 {schemaTagCheck.reason === "mismatch" &&
                   `"schema" was "${String(schemaTagCheck.actual)}" — download blocked.`}
-                <div style={{ marginTop: 6 }}>
+                <div style={{ marginTop: 6, display: "flex", gap: 6, flexWrap: "wrap" }}>
+                  <button
+                    type="button"
+                    onClick={handleRerunSelfCheck}
+                    style={{
+                      background: "rgba(15,23,42,0.4)",
+                      color: "rgb(254, 226, 226)",
+                      border: "1px solid rgba(239,68,68,0.45)",
+                      borderRadius: 4,
+                      padding: "3px 8px",
+                      fontSize: 11,
+                      fontWeight: 600,
+                      cursor: "pointer",
+                      letterSpacing: "0.02em",
+                    }}
+                    title="Re-measure the live DOM and refresh the on-screen diff self-check, without rebuilding the export payload."
+                  >
+                    ↺ Re-run self-check
+                  </button>
                   <button
                     type="button"
                     onClick={handleRegeneratePayload}
