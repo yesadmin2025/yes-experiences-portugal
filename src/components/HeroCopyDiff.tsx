@@ -500,8 +500,9 @@ export function HeroCopyDiff() {
     return () => {
       window.removeEventListener("keydown", onKeyDown);
       window.removeEventListener("keyup", onKeyUp);
+      window.clearInterval(tickId);
     };
-  }, [refresh]);
+  }, [refresh, recordAction]);
 
   // ---- Outlines on changed UI elements -----------------------------------
   // When the diff reports changes, find every rendered hero element tagged
