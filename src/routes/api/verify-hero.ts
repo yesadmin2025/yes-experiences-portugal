@@ -80,28 +80,63 @@ function redactUrlForLog(raw: string): string {
 }
 
 /**
- * Emit a structured log line for a rejected request. Never includes the
- * presented token, the raw query string, request headers, or the
- * caller-supplied `?url=` / `?path=` values verbatim. Only the request method,
- * route pathname, response status, and a stable reason code are recorded.
+ * Generate a short request correlation ID for cross-referencing log lines
+ * with client-side traces. Uses crypto.randomUUID when available, otherwise
+ * falls back to a base36 random string. The ID is opaque, non-secret, and
+ * safe to return in response headers.
  */
-function logRejection(
+function newRequestId(): string {
+  try {
+    if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
+      return crypto.randomUUID();
+    }
+  } catch {
+    // fall through to fallback
+  }
+  return (
+    Math.random().toString(36).slice(2, 10) +
+    Math.random().toString(36).slice(2, 10)
+  );
+}
+
+type AuditOutcome = "ok" | "reject" | "error";
+
+/**
+ * Single audit logger for every request — successes, rejections, and
+ * unexpected errors. Records only:
+ *   - rid: request correlation ID
+ *   - method: HTTP method
+ *   - route: redacted path (no query string, no fragment, no token)
+ *   - status: HTTP response status
+ *   - outcome: "ok" | "reject" | "error"
+ *   - reason: stable machine code (never an error message or stack)
+ *
+ * It deliberately does NOT log: tokens, the raw request URL, query
+ * parameters, request/response headers, request/response bodies, IPs, or
+ * caller-supplied `?url=` / `?path=` values.
+ */
+function logAudit(
+  rid: string,
   method: string,
   requestUrl: string,
   status: number,
+  outcome: AuditOutcome,
   reason: string,
 ): void {
+  const line = JSON.stringify({
+    evt: "verify_hero_audit",
+    rid,
+    method,
+    route: redactUrlForLog(requestUrl),
+    status,
+    outcome,
+    reason,
+  });
   // eslint-disable-next-line no-console
-  console.warn(
-    JSON.stringify({
-      evt: "verify_hero_reject",
-      method,
-      route: redactUrlForLog(requestUrl),
-      status,
-      reason,
-    }),
-  );
+  if (outcome === "ok") console.info(line);
+  else console.warn(line);
 }
+
 
 /**
  * Every routable path generated from `src/routes/` (excluding `__root` and the
