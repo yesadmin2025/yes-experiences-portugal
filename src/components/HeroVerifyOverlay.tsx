@@ -869,6 +869,43 @@ export function HeroVerifyOverlay() {
             })}
           </ul>
         </details>
+        {selfCheck && (
+          <div
+            style={{
+              marginTop: 10,
+              padding: "6px 8px",
+              borderRadius: 6,
+              fontSize: 11,
+              lineHeight: 1.45,
+              background: selfCheck.ok
+                ? "rgba(34,197,94,0.12)"
+                : "rgba(239,68,68,0.16)",
+              border: `1px solid ${
+                selfCheck.ok ? "rgba(34,197,94,0.45)" : "rgba(239,68,68,0.55)"
+              }`,
+              color: selfCheck.ok ? "rgb(187, 247, 208)" : "rgb(254, 202, 202)",
+            }}
+          >
+            <strong style={{ letterSpacing: "0.04em" }}>
+              {selfCheck.ok ? "✓ Self-check OK" : "✕ Self-check FAILED"}
+            </strong>
+            <span style={{ opacity: 0.75, marginLeft: 6 }}>
+              {new Date(selfCheck.at).toLocaleTimeString()}
+            </span>
+            {!selfCheck.ok && selfCheck.divergences.length > 0 && (
+              <ul style={{ margin: "4px 0 0", paddingLeft: 16 }}>
+                {selfCheck.divergences.slice(0, 4).map((d, i) => (
+                  <li key={i}>
+                    <strong>{d.key}</strong>: {d.reason}
+                  </li>
+                ))}
+                {selfCheck.divergences.length > 4 && (
+                  <li>+{selfCheck.divergences.length - 4} more (see console)</li>
+                )}
+              </ul>
+            )}
+          </div>
+        )}
         <div style={{ display: "flex", gap: 6, marginTop: 10 }}>
           <button
             type="button"
