@@ -229,7 +229,7 @@ function HomePage() {
           }}
         />
 
-        <div className="container-x relative z-10 pb-16 md:pb-36 pt-24 md:pt-40">
+        <div className="container-x relative z-10 pb-24 md:pb-36 pt-32 md:pt-40">
           <div className="max-w-3xl text-[color:var(--ivory)]">
             {/* Eyebrow — left-aligned with the same edge as the headline,
                 subheadline, CTAs and microcopy (single hero content grid).
@@ -244,29 +244,30 @@ function HomePage() {
               <span className="text-[color:var(--gold)]">✦</span>
             </span>
 
-            {/* Headline — tighter top-margin on mobile so the eyebrow
-                feels visually connected to line 1, not floating. Both
+            {/* Headline — sits on a calm 32px gap from the eyebrow on
+                mobile so the top line breathes without floating. Both
                 spans share the same left edge as every other element in
                 the hero column. */}
             <h1
               data-hero-field="headlineLine1 headlineLine2"
-              className="hero-h1 serif mt-3 md:mt-8 text-[2.05rem] sm:text-5xl md:text-7xl lg:text-[5.4rem] leading-[0.98] md:leading-[0.96] tracking-[-0.012em] text-[color:var(--ivory)] text-left opacity-0 animate-[heroFade_1.4s_ease-out_0.6s_forwards]"
+              className="hero-h1 serif mt-8 md:mt-10 text-[2.05rem] sm:text-5xl md:text-7xl lg:text-[5.4rem] leading-[1.02] md:leading-[0.96] tracking-[-0.012em] text-[color:var(--ivory)] text-left opacity-0 animate-[heroFade_1.4s_ease-out_0.6s_forwards]"
             >
               <span data-hero-field="headlineLine1" className="block">
                 {HERO_COPY.headlineLine1}
               </span>
               <span
                 data-hero-field="headlineLine2"
-                className="block italic font-medium text-[color:var(--gold-soft)] mt-0.5 md:mt-1 text-[2.2rem] sm:text-[3.4rem] md:text-[5rem] lg:text-[5.7rem] tracking-[-0.018em]"
+                className="block italic font-medium text-[color:var(--gold-soft)] mt-1 md:mt-1 text-[2.2rem] sm:text-[3.4rem] md:text-[5rem] lg:text-[5.7rem] tracking-[-0.018em]"
               >
                 {HERO_COPY.headlineLine2}
               </span>
             </h1>
 
-            {/* Subheadline — same left edge as the rest of the column. */}
+            {/* Subheadline — same left edge as the rest of the column.
+                Mobile vertical rhythm: 40px from headline. */}
             <p
               data-hero-field="subheadline"
-              className="mt-6 md:mt-10 text-[18px] md:text-[22px] text-[color:var(--ivory)]/90 max-w-lg leading-[1.65] md:leading-[1.75] font-light text-left opacity-0 animate-[heroFade_1.4s_ease-out_0.95s_forwards]"
+              className="mt-10 md:mt-10 text-[18px] md:text-[22px] text-[color:var(--ivory)]/90 max-w-lg leading-[1.7] md:leading-[1.75] font-light text-left opacity-0 animate-[heroFade_1.4s_ease-out_0.95s_forwards]"
             >
               {HERO_COPY.subheadline}
             </p>
@@ -279,15 +280,19 @@ function HomePage() {
                 Desktop: side-by-side, equal-width via flex-1 + basis-0.
                 Both buttons share the same internal layout: text centered,
                 arrow absolutely pinned at right-5 in BOTH, identical
-                padding (pl-9 pr-12 py-5), identical height + border. */}
+                padding (pl-9 pr-12 py-6) for a tactile, premium target,
+                identical height + border.
+                Vertical rhythm: 48px from subheadline (mt-12),
+                16px between primary and secondary CTAs (gap-4) so they
+                feel like a deliberate pair, not stacked-tight. */}
             <div
               ref={ctaGroupRef}
-              className="cta-magnet-group mt-8 md:mt-12 flex flex-col sm:flex-row gap-3 sm:gap-4 w-full max-w-sm sm:max-w-xl opacity-0 animate-[heroFade_1.4s_ease-out_1.25s_forwards]"
+              className="cta-magnet-group mt-12 md:mt-12 flex flex-col sm:flex-row gap-4 sm:gap-4 w-full max-w-sm sm:max-w-xl opacity-0 animate-[heroFade_1.4s_ease-out_1.25s_forwards]"
             >
               <Link
                 to="/builder"
                 data-hero-field="primaryCta"
-                className="cta-primary cta-attention cta-breathe group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-center text-center pl-9 pr-12 py-5 text-[12px] md:text-[12.5px] lg:text-[13px] tracking-[0.22em] md:tracking-[0.2em] uppercase font-light leading-[1.55]"
+                className="cta-primary cta-attention cta-breathe group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-center text-center pl-9 pr-12 py-6 md:py-5 text-[12px] md:text-[12.5px] lg:text-[13px] tracking-[0.22em] md:tracking-[0.2em] uppercase font-light leading-[1.55]"
               >
                 <span className="block">{HERO_COPY.primaryCta}</span>
                 <ArrowRight
@@ -299,7 +304,7 @@ function HomePage() {
                 to="/experiences"
                 data-cta-stagger
                 data-hero-field="secondaryCta"
-                className="cta-secondary-dark cta-attention cta-breathe group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-center text-center pl-9 pr-12 py-5 text-[12px] md:text-[12.5px] lg:text-[13px] tracking-[0.22em] md:tracking-[0.2em] uppercase font-light leading-[1.55] border-[1.5px]"
+                className="cta-secondary-dark cta-attention cta-breathe group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-center text-center pl-9 pr-12 py-6 md:py-5 text-[12px] md:text-[12.5px] lg:text-[13px] tracking-[0.22em] md:tracking-[0.2em] uppercase font-light leading-[1.55] border-[1.5px]"
               >
                 <span className="block">{HERO_COPY.secondaryCta}</span>
                 <ArrowRight
@@ -310,23 +315,25 @@ function HomePage() {
             </div>
 
             {/* Microcopy — same left edge as headline + buttons.
-                Slightly more breathing room above on mobile so it reads
-                as a clear, separate reassurance line. */}
-            <div className="mt-7 md:mt-7 max-w-sm sm:max-w-xl opacity-0 animate-[heroFade_1.4s_ease-out_1.5s_forwards]">
+                Mobile vertical rhythm: 48px from CTAs so it reads as a
+                clear, separate reassurance line, not glued to the
+                buttons. Slightly looser leading for calm readability. */}
+            <div className="mt-12 md:mt-8 max-w-sm sm:max-w-xl opacity-0 animate-[heroFade_1.4s_ease-out_1.5s_forwards]">
               <p
                 data-hero-field="microcopy"
-                className="text-[13px] md:text-[14px] text-[color:var(--ivory)]/95 leading-[1.7] md:leading-[1.75] font-light tracking-[0.01em] text-left"
+                className="text-[13px] md:text-[14px] text-[color:var(--ivory)]/95 leading-[1.8] md:leading-[1.75] font-light tracking-[0.01em] text-left"
               >
                 {HERO_COPY.microcopy}
               </p>
             </div>
 
             {/* Brand line — final centered editorial signature.
-                Sits inside the same max-w-sm rail on mobile (so the
-                centering is anchored to the hero column, not the
-                viewport) with restrained vertical rhythm above so it
-                feels intentional, not floating. */}
-            <div className="mt-10 md:mt-16 flex justify-center max-w-sm sm:max-w-none opacity-0 animate-[heroFade_1.4s_ease-out_1.75s_forwards]">
+                Mobile vertical rhythm: 64px from microcopy so it lands
+                as an unmistakable closing statement rather than a
+                continuation of the paragraph above. Sits inside the
+                same max-w-sm rail on mobile so the centering is
+                anchored to the hero column, not the viewport. */}
+            <div className="mt-16 md:mt-16 flex justify-center max-w-sm sm:max-w-none opacity-0 animate-[heroFade_1.4s_ease-out_1.75s_forwards]">
               <p
                 data-hero-field="brandLine"
                 className="text-[10.5px] uppercase tracking-[0.32em] text-[color:var(--gold-soft)] inline-flex items-center gap-3 text-center"
