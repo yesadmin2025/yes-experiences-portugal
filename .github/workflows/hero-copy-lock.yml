@@ -191,7 +191,7 @@ jobs:
         env:
           CI: "true"
 
-      - name: Write run metadata (qa-logs/meta.json)
+      - name: Write run metadata (qa-meta/meta.json + qa-logs/meta.json)
         # Bundles GitHub run context next to the script logs so a
         # downloaded artifact is self-describing — no need to cross-
         # reference the GitHub UI to know which commit/workflow/runner
@@ -202,9 +202,14 @@ jobs:
         # `jq -n --arg` is used (rather than a heredoc) so any quirky
         # characters in branch names / actor handles are JSON-escaped
         # correctly.
+        #
+        # The metadata is written to BOTH `qa-meta/` (uploaded as its
+        # own artifact with independent retention) AND `qa-logs/` (kept
+        # for back-compat with consumers that already read meta.json
+        # from the logs artifact). The two copies are byte-identical.
         if: always()
         run: |
-          mkdir -p qa-logs
+          mkdir -p qa-logs qa-meta
           EXIT_CODE="$(cat qa-logs/exit-code.txt 2>/dev/null || echo unknown)"
           jq -n \
             --arg generatedAt "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
@@ -251,9 +256,10 @@ jobs:
               qa: {
                 exitCode: $exitCode
               }
-            }' > qa-logs/meta.json
-          echo "Wrote qa-logs/meta.json:"
-          cat qa-logs/meta.json
+            }' > qa-meta/meta.json
+          cp qa-meta/meta.json qa-logs/meta.json
+          echo "Wrote qa-meta/meta.json (also copied to qa-logs/meta.json):"
+          cat qa-meta/meta.json
 
       - name: Upload hero-copy QA JSON report
         # Always upload — drift, fetch failures, and runtime errors are
