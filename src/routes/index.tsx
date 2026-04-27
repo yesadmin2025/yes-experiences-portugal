@@ -1208,19 +1208,18 @@ function HomePage() {
       >
         <div className="container-x">
           <div className="reveal text-center max-w-2xl mx-auto mb-14 md:mb-16">
-            <span className="eyebrow">For moments that matter</span>
+            <span className="eyebrow">Celebrations &amp; Groups</span>
             <h2
               id="occasions-title"
               className="serif text-[2.25rem] md:text-5xl mt-5 leading-[1.08]"
             >
-              Proposals. Celebrations. <br />
-              <span className="italic">Teams worth remembering.</span>
+              For moments <span className="italic">that matter.</span>
             </h2>
-            <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
-              Start from an idea, tailor a signature, or design from scratch — every occasion, entirely your own.
+            <p className="mt-5 text-[12.5px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
+              Proposals · Celebrations · Corporate · Groups
             </p>
-            <p className="mt-3 text-[12px] uppercase tracking-[0.24em] text-[color:var(--gold)]">
-              Instant confirmation across all experiences.
+            <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
+              From intimate plans to larger groups — all designed your way and confirmed instantly.
             </p>
           </div>
 
