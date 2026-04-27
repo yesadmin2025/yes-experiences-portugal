@@ -323,6 +323,52 @@ function HomePage() {
               <span data-probe-field="subheadline">{HERO_COPY.subheadline}</span>
             </div>
 
+            {/* JSON snapshot probe.
+                Serializes the full HERO_COPY object (plus the version hash)
+                into a single data attribute so you can diff copy changes
+                quickly in the browser console:
+
+                  const j = document.querySelector('[data-hero-copy-json]');
+                  JSON.parse(j.dataset.heroCopyJson);
+
+                Pair with `copy(...)` to grab the snapshot, then compare
+                against an earlier capture (e.g. JSON.diff in DevTools or
+                any text differ). Stable key order = clean diffs. */}
+            <div
+              data-hero-copy-json={JSON.stringify({
+                version: HERO_COPY_VERSION,
+                copy: HERO_COPY,
+              })}
+              data-testid="hero-copy-json"
+              aria-hidden="true"
+              style={{
+                position: "absolute",
+                width: 1,
+                height: 1,
+                padding: 0,
+                margin: -1,
+                overflow: "hidden",
+                clip: "rect(0,0,0,0)",
+                whiteSpace: "nowrap",
+                border: 0,
+              }}
+            >
+              <script
+                type="application/json"
+                data-probe-field="hero-copy-json"
+                // Inline JSON is also rendered as a <script type="application/json">
+                // so it survives a "View Source" capture without HTML-escaping
+                // mangling the quotes.
+                dangerouslySetInnerHTML={{
+                  __html: JSON.stringify(
+                    { version: HERO_COPY_VERSION, copy: HERO_COPY },
+                    null,
+                    2,
+                  ),
+                }}
+              />
+            </div>
+
             {/* Live <head> mirror — exposes the actual title + meta tags
                 that TanStack Router injected for this route. Stays in
                 sync via a MutationObserver on document.head. */}
