@@ -214,7 +214,7 @@ export function MobileStickyCTA() {
             : "opacity-0 translate-y-4 pointer-events-none",
         ].join(" ")}
       >
-        <div className="mx-3 mb-2 bg-white border border-[color:var(--gold)]/40 shadow-[0_18px_50px_-22px_rgba(15,23,42,0.35)]">
+        <div className="mx-3 mb-2 bg-white border border-[color:var(--charcoal-soft)] shadow-[0_18px_50px_-22px_rgba(15,23,42,0.35)]">
           <div className="flex items-start justify-between px-5 pt-4">
             <div>
               <p className="text-[10px] uppercase tracking-[0.28em] text-[color:var(--charcoal-soft)]">
