@@ -244,9 +244,9 @@ export function MobileStickyCTA() {
               onClick={handleChoice("explore_signature")}
               data-cta="explore_signature"
               data-cta-surface="mobile_sticky"
-              className="group flex items-center gap-3 px-3 py-3 border border-[color:var(--gold)]/40 hover:bg-[color:var(--sand)] transition-colors"
+              className="group flex items-center gap-3 px-3 py-3 border border-[color:var(--charcoal-soft)] hover:bg-[color:var(--sand)] transition-colors"
             >
-              <span className="shrink-0 w-9 h-9 inline-flex items-center justify-center bg-[color:var(--sand)] text-[color:var(--teal)] border border-[color:var(--gold)]/40">
+              <span className="shrink-0 w-9 h-9 inline-flex items-center justify-center bg-[color:var(--sand)] text-[color:var(--teal)] border border-[color:var(--charcoal-soft)]">
                 <Compass size={16} />
               </span>
               <span className="min-w-0 flex-1">
