@@ -173,11 +173,14 @@ type RouteResult = {
 // Returns { ok: true, samples } or { ok: false, error }.
 type AttemptResult = { ok: true; samples: Sample[] } | { ok: false; error: string };
 
+type SampleOpts = { fontsReadyCapMs: number; postLoadSettleMs: number };
+
 const sampleViaIframe = (
   iframe: HTMLIFrameElement,
   path: string,
   timeoutMs: number,
   ssrFallback: boolean,
+  opts: SampleOpts,
 ): Promise<AttemptResult> => new Promise((resolve) => {
   let settled = false;
   const settle = (r: AttemptResult) => {
@@ -194,15 +197,15 @@ const sampleViaIframe = (
       if (!win || !doc) return settle({ ok: false, error: "iframe blocked (cross-origin or sandbox)" });
 
       // Wait for webfonts so we sample the LOADED font, not fallback.
-      // Race against a 3s soft cap so a stuck font.ready doesn't eat the budget.
+      // Race against a soft cap so a stuck font.ready doesn't eat the budget.
       if (doc.fonts && (doc.fonts as FontFaceSet & { ready?: Promise<unknown> }).ready) {
         await Promise.race([
           doc.fonts.ready.catch(() => undefined),
-          new Promise((r) => setTimeout(r, 3000)),
+          new Promise((r) => setTimeout(r, opts.fontsReadyCapMs)),
         ]);
       }
       // Let async hero hooks (parallax, scroll-scale, hydration) settle.
-      await new Promise((r) => setTimeout(r, 250));
+      await new Promise((r) => setTimeout(r, opts.postLoadSettleMs));
       const samples = TOKENS.map((t) => sampleToken(doc, win, t));
 
       // Sanity guard: if EVERY token is "not present", treat as a failed render
@@ -240,28 +243,85 @@ const sampleViaIframe = (
   const timer = setTimeout(() => settle({ ok: false, error: `timeout after ${Math.round(timeoutMs / 1000)}s` }), timeoutMs);
 });
 
+// ─── Settings (persisted to localStorage) ─────────────────────────
+type StageSettings = { enabled: boolean; timeoutMs: number; backoffMs: number };
+type AuditSettings = {
+  iframeAttempt1: StageSettings;
+  iframeAttempt2: StageSettings;
+  ssrFallback: StageSettings;
+  fontsReadyCapMs: number;   // max time to wait for document.fonts.ready
+  postLoadSettleMs: number;  // delay after load before sampling (lets hydration finish)
+};
+
+const DEFAULT_SETTINGS: AuditSettings = {
+  iframeAttempt1: { enabled: true, timeoutMs: 8000,  backoffMs: 0 },
+  iframeAttempt2: { enabled: true, timeoutMs: 12000, backoffMs: 600 },
+  ssrFallback:    { enabled: true, timeoutMs: 8000,  backoffMs: 400 },
+  fontsReadyCapMs: 3000,
+  postLoadSettleMs: 250,
+};
+
+const SETTINGS_KEY = "yes:typography-audit:settings:v1";
+
+const loadSettings = (): AuditSettings => {
+  if (typeof localStorage === "undefined") return DEFAULT_SETTINGS;
+  try {
+    const raw = localStorage.getItem(SETTINGS_KEY);
+    if (!raw) return DEFAULT_SETTINGS;
+    const parsed = JSON.parse(raw) as Partial<AuditSettings>;
+    return {
+      ...DEFAULT_SETTINGS,
+      ...parsed,
+      iframeAttempt1: { ...DEFAULT_SETTINGS.iframeAttempt1, ...(parsed.iframeAttempt1 || {}) },
+      iframeAttempt2: { ...DEFAULT_SETTINGS.iframeAttempt2, ...(parsed.iframeAttempt2 || {}) },
+      ssrFallback:    { ...DEFAULT_SETTINGS.ssrFallback,    ...(parsed.ssrFallback    || {}) },
+    };
+  } catch { return DEFAULT_SETTINGS; }
+};
+
+const persistSettings = (s: AuditSettings) => {
+  try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(s)); } catch { /* quota/private mode */ }
+};
+
 function TypographyAuditPage() {
   const [results, setResults] = useState<RouteResult[]>(() => ROUTES.map((p) => ({ path: p, status: "pending", samples: [] })));
   const [running, setRunning] = useState(false);
+  const [settings, setSettings] = useState<AuditSettings>(() => loadSettings());
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
-  // 3-stage pipeline per route: iframe → iframe (longer timeout) → SSR HTML fallback.
-  // Each stage's failure reason is appended to attemptLog for visibility.
+  // Persist whenever settings change.
+  useEffect(() => { persistSettings(settings); }, [settings]);
+
+  // Hold a live ref to settings so the in-flight audit always reads the LATEST
+  // values (e.g. user adjusts a timeout mid-run). Without this, useCallback
+  // would close over the snapshot at audit start.
+  const settingsRef = useRef(settings);
+  useEffect(() => { settingsRef.current = settings; }, [settings]);
+
+  // Per-route pipeline driven by settings: iframe attempt 1 → iframe attempt 2
+  // → SSR HTML fallback. Disabled stages are skipped.
   const auditRoute = useCallback(async (path: string): Promise<RouteResult> => {
     const iframe = iframeRef.current;
     if (!iframe) return { path, status: "error", samples: [], error: "iframe missing" };
+    const s = settingsRef.current;
+    const opts: SampleOpts = { fontsReadyCapMs: s.fontsReadyCapMs, postLoadSettleMs: s.postLoadSettleMs };
 
-    const stages: Array<{ label: string; timeout: number; via: AuditVia; ssr: boolean; backoffBefore: number }> = [
-      { label: "iframe attempt 1", timeout: 8000, via: "iframe", ssr: false, backoffBefore: 0 },
-      { label: "iframe attempt 2", timeout: 12000, via: "iframe", ssr: false, backoffBefore: 600 },
-      { label: "SSR HTML fallback", timeout: 8000, via: "ssr-fallback", ssr: true, backoffBefore: 400 },
-    ];
+    const stages: Array<{ label: string; cfg: StageSettings; via: AuditVia; ssr: boolean }> = [
+      { label: "iframe attempt 1",  cfg: s.iframeAttempt1, via: "iframe" as AuditVia,       ssr: false },
+      { label: "iframe attempt 2",  cfg: s.iframeAttempt2, via: "iframe" as AuditVia,       ssr: false },
+      { label: "SSR HTML fallback", cfg: s.ssrFallback,    via: "ssr-fallback" as AuditVia, ssr: true  },
+    ].filter((stage) => stage.cfg.enabled);
+
+    if (stages.length === 0) {
+      return { path, status: "error", samples: [], error: "all retry stages disabled in settings", attemptLog: [] };
+    }
 
     const log: string[] = [];
     for (let i = 0; i < stages.length; i++) {
       const stage = stages[i];
-      if (stage.backoffBefore) await new Promise((r) => setTimeout(r, stage.backoffBefore));
-      const r = await sampleViaIframe(iframe, path, stage.timeout, stage.ssr);
+      if (stage.cfg.backoffMs) await new Promise((r) => setTimeout(r, stage.cfg.backoffMs));
+      const r = await sampleViaIframe(iframe, path, stage.cfg.timeoutMs, stage.ssr, opts);
       if (r.ok) {
         return { path, status: "done", samples: r.samples, attempts: i + 1, via: stage.via, attemptLog: log };
       }
@@ -269,7 +329,8 @@ function TypographyAuditPage() {
     }
     return {
       path, status: "error", samples: [],
-      error: "all 3 attempts failed", attempts: stages.length, attemptLog: log,
+      error: `all ${stages.length} attempt${stages.length === 1 ? "" : "s"} failed`,
+      attempts: stages.length, attemptLog: log,
     };
   }, []);
 
@@ -334,6 +395,14 @@ function TypographyAuditPage() {
             >
               {running ? "Auditing…" : "Re-run audit"}
             </button>
+            <button
+              type="button"
+              onClick={() => setSettingsOpen((v) => !v)}
+              aria-expanded={settingsOpen}
+              className="rounded-md border border-[color:var(--border)] px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.12em]"
+            >
+              {settingsOpen ? "Hide settings" : "Settings"}
+            </button>
             <a
               href="/"
               className="rounded-md border border-[color:var(--border)] px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.12em]"
@@ -341,6 +410,14 @@ function TypographyAuditPage() {
               ← Back to site
             </a>
           </div>
+          {settingsOpen && (
+            <SettingsPanel
+              settings={settings}
+              onChange={setSettings}
+              onReset={() => setSettings(DEFAULT_SETTINGS)}
+              disabled={running}
+            />
+          )}
         </div>
       </header>
 
@@ -496,4 +573,172 @@ function StatusBadge({ status }: { status: RouteResult["status"] }) {
     error: "bg-rose-100 text-rose-800",
   } as const;
   return <span className={`rounded-full px-2.5 py-1 text-[10px] uppercase tracking-[0.14em] ${map[status]}`}>{status}</span>;
+}
+
+// ─── Settings panel ──────────────────────────────────────────────
+type StageKey = "iframeAttempt1" | "iframeAttempt2" | "ssrFallback";
+const STAGE_META: Array<{ key: StageKey; label: string; hint: string }> = [
+  { key: "iframeAttempt1", label: "Stage 1 · iframe (fast)",    hint: "First live render. Short timeout — fails fast on cold/slow routes so we can retry." },
+  { key: "iframeAttempt2", label: "Stage 2 · iframe (patient)", hint: "Second live render with a longer budget. Good for routes that legitimately take time to hydrate." },
+  { key: "ssrFallback",    label: "Stage 3 · SSR HTML",          hint: "Last resort. Fetches the SSR HTML and samples it via srcdoc — bypasses runtime crashes entirely." },
+];
+
+function SettingsPanel({
+  settings, onChange, onReset, disabled,
+}: {
+  settings: AuditSettings;
+  onChange: (next: AuditSettings) => void;
+  onReset: () => void;
+  disabled?: boolean;
+}) {
+  const updateStage = (key: StageKey, patch: Partial<StageSettings>) => {
+    onChange({ ...settings, [key]: { ...settings[key], ...patch } });
+  };
+  const enabledCount = STAGE_META.filter(({ key }) => settings[key].enabled).length;
+  const totalBudget = STAGE_META.reduce(
+    (sum, { key }) => sum + (settings[key].enabled ? settings[key].timeoutMs + settings[key].backoffMs : 0),
+    0,
+  );
+
+  return (
+    <div className="mt-6 rounded-xl border border-[color:var(--border)] bg-white/80 p-5 md:p-6">
+      <div className="flex flex-wrap items-baseline justify-between gap-3">
+        <div>
+          <h2 className="font-[var(--font-serif)] text-xl">Reliability tuning</h2>
+          <p className="mt-1 text-[12px] text-black/60">
+            Per-stage retry behaviour. Settings are saved to your browser and applied to the next audit run.
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center gap-3 text-[11px] uppercase tracking-[0.12em]">
+          <span className="rounded-full bg-zinc-100 px-2.5 py-1 text-zinc-700">{enabledCount}/3 stages on</span>
+          <span className="rounded-full bg-zinc-100 px-2.5 py-1 text-zinc-700">≤{(totalBudget / 1000).toFixed(1)}s/route worst-case</span>
+          <button
+            type="button"
+            onClick={onReset}
+            disabled={disabled}
+            className="rounded-md border border-[color:var(--border)] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] disabled:opacity-50"
+          >
+            Reset to defaults
+          </button>
+        </div>
+      </div>
+
+      <div className="mt-5 grid gap-4 md:grid-cols-3">
+        {STAGE_META.map(({ key, label, hint }) => {
+          const cfg = settings[key];
+          return (
+            <fieldset
+              key={key}
+              className={`rounded-lg border p-4 transition ${cfg.enabled ? "border-[color:var(--border)] bg-white" : "border-dashed border-zinc-300 bg-zinc-50 opacity-70"}`}
+            >
+              <legend className="px-1.5 text-[11px] font-semibold uppercase tracking-[0.12em]">{label}</legend>
+              <label className="mt-2 flex items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={cfg.enabled}
+                  onChange={(e) => updateStage(key, { enabled: e.target.checked })}
+                  disabled={disabled}
+                  className="h-4 w-4"
+                />
+                <span>Enabled</span>
+              </label>
+              <p className="mt-1 text-[11px] text-black/55">{hint}</p>
+
+              <NumField
+                label="Timeout"
+                suffix="ms"
+                value={cfg.timeoutMs}
+                onChange={(v) => updateStage(key, { timeoutMs: v })}
+                min={500}
+                max={60000}
+                step={500}
+                disabled={disabled || !cfg.enabled}
+              />
+              <NumField
+                label="Backoff before"
+                suffix="ms"
+                value={cfg.backoffMs}
+                onChange={(v) => updateStage(key, { backoffMs: v })}
+                min={0}
+                max={5000}
+                step={100}
+                disabled={disabled || !cfg.enabled}
+              />
+            </fieldset>
+          );
+        })}
+      </div>
+
+      <div className="mt-5 grid gap-4 md:grid-cols-2">
+        <NumField
+          label="Fonts.ready soft cap"
+          suffix="ms"
+          value={settings.fontsReadyCapMs}
+          onChange={(v) => onChange({ ...settings, fontsReadyCapMs: v })}
+          min={500}
+          max={10000}
+          step={250}
+          disabled={disabled}
+          hint="Don't wait longer than this for document.fonts.ready before sampling."
+        />
+        <NumField
+          label="Post-load settle"
+          suffix="ms"
+          value={settings.postLoadSettleMs}
+          onChange={(v) => onChange({ ...settings, postLoadSettleMs: v })}
+          min={0}
+          max={2000}
+          step={50}
+          disabled={disabled}
+          hint="Pause after the iframe loads so hydration / parallax hooks settle before reading styles."
+        />
+      </div>
+
+      {enabledCount === 0 && (
+        <p className="mt-4 rounded-md bg-rose-50 px-3 py-2 text-sm text-rose-800">
+          ⚠ All stages are disabled — every route will fail. Enable at least one stage.
+        </p>
+      )}
+    </div>
+  );
+}
+
+function NumField({
+  label, value, onChange, min, max, step, suffix, hint, disabled,
+}: {
+  label: string; value: number; onChange: (v: number) => void;
+  min: number; max: number; step: number; suffix?: string; hint?: string; disabled?: boolean;
+}) {
+  return (
+    <label className={`mt-3 block ${disabled ? "opacity-50" : ""}`}>
+      <span className="text-[11px] font-semibold uppercase tracking-[0.1em] text-black/70">{label}</span>
+      <span className="mt-1 flex items-center gap-2">
+        <input
+          type="range"
+          value={value}
+          min={min}
+          max={max}
+          step={step}
+          disabled={disabled}
+          onChange={(e) => onChange(Number(e.target.value))}
+          className="h-1.5 flex-1 accent-[color:var(--charcoal-deep)]"
+        />
+        <input
+          type="number"
+          value={value}
+          min={min}
+          max={max}
+          step={step}
+          disabled={disabled}
+          onChange={(e) => {
+            const n = Number(e.target.value);
+            if (Number.isFinite(n)) onChange(Math.max(min, Math.min(max, n)));
+          }}
+          className="w-20 rounded border border-zinc-300 px-2 py-1 text-right text-sm tabular-nums"
+        />
+        {suffix && <span className="text-[11px] text-black/60">{suffix}</span>}
+      </span>
+      {hint && <span className="mt-1 block text-[11px] text-black/55">{hint}</span>}
+    </label>
+  );
 }
