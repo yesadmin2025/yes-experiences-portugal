@@ -292,7 +292,7 @@ function HomePage() {
               <Link
                 to="/builder"
                 data-hero-field="primaryCta"
-                className="cta-primary cta-attention cta-breathe group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-start text-left pl-6 pr-12 py-6 md:py-5 text-[12px] md:text-[12.5px] lg:text-[13px] tracking-[0.22em] md:tracking-[0.2em] uppercase font-light leading-[1.55]"
+                className="hero-cta-button cta-primary cta-attention cta-breathe group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-start text-left"
               >
                 <span className="block">{HERO_COPY.primaryCta}</span>
                 <ArrowRight
@@ -304,7 +304,7 @@ function HomePage() {
                 to="/experiences"
                 data-cta-stagger
                 data-hero-field="secondaryCta"
-                className="cta-secondary-dark cta-attention cta-breathe group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-start text-left pl-6 pr-12 py-6 md:py-5 text-[12px] md:text-[12.5px] lg:text-[13px] tracking-[0.22em] md:tracking-[0.2em] uppercase font-light leading-[1.55]"
+                className="hero-cta-button cta-secondary-dark cta-attention cta-breathe group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-start text-left"
               >
                 <span className="block">{HERO_COPY.secondaryCta}</span>
                 <ArrowRight
