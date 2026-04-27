@@ -332,7 +332,7 @@ function HomePage() {
                 reads as a brand sign-off, not a sentence continuation.
                 Decorative gold rules flank the two-line block, vertically
                 centered to keep the composition balanced. */}
-            <div className="mt-14 md:mt-16 mb-4 md:mb-2 flex justify-center opacity-0 animate-[heroFade_1.4s_ease-out_1.75s_forwards]">
+            <div className="hero-rhythm-microcopy-to-signature mb-4 md:mb-2 flex justify-center opacity-0 animate-[heroFade_1.4s_ease-out_1.75s_forwards]">
               <div
                 data-hero-field="brandLine"
                 className="inline-flex items-center gap-4 text-[color:var(--gold-soft)]"
