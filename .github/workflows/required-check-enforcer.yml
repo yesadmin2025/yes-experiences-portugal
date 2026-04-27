@@ -74,10 +74,14 @@ jobs:
     name: Required-check enforcer (${{ github.event_name == 'push' && 'apply' || (github.event.inputs.mode || 'check') }})
     runs-on: ubuntu-latest
     timeout-minutes: 3
-    # Hard-cap permissions on the workflow's GITHUB_TOKEN to nothing —
-    # we only ever use BRANCH_PROTECTION_*_TOKEN for the API calls.
+    # Hard-cap permissions on the workflow's GITHUB_TOKEN. We grant
+    # `pull-requests: write` so the comment step can post/update a
+    # sticky drift-status comment on the PR using the default token —
+    # no extra secret needed for that. Branch-protection reads/writes
+    # still go through BRANCH_PROTECTION_*_TOKEN.
     permissions:
       contents: read
+      pull-requests: write
 
     steps:
       - name: Checkout
@@ -104,6 +108,7 @@ jobs:
           fi
 
       - name: Verify / repair required-check context
+        id: enforce
         env:
           MODE: ${{ steps.mode.outputs.mode }}
           # Pick the right-scope token for the chosen mode. The write
@@ -115,4 +120,119 @@ jobs:
           PROTECTED_BRANCH: main
           WORKFLOW_PATH: .github/workflows/homepage-structure.yml
           WORKFLOW_JOB_KEY: homepage-structure
-        run: node scripts/enforce-required-status-context.mjs
+        # Capture combined stdout+stderr to a file AND echo it to the
+        # job log, then record the script's exit code as a step output
+        # without failing this step. The final "Re-assert exit code"
+        # step below will fail the job if needed — the comment step in
+        # between needs to run first so PR authors get the diagnostics
+        # even when the job is failing.
+        run: |
+          set +e
+          node scripts/enforce-required-status-context.mjs 2>&1 | tee enforcer-output.log
+          rc=${PIPESTATUS[0]}
+          set -e
+          echo "exit_code=${rc}" >> "$GITHUB_OUTPUT"
+          # Surface a short headline for the comment template.
+          if [ "$rc" = "0" ]; then
+            echo "headline=✅ In sync (or repaired)" >> "$GITHUB_OUTPUT"
+          elif [ "$rc" = "1" ]; then
+            echo "headline=❌ Drift detected — required-check context missing" >> "$GITHUB_OUTPUT"
+          else
+            echo "headline=⚠️ Setup error — see job log" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Post / update PR drift-status comment
+        # Only meaningful on pull_request events — push/dispatch runs
+        # don't have a PR to comment on. Always runs (even if enforce
+        # exited non-zero) so authors see the diagnostics inline.
+        if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          MODE: ${{ steps.mode.outputs.mode }}
+          HEADLINE: ${{ steps.enforce.outputs.headline }}
+          EXIT_CODE: ${{ steps.enforce.outputs.exit_code }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        # Idempotent comment: a hidden HTML marker
+        # (<!-- required-check-enforcer -->) lets us find and PATCH the
+        # existing comment on subsequent runs instead of spamming the PR.
+        run: |
+          set -euo pipefail
+
+          MARKER='<!-- required-check-enforcer -->'
+
+          # Fence the script output in a code block; truncate to keep
+          # the comment under GitHub's 65,536-char body limit with
+          # generous headroom.
+          OUTPUT=$(head -c 50000 enforcer-output.log)
+
+          BODY=$(cat <<EOF
+${MARKER}
+### Required-check enforcer — ${HEADLINE}
+
+| Field | Value |
+| --- | --- |
+| Mode | \`${MODE}\` |
+| Workflow | \`.github/workflows/homepage-structure.yml\` |
+| Job key | \`homepage-structure\` |
+| Protected branch | \`main\` |
+| Script exit code | \`${EXIT_CODE}\` |
+| Run | [view logs](${RUN_URL}) |
+
+<details><summary>Enforcer output (click to expand)</summary>
+
+\`\`\`
+${OUTPUT}
+\`\`\`
+
+</details>
+
+> Comment auto-updated by \`.github/workflows/required-check-enforcer.yml\`.
+> To preview a self-heal without writing, run the workflow manually with mode \`apply-dry-run\`.
+EOF
+)
+
+          # Write body to a file so jq slurps it safely (newlines, quotes, em-dashes).
+          printf '%s' "$BODY" > comment-body.md
+
+          # Find an existing comment with our marker.
+          EXISTING_ID=$(
+            gh api \
+              -H "Accept: application/vnd.github+json" \
+              "repos/${REPO}/issues/${PR_NUMBER}/comments?per_page=100" \
+              --paginate \
+              --jq "[.[] | select(.body | contains(\"${MARKER}\"))][0].id // empty"
+          )
+
+          if [ -n "$EXISTING_ID" ]; then
+            echo "Updating existing comment ${EXISTING_ID}"
+            gh api \
+              --method PATCH \
+              -H "Accept: application/vnd.github+json" \
+              "repos/${REPO}/issues/comments/${EXISTING_ID}" \
+              -F body=@comment-body.md > /dev/null
+          else
+            echo "Creating new sticky comment on PR #${PR_NUMBER}"
+            gh api \
+              --method POST \
+              -H "Accept: application/vnd.github+json" \
+              "repos/${REPO}/issues/${PR_NUMBER}/comments" \
+              -F body=@comment-body.md > /dev/null
+          fi
+
+      - name: Re-assert enforcer exit code
+        # Restores the original pass/fail signal of the enforcer step
+        # AFTER the comment has been posted, so PR authors always see
+        # the drift comment even when the job is failing. Exit codes:
+        #   0  in sync / repaired
+        #   1  drift in MODE=check
+        #   2  setup error
+        env:
+          EXIT_CODE: ${{ steps.enforce.outputs.exit_code }}
+        run: |
+          if [ "$EXIT_CODE" != "0" ]; then
+            echo "Enforcer exited with code ${EXIT_CODE} — failing job."
+            exit "$EXIT_CODE"
+          fi
+          echo "Enforcer in sync — job passes."
