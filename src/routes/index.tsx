@@ -101,20 +101,20 @@ const howItWorks = [
   {
     step: "01",
     icon: BookOpen,
-    title: "Pick a starting point",
-    line: "A signature experience, an idea, or a blank canvas in the Studio. Begin wherever feels right.",
+    title: "Start with an idea, place or experience",
+    line: "Begin from a curated experience or a blank canvas — wherever feels right.",
   },
   {
     step: "02",
     icon: PenLine,
-    title: "Shape it in real time",
-    line: "Adjust the pace, the stops, the people you meet — guided by local knowledge as you go.",
+    title: "Shape it instantly, your way",
+    line: "Adjust the pace, the stops, the people you meet — in real time.",
   },
   {
     step: "03",
     icon: Zap,
-    title: "Confirm instantly",
-    line: "No forms. No waiting. No back-and-forth. The moment it feels right, it's yours.",
+    title: "Confirm without waiting",
+    line: "No forms. No requests. The moment it feels right, it's yours.",
   },
 ];
 
@@ -144,9 +144,9 @@ const pillars = [
 const startPaths = [
   {
     icon: BookOpen,
-    eyebrow: "Signature",
-    title: "A Signature Experience",
-    line: "Ready to book. Instantly confirmed.",
+    eyebrow: "Ready to book",
+    title: "Ready-to-Book Experiences",
+    line: "Start from a curated experience and confirm instantly.",
     cta: "Explore",
     to: "/experiences",
     accent: "ivory" as const,
@@ -154,17 +154,17 @@ const startPaths = [
   {
     icon: Wand2,
     eyebrow: "Tailored",
-    title: "Tailor a Signature",
-    line: "Start from a signature and shape it your way.",
-    cta: "Tailor",
+    title: "Tailor an Experience",
+    line: "Adjust a ready experience to match your style.",
+    cta: "Tailor it",
     to: "/experiences",
     accent: "ivory" as const,
   },
   {
     icon: Sparkles,
     eyebrow: "From scratch",
-    title: "Design in the Studio",
-    line: "Build it step by step, in real time.",
+    title: "Build Your Own (Studio)",
+    line: "Create everything from scratch, in real time.",
     cta: "Open Studio",
     to: "/builder",
     accent: "teal" as const,
@@ -172,9 +172,9 @@ const startPaths = [
   {
     icon: Gift,
     eyebrow: "Occasions",
-    title: "Celebrations & Corporate",
-    line: "Proposals, events and team experiences — designed your way.",
-    cta: "Plan Occasion",
+    title: "Celebrations & Groups",
+    line: "Proposals, anniversaries, corporate and private groups.",
+    cta: "Plan your experience",
     to: "/proposals",
     accent: "ivory" as const,
   },
@@ -381,6 +381,9 @@ function HomePage() {
                 className="text-[14px] md:text-[14.5px] text-[color:var(--ivory)] leading-[1.75] md:leading-[1.7] font-normal tracking-[0.005em] text-center sm:text-left"
               >
                 {HERO_COPY.microcopy}
+              </p>
+              <p className="mt-3 text-[12.5px] md:text-[13px] text-[color:var(--ivory)]/75 italic font-light leading-[1.7] text-center sm:text-left">
+                Prefer guidance? <Link to="/contact" className="underline decoration-[color:var(--gold)]/60 underline-offset-4 hover:text-[color:var(--gold-soft)] transition-colors">A local designer can shape it with you.</Link>
               </p>
             </div>
 
@@ -643,7 +646,10 @@ function HomePage() {
               Choose how <span className="italic">you want to start.</span>
             </h2>
             <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
-              Book a signature, tailor one your way, design from scratch, or plan a moment that matters.
+              Book ready-to-go, tailor an experience, build from scratch, or plan a moment that matters.
+            </p>
+            <p className="mt-3 text-[12.5px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)]">
+              Instant confirmation. No forms. No waiting.
             </p>
           </div>
 
@@ -777,14 +783,17 @@ function HomePage() {
       <section className="py-24 md:py-40 bg-[color:var(--sand)]" aria-labelledby="signatures-title">
         <div className="container-x">
           <div className="reveal text-center max-w-2xl mx-auto mb-14 md:mb-20">
-            <span className="eyebrow">Signature experiences</span>
+            <span className="eyebrow">Ready-to-Book Experiences</span>
             <h2
               id="signatures-title"
               className="serif text-[2.25rem] md:text-5xl mt-5 leading-[1.08]"
             >
-              Book them as they are. <br />
+              Confirm them as they are. <br />
               <span className="italic">Or tailor them, your way.</span>
             </h2>
+            <p className="mt-3 text-[12px] uppercase tracking-[0.24em] text-[color:var(--gold)]">
+              Our signature experiences
+            </p>
             <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
               Three private experiences crafted by our locals — ready to confirm in seconds, or shaped entirely around you.
             </p>
@@ -814,7 +823,7 @@ function HomePage() {
                       to="/experiences"
                       className="inline-flex items-center gap-2 text-[11.5px] uppercase tracking-[0.24em] font-semibold text-[color:var(--teal)] hover:text-[color:var(--teal-2)] transition-colors"
                     >
-                      Book it <ArrowRight size={12} />
+                      Confirm it <ArrowRight size={12} />
                     </Link>
                     <span className="h-3 w-px bg-[color:var(--border)]" aria-hidden="true" />
                     <Link
