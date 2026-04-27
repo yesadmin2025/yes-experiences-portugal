@@ -1094,6 +1094,61 @@ function SettingsPanel({
           </button>
           <button
             type="button"
+            onClick={() => {
+              // One-click "ship it" flow:
+              //   1. Validate current panel values.
+              //   2. If errors exist, run autoFixSettings ONCE regardless of the
+              //      "Auto-fix on import" toggle (the user explicitly asked for
+              //      a fix-and-ship action by clicking this button).
+              //   3. Apply the fix, re-validate, and surface a publish CTA on
+              //      success. The actual publish is a Lovable editor action —
+              //      we render a clear next-step banner instead of pretending
+              //      the app can publish itself.
+              const initial = validateCurrentSettings(settings);
+              const hasErrors = initial.issues.some((i) => i.level === "error");
+              let finalSettings = settings;
+              let finalReport = initial;
+              let autoFixNotes: string[] = [];
+              if (hasErrors) {
+                const { fixed, changes } = autoFixSettings(settings);
+                onChange(fixed);
+                finalSettings = fixed;
+                finalReport = validateCurrentSettings(fixed);
+                autoFixNotes = changes;
+              }
+              const augmented: ValidationReport = autoFixNotes.length
+                ? {
+                    ...finalReport,
+                    issues: [
+                      ...finalReport.issues,
+                      ...autoFixNotes.map((c): ValidationIssue => ({
+                        level: "info",
+                        path: "auto-fix",
+                        message: c,
+                      })),
+                    ],
+                  }
+                : finalReport;
+              setImportReport({
+                fileName: hasErrors ? "current panel values · auto-fixed" : "current panel values",
+                mode: "current",
+                report: augmented,
+              });
+              // Show the publish CTA only when the post-fix report is clean
+              // (no errors). Warnings are fine — the user has been informed.
+              setPublishReady(!augmented.issues.some((i) => i.level === "error"));
+              // Avoid stale state from a previous click.
+              if (augmented.issues.some((i) => i.level === "error")) setPublishReady(false);
+              void finalSettings; // referenced for clarity above
+            }}
+            disabled={disabled}
+            className="rounded-md border border-emerald-300 bg-emerald-50 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-emerald-900 hover:bg-emerald-100 disabled:opacity-50"
+            title="Validate the current settings, auto-fix any errors, apply the result, then offer to open the Publish dialog."
+          >
+            Validate, apply &amp; publish
+          </button>
+          <button
+            type="button"
             onClick={onReset}
             disabled={disabled}
             className="rounded-md border border-[color:var(--border)] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] disabled:opacity-50"
