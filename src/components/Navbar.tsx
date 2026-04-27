@@ -50,7 +50,7 @@ export function Navbar() {
               width={909}
               height={579}
               alt="YES experiences PORTUGAL"
-              className="block h-[42px] md:h-[50px] lg:h-[56px] w-auto select-none"
+              className="block h-[48px] md:h-[52px] lg:h-[58px] w-auto select-none drop-shadow-[0_1px_0_rgba(255,255,255,0.4)]"
               draggable={false}
               fetchPriority="high"
               decoding="async"
@@ -76,7 +76,7 @@ export function Navbar() {
             ))}
             <Link
               to="/builder"
-              className="ml-2 group inline-flex items-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-white border border-[color:var(--gold)]/70 hover:border-[color:var(--gold)] px-5 py-3 text-[10.5px] tracking-[0.2em] uppercase transition-all duration-500 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+              className="ml-2 group inline-flex items-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-white border border-[color:var(--gold)] hover:border-[color:var(--gold-soft)] px-5 py-3 text-[10.5px] tracking-[0.2em] uppercase transition-all duration-500 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             >
               Design &amp; Secure
               <ArrowRight size={13} className="group-hover:translate-x-0.5 transition-transform duration-300" />
@@ -121,7 +121,7 @@ export function Navbar() {
             <Link
               to="/builder"
               onClick={() => setOpen(false)}
-              className="mt-3 inline-flex items-center justify-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-white border border-[color:var(--gold)]/70 px-5 py-3.5 text-[11px] tracking-[0.22em] uppercase transition-colors"
+              className="mt-3 inline-flex items-center justify-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-white border border-[color:var(--gold)] px-5 py-3.5 text-[11px] tracking-[0.22em] uppercase transition-colors"
             >
               Design &amp; Secure Your Experience
               <ArrowRight size={14} />

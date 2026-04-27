@@ -214,7 +214,7 @@ export function MobileStickyCTA() {
             : "opacity-0 translate-y-4 pointer-events-none",
         ].join(" ")}
       >
-        <div className="mx-3 mb-2 bg-white border border-[color:var(--gold)]/40 shadow-[0_18px_50px_-22px_rgba(15,23,42,0.35)]">
+        <div className="mx-3 mb-2 bg-white border border-[color:var(--charcoal-soft)] shadow-[0_18px_50px_-22px_rgba(15,23,42,0.35)]">
           <div className="flex items-start justify-between px-5 pt-4">
             <div>
               <p className="text-[10px] uppercase tracking-[0.28em] text-[color:var(--charcoal-soft)]">
@@ -244,9 +244,9 @@ export function MobileStickyCTA() {
               onClick={handleChoice("explore_signature")}
               data-cta="explore_signature"
               data-cta-surface="mobile_sticky"
-              className="group flex items-center gap-3 px-3 py-3 border border-[color:var(--gold)]/40 hover:bg-[color:var(--sand)] transition-colors"
+              className="group flex items-center gap-3 px-3 py-3 border border-[color:var(--charcoal-soft)] hover:bg-[color:var(--sand)] transition-colors"
             >
-              <span className="shrink-0 w-9 h-9 inline-flex items-center justify-center bg-[color:var(--sand)] text-[color:var(--teal)] border border-[color:var(--gold)]/40">
+              <span className="shrink-0 w-9 h-9 inline-flex items-center justify-center bg-[color:var(--sand)] text-[color:var(--teal)] border border-[color:var(--charcoal-soft)]">
                 <Compass size={16} />
               </span>
               <span className="min-w-0 flex-1">
@@ -305,7 +305,7 @@ export function MobileStickyCTA() {
         <div className="h-6 bg-gradient-to-t from-white to-transparent pointer-events-none" />
 
         <div
-          className="bg-white border-t border-[color:var(--gold)]/30 shadow-[0_-8px_28px_-18px_rgba(15,23,42,0.18)]"
+          className="bg-white border-t border-[color:var(--charcoal)]/15 shadow-[0_-8px_28px_-18px_rgba(15,23,42,0.18)]"
           style={{ paddingBottom: "max(env(safe-area-inset-bottom), 0px)" }}
         >
           <div className="px-4 py-3 flex items-center gap-3">
@@ -341,7 +341,7 @@ export function MobileStickyCTA() {
               data-state={submitting ? "submitting" : sheetOpen ? "open" : "idle"}
               className={[
                 "group inline-flex items-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-white",
-                "border border-[color:var(--gold)]/70 px-4 py-3 text-[10.5px] tracking-[0.2em] uppercase whitespace-nowrap",
+                "border border-[color:var(--gold)] px-4 py-3 text-[10.5px] tracking-[0.2em] uppercase whitespace-nowrap",
                 "transition-[opacity,background-color] duration-300",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-white",
                 submitting ? "opacity-70 pointer-events-none cursor-default" : "",
