@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Menu, X, ArrowRight } from "lucide-react";
-import logoTeal from "@/assets/yes-logo-teal.svg";
+import logoTeal from "@/assets/yes-logo-approved.png";
 
 // Desktop nav — full editorial set, kept compact in tracking so all 8
 // items fit gracefully on a single row at lg+ widths.
@@ -33,26 +33,26 @@ export function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="fixed top-0 inset-x-0 z-50 bg-white border-b border-black/[0.05] shadow-[0_1px_0_0_rgba(201,169,106,0.16),0_12px_32px_-22px_rgba(15,23,42,0.10)] opacity-0 animate-[headerFade_900ms_ease-out_forwards]">
+    <header className="fixed top-0 inset-x-0 z-50 bg-white border-b border-black/[0.06] shadow-[0_1px_0_0_rgba(201,169,106,0.18),0_10px_28px_-18px_rgba(15,23,42,0.10)] opacity-0 animate-[headerFade_900ms_ease-out_forwards]">
       <div className="container-x">
-        <div className="flex items-center justify-between h-[92px] md:h-[104px] lg:h-[112px] py-2 md:py-2.5">
-          {/* Official master logo — exact approved teal (#295B61) via SVG.
-              Sized for premium presence with calibrated breathing room
-              against the header edges. */}
+        <div className="flex items-center justify-between h-[88px] md:h-[100px] lg:h-[108px]">
+          {/* Official master logo — uploaded brand asset, used as-is.
+              Sized for premium presence with breathing room in the header. */}
           <Link
             to="/"
-            className="flex-shrink-0 inline-flex items-center h-full pr-3 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+            className="flex-shrink-0 inline-flex items-center h-full rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             aria-label="YES experiences PORTUGAL — Home"
           >
             <img
               src={logoTeal}
-              width={1200}
-              height={900}
+              width={909}
+              height={579}
               alt="YES experiences PORTUGAL"
-              className="block h-[60px] md:h-[72px] lg:h-[80px] w-auto select-none"
+              className="block h-[64px] md:h-[76px] lg:h-[84px] w-auto select-none"
               draggable={false}
               fetchPriority="high"
               decoding="async"
+              style={{ imageRendering: "auto" }}
             />
           </Link>
 
@@ -61,7 +61,7 @@ export function Navbar() {
               Tracking tightened slightly (0.20em) so all 8 labels fit on one
               row at lg+ without wrapping. The CTA button is the calm,
               conversion-focused anchor — teal fill, fine gold border. */}
-          <nav className="hidden lg:flex items-center h-full gap-8 xl:gap-10 text-[11px] uppercase tracking-[0.22em] font-normal leading-none">
+          <nav className="hidden lg:flex items-center h-full gap-7 xl:gap-9 text-[11px] uppercase tracking-[0.2em] font-normal leading-none">
             {desktopLinks.map((n) => (
               <Link
                 key={n.to}
