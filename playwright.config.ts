@@ -22,10 +22,27 @@ export default defineConfig({
     trace: "retain-on-failure",
     video: "retain-on-failure",
   },
+  // Snapshot config — visual regression tests. A 0.2% pixel-diff budget
+  // tolerates sub-pixel font rendering jitter without hiding real layout
+  // breakage; an 8-pixel max diff per channel keeps anti-aliasing noise
+  // from registering as a regression.
+  expect: {
+    toHaveScreenshot: {
+      maxDiffPixelRatio: 0.002,
+      threshold: 0.15,
+      animations: "disabled",
+      caret: "hide",
+      scale: "css",
+    },
+  },
   projects: [
     {
       name: "mobile-chromium",
       use: { ...devices["Pixel 5"] },
+    },
+    {
+      name: "desktop-chromium",
+      use: { ...devices["Desktop Chrome"], viewport: { width: 1366, height: 768 } },
     },
   ],
   webServer: {
