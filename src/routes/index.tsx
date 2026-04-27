@@ -670,7 +670,7 @@ function HomePage() {
               to="/builder"
               className="cta-primary inline-flex items-center gap-2 px-8 py-[16px] text-[12.5px] uppercase tracking-[0.2em] font-semibold"
             >
-              Start designing yours
+              Start creating yours
               <ArrowRight size={15} />
             </Link>
           </div>
