@@ -143,7 +143,8 @@ describe("scripts/hero-copy-qa.mjs --report-json-strict", () => {
         expect(combined).toMatch(/_injectedByTest/);
         expect(combined).toMatch(/unknown top-level key/);
       } finally {
-        rmSync(tmp, { recursive: true, force: true });
+        rmSync(tmpReports, { recursive: true, force: true });
+        rmSync(mutatedScriptPath, { force: true });
       }
     },
     90_000,
