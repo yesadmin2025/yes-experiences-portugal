@@ -159,11 +159,39 @@ for (const target of TARGETS) {
     continue;
   }
 
+  // Preflight: rendered runtime strings must equal source-of-truth.
+  console.log(`  ${DIM}Preflight — runtime strings vs src/content/hero-copy.ts${RESET}`);
+  const preflight = runPreflight(html);
+  const probeFound = preflight.some((p) => !p.missing);
+  if (!probeFound) {
+    console.log(
+      `    ${RED}✗ No data-hero-* probe attributes found in served HTML — cannot verify runtime parity.${RESET}`,
+    );
+    totalFailures++;
+  } else {
+    for (const p of preflight) {
+      if (p.pass) {
+        console.log(`    ${GREEN}✓${RESET} ${p.attr.padEnd(24)} matches source-of-truth`);
+      } else if (p.missing) {
+        console.log(
+          `    ${RED}✗${RESET} ${p.attr.padEnd(24)} ${RED}attribute missing from rendered HTML${RESET}`,
+        );
+        totalFailures++;
+      } else {
+        console.log(`    ${RED}✗${RESET} ${p.attr.padEnd(24)} ${RED}DRIFT${RESET}`);
+        console.log(`        expected: ${DIM}"${p.expected}"${RESET}`);
+        console.log(`        runtime:  ${DIM}"${p.actual}"${RESET}`);
+        totalFailures++;
+      }
+    }
+  }
+
+  console.log(`  ${DIM}Substring checks — exact strings present in served HTML${RESET}`);
   const results = runChecks(html);
   for (const r of results) {
     const icon = r.pass ? `${GREEN}✓${RESET}` : `${RED}✗${RESET}`;
     const status = r.pass ? "" : `  ${RED}MISSING${RESET}`;
-    console.log(`  ${icon} ${r.label.padEnd(20)} ${DIM}"${r.value}"${RESET}${status}`);
+    console.log(`    ${icon} ${r.label.padEnd(20)} ${DIM}"${r.value}"${RESET}${status}`);
     if (!r.pass) totalFailures++;
   }
   console.log("");
