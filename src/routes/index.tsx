@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { SiteLayout } from "@/components/SiteLayout";
@@ -149,6 +150,10 @@ const startPaths = [
     line: "Start from a curated experience and confirm instantly.",
     cta: "Explore signatures",
     to: "/experiences",
+    destination: "Signatures",
+    expectedTo: "/experiences",
+    ariaLabel:
+      "Explore Signature Experiences — opens the Signatures catalog page",
     accent: "ivory" as const,
   },
   {
@@ -158,6 +163,10 @@ const startPaths = [
     line: "Start from a signature and shape every detail your way.",
     cta: "Start tailoring",
     to: "/experiences",
+    destination: "Tailoring",
+    expectedTo: "/experiences",
+    ariaLabel:
+      "Start Tailoring a Signature — opens the Signatures catalog where each experience can be tailored",
     accent: "sand" as const,
   },
   {
@@ -167,6 +176,9 @@ const startPaths = [
     line: "Create everything from a blank slate, in real time.",
     cta: "Open the Studio",
     to: "/builder",
+    destination: "Studio",
+    expectedTo: "/builder",
+    ariaLabel: "Open the Studio — design your experience from scratch in real time",
     accent: "teal" as const,
   },
   {
@@ -176,6 +188,10 @@ const startPaths = [
     line: "Proposals, anniversaries, corporate and private groups.",
     cta: "Start your occasion",
     to: "/proposals",
+    destination: "Celebrations",
+    expectedTo: "/proposals",
+    ariaLabel:
+      "Start your Celebration or Group experience — opens the Proposals, Celebrations and Groups page",
     accent: "charcoal" as const,
   },
 ];
@@ -203,6 +219,102 @@ const reviews = [
     platform: "Trustpilot",
   },
 ];
+
+/**
+ * Decision-card route validator.
+ *
+ * Cross-checks every entry in `startPaths` against its `expectedTo` route
+ * at mount, logs the result to the console (one grouped `console.info`
+ * per page load), and exposes a small visible status strip directly under
+ * the card grid.
+ *
+ * The strip is rendered:
+ *   • always in development (`import.meta.env.DEV`)
+ *   • on production preview when the URL contains `?debug-routes`
+ * Otherwise it stays hidden so end-users never see QA chrome.
+ */
+function RouteValidationStrip() {
+  const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const debugFlag = params.has("debug-routes");
+    const visible = import.meta.env.DEV || debugFlag;
+    setShow(visible);
+
+    // Always log — useful in production console even when the strip is hidden.
+    const results = startPaths.map((p) => ({
+      destination: p.destination,
+      label: p.cta,
+      to: p.to,
+      expectedTo: p.expectedTo,
+      ok: p.to === p.expectedTo,
+    }));
+    const allOk = results.every((r) => r.ok);
+    /* eslint-disable no-console */
+    console.groupCollapsed(
+      `%c[YES] Decision-card route check — ${allOk ? "PASS ✓" : "FAIL ✗"}`,
+      `color:${allOk ? "#2e7d32" : "#c62828"};font-weight:600`,
+    );
+    results.forEach((r) => {
+      console.info(
+        `${r.ok ? "✓" : "✗"} ${r.destination.padEnd(13)} → ${r.to}` +
+          (r.ok ? "" : `  (expected ${r.expectedTo})`) +
+          `   [label: "${r.label}"]`,
+      );
+    });
+    console.groupEnd();
+    /* eslint-enable no-console */
+  }, []);
+
+  if (!show) return null;
+
+  const checks = startPaths.map((p) => ({
+    destination: p.destination,
+    to: p.to,
+    expectedTo: p.expectedTo,
+    label: p.cta,
+    ok: p.to === p.expectedTo,
+  }));
+  const allOk = checks.every((c) => c.ok);
+
+  return (
+    <div
+      role="status"
+      aria-live="polite"
+      aria-label="Decision card route validation"
+      className="mt-10 max-w-6xl mx-auto border border-dashed border-[color:var(--border)] bg-[color:var(--card)] px-5 py-4 text-[12px] text-[color:var(--charcoal-soft)] font-mono"
+    >
+      <p className="flex items-center gap-2 text-[10.5px] uppercase tracking-[0.24em]">
+        <span
+          aria-hidden="true"
+          className={`inline-block w-2 h-2 rounded-full ${
+            allOk ? "bg-emerald-600" : "bg-red-600"
+          }`}
+        />
+        Route validation — {allOk ? "all 4 paths OK" : "MISMATCH detected"}
+      </p>
+      <ul className="mt-3 grid sm:grid-cols-2 lg:grid-cols-4 gap-2 list-none p-0">
+        {checks.map((c) => (
+          <li
+            key={c.destination}
+            className={`flex items-center justify-between gap-3 px-3 py-2 border ${
+              c.ok
+                ? "border-emerald-600/30 text-[color:var(--charcoal)]"
+                : "border-red-600/40 text-red-700"
+            }`}
+          >
+            <span className="font-semibold">{c.destination}</span>
+            <span className="opacity-80">
+              {c.to}
+              {c.ok ? " ✓" : ` ✗ (expected ${c.expectedTo})`}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
 
 function HomePage() {
   // Pointer-driven parallax — writes --hero-px / --hero-py (-1 → 1) to the
@@ -720,6 +832,11 @@ function HomePage() {
                 <li key={p.title} className="reveal-stagger h-full">
                   <Link
                     to={p.to}
+                    aria-label={p.ariaLabel}
+                    data-destination={p.destination}
+                    data-expected-to={p.expectedTo}
+                    data-actual-to={p.to}
+                    data-route-ok={p.to === p.expectedTo ? "true" : "false"}
                     className={`group relative flex flex-col h-full p-7 md:p-8 transition-all duration-500 overflow-hidden ${styles.card}`}
                   >
                     {/* Top rail — distinct accent pattern per card
@@ -768,6 +885,9 @@ function HomePage() {
               );
             })}
           </ul>
+
+          <RouteValidationStrip />
+
         </div>
       </section>
 
