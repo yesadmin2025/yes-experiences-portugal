@@ -780,14 +780,17 @@ function HomePage() {
       <section className="py-24 md:py-40 bg-[color:var(--sand)]" aria-labelledby="signatures-title">
         <div className="container-x">
           <div className="reveal text-center max-w-2xl mx-auto mb-14 md:mb-20">
-            <span className="eyebrow">Signature experiences</span>
+            <span className="eyebrow">Ready-to-Book Experiences</span>
             <h2
               id="signatures-title"
               className="serif text-[2.25rem] md:text-5xl mt-5 leading-[1.08]"
             >
-              Book them as they are. <br />
+              Confirm them as they are. <br />
               <span className="italic">Or tailor them, your way.</span>
             </h2>
+            <p className="mt-3 text-[12px] uppercase tracking-[0.24em] text-[color:var(--gold)]">
+              Our signature experiences
+            </p>
             <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
               Three private experiences crafted by our locals — ready to confirm in seconds, or shaped entirely around you.
             </p>
