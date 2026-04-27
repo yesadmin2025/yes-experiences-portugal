@@ -270,6 +270,19 @@ function clearPersistedOutlines() {
   }
 }
 
+/**
+ * Strip every rendered hero outline immediately. Belt-and-braces companion
+ * to clearPersistedOutlines(): the outline effect's cleanup runs on the
+ * next state change, but on baseline acceptance we want the visual to
+ * disappear synchronously so the user sees an instant confirmation.
+ */
+function clearRenderedOutlines() {
+  if (typeof document === "undefined") return;
+  document
+    .querySelectorAll<HTMLElement>("[data-hero-diff-highlight]")
+    .forEach((el) => el.removeAttribute("data-hero-diff-highlight"));
+}
+
 async function copyTextToClipboard(text: string): Promise<boolean> {
   // Modern path — works on https + localhost.
   try {
