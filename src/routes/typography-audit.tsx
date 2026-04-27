@@ -1007,6 +1007,93 @@ function SettingsPanel({
   );
 }
 
+function ImportReportCard({
+  fileName, mode, report, onApply, onDismiss,
+}: {
+  fileName: string;
+  mode: "applied" | "validated" | "rejected";
+  report: ValidationReport;
+  onApply?: () => void;
+  onDismiss: () => void;
+}) {
+  const errors   = report.issues.filter((i) => i.level === "error");
+  const warnings = report.issues.filter((i) => i.level === "warning");
+  const infos    = report.issues.filter((i) => i.level === "info");
+
+  // Tone the banner by outcome:
+  //  - applied   → green (settings updated)
+  //  - validated → amber (dry-run; current settings untouched)
+  //  - rejected  → red (errors blocked the import)
+  const toneClass =
+    mode === "applied"   ? "border-emerald-200 bg-emerald-50 text-emerald-900" :
+    mode === "validated" ? "border-amber-200 bg-amber-50 text-amber-900" :
+                           "border-rose-200 bg-rose-50 text-rose-900";
+
+  const headline =
+    mode === "applied"   ? `Imported "${fileName}"` :
+    mode === "validated" ? (report.ok ? `Validated "${fileName}" — no errors` : `Validated "${fileName}" — ${errors.length} error${errors.length === 1 ? "" : "s"}`) :
+                           `Rejected "${fileName}" — ${errors.length} error${errors.length === 1 ? "" : "s"}`;
+
+  return (
+    <div role="status" className={`mt-3 rounded-md border p-3 text-[12px] ${toneClass}`}>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="font-semibold">{headline}</span>
+          {mode === "validated" && (
+            <span className="rounded-full bg-white/60 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em]">
+              Dry run · current settings unchanged
+            </span>
+          )}
+          <span className="text-[11px] opacity-75">
+            shape: {report.shape}
+            {report.exportedAt ? ` · exported ${report.exportedAt}` : ""}
+            {` · ${errors.length} error${errors.length === 1 ? "" : "s"}, ${warnings.length} warning${warnings.length === 1 ? "" : "s"}, ${infos.length} note${infos.length === 1 ? "" : "s"}`}
+          </span>
+        </div>
+        <div className="flex items-center gap-2">
+          {onApply && (
+            <button
+              type="button"
+              onClick={onApply}
+              className="rounded-md border border-current/30 bg-white/70 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] hover:bg-white"
+              title="Apply the validated settings now"
+            >
+              Apply now
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={onDismiss}
+            className="rounded-md border border-current/30 bg-white/70 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] hover:bg-white"
+          >
+            Dismiss
+          </button>
+        </div>
+      </div>
+
+      {report.issues.length > 0 && (
+        <ul className="mt-2 space-y-1">
+          {report.issues.map((issue, idx) => (
+            <li key={idx} className="flex items-start gap-2 leading-snug">
+              <span
+                className={`mt-0.5 inline-flex w-14 shrink-0 justify-center rounded-sm px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.1em] ${
+                  issue.level === "error"   ? "bg-rose-200 text-rose-900" :
+                  issue.level === "warning" ? "bg-amber-200 text-amber-900" :
+                                              "bg-zinc-200 text-zinc-800"
+                }`}
+              >
+                {issue.level}
+              </span>
+              <code className="shrink-0 rounded bg-white/70 px-1.5 py-0.5 text-[11px]">{issue.path}</code>
+              <span className="text-[12px]">{issue.message}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
 function NumField({
   label, value, onChange, min, max, step, suffix, hint, disabled,
 }: {
