@@ -23,6 +23,25 @@ type CheckItem = {
   src: string;
   /** Optional hash to scroll the iframe to a specific section. */
   hash?: string;
+  /**
+   * Ordered list of fallback selectors to try inside the iframe when the
+   * literal hash id isn't present (e.g. "#top" → main hero element).
+   */
+  aliases?: string[];
+};
+
+/** Aliases applied to every item, keyed by hash. Item-level aliases win. */
+const HASH_ALIASES: Record<string, string[]> = {
+  "#top": [
+    "#hero",
+    "#main",
+    "main h1",
+    "[data-hero]",
+    "header h1",
+    "h1",
+  ],
+  "#signatures-title": ["#signatures", "[data-section='signatures']"],
+  "#studio-title": ["#studio", "#builder", "[data-section='studio']"],
 };
 
 const CHECKS: CheckItem[] = [
@@ -56,24 +75,56 @@ function PreviewCheckPage() {
   const toggle = (id: string) =>
     setChecked((prev) => ({ ...prev, [id]: !prev[id] }));
 
+  const resolveTarget = (
+    doc: Document,
+    item: CheckItem,
+  ): HTMLElement | null => {
+    if (!item.hash) return null;
+    const id = item.hash.replace(/^#/, "");
+
+    // 1. Literal id match
+    const direct = doc.getElementById(id);
+    if (direct) return direct as HTMLElement;
+
+    // 2. Item-specific + global aliases
+    const aliases = [
+      ...(item.aliases ?? []),
+      ...(HASH_ALIASES[item.hash] ?? []),
+    ];
+    for (const sel of aliases) {
+      try {
+        const found = doc.querySelector<HTMLElement>(sel);
+        if (found) return found;
+      } catch {
+        /* invalid selector — skip */
+      }
+    }
+
+    // 3. "#top" always falls back to the document top
+    if (id === "top") return (doc.scrollingElement ?? doc.body) as HTMLElement;
+
+    return null;
+  };
+
   const jumpTo = (item: CheckItem) => {
     const el = iframeRefs.current[item.id];
     if (!el || !item.hash) return;
 
-    const targetId = item.hash.replace(/^#/, "");
-
-    // Same-origin iframe (same site) — try in-place smooth scroll first
-    // so we don't reload the embedded page on every jump.
+    // Same-origin iframe — try in-place smooth scroll first so we don't
+    // reload the embedded page on every jump.
     try {
       const win = el.contentWindow;
       const doc = el.contentDocument;
-      if (win && doc) {
-        const target =
-          doc.getElementById(targetId) ||
-          (targetId === "top" ? doc.body : null);
+      if (win && doc && doc.readyState !== "loading") {
+        const target = resolveTarget(doc, item);
         if (target) {
-          target.scrollIntoView({ behavior: "smooth", block: "start" });
-          // Update the iframe's hash without triggering navigation/reload.
+          // For "top"-like targets, scroll the window to 0 for consistency.
+          const id = item.hash.replace(/^#/, "");
+          if (id === "top" || target === doc.body || target === doc.scrollingElement) {
+            win.scrollTo({ top: 0, behavior: "smooth" });
+          } else {
+            target.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
           try {
             win.history.replaceState(null, "", item.src + item.hash);
           } catch {
