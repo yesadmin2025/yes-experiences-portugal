@@ -37,42 +37,103 @@ const ALL_TARGETS = [
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Exit code contract — stable for CI consumers.
+//
+//   0   OK              All checks passed (one-shot) or watch exited cleanly
+//                       after meeting --max-runs / receiving SIGINT with no
+//                       drift in the most recent run.
+//   1   DRIFT           Substring or preflight checks failed against a target
+//                       (one-shot), or watch exited with drift present in the
+//                       most recent run (--fail-fast or --max-runs).
+//   2   FLAG_MISCONFIG  Bad CLI flag value, unknown flag under --strict-flags,
+//                       or empty target filter. The run never started.
+//   3   RUNTIME_ERROR   Uncaught exception inside the script (bug, fs watcher
+//                       crash, unhandled rejection, etc).
+//   4   FETCH_ERROR     Network/HTTP failure prevented verifying a target
+//                       (one-shot only — watch keeps polling and surfaces
+//                       this as a transient error in the UI).
+//
+// Watch mode normally runs forever (exit code only delivered on Ctrl-C or
+// when --max-runs is hit). Use --fail-fast and/or --max-runs=N to make watch
+// suitable for a CI step that should terminate.
+// ─────────────────────────────────────────────────────────────────────────────
+const EXIT = Object.freeze({
+  OK: 0,
+  DRIFT: 1,
+  FLAG_MISCONFIG: 2,
+  RUNTIME_ERROR: 3,
+  FETCH_ERROR: 4,
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
 // CLI argument parsing.
 //
-// Supported flags (all optional; primarily affect --watch but --target also
-// applies to one-shot mode so the same filter works for both invocations):
+// Supported flags (all optional):
 //
-//   --watch                       enable watch mode
-//   --target=<preview|production|all>   filter which deployments to check
-//                                       (also: --preview-only, --production-only)
-//   --debounce=<ms>               override watch-mode debounce (default 200ms,
-//                                       clamped to [0, 10000])
+//   --watch                              enable watch mode
+//   --target=<preview|production|all>    filter which deployments to check
+//                                        (shorthand: --preview-only, --production-only)
+//   --debounce=<ms>                      watch-mode debounce (default 200ms,
+//                                        clamped to [0, 10000])
+//   --fail-fast                          watch: exit EXIT.DRIFT on first
+//                                        failing run
+//   --max-runs=<n>                       watch: exit after N runs (>=1).
+//                                        Exit code reflects the LAST run.
+//   --strict-flags                       treat unknown flags / bad values as
+//                                        EXIT.FLAG_MISCONFIG instead of warning
 //
-// Unknown flags are ignored with a warning so future additions don't break
-// older muscle-memory invocations.
+// Without --strict-flags, unknown flags are warnings (back-compat); with it,
+// CI can guarantee no silent typos.
 // ─────────────────────────────────────────────────────────────────────────────
 function parseArgs(argv) {
-  const opts = { watch: false, target: "all", debounceMs: 200 };
+  const opts = {
+    watch: false,
+    target: "all",
+    debounceMs: 200,
+    failFast: false,
+    maxRuns: Infinity,
+    strictFlags: false,
+  };
+  const errors = [];
+  const strict = argv.includes("--strict-flags");
+  const warn = (msg) => {
+    if (strict) errors.push(msg);
+    else console.log(`\x1b[33m⚠ ${msg}\x1b[0m`);
+  };
   for (const raw of argv) {
     if (raw === "--watch") opts.watch = true;
+    else if (raw === "--strict-flags") opts.strictFlags = true;
+    else if (raw === "--fail-fast") opts.failFast = true;
     else if (raw === "--preview-only") opts.target = "preview";
     else if (raw === "--production-only" || raw === "--prod-only") opts.target = "production";
     else if (raw.startsWith("--target=")) {
       const v = raw.slice("--target=".length).toLowerCase();
       if (["preview", "production", "all"].includes(v)) opts.target = v;
-      else console.log(`\x1b[33m⚠ Ignoring --target=${v} (expected preview|production|all)\x1b[0m`);
+      else warn(`Invalid --target=${v} (expected preview|production|all)`);
     } else if (raw.startsWith("--debounce=")) {
-      const n = Number(raw.slice("--debounce=".length));
+      const v = raw.slice("--debounce=".length);
+      const n = Number(v);
       if (Number.isFinite(n) && n >= 0) opts.debounceMs = Math.min(10000, Math.floor(n));
-      else console.log(`\x1b[33m⚠ Ignoring --debounce=${raw.slice(11)} (expected non-negative number)\x1b[0m`);
+      else warn(`Invalid --debounce=${v} (expected non-negative number)`);
+    } else if (raw.startsWith("--max-runs=")) {
+      const v = raw.slice("--max-runs=".length);
+      const n = Number(v);
+      if (Number.isInteger(n) && n >= 1) opts.maxRuns = n;
+      else warn(`Invalid --max-runs=${v} (expected positive integer)`);
     } else if (raw.startsWith("--")) {
-      console.log(`\x1b[33m⚠ Unknown flag ${raw} ignored\x1b[0m`);
+      warn(`Unknown flag ${raw}`);
     }
   }
-  return opts;
+  return { opts, errors };
 }
 
-const CLI = parseArgs(process.argv.slice(2));
+const { opts: CLI, errors: CLI_ERRORS } = parseArgs(process.argv.slice(2));
+
+if (CLI_ERRORS.length > 0) {
+  console.log(`\x1b[31mFlag errors (--strict-flags):\x1b[0m`);
+  for (const e of CLI_ERRORS) console.log(`  • ${e}`);
+  process.exit(EXIT.FLAG_MISCONFIG);
+}
 
 const TARGETS = ALL_TARGETS.filter((t) => {
   if (CLI.target === "all") return true;
@@ -81,7 +142,7 @@ const TARGETS = ALL_TARGETS.filter((t) => {
 
 if (TARGETS.length === 0) {
   console.log(`\x1b[31mNo targets matched filter --target=${CLI.target}\x1b[0m`);
-  process.exit(2);
+  process.exit(EXIT.FLAG_MISCONFIG);
 }
 
 // The localization checklist — every string here must appear verbatim in the
@@ -201,6 +262,7 @@ async function runOnce() {
   const summary = [];
   let totalFailures = 0;
   let manualChecks = 0;
+  let fetchFailures = 0;
 
   for (const target of TARGETS) {
     console.log(`${BOLD}${target.name}${RESET} ${DIM}${target.url}${RESET}`);
@@ -222,6 +284,7 @@ async function runOnce() {
       }
       console.log(`  ${RED}✗ Fetch failed: ${err.message}${RESET}\n`);
       totalFailures++;
+      fetchFailures++;
       summary.push({ target: target.name, status: "fetch_failed", driftKeys: [] });
       continue;
     }
@@ -274,24 +337,43 @@ async function runOnce() {
     });
   }
 
-  return { summary, totalFailures, manualChecks };
+  return { summary, totalFailures, manualChecks, fetchFailures };
 }
+
+// Global safety net: any uncaught error inside the script (sync or async) is
+// a runtime bug, not a content drift. CI should be able to tell them apart.
+process.on("uncaughtException", (err) => {
+  console.log(`${RED}${BOLD}✗ Uncaught exception: ${err?.stack || err}${RESET}`);
+  process.exit(EXIT.RUNTIME_ERROR);
+});
+process.on("unhandledRejection", (err) => {
+  console.log(`${RED}${BOLD}✗ Unhandled rejection: ${err?.stack || err}${RESET}`);
+  process.exit(EXIT.RUNTIME_ERROR);
+});
 
 const WATCH = CLI.watch;
 
 if (!WATCH) {
-  const { totalFailures, manualChecks } = await runOnce();
-  if (totalFailures > 0) {
-    console.log(`${RED}${BOLD}✗ ${totalFailures} check(s) failed — do not release.${RESET}`);
-    process.exit(1);
+  const { totalFailures, manualChecks, fetchFailures } = await runOnce();
+  // Drift takes priority over fetch errors so a true content failure is never
+  // masked by a flaky network call. Pure fetch-only failure → EXIT.FETCH_ERROR.
+  const driftFailures = totalFailures - fetchFailures;
+  if (driftFailures > 0) {
+    console.log(`${RED}${BOLD}✗ ${driftFailures} drift check(s) failed — do not release.${RESET}`);
+    process.exit(EXIT.DRIFT);
+  } else if (fetchFailures > 0) {
+    console.log(
+      `${RED}${BOLD}✗ ${fetchFailures} target(s) unreachable — verification incomplete.${RESET}`,
+    );
+    process.exit(EXIT.FETCH_ERROR);
   } else if (manualChecks > 0) {
     console.log(
       `${GREEN}${BOLD}✓ Production verified.${RESET} ${BOLD}${manualChecks} target(s) need manual visual check before release.${RESET}`,
     );
-    process.exit(0);
+    process.exit(EXIT.OK);
   } else {
     console.log(`${GREEN}${BOLD}✓ All hero copy verified across preview and production.${RESET}`);
-    process.exit(0);
+    process.exit(EXIT.OK);
   }
 }
 
@@ -369,8 +451,21 @@ function printTransitions(transitions) {
 }
 
 let previousSummary = null;
+let lastSummary = null;
+let runCount = 0;
 let running = false;
 let pending = false;
+
+// Compute the would-be exit code from a run's summary, mirroring one-shot
+// semantics so --fail-fast / --max-runs / SIGINT all use the same contract.
+function exitCodeFor(summary) {
+  if (!summary || summary.length === 0) return EXIT.OK;
+  const hasDrift = summary.some((s) => s.status === "drift");
+  const hasFetchFail = summary.some((s) => s.status === "fetch_failed");
+  if (hasDrift) return EXIT.DRIFT;
+  if (hasFetchFail) return EXIT.FETCH_ERROR;
+  return EXIT.OK;
+}
 
 async function tick(reason) {
   if (running) {
@@ -383,18 +478,43 @@ async function tick(reason) {
     `${DIM}[${fmtTimestamp()}]${RESET} ${BOLD}qa:hero-copy --watch${RESET} ${DIM}(${reason})${RESET}`,
   );
   console.log(
-    `${DIM}target=${CLI.target} debounce=${CLI.debounceMs}ms targets=[${TARGETS.map((t) => t.name).join(", ")}]${RESET}\n`,
+    `${DIM}target=${CLI.target} debounce=${CLI.debounceMs}ms failFast=${CLI.failFast} maxRuns=${CLI.maxRuns === Infinity ? "∞" : CLI.maxRuns} targets=[${TARGETS.map((t) => t.name).join(", ")}]${RESET}\n`,
   );
+  let runFailedRuntime = false;
   try {
     const { summary } = await runOnce();
     const transitions = diffSummaries(previousSummary, summary);
     printTransitions(transitions);
     previousSummary = summary;
+    lastSummary = summary;
   } catch (err) {
-    console.log(`${RED}Run failed: ${err.message}${RESET}\n`);
+    console.log(`${RED}Run failed (script error): ${err?.stack || err.message}${RESET}\n`);
+    runFailedRuntime = true;
   }
-  console.log(`${DIM}Watching ${WATCHED_FILES.length} file(s). Press Ctrl-C to exit.${RESET}`);
+  runCount++;
+  console.log(
+    `${DIM}Run #${runCount} complete. Watching ${WATCHED_FILES.length} file(s). Press Ctrl-C to exit.${RESET}`,
+  );
   running = false;
+
+  // Termination triggers (CI-friendly):
+  //   --fail-fast: exit on first run with drift/fetch failure
+  //   --max-runs:  exit after N runs, with code derived from the last run
+  //   runtime err: exit RUNTIME_ERROR immediately (test/script bug)
+  if (runFailedRuntime) {
+    process.exit(EXIT.RUNTIME_ERROR);
+  }
+  const code = exitCodeFor(lastSummary);
+  if (CLI.failFast && code !== EXIT.OK) {
+    console.log(`${RED}${BOLD}--fail-fast: exiting with code ${code}.${RESET}`);
+    process.exit(code);
+  }
+  if (runCount >= CLI.maxRuns) {
+    const label = code === EXIT.OK ? GREEN : RED;
+    console.log(`${label}${BOLD}--max-runs reached (${CLI.maxRuns}): exiting with code ${code}.${RESET}`);
+    process.exit(code);
+  }
+
   if (pending) {
     pending = false;
     setTimeout(() => tick("queued change"), 50);
@@ -416,6 +536,14 @@ for (const file of WATCHED_FILES) {
     console.log(`${YELLOW}⚠ Could not watch ${file}: ${err.message}${RESET}`);
   }
 }
+
+// SIGINT (Ctrl-C) gets a clean exit reflecting the last completed run, so a
+// CI operator who interrupts a long-running watch still gets a meaningful code.
+process.on("SIGINT", () => {
+  const code = exitCodeFor(lastSummary);
+  console.log(`\n${DIM}SIGINT received — exiting with code ${code} (based on last run).${RESET}`);
+  process.exit(code);
+});
 
 await tick("initial run");
 
