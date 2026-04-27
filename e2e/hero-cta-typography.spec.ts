@@ -76,10 +76,12 @@ test.describe("Hero CTA — typography & spacing contract", () => {
     await gotoHero(page);
 
     const primary = page.getByRole("link", {
-      name: /Design.*Secure Your Experience/i,
+      name: "Create Your Story",
+      exact: true,
     });
     const secondary = page.getByRole("link", {
-      name: /Explore Signature Experiences/i,
+      name: "Explore Signature Experiences",
+      exact: true,
     });
 
     for (const cta of [primary, secondary]) {
