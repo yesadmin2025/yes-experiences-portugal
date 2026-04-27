@@ -30,10 +30,13 @@ const MOBILE_VIEWPORT = { width: 390, height: 844 } as const;
 const PX_TOLERANCE = 1.5;
 
 // Locked mobile values. Mirror src/styles.css :root.
+// Tightened in the "cohesive signature" pass: each gap was reduced so
+// secondary CTA → microcopy → brand sign-off reads as ONE flowing
+// closing block instead of three floating elements.
 const EXPECTED_MOBILE = {
-  ctaToMicrocopyPx: 40,
-  microcopyToSignaturePx: 56,
-  signatureLineGapPx: 6,
+  ctaToMicrocopyPx: 28,
+  microcopyToSignaturePx: 44,
+  signatureLineGapPx: 3,
 } as const;
 
 async function gotoHeroMobile(page: Page) {
