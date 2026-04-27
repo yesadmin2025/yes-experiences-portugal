@@ -81,6 +81,11 @@ const EXIT = Object.freeze({
 //                                        Exit code reflects the LAST run.
 //   --strict-flags                       treat unknown flags / bad values as
 //                                        EXIT.FLAG_MISCONFIG instead of warning
+//   --report-json[=<path|->]             emit a structured JSON report for CI.
+//                                        "-" or no value = stdout (human log
+//                                        is redirected to stderr so stdout is
+//                                        machine-parseable). Otherwise treated
+//                                        as a file path written on each run.
 //
 // Without --strict-flags, unknown flags are warnings (back-compat); with it,
 // CI can guarantee no silent typos.
@@ -93,6 +98,7 @@ function parseArgs(argv) {
     failFast: false,
     maxRuns: Infinity,
     strictFlags: false,
+    reportJson: null, // null = off; "-" = stdout; else file path
   };
   const errors = [];
   const strict = argv.includes("--strict-flags");
@@ -106,7 +112,12 @@ function parseArgs(argv) {
     else if (raw === "--fail-fast") opts.failFast = true;
     else if (raw === "--preview-only") opts.target = "preview";
     else if (raw === "--production-only" || raw === "--prod-only") opts.target = "production";
-    else if (raw.startsWith("--target=")) {
+    else if (raw === "--report-json") opts.reportJson = "-";
+    else if (raw.startsWith("--report-json=")) {
+      const v = raw.slice("--report-json=".length);
+      if (v === "" || v === "-" || v === "stdout") opts.reportJson = "-";
+      else opts.reportJson = v; // treat as file path
+    } else if (raw.startsWith("--target=")) {
       const v = raw.slice("--target=".length).toLowerCase();
       if (["preview", "production", "all"].includes(v)) opts.target = v;
       else warn(`Invalid --target=${v} (expected preview|production|all)`);
@@ -129,6 +140,15 @@ function parseArgs(argv) {
 
 const { opts: CLI, errors: CLI_ERRORS } = parseArgs(process.argv.slice(2));
 
+// When piping JSON to stdout, the human-readable log MUST go to stderr or it
+// will corrupt the machine-parseable stream. We redirect console.log/clear
+// once, up-front, so every subsequent log call is automatically routed.
+const JSON_TO_STDOUT = CLI.reportJson === "-";
+if (JSON_TO_STDOUT) {
+  console.log = (...args) => process.stderr.write(args.join(" ") + "\n");
+  console.clear = () => {}; // suppress screen-clear so CI logs stay linear
+}
+
 if (CLI_ERRORS.length > 0) {
   console.log(`\x1b[31mFlag errors (--strict-flags):\x1b[0m`);
   for (const e of CLI_ERRORS) console.log(`  • ${e}`);
@@ -145,6 +165,70 @@ if (TARGETS.length === 0) {
   process.exit(EXIT.FLAG_MISCONFIG);
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// JSON report (CI contract).
+//
+// Schema (stable):
+//   {
+//     "schema": "hero-copy-qa@1",
+//     "ts": "2026-04-27T12:34:56.789Z",
+//     "mode": "one-shot" | "watch",
+//     "runIndex": 1,
+//     "exitCode": 0,
+//     "exitName": "OK",
+//     "filter": { "target": "all" },
+//     "targets": [{ name, url, status, driftKeys, fetchFailed }],
+//     "totals": { "drift": 0, "fetchFailed": 0, "manual": 0 }
+//   }
+//
+// Bump "schema" if a breaking change is ever made so consumers can pin.
+// ─────────────────────────────────────────────────────────────────────────────
+import { writeFileSync } from "node:fs";
+
+const exitNameOf = (code) =>
+  Object.entries(EXIT).find(([, v]) => v === code)?.[0] ?? "UNKNOWN";
+
+function buildReport({ summary, mode, runIndex, exitCode }) {
+  const targetsOut = TARGETS.map((t) => {
+    const s = summary?.find((x) => x.target === t.name);
+    return {
+      name: t.name,
+      url: t.url,
+      status: s?.status ?? "unknown",
+      driftKeys: s?.driftKeys ?? [],
+      fetchFailed: s?.status === "fetch_failed",
+    };
+  });
+  return {
+    schema: "hero-copy-qa@1",
+    ts: new Date().toISOString(),
+    mode,
+    runIndex,
+    exitCode,
+    exitName: exitNameOf(exitCode),
+    filter: { target: CLI.target },
+    targets: targetsOut,
+    totals: {
+      drift: targetsOut.filter((t) => t.status === "drift").length,
+      fetchFailed: targetsOut.filter((t) => t.fetchFailed).length,
+      manual: targetsOut.filter((t) => t.status === "manual").length,
+    },
+  };
+}
+
+function emitReport(report) {
+  if (!CLI.reportJson) return;
+  const line = JSON.stringify(report);
+  if (CLI.reportJson === "-") {
+    process.stdout.write(line + "\n");
+  } else {
+    try {
+      writeFileSync(CLI.reportJson, line + "\n");
+    } catch (err) {
+      console.log(`\x1b[31m⚠ Failed to write JSON report to ${CLI.reportJson}: ${err.message}\x1b[0m`);
+    }
+  }
+}
 // The localization checklist — every string here must appear verbatim in the
 // served HTML of every target. Order is intentional (top-to-bottom in the UI).
 const CHECKS = [
@@ -354,27 +438,30 @@ process.on("unhandledRejection", (err) => {
 const WATCH = CLI.watch;
 
 if (!WATCH) {
-  const { totalFailures, manualChecks, fetchFailures } = await runOnce();
+  const { summary, totalFailures, manualChecks, fetchFailures } = await runOnce();
   // Drift takes priority over fetch errors so a true content failure is never
   // masked by a flaky network call. Pure fetch-only failure → EXIT.FETCH_ERROR.
   const driftFailures = totalFailures - fetchFailures;
+  let exitCode;
   if (driftFailures > 0) {
     console.log(`${RED}${BOLD}✗ ${driftFailures} drift check(s) failed — do not release.${RESET}`);
-    process.exit(EXIT.DRIFT);
+    exitCode = EXIT.DRIFT;
   } else if (fetchFailures > 0) {
     console.log(
       `${RED}${BOLD}✗ ${fetchFailures} target(s) unreachable — verification incomplete.${RESET}`,
     );
-    process.exit(EXIT.FETCH_ERROR);
+    exitCode = EXIT.FETCH_ERROR;
   } else if (manualChecks > 0) {
     console.log(
       `${GREEN}${BOLD}✓ Production verified.${RESET} ${BOLD}${manualChecks} target(s) need manual visual check before release.${RESET}`,
     );
-    process.exit(EXIT.OK);
+    exitCode = EXIT.OK;
   } else {
     console.log(`${GREEN}${BOLD}✓ All hero copy verified across preview and production.${RESET}`);
-    process.exit(EXIT.OK);
+    exitCode = EXIT.OK;
   }
+  emitReport(buildReport({ summary, mode: "one-shot", runIndex: 1, exitCode }));
+  process.exit(exitCode);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -502,9 +589,21 @@ async function tick(reason) {
   //   --max-runs:  exit after N runs, with code derived from the last run
   //   runtime err: exit RUNTIME_ERROR immediately (test/script bug)
   if (runFailedRuntime) {
+    emitReport(
+      buildReport({
+        summary: lastSummary,
+        mode: "watch",
+        runIndex: runCount,
+        exitCode: EXIT.RUNTIME_ERROR,
+      }),
+    );
     process.exit(EXIT.RUNTIME_ERROR);
   }
   const code = exitCodeFor(lastSummary);
+  // Per-tick report — one JSON line per run, so CI can stream and parse.
+  emitReport(
+    buildReport({ summary: lastSummary, mode: "watch", runIndex: runCount, exitCode: code }),
+  );
   if (CLI.failFast && code !== EXIT.OK) {
     console.log(`${RED}${BOLD}--fail-fast: exiting with code ${code}.${RESET}`);
     process.exit(code);
@@ -542,6 +641,9 @@ for (const file of WATCHED_FILES) {
 process.on("SIGINT", () => {
   const code = exitCodeFor(lastSummary);
   console.log(`\n${DIM}SIGINT received — exiting with code ${code} (based on last run).${RESET}`);
+  emitReport(
+    buildReport({ summary: lastSummary, mode: "watch", runIndex: runCount, exitCode: code }),
+  );
   process.exit(code);
 });
 
