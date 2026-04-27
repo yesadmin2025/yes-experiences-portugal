@@ -1,0 +1,114 @@
+name: Required-check enforcer
+
+# Verifies AND (when safe) repairs the required-status-check context
+# on `main` so it always matches the homepage-structure workflow's
+# job `name:`. Companion to `required-check-parity.yml` (read-only).
+#
+# Behaviour
+# ---------
+#   pull_request    → MODE=check  (read-only). Fails the PR if drift
+#                                  exists, but never writes. This is the
+#                                  PR gate.
+#   push to main    → MODE=apply  (additive write). On every push to
+#                                  main, if the required context is
+#                                  missing, add it. Never removes other
+#                                  contexts; never touches other
+#                                  protection fields.
+#   workflow_dispatch → MODE comes from the input (default: check).
+#                                  Use this to dry-run from the Actions
+#                                  UI before letting it self-heal.
+#
+# Safety boundaries (also enforced by the script)
+# -----------------------------------------------
+#   - Uses the granular contexts endpoint (POST .../contexts), not the
+#     full-replace PUT .../protection. Cannot wipe review counts,
+#     restrictions, signed-commit settings, etc.
+#   - Only ADDS the one missing context. Never removes or reorders.
+#   - Refuses to run if branch protection isn't configured at all —
+#     bootstrapping protection from a workflow is a deliberate human
+#     decision, not something to auto-heal.
+#   - Apply-mode is gated to push events on `main` so a malicious PR
+#     cannot trigger writes.
+#
+# Auth
+# ----
+#   - Read mode: BRANCH_PROTECTION_READ_TOKEN — Administration: Read.
+#   - Apply mode: BRANCH_PROTECTION_WRITE_TOKEN — Administration:
+#     Read and write. Treat this token like a deploy key — anyone who
+#     can trigger this workflow with apply mode can reshape branch
+#     protection on main.
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - ".github/workflows/homepage-structure.yml"
+      - ".github/workflows/required-check-enforcer.yml"
+      - "scripts/enforce-required-status-context.mjs"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/homepage-structure.yml"
+      - ".github/workflows/required-check-enforcer.yml"
+      - "scripts/enforce-required-status-context.mjs"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "check (read-only) or apply (additive write)"
+        required: true
+        default: "check"
+        type: choice
+        options:
+          - check
+          - apply
+
+concurrency:
+  group: required-check-enforcer-${{ github.ref }}
+  cancel-in-progress: false # don't cancel an in-flight write
+
+jobs:
+  enforce:
+    name: Required-check enforcer (${{ github.event_name == 'push' && 'apply' || (github.event.inputs.mode || 'check') }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    # Hard-cap permissions on the workflow's GITHUB_TOKEN to nothing —
+    # we only ever use BRANCH_PROTECTION_*_TOKEN for the API calls.
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node (script uses only built-ins)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Resolve mode + token
+        id: mode
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          INPUT_MODE: ${{ github.event.inputs.mode }}
+        run: |
+          if [ "$EVENT_NAME" = "push" ]; then
+            echo "mode=apply" >> "$GITHUB_OUTPUT"
+          elif [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            echo "mode=${INPUT_MODE:-check}" >> "$GITHUB_OUTPUT"
+          else
+            # pull_request and any other event default to read-only.
+            echo "mode=check" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Verify / repair required-check context
+        env:
+          MODE: ${{ steps.mode.outputs.mode }}
+          # Pick the right-scope token for the chosen mode. The write
+          # token is only ever exposed to the script when MODE=apply.
+          BRANCH_PROTECTION_TOKEN: >-
+            ${{ steps.mode.outputs.mode == 'apply'
+                && secrets.BRANCH_PROTECTION_WRITE_TOKEN
+                || secrets.BRANCH_PROTECTION_READ_TOKEN }}
+          PROTECTED_BRANCH: main
+          WORKFLOW_PATH: .github/workflows/homepage-structure.yml
+          WORKFLOW_JOB_KEY: homepage-structure
+        run: node scripts/enforce-required-status-context.mjs
