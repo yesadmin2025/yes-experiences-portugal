@@ -1072,7 +1072,7 @@ function HomePage() {
               </ul>
               <Link
                 to="/builder"
-                className="inline-flex items-center gap-2 mt-10 px-9 py-[18px] text-[12.5px] uppercase tracking-[0.22em] font-semibold bg-[color:var(--gold)] text-[color:var(--charcoal-deep)] hover:bg-[color:var(--gold-soft)] transition-colors"
+                className="inline-flex items-center gap-2 mt-10 px-9 py-[16px] text-[15px] tracking-[0.005em] font-medium bg-[color:var(--gold)] text-[color:var(--charcoal-deep)] hover:bg-[color:var(--gold-soft)] transition-colors"
               >
                 Open the Studio <ArrowRight size={15} />
               </Link>
