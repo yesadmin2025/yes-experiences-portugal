@@ -21,6 +21,7 @@
  */
 
 import { HERO_COPY } from "../src/content/hero-copy.ts";
+import { parse as parseHtml } from "node-html-parser";
 
 const TARGETS = [
   {
