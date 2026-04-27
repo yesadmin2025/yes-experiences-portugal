@@ -237,24 +237,28 @@ function HomePage() {
                 visual drift around the words. */}
             <span
               data-hero-field="eyebrow"
-              className="inline-flex items-center gap-2 sm:gap-3 whitespace-nowrap text-[8.5px] sm:text-[10.5px] md:text-[11px] uppercase tracking-[0.18em] sm:tracking-[0.3em] md:tracking-[0.34em] text-[color:var(--gold-soft)] opacity-0 animate-[heroFade_1.1s_ease-out_0.3s_forwards]"
+              className="inline-flex items-center gap-2 sm:gap-3 whitespace-nowrap text-[8.5px] sm:text-[10.5px] md:text-[11px] uppercase tracking-[0.14em] sm:tracking-[0.24em] md:tracking-[0.28em] text-[color:var(--gold-soft)] opacity-0 animate-[heroFade_1.1s_ease-out_0.3s_forwards] -ml-px"
             >
               <span className="text-[color:var(--gold)]">✦</span>
               <span className="whitespace-nowrap">{HERO_COPY.eyebrow}</span>
               <span className="text-[color:var(--gold)]">✦</span>
             </span>
 
-            {/* Headline — tighter leading for an editorial feel; both lines
-                share the same left edge as everything else in the column. */}
+            {/* Headline — tighter leading + a quietly heavier weight on
+                line 2 ("You write the story") for editorial emphasis
+                without breaking the soft-gold rhythm. Both spans share
+                the same left edge as the column, locked by the visual
+                regression suite. */}
             <h1
               data-hero-field="headlineLine1 headlineLine2"
-              className="hero-h1 serif mt-10 md:mt-14 text-[2.05rem] sm:text-5xl md:text-7xl lg:text-[5.4rem] leading-[1.04] md:leading-[1.02] tracking-[-0.005em] text-[color:var(--ivory)] text-left opacity-0 animate-[heroFade_1.4s_ease-out_0.6s_forwards]"
+              className="hero-h1 serif mt-6 md:mt-8 text-[2.05rem] sm:text-5xl md:text-7xl lg:text-[5.4rem] leading-[0.98] md:leading-[0.96] tracking-[-0.012em] text-[color:var(--ivory)] text-left opacity-0 animate-[heroFade_1.4s_ease-out_0.6s_forwards]"
             >
-              <span data-hero-field="headlineLine1">{HERO_COPY.headlineLine1}</span>
-              <br />
+              <span data-hero-field="headlineLine1" className="block">
+                {HERO_COPY.headlineLine1}
+              </span>
               <span
                 data-hero-field="headlineLine2"
-                className="italic text-[color:var(--gold-soft)] inline-block mt-1 md:mt-1.5"
+                className="block italic font-medium text-[color:var(--gold-soft)] mt-0.5 md:mt-1 text-[2.2rem] sm:text-[3.4rem] md:text-[5rem] lg:text-[5.7rem] tracking-[-0.018em]"
               >
                 {HERO_COPY.headlineLine2}
               </span>
