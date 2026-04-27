@@ -54,12 +54,15 @@ jobs:
           fi
 
       - name: Run hero visual regression suite
-        # Scope to the hero specs — visual regression + CTA parity guard +
-        # mobile vertical-rhythm token lock. The parity spec catches
-        # geometry/typography drift between the primary and secondary CTA
-        # on every hero spacing change; the rhythm spec pins the gaps
-        # between secondary CTA, microcopy, and the two-line signature.
-        run: bunx playwright test e2e/hero-visual-regression.spec.ts e2e/hero-cta-parity.spec.ts e2e/hero-mobile-rhythm.spec.ts --reporter=github,html
+        # Scope to the hero specs — visual regression + CTA parity guards
+        # (mobile + tablet) + mobile vertical-rhythm token lock. The
+        # mobile parity spec catches geometry/typography drift between
+        # the primary and secondary CTA on every hero spacing change; the
+        # tablet parity spec re-runs that contract at 768×1024 and
+        # 1024×768 to catch drift across the `md:` breakpoint where the
+        # CTA row reflows. The rhythm spec pins the gaps between
+        # secondary CTA, microcopy, and the two-line signature.
+        run: bunx playwright test e2e/hero-visual-regression.spec.ts e2e/hero-cta-parity.spec.ts e2e/hero-cta-parity-tablet.spec.ts e2e/hero-mobile-rhythm.spec.ts --reporter=github,html
         env:
           CI: "true"
 
