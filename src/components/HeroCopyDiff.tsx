@@ -221,9 +221,39 @@ function persistPanelVisibility(next: boolean) {
   }
 }
 
+async function copyTextToClipboard(text: string): Promise<boolean> {
+  // Modern path — works on https + localhost.
+  try {
+    if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+  } catch {
+    /* fall through to legacy path */
+  }
+  // Legacy fallback for older browsers / non-secure contexts.
+  try {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.position = "fixed";
+    ta.style.top = "0";
+    ta.style.left = "0";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    const ok = document.execCommand("copy");
+    document.body.removeChild(ta);
+    return ok;
+  } catch {
+    return false;
+  }
+}
+
 export function HeroCopyDiff() {
   const [state, setState] = useState<DiffState | null>(null);
   const [panelVisible, setPanelVisible] = useState(false);
+  const [copyStatus, setCopyStatus] = useState<"idle" | "ok" | "fail">("idle");
 
   const refresh = useCallback(() => {
     const next = buildDiffState();
