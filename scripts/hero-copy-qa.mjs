@@ -192,6 +192,11 @@ if (TARGETS.length === 0) {
 // ─────────────────────────────────────────────────────────────────────────────
 import { writeFileSync } from "node:fs";
 
+// Single source of truth for the JSON schema version. Bump when the schema
+// shape changes; the validator below MUST be updated in lockstep so consumers
+// can pin against `"schema": "hero-copy-qa@N"`.
+const REPORT_SCHEMA = "hero-copy-qa@1";
+
 const exitNameOf = (code) =>
   Object.entries(EXIT).find(([, v]) => v === code)?.[0] ?? "UNKNOWN";
 
@@ -207,7 +212,7 @@ function buildReport({ summary, mode, runIndex, exitCode }) {
     };
   });
   return {
-    schema: "hero-copy-qa@1",
+    schema: REPORT_SCHEMA,
     ts: new Date().toISOString(),
     mode,
     runIndex,
@@ -223,8 +228,153 @@ function buildReport({ summary, mode, runIndex, exitCode }) {
   };
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Schema validator (used under --report-json-strict).
+//
+// Hand-rolled rather than pulling in a JSON-Schema dep so the validator has
+// zero install footprint and runs in the same module as the emitter — meaning
+// any local change to buildReport() is checked the moment a report is emitted.
+//
+// The validator is intentionally STRICT:
+//   - rejects unknown top-level / per-target / totals keys
+//   - asserts exact value types
+//   - asserts enum membership for status / mode / target / exitName
+//   - asserts internal consistency (totals match targets, exitName matches
+//     exitCode, schema string matches REPORT_SCHEMA)
+//
+// Any violation is a script bug. We surface the path and exit RUNTIME_ERROR.
+// ─────────────────────────────────────────────────────────────────────────────
+const REPORT_SCHEMA_SHAPE = {
+  topKeys: ["schema", "ts", "mode", "runIndex", "exitCode", "exitName", "filter", "targets", "totals"],
+  modes: ["one-shot", "watch"],
+  targetStatuses: ["ok", "drift", "fetch_failed", "manual", "unknown"],
+  filterTargets: ["all", "preview", "production"],
+  targetKeys: ["name", "url", "status", "driftKeys", "fetchFailed"],
+  totalsKeys: ["drift", "fetchFailed", "manual"],
+};
+
+function validateReport(report) {
+  const errs = [];
+  const E = (path, msg) => errs.push(`${path}: ${msg}`);
+
+  if (report === null || typeof report !== "object" || Array.isArray(report)) {
+    return [`<root>: must be a plain object`];
+  }
+  // Top-level shape
+  const keys = Object.keys(report);
+  for (const k of REPORT_SCHEMA_SHAPE.topKeys) {
+    if (!(k in report)) E(k, "missing required key");
+  }
+  for (const k of keys) {
+    if (!REPORT_SCHEMA_SHAPE.topKeys.includes(k)) E(k, `unknown top-level key`);
+  }
+
+  if (report.schema !== REPORT_SCHEMA) {
+    E("schema", `expected "${REPORT_SCHEMA}", got ${JSON.stringify(report.schema)}`);
+  }
+  if (typeof report.ts !== "string" || Number.isNaN(Date.parse(report.ts))) {
+    E("ts", `expected ISO-8601 timestamp string, got ${JSON.stringify(report.ts)}`);
+  }
+  if (!REPORT_SCHEMA_SHAPE.modes.includes(report.mode)) {
+    E("mode", `expected one of ${REPORT_SCHEMA_SHAPE.modes.join("|")}, got ${JSON.stringify(report.mode)}`);
+  }
+  if (!Number.isInteger(report.runIndex) || report.runIndex < 1) {
+    E("runIndex", `expected positive integer, got ${JSON.stringify(report.runIndex)}`);
+  }
+  if (!Number.isInteger(report.exitCode) || !Object.values(EXIT).includes(report.exitCode)) {
+    E("exitCode", `expected one of ${Object.values(EXIT).join("|")}, got ${JSON.stringify(report.exitCode)}`);
+  }
+  if (typeof report.exitName !== "string" || exitNameOf(report.exitCode) !== report.exitName) {
+    E("exitName", `must equal exitNameOf(exitCode) (=${exitNameOf(report.exitCode)}), got ${JSON.stringify(report.exitName)}`);
+  }
+
+  // filter
+  if (!report.filter || typeof report.filter !== "object" || Array.isArray(report.filter)) {
+    E("filter", "must be an object");
+  } else {
+    const fkeys = Object.keys(report.filter);
+    if (fkeys.length !== 1 || fkeys[0] !== "target") E("filter", `expected exactly { target }, got keys [${fkeys.join(", ")}]`);
+    if (!REPORT_SCHEMA_SHAPE.filterTargets.includes(report.filter.target)) {
+      E("filter.target", `expected one of ${REPORT_SCHEMA_SHAPE.filterTargets.join("|")}, got ${JSON.stringify(report.filter.target)}`);
+    }
+  }
+
+  // targets[]
+  if (!Array.isArray(report.targets)) {
+    E("targets", "must be an array");
+  } else {
+    report.targets.forEach((t, i) => {
+      const path = `targets[${i}]`;
+      if (!t || typeof t !== "object" || Array.isArray(t)) {
+        E(path, "must be an object");
+        return;
+      }
+      const tk = Object.keys(t);
+      for (const k of REPORT_SCHEMA_SHAPE.targetKeys) if (!(k in t)) E(`${path}.${k}`, "missing");
+      for (const k of tk) if (!REPORT_SCHEMA_SHAPE.targetKeys.includes(k)) E(`${path}.${k}`, "unknown key");
+      if (typeof t.name !== "string" || !t.name) E(`${path}.name`, "expected non-empty string");
+      if (typeof t.url !== "string" || !/^https?:\/\//.test(t.url)) E(`${path}.url`, "expected http(s) URL");
+      if (!REPORT_SCHEMA_SHAPE.targetStatuses.includes(t.status)) {
+        E(`${path}.status`, `expected one of ${REPORT_SCHEMA_SHAPE.targetStatuses.join("|")}, got ${JSON.stringify(t.status)}`);
+      }
+      if (!Array.isArray(t.driftKeys) || !t.driftKeys.every((k) => typeof k === "string")) {
+        E(`${path}.driftKeys`, "expected string[]");
+      }
+      if (typeof t.fetchFailed !== "boolean") E(`${path}.fetchFailed`, "expected boolean");
+      // Internal consistency: fetchFailed boolean must mirror status.
+      if (t.fetchFailed !== (t.status === "fetch_failed")) {
+        E(`${path}.fetchFailed`, `must equal (status === "fetch_failed"); got ${t.fetchFailed} for status=${t.status}`);
+      }
+    });
+  }
+
+  // totals
+  if (!report.totals || typeof report.totals !== "object" || Array.isArray(report.totals)) {
+    E("totals", "must be an object");
+  } else {
+    const tk = Object.keys(report.totals);
+    for (const k of REPORT_SCHEMA_SHAPE.totalsKeys) if (!(k in report.totals)) E(`totals.${k}`, "missing");
+    for (const k of tk) if (!REPORT_SCHEMA_SHAPE.totalsKeys.includes(k)) E(`totals.${k}`, "unknown key");
+    for (const k of REPORT_SCHEMA_SHAPE.totalsKeys) {
+      if (!Number.isInteger(report.totals[k]) || report.totals[k] < 0) {
+        E(`totals.${k}`, `expected non-negative integer, got ${JSON.stringify(report.totals[k])}`);
+      }
+    }
+    // Cross-check totals against targets[].
+    if (Array.isArray(report.targets)) {
+      const expected = {
+        drift: report.targets.filter((t) => t.status === "drift").length,
+        fetchFailed: report.targets.filter((t) => t.status === "fetch_failed").length,
+        manual: report.targets.filter((t) => t.status === "manual").length,
+      };
+      for (const k of REPORT_SCHEMA_SHAPE.totalsKeys) {
+        if (report.totals[k] !== expected[k]) {
+          E(`totals.${k}`, `inconsistent: expected ${expected[k]} (from targets[]), got ${report.totals[k]}`);
+        }
+      }
+    }
+  }
+
+  return errs;
+}
+
 function emitReport(report) {
   if (!CLI.reportJson) return;
+
+  if (CLI.reportJsonStrict) {
+    const errs = validateReport(report);
+    if (errs.length > 0) {
+      console.log(
+        `\x1b[31m\x1b[1m✗ --report-json-strict: emitter format diverged from schema "${REPORT_SCHEMA}":\x1b[0m`,
+      );
+      for (const e of errs) console.log(`  • ${e}`);
+      console.log(
+        `\x1b[31mThis is a script bug (buildReport changed without bumping the schema). Update REPORT_SCHEMA + validateReport in lockstep.\x1b[0m`,
+      );
+      process.exit(EXIT.RUNTIME_ERROR);
+    }
+  }
+
   const line = JSON.stringify(report);
   if (CLI.reportJson === "-") {
     process.stdout.write(line + "\n");
