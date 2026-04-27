@@ -793,6 +793,7 @@ export function HeroVerifyOverlay() {
         };
       }),
     };
+    if (!assertSchemaTag(payload, "CSV")) return;
     if (!validateBeforeDownload(payload, "CSV")) return;
 
     const header = [
