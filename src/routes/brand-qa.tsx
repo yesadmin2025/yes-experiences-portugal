@@ -407,14 +407,14 @@ function BrandThemeSelectorPanel() {
 
   const setTheme = (next: BrandLogoTheme) => {
     navigate({
-      search: (prev) => ({ ...prev, theme: next }),
+      search: (prev: { theme?: string }) => ({ ...prev, theme: next }),
       replace: true,
     });
   };
 
   const setRawTheme = (raw: string | undefined) => {
     navigate({
-      search: (prev) => ({ ...prev, theme: raw }),
+      search: (prev: { theme?: string }) => ({ ...prev, theme: raw }),
       replace: true,
     });
   };
