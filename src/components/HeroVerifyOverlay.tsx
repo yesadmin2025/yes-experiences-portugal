@@ -710,12 +710,15 @@ export function HeroVerifyOverlay() {
           </summary>
           <ul style={{ marginTop: 8, paddingLeft: 14 }}>
             {reports.map((r) => {
-              // Compute a char-level diff only for non-match fields with
-              // both sides present. Matched fields just show the expected.
+              // Reuse the SAME memoized segments as the JSON/CSV exports
+              // so the on-screen diff and the downloaded artifacts cannot
+              // drift. The pre-export self-check verifies this invariant.
               const showDiff =
                 r.actual !== null &&
                 (r.status === "mismatch" || r.status === "loose");
-              const segments = showDiff ? diffChars(r.expected, r.actual ?? "") : null;
+              const segments = showDiff
+                ? fieldDiffs.find((d) => d.key === r.key)?.segments ?? null
+                : null;
               return (
                 <li key={r.key} style={{ marginBottom: 10 }}>
                   <span style={{ color: STATUS_COLOR[r.status] }}>
