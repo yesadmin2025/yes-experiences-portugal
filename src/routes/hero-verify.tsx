@@ -14,61 +14,6 @@ import {
   type VerifyResponse,
 } from "@/lib/hero-verify-download";
 
-type CheckResult = {
-  key: string;
-  expected: string;
-  found: boolean;
-};
-
-type PageReport = {
-  path: string;
-  url: string;
-  ok: boolean;
-  httpStatus: number;
-  liveVersion: string | null;
-  versionMatch: boolean | null;
-  checks: CheckResult[];
-  missing: { key: string; expected: string }[];
-  error?: string;
-};
-
-type SpecDrift = {
-  ok: boolean;
-  drifted: { key: string; expected: string; actual: string }[];
-};
-
-type SingleResponse = {
-  ok: boolean;
-  target: string;
-  httpStatus: number;
-  sourceVersion: string;
-  liveVersion: string | null;
-  versionMatch: boolean | null;
-  checks: CheckResult[];
-  missing: { key: string; expected: string }[];
-  specDrift?: SpecDrift;
-  checkedAt: string;
-  error?: string;
-};
-
-type MultiResponse = {
-  ok: boolean;
-  mode: "all";
-  base: string;
-  sourceVersion: string;
-  totalPages: number;
-  failedCount: number;
-  pages: PageReport[];
-  specDrift?: SpecDrift;
-  checkedAt: string;
-};
-
-type VerifyResponse = SingleResponse | MultiResponse;
-
-function isMulti(r: VerifyResponse): r is MultiResponse {
-  return (r as MultiResponse).mode === "all";
-}
-
 export const Route = createFileRoute("/hero-verify")({
   head: () => ({
     meta: [
