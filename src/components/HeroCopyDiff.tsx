@@ -1130,3 +1130,62 @@ export function HeroCopyDiff() {
     </>
   );
 }
+
+/**
+ * On-page "Reset hero copy diff" button.
+ *
+ * Performs the same outline cleanup as the route-boundary effect, then
+ * arms a one-shot flag (`hero-copy:force-refresh-next`) so the NEXT
+ * navigation back to "/" runs a full diff refresh — even if the version
+ * guard would normally skip it.
+ *
+ * Renders as a discreet ghost button. Drop it anywhere on the index page.
+ */
+export function HeroCopyDiffResetButton({
+  className,
+}: {
+  className?: string;
+}) {
+  const [status, setStatus] = useState<"idle" | "armed">("idle");
+
+  const onClick = useCallback(() => {
+    // Synchronous cleanup: persisted payload + any rendered outlines.
+    clearPersistedOutlines();
+    clearRenderedOutlines();
+    // Arm the override the route-boundary effect will consume on next
+    // entry to "/". Stays armed across reloads within the tab session.
+    armForceRefresh();
+    setStatus("armed");
+
+    toast("Hero copy diff reset", {
+      description:
+        "Persisted outlines cleared. Next navigation will force a full diff refresh.",
+      duration: 2400,
+      id: "hero-copy-reset",
+    });
+
+    console.info(
+      "%c[hero-copy] reset button: outlines cleared & next-boundary refresh armed",
+      "color:#f59e0b",
+      { armedKey: "hero-copy:force-refresh-next" },
+    );
+
+    window.setTimeout(() => setStatus("idle"), 2400);
+  }, []);
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      data-hero-copy-reset=""
+      data-testid="hero-copy-reset"
+      data-status={status}
+      className={
+        className ??
+        "inline-flex items-center gap-2 rounded-md border border-border/40 bg-background/40 px-3 py-1.5 text-[11px] uppercase tracking-[0.18em] text-muted-foreground backdrop-blur transition-colors hover:border-border hover:text-foreground"
+      }
+    >
+      {status === "armed" ? "Reset · armed ✓" : "Reset hero copy diff"}
+    </button>
+  );
+}
