@@ -36,6 +36,13 @@ function HeroVerifyPage() {
   const [loading, setLoading] = useState(false);
   const [targetOverride, setTargetOverride] = useState("");
   const [checkAllPages, setCheckAllPages] = useState(false);
+  const [history, setHistory] = useState<HistoryEntry[]>([]);
+  const [compareMode, setCompareMode] = useState(false);
+
+  // Hydrate history from localStorage after mount (SSR-safe).
+  useEffect(() => {
+    setHistory(loadHistory());
+  }, []);
 
   const runCheck = useCallback(async () => {
     setLoading(true);
@@ -48,6 +55,7 @@ function HeroVerifyPage() {
       const res = await fetch(`/api/verify-hero${qs}`, { cache: "no-store" });
       const json = (await res.json()) as VerifyResponse;
       setResult(json);
+      setHistory(saveRun(json));
     } catch (err) {
       setResult({
         ok: false,
@@ -80,6 +88,25 @@ function HeroVerifyPage() {
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
     triggerDownload(blob, buildFilename(result, "csv"));
   }, [result]);
+
+  const handleClearHistory = useCallback(() => {
+    clearHistory();
+    setHistory([]);
+    setCompareMode(false);
+  }, []);
+
+  // The two most recent runs, oldest first.
+  const compareEntries = useMemo<[HistoryEntry, HistoryEntry] | null>(() => {
+    if (history.length < 2) return null;
+    const last = history[history.length - 1];
+    const prev = history[history.length - 2];
+    return [prev, last];
+  }, [history]);
+
+  const diff = useMemo<FieldChange[] | null>(() => {
+    if (!compareMode || !compareEntries) return null;
+    return diffReports(compareEntries[0].result, compareEntries[1].result);
+  }, [compareMode, compareEntries]);
 
   return (
     <main className="mx-auto max-w-3xl px-6 py-12 font-sans">
