@@ -856,6 +856,57 @@ export function HeroCopyDiff() {
             <br />
             changed: <code>{state.rows.length}</code>
           </div>
+          <div
+            data-last-baseline-action={lastAction?.action ?? ""}
+            data-last-baseline-action-at={lastAction?.at ?? ""}
+            data-last-baseline-action-version={lastAction?.version ?? ""}
+            style={{
+              marginBottom: 8,
+              padding: "6px 8px",
+              borderRadius: 4,
+              background: "rgba(255,255,255,0.06)",
+              border: "1px solid rgba(255,255,255,0.12)",
+              fontSize: 11,
+              lineHeight: 1.4,
+            }}
+          >
+            <div style={{ opacity: 0.6, marginBottom: 2 }}>last action</div>
+            {lastAction ? (
+              <>
+                <span
+                  style={{
+                    display: "inline-block",
+                    padding: "1px 6px",
+                    borderRadius: 3,
+                    fontWeight: 600,
+                    background:
+                      lastAction.action === "accepted" ? "#10b981" : "#dc2626",
+                    color: "#fff",
+                    marginRight: 6,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.04em",
+                    fontSize: 10,
+                  }}
+                >
+                  {lastAction.action}
+                </span>
+                <code title={lastAction.at}>
+                  {formatRelativeTime(lastAction.at)}
+                </code>
+                {lastAction.version ? (
+                  <>
+                    {" "}
+                    · v=<code>{lastAction.version}</code>
+                  </>
+                ) : null}
+                <div style={{ opacity: 0.5, fontSize: 10, marginTop: 2 }}>
+                  {new Date(lastAction.at).toLocaleString()}
+                </div>
+              </>
+            ) : (
+              <span style={{ opacity: 0.6 }}>none recorded yet</span>
+            )}
+          </div>
           <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
             <button
               type="button"
