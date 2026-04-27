@@ -1396,7 +1396,7 @@ function HomePage() {
                   to="/builder"
                   className="cta-primary inline-flex items-center gap-2 px-9 py-[18px] text-[12.5px] uppercase tracking-[0.22em] font-semibold"
                 >
-                  Create Your Experience
+                  Create Your Story
                   <ArrowRight size={15} />
                 </Link>
                 <Link
