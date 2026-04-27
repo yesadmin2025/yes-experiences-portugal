@@ -528,6 +528,55 @@ export function HeroCopyDiff() {
         ))}
       </div>
 
+      {/* Sr-only export button.
+          Always present in the DOM, visually hidden from sighted users
+          (no layout impact) but discoverable by:
+            • Tab navigation (it's focusable and slides into view on focus)
+            • Screen readers (announced as "Copy hero-copy diff JSON …")
+            • Test runners via [data-testid="hero-copy-export"]
+            • Console: document.querySelector('[data-testid="hero-copy-export"]').click()
+       */}
+      <button
+        type="button"
+        data-hero-copy-export=""
+        data-testid="hero-copy-export"
+        data-copy-status={copyStatus}
+        onClick={exportDiff}
+        className="hero-copy-export-btn"
+        style={SR_ONLY}
+      >
+        {copyStatus === "ok"
+          ? "Diff JSON copied"
+          : copyStatus === "fail"
+            ? "Copy failed — see console"
+            : `Copy hero-copy diff JSON (${state.rows.length} change${
+                state.rows.length === 1 ? "" : "s"
+              })`}
+      </button>
+      <style>{`
+        .hero-copy-export-btn:focus-visible,
+        .hero-copy-export-btn:hover {
+          position: fixed !important;
+          width: auto !important;
+          height: auto !important;
+          clip: auto !important;
+          margin: 0 !important;
+          padding: 8px 12px !important;
+          overflow: visible !important;
+          white-space: normal !important;
+          bottom: 16px !important;
+          right: 16px !important;
+          z-index: 2147483646 !important;
+          background: #0f0f0f !important;
+          color: #fafafa !important;
+          border: 1px solid rgba(255,255,255,0.25) !important;
+          border-radius: 6px !important;
+          font: 12px/1.4 ui-sans-serif, system-ui, -apple-system, sans-serif !important;
+          cursor: pointer !important;
+          box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+        }
+      `}</style>
+
       {/* Hidden control panel.
           Invisible by default. Reveal with `?hero-debug` in the URL or
           Shift+H+R. Use it to clear the baseline (and rerun the diff)
