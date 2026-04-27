@@ -1227,14 +1227,14 @@ function HomePage() {
                   to="/builder"
                   className="cta-primary inline-flex items-center gap-2 px-9 py-[18px] text-[12.5px] uppercase tracking-[0.22em] font-semibold"
                 >
-                  Create &amp; Confirm Now
+                  Create Your Experience
                   <ArrowRight size={15} />
                 </Link>
                 <Link
-                  to="/contact"
+                  to="/experiences"
                   className="cta-secondary-light inline-flex items-center gap-2 px-9 py-[18px] text-[12.5px] uppercase tracking-[0.22em] font-semibold"
                 >
-                  Speak with a local
+                  Explore Signature Experiences
                 </Link>
               </div>
 
