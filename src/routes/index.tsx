@@ -404,12 +404,13 @@ function HomePage() {
                 Locked to one line on mobile via whitespace-nowrap +
                 a smaller base size + tighter tracking. */}
             <span
-              data-hero-field="eyebrow"
               className="inline-flex items-center gap-2.5 sm:gap-3.5 whitespace-nowrap text-[10px] sm:text-[12px] md:text-[13px] uppercase tracking-[0.16em] sm:tracking-[0.26em] md:tracking-[0.3em] text-[color:var(--gold-soft)] opacity-0 animate-[heroFade_1.1s_ease-out_0.3s_forwards]"
             >
-              <span className="text-[color:var(--gold)]">✦</span>
-              <span className="whitespace-nowrap">{HERO_COPY.eyebrow}</span>
-              <span className="text-[color:var(--gold)]">✦</span>
+              <span aria-hidden="true" className="text-[color:var(--gold)]">✦</span>
+              <span data-hero-field="eyebrow" className="whitespace-nowrap">
+                {HERO_COPY.eyebrow}
+              </span>
+              <span aria-hidden="true" className="text-[color:var(--gold)]">✦</span>
             </span>
 
             {/* Headline — sits on a calm 32px gap from the eyebrow on
