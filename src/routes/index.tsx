@@ -149,6 +149,10 @@ const startPaths = [
     line: "Start from a curated experience and confirm instantly.",
     cta: "Explore signatures",
     to: "/experiences",
+    destination: "Signatures",
+    expectedTo: "/experiences",
+    ariaLabel:
+      "Explore Signature Experiences — opens the Signatures catalog page",
     accent: "ivory" as const,
   },
   {
@@ -158,6 +162,10 @@ const startPaths = [
     line: "Start from a signature and shape every detail your way.",
     cta: "Start tailoring",
     to: "/experiences",
+    destination: "Tailoring",
+    expectedTo: "/experiences",
+    ariaLabel:
+      "Start Tailoring a Signature — opens the Signatures catalog where each experience can be tailored",
     accent: "sand" as const,
   },
   {
@@ -167,6 +175,9 @@ const startPaths = [
     line: "Create everything from a blank slate, in real time.",
     cta: "Open the Studio",
     to: "/builder",
+    destination: "Studio",
+    expectedTo: "/builder",
+    ariaLabel: "Open the Studio — design your experience from scratch in real time",
     accent: "teal" as const,
   },
   {
@@ -176,6 +187,10 @@ const startPaths = [
     line: "Proposals, anniversaries, corporate and private groups.",
     cta: "Start your occasion",
     to: "/proposals",
+    destination: "Celebrations",
+    expectedTo: "/proposals",
+    ariaLabel:
+      "Start your Celebration or Group experience — opens the Proposals, Celebrations and Groups page",
     accent: "charcoal" as const,
   },
 ];
