@@ -231,44 +231,60 @@ function HomePage() {
 
         <div className="container-x relative z-10 pb-24 md:pb-36 pt-32 md:pt-40">
           <div className="max-w-3xl text-[color:var(--ivory)]">
+            {/* Eyebrow — locked to one line on mobile via whitespace-nowrap +
+                a smaller base size + tighter tracking. Symmetric ✦ ✦ flank
+                with equal gap so the · separators in the copy don't cause
+                visual drift around the words. */}
             <span
               data-hero-field="eyebrow"
-              className="inline-flex items-center gap-3 text-[11px] uppercase tracking-[0.34em] text-[color:var(--gold-soft)] opacity-0 animate-[heroFade_1.1s_ease-out_0.3s_forwards]"
+              className="inline-flex items-center gap-2 sm:gap-3 whitespace-nowrap text-[9.5px] sm:text-[10.5px] md:text-[11px] uppercase tracking-[0.26em] sm:tracking-[0.3em] md:tracking-[0.34em] text-[color:var(--gold-soft)] opacity-0 animate-[heroFade_1.1s_ease-out_0.3s_forwards]"
             >
               <span className="text-[color:var(--gold)]">✦</span>
               <span>{HERO_COPY.eyebrow}</span>
               <span className="text-[color:var(--gold)]">✦</span>
             </span>
 
+            {/* Headline — tighter leading for an editorial feel; both lines
+                share the same left edge as everything else in the column. */}
             <h1
               data-hero-field="headlineLine1 headlineLine2"
-              className="hero-h1 serif mt-12 md:mt-16 text-[2.05rem] sm:text-5xl md:text-7xl lg:text-[5.4rem] text-[color:var(--ivory)] opacity-0 animate-[heroFade_1.4s_ease-out_0.6s_forwards]"
+              className="hero-h1 serif mt-10 md:mt-14 text-[2.05rem] sm:text-5xl md:text-7xl lg:text-[5.4rem] leading-[1.04] md:leading-[1.02] tracking-[-0.005em] text-[color:var(--ivory)] text-left opacity-0 animate-[heroFade_1.4s_ease-out_0.6s_forwards]"
             >
               <span data-hero-field="headlineLine1">{HERO_COPY.headlineLine1}</span>
               <br />
               <span
                 data-hero-field="headlineLine2"
-                className="italic text-[color:var(--gold-soft)] inline-block mt-1 md:mt-2"
+                className="italic text-[color:var(--gold-soft)] inline-block mt-1 md:mt-1.5"
               >
                 {HERO_COPY.headlineLine2}
               </span>
             </h1>
 
+            {/* Subheadline — narrower measure (max-w-lg) for a calmer
+                reading rhythm; slightly looser leading. */}
             <p
               data-hero-field="subheadline"
-              className="mt-7 md:mt-9 text-[18px] md:text-[22px] text-[color:var(--ivory)]/90 max-w-xl leading-[1.7] font-light opacity-0 animate-[heroFade_1.4s_ease-out_0.95s_forwards]"
+              className="mt-8 md:mt-10 text-[18px] md:text-[22px] text-[color:var(--ivory)]/90 max-w-lg leading-[1.75] font-light text-left opacity-0 animate-[heroFade_1.4s_ease-out_0.95s_forwards]"
             >
               {HERO_COPY.subheadline}
             </p>
 
+            {/* CTA group.
+                Mobile: stacked, identical full-column width via w-full on
+                each link inside a max-w container so primary and secondary
+                are perfectly aligned and equally sized.
+                ≥sm: side-by-side at natural width with a consistent 16px
+                horizontal gap. Vertical gap (gap-4) and increased y-padding
+                (py-5) give each button a more premium target without
+                breaking the editorial rhythm. */}
             <div
               ref={ctaGroupRef}
-              className="cta-magnet-group mt-10 md:mt-12 flex flex-col sm:flex-row flex-wrap gap-5 sm:gap-6 opacity-0 animate-[heroFade_1.4s_ease-out_1.25s_forwards]"
+              className="cta-magnet-group mt-10 md:mt-12 flex flex-col sm:flex-row sm:flex-wrap gap-4 sm:gap-4 w-full max-w-sm sm:max-w-none opacity-0 animate-[heroFade_1.4s_ease-out_1.25s_forwards]"
             >
               <Link
                 to="/builder"
                 data-hero-field="primaryCta"
-                className="cta-primary cta-attention cta-breathe group inline-flex items-center justify-center gap-3 px-9 py-[18px] text-[12px] md:text-[12.5px] lg:text-[13px] tracking-[0.22em] md:tracking-[0.2em] uppercase font-light leading-[1.55]"
+                className="cta-primary cta-attention cta-breathe group inline-flex w-full sm:w-auto items-center justify-center gap-3 px-9 py-5 text-[12px] md:text-[12.5px] lg:text-[13px] tracking-[0.22em] md:tracking-[0.2em] uppercase font-light leading-[1.55]"
               >
                 {HERO_COPY.primaryCta}
                 <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform duration-300" />
@@ -277,18 +293,19 @@ function HomePage() {
                 to="/experiences"
                 data-cta-stagger
                 data-hero-field="secondaryCta"
-                className="cta-secondary-dark cta-attention cta-breathe group inline-flex items-center justify-center gap-3 px-9 py-[18px] text-[12px] md:text-[12.5px] lg:text-[13px] tracking-[0.22em] md:tracking-[0.2em] uppercase font-light leading-[1.55]"
+                className="cta-secondary-dark cta-attention cta-breathe group inline-flex w-full sm:w-auto items-center justify-center gap-3 px-9 py-5 text-[12px] md:text-[12.5px] lg:text-[13px] tracking-[0.22em] md:tracking-[0.2em] uppercase font-light leading-[1.55] border-[1.5px]"
               >
                 {HERO_COPY.secondaryCta}
                 <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform duration-300" />
               </Link>
             </div>
 
-            {/* Microcopy — friction-removing, calm, trust-building */}
-            <div className="mt-7 md:mt-8 max-w-xl opacity-0 animate-[heroFade_1.4s_ease-out_1.5s_forwards]">
+            {/* Microcopy — slightly smaller and brighter for at-a-glance
+                reassurance, with the same left edge as the column. */}
+            <div className="mt-8 md:mt-10 max-w-lg opacity-0 animate-[heroFade_1.4s_ease-out_1.5s_forwards]">
               <p
                 data-hero-field="microcopy"
-                className="text-[14px] md:text-[15px] text-[color:var(--ivory)]/85 leading-[1.7] font-light tracking-wide"
+                className="text-[13px] md:text-[14px] text-[color:var(--ivory)]/95 leading-[1.75] font-light tracking-[0.01em]"
               >
                 {HERO_COPY.microcopy}
               </p>
@@ -296,7 +313,7 @@ function HomePage() {
 
             <p
               data-hero-field="brandLine"
-              className="mt-9 md:mt-11 text-[10.5px] uppercase tracking-[0.32em] text-[color:var(--gold-soft)] flex items-center gap-3 opacity-0 animate-[heroFade_1.4s_ease-out_1.75s_forwards]"
+              className="mt-10 md:mt-12 text-[10.5px] uppercase tracking-[0.32em] text-[color:var(--gold-soft)] flex items-center gap-3 opacity-0 animate-[heroFade_1.4s_ease-out_1.75s_forwards]"
             >
               <span className="h-px w-6 bg-[color:var(--gold)]" />
               {HERO_COPY.brandLine}
