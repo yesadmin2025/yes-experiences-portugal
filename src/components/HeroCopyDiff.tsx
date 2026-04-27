@@ -19,6 +19,10 @@ import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
  *   __heroCopy.clear()       // remove the baseline entirely
  *
  * Renders nothing visible. Skips gracefully on the server.
+ *
+ * brand-audit-ignore-file — this dev-only diff visualizer uses standard
+ * semantic colors (green=added, red=removed, amber=changed, gray=neutral),
+ * not brand chrome. It is intentionally excluded from the brand audit.
  */
 
 const STORAGE_KEY = "hero-copy:baseline";

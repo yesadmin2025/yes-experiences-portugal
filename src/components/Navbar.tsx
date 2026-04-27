@@ -59,7 +59,7 @@ export function Navbar() {
           </Link>
 
           {/* Desktop nav + CTA — right side, vertically centered.
-              Default text: charcoal (#2E2E2E, 13.58:1). Hover/active: teal (7.60:1).
+              Default text: charcoal (var(--charcoal), 13.58:1). Hover/active: teal (7.60:1).
               Tracking tightened slightly (0.20em) so all 8 labels fit on one
               row at lg+ without wrapping. The CTA button is the calm,
               conversion-focused anchor — teal fill, fine gold border. */}

@@ -21,7 +21,13 @@ export const Route = createFileRoute("/brand-qa")({
  * APPROVED BRAND PALETTE — single source of truth.
  * Any drift between this list and the live CSS variables (or hex codes
  * referenced anywhere in the app) is reported as a failure below.
+ *
+ * NOTE: this file is the brand QA reference. The literal hex values below
+ * are intentional — they are the canonical truth that the audit tool
+ * (`scripts/site-brand-audit.mjs`) compares the rest of the codebase
+ * against. Do not rewrite them to var() form.
  */
+// brand-audit-ignore-file
 const APPROVED = {
   teal: "#295B61",
   "teal-2": "#2A7C82",

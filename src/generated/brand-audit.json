@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-27T03:12:06.702Z",
+  "generatedAt": "2026-04-27T03:38:32.310Z",
   "filesScanned": 34,
   "approvedPalette": {
     "teal": "#295B61",
@@ -18,33 +18,15 @@
     "#cccccc"
   ],
   "counts": {
-    "total": 91,
-    "approved": 38,
+    "total": 86,
+    "approved": 33,
     "allowlisted": 24,
     "mismatch": 29
   },
   "findings": [
     {
-      "file": "src/components/CtaScrollDebugOverlay.tsx",
-      "line": 147,
-      "col": 92,
-      "raw": "#E1CFA6",
-      "normalized": "#e1cfa6",
-      "snippet": "<span className=\"text-[20px] font-light tabular-nums text-[color:var(--gold-soft,#E1CFA6)]\">",
-      "status": "approved"
-    },
-    {
-      "file": "src/components/CtaScrollDebugOverlay.tsx",
-      "line": 165,
-      "col": 100,
-      "raw": "#C9A96A",
-      "normalized": "#c9a96a",
-      "snippet": "className=\"absolute top-1/2 -translate-y-1/2 h-2 w-2 rounded-full bg-[color:var(--gold,#C9A96A)] shadow-[0_0_6px_rgba(201,169,106,0.8)]\"",
-      "status": "approved"
-    },
-    {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 158,
+      "line": 162,
       "col": 14,
       "raw": "#9ca3af",
       "normalized": "#9ca3af",
@@ -53,7 +35,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 167,
+      "line": 171,
       "col": 14,
       "raw": "#9ca3af",
       "normalized": "#9ca3af",
@@ -62,7 +44,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 176,
+      "line": 180,
       "col": 12,
       "raw": "#f59e0b",
       "normalized": "#f59e0b",
@@ -71,7 +53,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 483,
+      "line": 487,
       "col": 14,
       "raw": "#9ca3af",
       "normalized": "#9ca3af",
@@ -80,7 +62,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 497,
+      "line": 501,
       "col": 19,
       "raw": "#10b981",
       "normalized": "#10b981",
@@ -89,7 +71,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 497,
+      "line": 501,
       "col": 37,
       "raw": "#ef4444",
       "normalized": "#ef4444",
@@ -98,7 +80,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 529,
+      "line": 533,
       "col": 18,
       "raw": "#10b981",
       "normalized": "#10b981",
@@ -107,7 +89,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 544,
+      "line": 548,
       "col": 63,
       "raw": "#9ca3af",
       "normalized": "#9ca3af",
@@ -116,7 +98,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 597,
+      "line": 601,
       "col": 31,
       "raw": "#f59e0b",
       "normalized": "#f59e0b",
@@ -125,7 +107,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 603,
+      "line": 607,
       "col": 63,
       "raw": "#10b981",
       "normalized": "#10b981",
@@ -134,7 +116,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 604,
+      "line": 608,
       "col": 63,
       "raw": "#ef4444",
       "normalized": "#ef4444",
@@ -143,7 +125,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 605,
+      "line": 609,
       "col": 63,
       "raw": "#f59e0b",
       "normalized": "#f59e0b",
@@ -152,7 +134,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 673,
+      "line": 677,
       "col": 14,
       "raw": "#f59e0b",
       "normalized": "#f59e0b",
@@ -161,7 +143,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 720,
+      "line": 724,
       "col": 14,
       "raw": "#9ca3af",
       "normalized": "#9ca3af",
@@ -170,7 +152,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 755,
+      "line": 759,
       "col": 18,
       "raw": "#9ca3af",
       "normalized": "#9ca3af",
@@ -179,7 +161,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 771,
+      "line": 775,
       "col": 20,
       "raw": "#10b981",
       "normalized": "#10b981",
@@ -188,7 +170,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 785,
+      "line": 789,
       "col": 20,
       "raw": "#ef4444",
       "normalized": "#ef4444",
@@ -197,7 +179,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 793,
+      "line": 797,
       "col": 16,
       "raw": "#9ca3af",
       "normalized": "#9ca3af",
@@ -206,7 +188,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 950,
+      "line": 954,
       "col": 23,
       "raw": "#0f0f0f",
       "normalized": "#0f0f0f",
@@ -215,7 +197,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 951,
+      "line": 955,
       "col": 18,
       "raw": "#fafafa",
       "normalized": "#fafafa",
@@ -224,7 +206,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 975,
+      "line": 979,
       "col": 21,
       "raw": "#fafafa",
       "normalized": "#fafafa",
@@ -233,7 +215,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 1005,
+      "line": 1009,
       "col": 25,
       "raw": "#fafafa",
       "normalized": "#fafafa",
@@ -242,7 +224,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 1049,
+      "line": 1053,
       "col": 59,
       "raw": "#10b981",
       "normalized": "#10b981",
@@ -251,7 +233,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 1049,
+      "line": 1053,
       "col": 71,
       "raw": "#dc2626",
       "normalized": "#dc2626",
@@ -260,7 +242,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 1050,
+      "line": 1054,
       "col": 29,
       "raw": "#fff",
       "normalized": "#ffffff",
@@ -269,7 +251,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 1082,
+      "line": 1086,
       "col": 30,
       "raw": "#dc2626",
       "normalized": "#dc2626",
@@ -278,7 +260,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 1083,
+      "line": 1087,
       "col": 25,
       "raw": "#fff",
       "normalized": "#ffffff",
@@ -287,7 +269,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 1103,
+      "line": 1107,
       "col": 25,
       "raw": "#fff",
       "normalized": "#ffffff",
@@ -296,7 +278,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 1127,
+      "line": 1131,
       "col": 26,
       "raw": "#10b981",
       "normalized": "#10b981",
@@ -305,7 +287,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 1135,
+      "line": 1139,
       "col": 25,
       "raw": "#fff",
       "normalized": "#ffffff",
@@ -314,7 +296,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 1152,
+      "line": 1156,
       "col": 24,
       "raw": "#10b981",
       "normalized": "#10b981",
@@ -323,7 +305,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 1154,
+      "line": 1158,
       "col": 26,
       "raw": "#dc2626",
       "normalized": "#dc2626",
@@ -332,7 +314,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 1156,
+      "line": 1160,
       "col": 25,
       "raw": "#fff",
       "normalized": "#ffffff",
@@ -341,7 +323,7 @@
     },
     {
       "file": "src/components/HeroCopyDiff.tsx",
-      "line": 1215,
+      "line": 1219,
       "col": 14,
       "raw": "#f59e0b",
       "normalized": "#f59e0b",
@@ -349,35 +331,8 @@
       "status": "mismatch"
     },
     {
-      "file": "src/components/Navbar.tsx",
-      "line": 60,
-      "col": 39,
-      "raw": "#2E2E2E",
-      "normalized": "#2e2e2e",
-      "snippet": "Default text: charcoal (#2E2E2E, 13.58:1). Hover/active: teal (7.60:1).",
-      "status": "approved"
-    },
-    {
-      "file": "src/components/PlatformBadge.tsx",
-      "line": 42,
-      "col": 14,
-      "raw": "#6B6B6B",
-      "normalized": "#6b6b6b",
-      "snippet": "// charcoal (#6B6B6B) so every mark reads as a single neutral weight.",
-      "status": "approved"
-    },
-    {
-      "file": "src/components/PlatformBadge.tsx",
-      "line": 45,
-      "col": 52,
-      "raw": "#2E2E2E",
-      "normalized": "#2e2e2e",
-      "snippet": "// on small marks. Hover deepens to dark charcoal (#2E2E2E) for a quiet",
-      "status": "approved"
-    },
-    {
       "file": "src/routes/brand-qa.tsx",
-      "line": 26,
+      "line": 32,
       "col": 10,
       "raw": "#295B61",
       "normalized": "#295b61",
@@ -386,7 +341,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 27,
+      "line": 33,
       "col": 14,
       "raw": "#2A7C82",
       "normalized": "#2a7c82",
@@ -395,7 +350,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 28,
+      "line": 34,
       "col": 10,
       "raw": "#C9A96A",
       "normalized": "#c9a96a",
@@ -404,7 +359,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 29,
+      "line": 35,
       "col": 17,
       "raw": "#E1CFA6",
       "normalized": "#e1cfa6",
@@ -413,7 +368,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 30,
+      "line": 36,
       "col": 11,
       "raw": "#FAF8F3",
       "normalized": "#faf8f3",
@@ -422,7 +377,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 31,
+      "line": 37,
       "col": 10,
       "raw": "#F4EFE7",
       "normalized": "#f4efe7",
@@ -431,7 +386,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 32,
+      "line": 38,
       "col": 14,
       "raw": "#2E2E2E",
       "normalized": "#2e2e2e",
@@ -440,7 +395,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 33,
+      "line": 39,
       "col": 21,
       "raw": "#6B6B6B",
       "normalized": "#6b6b6b",
@@ -449,7 +404,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 43,
+      "line": 49,
       "col": 6,
       "raw": "#000",
       "normalized": "#000000",
@@ -458,7 +413,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 44,
+      "line": 50,
       "col": 6,
       "raw": "#000000",
       "normalized": "#000000",
@@ -467,7 +422,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 45,
+      "line": 51,
       "col": 6,
       "raw": "#fff",
       "normalized": "#ffffff",
@@ -476,7 +431,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 46,
+      "line": 52,
       "col": 6,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -485,7 +440,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 47,
+      "line": 53,
       "col": 6,
       "raw": "#1f1f1f",
       "normalized": "#1f1f1f",
@@ -494,7 +449,7 @@
     },
     {
       "file": "src/routes/brand-qa.tsx",
-      "line": 48,
+      "line": 54,
       "col": 6,
       "raw": "#ccc",
       "normalized": "#cccccc",
