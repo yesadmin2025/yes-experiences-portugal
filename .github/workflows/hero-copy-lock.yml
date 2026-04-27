@@ -495,7 +495,16 @@ jobs:
         # the first emit leaves no JSON on disk — we don't want a noisy
         # "no files found" warning competing with the real failure in
         # the logs artifact below.
-        if: always()
+        #
+        # Guard: `always() && steps.retention.outcome == 'success'`
+        # auto-skips this upload whenever the post-precedence retention
+        # validator failed — even if the job continues for any reason
+        # (e.g., a future `continue-on-error: true`, a manually edited
+        # rerun, or a downstream step that swallows the failure). The
+        # `always()` half preserves the triage value of uploading on QA
+        # drift / fetch errors; the `outcome == 'success'` half is the
+        # explicit early-return for invalid retention.
+        if: always() && steps.retention.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
           name: hero-copy-qa-report
@@ -513,8 +522,9 @@ jobs:
         #
         # Effective retention (after qa_logs_retention_days →
         # qa_report_retention_days → 14 precedence) comes from the
-        # validated `retention` step output `logs`.
-        if: always()
+        # validated `retention` step output `logs`. Same guard as the
+        # report upload above: skipped iff retention validation failed.
+        if: always() && steps.retention.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
           name: hero-copy-qa-logs
@@ -533,12 +543,24 @@ jobs:
         # precedence) comes from the validated `retention` step output
         # `meta`. Metadata is the cheapest artifact and most useful for
         # long-term audit trails, so it's typically set to the longest
-        # retention of the three.
-        if: always()
+        # retention of the three. Same guard as the report upload above:
+        # skipped iff retention validation failed.
+        if: always() && steps.retention.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
           name: hero-copy-qa-meta
           path: qa-meta/meta.json
           retention-days: ${{ steps.retention.outputs.meta }}
           if-no-files-found: warn
+
+      - name: Notify when artifact uploads were skipped
+        # Companion to the guard above: when the retention validator
+        # failed, all three uploads are auto-skipped (no artifacts at
+        # all). This step makes that consequence loud and unambiguous
+        # in the job log — otherwise a reviewer scanning the run would
+        # see "step skipped" three times with no obvious reason.
+        if: always() && steps.retention.outcome != 'success'
+        run: |
+          echo "::warning title=Artifact uploads skipped::Retention validation did not succeed (outcome=${{ steps.retention.outcome }}); hero-copy-qa-report, hero-copy-qa-logs, and hero-copy-qa-meta were NOT uploaded for this run. Fix the retention input(s) and re-run the workflow."
+          exit 1
 
