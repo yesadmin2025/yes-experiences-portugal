@@ -168,11 +168,15 @@ jobs:
           MARKER='<!-- required-check-enforcer -->'
 
           # Resolve the line number of the homepage-structure job's
-          # `name:` field at the PR's head SHA. This makes the deep
-          # link land on the exact line that defines the required
-          # status check context — not the top of the file.
-          NAME_LINE=$(grep -nE '^    name: ' .github/workflows/homepage-structure.yml | head -n1 | cut -d: -f1)
-          NAME_LINE="${NAME_LINE:-30}" # fallback if grep fails
+          # `name:` field at the PR's head SHA via a structural YAML
+          # walk (scripts/resolve-workflow-job-name-line.mjs). The
+          # helper exits non-zero with a precise diagnostic if the
+          # `jobs:` block, the job key, or its `name:` field is
+          # missing — `set -e` then fails this step before posting a
+          # comment with a wrong-line link. No silent fallback.
+          NAME_LINE=$(node scripts/resolve-workflow-job-name-line.mjs \
+            .github/workflows/homepage-structure.yml \
+            homepage-structure)
 
           WORKFLOW_FILE_URL="${SERVER_URL}/${REPO}/blob/${HEAD_SHA}/.github/workflows/homepage-structure.yml"
           WORKFLOW_JOB_URL="${WORKFLOW_FILE_URL}#L${NAME_LINE}"
