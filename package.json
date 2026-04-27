@@ -19,7 +19,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
-    "test:e2e:install": "playwright install chromium"
+    "test:e2e:install": "playwright install chromium",
+    "test:e2e:homepage-structure": "playwright test e2e/homepage-structure.spec.ts"
   },
   "dependencies": {
     "@cloudflare/vite-plugin": "^1.25.5",
