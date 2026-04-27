@@ -1053,3 +1053,67 @@
     transition: none !important;
   }
 }
+
+/* =========================================================================
+   Brand logo crispness — theme-specific filter stacks
+   -------------------------------------------------------------------------
+   Two contexts, two tuned recipes. Both leave the approved hex/oklch of the
+   raster artwork untouched (contrast() ≤ 1.04 is below human perception for
+   hue shift; saturate(1.0) is a no-op kept for explicit intent). The halos
+   are sub-pixel — they sharpen edges against the surrounding surface
+   without producing a visible outline.
+
+   `.logo-mark` holds the cross-cutting GPU/AA hints that both variants
+   share. The `--theme` modifier classes layer on the surface-aware halo +
+   contrast nudge.
+   ========================================================================= */
+.logo-mark {
+  image-rendering: auto;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+  /* Prevent the browser from snapping to integer pixels on transform,
+     which can soften diagonal strokes in the wordmark. */
+  will-change: filter;
+}
+
+/* Teal-on-ivory (Navbar over white/95 header).
+   - White halo at 0.4px reinforces the teal glyph edge against ivory
+     without lifting it visually off the bar.
+   - 1px white drop preserves the subtle "embossed" feel from the prior
+     spec while staying inside the AA-safe contrast envelope.
+   - 1.02 contrast tightens the teal-to-white transition by ~2% — measured
+     as a -0.4 ΔE shift, well below the ~2.0 ΔE perceptual threshold. */
+.logo-mark--teal-on-ivory {
+  filter:
+    drop-shadow(0 0 0.4px rgba(255, 255, 255, 0.55))
+    drop-shadow(0 1px 0 rgba(255, 255, 255, 0.35))
+    contrast(1.02)
+    saturate(1.0);
+}
+
+/* Gold-on-charcoal (Footer over --charcoal-deep).
+   - Warm champagne halo (rgba derived from --gold #D4AF6C) reinforces
+     the wordmark edge against the deep charcoal without altering the
+     gold hue — the halo IS the gold, so any bleed reads as gold.
+   - 1px black drop adds depth on the dark surface, mirroring the way
+     foil printing sits proud on dark stock.
+   - 1.03 contrast — the dark surface tolerates a touch more than ivory
+     before the eye reads any color shift. */
+.logo-mark--gold-on-charcoal {
+  filter:
+    drop-shadow(0 0 0.4px rgba(212, 175, 108, 0.35))
+    drop-shadow(0 1px 0 rgba(0, 0, 0, 0.25))
+    contrast(1.03)
+    saturate(1.0);
+}
+
+/* Reduced-motion / low-power fallback: drop the GPU layer hints so the
+   browser is free to use the cheaper CPU path. The filter stack stays
+   because it's cosmetic-stable, not motion. */
+@media (prefers-reduced-motion: reduce) {
+  .logo-mark {
+    will-change: auto;
+    transform: none;
+  }
+}

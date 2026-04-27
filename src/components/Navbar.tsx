@@ -45,35 +45,20 @@ export function Navbar() {
             className="flex-shrink-0 inline-flex items-center h-full rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             aria-label="YES experiences PORTUGAL — Home"
           >
-            {/* Brand-safe crispness refinement:
-                - imageRendering: "auto" lets the browser pick the best
-                  high-DPI resampler (no nearest-neighbor crunch).
-                - A near-zero contrast() + saturate(1) is a no-op on color
-                  but forces the GPU compositor onto the image, which on
-                  many engines yields sharper sub-pixel edges than the
-                  default CPU path.
-                - The hairline white halo (0 0 0.5px) and 1px ivory drop
-                  improves edge definition on the white bar without
-                  shifting the approved teal hue or introducing a visible
-                  outline. transform: translateZ(0) promotes to its own
-                  layer to avoid sub-pixel re-sampling on scroll. */}
+            {/* Theme-tuned crispness via .logo-mark--teal-on-ivory.
+                Filter stack lives in src/styles.css so it can be tuned
+                independently from the gold-on-charcoal variant in the
+                footer. Contrast nudge stays ≤1.02 to preserve the
+                approved teal hue while sharpening edges on the white bar. */}
             <img
               src={logoTeal}
               width={909}
               height={579}
               alt="YES experiences PORTUGAL"
-              className="block h-[60px] md:h-[64px] lg:h-[68px] w-auto select-none"
+              className="logo-mark logo-mark--teal-on-ivory block h-[60px] md:h-[64px] lg:h-[68px] w-auto select-none"
               draggable={false}
               fetchPriority="high"
               decoding="async"
-              style={{
-                imageRendering: "auto",
-                filter:
-                  "drop-shadow(0 0 0.4px rgba(255,255,255,0.55)) drop-shadow(0 1px 0 rgba(255,255,255,0.35)) contrast(1.02) saturate(1.0)",
-                transform: "translateZ(0)",
-                backfaceVisibility: "hidden",
-                WebkitFontSmoothing: "antialiased",
-              }}
             />
           </Link>
 
