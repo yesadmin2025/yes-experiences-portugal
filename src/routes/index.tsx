@@ -22,6 +22,7 @@ import { ArrowRight, Star, Compass, Sparkles, PenLine, Heart, Lock, Wand2, Zap, 
 import { PlatformBadge } from "@/components/PlatformBadge";
 import { HeroMetaProbe } from "@/components/HeroMetaProbe";
 import { HeroCopyDiff } from "@/components/HeroCopyDiff";
+import { HeroVerifyOverlay } from "@/components/HeroVerifyOverlay";
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
 
 export const Route = createFileRoute("/")({
@@ -631,6 +632,12 @@ function HomePage() {
                 localStorage baseline and logs changed fields. Manual
                 controls live on `window.__heroCopy`. Renders nothing. */}
             <HeroCopyDiff />
+
+            {/* Visual verify overlay — only renders when the URL has
+                `?verify=hero`. Highlights every [data-hero-field] node
+                against HERO_COPY_SPEC with green/amber/red badges and a
+                summary legend. No layout impact when disabled. */}
+            <HeroVerifyOverlay />
           </div>
         </div>
       </section>
