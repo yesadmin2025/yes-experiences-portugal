@@ -93,6 +93,7 @@ function parseArgs(argv) {
     failFast: false,
     maxRuns: Infinity,
     strictFlags: false,
+    reportJson: null, // null = off; "-" = stdout; else file path
   };
   const errors = [];
   const strict = argv.includes("--strict-flags");
@@ -106,7 +107,12 @@ function parseArgs(argv) {
     else if (raw === "--fail-fast") opts.failFast = true;
     else if (raw === "--preview-only") opts.target = "preview";
     else if (raw === "--production-only" || raw === "--prod-only") opts.target = "production";
-    else if (raw.startsWith("--target=")) {
+    else if (raw === "--report-json") opts.reportJson = "-";
+    else if (raw.startsWith("--report-json=")) {
+      const v = raw.slice("--report-json=".length);
+      if (v === "" || v === "-" || v === "stdout") opts.reportJson = "-";
+      else opts.reportJson = v; // treat as file path
+    } else if (raw.startsWith("--target=")) {
       const v = raw.slice("--target=".length).toLowerCase();
       if (["preview", "production", "all"].includes(v)) opts.target = v;
       else warn(`Invalid --target=${v} (expected preview|production|all)`);
