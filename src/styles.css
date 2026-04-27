@@ -1065,3 +1065,74 @@
     transition: none !important;
   }
 }
+
+/* ──────────────────────────────────────────────────────────────────────
+   Hero "Yes" confirmation — instant, no-form micro-interaction
+   sitting directly under the hero CTAs. Mirrors the premium signature
+   typography (uppercase, wide tracking, gold accent on the lead word)
+   and uses a soft gold ring + subtle glow so it reads as a deliberate,
+   editorial reassurance rather than a system toast.
+   ────────────────────────────────────────────────────────────────── */
+.hero-yes-chip {
+  border-radius: 9999px;
+  background: color-mix(in oklab, var(--ink, #0b0b0b) 45%, transparent);
+  border: 1px solid color-mix(in oklab, var(--gold) 38%, transparent);
+  backdrop-filter: blur(10px) saturate(120%);
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
+  box-shadow:
+    0 10px 28px -16px color-mix(in oklab, var(--gold) 45%, transparent),
+    inset 0 1px 0 0 color-mix(in oklab, var(--ivory) 8%, transparent);
+}
+
+.hero-yes-check {
+  background: linear-gradient(
+    135deg,
+    color-mix(in oklab, var(--gold) 92%, white 8%),
+    color-mix(in oklab, var(--gold) 70%, transparent)
+  );
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--gold) 55%, transparent),
+    0 4px 10px -4px color-mix(in oklab, var(--gold) 55%, transparent);
+}
+
+.hero-yes-text {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5em;
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  font-size: 10.75px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--ivory) 96%, transparent);
+  text-shadow: 0 1px 2px color-mix(in oklab, var(--ink, #000) 35%, transparent);
+}
+
+.hero-yes-text-lead {
+  color: var(--gold);
+  letter-spacing: 0.22em;
+  font-weight: 700;
+}
+
+.hero-yes-text-sep {
+  opacity: 0.55;
+  letter-spacing: 0;
+  font-weight: 400;
+}
+
+.hero-yes-text-tail {
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  color: color-mix(in oklab, var(--ivory) 92%, transparent);
+}
+
+@media (min-width: 768px) {
+  .hero-yes-text { font-size: 11.25px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-yes-chip {
+    transition: opacity 200ms ease !important;
+    transform: none !important;
+  }
+}

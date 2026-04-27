@@ -26,6 +26,7 @@ import { PlatformBadge } from "@/components/PlatformBadge";
 import { HeroMetaProbe } from "@/components/HeroMetaProbe";
 import { HeroCopyDiff } from "@/components/HeroCopyDiff";
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
+import { HeroYesConfirmation } from "@/components/HeroYesConfirmation";
 
 export const Route = createFileRoute("/")({
   headers: () => ({
@@ -312,6 +313,16 @@ function HomePage() {
                   className="absolute right-5 top-1/2 -translate-y-1/2 group-hover:translate-x-1 transition-transform duration-300"
                 />
               </Link>
+            </div>
+
+            {/* Instant "Yes" confirmation — no form, no waiting.
+                Sits directly under the CTA pair, centered, and reveals
+                the moment a visitor hovers, focuses or taps either
+                button. Premium uppercase typography mirrors the brand
+                signature so the response reads as editorial reassurance,
+                not a system toast. */}
+            <div className="opacity-0 animate-[heroFade_1.4s_ease-out_1.4s_forwards]">
+              <HeroYesConfirmation />
             </div>
 
             {/* Microcopy — centered on mobile to mirror the brand
