@@ -229,7 +229,7 @@ function HomePage() {
           }}
         />
 
-        <div className="container-x relative z-10 pb-24 md:pb-36 pt-32 md:pt-40">
+        <div className="container-x relative z-10 pb-14 md:pb-36 pt-32 md:pt-40">
           <div className="max-w-3xl text-[color:var(--ivory)]">
             {/* Eyebrow — left-aligned with the same edge as the headline,
                 subheadline, CTAs and microcopy (single hero content grid).
