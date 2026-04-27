@@ -1,0 +1,58 @@
+name: Required-check parity
+
+# Verifies that the required status check configured in branch protection
+# on `main` exactly matches the job `name:` of the homepage-structure
+# workflow. Catches the silent failure mode where:
+#
+#   - someone renames the job's `name:` field, OR
+#   - someone types the rule by hand and substitutes `--` for the
+#     em-dash `—` (U+2014), OR
+#   - branch protection isn't configured at all.
+#
+# Without this guard, every PR would appear "stuck on a missing required
+# check" with no log explaining why. Here, the failure points directly
+# at the byte-level diff (em-dash vs hyphen-minus is the usual culprit).
+#
+# Auth: needs a token with `Administration: read` on the repo. The
+# default GITHUB_TOKEN cannot read branch protection. Configure a repo
+# secret named BRANCH_PROTECTION_READ_TOKEN — either a fine-grained PAT
+# (Administration: Read) or a GitHub App installation token.
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - ".github/workflows/homepage-structure.yml"
+      - ".github/workflows/required-check-parity.yml"
+      - "scripts/check-required-status-context.mjs"
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: required-check-parity-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  parity:
+    name: Required-check context matches workflow job name
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node (script uses only built-ins)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Verify required-check context matches workflow job name
+        env:
+          # Inherits GITHUB_REPOSITORY automatically. Token must be
+          # provided as a repo secret — see workflow header for scope.
+          BRANCH_PROTECTION_TOKEN: ${{ secrets.BRANCH_PROTECTION_READ_TOKEN }}
+          PROTECTED_BRANCH: main
+          WORKFLOW_PATH: .github/workflows/homepage-structure.yml
+          WORKFLOW_JOB_KEY: homepage-structure
+        run: node scripts/check-required-status-context.mjs
