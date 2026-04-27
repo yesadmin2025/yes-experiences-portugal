@@ -49,7 +49,7 @@ test.describe("Hero CTA — typography & spacing contract", () => {
     await gotoHero(page);
 
     const eyebrow = page
-      .locator("span", { hasText: "Private · By local hands" })
+      .locator("span", { hasText: "Private · By locals · Any occasion" })
       .first();
     const h1 = page.locator("h1.hero-h1");
 
@@ -76,10 +76,12 @@ test.describe("Hero CTA — typography & spacing contract", () => {
     await gotoHero(page);
 
     const primary = page.getByRole("link", {
-      name: /Design.*Secure Your Experience/i,
+      name: "Create Your Story",
+      exact: true,
     });
     const secondary = page.getByRole("link", {
-      name: /Explore Signature Experiences/i,
+      name: "Explore Signature Experiences",
+      exact: true,
     });
 
     for (const cta of [primary, secondary]) {
@@ -130,10 +132,12 @@ test.describe("Hero CTA — typography & spacing contract", () => {
     await gotoHero(page);
 
     const primary = page.getByRole("link", {
-      name: /Design.*Secure Your Experience/i,
+      name: "Create Your Story",
+      exact: true,
     });
     const secondary = page.getByRole("link", {
-      name: /Explore Signature Experiences/i,
+      name: "Explore Signature Experiences",
+      exact: true,
     });
 
     const [a, b] = await Promise.all([
