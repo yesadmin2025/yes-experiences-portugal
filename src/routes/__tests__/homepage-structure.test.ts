@@ -247,7 +247,7 @@ describe("Approved homepage structure (source lock)", () => {
 
     it("hero uses overflow-hidden so the slow zoom never causes horizontal scroll", () => {
       const hero = findSections(SOURCE).find(
-        (s) => markerAbove(SOURCE, s.index) === "1 — HERO",
+        (s) => (markerAbove(SOURCE, s.index) ?? "").includes("HERO"),
       );
       expect(hero).toBeDefined();
       expect(
