@@ -1077,7 +1077,7 @@ function ImportReportCard({
   fileName, mode, report, onApply, onDismiss,
 }: {
   fileName: string;
-  mode: "applied" | "validated" | "rejected";
+  mode: "applied" | "validated" | "rejected" | "current";
   report: ValidationReport;
   onApply?: () => void;
   onDismiss: () => void;
@@ -1089,15 +1089,24 @@ function ImportReportCard({
   // Tone the banner by outcome:
   //  - applied   → green (settings updated)
   //  - validated → amber (dry-run; current settings untouched)
+  //  - current   → green if clean, amber if warnings, red if errors
   //  - rejected  → red (errors blocked the import)
   const toneClass =
     mode === "applied"   ? "border-emerald-200 bg-emerald-50 text-emerald-900" :
     mode === "validated" ? "border-amber-200 bg-amber-50 text-amber-900" :
+    mode === "current"   ? (
+      errors.length      ? "border-rose-200 bg-rose-50 text-rose-900" :
+      warnings.length    ? "border-amber-200 bg-amber-50 text-amber-900" :
+                           "border-emerald-200 bg-emerald-50 text-emerald-900"
+    ) :
                            "border-rose-200 bg-rose-50 text-rose-900";
 
   const headline =
     mode === "applied"   ? `Imported "${fileName}"` :
     mode === "validated" ? (report.ok ? `Validated "${fileName}" — no errors` : `Validated "${fileName}" — ${errors.length} error${errors.length === 1 ? "" : "s"}`) :
+    mode === "current"   ? (report.ok
+        ? (warnings.length ? `Current settings — OK with ${warnings.length} warning${warnings.length === 1 ? "" : "s"}` : `Current settings — all checks passed`)
+        : `Current settings — ${errors.length} error${errors.length === 1 ? "" : "s"}`) :
                            `Rejected "${fileName}" — ${errors.length} error${errors.length === 1 ? "" : "s"}`;
 
   return (
