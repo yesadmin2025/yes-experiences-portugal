@@ -496,6 +496,16 @@ export function HeroVerifyOverlay() {
 
   const handleExportJson = () => {
     if (typeof window === "undefined") return;
+    // Block the export if the live DOM diff and the about-to-be-exported
+    // diff disagree. The user can still re-trigger after acknowledging.
+    if (!runDiffSelfCheck()) {
+      const proceed = window.confirm(
+        "Export self-check FAILED: on-screen diff and JSON disagree.\n\n" +
+          "See console + the red row in the overlay for details.\n\n" +
+          "Download anyway?",
+      );
+      if (!proceed) return;
+    }
     const diffByKey = new Map(fieldDiffs.map((d) => [d.key, d.segments]));
     const payload = {
       schema: "hero-verify-report/v2",
