@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/preview-check")({
@@ -31,26 +31,37 @@ const CHECKS: CheckItem[] = [
     label: "Hero",
     description: "Headline, subheadline, eyebrow and primary CTAs are visible and on-brand.",
     src: "/",
+    hash: "#top",
   },
   {
     id: "experiences",
     label: "Experiences list",
     description: "Signature experiences render with images, titles and links.",
-    src: "/experiences",
+    src: "/",
+    hash: "#signatures-title",
   },
   {
     id: "builder",
     label: "Builder CTA",
     description: "The Studio / builder entry point loads and the primary CTA is visible.",
-    src: "/builder",
+    src: "/",
+    hash: "#studio-title",
   },
 ];
 
 function PreviewCheckPage() {
   const [checked, setChecked] = useState<Record<string, boolean>>({});
+  const iframeRefs = useRef<Record<string, HTMLIFrameElement | null>>({});
 
   const toggle = (id: string) =>
     setChecked((prev) => ({ ...prev, [id]: !prev[id] }));
+
+  const jumpTo = (item: CheckItem) => {
+    const el = iframeRefs.current[item.id];
+    if (!el || !item.hash) return;
+    // Re-assigning src forces the iframe to navigate to the anchor and scroll.
+    el.src = item.src + item.hash + "?t=" + Date.now();
+  };
 
   const completed = CHECKS.filter((c) => checked[c.id]).length;
 
@@ -105,18 +116,33 @@ function PreviewCheckPage() {
                   </p>
                 </div>
               </div>
-              <a
-                href={item.src}
-                target="_blank"
-                rel="noreferrer"
-                className="shrink-0 text-xs underline underline-offset-4 text-muted-foreground hover:text-primary"
-              >
-                Open ↗
-              </a>
+              <div className="shrink-0 flex flex-col items-end gap-2">
+                {item.hash && (
+                  <button
+                    type="button"
+                    onClick={() => jumpTo(item)}
+                    className="text-xs px-2 py-1 rounded-md border border-border bg-background hover:bg-accent hover:text-accent-foreground transition-colors"
+                    aria-label={`Jump preview to ${item.label} section`}
+                  >
+                    Jump to {item.hash}
+                  </button>
+                )}
+                <a
+                  href={item.src + (item.hash ?? "")}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-xs underline underline-offset-4 text-muted-foreground hover:text-primary"
+                >
+                  Open ↗
+                </a>
+              </div>
             </div>
 
             <div className="bg-muted/30">
               <iframe
+                ref={(el) => {
+                  iframeRefs.current[item.id] = el;
+                }}
                 title={`${item.label} preview`}
                 src={item.src + (item.hash ?? "")}
                 loading="lazy"
