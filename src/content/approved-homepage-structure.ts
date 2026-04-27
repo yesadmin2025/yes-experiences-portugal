@@ -70,7 +70,7 @@ export const MOBILE_TAILWIND_PREFIX = "" as const;
  *                         on the section. Survives copy edits.
  *   - `marker`          — fallback for sections that don't use
  *                         aria-labelledby (e.g. the hero, multi-day).
- *                         Matches the `{/* N — NAME */}` comment that
+ *                         Matches the `{/* N — NAME *\/}` comment that
  *                         already lives above the section in
  *                         `src/routes/index.tsx`.
  *
@@ -88,7 +88,7 @@ export interface ApprovedSection {
   /**
    * Stable identity. EXACTLY ONE of these must be set per entry.
    * - aria-labelledby id, OR
-   * - the trailing text of the `{/* N — NAME */}` comment.
+   * - the trailing text of the `{/* N — NAME *\/}` comment.
    */
   ariaLabelledBy?: string;
   marker?: string;
