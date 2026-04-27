@@ -332,6 +332,7 @@ export function HeroCopyDiff() {
     // Resetting the baseline invalidates any persisted outlines: the
     // saved "before" version no longer exists to diff against.
     clearPersistedOutlines();
+    clearRenderedOutlines();
     console.info(
       "%c[hero-copy] baseline cleared via UI",
       "color:#9ca3af",
