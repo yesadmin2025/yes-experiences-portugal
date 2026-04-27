@@ -82,8 +82,8 @@ async function verifyPage(targetUrl: string, path: string): Promise<PageReport> 
 
     const checks: CheckResult[] = HERO_KEYS.map((key) => ({
       key,
-      expected: HERO_COPY[key],
-      found: decoded.includes(HERO_COPY[key]),
+      expected: HERO_COPY_SPEC[key],
+      found: decoded.includes(HERO_COPY_SPEC[key]),
     }));
 
     const missing = checks
@@ -105,7 +105,28 @@ async function verifyPage(targetUrl: string, path: string): Promise<PageReport> 
       ...base,
       httpStatus: 0,
       checks: [],
-      missing: HERO_KEYS.map((key) => ({ key, expected: HERO_COPY[key] })),
+      missing: HERO_KEYS.map((key) => ({ key, expected: HERO_COPY_SPEC[key] })),
+      ok: false,
+      error: (err as Error).message,
+    };
+  }
+}
+
+/**
+ * Compare the in-source HERO_COPY against the frozen HERO_COPY_SPEC. If any
+ * string drifts, the verifier reports it before even hitting the network — so
+ * unauthorised wording changes are caught at the source, not after publish.
+ */
+function detectSpecDrift() {
+  const drifted = HERO_KEYS.filter(
+    (k) => HERO_COPY[k] !== HERO_COPY_SPEC[k],
+  ).map((k) => ({
+    key: k,
+    expected: HERO_COPY_SPEC[k],
+    actual: HERO_COPY[k],
+  }));
+  return { ok: drifted.length === 0, drifted };
+}
       ok: false,
       error: (err as Error).message,
     };
