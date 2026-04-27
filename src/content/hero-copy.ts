@@ -14,10 +14,10 @@ export const HERO_COPY = {
   headlineLine1: "Portugal is the stage.",
   headlineLine2: "You write the story.",
   subheadline:
-    "Designed by you, guided by local knowledge — from private days to proposals, celebrations and group experiences.",
+    "Designed by you, at your rhythm — for a day, a journey, or a celebration — guided by a local who knows where the real moments happen.",
   primaryCta: "Create Your Story",
   secondaryCta: "Explore Signature Experiences",
-  microcopy: "Instant confirmation. Personalized by you. No waiting, no forms.",
+  microcopy: "Instant confirmation. No forms. No waiting.",
   brandLine: "Whatever you have in mind, we say YES.",
 } as const;
 
