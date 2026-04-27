@@ -41,6 +41,38 @@ RETENTION_MAX=90      # GitHub's hard cap for actions/upload-artifact@v4
 RETENTION_DEFAULT=14  # Workflow fallback when every precedence slot empty
 
 # ─────────────────────────────────────────────────────────────────────
+# ::error annotation title convention (DO NOT drift from this).
+#
+# All retention-related annotations use the shape:
+#
+#     Retention <stage>: <reason>
+#
+# where <stage> is one of:
+#   - "input"     → the failing value came directly from a user input
+#                   (workflow_dispatch). Body mentions the input name.
+#   - "effective" → the failing value is the result of resolving the
+#                   precedence chain. Body mentions "after precedence"
+#                   and the workflow default, signalling a workflow bug
+#                   rather than a user mistake.
+#
+# and <reason> is one of:
+#   - "not a positive integer"
+#   - "exceeds GitHub maximum"
+#
+# This means the four possible failure annotations are:
+#   Retention input: not a positive integer
+#   Retention input: exceeds GitHub maximum
+#   Retention effective: not a positive integer
+#   Retention effective: exceeds GitHub maximum
+#
+# When grouped in the GitHub Checks UI ("Annotations" panel), the
+# common "Retention " prefix keeps them clustered together while the
+# stage segment makes the user-vs-workflow distinction immediately
+# scannable. Do not introduce ad-hoc titles for new failure modes —
+# extend the <stage>/<reason> vocabulary instead.
+# ─────────────────────────────────────────────────────────────────────
+
+# ─────────────────────────────────────────────────────────────────────
 # retention_first_nonempty <value...>
 #
 # Print the first non-empty argument; if all are empty, print
