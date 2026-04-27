@@ -24,6 +24,7 @@ import editViewpoint from "@/assets/edit-viewpoint.jpg";
 import { ArrowRight, Star, MapPin, Compass, Clock } from "lucide-react";
 import { PlatformBadge } from "@/components/PlatformBadge";
 import { HeroMetaProbe } from "@/components/HeroMetaProbe";
+import { HeroCopyDiff } from "@/components/HeroCopyDiff";
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
 
 export const Route = createFileRoute("/")({
