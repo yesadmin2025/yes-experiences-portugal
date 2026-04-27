@@ -337,24 +337,43 @@ async function runOnce() {
     });
   }
 
-  return { summary, totalFailures, manualChecks };
+  return { summary, totalFailures, manualChecks, fetchFailures };
 }
+
+// Global safety net: any uncaught error inside the script (sync or async) is
+// a runtime bug, not a content drift. CI should be able to tell them apart.
+process.on("uncaughtException", (err) => {
+  console.log(`${RED}${BOLD}✗ Uncaught exception: ${err?.stack || err}${RESET}`);
+  process.exit(EXIT.RUNTIME_ERROR);
+});
+process.on("unhandledRejection", (err) => {
+  console.log(`${RED}${BOLD}✗ Unhandled rejection: ${err?.stack || err}${RESET}`);
+  process.exit(EXIT.RUNTIME_ERROR);
+});
 
 const WATCH = CLI.watch;
 
 if (!WATCH) {
-  const { totalFailures, manualChecks } = await runOnce();
-  if (totalFailures > 0) {
-    console.log(`${RED}${BOLD}✗ ${totalFailures} check(s) failed — do not release.${RESET}`);
-    process.exit(1);
+  const { totalFailures, manualChecks, fetchFailures } = await runOnce();
+  // Drift takes priority over fetch errors so a true content failure is never
+  // masked by a flaky network call. Pure fetch-only failure → EXIT.FETCH_ERROR.
+  const driftFailures = totalFailures - fetchFailures;
+  if (driftFailures > 0) {
+    console.log(`${RED}${BOLD}✗ ${driftFailures} drift check(s) failed — do not release.${RESET}`);
+    process.exit(EXIT.DRIFT);
+  } else if (fetchFailures > 0) {
+    console.log(
+      `${RED}${BOLD}✗ ${fetchFailures} target(s) unreachable — verification incomplete.${RESET}`,
+    );
+    process.exit(EXIT.FETCH_ERROR);
   } else if (manualChecks > 0) {
     console.log(
       `${GREEN}${BOLD}✓ Production verified.${RESET} ${BOLD}${manualChecks} target(s) need manual visual check before release.${RESET}`,
     );
-    process.exit(0);
+    process.exit(EXIT.OK);
   } else {
     console.log(`${GREEN}${BOLD}✓ All hero copy verified across preview and production.${RESET}`);
-    process.exit(0);
+    process.exit(EXIT.OK);
   }
 }
 
