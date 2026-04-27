@@ -35,7 +35,7 @@ export function Footer() {
                 style={{ imageRendering: "auto" }}
               />
             </Link>
-            <p className="mt-8 text-[14.5px] text-[color:var(--ivory)]/80 leading-[1.75] max-w-xs font-light">
+            <p className="mt-8 text-[14.5px] text-[color:var(--ivory)]/85 leading-[1.8] max-w-xs" style={{ fontWeight: 320, letterSpacing: "0.005em" }}>
               Private, designed Portugal experiences — crafted around your story by passionate
               local experts.
             </p>
@@ -83,9 +83,9 @@ export function Footer() {
               </li>
             ))}
           </ul>
-          <div className="w-full flex flex-col md:flex-row justify-between items-center gap-4 text-[12px] text-[color:var(--ivory)]/65">
+          <div className="w-full flex flex-col md:flex-row justify-between items-center gap-4 text-[12px] text-[color:var(--ivory)]/75" style={{ fontWeight: 350 }}>
             <p>© {new Date().getFullYear()} YES experiences Portugal. All rights reserved.</p>
-            <p className="tracking-[0.3em] uppercase text-[color:var(--gold)]">
+            <p className="tracking-[0.32em] uppercase text-[color:var(--gold)]" style={{ fontWeight: 400 }}>
               Designed in Portugal
             </p>
           </div>
@@ -104,15 +104,15 @@ function FooterCol({
 }) {
   return (
     <div>
-      <h4 className="font-sans font-medium text-[11.5px] uppercase tracking-[0.3em] text-[color:var(--gold)] mb-6">
+      <h4 className="font-sans text-[11px] uppercase tracking-[0.32em] text-[color:var(--gold)] mb-6" style={{ fontWeight: 400 }}>
         {title}
       </h4>
-      <ul className="space-y-3.5 text-[14.5px]">
+      <ul className="space-y-3.5 text-[14.5px]" style={{ fontWeight: 350 }}>
         {links.map((l) => (
           <li key={l.to}>
             <Link
               to={l.to}
-              className="text-[color:var(--ivory)]/80 hover:text-[color:var(--gold-soft)] transition-colors duration-300"
+              className="text-[color:var(--ivory)]/85 hover:text-[color:var(--gold-soft)] transition-colors duration-300"
             >
               {l.label}
             </Link>

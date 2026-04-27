@@ -94,7 +94,7 @@
   --ivory: #FAF8F3;
   --sand: #F4EFE7;
   --charcoal: #2E2E2E;
-  --charcoal-soft: #6B6B6B;
+  --charcoal-soft: #5A5A5A;
   --charcoal-deep: #1F1F1F;
 
   /* Semantic */
@@ -211,52 +211,40 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
-    font-feature-settings: "ss01", "cv11";
+    font-weight: 380;
+    font-feature-settings: "ss01", "cv11", "kern", "calt";
+    letter-spacing: 0.005em;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  p {
+    color: var(--charcoal);
   }
   /* ─────────────────────────────────────────────────────────────
-     TYPOGRAPHIC HIERARCHY — editorial, restrained, premium.
-     One curve of weight (500 → 460 → 450) and a single tracking
-     scale that tightens as type grows, so display sizes feel
-     composed rather than airy.
+     TYPOGRAPHIC HIERARCHY — couture, restrained, premium.
+     Thinner weight curve so display type reads as fine couture rather
+     than a heavy template. Optical kerning + ligatures on for crisp
+     serif joins. Contrast stays AA via charcoal-deep.
      ───────────────────────────────────────────────────────────── */
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-serif);
-    font-weight: 460;
-    letter-spacing: -0.012em;
-    color: var(--charcoal);
+    font-weight: 400;
+    letter-spacing: -0.014em;
+    color: var(--charcoal-deep);
     text-wrap: balance;
+    font-feature-settings: "kern", "liga", "calt", "ss01";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
-  h1 {
-    font-weight: 500;
-    letter-spacing: -0.018em;
-    line-height: 1.04;
-  }
-  h2 {
-    font-weight: 470;
-    letter-spacing: -0.015em;
-    line-height: 1.1;
-  }
-  h3 {
-    font-weight: 460;
-    letter-spacing: -0.012em;
-    line-height: 1.2;
-  }
-  h4 {
-    font-weight: 500;
-    letter-spacing: -0.008em;
-    line-height: 1.3;
-  }
-  h5, h6 {
-    font-weight: 500;
-    letter-spacing: -0.006em;
-    line-height: 1.35;
-  }
-  /* Italic display accents (signature gold/teal phrasing) sit
-     slightly lighter so the contrast feels editorial, not bold. */
+  h1 { font-weight: 380; letter-spacing: -0.022em; line-height: 1.04; }
+  h2 { font-weight: 400; letter-spacing: -0.018em; line-height: 1.1; }
+  h3 { font-weight: 410; letter-spacing: -0.014em; line-height: 1.2; }
+  h4 { font-weight: 440; letter-spacing: -0.01em;  line-height: 1.3; }
+  h5, h6 { font-weight: 460; letter-spacing: -0.008em; line-height: 1.35; }
   h1 em, h2 em, h3 em,
   h1 .italic, h2 .italic, h3 .italic {
-    font-weight: 400;
+    font-weight: 350;
   }
   /* Subtle, tactile link hover across the page */
   a {
