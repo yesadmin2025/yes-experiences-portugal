@@ -23,31 +23,20 @@ export function Footer() {
               className="inline-block rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--charcoal-deep)]"
               aria-label="YES experiences PORTUGAL — Home"
             >
-              {/* Brand-safe crispness refinement for the gold mark on the
-                  charcoal-deep footer:
-                  - A faint warm halo (rgba champagne) reinforces edges
-                    against the dark surface without altering the gold hue.
-                  - contrast(1.03) tightens the gold-on-dark transition by
-                    ~3% — imperceptible as a color shift, measurable as
-                    edge definition.
-                  - translateZ(0) + backfaceVisibility prevent sub-pixel
-                    softening on scroll/zoom. */}
+              {/* Theme-tuned crispness via .logo-mark--gold-on-charcoal.
+                  Warm champagne halo + 1.03 contrast nudge defined in
+                  src/styles.css — kept separate from the navbar's
+                  teal-on-ivory recipe so each surface can be tuned
+                  without affecting the other. */}
               <img
                 src={logoGold}
                 width={909}
                 height={579}
                 alt="YES experiences PORTUGAL"
-                className="block h-[60px] md:h-[64px] lg:h-[68px] w-auto select-none"
+                className="logo-mark logo-mark--gold-on-charcoal block h-[60px] md:h-[64px] lg:h-[68px] w-auto select-none"
                 draggable={false}
                 loading="lazy"
                 decoding="async"
-                style={{
-                  imageRendering: "auto",
-                  filter:
-                    "drop-shadow(0 0 0.4px rgba(212,175,108,0.35)) drop-shadow(0 1px 0 rgba(0,0,0,0.25)) contrast(1.03) saturate(1.0)",
-                  transform: "translateZ(0)",
-                  backfaceVisibility: "hidden",
-                }}
               />
             </Link>
             <p className="mt-8 text-[14.5px] text-[color:var(--ivory)]/85 leading-[1.8] max-w-xs" style={{ fontWeight: 320, letterSpacing: "0.005em" }}>
