@@ -399,10 +399,11 @@ async function tick(reason) {
 }
 
 // Debounce bursty fs events (editors often emit several events per save).
+// Interval is configurable via --debounce=<ms> (default 200).
 let debounceTimer = null;
 function scheduleTick(reason) {
   if (debounceTimer) clearTimeout(debounceTimer);
-  debounceTimer = setTimeout(() => tick(reason), 200);
+  debounceTimer = setTimeout(() => tick(reason), CLI.debounceMs);
 }
 
 for (const file of WATCHED_FILES) {
