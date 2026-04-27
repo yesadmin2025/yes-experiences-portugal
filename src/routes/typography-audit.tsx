@@ -880,6 +880,18 @@ function SettingsPanel({
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [validateOnly, setValidateOnly] = useState(false);
+  // Workflow preference: when ON, an Import will silently apply auto-fix
+  // corrections instead of surfacing a report and asking for confirmation.
+  // Persisted separately from AuditSettings (it's a UX preference, not a stage).
+  const AUTOFIX_KEY = "yes:typography-audit:autofix-on-import:v1";
+  const [autoFixOnImport, setAutoFixOnImport] = useState<boolean>(() => {
+    if (typeof localStorage === "undefined") return false;
+    try { return localStorage.getItem(AUTOFIX_KEY) === "1"; } catch { return false; }
+  });
+  useEffect(() => {
+    try { localStorage.setItem(AUTOFIX_KEY, autoFixOnImport ? "1" : "0"); } catch { /* ignore */ }
+  }, [autoFixOnImport]);
+
   // Hold full validation report so the panel can render a structured issue list,
   // not just a single one-line message.
   const [importReport, setImportReport] = useState<
@@ -887,7 +899,7 @@ function SettingsPanel({
     | null
   >(null);
 
-  const handleImportFile = async (file: File, dryRun: boolean) => {
+  const handleImportFile = async (file: File, dryRun: boolean, autoFix: boolean) => {
     setImportReport(null);
     try {
       if (file.size > 64 * 1024) {
@@ -906,10 +918,36 @@ function SettingsPanel({
       const text = await file.text();
       const report = validateSettingsJson(text);
       // Validate-only mode NEVER mutates current settings — even on a clean file.
+      // (Takes precedence over auto-fix, since the user explicitly asked for a dry run.)
       if (dryRun) {
         setImportReport({ fileName: file.name, mode: "validated", report });
         return;
       }
+
+      // Auto-fix path: as long as we got *some* parsed structure (validator
+      // returns parsed=null only on totally unparseable JSON), we can mechanically
+      // correct it and apply. Surface the corrections as info notes appended to
+      // the report so the user always knows what changed.
+      if (autoFix && report.parsed) {
+        const { fixed, changes } = autoFixSettings(report.parsed);
+        onChange(fixed);
+        const augmented: ValidationReport = {
+          ...report,
+          ok: true,
+          parsed: fixed,
+          issues: [
+            ...report.issues,
+            ...changes.map((c): ValidationIssue => ({
+              level: "info",
+              path: "auto-fix",
+              message: c,
+            })),
+          ],
+        };
+        setImportReport({ fileName: file.name, mode: "applied", report: augmented });
+        return;
+      }
+
       if (report.ok && report.parsed) {
         onChange(report.parsed);
         setImportReport({ fileName: file.name, mode: "applied", report });
@@ -931,10 +969,12 @@ function SettingsPanel({
     }
   };
 
-  // Read validateOnly through a ref so the input's onChange (created once per
-  // render) always sees the latest toggle state without rebinding listeners.
+  // Read toggle state through refs so the input's onChange (created once per
+  // render) always sees the latest values without rebinding listeners.
   const validateOnlyRef = useRef(validateOnly);
   useEffect(() => { validateOnlyRef.current = validateOnly; }, [validateOnly]);
+  const autoFixOnImportRef = useRef(autoFixOnImport);
+  useEffect(() => { autoFixOnImportRef.current = autoFixOnImport; }, [autoFixOnImport]);
 
   return (
     <div className="mt-6 rounded-xl border border-[color:var(--border)] bg-white/80 p-5 md:p-6">
