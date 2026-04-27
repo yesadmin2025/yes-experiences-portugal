@@ -13,6 +13,8 @@
     "brand:audit": "node scripts/brand-audit.mjs",
     "lint": "eslint .",
     "format": "prettier --write .",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "test:e2e": "playwright test",
     "test:e2e:install": "playwright install chromium"
   },
