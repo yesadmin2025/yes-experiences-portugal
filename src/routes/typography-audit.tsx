@@ -1142,10 +1142,10 @@ function SettingsPanel({
               });
               // Show the publish CTA only when the post-fix report is clean
               // (no errors). Warnings are fine — the user has been informed.
-              setPublishReady(!augmented.issues.some((i) => i.level === "error"));
-              // Avoid stale state from a previous click.
-              if (augmented.issues.some((i) => i.level === "error")) setPublishReady(false);
-              void finalSettings; // referenced for clarity above
+              // We anchor it to the exact AuditSettings reference that was
+              // applied; any subsequent edit to `settings` invalidates the CTA.
+              const clean = !augmented.issues.some((i) => i.level === "error");
+              setPublishReadyFor(clean ? finalSettings : null);
             }}
             disabled={disabled}
             className="rounded-md border border-emerald-300 bg-emerald-50 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-emerald-900 hover:bg-emerald-100 disabled:opacity-50"
