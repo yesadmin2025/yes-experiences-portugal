@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Instagram, Facebook, Youtube, Linkedin } from "lucide-react";
-import logoGold from "@/assets/yes-logo-approved-gold-silk.png";
+import { Logo } from "@/components/Logo";
 
 const SOCIALS = [
   { href: "https://instagram.com/", label: "Instagram", Icon: Instagram },
