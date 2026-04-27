@@ -54,9 +54,10 @@ jobs:
           fi
 
       - name: Run hero visual regression suite
-        # Scope to the hero spec only — this workflow's contract is the
-        # hero layout, not the full e2e suite.
-        run: bunx playwright test e2e/hero-visual-regression.spec.ts --reporter=github,html
+        # Scope to the hero specs — visual regression + CTA parity guard.
+        # The parity spec catches geometry/typography drift between the
+        # primary and secondary CTA on every hero spacing change.
+        run: bunx playwright test e2e/hero-visual-regression.spec.ts e2e/hero-cta-parity.spec.ts --reporter=github,html
         env:
           CI: "true"
 
