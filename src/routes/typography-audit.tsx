@@ -157,48 +157,120 @@ const sampleToken = (doc: Document, win: Window, t: Token): Sample => {
   };
 };
 
-// ─── Per-route audit (loads route in hidden iframe) ───────────────
-type RouteResult = { path: string; status: "pending" | "loading" | "done" | "error"; samples: Sample[]; error?: string };
+// ─── Per-route audit (loads route in hidden iframe with retry + SSR fallback) ──
+type AuditVia = "iframe" | "ssr-fallback";
+type RouteResult = {
+  path: string;
+  status: "pending" | "loading" | "done" | "error";
+  samples: Sample[];
+  error?: string;
+  attempts?: number;          // total attempts taken (1–3)
+  via?: AuditVia;             // which path produced the final samples
+  attemptLog?: string[];      // per-attempt failure reasons (visible in UI)
+};
+
+// Sample a route once via the shared iframe with a hard timeout.
+// Returns { ok: true, samples } or { ok: false, error }.
+type AttemptResult = { ok: true; samples: Sample[] } | { ok: false; error: string };
+
+const sampleViaIframe = (
+  iframe: HTMLIFrameElement,
+  path: string,
+  timeoutMs: number,
+  ssrFallback: boolean,
+): Promise<AttemptResult> => new Promise((resolve) => {
+  let settled = false;
+  const settle = (r: AttemptResult) => {
+    if (settled) return;
+    settled = true;
+    iframe.removeEventListener("load", onLoad);
+    clearTimeout(timer);
+    resolve(r);
+  };
+  const onLoad = async () => {
+    try {
+      const win = iframe.contentWindow;
+      const doc = iframe.contentDocument;
+      if (!win || !doc) return settle({ ok: false, error: "iframe blocked (cross-origin or sandbox)" });
+
+      // Wait for webfonts so we sample the LOADED font, not fallback.
+      // Race against a 3s soft cap so a stuck font.ready doesn't eat the budget.
+      if (doc.fonts && (doc.fonts as FontFaceSet & { ready?: Promise<unknown> }).ready) {
+        await Promise.race([
+          doc.fonts.ready.catch(() => undefined),
+          new Promise((r) => setTimeout(r, 3000)),
+        ]);
+      }
+      // Let async hero hooks (parallax, scroll-scale, hydration) settle.
+      await new Promise((r) => setTimeout(r, 250));
+      const samples = TOKENS.map((t) => sampleToken(doc, win, t));
+
+      // Sanity guard: if EVERY token is "not present", treat as a failed render
+      // (likely a hydration crash or a stripped-down SSR shell that lost layout).
+      const anyFound = samples.some((s) => s.found);
+      if (!anyFound) return settle({ ok: false, error: "no tokens found in document — likely hydration failure" });
+      settle({ ok: true, samples });
+    } catch (e) {
+      settle({ ok: false, error: e instanceof Error ? e.message : String(e) });
+    }
+  };
+  iframe.addEventListener("load", onLoad);
+
+  if (ssrFallback) {
+    // Load via srcdoc so the iframe contains the SSR HTML even if the runtime would crash.
+    fetch(`${path}${path.includes("?") ? "&" : "?"}__audit=${Date.now()}`, { credentials: "same-origin" })
+      .then(async (res) => {
+        if (!res.ok) throw new Error(`SSR fetch ${res.status}`);
+        const html = await res.text();
+        // Inject a <base> so relative asset URLs resolve and a no-script marker
+        // so we can tell this was the fallback path.
+        const withBase = html.replace(
+          /<head([^>]*)>/i,
+          `<head$1><base href="${location.origin}/"><meta name="x-audit-via" content="ssr-fallback">`,
+        );
+        iframe.srcdoc = withBase;
+      })
+      .catch((err) => settle({ ok: false, error: `SSR fetch failed: ${err instanceof Error ? err.message : String(err)}` }));
+  } else {
+    // Cache-bust so the iframe re-renders fresh on every attempt.
+    iframe.removeAttribute("srcdoc");
+    iframe.src = `${path}${path.includes("?") ? "&" : "?"}__audit=${Date.now()}`;
+  }
+
+  const timer = setTimeout(() => settle({ ok: false, error: `timeout after ${Math.round(timeoutMs / 1000)}s` }), timeoutMs);
+});
 
 function TypographyAuditPage() {
   const [results, setResults] = useState<RouteResult[]>(() => ROUTES.map((p) => ({ path: p, status: "pending", samples: [] })));
   const [running, setRunning] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
+  // 3-stage pipeline per route: iframe → iframe (longer timeout) → SSR HTML fallback.
+  // Each stage's failure reason is appended to attemptLog for visibility.
   const auditRoute = useCallback(async (path: string): Promise<RouteResult> => {
     const iframe = iframeRef.current;
     if (!iframe) return { path, status: "error", samples: [], error: "iframe missing" };
-    return new Promise((resolve) => {
-      const onLoad = async () => {
-        iframe.removeEventListener("load", onLoad);
-        try {
-          const win = iframe.contentWindow;
-          const doc = iframe.contentDocument;
-          if (!win || !doc) {
-            resolve({ path, status: "error", samples: [], error: "iframe blocked" });
-            return;
-          }
-          // Wait for webfonts before sampling so we read the LOADED font, not fallback
-          if (doc.fonts && (doc.fonts as FontFaceSet & { ready?: Promise<unknown> }).ready) {
-            try { await doc.fonts.ready; } catch { /* ignore */ }
-          }
-          // Give async hero hooks (parallax, scroll-scale) one frame to settle.
-          await new Promise((r) => setTimeout(r, 250));
-          const samples = TOKENS.map((t) => sampleToken(doc, win, t));
-          resolve({ path, status: "done", samples });
-        } catch (e) {
-          resolve({ path, status: "error", samples: [], error: e instanceof Error ? e.message : String(e) });
-        }
-      };
-      iframe.addEventListener("load", onLoad);
-      // Cache-bust each navigation so the iframe re-evaluates fresh
-      iframe.src = `${path}${path.includes("?") ? "&" : "?"}__audit=${Date.now()}`;
-      // Hard timeout per route
-      setTimeout(() => {
-        iframe.removeEventListener("load", onLoad);
-        resolve({ path, status: "error", samples: [], error: "timeout (10s)" });
-      }, 10000);
-    });
+
+    const stages: Array<{ label: string; timeout: number; via: AuditVia; ssr: boolean; backoffBefore: number }> = [
+      { label: "iframe attempt 1", timeout: 8000, via: "iframe", ssr: false, backoffBefore: 0 },
+      { label: "iframe attempt 2", timeout: 12000, via: "iframe", ssr: false, backoffBefore: 600 },
+      { label: "SSR HTML fallback", timeout: 8000, via: "ssr-fallback", ssr: true, backoffBefore: 400 },
+    ];
+
+    const log: string[] = [];
+    for (let i = 0; i < stages.length; i++) {
+      const stage = stages[i];
+      if (stage.backoffBefore) await new Promise((r) => setTimeout(r, stage.backoffBefore));
+      const r = await sampleViaIframe(iframe, path, stage.timeout, stage.ssr);
+      if (r.ok) {
+        return { path, status: "done", samples: r.samples, attempts: i + 1, via: stage.via, attemptLog: log };
+      }
+      log.push(`${stage.label}: ${r.error}`);
+    }
+    return {
+      path, status: "error", samples: [],
+      error: "all 3 attempts failed", attempts: stages.length, attemptLog: log,
+    };
   }, []);
 
   const runAudit = useCallback(async () => {
