@@ -351,6 +351,21 @@ jobs:
             # hard-coded string) and the URL still passes the shape
             # regex above but points at a DIFFERENT workflow's runs
             # listing — silently misleading every reviewer who clicks.
+            #
+            # Print a side-by-side comparison BEFORE the equality test
+            # so a failed run shows the two values on adjacent log lines
+            # — no scrolling, no copy-paste — and a passing run shows
+            # the exact strings that were compared (proof of work).
+            if [[ "${runs_basename}" == "${expected_basename}" ]]; then
+              basename_match_marker="✅ match"
+            else
+              basename_match_marker="❌ differ"
+            fi
+            echo "── phase-2 basename comparison ────────────────────────────"
+            echo "  expected (from TARGET_WORKFLOW)   : \"${expected_basename}\""
+            echo "  actual   (from WORKFLOW_RUNS_URL) : \"${runs_basename}\""
+            echo "  result                            : ${basename_match_marker}"
+            echo "───────────────────────────────────────────────────────────"
             if [[ "${runs_basename}" != "${expected_basename}" ]]; then
               validation_errors+=(
                 "WORKFLOW_RUNS_URL basename \"${runs_basename}\" does not match basename of TARGET_WORKFLOW \"${expected_basename}\" (TARGET_WORKFLOW=\"${TARGET_WORKFLOW}\", URL=\"${WORKFLOW_RUNS_URL}\")"
