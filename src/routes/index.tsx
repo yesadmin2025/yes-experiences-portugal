@@ -978,10 +978,10 @@ function HomePage() {
               <span className="italic">Or tailor them, your way.</span>
             </h2>
             <p className="mt-3 text-[12px] uppercase tracking-[0.24em] text-[color:var(--gold)]">
-              Our signature experiences
+              Instant confirmation across all experiences.
             </p>
             <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
-              Three private experiences crafted by our locals — ready to confirm in seconds, or shaped entirely around you.
+              Three private experiences crafted by our locals — confirm them as they are, or reshape every detail. Either way, it's yours in seconds.
             </p>
           </div>
 
