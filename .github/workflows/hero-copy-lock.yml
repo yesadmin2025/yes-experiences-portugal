@@ -261,6 +261,82 @@ jobs:
           echo "Wrote qa-meta/meta.json (also copied to qa-logs/meta.json):"
           cat qa-meta/meta.json
 
+      - name: Summarize QA report (qa-logs/summary.json)
+        # Distills the full hero-copy-qa@1 report into a compact triage
+        # summary so reviewers don't have to grep the full JSON / logs to
+        # answer "what failed and where?". Captured fields:
+        #   - exitCode / exitName (mirrored from qa-logs/exit-code.txt;
+        #     falls back to the report's own exitCode/exitName)
+        #   - totals: { drift, fetchFailed, manual, ok, targets }
+        #   - failingTargets: array of { name, url, status, driftKeys }
+        #     for any target whose status is not "ok" — these are the
+        #     "page IDs" reviewers click first.
+        #   - driftKeys: flat union of every driftKeys[] across targets
+        #     (deduped) so a single grep tells you which copy fields
+        #     drifted across the whole run.
+        #
+        # Tolerant of missing / malformed input: if the report file is
+        # absent (hard crash before first emit) or unparseable, we still
+        # emit a well-formed summary stub with `reportPresent: false`
+        # and the exit code from disk — so consumers can rely on the
+        # file always existing in the logs artifact.
+        if: always()
+        run: |
+          mkdir -p qa-logs
+          REPORT="qa-reports/hero-copy-qa.json"
+          EXIT_CODE="$(cat qa-logs/exit-code.txt 2>/dev/null || echo unknown)"
+          if [ -s "$REPORT" ] && jq empty "$REPORT" >/dev/null 2>&1; then
+            jq \
+              --arg generatedAt "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+              --arg exitCodeStr "$EXIT_CODE" \
+              '{
+                schema: "hero-copy-qa-summary@1",
+                generatedAt: $generatedAt,
+                reportPresent: true,
+                reportSchema: .schema,
+                reportTs: .ts,
+                mode: .mode,
+                runIndex: .runIndex,
+                exitCode: (try ($exitCodeStr | tonumber) catch .exitCode),
+                exitName: .exitName,
+                filter: .filter,
+                totals: {
+                  targets:     (.targets | length),
+                  ok:          ([.targets[] | select(.status == "ok")]          | length),
+                  drift:       (.totals.drift       // 0),
+                  fetchFailed: (.totals.fetchFailed // 0),
+                  manual:      (.totals.manual      // 0)
+                },
+                failingTargets: [
+                  .targets[]
+                  | select(.status != "ok")
+                  | { name, url, status, driftKeys: (.driftKeys // []) }
+                ],
+                driftKeys: [
+                  .targets[]?.driftKeys[]?
+                ] | unique
+              }' "$REPORT" > qa-logs/summary.json
+          else
+            echo "::warning::hero-copy-qa report missing or unparseable at $REPORT — emitting summary stub"
+            jq -n \
+              --arg generatedAt "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+              --arg exitCodeStr "$EXIT_CODE" \
+              --arg reportPath  "$REPORT" \
+              '{
+                schema: "hero-copy-qa-summary@1",
+                generatedAt: $generatedAt,
+                reportPresent: false,
+                reportPath: $reportPath,
+                exitCode: (try ($exitCodeStr | tonumber) catch $exitCodeStr),
+                exitName: "UNKNOWN",
+                totals: { targets: 0, ok: 0, drift: 0, fetchFailed: 0, manual: 0 },
+                failingTargets: [],
+                driftKeys: []
+              }' > qa-logs/summary.json
+          fi
+          echo "Wrote qa-logs/summary.json:"
+          cat qa-logs/summary.json
+
       - name: Upload hero-copy QA JSON report
         # Always upload — drift, fetch failures, and runtime errors are
         # exactly the cases where the JSON is most useful for triage.
