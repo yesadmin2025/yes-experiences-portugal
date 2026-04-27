@@ -65,6 +65,45 @@ function timingSafeEqual(a: string, b: string): boolean {
 }
 
 /**
+ * Redact sensitive fields from a URL before logging. Strips the entire query
+ * string and fragment so callers can never leak `?token=...` or other
+ * sensitive overrides via worker logs. Returns only `<origin><pathname>`,
+ * or `"<unparseable-url>"` if the input is not a valid URL.
+ */
+function redactUrlForLog(raw: string): string {
+  try {
+    const u = new URL(raw);
+    return `${u.origin}${u.pathname}`;
+  } catch {
+    return "<unparseable-url>";
+  }
+}
+
+/**
+ * Emit a structured log line for a rejected request. Never includes the
+ * presented token, the raw query string, request headers, or the
+ * caller-supplied `?url=` / `?path=` values verbatim. Only the request method,
+ * route pathname, response status, and a stable reason code are recorded.
+ */
+function logRejection(
+  method: string,
+  requestUrl: string,
+  status: number,
+  reason: string,
+): void {
+  // eslint-disable-next-line no-console
+  console.warn(
+    JSON.stringify({
+      evt: "verify_hero_reject",
+      method,
+      route: redactUrlForLog(requestUrl),
+      status,
+      reason,
+    }),
+  );
+}
+
+/**
  * Every routable path generated from `src/routes/` (excluding `__root` and the
  * api/* server routes). Keep this list in sync when new top-level routes are
  * added — it powers the multi-page hero verification mode.
@@ -295,128 +334,152 @@ export const Route = createFileRoute("/api/verify-hero")({
   server: {
     handlers: {
       GET: async ({ request }) => {
-        const url = new URL(request.url);
+        try {
+          const url = new URL(request.url);
 
-        // ---- Auth: require shared secret before any fetch logic runs ----
-        const expectedToken = process.env.VERIFY_HERO_TOKEN;
-        if (!expectedToken) {
-          // Fail closed if the server is misconfigured rather than allowing
-          // unauthenticated access by default.
-          return Response.json(
-            { ok: false, error: "endpoint_disabled" },
-            { status: 503, headers: { "cache-control": "no-store" } },
-          );
-        }
-        const authHeader = request.headers.get("authorization") ?? "";
-        const bearer = authHeader.startsWith("Bearer ")
-          ? authHeader.slice("Bearer ".length)
-          : "";
-        const queryToken = url.searchParams.get("token") ?? "";
-        const presented = bearer || queryToken;
-        if (!presented || !timingSafeEqual(presented, expectedToken)) {
-          return Response.json(
-            { ok: false, error: "unauthorized" },
-            { status: 401, headers: { "cache-control": "no-store" } },
-          );
-        }
+          // ---- Auth: require shared secret before any fetch logic runs ----
+          const expectedToken = process.env.VERIFY_HERO_TOKEN;
+          if (!expectedToken) {
+            // Fail closed if the server is misconfigured rather than allowing
+            // unauthenticated access by default. Do not echo configuration
+            // detail back to the caller — only a stable code.
+            logRejection(request.method, request.url, 503, "endpoint_disabled");
+            return Response.json(
+              { ok: false, error: "endpoint_disabled" },
+              { status: 503, headers: { "cache-control": "no-store" } },
+            );
+          }
+          const authHeader = request.headers.get("authorization") ?? "";
+          const bearer = authHeader.startsWith("Bearer ")
+            ? authHeader.slice("Bearer ".length)
+            : "";
+          const queryToken = url.searchParams.get("token") ?? "";
+          const presented = bearer || queryToken;
+          if (!presented || !timingSafeEqual(presented, expectedToken)) {
+            // CRITICAL: never include `presented`, `bearer`, `queryToken`,
+            // request headers, or the raw `request.url` (which carries the
+            // token) in either the response body or the log line.
+            logRejection(request.method, request.url, 401, "unauthorized");
+            return Response.json(
+              { ok: false, error: "unauthorized" },
+              { status: 401, headers: { "cache-control": "no-store" } },
+            );
+          }
 
-        // ---- Input validation: ?url= must be in allowlist, ?path= must be relative ----
-        const rawTarget = url.searchParams.get("url");
-        const target = rawTarget === null
-          ? PUBLISHED_URL
-          : validateTargetUrl(rawTarget);
-        if (target === null) {
+          // ---- Input validation: ?url= must be in allowlist, ?path= must be relative ----
+          const rawTarget = url.searchParams.get("url");
+          const target = rawTarget === null
+            ? PUBLISHED_URL
+            : validateTargetUrl(rawTarget);
+          if (target === null) {
+            // Do NOT echo the rejected `?url=` value back to the caller or
+            // into logs — it may itself be an SSRF probe (e.g. an internal
+            // IP). Only the stable error code is returned.
+            logRejection(request.method, request.url, 400, "invalid_url_param");
+            return Response.json(
+              { ok: false, error: "invalid_url_param" },
+              { status: 400, headers: { "cache-control": "no-store" } },
+            );
+          }
+
+          const all = url.searchParams.get("all");
+          const strictParam = url.searchParams.get("strict");
+          const strict = strictParam === "1" || strictParam === "true";
+
+          const rawPath = url.searchParams.get("path");
+          const singlePath = rawPath === null ? "/" : validatePath(rawPath);
+          if (singlePath === null) {
+            // Same rule: do not echo the rejected `?path=` value.
+            logRejection(
+              request.method,
+              request.url,
+              400,
+              "invalid_path_param",
+            );
+            return Response.json(
+              { ok: false, error: "invalid_path_param" },
+              { status: 400, headers: { "cache-control": "no-store" } },
+            );
+          }
+
+          const paths: readonly string[] =
+            all === "1" || all === "true" ? ALL_ROUTES : [singlePath];
+
+          // Run in parallel; cap concurrency implicitly via Promise.all on a
+          // small fixed list (≤12 paths today).
+          const pages = await Promise.all(
+            paths.map((p) => verifyPage(target, p)),
+          );
+
+          const specDrift = detectSpecDrift();
+          const pagesOk = pages.every((p) => p.ok);
+          const ok = pagesOk && specDrift.ok;
+          const failedCount =
+            pages.filter((p) => !p.ok).length + (specDrift.ok ? 0 : 1);
+          const summary = buildSummary(pages, specDrift);
+
+          // Backwards-compatible single-page shape when not in `all` mode.
+          if (paths.length === 1) {
+            const only = pages[0];
+            const failureStatus = strict ? 422 : only.error ? 502 : 409;
+            return Response.json(
+              {
+                ok: only.ok,
+                strict,
+                target: only.url,
+                httpStatus: only.httpStatus,
+                sourceVersion: HERO_COPY_VERSION,
+                specDrift,
+                liveVersion: only.liveVersion,
+                versionMatch: only.versionMatch,
+                checks: only.checks,
+                missing: only.missing,
+                summary,
+                checkedAt: new Date().toISOString(),
+                ...(only.error ? { error: only.error } : {}),
+              },
+              {
+                status: only.ok ? 200 : failureStatus,
+                headers: { "cache-control": "no-store" },
+              },
+            );
+          }
+
+          const multiFailureStatus = strict ? 422 : 409;
           return Response.json(
             {
-              ok: false,
-              error: "invalid_url_param",
-              detail: "?url= must be https and match an allowlisted origin.",
-            },
-            { status: 400, headers: { "cache-control": "no-store" } },
-          );
-        }
-
-        const all = url.searchParams.get("all");
-        const strictParam = url.searchParams.get("strict");
-        const strict = strictParam === "1" || strictParam === "true";
-
-        const rawPath = url.searchParams.get("path");
-        const singlePath = rawPath === null ? "/" : validatePath(rawPath);
-        if (singlePath === null) {
-          return Response.json(
-            {
-              ok: false,
-              error: "invalid_path_param",
-              detail:
-                "?path= must be a relative path beginning with '/' and may not contain a scheme.",
-            },
-            { status: 400, headers: { "cache-control": "no-store" } },
-          );
-        }
-
-        const paths: readonly string[] =
-          all === "1" || all === "true" ? ALL_ROUTES : [singlePath];
-
-        // Run in parallel; cap concurrency implicitly via Promise.all on a
-        // small fixed list (≤12 paths today).
-        const pages = await Promise.all(
-          paths.map((p) => verifyPage(target, p)),
-        );
-
-        const specDrift = detectSpecDrift();
-        const pagesOk = pages.every((p) => p.ok);
-        const ok = pagesOk && specDrift.ok;
-        const failedCount =
-          pages.filter((p) => !p.ok).length + (specDrift.ok ? 0 : 1);
-        const summary = buildSummary(pages, specDrift);
-
-        // Backwards-compatible single-page shape when not in `all` mode.
-        if (paths.length === 1) {
-          const only = pages[0];
-          const failureStatus = strict ? 422 : only.error ? 502 : 409;
-          return Response.json(
-            {
-              ok: only.ok,
+              ok,
               strict,
-              target: only.url,
-              httpStatus: only.httpStatus,
+              mode: "all",
+              base: target,
               sourceVersion: HERO_COPY_VERSION,
               specDrift,
-              liveVersion: only.liveVersion,
-              versionMatch: only.versionMatch,
-              checks: only.checks,
-              missing: only.missing,
+              totalPages: pages.length,
+              failedCount,
               summary,
+              pages,
               checkedAt: new Date().toISOString(),
-              ...(only.error ? { error: only.error } : {}),
             },
             {
-              status: only.ok ? 200 : failureStatus,
+              status: ok ? 200 : multiFailureStatus,
               headers: { "cache-control": "no-store" },
             },
           );
+        } catch {
+          // Catch-all: never let an unexpected error bubble up with a stack
+          // trace or the raw request URL. Log only a stable reason code and
+          // a redacted route, and return a generic 500.
+          logRejection(
+            request.method,
+            request.url,
+            500,
+            "unexpected_error",
+          );
+          return Response.json(
+            { ok: false, error: "internal_error" },
+            { status: 500, headers: { "cache-control": "no-store" } },
+          );
         }
-
-        const multiFailureStatus = strict ? 422 : 409;
-        return Response.json(
-          {
-            ok,
-            strict,
-            mode: "all",
-            base: target,
-            sourceVersion: HERO_COPY_VERSION,
-            specDrift,
-            totalPages: pages.length,
-            failedCount,
-            summary,
-            pages,
-            checkedAt: new Date().toISOString(),
-          },
-          {
-            status: ok ? 200 : multiFailureStatus,
-            headers: { "cache-control": "no-store" },
-          },
-        );
       },
     },
   },
