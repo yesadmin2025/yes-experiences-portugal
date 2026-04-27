@@ -31,3 +31,27 @@ jobs:
         # Fails the job on ANY TypeScript diagnostic. tsc exits non-zero on
         # error, which propagates as a failed required check on push and PR.
         run: bunx tsc --noEmit -p tsconfig.json
+
+  eslint:
+    name: eslint
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Run ESLint
+        # Uses the project's `lint` script (`eslint .`). ESLint exits non-zero
+        # on any error, which fails the job and blocks the required check.
+        # `--max-warnings=0` would also escalate warnings; omitted here so
+        # warnings stay non-blocking until the team opts in.
+        run: bun run lint
