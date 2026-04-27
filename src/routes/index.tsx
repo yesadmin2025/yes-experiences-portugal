@@ -102,7 +102,7 @@ const howItWorks = [
     step: "01",
     icon: BookOpen,
     title: "Start with an idea, place or experience",
-    line: "Begin from a curated experience or a blank canvas — wherever feels right.",
+    line: "Begin from a curated experience or a blank slate — wherever feels right.",
   },
   {
     step: "02",
