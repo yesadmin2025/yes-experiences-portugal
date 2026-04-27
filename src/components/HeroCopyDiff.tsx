@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
 
 /**
@@ -138,12 +138,76 @@ declare global {
   }
 }
 
+type DiffState = {
+  baselineVersion: string | null;
+  currentVersion: string;
+  rows: DiffRow[];
+  status: "no-baseline" | "no-changes" | "changed";
+  ranAt: string;
+};
+
+function buildDiffState(): DiffState {
+  const after = currentSnapshot();
+  const before = readBaseline();
+  const ranAt = new Date().toISOString();
+
+  if (!before) {
+    return {
+      baselineVersion: null,
+      currentVersion: after.version,
+      rows: [],
+      status: "no-baseline",
+      ranAt,
+    };
+  }
+  if (before.version === after.version) {
+    return {
+      baselineVersion: before.version,
+      currentVersion: after.version,
+      rows: [],
+      status: "no-changes",
+      ranAt,
+    };
+  }
+  return {
+    baselineVersion: before.version,
+    currentVersion: after.version,
+    rows: diffSnapshots(before, after),
+    status: "changed",
+    ranAt,
+  };
+}
+
+const SR_ONLY: React.CSSProperties = {
+  position: "absolute",
+  width: 1,
+  height: 1,
+  padding: 0,
+  margin: -1,
+  overflow: "hidden",
+  clip: "rect(0,0,0,0)",
+  whiteSpace: "nowrap",
+  border: 0,
+};
+
 export function HeroCopyDiff() {
+  const [state, setState] = useState<DiffState | null>(null);
+
+  const refresh = useCallback(() => {
+    const next = buildDiffState();
+    setState(next);
+    return next;
+  }, []);
+
   useEffect(() => {
     if (typeof window === "undefined") return;
 
     window.__heroCopy = {
-      diff: runDiff,
+      diff: () => {
+        const next = refresh();
+        runDiff(); // keep the existing console output behaviour
+        return next.rows;
+      },
       snapshot: currentSnapshot,
       baseline: readBaseline,
       setBaseline: () => {
@@ -154,6 +218,7 @@ export function HeroCopyDiff() {
           "color:#10b981",
           `version=${snap.version}`,
         );
+        refresh();
         return snap;
       },
       clear: () => {
@@ -163,11 +228,54 @@ export function HeroCopyDiff() {
           /* ignore */
         }
         console.info("%c[hero-copy] baseline cleared", "color:#9ca3af");
+        refresh();
       },
     };
 
+    // Initial run: log to console (existing behaviour) AND populate the
+    // hidden DOM probe so it's inspectable without opening DevTools console.
     runDiff();
-  }, []);
+    refresh();
+  }, [refresh]);
 
-  return null;
+  // SSR / pre-hydration: render nothing so the hidden probe only appears
+  // once a real client-side comparison has happened. Avoids a misleading
+  // "no-baseline" snapshot baked into the SSR HTML.
+  if (!state) return null;
+
+  const changedFields = state.rows.map((r) => r.field).join(",");
+
+  return (
+    <div
+      data-hero-copy-diff=""
+      data-testid="hero-copy-diff"
+      data-diff-status={state.status}
+      data-diff-baseline-version={state.baselineVersion ?? ""}
+      data-diff-current-version={state.currentVersion}
+      data-diff-changed-count={String(state.rows.length)}
+      data-diff-changed-fields={changedFields}
+      data-diff-ran-at={state.ranAt}
+      data-diff-json={JSON.stringify(state)}
+      aria-hidden="true"
+      style={SR_ONLY}
+    >
+      <span data-diff-summary>
+        [hero-copy diff] status={state.status} changed={state.rows.length}{" "}
+        {state.baselineVersion ?? "—"} → {state.currentVersion}
+      </span>
+      {state.rows.map((row) => (
+        <span
+          key={row.field}
+          data-diff-row={row.field}
+          data-diff-change={row.change}
+          data-diff-before={row.before ?? ""}
+          data-diff-after={row.after ?? ""}
+        >
+          {" | "}
+          {row.field} ({row.change}): {JSON.stringify(row.before)} →{" "}
+          {JSON.stringify(row.after)}
+        </span>
+      ))}
+    </div>
+  );
 }
