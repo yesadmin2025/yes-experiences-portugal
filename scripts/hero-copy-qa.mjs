@@ -91,6 +91,11 @@ const EXIT = Object.freeze({
 //                                        diverges from the contract the script
 //                                        exits EXIT.RUNTIME_ERROR (it's a
 //                                        script bug, not content drift).
+//   --report-json-schema                 print the strict-validator schema
+//                                        (version + shape) as JSON to stdout
+//                                        and exit 0. No fetches performed.
+//                                        Lets tests/CI assert the schema name
+//                                        matches "hero-copy-qa@N".
 //
 // Without --strict-flags, unknown flags are warnings (back-compat); with it,
 // CI can guarantee no silent typos.
