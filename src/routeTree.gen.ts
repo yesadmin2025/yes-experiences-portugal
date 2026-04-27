@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TypographyAuditRouteImport } from './routes/typography-audit'
 import { Route as ProposalsRouteImport } from './routes/proposals'
+import { Route as PreviewCheckRouteImport } from './routes/preview-check'
 import { Route as MultiDayRouteImport } from './routes/multi-day'
 import { Route as LocalStoriesRouteImport } from './routes/local-stories'
 import { Route as HeroVerifyRouteImport } from './routes/hero-verify'
@@ -32,6 +33,11 @@ const TypographyAuditRoute = TypographyAuditRouteImport.update({
 const ProposalsRoute = ProposalsRouteImport.update({
   id: '/proposals',
   path: '/proposals',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PreviewCheckRoute = PreviewCheckRouteImport.update({
+  id: '/preview-check',
+  path: '/preview-check',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MultiDayRoute = MultiDayRouteImport.update({
@@ -107,6 +113,7 @@ export interface FileRoutesByFullPath {
   '/hero-verify': typeof HeroVerifyRoute
   '/local-stories': typeof LocalStoriesRoute
   '/multi-day': typeof MultiDayRoute
+  '/preview-check': typeof PreviewCheckRoute
   '/proposals': typeof ProposalsRoute
   '/typography-audit': typeof TypographyAuditRoute
   '/api/verify-hero': typeof ApiVerifyHeroRoute
@@ -123,6 +130,7 @@ export interface FileRoutesByTo {
   '/hero-verify': typeof HeroVerifyRoute
   '/local-stories': typeof LocalStoriesRoute
   '/multi-day': typeof MultiDayRoute
+  '/preview-check': typeof PreviewCheckRoute
   '/proposals': typeof ProposalsRoute
   '/typography-audit': typeof TypographyAuditRoute
   '/api/verify-hero': typeof ApiVerifyHeroRoute
@@ -140,6 +148,7 @@ export interface FileRoutesById {
   '/hero-verify': typeof HeroVerifyRoute
   '/local-stories': typeof LocalStoriesRoute
   '/multi-day': typeof MultiDayRoute
+  '/preview-check': typeof PreviewCheckRoute
   '/proposals': typeof ProposalsRoute
   '/typography-audit': typeof TypographyAuditRoute
   '/api/verify-hero': typeof ApiVerifyHeroRoute
@@ -158,6 +167,7 @@ export interface FileRouteTypes {
     | '/hero-verify'
     | '/local-stories'
     | '/multi-day'
+    | '/preview-check'
     | '/proposals'
     | '/typography-audit'
     | '/api/verify-hero'
@@ -174,6 +184,7 @@ export interface FileRouteTypes {
     | '/hero-verify'
     | '/local-stories'
     | '/multi-day'
+    | '/preview-check'
     | '/proposals'
     | '/typography-audit'
     | '/api/verify-hero'
@@ -190,6 +201,7 @@ export interface FileRouteTypes {
     | '/hero-verify'
     | '/local-stories'
     | '/multi-day'
+    | '/preview-check'
     | '/proposals'
     | '/typography-audit'
     | '/api/verify-hero'
@@ -207,6 +219,7 @@ export interface RootRouteChildren {
   HeroVerifyRoute: typeof HeroVerifyRoute
   LocalStoriesRoute: typeof LocalStoriesRoute
   MultiDayRoute: typeof MultiDayRoute
+  PreviewCheckRoute: typeof PreviewCheckRoute
   ProposalsRoute: typeof ProposalsRoute
   TypographyAuditRoute: typeof TypographyAuditRoute
   ApiVerifyHeroRoute: typeof ApiVerifyHeroRoute
@@ -226,6 +239,13 @@ declare module '@tanstack/react-router' {
       path: '/proposals'
       fullPath: '/proposals'
       preLoaderRoute: typeof ProposalsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/preview-check': {
+      id: '/preview-check'
+      path: '/preview-check'
+      fullPath: '/preview-check'
+      preLoaderRoute: typeof PreviewCheckRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/multi-day': {
@@ -327,6 +347,7 @@ const rootRouteChildren: RootRouteChildren = {
   HeroVerifyRoute: HeroVerifyRoute,
   LocalStoriesRoute: LocalStoriesRoute,
   MultiDayRoute: MultiDayRoute,
+  PreviewCheckRoute: PreviewCheckRoute,
   ProposalsRoute: ProposalsRoute,
   TypographyAuditRoute: TypographyAuditRoute,
   ApiVerifyHeroRoute: ApiVerifyHeroRoute,
