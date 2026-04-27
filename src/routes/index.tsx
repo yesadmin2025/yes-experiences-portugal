@@ -32,7 +32,7 @@ import { PlatformBadge } from "@/components/PlatformBadge";
 import { HeroMetaProbe } from "@/components/HeroMetaProbe";
 import { HeroCopyDiff } from "@/components/HeroCopyDiff";
 import { HeroVerifyOverlay } from "@/components/HeroVerifyOverlay";
-import { CacheDebugBanner } from "@/components/CacheDebugBanner";
+
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
 
 export const Route = createFileRoute("/")({
@@ -354,7 +354,6 @@ function HomePage() {
   return (
     <SiteLayout>
       {ctaDebug && <CtaScrollDebugOverlay targetRef={ctaGroupRef} />}
-      <CacheDebugBanner />
       {/* 1 — HERO
           Cinematic image, slow zoom, layered overlays for AA-compliant
           contrast on the headline and microcopy. A subtle pointer parallax
