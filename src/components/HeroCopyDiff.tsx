@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
 
 /**
