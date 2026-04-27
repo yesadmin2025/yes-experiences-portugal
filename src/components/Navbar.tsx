@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Menu, X, ArrowRight } from "lucide-react";
-import logoTeal from "@/assets/yes-logo-approved.png";
+import { Logo } from "@/components/Logo";
 
 // Desktop nav — full editorial set, kept compact in tracking so all 8
 // items fit gracefully on a single row at lg+ widths.
