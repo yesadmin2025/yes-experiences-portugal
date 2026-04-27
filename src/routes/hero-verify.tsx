@@ -20,6 +20,11 @@ type PageReport = {
   error?: string;
 };
 
+type SpecDrift = {
+  ok: boolean;
+  drifted: { key: string; expected: string; actual: string }[];
+};
+
 type SingleResponse = {
   ok: boolean;
   target: string;
@@ -29,6 +34,7 @@ type SingleResponse = {
   versionMatch: boolean | null;
   checks: CheckResult[];
   missing: { key: string; expected: string }[];
+  specDrift?: SpecDrift;
   checkedAt: string;
   error?: string;
 };
@@ -41,6 +47,7 @@ type MultiResponse = {
   totalPages: number;
   failedCount: number;
   pages: PageReport[];
+  specDrift?: SpecDrift;
   checkedAt: string;
 };
 
