@@ -1200,6 +1200,32 @@ function SettingsPanel({
         );
       })()}
 
+      {publishReady && (
+        <div
+          role="status"
+          className="mt-3 flex flex-wrap items-center justify-between gap-3 rounded-md border border-emerald-300 bg-emerald-50 p-3 text-[12px] text-emerald-900"
+        >
+          <div className="flex flex-col">
+            <span className="font-semibold">Settings applied · ready to publish</span>
+            <span className="text-[11px] opacity-75">
+              Frontend changes go live only after you publish. Use your editor's Publish button to push the updated reliability settings.
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="hidden text-[11px] opacity-75 md:inline">
+              Desktop: Publish (top-right) · Mobile: ⋯ menu → Publish
+            </span>
+            <button
+              type="button"
+              onClick={() => setPublishReady(false)}
+              className="rounded-md border border-emerald-300 bg-white/70 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] hover:bg-white"
+            >
+              Dismiss
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="mt-5 grid gap-4 md:grid-cols-3">
         {STAGE_META.map(({ key, label, hint }) => {
           const cfg = settings[key];
