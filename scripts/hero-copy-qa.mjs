@@ -47,6 +47,56 @@ const CHECKS = [
   { key: "microcopy", label: "Microcopy", value: HERO_COPY.microcopy },
 ];
 
+// Preflight: the rendered app exposes the live runtime strings via
+// `data-hero-*` attributes on a hidden probe element (see src/routes/index.tsx
+// around line 574). We parse those attributes from the served HTML and assert
+// each one is byte-for-byte equal to the source-of-truth value. If this fails,
+// the substring checks below would lie — passing because the OLD copy still
+// matches, even though something else has drifted.
+const PROBE_ATTRS = [
+  { attr: "data-hero-eyebrow", key: "eyebrow", expected: HERO_COPY.eyebrow },
+  {
+    attr: "data-hero-headline",
+    key: "headline",
+    expected: `${HERO_COPY.headlineLine1} ${HERO_COPY.headlineLine2}`,
+  },
+  { attr: "data-hero-subheadline", key: "subheadline", expected: HERO_COPY.subheadline },
+  { attr: "data-hero-primary-cta", key: "primaryCta", expected: HERO_COPY.primaryCta },
+  { attr: "data-hero-secondary-cta", key: "secondaryCta", expected: HERO_COPY.secondaryCta },
+  { attr: "data-hero-microcopy", key: "microcopy", expected: HERO_COPY.microcopy },
+];
+
+// Decode the small set of HTML entities React emits inside attribute values.
+function decodeAttr(value) {
+  return value
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&#x27;/g, "'")
+    .replace(/&#x2F;/g, "/");
+}
+
+function readProbeAttr(html, attr) {
+  // Match: data-hero-foo="..." (double-quoted is what React renders).
+  const re = new RegExp(`${attr}="([^"]*)"`);
+  const m = html.match(re);
+  return m ? decodeAttr(m[1]) : null;
+}
+
+function runPreflight(html) {
+  return PROBE_ATTRS.map((p) => {
+    const actual = readProbeAttr(html, p.attr);
+    return {
+      ...p,
+      actual,
+      pass: actual !== null && actual === p.expected,
+      missing: actual === null,
+    };
+  });
+}
+
 const GREEN = "\x1b[32m";
 const RED = "\x1b[31m";
 const DIM = "\x1b[2m";
