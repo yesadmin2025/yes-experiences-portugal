@@ -1215,6 +1215,26 @@ export function HeroVerifyOverlay() {
                   `"schema" must be a string — got ${typeof schemaTagCheck.actual}.`}
                 {schemaTagCheck.reason === "mismatch" &&
                   `"schema" was "${String(schemaTagCheck.actual)}" — download blocked.`}
+                <div style={{ marginTop: 6 }}>
+                  <button
+                    type="button"
+                    onClick={handleRegeneratePayload}
+                    style={{
+                      background: "rgba(239,68,68,0.2)",
+                      color: "rgb(254, 226, 226)",
+                      border: "1px solid rgba(239,68,68,0.6)",
+                      borderRadius: 4,
+                      padding: "3px 8px",
+                      fontSize: 11,
+                      fontWeight: 600,
+                      cursor: "pointer",
+                      letterSpacing: "0.02em",
+                    }}
+                    title="Rebuild the export payload from current state and re-run the schema-tag guard without downloading."
+                  >
+                    ↻ Regenerate export payload
+                  </button>
+                </div>
               </div>
             )}
           </div>
