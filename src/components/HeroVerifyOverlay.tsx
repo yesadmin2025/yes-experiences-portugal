@@ -408,6 +408,60 @@ export function HeroVerifyOverlay() {
             ?verify=hero
           </span>
         </div>
+        {/* Live mode toggle — when ON, a MutationObserver re-runs
+            verification on any DOM change to hero-field nodes (HMR-safe). */}
+        <label
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            marginBottom: 10,
+            fontSize: 11,
+            cursor: "pointer",
+            userSelect: "none",
+          }}
+        >
+          <input
+            type="checkbox"
+            checked={liveMode}
+            onChange={(e) => setLiveMode(e.target.checked)}
+            style={{ cursor: "pointer" }}
+          />
+          <span>
+            <strong style={{ letterSpacing: "0.04em" }}>Live mode</strong>
+            <span style={{ opacity: 0.65, marginLeft: 6 }}>
+              {liveMode ? "watching DOM" : "manual"}
+            </span>
+          </span>
+          <span
+            aria-hidden="true"
+            style={{
+              marginLeft: "auto",
+              width: 8,
+              height: 8,
+              borderRadius: "50%",
+              background: liveMode
+                ? "rgb(34, 197, 94)"
+                : "rgb(148, 163, 184)",
+              boxShadow: liveMode
+                ? "0 0 0 3px rgba(34,197,94,0.25)"
+                : "none",
+              animation: liveMode ? "heroVerifyPulse 1.6s ease-in-out infinite" : "none",
+            }}
+          />
+        </label>
+        {lastUpdated !== null && (
+          <div
+            style={{
+              fontSize: 10,
+              opacity: 0.55,
+              marginBottom: 8,
+              fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
+            }}
+          >
+            updated {new Date(lastUpdated).toLocaleTimeString()}
+          </div>
+        )}
         <div
           style={{
             display: "grid",
