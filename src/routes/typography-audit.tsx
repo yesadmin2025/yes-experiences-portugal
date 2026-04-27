@@ -497,6 +497,70 @@ const validateCurrentSettings = (s: AuditSettings): ValidationReport => {
   return { ok, shape: "bare", issues, parsed: s };
 };
 
+// Build a corrected AuditSettings from a (possibly broken) source: clamp every
+// numeric field into its allowed range, round non-integers, fall back to
+// defaults for missing/invalid values, and re-enable Stage 1 if every stage was
+// disabled. Returns both the fixed settings and a human-readable list of the
+// changes that were made (for transparency in the UI).
+type AutoFix = { fixed: AuditSettings; changes: string[] };
+
+const autoFixSettings = (s: AuditSettings): AutoFix => {
+  const changes: string[] = [];
+
+  const clampNum = (path: string, v: unknown, fb: number, range: FieldRange): number => {
+    const n = typeof v === "number" ? v : Number(v);
+    if (!Number.isFinite(n)) {
+      changes.push(`${path}: invalid (${String(v)}) → reset to default ${fb}`);
+      return fb;
+    }
+    let out = n;
+    if (out < range.min) {
+      changes.push(`${path}: ${out} < ${range.min} → clamped to ${range.min}`);
+      out = range.min;
+    } else if (out > range.max) {
+      changes.push(`${path}: ${out} > ${range.max} → clamped to ${range.max}`);
+      out = range.max;
+    }
+    if (!Number.isInteger(out)) {
+      const rounded = Math.round(out);
+      changes.push(`${path}: ${out} → rounded to ${rounded}`);
+      out = rounded;
+    }
+    return out;
+  };
+
+  const fixStage = (key: StageKey, fb: StageSettings): StageSettings => {
+    const stage = s[key] ?? fb;
+    let enabled = stage.enabled;
+    if (typeof enabled !== "boolean") {
+      changes.push(`${key}.enabled: invalid → reset to ${fb.enabled}`);
+      enabled = fb.enabled;
+    }
+    return {
+      enabled,
+      timeoutMs: clampNum(`${key}.timeoutMs`, stage.timeoutMs, fb.timeoutMs, FIELD_RANGES.stageTimeoutMs),
+      backoffMs: clampNum(`${key}.backoffMs`, stage.backoffMs, fb.backoffMs, FIELD_RANGES.stageBackoffMs),
+    };
+  };
+
+  const fixed: AuditSettings = {
+    iframeAttempt1: fixStage("iframeAttempt1", DEFAULT_SETTINGS.iframeAttempt1),
+    iframeAttempt2: fixStage("iframeAttempt2", DEFAULT_SETTINGS.iframeAttempt2),
+    ssrFallback:    fixStage("ssrFallback",    DEFAULT_SETTINGS.ssrFallback),
+    fontsReadyCapMs:  clampNum("fontsReadyCapMs",  s.fontsReadyCapMs,  DEFAULT_SETTINGS.fontsReadyCapMs,  FIELD_RANGES.fontsReadyCapMs),
+    postLoadSettleMs: clampNum("postLoadSettleMs", s.postLoadSettleMs, DEFAULT_SETTINGS.postLoadSettleMs, FIELD_RANGES.postLoadSettleMs),
+  };
+
+  // Cross-field repair: a fully-disabled config means the audit silently does
+  // nothing. Re-enable Stage 1 so the pipeline has at least one shot.
+  if (!STAGE_KEYS.some((k) => fixed[k].enabled)) {
+    fixed.iframeAttempt1 = { ...fixed.iframeAttempt1, enabled: true };
+    changes.push("iframeAttempt1.enabled: all stages were off → re-enabled Stage 1");
+  }
+
+  return { fixed, changes };
+};
+
 function TypographyAuditPage() {
   const [results, setResults] = useState<RouteResult[]>(() => ROUTES.map((p) => ({ path: p, status: "pending", samples: [] })));
   const [running, setRunning] = useState(false);
