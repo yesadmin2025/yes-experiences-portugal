@@ -630,22 +630,47 @@ export function HeroVerifyOverlay() {
             Field details
           </summary>
           <ul style={{ marginTop: 8, paddingLeft: 14 }}>
-            {reports.map((r) => (
-              <li key={r.key} style={{ marginBottom: 6 }}>
-                <span style={{ color: STATUS_COLOR[r.status] }}>
-                  {STATUS_GLYPH[r.status]}
-                </span>{" "}
-                <strong>{r.key}</strong>
-                <div style={{ opacity: 0.7, fontSize: 11 }}>
-                  exp: <q>{r.expected}</q>
-                </div>
-                {r.actual !== null && r.status !== "match" && (
-                  <div style={{ opacity: 0.7, fontSize: 11 }}>
-                    got: <q>{r.actual}</q>
-                  </div>
-                )}
-              </li>
-            ))}
+            {reports.map((r) => {
+              // Compute a char-level diff only for non-match fields with
+              // both sides present. Matched fields just show the expected.
+              const showDiff =
+                r.actual !== null &&
+                (r.status === "mismatch" || r.status === "loose");
+              const segments = showDiff ? diffChars(r.expected, r.actual ?? "") : null;
+              return (
+                <li key={r.key} style={{ marginBottom: 10 }}>
+                  <span style={{ color: STATUS_COLOR[r.status] }}>
+                    {STATUS_GLYPH[r.status]}
+                  </span>{" "}
+                  <strong>{r.key}</strong>
+                  {showDiff && segments ? (
+                    <div
+                      style={{
+                        marginTop: 4,
+                        padding: "6px 8px",
+                        background: "rgba(255,255,255,0.04)",
+                        border: "1px solid rgba(255,255,255,0.08)",
+                        borderRadius: 6,
+                      }}
+                    >
+                      <DiffLine label="exp" segments={segments} side="expected" />
+                      <DiffLine label="got" segments={segments} side="actual" />
+                    </div>
+                  ) : (
+                    <>
+                      <div style={{ opacity: 0.7, fontSize: 11 }}>
+                        exp: <q>{r.expected}</q>
+                      </div>
+                      {r.actual !== null && r.status !== "match" && (
+                        <div style={{ opacity: 0.7, fontSize: 11 }}>
+                          got: <q>{r.actual}</q>
+                        </div>
+                      )}
+                    </>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         </details>
         <div style={{ display: "flex", gap: 6, marginTop: 10 }}>
