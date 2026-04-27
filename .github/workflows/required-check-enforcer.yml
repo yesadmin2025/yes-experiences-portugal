@@ -208,6 +208,17 @@ jobs:
           # against what's in branch protection.
           WORKFLOW_RUNS_URL="${SERVER_URL}/${REPO}/actions/workflows/$(basename "${TARGET_WORKFLOW}")"
 
+          # Echo the fully-constructed deep links so operators can
+          # copy-paste them straight from the step log without having
+          # to render the PR comment first. Useful when the comment
+          # POST itself fails (e.g. permissions glitch) but the URLs
+          # are still needed for manual verification.
+          echo "── PR comment deep-links ───────────────────────────────────"
+          echo "  Workflow file : ${WORKFLOW_FILE_URL}"
+          echo "  Job (line ${NAME_LINE}) : ${WORKFLOW_JOB_URL}"
+          echo "  Workflow runs : ${WORKFLOW_RUNS_URL}"
+          echo "────────────────────────────────────────────────────────────"
+
           # Fence the script output in a code block; truncate to keep
           # the comment under GitHub's 65,536-char body limit with
           # generous headroom.
