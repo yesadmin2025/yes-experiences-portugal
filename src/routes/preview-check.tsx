@@ -59,7 +59,34 @@ function PreviewCheckPage() {
   const jumpTo = (item: CheckItem) => {
     const el = iframeRefs.current[item.id];
     if (!el || !item.hash) return;
-    // Re-assigning src forces the iframe to navigate to the anchor and scroll.
+
+    const targetId = item.hash.replace(/^#/, "");
+
+    // Same-origin iframe (same site) — try in-place smooth scroll first
+    // so we don't reload the embedded page on every jump.
+    try {
+      const win = el.contentWindow;
+      const doc = el.contentDocument;
+      if (win && doc) {
+        const target =
+          doc.getElementById(targetId) ||
+          (targetId === "top" ? doc.body : null);
+        if (target) {
+          target.scrollIntoView({ behavior: "smooth", block: "start" });
+          // Update the iframe's hash without triggering navigation/reload.
+          try {
+            win.history.replaceState(null, "", item.src + item.hash);
+          } catch {
+            /* hash sync is best-effort */
+          }
+          return;
+        }
+      }
+    } catch {
+      /* cross-origin or not-yet-loaded — fall through to reload */
+    }
+
+    // Fallback: only reload if we couldn't reach the inner DOM.
     el.src = item.src + item.hash + "?t=" + Date.now();
   };
 
