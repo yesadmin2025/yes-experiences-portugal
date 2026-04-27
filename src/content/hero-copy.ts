@@ -14,7 +14,7 @@ export const HERO_COPY = {
   headlineLine1: "Portugal is the stage.",
   headlineLine2: "You write the story.",
   subheadline:
-    "Choose a signature, tailor it, or build from scratch in the Studio — guided by local knowledge and confirmed instantly.",
+    "Designed by you, guided by local knowledge — from private days to proposals, celebrations and group experiences.",
   primaryCta: "Create Your Story",
   secondaryCta: "Explore Signature Experiences",
   microcopy: "Instant confirmation. Personalized by you. No waiting, no forms.",
