@@ -283,6 +283,51 @@ const persistSettings = (s: AuditSettings) => {
   try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(s)); } catch { /* quota/private mode */ }
 };
 
+// Coerce an unknown value into a safe StageSettings, clamped to UI ranges.
+const coerceStage = (raw: unknown, fallback: StageSettings): StageSettings => {
+  const obj = (raw && typeof raw === "object") ? (raw as Record<string, unknown>) : {};
+  const num = (v: unknown, fb: number, min: number, max: number) => {
+    const n = typeof v === "number" ? v : Number(v);
+    if (!Number.isFinite(n)) return fb;
+    return Math.min(max, Math.max(min, Math.round(n)));
+  };
+  return {
+    enabled: typeof obj.enabled === "boolean" ? obj.enabled : fallback.enabled,
+    timeoutMs: num(obj.timeoutMs, fallback.timeoutMs, 500, 60000),
+    backoffMs: num(obj.backoffMs, fallback.backoffMs, 0, 5000),
+  };
+};
+
+// Parse a JSON string (either a bare AuditSettings or an exported envelope
+// `{ settings: {...} }`) and return a validated AuditSettings or throw.
+const parseSettingsJson = (text: string): AuditSettings => {
+  const data = JSON.parse(text) as unknown;
+  if (!data || typeof data !== "object") throw new Error("File is not a JSON object.");
+  const root = data as Record<string, unknown>;
+  // Support both shapes: exported envelope and raw settings.
+  const candidate = (root.settings && typeof root.settings === "object")
+    ? (root.settings as Record<string, unknown>)
+    : root;
+
+  const hasAnyStage = ["iframeAttempt1", "iframeAttempt2", "ssrFallback"]
+    .some((k) => candidate[k] && typeof candidate[k] === "object");
+  if (!hasAnyStage) throw new Error("Missing stage settings (iframeAttempt1 / iframeAttempt2 / ssrFallback).");
+
+  const num = (v: unknown, fb: number, min: number, max: number) => {
+    const n = typeof v === "number" ? v : Number(v);
+    if (!Number.isFinite(n)) return fb;
+    return Math.min(max, Math.max(min, Math.round(n)));
+  };
+
+  return {
+    iframeAttempt1: coerceStage(candidate.iframeAttempt1, DEFAULT_SETTINGS.iframeAttempt1),
+    iframeAttempt2: coerceStage(candidate.iframeAttempt2, DEFAULT_SETTINGS.iframeAttempt2),
+    ssrFallback:    coerceStage(candidate.ssrFallback,    DEFAULT_SETTINGS.ssrFallback),
+    fontsReadyCapMs:  num(candidate.fontsReadyCapMs,  DEFAULT_SETTINGS.fontsReadyCapMs,  0, 30000),
+    postLoadSettleMs: num(candidate.postLoadSettleMs, DEFAULT_SETTINGS.postLoadSettleMs, 0, 10000),
+  };
+};
+
 function TypographyAuditPage() {
   const [results, setResults] = useState<RouteResult[]>(() => ROUTES.map((p) => ({ path: p, status: "pending", samples: [] })));
   const [running, setRunning] = useState(false);
