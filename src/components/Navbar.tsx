@@ -90,7 +90,7 @@ export function Navbar() {
               the container's right edge); padding lives in container-x
               so the trigger sits at the same gutter as the logo. */}
           <button
-            className="lg:hidden inline-flex items-center justify-center h-11 w-11 border border-[color:var(--charcoal)]/30 hover:border-[color:var(--teal)] text-[color:var(--charcoal)] hover:text-[color:var(--teal)] transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+            className="lg:hidden inline-flex items-center justify-center h-11 w-11 border border-[color:var(--charcoal-soft)] hover:border-[color:var(--teal)] text-[color:var(--charcoal)] hover:text-[color:var(--teal)] transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             onClick={() => setOpen(!open)}
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
