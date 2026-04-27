@@ -394,10 +394,99 @@ export function HeroVerifyOverlay() {
     return out;
   };
 
-  // Build the export payload + trigger a JSON file download. Captures the
-  // page URL, viewport, version hash, per-field expected/actual/status,
-  // diff segments, and summary counts so the file is self-contained for
-  // CI logs and post-hoc auditing.
+  /**
+   * Pre-export self-check.
+   *
+   * Re-derives a fresh set of reports + diff segments straight from the
+   * live DOM and compares them byte-for-byte to the diff segments held in
+   * `fieldDiffs` (which is what feeds BOTH the on-screen diff list AND
+   * the JSON/CSV export). If anything differs — segment count, segment
+   * types, or segment text — we surface it visibly so you don't ship a
+   * report that disagrees with what you can see on screen.
+   *
+   * Returns true when everything matches; false otherwise (and writes a
+   * console.warn + a transient `divergences` state for the legend).
+   */
+  const runDiffSelfCheck = (): boolean => {
+    if (typeof document === "undefined") return true;
+    const liveReports = computeReports();
+    const liveDiffs = new Map(
+      liveReports.map((r) => {
+        const hasBoth = r.actual !== null;
+        return [r.key, hasBoth ? diffChars(r.expected, r.actual ?? "") : null] as const;
+      }),
+    );
+    const exportedDiffs = new Map(fieldDiffs.map((d) => [d.key, d.segments]));
+
+    type Divergence = {
+      key: string;
+      reason: string;
+      live: DiffSegment[] | null;
+      exported: DiffSegment[] | null;
+    };
+    const divergences: Divergence[] = [];
+
+    // Union of keys from both sides — catches missing entries on either.
+    const allKeys = new Set<string>([
+      ...liveDiffs.keys(),
+      ...exportedDiffs.keys(),
+    ]);
+
+    for (const key of allKeys) {
+      const live = liveDiffs.get(key) ?? null;
+      const exp = exportedDiffs.get(key) ?? null;
+
+      if (live === null && exp === null) continue;
+      if (live === null || exp === null) {
+        divergences.push({
+          key,
+          reason: live === null ? "live missing diff" : "exported missing diff",
+          live,
+          exported: exp,
+        });
+        continue;
+      }
+      if (live.length !== exp.length) {
+        divergences.push({
+          key,
+          reason: `segment count differs (live=${live.length}, exported=${exp.length})`,
+          live,
+          exported: exp,
+        });
+        continue;
+      }
+      for (let i = 0; i < live.length; i++) {
+        if (live[i].type !== exp[i].type || live[i].text !== exp[i].text) {
+          divergences.push({
+            key,
+            reason: `segment ${i} differs`,
+            live,
+            exported: exp,
+          });
+          break;
+        }
+      }
+    }
+
+    if (divergences.length > 0) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        "[hero-verify] export self-check FAILED — on-screen diff and export diverge",
+        divergences,
+      );
+      setSelfCheck({ ok: false, at: Date.now(), divergences });
+      return false;
+    }
+
+    // eslint-disable-next-line no-console
+    console.info(
+      "[hero-verify] export self-check OK — on-screen diff matches export byte-for-byte",
+    );
+    setSelfCheck({ ok: true, at: Date.now(), divergences: [] });
+    return true;
+  };
+
+
   const handleExportJson = () => {
     if (typeof window === "undefined") return;
     const diffByKey = new Map(fieldDiffs.map((d) => [d.key, d.segments]));
