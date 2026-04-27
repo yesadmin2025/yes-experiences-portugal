@@ -646,28 +646,100 @@ EOF
           EXIT_CODE: ${{ needs.enforce.outputs.url_validation_exit_code }}
         run: |
           set -euo pipefail
-          echo "Observed url_validation_exit_code: \"${EXIT_CODE:-<empty>}\""
+          WORKFLOW_PATH=".github/workflows/required-check-enforcer.yml"
+          PRODUCER_STEP="steps.comment (name: 'Post / update PR drift-status comment')"
+          OUTPUT_KEY="url_validation_exit_code"
+          ALL_OUTPUT_KEYS="url_validation_status, url_validation_exit_code, url_validation_phase1_failed, url_validation_phase2_failed, url_validation_phase1_rules, url_validation_phase2_error_count"
+
+          echo "Observed ${OUTPUT_KEY}: \"${EXIT_CODE:-<empty>}\""
+
           case "${EXIT_CODE}" in
             0|11|12|13)
               echo "✅ Exit code \"${EXIT_CODE}\" is in the documented set {0,11,12,13}."
-              ;;
-            "")
-              echo "❌ url_validation_exit_code is EMPTY — the comment step in the"
-              echo "   enforce job did not write the output, or the output was not"
-              echo "   exposed at the job level. Check:"
-              echo "     1. steps.comment.id is 'comment'"
-              echo "     2. enforce.outputs.url_validation_exit_code maps to it"
-              echo "     3. the comment step actually reached the GITHUB_OUTPUT write"
-              exit 1
-              ;;
-            *)
-              echo "❌ url_validation_exit_code \"${EXIT_CODE}\" is NOT in the documented"
-              echo "   set {0,11,12,13}. The comment step's exit-code mapping has drifted"
-              echo "   from the contract — update both the producer (comment step) and"
-              echo "   every consumer's if: clause together."
-              exit 1
+              exit 0
               ;;
           esac
+
+          # ── Failure path: emit a single, structured diagnostic ────────
+          # Distinguishes the FOUR most common breakage modes and points
+          # at the exact file + step + line region the operator has to
+          # touch to fix each one. Designed so a future maintainer can
+          # paste the failure log into a PR and reviewers know which
+          # piece moved without re-deriving the contract.
+          if [[ -z "${EXIT_CODE}" ]]; then
+            kind="EMPTY"
+          else
+            kind="OUT_OF_CONTRACT"
+          fi
+
+          cat <<EOF
+          ❌ Guard FAILED — ${OUTPUT_KEY}=\"${EXIT_CODE:-<empty>}\" (${kind})
+
+          The contract between the producer step and downstream
+          handlers has drifted. Walk these four common causes in order
+          and apply the matching fix in ${WORKFLOW_PATH}.
+
+          ── Cause 1: missing step output write ────────────────────────
+          The producer never reached the \`>> "\$GITHUB_OUTPUT"\` block
+          (early exit, syntax error, or the block was deleted).
+            • Symptom : ${OUTPUT_KEY} is EMPTY in this guard.
+            • Where   : ${WORKFLOW_PATH}, ${PRODUCER_STEP},
+                        the \`{ echo "${OUTPUT_KEY}=…" } >> "\$GITHUB_OUTPUT"\` block
+                        right before the \`exit "\${url_validation_exit_code}"\` line.
+            • Fix     : ensure ALL six outputs are written BEFORE any
+                        \`exit\`, and that the block is reached on every
+                        code path (pass AND fail). Required keys:
+                        ${ALL_OUTPUT_KEYS}.
+
+          ── Cause 2: wrong step \`id\` ──────────────────────────────────
+          The job-level \`outputs:\` mapping references a step id that
+          no longer exists (or never existed).
+            • Symptom : ${OUTPUT_KEY} is EMPTY in this guard.
+            • Where   : ${WORKFLOW_PATH}, the \`enforce\` job header.
+                        Look for \`id: comment\` on the producer step
+                        and \`steps.comment.outputs.*\` in the
+                        \`outputs:\` map.
+            • Fix     : keep the producer step's \`id:\` and the
+                        \`steps.<id>.outputs.*\` references in lockstep.
+                        Renaming one without the other silently breaks
+                        every downstream handler.
+
+          ── Cause 3: renamed output key ───────────────────────────────
+          The producer writes a key (e.g. \`validation_exit_code\`) that
+          no longer matches what the job-level \`outputs:\` map exposes
+          as \`${OUTPUT_KEY}\`.
+            • Symptom : ${OUTPUT_KEY} is EMPTY in this guard, but the
+                        producer step's log shows it wrote *something*
+                        to GITHUB_OUTPUT.
+            • Where   : ${WORKFLOW_PATH}, both ends of the mapping —
+                        the \`echo "<key>=…" >> "\$GITHUB_OUTPUT"\`
+                        lines in the producer AND the \`outputs:\` map
+                        on the \`enforce\` job.
+            • Fix     : rename in BOTH places, then update every
+                        downstream consumer that reads
+                        \`needs.enforce.outputs.<key>\`.
+
+          ── Cause 4: changed exit-code mapping ────────────────────────
+          The producer now emits a code outside {0,11,12,13} (e.g. it
+          was switched to plain 0/1, or a new phase added code 14).
+            • Symptom : ${OUTPUT_KEY} is non-empty but NOT in
+                        {0,11,12,13} (this run: \"${EXIT_CODE}\").
+            • Where   : ${WORKFLOW_PATH}, the producer step's
+                        \`url_validation_exit_code=…\` assignments
+                        (search for \`url_validation_exit_code=11\`
+                        etc.) AND every consumer's \`if:\` clause that
+                        compares to '0', '11', '12', or '13'.
+            • Fix     : update the producer, this guard's \`case\`
+                        statement, AND every handler's \`if:\` clause
+                        in one commit. The set must stay in sync across
+                        all three.
+
+          ── Quick triage ──────────────────────────────────────────────
+          • EMPTY  → causes 1, 2, or 3 (check producer log first).
+          • Other  → cause 4 (exit-code mapping drift).
+          EOF
+
+          exit 1
 
   url-validation-passed:
     name: URL validation passed (post-validation hook)
