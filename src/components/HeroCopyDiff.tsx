@@ -716,18 +716,6 @@ export function HeroCopyDiff() {
           },
         );
       } else {
-        console.info(
-          "%c[hero-copy] post-boundary diff refresh: skipped (version guard)",
-          "color:#9ca3af",
-          {
-            prev,
-            next: pathname,
-            baselineVersion,
-            currentVersion,
-            reason: "baseline version matches current — nothing to diff",
-          },
-        );
-      } else {
         try {
           const next = refresh();
           console.info(
