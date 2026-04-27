@@ -270,6 +270,19 @@ function clearPersistedOutlines() {
   }
 }
 
+/**
+ * Strip every rendered hero outline immediately. Belt-and-braces companion
+ * to clearPersistedOutlines(): the outline effect's cleanup runs on the
+ * next state change, but on baseline acceptance we want the visual to
+ * disappear synchronously so the user sees an instant confirmation.
+ */
+function clearRenderedOutlines() {
+  if (typeof document === "undefined") return;
+  document
+    .querySelectorAll<HTMLElement>("[data-hero-diff-highlight]")
+    .forEach((el) => el.removeAttribute("data-hero-diff-highlight"));
+}
+
 async function copyTextToClipboard(text: string): Promise<boolean> {
   // Modern path — works on https + localhost.
   try {
@@ -319,6 +332,7 @@ export function HeroCopyDiff() {
     // Resetting the baseline invalidates any persisted outlines: the
     // saved "before" version no longer exists to diff against.
     clearPersistedOutlines();
+    clearRenderedOutlines();
     console.info(
       "%c[hero-copy] baseline cleared via UI",
       "color:#9ca3af",
@@ -359,6 +373,7 @@ export function HeroCopyDiff() {
         writeBaseline(snap);
         // New baseline → previously persisted outlines no longer apply.
         clearPersistedOutlines();
+        clearRenderedOutlines();
         console.info(
           "%c[hero-copy] baseline updated",
           "color:#10b981",
@@ -374,6 +389,7 @@ export function HeroCopyDiff() {
           /* ignore */
         }
         clearPersistedOutlines();
+        clearRenderedOutlines();
         console.info("%c[hero-copy] baseline cleared", "color:#9ca3af");
         refresh();
       },
@@ -767,7 +783,17 @@ export function HeroCopyDiff() {
               onClick={() => {
                 const snap = currentSnapshot();
                 writeBaseline(snap);
+                // Accepting the current copy as the new baseline means
+                // there is — by definition — nothing to highlight anymore.
+                // Clear both the persisted payload AND any outline already
+                // painted on the DOM so the visual disappears immediately.
                 clearPersistedOutlines();
+                clearRenderedOutlines();
+                console.info(
+                  "%c[hero-copy] baseline accepted via UI — outlines cleared",
+                  "color:#10b981",
+                  `version=${snap.version}`,
+                );
                 refresh();
               }}
               data-action="accept-current"
