@@ -382,6 +382,9 @@ function HomePage() {
               >
                 {HERO_COPY.microcopy}
               </p>
+              <p className="mt-3 text-[12.5px] md:text-[13px] text-[color:var(--ivory)]/75 italic font-light leading-[1.7] text-center sm:text-left">
+                Prefer guidance? <Link to="/contact" className="underline decoration-[color:var(--gold)]/60 underline-offset-4 hover:text-[color:var(--gold-soft)] transition-colors">A local designer can shape it with you.</Link>
+              </p>
             </div>
 
             {/* Brand line — final centered editorial signature.
