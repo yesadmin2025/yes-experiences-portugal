@@ -390,9 +390,24 @@ function RouteSection({ result }: { result: RouteResult }) {
   return (
     <section className="overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-black/5">
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-black/5 px-5 py-4">
-        <div className="flex items-baseline gap-3">
+        <div className="flex flex-wrap items-baseline gap-3">
           <code className="rounded bg-black/5 px-2 py-1 text-sm font-semibold">{result.path}</code>
           <StatusBadge status={result.status} />
+          {result.via && (
+            <span
+              className={`rounded-full px-2 py-0.5 text-[10px] uppercase tracking-[0.14em] ${
+                result.via === "ssr-fallback" ? "bg-amber-100 text-amber-800" : "bg-zinc-100 text-zinc-700"
+              }`}
+              title={result.via === "ssr-fallback" ? "Live runtime failed; sampled SSR HTML instead" : "Sampled live runtime"}
+            >
+              via {result.via}
+            </span>
+          )}
+          {result.attempts && result.attempts > 1 && (
+            <span className="rounded-full bg-amber-50 px-2 py-0.5 text-[10px] uppercase tracking-[0.14em] text-amber-800">
+              {result.attempts} attempts
+            </span>
+          )}
         </div>
         <div className="flex gap-2 text-[11px] uppercase tracking-[0.12em]">
           <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-emerald-800">{passing} ok</span>
@@ -400,9 +415,14 @@ function RouteSection({ result }: { result: RouteResult }) {
           {missing > 0 && <span className="rounded-full bg-zinc-100 px-2.5 py-1 text-zinc-700">{missing} n/a</span>}
         </div>
       </header>
-      {result.error && (
-        <div className="border-b border-rose-100 bg-rose-50 px-5 py-3 text-sm text-rose-800">
-          Error: {result.error}
+      {(result.error || (result.attemptLog && result.attemptLog.length > 0)) && (
+        <div className={`border-b px-5 py-3 text-sm ${result.error ? "border-rose-100 bg-rose-50 text-rose-800" : "border-amber-100 bg-amber-50/60 text-amber-900"}`}>
+          {result.error && <div className="font-medium">Error: {result.error}</div>}
+          {result.attemptLog && result.attemptLog.length > 0 && (
+            <ul className="mt-1 space-y-0.5 text-[12px]">
+              {result.attemptLog.map((line, i) => <li key={i}>↳ {line}</li>)}
+            </ul>
+          )}
         </div>
       )}
       <div className="overflow-x-auto">
