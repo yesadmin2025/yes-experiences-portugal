@@ -65,6 +65,20 @@ function PreviewCheckPage() {
 
   const completed = CHECKS.filter((c) => checked[c.id]).length;
 
+  const handleDropdownJump = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const id = e.target.value;
+    if (!id) return;
+    const item = CHECKS.find((c) => c.id === id);
+    if (!item) return;
+    // Scroll the page to the section card…
+    document
+      .getElementById(`check-${item.id}-title`)
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    // …and navigate the iframe to its anchor.
+    jumpTo(item);
+    e.target.value = "";
+  };
+
   return (
     <main className="min-h-screen bg-background text-foreground">
       <header className="border-b border-border/60 bg-card/40 backdrop-blur">
