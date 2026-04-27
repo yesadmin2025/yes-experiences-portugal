@@ -598,3 +598,93 @@ EOF
             exit "$EXIT_CODE"
           fi
           echo "Enforcer in sync — job passes."
+
+  # ─────────────────────────────────────────────────────────────────
+  # Downstream branching on URL-validation outcome.
+  #
+  # All three jobs gate on `needs.enforce.outputs.url_validation_exit_code`
+  # (the numeric exit code, never the log) so they react precisely
+  # without parsing free-form text:
+  #   0   → url-validation-passed
+  #   11  → url-validation-phase1-failure-handler
+  #   12  → url-validation-phase2-failure-handler
+  #   13  → BOTH handlers run (currently unreachable; reserved for the
+  #         day the early-exit guard is relaxed)
+  #
+  # `if: always()` is mandatory — the `enforce` job is marked `failure`
+  # whenever validation fails (the comment step exits 11/12/13), and the
+  # default `needs:` semantics would otherwise skip every consumer.
+  # The `needs.enforce.result != 'skipped'` guard avoids spurious
+  # branching when the entire enforce job was skipped (e.g. workflow
+  # filtered out by path/branch rules upstream).
+  # ─────────────────────────────────────────────────────────────────
+
+  url-validation-passed:
+    name: URL validation passed (post-validation hook)
+    needs: enforce
+    if: |
+      always()
+      && needs.enforce.result != 'skipped'
+      && needs.enforce.outputs.url_validation_exit_code == '0'
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - name: Acknowledge clean validation
+        env:
+          STATUS: ${{ needs.enforce.outputs.url_validation_status }}
+        run: |
+          echo "✅ URL validation passed (status=${STATUS}, exit_code=0)."
+          echo "Downstream consumers can safely trust the deep-links in the PR comment."
+
+  url-validation-phase1-failure-handler:
+    name: URL validation — phase 1 failure handler
+    needs: enforce
+    # Triggers on phase-1-only (11) AND combined (13). Numeric compare
+    # via string equality is intentional — GitHub Actions expression
+    # context coerces both sides to strings.
+    if: |
+      always()
+      && needs.enforce.result != 'skipped'
+      && (needs.enforce.outputs.url_validation_exit_code == '11'
+          || needs.enforce.outputs.url_validation_exit_code == '13')
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - name: Report foundational-input failure
+        env:
+          EXIT_CODE: ${{ needs.enforce.outputs.url_validation_exit_code }}
+          RULES:     ${{ needs.enforce.outputs.url_validation_phase1_rules }}
+        run: |
+          echo "❌ Phase-1 (foundational inputs) failed."
+          echo "   exit_code      : ${EXIT_CODE}"
+          echo "   failed rules   : ${RULES}"
+          echo "   remediation    : fix HEAD_SHA / REPO / SERVER_URL plumbing."
+          echo "   See the enforce job's 'URL validation results' block for full diagnostics."
+          # Non-zero so this handler shows red in the checks UI — the
+          # presence of a failing handler tells reviewers exactly which
+          # phase tripped without opening logs.
+          exit 1
+
+  url-validation-phase2-failure-handler:
+    name: URL validation — phase 2 failure handler
+    needs: enforce
+    # Triggers on phase-2-only (12) AND combined (13).
+    if: |
+      always()
+      && needs.enforce.result != 'skipped'
+      && (needs.enforce.outputs.url_validation_exit_code == '12'
+          || needs.enforce.outputs.url_validation_exit_code == '13')
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - name: Report URL-shape failure
+        env:
+          EXIT_CODE:   ${{ needs.enforce.outputs.url_validation_exit_code }}
+          ERROR_COUNT: ${{ needs.enforce.outputs.url_validation_phase2_error_count }}
+        run: |
+          echo "❌ Phase-2 (URL-shape / basename) failed."
+          echo "   exit_code      : ${EXIT_CODE}"
+          echo "   error count    : ${ERROR_COUNT}"
+          echo "   remediation    : fix WORKFLOW_FILE_URL / WORKFLOW_JOB_URL / WORKFLOW_RUNS_URL construction."
+          echo "   See the enforce job's 'URL validation results' block for full diagnostics."
+          exit 1
