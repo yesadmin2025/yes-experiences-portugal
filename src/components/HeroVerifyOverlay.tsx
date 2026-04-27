@@ -295,6 +295,20 @@ export function HeroVerifyOverlay() {
     | { ok: false; at: number; format: "JSON" | "CSV"; issues: ValidationIssue[] }
     | null
   >(null);
+  // Hard guard: the payload's `schema` field MUST equal the expected
+  // version tag. A missing/different tag blocks the download outright
+  // (no override) — surfaced in the legend.
+  const [schemaTagCheck, setSchemaTagCheck] = useState<
+    | { ok: true; at: number; format: "JSON" | "CSV"; tag: string }
+    | {
+        ok: false;
+        at: number;
+        format: "JSON" | "CSV";
+        reason: "missing" | "wrong-type" | "mismatch";
+        actual: unknown;
+      }
+    | null
+  >(null);
 
   // Activate only when ?verify=hero is present.
   useEffect(() => {
