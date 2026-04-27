@@ -23,7 +23,7 @@
 import { HERO_COPY } from "../src/content/hero-copy.ts";
 import { parse as parseHtml } from "node-html-parser";
 
-const TARGETS = [
+const ALL_TARGETS = [
   {
     name: "Preview",
     url:
@@ -35,6 +35,54 @@ const TARGETS = [
     url: process.env.PRODUCTION_URL || "https://dreamscape-builder-co.lovable.app/",
   },
 ];
+
+// ─────────────────────────────────────────────────────────────────────────────
+// CLI argument parsing.
+//
+// Supported flags (all optional; primarily affect --watch but --target also
+// applies to one-shot mode so the same filter works for both invocations):
+//
+//   --watch                       enable watch mode
+//   --target=<preview|production|all>   filter which deployments to check
+//                                       (also: --preview-only, --production-only)
+//   --debounce=<ms>               override watch-mode debounce (default 200ms,
+//                                       clamped to [0, 10000])
+//
+// Unknown flags are ignored with a warning so future additions don't break
+// older muscle-memory invocations.
+// ─────────────────────────────────────────────────────────────────────────────
+function parseArgs(argv) {
+  const opts = { watch: false, target: "all", debounceMs: 200 };
+  for (const raw of argv) {
+    if (raw === "--watch") opts.watch = true;
+    else if (raw === "--preview-only") opts.target = "preview";
+    else if (raw === "--production-only" || raw === "--prod-only") opts.target = "production";
+    else if (raw.startsWith("--target=")) {
+      const v = raw.slice("--target=".length).toLowerCase();
+      if (["preview", "production", "all"].includes(v)) opts.target = v;
+      else console.log(`\x1b[33m⚠ Ignoring --target=${v} (expected preview|production|all)\x1b[0m`);
+    } else if (raw.startsWith("--debounce=")) {
+      const n = Number(raw.slice("--debounce=".length));
+      if (Number.isFinite(n) && n >= 0) opts.debounceMs = Math.min(10000, Math.floor(n));
+      else console.log(`\x1b[33m⚠ Ignoring --debounce=${raw.slice(11)} (expected non-negative number)\x1b[0m`);
+    } else if (raw.startsWith("--")) {
+      console.log(`\x1b[33m⚠ Unknown flag ${raw} ignored\x1b[0m`);
+    }
+  }
+  return opts;
+}
+
+const CLI = parseArgs(process.argv.slice(2));
+
+const TARGETS = ALL_TARGETS.filter((t) => {
+  if (CLI.target === "all") return true;
+  return t.name.toLowerCase() === CLI.target;
+});
+
+if (TARGETS.length === 0) {
+  console.log(`\x1b[31mNo targets matched filter --target=${CLI.target}\x1b[0m`);
+  process.exit(2);
+}
 
 // The localization checklist — every string here must appear verbatim in the
 // served HTML of every target. Order is intentional (top-to-bottom in the UI).
@@ -229,7 +277,7 @@ async function runOnce() {
   return { summary, totalFailures, manualChecks };
 }
 
-const WATCH = process.argv.includes("--watch");
+const WATCH = CLI.watch;
 
 if (!WATCH) {
   const { totalFailures, manualChecks } = await runOnce();
@@ -332,7 +380,10 @@ async function tick(reason) {
   running = true;
   console.clear();
   console.log(
-    `${DIM}[${fmtTimestamp()}]${RESET} ${BOLD}qa:hero-copy --watch${RESET} ${DIM}(${reason})${RESET}\n`,
+    `${DIM}[${fmtTimestamp()}]${RESET} ${BOLD}qa:hero-copy --watch${RESET} ${DIM}(${reason})${RESET}`,
+  );
+  console.log(
+    `${DIM}target=${CLI.target} debounce=${CLI.debounceMs}ms targets=[${TARGETS.map((t) => t.name).join(", ")}]${RESET}\n`,
   );
   try {
     const { summary } = await runOnce();
@@ -351,10 +402,11 @@ async function tick(reason) {
 }
 
 // Debounce bursty fs events (editors often emit several events per save).
+// Interval is configurable via --debounce=<ms> (default 200).
 let debounceTimer = null;
 function scheduleTick(reason) {
   if (debounceTimer) clearTimeout(debounceTimer);
-  debounceTimer = setTimeout(() => tick(reason), 200);
+  debounceTimer = setTimeout(() => tick(reason), CLI.debounceMs);
 }
 
 for (const file of WATCHED_FILES) {
