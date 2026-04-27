@@ -92,7 +92,14 @@ describe("scripts/hero-copy-qa.mjs --report-json-strict", () => {
   it(
     "fails with EXIT_RUNTIME_ERROR when the emitter shape is mutated",
     () => {
-      const tmp = mkdtempSync(join(tmpdir(), "hero-copy-qa-mut-"));
+      const tmpReports = mkdtempSync(join(tmpdir(), "hero-copy-qa-mut-"));
+      // The mutated script must live in scripts/ so its relative `import
+      // "../src/content/hero-copy.ts"` still resolves to the project's source
+      // of truth. Putting it under /tmp would break the import path.
+      const mutatedScriptPath = resolve(
+        PROJECT_ROOT,
+        `scripts/.hero-copy-qa.mutated.${process.pid}.${Date.now()}.mjs`,
+      );
       try {
         // Surgical mutation: inject an unknown top-level key into the object
         // returned by buildReport. The validator is configured to reject any
@@ -108,10 +115,9 @@ describe("scripts/hero-copy-qa.mjs --report-json-strict", () => {
           NEEDLE,
           `targets: targetsOut, _injectedByTest: "should-trip-strict-validator",`,
         );
-        const mutatedScriptPath = join(tmp, "hero-copy-qa.mutated.mjs");
         writeFileSync(mutatedScriptPath, mutated);
 
-        const reportPath = join(tmp, "report.json");
+        const reportPath = join(tmpReports, "report.json");
         const { status, stdout, stderr } = runScript(mutatedScriptPath, [
           "--production-only",
           `--report-json=${reportPath}`,
