@@ -23,6 +23,25 @@ type CheckItem = {
   src: string;
   /** Optional hash to scroll the iframe to a specific section. */
   hash?: string;
+  /**
+   * Ordered list of fallback selectors to try inside the iframe when the
+   * literal hash id isn't present (e.g. "#top" → main hero element).
+   */
+  aliases?: string[];
+};
+
+/** Aliases applied to every item, keyed by hash. Item-level aliases win. */
+const HASH_ALIASES: Record<string, string[]> = {
+  "#top": [
+    "#hero",
+    "#main",
+    "main h1",
+    "[data-hero]",
+    "header h1",
+    "h1",
+  ],
+  "#signatures-title": ["#signatures", "[data-section='signatures']"],
+  "#studio-title": ["#studio", "#builder", "[data-section='studio']"],
 };
 
 const CHECKS: CheckItem[] = [
