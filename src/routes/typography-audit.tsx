@@ -1040,22 +1040,44 @@ function SettingsPanel({
         </div>
       </div>
 
-      {importReport && (
-        <ImportReportCard
-          fileName={importReport.fileName}
-          mode={importReport.mode}
-          report={importReport.report}
-          onApply={
-            importReport.mode === "validated" && importReport.report.ok && importReport.report.parsed
-              ? () => {
-                  onChange(importReport.report.parsed!);
-                  setImportReport({ ...importReport, mode: "applied" });
-                }
-              : undefined
-          }
-          onDismiss={() => setImportReport(null)}
-        />
-      )}
+      {importReport && (() => {
+        // Source for auto-fix: the parsed (clamped) result if available, else
+        // the live settings (so "Validate current" can also auto-fix).
+        const source = importReport.report.parsed ?? settings;
+        const autoFix = autoFixSettings(source);
+        // Only offer auto-fix when it would actually change something AND we
+        // either have errors or are clearly off the happy path.
+        const canAutoFix =
+          autoFix.changes.length > 0 &&
+          (importReport.report.issues.some((i) => i.level === "error" || i.level === "warning"));
+        return (
+          <ImportReportCard
+            fileName={importReport.fileName}
+            mode={importReport.mode}
+            report={importReport.report}
+            onApply={
+              importReport.mode === "validated" && importReport.report.ok && importReport.report.parsed
+                ? () => {
+                    onChange(importReport.report.parsed!);
+                    setImportReport({ ...importReport, mode: "applied" });
+                  }
+                : undefined
+            }
+            onAutoFix={canAutoFix ? () => {
+              onChange(autoFix.fixed);
+              // Re-validate against the freshly applied values so the card
+              // reflects the new (hopefully clean) state.
+              setImportReport({
+                fileName: importReport.fileName,
+                mode: "applied",
+                report: validateCurrentSettings(autoFix.fixed),
+              });
+            } : undefined}
+            autoFixChanges={canAutoFix ? autoFix.changes : undefined}
+            onDismiss={() => setImportReport(null)}
+          />
+        );
+      })()}
 
       <div className="mt-5 grid gap-4 md:grid-cols-3">
         {STAGE_META.map(({ key, label, hint }) => {
