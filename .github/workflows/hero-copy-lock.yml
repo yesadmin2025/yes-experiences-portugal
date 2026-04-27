@@ -30,6 +30,14 @@ on:
         description: "Retention (days) for hero-copy QA JSON reports. GitHub max is 90."
         required: false
         default: "14"
+      qa_logs_retention_days:
+        description: "Retention (days) for hero-copy QA logs (stdout/stderr + exit code + meta.json). Falls back to qa_report_retention_days when empty. GitHub max is 90."
+        required: false
+        default: ""
+      qa_meta_retention_days:
+        description: "Retention (days) for the run metadata (meta.json) artifact. Falls back to qa_logs_retention_days, then qa_report_retention_days. GitHub max is 90."
+        required: false
+        default: ""
 
 # Cancel in-flight runs for the same PR when new commits are pushed.
 concurrency:
