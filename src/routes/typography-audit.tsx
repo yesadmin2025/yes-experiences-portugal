@@ -286,25 +286,42 @@ const persistSettings = (s: AuditSettings) => {
 function TypographyAuditPage() {
   const [results, setResults] = useState<RouteResult[]>(() => ROUTES.map((p) => ({ path: p, status: "pending", samples: [] })));
   const [running, setRunning] = useState(false);
+  const [settings, setSettings] = useState<AuditSettings>(() => loadSettings());
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
-  // 3-stage pipeline per route: iframe → iframe (longer timeout) → SSR HTML fallback.
-  // Each stage's failure reason is appended to attemptLog for visibility.
+  // Persist whenever settings change.
+  useEffect(() => { persistSettings(settings); }, [settings]);
+
+  // Hold a live ref to settings so the in-flight audit always reads the LATEST
+  // values (e.g. user adjusts a timeout mid-run). Without this, useCallback
+  // would close over the snapshot at audit start.
+  const settingsRef = useRef(settings);
+  useEffect(() => { settingsRef.current = settings; }, [settings]);
+
+  // Per-route pipeline driven by settings: iframe attempt 1 → iframe attempt 2
+  // → SSR HTML fallback. Disabled stages are skipped.
   const auditRoute = useCallback(async (path: string): Promise<RouteResult> => {
     const iframe = iframeRef.current;
     if (!iframe) return { path, status: "error", samples: [], error: "iframe missing" };
+    const s = settingsRef.current;
+    const opts: SampleOpts = { fontsReadyCapMs: s.fontsReadyCapMs, postLoadSettleMs: s.postLoadSettleMs };
 
-    const stages: Array<{ label: string; timeout: number; via: AuditVia; ssr: boolean; backoffBefore: number }> = [
-      { label: "iframe attempt 1", timeout: 8000, via: "iframe", ssr: false, backoffBefore: 0 },
-      { label: "iframe attempt 2", timeout: 12000, via: "iframe", ssr: false, backoffBefore: 600 },
-      { label: "SSR HTML fallback", timeout: 8000, via: "ssr-fallback", ssr: true, backoffBefore: 400 },
-    ];
+    const stages: Array<{ label: string; cfg: StageSettings; via: AuditVia; ssr: boolean }> = [
+      { label: "iframe attempt 1",  cfg: s.iframeAttempt1, via: "iframe",        ssr: false },
+      { label: "iframe attempt 2",  cfg: s.iframeAttempt2, via: "iframe",        ssr: false },
+      { label: "SSR HTML fallback", cfg: s.ssrFallback,    via: "ssr-fallback",  ssr: true  },
+    ].filter((stage) => stage.cfg.enabled);
+
+    if (stages.length === 0) {
+      return { path, status: "error", samples: [], error: "all retry stages disabled in settings", attemptLog: [] };
+    }
 
     const log: string[] = [];
     for (let i = 0; i < stages.length; i++) {
       const stage = stages[i];
-      if (stage.backoffBefore) await new Promise((r) => setTimeout(r, stage.backoffBefore));
-      const r = await sampleViaIframe(iframe, path, stage.timeout, stage.ssr);
+      if (stage.cfg.backoffMs) await new Promise((r) => setTimeout(r, stage.cfg.backoffMs));
+      const r = await sampleViaIframe(iframe, path, stage.cfg.timeoutMs, stage.ssr, opts);
       if (r.ok) {
         return { path, status: "done", samples: r.samples, attempts: i + 1, via: stage.via, attemptLog: log };
       }
@@ -312,7 +329,8 @@ function TypographyAuditPage() {
     }
     return {
       path, status: "error", samples: [],
-      error: "all 3 attempts failed", attempts: stages.length, attemptLog: log,
+      error: `all ${stages.length} attempt${stages.length === 1 ? "" : "s"} failed`,
+      attempts: stages.length, attemptLog: log,
     };
   }, []);
 
