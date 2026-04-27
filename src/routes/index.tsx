@@ -128,24 +128,71 @@ const editorial = [
   },
 ];
 
+const howItWorks = [
+  {
+    step: "01",
+    icon: MessageSquare,
+    title: "Tell us your story",
+    line: "A short conversation — who's traveling, what you love, the pace that feels right. No forms, no friction.",
+  },
+  {
+    step: "02",
+    icon: PenLine,
+    title: "We design it around you",
+    line: "Your local experience designer crafts a fully private journey — places, people, timing — and refines it until it's exactly right.",
+  },
+  {
+    step: "03",
+    icon: Plane,
+    title: "You travel, we host",
+    line: "Drivers, guides, hosts and a single point of contact — every detail handled so you can simply be present.",
+  },
+];
+
+const pillars = [
+  {
+    icon: Heart,
+    title: "Local",
+    line: "Designed and hosted by Portuguese locals — the people, places and pace only insiders know.",
+  },
+  {
+    icon: Lock,
+    title: "Private",
+    line: "Always just your group. No strangers, no shared buses — every experience entirely yours.",
+  },
+  {
+    icon: Wand2,
+    title: "Tailored",
+    line: "Built around how you travel — your pace, your interests, the moments that matter to you.",
+  },
+  {
+    icon: Zap,
+    title: "Instant",
+    line: "From idea to confirmed itinerary in days, not weeks — with a real human behind every reply.",
+  },
+];
+
 const reviews = [
   {
     quote:
       "It felt like traveling Portugal with a local friend. Every stop was somewhere we'd never have found ourselves.",
     name: "Sarah T.",
     location: "San Francisco",
+    platform: "Google",
   },
   {
     quote:
       "Quiet luxury done properly. No itineraries shoved at us — just thoughtful, beautifully timed moments.",
     name: "Pierre L.",
     location: "Paris",
+    platform: "TripAdvisor",
   },
   {
     quote:
       "Our 12 guests, fully private, completely seamless. They handled everything with extraordinary grace.",
     name: "Akiko M.",
     location: "Tokyo",
+    platform: "Trustpilot",
   },
 ];
 
