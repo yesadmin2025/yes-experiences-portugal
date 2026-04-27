@@ -180,7 +180,9 @@ for (const file of files) {
     totalRewrites += fixes.length;
   }
   // Re-scan post-rewrite for any remaining hex that isn't allow-listed.
+  // Skip ignore-marked reference files (e.g. brand-qa palette).
   const post = readFileSync(file, "utf8");
+  if (post.includes("brand-audit-ignore-file")) continue;
   const re = /#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})\b/g;
   let mm;
   while ((mm = re.exec(post)) !== null) {
