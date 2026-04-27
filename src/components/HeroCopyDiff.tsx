@@ -200,6 +200,7 @@ const SR_ONLY: React.CSSProperties = {
  * client-side navigation within the tab. Never on by default.
  */
 const PANEL_VISIBILITY_KEY = "hero-copy:panel-visible";
+const OUTLINES_KEY = "hero-copy:last-outlines";
 
 function readInitialPanelVisibility(): boolean {
   if (typeof window === "undefined") return false;
@@ -216,6 +217,54 @@ function persistPanelVisibility(next: boolean) {
   try {
     if (next) sessionStorage.setItem(PANEL_VISIBILITY_KEY, "1");
     else sessionStorage.removeItem(PANEL_VISIBILITY_KEY);
+  } catch {
+    /* ignore */
+  }
+}
+
+/**
+ * Persisted outline payload. Keyed by the baseline version it was diffed
+ * against, so restoring it after a reload is safe: if the baseline has
+ * since been reset/changed, the saved outlines are discarded.
+ */
+type PersistedOutlines = {
+  baselineVersion: string;
+  currentVersion: string;
+  outlines: { field: string; change: DiffRow["change"] }[];
+  savedAt: string;
+};
+
+function readPersistedOutlines(): PersistedOutlines | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = sessionStorage.getItem(OUTLINES_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (
+      parsed &&
+      typeof parsed === "object" &&
+      typeof parsed.baselineVersion === "string" &&
+      Array.isArray(parsed.outlines)
+    ) {
+      return parsed as PersistedOutlines;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+function writePersistedOutlines(payload: PersistedOutlines) {
+  try {
+    sessionStorage.setItem(OUTLINES_KEY, JSON.stringify(payload));
+  } catch {
+    /* ignore */
+  }
+}
+
+function clearPersistedOutlines() {
+  try {
+    sessionStorage.removeItem(OUTLINES_KEY);
   } catch {
     /* ignore */
   }
@@ -267,6 +316,9 @@ export function HeroCopyDiff() {
     } catch {
       /* ignore */
     }
+    // Resetting the baseline invalidates any persisted outlines: the
+    // saved "before" version no longer exists to diff against.
+    clearPersistedOutlines();
     console.info(
       "%c[hero-copy] baseline cleared via UI",
       "color:#9ca3af",
@@ -305,6 +357,8 @@ export function HeroCopyDiff() {
       setBaseline: () => {
         const snap = currentSnapshot();
         writeBaseline(snap);
+        // New baseline → previously persisted outlines no longer apply.
+        clearPersistedOutlines();
         console.info(
           "%c[hero-copy] baseline updated",
           "color:#10b981",
@@ -319,6 +373,7 @@ export function HeroCopyDiff() {
         } catch {
           /* ignore */
         }
+        clearPersistedOutlines();
         console.info("%c[hero-copy] baseline cleared", "color:#9ca3af");
         refresh();
       },
@@ -355,15 +410,15 @@ export function HeroCopyDiff() {
     };
   }, [refresh]);
 
-  // ---- Temporary outline on changed UI elements --------------------------
+  // ---- Outlines on changed UI elements -----------------------------------
   // When the diff reports changes, find every rendered hero element tagged
   // with `data-hero-field="<field>"` (space-separated lists supported, e.g.
-  // the <h1> tagged "headlineLine1 headlineLine2") and apply a temporary
-  // highlight class. Auto-removed after 6s, or earlier if the diff is
-  // re-run with no changes. Pure presentation, zero impact on layout.
+  // the <h1> tagged "headlineLine1 headlineLine2") and apply a highlight
+  // attribute. Outlines persist until the baseline is reset / accepted —
+  // they survive a preview reload via sessionStorage.
   useEffect(() => {
     if (typeof document === "undefined") return;
-    if (!state || state.rows.length === 0) return;
+    if (!state) return;
 
     const STYLE_ID = "hero-copy-diff-highlight-style";
     if (!document.getElementById(STYLE_ID)) {
@@ -391,8 +446,27 @@ export function HeroCopyDiff() {
       document.head.appendChild(style);
     }
 
+    // Resolve which {field → change} map we should apply. Live diff wins;
+    // otherwise fall back to the persisted set IF it's still valid against
+    // the current baseline (so a baseline reset implicitly clears it).
+    let source: { field: string; change: DiffRow["change"] }[] = state.rows;
+    let origin: "live" | "restored" = "live";
+    if (source.length === 0) {
+      const persisted = readPersistedOutlines();
+      if (
+        persisted &&
+        persisted.baselineVersion === (state.baselineVersion ?? "") &&
+        persisted.outlines.length > 0
+      ) {
+        source = persisted.outlines;
+        origin = "restored";
+      }
+    }
+
+    if (source.length === 0) return;
+
     const changedByField = new Map<string, DiffRow["change"]>();
-    for (const row of state.rows) changedByField.set(row.field, row.change);
+    for (const row of source) changedByField.set(row.field, row.change);
 
     const tagged = document.querySelectorAll<HTMLElement>("[data-hero-field]");
     const touched: HTMLElement[] = [];
@@ -415,18 +489,27 @@ export function HeroCopyDiff() {
 
     if (touched.length === 0) return;
 
+    // Persist on live diffs only — never re-persist a restoration, that
+    // would just rewrite the same payload with a new timestamp.
+    if (origin === "live" && state.baselineVersion) {
+      writePersistedOutlines({
+        baselineVersion: state.baselineVersion,
+        currentVersion: state.currentVersion,
+        outlines: source,
+        savedAt: new Date().toISOString(),
+      });
+    }
+
     console.info(
-      "%c[hero-copy] outlining changed UI elements",
+      `%c[hero-copy] outlining changed UI elements (${origin})`,
       "color:#f59e0b",
       touched.map((el) => el.dataset.heroField),
     );
 
-    const timer = window.setTimeout(() => {
-      touched.forEach((el) => el.removeAttribute("data-hero-diff-highlight"));
-    }, 6000);
-
     return () => {
-      window.clearTimeout(timer);
+      // Strip outlines on unmount / next effect run; the next run will
+      // re-apply from the latest source. We do NOT clear the persisted
+      // payload here — only baseline mutations clear it.
       touched.forEach((el) => el.removeAttribute("data-hero-diff-highlight"));
     };
   }, [state]);
@@ -684,6 +767,7 @@ export function HeroCopyDiff() {
               onClick={() => {
                 const snap = currentSnapshot();
                 writeBaseline(snap);
+                clearPersistedOutlines();
                 refresh();
               }}
               data-action="accept-current"
