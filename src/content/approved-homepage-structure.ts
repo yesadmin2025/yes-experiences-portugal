@@ -114,7 +114,7 @@ export const APPROVED_HOMEPAGE_SECTIONS: readonly ApprovedSection[] = [
   {
     order: 1,
     name: "Hero",
-    marker: "1 — HERO",
+    marker: "HERO",
     requiredSpacing: { kind: "min-h-vh", minVh: 80 },
   },
   {
@@ -156,7 +156,7 @@ export const APPROVED_HOMEPAGE_SECTIONS: readonly ApprovedSection[] = [
   {
     order: 8,
     name: "Multi-day journeys",
-    marker: "6 — MULTI-DAY JOURNEYS",
+    marker: "MULTI-DAY JOURNEYS",
     requiredSpacing: { kind: "py", minScale: 24 },
   },
   {
@@ -168,7 +168,7 @@ export const APPROVED_HOMEPAGE_SECTIONS: readonly ApprovedSection[] = [
   {
     order: 10,
     name: "Local stories & hidden gems",
-    marker: "8 — LOCAL STORIES",
+    marker: "LOCAL STORIES",
     requiredSpacing: { kind: "py", minScale: 24 },
   },
   {
@@ -180,7 +180,7 @@ export const APPROVED_HOMEPAGE_SECTIONS: readonly ApprovedSection[] = [
   {
     order: 12,
     name: "Final CTA",
-    marker: "10 — FINAL CTA",
+    marker: "FINAL CTA",
     requiredSpacing: { kind: "pb", minScale: 24 }, // pb-28 in source, floor 24
   },
 ] as const;
