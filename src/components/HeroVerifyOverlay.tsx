@@ -1230,7 +1230,25 @@ export function HeroVerifyOverlay() {
                   `"schema" must be a string — got ${typeof schemaTagCheck.actual}.`}
                 {schemaTagCheck.reason === "mismatch" &&
                   `"schema" was "${String(schemaTagCheck.actual)}" — download blocked.`}
-                <div style={{ marginTop: 6 }}>
+                <div style={{ marginTop: 6, display: "flex", gap: 6, flexWrap: "wrap" }}>
+                  <button
+                    type="button"
+                    onClick={handleRerunSelfCheck}
+                    style={{
+                      background: "rgba(15,23,42,0.4)",
+                      color: "rgb(254, 226, 226)",
+                      border: "1px solid rgba(239,68,68,0.45)",
+                      borderRadius: 4,
+                      padding: "3px 8px",
+                      fontSize: 11,
+                      fontWeight: 600,
+                      cursor: "pointer",
+                      letterSpacing: "0.02em",
+                    }}
+                    title="Re-measure the live DOM and refresh the on-screen diff self-check, without rebuilding the export payload."
+                  >
+                    ↺ Re-run self-check
+                  </button>
                   <button
                     type="button"
                     onClick={handleRegeneratePayload}
