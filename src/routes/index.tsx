@@ -24,10 +24,36 @@ import editViewpoint from "@/assets/edit-viewpoint.jpg";
 import { ArrowRight, Star, MapPin, Compass, Clock } from "lucide-react";
 import { PlatformBadge } from "@/components/PlatformBadge";
 
+const HERO_COPY = {
+  eyebrow: "Private · By locals · Any occasion",
+  headlineLine1: "Portugal is the stage.",
+  headlineLine2: "You write the story.",
+  subheadline:
+    "Designed by you, guided by local knowledge — from a private day to something worth celebrating.",
+  primaryCta: "Create Your Story",
+  secondaryCta: "Explore Signature Experiences",
+  microcopy: "Instant confirmation. Personalized by you. No waiting, no forms.",
+  brandLine: "Whatever you have in mind, we say YES.",
+} as const;
+
+const HERO_COPY_VERSION = Object.values(HERO_COPY)
+  .join("|")
+  .split("")
+  .reduce((hash, char) => (hash * 31 + char.charCodeAt(0)) >>> 0, 0)
+  .toString(36);
+
 export const Route = createFileRoute("/")({
+  headers: () => ({
+    "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0",
+    Pragma: "no-cache",
+    Expires: "0",
+    "Surrogate-Control": "no-store",
+    "X-Hero-Copy-Version": HERO_COPY_VERSION,
+  }),
   head: () => ({
     meta: [
       { title: "YES experiences Portugal — Portugal, Designed Around You" },
+      { name: "yes-hero-copy-version", content: HERO_COPY_VERSION },
       {
         name: "description",
         content:
