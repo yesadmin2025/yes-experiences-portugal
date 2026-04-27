@@ -38,11 +38,26 @@
  *   PROTECTED_BRANCH            Defaults to "main".
  *   WORKFLOW_PATH               Defaults to ".github/workflows/homepage-structure.yml".
  *   WORKFLOW_JOB_KEY            Defaults to "homepage-structure".
- *   MODE                        "check" (default) | "apply".
+ *   MODE                        "check" (default) | "apply" | "apply-dry-run".
+ *
+ * Modes
+ * -----
+ *   check          Read-only. Exit 1 on drift, never writes. Token only
+ *                  needs Administration: Read.
+ *   apply-dry-run  Read-only. Reports the EXACT POST payload that
+ *                  `apply` mode WOULD send (the missing context, the
+ *                  endpoint URL, the request body), then exits 0.
+ *                  Useful for previewing self-heal behavior from the
+ *                  Actions UI before granting write permission.
+ *                  Token only needs Administration: Read.
+ *   apply          Mutating. Issues an additive POST to add the
+ *                  missing context. Token needs Administration:
+ *                  Read and write.
  *
  * Exit codes
  * ----------
- *   0  Already in sync, OR (MODE=apply) was missing and got added.
+ *   0  Already in sync, OR MODE=apply added the missing context, OR
+ *      MODE=apply-dry-run completed (drift reported but not applied).
  *   1  Drift detected and MODE=check (read-only).
  *   2  Setup error — missing token, no protection configured, file
  *      missing, parse error, etc.
@@ -60,10 +75,15 @@ const WORKFLOW_PATH =
 const JOB_KEY = process.env.WORKFLOW_JOB_KEY ?? "homepage-structure";
 const MODE = (process.env.MODE ?? "check").toLowerCase();
 
-if (!["check", "apply"].includes(MODE)) {
-  process.stderr.write(`❌ MODE must be "check" or "apply", got "${MODE}".\n`);
+const VALID_MODES = ["check", "apply", "apply-dry-run"];
+if (!VALID_MODES.includes(MODE)) {
+  process.stderr.write(
+    `❌ MODE must be one of ${VALID_MODES.map((m) => `"${m}"`).join(", ")}, got "${MODE}".\n`,
+  );
   process.exit(2);
 }
+
+const IS_WRITE = MODE === "apply";
 
 function fail(code, msg) {
   process.stderr.write(`❌ ${msg}\n`);
