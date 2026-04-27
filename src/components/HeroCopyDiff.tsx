@@ -687,6 +687,10 @@ export function HeroCopyDiff() {
     // tell at a glance whether the boundary triggered a fresh diff or
     // intentionally skipped it (e.g. when navigating away from index).
     if (isIndex) {
+      // One-shot override armed by the on-page reset button. When set, we
+      // skip the version guard entirely and always run the refresh.
+      const forced = consumeForceRefresh();
+
       // Version guard: a refresh only meaningfully changes anything when
       // the stored baseline version differs from the current code version.
       // If they match, the diff result is guaranteed to be "no-changes",
@@ -695,7 +699,23 @@ export function HeroCopyDiff() {
       const baselineVersion = baselineSnap?.version ?? null;
       const currentVersion = HERO_COPY_VERSION;
 
-      if (baselineVersion !== null && baselineVersion === currentVersion) {
+      if (
+        !forced &&
+        baselineVersion !== null &&
+        baselineVersion === currentVersion
+      ) {
+        console.info(
+          "%c[hero-copy] post-boundary diff refresh: skipped (version guard)",
+          "color:#9ca3af",
+          {
+            prev,
+            next: pathname,
+            baselineVersion,
+            currentVersion,
+            reason: "baseline version matches current — nothing to diff",
+          },
+        );
+      } else {
         console.info(
           "%c[hero-copy] post-boundary diff refresh: skipped (version guard)",
           "color:#9ca3af",
