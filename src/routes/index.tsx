@@ -959,13 +959,13 @@ function HomePage() {
 
               <div className="mt-11 flex flex-wrap gap-x-8 gap-y-3 text-[12px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)]">
                 <span className="inline-flex items-center gap-2">
-                  <Compass size={13} className="text-[color:var(--gold)]" /> Local hands
+                  <Zap size={13} className="text-[color:var(--gold)]" /> Instant confirmation
                 </span>
                 <span className="inline-flex items-center gap-2">
-                  <MapPin size={13} className="text-[color:var(--gold)]" /> Hidden places
+                  <Lock size={13} className="text-[color:var(--gold)]" /> Always private
                 </span>
                 <span className="inline-flex items-center gap-2">
-                  <Clock size={13} className="text-[color:var(--gold)]" /> Designed at your pace
+                  <Compass size={13} className="text-[color:var(--gold)]" /> Local knowledge
                 </span>
               </div>
             </div>
