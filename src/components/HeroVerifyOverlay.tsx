@@ -396,6 +396,27 @@ export function HeroVerifyOverlay() {
             ))}
           </ul>
         </details>
+        <button
+          type="button"
+          onClick={handleExport}
+          style={{
+            marginTop: 10,
+            width: "100%",
+            background: "white",
+            color: "rgb(15, 23, 42)",
+            border: "none",
+            borderRadius: 6,
+            padding: "8px 10px",
+            fontSize: 11.5,
+            fontWeight: 700,
+            letterSpacing: "0.06em",
+            textTransform: "uppercase",
+            cursor: "pointer",
+            boxShadow: "0 2px 6px rgba(0,0,0,0.25)",
+          }}
+        >
+          ⬇ Export report (JSON)
+        </button>
       </div>
     </div>
   );
