@@ -21,7 +21,7 @@ import editCoastal from "@/assets/edit-coastal-road.jpg";
 import editWinery from "@/assets/edit-winery.jpg";
 import editMarket from "@/assets/edit-market.jpg";
 import editViewpoint from "@/assets/edit-viewpoint.jpg";
-import { ArrowRight, Star, Compass, Sparkles, PenLine, Heart, Lock, Wand2, Zap } from "lucide-react";
+import { ArrowRight, Star, Compass, Sparkles, PenLine, Heart, Lock, Wand2, Zap, BookOpen, Gift } from "lucide-react";
 import { PlatformBadge } from "@/components/PlatformBadge";
 import { HeroMetaProbe } from "@/components/HeroMetaProbe";
 import { HeroCopyDiff } from "@/components/HeroCopyDiff";
