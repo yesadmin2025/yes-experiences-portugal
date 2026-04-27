@@ -1,0 +1,87 @@
+name: Homepage Structure Lock
+
+# Runs the homepage-structure Playwright suite on every pull request.
+# Scoped via Playwright's `--grep` selector so this workflow runs ONLY
+# the live-DOM checks declared in `e2e/homepage-structure.spec.ts`
+# (their describe blocks are titled `homepage structure @ <breakpoint>`).
+# Using --grep instead of a file path lets us:
+#   - Add additional homepage-structure specs in other files later
+#     without editing this workflow.
+#   - Skip unrelated specs (hero copy, hero visuals, sticky CTA) that
+#     have their own dedicated workflows.
+#
+# Wire this workflow as a required status check in branch protection so
+# any drift in the approved homepage section order, count, or Tailwind
+# spacing floors blocks merges.
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Cancel in-flight runs for the same PR when new commits are pushed.
+concurrency:
+  group: homepage-structure-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  homepage-structure:
+    name: Playwright — homepage structure (mobile breakpoints)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package.json', 'bun.lockb') }}
+          restore-keys: |
+            playwright-${{ runner.os }}-
+
+      - name: Install Playwright Chromium + system deps
+        # Always install OS deps (cache only covers the browser binary).
+        run: |
+          if [ "${{ steps.playwright-cache.outputs.cache-hit }}" = "true" ]; then
+            bunx playwright install-deps chromium
+          else
+            bunx playwright install --with-deps chromium
+          fi
+
+      - name: Run homepage-structure suite (grep selector)
+        # IMPORTANT — uses Playwright's `--grep` against the describe
+        # block titles ("homepage structure @ <breakpoint>"), NOT a file
+        # path. This is the same selector behind
+        # `bun run test:e2e:grep:homepage-structure`, kept aligned so
+        # local + CI runs always cover the same set of tests.
+        #
+        # Reporters (github + html) are configured in
+        # playwright.config.ts when CI=true — do NOT pass --reporter on
+        # the CLI here, or the inline PR annotations will be dropped.
+        run: bun run test:e2e:grep:homepage-structure
+        env:
+          CI: "true"
+
+      - name: Upload Playwright report (traces + DOM snapshots)
+        # On failure the report includes the exact bounding-box dump and
+        # DOM snapshot per breakpoint, so reviewers can see which
+        # section/seam violated the spec without rerunning locally.
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: homepage-structure-playwright-report
+          path: playwright-report/
+          retention-days: 14
