@@ -402,12 +402,94 @@ jobs:
           echo "Wrote qa-logs/summary.json:"
           cat qa-logs/summary.json
 
+      - name: Resolve & validate effective retention (post-precedence)
+        # Defence-in-depth: the per-input validator above only checks the
+        # raw user inputs. This step recomputes each artifact's effective
+        # retention via the SAME precedence chain used by the upload
+        # steps, then revalidates 1..90 — catching the case where:
+        #   • a future edit raises the literal default above 90;
+        #   • a new fallback source is added that points at an
+        #     unvalidated value;
+        #   • the precedence expression is mistyped and silently picks
+        #     up something out-of-band.
+        #
+        # The resolved values are exposed as step outputs (`report`,
+        # `logs`, `meta`), and the three upload steps below consume
+        # those outputs instead of re-evaluating the precedence
+        # expression — so there is exactly ONE source of truth for the
+        # effective retention, and it has been validated.
+        id: retention
+        if: always()
+        env:
+          QA_REPORT_RETENTION: ${{ inputs.qa_report_retention_days }}
+          QA_LOGS_RETENTION:   ${{ inputs.qa_logs_retention_days }}
+          QA_META_RETENTION:   ${{ inputs.qa_meta_retention_days }}
+        run: |
+          set -e
+          MAX=90
+          DEFAULT=14
+          FAILED=0
+
+          # Precedence chains, mirrored from the upload steps:
+          #   report:  QA_REPORT_RETENTION                                       || DEFAULT
+          #   logs:    QA_LOGS_RETENTION   || QA_REPORT_RETENTION                || DEFAULT
+          #   meta:    QA_META_RETENTION   || QA_LOGS_RETENTION || QA_REPORT_RETENTION || DEFAULT
+          first_nonempty() {
+            for v in "$@"; do
+              if [ -n "$v" ]; then
+                printf '%s' "$v"
+                return 0
+              fi
+            done
+            printf '%s' "$DEFAULT"
+          }
+
+          REPORT_EFF="$(first_nonempty "$QA_REPORT_RETENTION")"
+          LOGS_EFF="$(first_nonempty "$QA_LOGS_RETENTION"   "$QA_REPORT_RETENTION")"
+          META_EFF="$(first_nonempty "$QA_META_RETENTION"   "$QA_LOGS_RETENTION" "$QA_REPORT_RETENTION")"
+
+          revalidate() {
+            local name="$1"
+            local value="$2"
+            if ! printf '%s' "$value" | grep -Eq '^[1-9][0-9]*$'; then
+              echo "::error title=Resolved retention is not a positive integer::$name resolved to '$value' after precedence (default=$DEFAULT). This is a workflow bug — the fallback chain produced a non-numeric value."
+              FAILED=1
+              return 0
+            fi
+            if [ "$value" -gt "$MAX" ]; then
+              echo "::error title=Resolved retention exceeds GitHub maximum::$name resolved to '$value' day(s) after precedence, which exceeds GitHub's hard cap of $MAX. Lower the corresponding input or the workflow default ($DEFAULT)."
+              FAILED=1
+              return 0
+            fi
+            echo "✓ effective $name: $value day(s)"
+          }
+
+          revalidate "hero-copy-qa-report retention" "$REPORT_EFF"
+          revalidate "hero-copy-qa-logs   retention" "$LOGS_EFF"
+          revalidate "hero-copy-qa-meta   retention" "$META_EFF"
+
+          if [ "$FAILED" -ne 0 ]; then
+            echo ""
+            echo "Refusing to upload artifacts: at least one effective retention value is invalid."
+            echo "GitHub allows 1..$MAX days for actions/upload-artifact@v4."
+            exit 1
+          fi
+
+          echo "report=$REPORT_EFF" >> "$GITHUB_OUTPUT"
+          echo "logs=$LOGS_EFF"     >> "$GITHUB_OUTPUT"
+          echo "meta=$META_EFF"     >> "$GITHUB_OUTPUT"
+          echo ""
+          echo "All effective retentions valid; uploads will use:"
+          echo "  hero-copy-qa-report : $REPORT_EFF day(s)"
+          echo "  hero-copy-qa-logs   : $LOGS_EFF day(s)"
+          echo "  hero-copy-qa-meta   : $META_EFF day(s)"
+
       - name: Upload hero-copy QA JSON report
         # Always upload — drift, fetch failures, and runtime errors are
         # exactly the cases where the JSON is most useful for triage.
         # Retention is configurable from `workflow_dispatch` (default 14
-        # days); for pull_request / push runs GitHub falls back to the
-        # repo's default retention if the input is empty.
+        # days); the effective value is resolved & validated by the
+        # `retention` step above and consumed here as `outputs.report`.
         #
         # `if-no-files-found: ignore` because a hard runtime crash before
         # the first emit leaves no JSON on disk — we don't want a noisy
@@ -418,7 +500,7 @@ jobs:
         with:
           name: hero-copy-qa-report
           path: qa-reports/hero-copy-qa.json
-          retention-days: ${{ inputs.qa_report_retention_days || '14' }}
+          retention-days: ${{ steps.retention.outputs.report }}
           if-no-files-found: ignore
 
       - name: Upload hero-copy QA logs (stdout/stderr + exit code)
@@ -429,16 +511,15 @@ jobs:
         # plus the exit code file written above. Always uploaded so a
         # crashing/empty-JSON run still ships its log trail.
         #
-        # Retention precedence: qa_logs_retention_days (if set) →
-        # qa_report_retention_days → '14'. This lets ops keep noisy
-        # log artifacts for a shorter window than the structured JSON
-        # report (or vice versa) without forking the workflow.
+        # Effective retention (after qa_logs_retention_days →
+        # qa_report_retention_days → 14 precedence) comes from the
+        # validated `retention` step output `logs`.
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: hero-copy-qa-logs
           path: qa-logs/
-          retention-days: ${{ inputs.qa_logs_retention_days || inputs.qa_report_retention_days || '14' }}
+          retention-days: ${{ steps.retention.outputs.logs }}
           if-no-files-found: warn
 
       - name: Upload hero-copy QA run metadata (meta.json)
@@ -447,16 +528,17 @@ jobs:
         # node/bun versions, exit code) can fetch this single small
         # JSON without downloading the full logs tarball.
         #
-        # Retention precedence: qa_meta_retention_days (if set) →
-        # qa_logs_retention_days → qa_report_retention_days → '14'.
-        # Metadata is the cheapest artifact and most useful for long-
-        # term audit trails, so it's typically set to the longest
+        # Effective retention (after qa_meta_retention_days →
+        # qa_logs_retention_days → qa_report_retention_days → 14
+        # precedence) comes from the validated `retention` step output
+        # `meta`. Metadata is the cheapest artifact and most useful for
+        # long-term audit trails, so it's typically set to the longest
         # retention of the three.
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: hero-copy-qa-meta
           path: qa-meta/meta.json
-          retention-days: ${{ inputs.qa_meta_retention_days || inputs.qa_logs_retention_days || inputs.qa_report_retention_days || '14' }}
+          retention-days: ${{ steps.retention.outputs.meta }}
           if-no-files-found: warn
 
