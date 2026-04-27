@@ -298,34 +298,152 @@ const coerceStage = (raw: unknown, fallback: StageSettings): StageSettings => {
   };
 };
 
-// Parse a JSON string (either a bare AuditSettings or an exported envelope
-// `{ settings: {...} }`) and return a validated AuditSettings or throw.
-const parseSettingsJson = (text: string): AuditSettings => {
-  const data = JSON.parse(text) as unknown;
-  if (!data || typeof data !== "object") throw new Error("File is not a JSON object.");
+// ─── Validation & parsing ────────────────────────────────────────
+// Numeric ranges accepted by the SettingsPanel UI. Kept in one place so
+// validation and coercion can't drift apart.
+type FieldRange = { min: number; max: number };
+const FIELD_RANGES = {
+  stageTimeoutMs:  { min: 500, max: 60000 } satisfies FieldRange,
+  stageBackoffMs:  { min: 0,   max: 5000 }  satisfies FieldRange,
+  fontsReadyCapMs: { min: 0,   max: 30000 } satisfies FieldRange,
+  postLoadSettleMs:{ min: 0,   max: 10000 } satisfies FieldRange,
+} as const;
+
+type ValidationIssue = {
+  level: "error" | "warning" | "info";
+  path: string;     // dotted path, e.g. "iframeAttempt1.timeoutMs"
+  message: string;
+};
+
+type ValidationReport = {
+  ok: boolean;                  // no errors (warnings allowed)
+  shape: "envelope" | "bare" | "invalid";
+  exportedAt?: string;
+  issues: ValidationIssue[];
+  parsed: AuditSettings | null; // clamped result if parseable, else null
+};
+
+const STAGE_KEYS: StageKey[] = ["iframeAttempt1", "iframeAttempt2", "ssrFallback"];
+
+// Validate a JSON string thoroughly. Always returns a report — never throws.
+// Used by both the regular Import (apply parsed) and Validate-only (report only).
+const validateSettingsJson = (text: string): ValidationReport => {
+  const issues: ValidationIssue[] = [];
+  const err = (path: string, message: string) => issues.push({ level: "error", path, message });
+  const warn = (path: string, message: string) => issues.push({ level: "warning", path, message });
+  const info = (path: string, message: string) => issues.push({ level: "info", path, message });
+
+  let data: unknown;
+  try {
+    data = JSON.parse(text);
+  } catch (e) {
+    err("$", `Invalid JSON: ${e instanceof Error ? e.message : "parse error"}`);
+    return { ok: false, shape: "invalid", issues, parsed: null };
+  }
+  if (!data || typeof data !== "object" || Array.isArray(data)) {
+    err("$", "Top-level value must be a JSON object.");
+    return { ok: false, shape: "invalid", issues, parsed: null };
+  }
   const root = data as Record<string, unknown>;
-  // Support both shapes: exported envelope and raw settings.
-  const candidate = (root.settings && typeof root.settings === "object")
-    ? (root.settings as Record<string, unknown>)
-    : root;
 
-  const hasAnyStage = ["iframeAttempt1", "iframeAttempt2", "ssrFallback"]
-    .some((k) => candidate[k] && typeof candidate[k] === "object");
-  if (!hasAnyStage) throw new Error("Missing stage settings (iframeAttempt1 / iframeAttempt2 / ssrFallback).");
+  let shape: "envelope" | "bare" = "bare";
+  let candidate: Record<string, unknown> = root;
+  let exportedAt: string | undefined;
+  if (root.settings && typeof root.settings === "object" && !Array.isArray(root.settings)) {
+    shape = "envelope";
+    candidate = root.settings as Record<string, unknown>;
+    if (typeof root.exportedAt === "string") exportedAt = root.exportedAt;
+    if (root.version !== undefined && root.version !== 1) {
+      warn("version", `Unknown export version "${String(root.version)}" — proceeding anyway.`);
+    }
+  } else {
+    info("$", "No `settings` envelope detected — treating top-level object as raw settings.");
+  }
 
-  const num = (v: unknown, fb: number, min: number, max: number) => {
-    const n = typeof v === "number" ? v : Number(v);
-    if (!Number.isFinite(n)) return fb;
-    return Math.min(max, Math.max(min, Math.round(n)));
+  const hasAnyStage = STAGE_KEYS.some((k) => candidate[k] && typeof candidate[k] === "object");
+  if (!hasAnyStage) {
+    err("settings", "Missing stage settings (iframeAttempt1 / iframeAttempt2 / ssrFallback).");
+    return { ok: false, shape, exportedAt, issues, parsed: null };
+  }
+
+  const checkNum = (path: string, raw: unknown, fb: number, range: FieldRange): number => {
+    if (raw === undefined) {
+      warn(path, `Missing — will fall back to default (${fb}).`);
+      return fb;
+    }
+    const n = typeof raw === "number" ? raw : Number(raw);
+    if (!Number.isFinite(n)) {
+      err(path, `Expected a finite number, got ${JSON.stringify(raw)}. Falling back to ${fb}.`);
+      return fb;
+    }
+    if (typeof raw !== "number") {
+      warn(path, `Value was a string ${JSON.stringify(raw)} — coerced to number ${n}.`);
+    }
+    if (n < range.min) {
+      warn(path, `Below minimum (${n} < ${range.min}) — would clamp to ${range.min}.`);
+      return range.min;
+    }
+    if (n > range.max) {
+      warn(path, `Above maximum (${n} > ${range.max}) — would clamp to ${range.max}.`);
+      return range.max;
+    }
+    if (!Number.isInteger(n)) {
+      warn(path, `Non-integer value (${n}) — would round to ${Math.round(n)}.`);
+      return Math.round(n);
+    }
+    return n;
   };
 
-  return {
-    iframeAttempt1: coerceStage(candidate.iframeAttempt1, DEFAULT_SETTINGS.iframeAttempt1),
-    iframeAttempt2: coerceStage(candidate.iframeAttempt2, DEFAULT_SETTINGS.iframeAttempt2),
-    ssrFallback:    coerceStage(candidate.ssrFallback,    DEFAULT_SETTINGS.ssrFallback),
-    fontsReadyCapMs:  num(candidate.fontsReadyCapMs,  DEFAULT_SETTINGS.fontsReadyCapMs,  0, 30000),
-    postLoadSettleMs: num(candidate.postLoadSettleMs, DEFAULT_SETTINGS.postLoadSettleMs, 0, 10000),
+  const checkStage = (key: StageKey, fallback: StageSettings): StageSettings => {
+    const raw = candidate[key];
+    if (!raw || typeof raw !== "object") {
+      err(key, `Missing or not an object — using defaults.`);
+      return fallback;
+    }
+    const obj = raw as Record<string, unknown>;
+    let enabled = fallback.enabled;
+    if (obj.enabled === undefined) {
+      warn(`${key}.enabled`, `Missing — defaulting to ${fallback.enabled}.`);
+    } else if (typeof obj.enabled !== "boolean") {
+      err(`${key}.enabled`, `Expected boolean, got ${JSON.stringify(obj.enabled)}. Defaulting to ${fallback.enabled}.`);
+    } else {
+      enabled = obj.enabled;
+    }
+    const timeoutMs = checkNum(`${key}.timeoutMs`, obj.timeoutMs, fallback.timeoutMs, FIELD_RANGES.stageTimeoutMs);
+    const backoffMs = checkNum(`${key}.backoffMs`, obj.backoffMs, fallback.backoffMs, FIELD_RANGES.stageBackoffMs);
+    return { enabled, timeoutMs, backoffMs };
   };
+
+  const parsed: AuditSettings = {
+    iframeAttempt1: checkStage("iframeAttempt1", DEFAULT_SETTINGS.iframeAttempt1),
+    iframeAttempt2: checkStage("iframeAttempt2", DEFAULT_SETTINGS.iframeAttempt2),
+    ssrFallback:    checkStage("ssrFallback",    DEFAULT_SETTINGS.ssrFallback),
+    fontsReadyCapMs:  checkNum("fontsReadyCapMs",  candidate.fontsReadyCapMs,  DEFAULT_SETTINGS.fontsReadyCapMs,  FIELD_RANGES.fontsReadyCapMs),
+    postLoadSettleMs: checkNum("postLoadSettleMs", candidate.postLoadSettleMs, DEFAULT_SETTINGS.postLoadSettleMs, FIELD_RANGES.postLoadSettleMs),
+  };
+
+  if (!STAGE_KEYS.some((k) => parsed[k].enabled)) {
+    warn("settings", "All stages are disabled — every route would be skipped at runtime.");
+  }
+
+  // Surface unknown fields so authors notice typos.
+  const knownTop = new Set<string>([...STAGE_KEYS, "fontsReadyCapMs", "postLoadSettleMs"]);
+  for (const k of Object.keys(candidate)) {
+    if (!knownTop.has(k)) info(k, `Unknown field — will be ignored.`);
+  }
+
+  const ok = !issues.some((i) => i.level === "error");
+  return { ok, shape, exportedAt, issues, parsed };
+};
+
+// Throwing wrapper kept for any future callers that prefer exceptions.
+const parseSettingsJson = (text: string): AuditSettings => {
+  const report = validateSettingsJson(text);
+  if (!report.ok || !report.parsed) {
+    const firstErr = report.issues.find((i) => i.level === "error");
+    throw new Error(firstErr ? `${firstErr.path}: ${firstErr.message}` : "Invalid settings file.");
+  }
+  return report.parsed;
 };
 
 function TypographyAuditPage() {
@@ -646,20 +764,62 @@ function SettingsPanel({
   );
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [importStatus, setImportStatus] = useState<{ kind: "ok" | "err"; msg: string } | null>(null);
+  const [validateOnly, setValidateOnly] = useState(false);
+  // Hold full validation report so the panel can render a structured issue list,
+  // not just a single one-line message.
+  const [importReport, setImportReport] = useState<
+    | { fileName: string; mode: "applied" | "validated" | "rejected"; report: ValidationReport }
+    | null
+  >(null);
 
-  const handleImportFile = async (file: File) => {
+  const handleImportFile = async (file: File, dryRun: boolean) => {
+    setImportReport(null);
     try {
-      if (file.size > 64 * 1024) throw new Error("File too large (>64KB).");
+      if (file.size > 64 * 1024) {
+        setImportReport({
+          fileName: file.name,
+          mode: "rejected",
+          report: {
+            ok: false,
+            shape: "invalid",
+            issues: [{ level: "error", path: "$", message: `File too large (${file.size} bytes > 65536).` }],
+            parsed: null,
+          },
+        });
+        return;
+      }
       const text = await file.text();
-      const next = parseSettingsJson(text);
-      onChange(next);
-      setImportStatus({ kind: "ok", msg: `Imported "${file.name}". Values clamped to allowed ranges where needed.` });
+      const report = validateSettingsJson(text);
+      // Validate-only mode NEVER mutates current settings — even on a clean file.
+      if (dryRun) {
+        setImportReport({ fileName: file.name, mode: "validated", report });
+        return;
+      }
+      if (report.ok && report.parsed) {
+        onChange(report.parsed);
+        setImportReport({ fileName: file.name, mode: "applied", report });
+      } else {
+        setImportReport({ fileName: file.name, mode: "rejected", report });
+      }
     } catch (err) {
-      const msg = err instanceof Error ? err.message : "Could not parse file.";
-      setImportStatus({ kind: "err", msg: `Import failed: ${msg}` });
+      const msg = err instanceof Error ? err.message : "Could not read file.";
+      setImportReport({
+        fileName: file.name,
+        mode: "rejected",
+        report: {
+          ok: false,
+          shape: "invalid",
+          issues: [{ level: "error", path: "$", message: msg }],
+          parsed: null,
+        },
+      });
     }
   };
+
+  // Read validateOnly through a ref so the input's onChange (created once per
+  // render) always sees the latest toggle state without rebinding listeners.
+  const validateOnlyRef = useRef(validateOnly);
+  useEffect(() => { validateOnlyRef.current = validateOnly; }, [validateOnly]);
 
   return (
     <div className="mt-6 rounded-xl border border-[color:var(--border)] bg-white/80 p-5 md:p-6">
@@ -680,22 +840,37 @@ function SettingsPanel({
             className="hidden"
             onChange={(e) => {
               const file = e.target.files?.[0];
-              if (file) void handleImportFile(file);
+              if (file) void handleImportFile(file, validateOnlyRef.current);
               // Reset so re-selecting the same file still fires onChange.
               e.target.value = "";
             }}
           />
+          <label
+            className={`flex items-center gap-1.5 rounded-md border border-[color:var(--border)] px-2.5 py-1.5 text-[11px] font-semibold normal-case tracking-normal ${disabled ? "opacity-50" : "cursor-pointer hover:bg-zinc-50"}`}
+            title="When on, the next file you pick will be checked but NOT applied to your current settings."
+          >
+            <input
+              type="checkbox"
+              checked={validateOnly}
+              onChange={(e) => setValidateOnly(e.target.checked)}
+              disabled={disabled}
+              className="h-3.5 w-3.5"
+            />
+            <span className="uppercase tracking-[0.12em]">Validate only</span>
+          </label>
           <button
             type="button"
             onClick={() => {
-              setImportStatus(null);
+              setImportReport(null);
               fileInputRef.current?.click();
             }}
             disabled={disabled}
             className="rounded-md border border-[color:var(--border)] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] hover:bg-zinc-50 disabled:opacity-50"
-            title="Load reliability settings from a JSON file"
+            title={validateOnly
+              ? "Pick a JSON file — it will be checked and reported but not applied."
+              : "Load reliability settings from a JSON file."}
           >
-            Import JSON
+            {validateOnly ? "Validate JSON…" : "Import JSON"}
           </button>
           <button
             type="button"
@@ -735,17 +910,21 @@ function SettingsPanel({
         </div>
       </div>
 
-      {importStatus && (
-        <div
-          role="status"
-          className={`mt-3 rounded-md border px-3 py-2 text-[12px] ${
-            importStatus.kind === "ok"
-              ? "border-emerald-200 bg-emerald-50 text-emerald-800"
-              : "border-rose-200 bg-rose-50 text-rose-800"
-          }`}
-        >
-          {importStatus.msg}
-        </div>
+      {importReport && (
+        <ImportReportCard
+          fileName={importReport.fileName}
+          mode={importReport.mode}
+          report={importReport.report}
+          onApply={
+            importReport.mode === "validated" && importReport.report.ok && importReport.report.parsed
+              ? () => {
+                  onChange(importReport.report.parsed!);
+                  setImportReport({ ...importReport, mode: "applied" });
+                }
+              : undefined
+          }
+          onDismiss={() => setImportReport(null)}
+        />
       )}
 
       <div className="mt-5 grid gap-4 md:grid-cols-3">
@@ -823,6 +1002,93 @@ function SettingsPanel({
         <p className="mt-4 rounded-md bg-rose-50 px-3 py-2 text-sm text-rose-800">
           ⚠ All stages are disabled — every route will fail. Enable at least one stage.
         </p>
+      )}
+    </div>
+  );
+}
+
+function ImportReportCard({
+  fileName, mode, report, onApply, onDismiss,
+}: {
+  fileName: string;
+  mode: "applied" | "validated" | "rejected";
+  report: ValidationReport;
+  onApply?: () => void;
+  onDismiss: () => void;
+}) {
+  const errors   = report.issues.filter((i) => i.level === "error");
+  const warnings = report.issues.filter((i) => i.level === "warning");
+  const infos    = report.issues.filter((i) => i.level === "info");
+
+  // Tone the banner by outcome:
+  //  - applied   → green (settings updated)
+  //  - validated → amber (dry-run; current settings untouched)
+  //  - rejected  → red (errors blocked the import)
+  const toneClass =
+    mode === "applied"   ? "border-emerald-200 bg-emerald-50 text-emerald-900" :
+    mode === "validated" ? "border-amber-200 bg-amber-50 text-amber-900" :
+                           "border-rose-200 bg-rose-50 text-rose-900";
+
+  const headline =
+    mode === "applied"   ? `Imported "${fileName}"` :
+    mode === "validated" ? (report.ok ? `Validated "${fileName}" — no errors` : `Validated "${fileName}" — ${errors.length} error${errors.length === 1 ? "" : "s"}`) :
+                           `Rejected "${fileName}" — ${errors.length} error${errors.length === 1 ? "" : "s"}`;
+
+  return (
+    <div role="status" className={`mt-3 rounded-md border p-3 text-[12px] ${toneClass}`}>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="font-semibold">{headline}</span>
+          {mode === "validated" && (
+            <span className="rounded-full bg-white/60 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em]">
+              Dry run · current settings unchanged
+            </span>
+          )}
+          <span className="text-[11px] opacity-75">
+            shape: {report.shape}
+            {report.exportedAt ? ` · exported ${report.exportedAt}` : ""}
+            {` · ${errors.length} error${errors.length === 1 ? "" : "s"}, ${warnings.length} warning${warnings.length === 1 ? "" : "s"}, ${infos.length} note${infos.length === 1 ? "" : "s"}`}
+          </span>
+        </div>
+        <div className="flex items-center gap-2">
+          {onApply && (
+            <button
+              type="button"
+              onClick={onApply}
+              className="rounded-md border border-current/30 bg-white/70 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] hover:bg-white"
+              title="Apply the validated settings now"
+            >
+              Apply now
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={onDismiss}
+            className="rounded-md border border-current/30 bg-white/70 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] hover:bg-white"
+          >
+            Dismiss
+          </button>
+        </div>
+      </div>
+
+      {report.issues.length > 0 && (
+        <ul className="mt-2 space-y-1">
+          {report.issues.map((issue, idx) => (
+            <li key={idx} className="flex items-start gap-2 leading-snug">
+              <span
+                className={`mt-0.5 inline-flex w-14 shrink-0 justify-center rounded-sm px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.1em] ${
+                  issue.level === "error"   ? "bg-rose-200 text-rose-900" :
+                  issue.level === "warning" ? "bg-amber-200 text-amber-900" :
+                                              "bg-zinc-200 text-zinc-800"
+                }`}
+              >
+                {issue.level}
+              </span>
+              <code className="shrink-0 rounded bg-white/70 px-1.5 py-0.5 text-[11px]">{issue.path}</code>
+              <span className="text-[12px]">{issue.message}</span>
+            </li>
+          ))}
+        </ul>
       )}
     </div>
   );
