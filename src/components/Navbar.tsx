@@ -50,11 +50,11 @@ export function Navbar() {
               width={909}
               height={579}
               alt="YES experiences PORTUGAL"
-              className="block h-[60px] md:h-[64px] lg:h-[68px] w-auto select-none drop-shadow-[0_1px_0_rgba(255,255,255,0.4)]"
+              className="block h-[60px] md:h-[64px] lg:h-[68px] w-auto select-none"
               draggable={false}
               fetchPriority="high"
               decoding="async"
-              style={{ imageRendering: "auto" }}
+              style={{ imageRendering: "auto", filter: "drop-shadow(0 1px 0 rgba(255,255,255,0.4))" }}
             />
           </Link>
 
@@ -63,7 +63,7 @@ export function Navbar() {
               Tracking tightened slightly (0.20em) so all 8 labels fit on one
               row at lg+ without wrapping. The CTA button is the calm,
               conversion-focused anchor — teal fill, fine gold border. */}
-          <nav className="hidden lg:flex items-center h-full gap-7 xl:gap-9 text-[11px] uppercase tracking-[0.2em] font-normal leading-none">
+          <nav className="hidden lg:flex items-center h-full gap-7 xl:gap-9 text-[11px] uppercase tracking-[0.22em] leading-none" style={{ fontWeight: 380 }}>
             {desktopLinks.map((n) => (
               <Link
                 key={n.to}
@@ -112,7 +112,8 @@ export function Navbar() {
                 key={n.to}
                 to={n.to}
                 onClick={() => setOpen(false)}
-                className="text-[color:var(--charcoal)] hover:text-[color:var(--teal)] transition-colors uppercase tracking-[0.2em] text-[12px] rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                className="text-[color:var(--charcoal)] hover:text-[color:var(--teal)] transition-colors uppercase tracking-[0.22em] text-[12px] rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                style={{ fontWeight: 380 }}
                 activeProps={{ className: "text-[color:var(--teal)]" }}
               >
                 {n.label}
