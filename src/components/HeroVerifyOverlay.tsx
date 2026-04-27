@@ -276,6 +276,13 @@ export function HeroVerifyOverlay() {
   // text in place). Default ON; togglable from the legend.
   const [liveMode, setLiveMode] = useState(true);
   const [lastUpdated, setLastUpdated] = useState<number | null>(null);
+  // Result of the most recent pre-export diff self-check. `null` until
+  // the user runs an export. Surfaced in the legend with a green/red row.
+  const [selfCheck, setSelfCheck] = useState<{
+    ok: boolean;
+    at: number;
+    divergences: { key: string; reason: string }[];
+  } | null>(null);
 
   // Activate only when ?verify=hero is present.
   useEffect(() => {
