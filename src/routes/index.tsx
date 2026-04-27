@@ -102,7 +102,7 @@ const howItWorks = [
     step: "01",
     icon: BookOpen,
     title: "Start with an idea, place or experience",
-    line: "Begin from a curated experience or a blank canvas — wherever feels right.",
+    line: "Begin from a curated experience or a blank slate — wherever feels right.",
   },
   {
     step: "02",
@@ -164,7 +164,7 @@ const startPaths = [
     icon: Sparkles,
     eyebrow: "From scratch",
     title: "Design in the Studio",
-    line: "Create everything from a blank canvas, in real time.",
+    line: "Create everything from a blank slate, in real time.",
     cta: "Open the Studio",
     to: "/builder",
     accent: "teal" as const,
@@ -660,44 +660,58 @@ function HomePage() {
               // different "product" at a glance, while keeping the same
               // grid layout and content structure.
               const styles = {
+                // 1 · Signature (Ready) — calm ivory with a teal hairline
+                // rail, square teal-stroked icon tile, teal CTA.
                 ivory: {
                   card: "bg-[color:var(--card)] border border-[color:var(--border)] text-[color:var(--charcoal)] hover:border-[color:var(--teal)]/40 hover:shadow-[0_24px_50px_-24px_rgba(41,91,97,0.18)]",
-                  iconWrap: "border-[color:var(--gold)]/40 text-[color:var(--teal)]",
-                  eyebrow: "text-[color:var(--gold)]",
+                  iconWrap:
+                    "rounded-none border border-[color:var(--teal)]/40 text-[color:var(--teal)] bg-[color:var(--ivory)]",
+                  eyebrow: "text-[color:var(--teal)]",
                   title: "text-[color:var(--charcoal)]",
                   line: "text-[color:var(--charcoal-soft)]",
                   cta: "text-[color:var(--teal)]",
-                  rail: "bg-gradient-to-r from-[color:var(--gold)]/0 via-[color:var(--gold)]/0 to-[color:var(--gold)]/0",
+                  rail: "h-px bg-[color:var(--teal)]/55",
                   ribbon: null as string | null,
                 },
+                // 2 · Tailor — sand background, soft-gold gradient rail,
+                // rounded gold-stroked icon tile, gold CTA.
                 sand: {
                   card: "bg-[color:var(--sand)] border border-[color:var(--gold)]/25 text-[color:var(--charcoal)] hover:border-[color:var(--gold)]/60 hover:shadow-[0_24px_50px_-24px_rgba(178,140,71,0.22)]",
-                  iconWrap: "border-[color:var(--gold)]/60 text-[color:var(--gold)] bg-[color:var(--ivory)]",
+                  iconWrap:
+                    "rounded-md border border-[color:var(--gold)]/70 text-[color:var(--gold)] bg-[color:var(--ivory)]",
                   eyebrow: "text-[color:var(--gold)]",
                   title: "text-[color:var(--charcoal)]",
                   line: "text-[color:var(--charcoal-soft)]",
                   cta: "text-[color:var(--gold)]",
-                  rail: "bg-gradient-to-r from-[color:var(--gold)]/0 via-[color:var(--gold)]/40 to-[color:var(--gold)]/0",
+                  rail:
+                    "h-[2px] bg-gradient-to-r from-[color:var(--gold)]/0 via-[color:var(--gold)]/70 to-[color:var(--gold)]/0",
                   ribbon: null,
                 },
+                // 3 · Studio — teal flagship card, full bright-gold band
+                // rail, double-bordered circular icon, gold-soft CTA.
                 teal: {
                   card: "bg-[color:var(--teal)] text-[color:var(--ivory)] hover:bg-[color:var(--teal-2)] shadow-[0_18px_40px_-20px_rgba(41,91,97,0.55)]",
-                  iconWrap: "border-[color:var(--gold)]/50 text-[color:var(--gold-soft)] bg-[color:var(--teal-2)]/40",
+                  iconWrap:
+                    "rounded-full border-2 border-[color:var(--gold)] text-[color:var(--gold)] bg-[color:var(--teal-2)]/60 ring-1 ring-[color:var(--gold)]/30 ring-offset-2 ring-offset-[color:var(--teal)]",
                   eyebrow: "text-[color:var(--gold)]",
                   title: "text-[color:var(--ivory)]",
                   line: "text-[color:var(--ivory)]/85",
                   cta: "text-[color:var(--gold-soft)]",
-                  rail: "bg-gradient-to-r from-[color:var(--gold)]/40 via-[color:var(--gold)] to-[color:var(--gold)]/40",
+                  rail: "h-[3px] bg-[color:var(--gold)]",
                   ribbon: "Most flexible",
                 },
+                // 4 · Celebrations — deep charcoal, dotted gold rail,
+                // rounded gold-soft icon tile, ivory CTA.
                 charcoal: {
                   card: "bg-[color:var(--charcoal-deep)] text-[color:var(--ivory)] hover:bg-[color:var(--charcoal)] border border-[color:var(--gold)]/20",
-                  iconWrap: "border-[color:var(--gold)]/50 text-[color:var(--gold-soft)] bg-[color:var(--charcoal)]/60",
-                  eyebrow: "text-[color:var(--gold)]",
+                  iconWrap:
+                    "rounded-lg border border-dashed border-[color:var(--gold)]/70 text-[color:var(--gold-soft)] bg-[color:var(--charcoal)]/60",
+                  eyebrow: "text-[color:var(--gold-soft)]",
                   title: "text-[color:var(--ivory)]",
                   line: "text-[color:var(--ivory)]/80",
-                  cta: "text-[color:var(--gold-soft)]",
-                  rail: "bg-gradient-to-r from-[color:var(--gold)]/0 via-[color:var(--gold)]/30 to-[color:var(--gold)]/0",
+                  cta: "text-[color:var(--ivory)]",
+                  rail:
+                    "h-px bg-[image:repeating-linear-gradient(90deg,var(--gold)_0_6px,transparent_6px_12px)]",
                   ribbon: null,
                 },
               }[p.accent];
@@ -708,11 +722,13 @@ function HomePage() {
                     to={p.to}
                     className={`group relative flex flex-col h-full p-7 md:p-8 transition-all duration-500 overflow-hidden ${styles.card}`}
                   >
-                    {/* Top hairline rail — subtle accent that visually
-                        anchors each card to its own identity. */}
+                    {/* Top rail — distinct accent pattern per card
+                        (solid teal · soft-gold gradient · thick gold ·
+                        dotted gold) so each path is identifiable at a
+                        glance even before reading the title. */}
                     <span
                       aria-hidden="true"
-                      className={`absolute top-0 left-0 right-0 h-px ${styles.rail}`}
+                      className={`absolute top-0 left-0 right-0 ${styles.rail}`}
                     />
                     {styles.ribbon && (
                       <span
