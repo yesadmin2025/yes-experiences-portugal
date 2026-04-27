@@ -305,7 +305,7 @@ export function MobileStickyCTA() {
         <div className="h-6 bg-gradient-to-t from-white to-transparent pointer-events-none" />
 
         <div
-          className="bg-white border-t border-[color:var(--gold)]/30 shadow-[0_-8px_28px_-18px_rgba(15,23,42,0.18)]"
+          className="bg-white border-t border-[color:var(--charcoal)]/15 shadow-[0_-8px_28px_-18px_rgba(15,23,42,0.18)]"
           style={{ paddingBottom: "max(env(safe-area-inset-bottom), 0px)" }}
         >
           <div className="px-4 py-3 flex items-center gap-3">
