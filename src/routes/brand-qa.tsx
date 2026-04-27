@@ -1,12 +1,47 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Link,
+  useNavigate,
+} from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
+import { z } from "zod";
+import { fallback, zodValidator } from "@tanstack/zod-adapter";
 import auditReport from "@/generated/brand-audit.json";
 import { BrandThemeSelect } from "@/components/BrandThemeSelect";
 import { Logo } from "@/components/Logo";
-import type { BrandLogoTheme } from "@/lib/brand-tokens";
+import {
+  BRAND_LOGO_THEMES,
+  isBrandLogoTheme,
+  type BrandLogoTheme,
+} from "@/lib/brand-tokens";
+
+/**
+ * Sentinel value used when the URL carries a `?theme=` that is not a
+ * valid `BrandLogoTheme`. We deliberately do NOT silently coerce to a
+ * default here — the whole point is to surface the bad value to the
+ * `<BrandThemeSelect>` runtime guard so the dev-only error panel
+ * fires (and `console.error` is logged), exactly like any other
+ * untrusted input source (CMS, DB, props).
+ */
+const INVALID_THEME_SENTINEL = "__invalid__" as const;
+
+const themeSearchSchema = z.object({
+  /**
+   * `?theme=teal-on-ivory` etc. When the URL value is missing, we leave
+   * it `undefined` (picker uses its own default). When the value is
+   * present but invalid, we forward the raw string so the picker can
+   * report it. `fallback()` (not `.catch()`) keeps the inferred type
+   * intact — see TanStack search-params guidance.
+   */
+  theme: fallback(
+    z.union([z.enum(BRAND_LOGO_THEMES as [string, ...string[]]), z.string()]),
+    INVALID_THEME_SENTINEL,
+  ).optional(),
+});
 
 export const Route = createFileRoute("/brand-qa")({
   component: BrandQAPage,
+  validateSearch: zodValidator(themeSearchSchema),
   head: () => ({
     meta: [
       { title: "Brand QA — YES Experiences Portugal" },
