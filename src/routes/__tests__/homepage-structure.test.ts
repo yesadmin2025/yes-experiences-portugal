@@ -75,17 +75,20 @@ function findSections(source: string): SectionMatch[] {
 }
 
 /**
- * Find the `{/* N — NAME *\/}` marker comment that appears most
- * recently before `index` in the source. Returns the trimmed marker
- * text (e.g. "1 — HERO") or null if none.
+ * Find the most recent `{/* … *\/}` JSX block-comment that ends before
+ * `index` in the source. Returns its full inner text (multi-line
+ * comments are joined with spaces) or null if none.
  */
 function markerAbove(source: string, index: number): string | null {
   const slice = source.slice(0, index);
-  const re = /\{\s*\/\*\s*([^*]+?)\s*\*\/\s*\}/g;
+  // Match JSX comment blocks `{/* ... */}` non-greedily, supporting
+  // multi-line bodies (the homepage uses both inline and prose-form
+  // marker comments). `[\s\S]` instead of `.` so newlines match.
+  const re = /\{\s*\/\*([\s\S]*?)\*\/\s*\}/g;
   let last: string | null = null;
   let m: RegExpExecArray | null;
   while ((m = re.exec(slice)) !== null) {
-    last = m[1].trim();
+    last = m[1].replace(/\s+/g, " ").trim();
   }
   return last;
 }
@@ -94,6 +97,15 @@ function markerAbove(source: string, index: number): string | null {
  * Resolve every approved section to the rendered <section> that
  * carries its identity. Returns matches in spec order with the source
  * `<section>` index, so the next test can assert ordering.
+ *
+ * Matching strategy:
+ *   - aria-labelledby → exact match on the attribute value.
+ *   - marker          → substring match against the nearest preceding
+ *                       JSX comment. Substring (not equality) because
+ *                       the comments are descriptive (e.g.
+ *                       "8 — LOCAL STORIES / HIDDEN GEMS\n   …prose…").
+ *                       Each marker MUST be unique enough to identify
+ *                       exactly one section — we assert that below.
  */
 function resolveApprovedToSource(): {
   spec: ApprovedSection;
@@ -107,11 +119,12 @@ function resolveApprovedToSource(): {
         allSections.find((s) => s.ariaLabelledBy === spec.ariaLabelledBy) ??
         null;
     } else if (spec.marker) {
-      match =
-        allSections.find((s) => {
-          const marker = markerAbove(SOURCE, s.index);
-          return marker === spec.marker;
-        }) ?? null;
+      const candidates = allSections.filter((s) => {
+        const marker = markerAbove(SOURCE, s.index);
+        return marker !== null && marker.includes(spec.marker!);
+      });
+      // First match wins — sections already come back in source order.
+      match = candidates[0] ?? null;
     }
     return { spec, match };
   });
