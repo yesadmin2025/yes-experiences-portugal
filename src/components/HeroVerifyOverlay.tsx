@@ -93,6 +93,128 @@ function classify(expected: string, actual: string | null): FieldStatus {
   return "mismatch";
 }
 
+/**
+ * Character-level LCS diff. Returns segments tagged as `equal`,
+ * `removed` (in expected only), or `added` (in actual only). O(n*m)
+ * — fine for hero strings (always < ~200 chars).
+ */
+type DiffSegment = { type: "equal" | "removed" | "added"; text: string };
+
+function diffChars(a: string, b: string): DiffSegment[] {
+  const n = a.length;
+  const m = b.length;
+  const dp: number[][] = Array.from({ length: n + 1 }, () =>
+    new Array<number>(m + 1).fill(0),
+  );
+  for (let i = 1; i <= n; i++) {
+    for (let j = 1; j <= m; j++) {
+      dp[i][j] =
+        a[i - 1] === b[j - 1]
+          ? dp[i - 1][j - 1] + 1
+          : Math.max(dp[i - 1][j], dp[i][j - 1]);
+    }
+  }
+  const reversed: DiffSegment[] = [];
+  const push = (type: DiffSegment["type"], ch: string) => {
+    const last = reversed[reversed.length - 1];
+    if (last && last.type === type) last.text += ch;
+    else reversed.push({ type, text: ch });
+  };
+  let i = n;
+  let j = m;
+  while (i > 0 && j > 0) {
+    if (a[i - 1] === b[j - 1]) {
+      push("equal", a[i - 1]);
+      i--;
+      j--;
+    } else if (dp[i - 1][j] >= dp[i][j - 1]) {
+      push("removed", a[i - 1]);
+      i--;
+    } else {
+      push("added", b[j - 1]);
+      j--;
+    }
+  }
+  while (i > 0) {
+    push("removed", a[i - 1]);
+    i--;
+  }
+  while (j > 0) {
+    push("added", b[j - 1]);
+    j--;
+  }
+  // We pushed in reverse — flip segment order AND reverse each segment's
+  // text so the final result reads left-to-right.
+  const out: DiffSegment[] = [];
+  for (let k = reversed.length - 1; k >= 0; k--) {
+    out.push({
+      type: reversed[k].type,
+      text: reversed[k].text.split("").reverse().join(""),
+    });
+  }
+  return out;
+}
+
+// One side of the diff. For "expected": show equal + removed (red strike).
+// For "actual": show equal + added (green underline). Whitespace inside
+// changed runs is visualized with · so it isn't invisible.
+function DiffLine({
+  label,
+  segments,
+  side,
+}: {
+  label: string;
+  segments: DiffSegment[];
+  side: "expected" | "actual";
+}) {
+  const visible = segments.filter(
+    (s) =>
+      s.type === "equal" ||
+      (side === "expected" ? s.type === "removed" : s.type === "added"),
+  );
+  return (
+    <div
+      style={{
+        opacity: 0.9,
+        fontSize: 11,
+        fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
+        wordBreak: "break-word",
+        lineHeight: 1.5,
+      }}
+    >
+      <span style={{ opacity: 0.55 }}>{label}: </span>
+      {visible.map((seg, idx) => {
+        if (seg.type === "equal") {
+          return (
+            <span key={idx} style={{ opacity: 0.6 }}>
+              {seg.text}
+            </span>
+          );
+        }
+        const isAdded = seg.type === "added";
+        const text = seg.text.replace(/ /g, "·");
+        return (
+          <span
+            key={idx}
+            title={isAdded ? "added in actual" : "missing from actual"}
+            style={{
+              background: isAdded
+                ? "rgba(34, 197, 94, 0.35)"
+                : "rgba(239, 68, 68, 0.35)",
+              color: isAdded ? "rgb(187, 247, 208)" : "rgb(254, 202, 202)",
+              textDecoration: isAdded ? "underline" : "line-through",
+              borderRadius: 2,
+              padding: "0 1px",
+            }}
+          >
+            {text}
+          </span>
+        );
+      })}
+    </div>
+  );
+}
+
 function computeReports(): FieldReport[] {
   if (typeof document === "undefined") return [];
   return FIELD_ORDER.map((key): FieldReport => {
