@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Menu, X, ArrowRight } from "lucide-react";
-import logoTeal from "@/assets/yes-logo-approved.png";
+import { Logo } from "@/components/Logo";
 
 // Desktop nav — full editorial set, kept compact in tracking so all 8
 // items fit gracefully on a single row at lg+ widths.
@@ -45,20 +45,13 @@ export function Navbar() {
             className="flex-shrink-0 inline-flex items-center h-full rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             aria-label="YES experiences PORTUGAL — Home"
           >
-            {/* Theme-tuned crispness via .logo-mark--teal-on-ivory.
-                Filter stack lives in src/styles.css so it can be tuned
-                independently from the gold-on-charcoal variant in the
-                footer. Contrast nudge stays ≤1.02 to preserve the
-                approved teal hue while sharpening edges on the white bar. */}
-            <img
-              src={logoTeal}
-              width={909}
-              height={579}
-              alt="YES experiences PORTUGAL"
-              className="logo-mark logo-mark--teal-on-ivory block h-[60px] md:h-[64px] lg:h-[68px] w-auto select-none"
-              draggable={false}
+            {/* Shared <Logo> wrapper guarantees the teal artwork is paired
+                with the .logo-mark--teal-on-ivory filter recipe — the
+                `theme` prop drives both. No way to mismatch. */}
+            <Logo
+              theme="teal-on-ivory"
               fetchPriority="high"
-              decoding="async"
+              className="block h-[60px] md:h-[64px] lg:h-[68px] w-auto select-none"
             />
           </Link>
 

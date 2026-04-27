@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Instagram, Facebook, Youtube, Linkedin } from "lucide-react";
-import logoGold from "@/assets/yes-logo-approved-gold-silk.png";
+import { Logo } from "@/components/Logo";
 
 const SOCIALS = [
   { href: "https://instagram.com/", label: "Instagram", Icon: Instagram },
@@ -23,20 +23,13 @@ export function Footer() {
               className="inline-block rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--charcoal-deep)]"
               aria-label="YES experiences PORTUGAL — Home"
             >
-              {/* Theme-tuned crispness via .logo-mark--gold-on-charcoal.
-                  Warm champagne halo + 1.03 contrast nudge defined in
-                  src/styles.css — kept separate from the navbar's
-                  teal-on-ivory recipe so each surface can be tuned
-                  without affecting the other. */}
-              <img
-                src={logoGold}
-                width={909}
-                height={579}
-                alt="YES experiences PORTUGAL"
-                className="logo-mark logo-mark--gold-on-charcoal block h-[60px] md:h-[64px] lg:h-[68px] w-auto select-none"
-                draggable={false}
+              {/* Shared <Logo> wrapper — `theme` prop binds the gold
+                  artwork to the .logo-mark--gold-on-charcoal filter
+                  recipe so they can never drift apart. */}
+              <Logo
+                theme="gold-on-charcoal"
                 loading="lazy"
-                decoding="async"
+                className="block h-[60px] md:h-[64px] lg:h-[68px] w-auto select-none"
               />
             </Link>
             <p className="mt-8 text-[14.5px] text-[color:var(--ivory)]/85 leading-[1.8] max-w-xs" style={{ fontWeight: 320, letterSpacing: "0.005em" }}>
