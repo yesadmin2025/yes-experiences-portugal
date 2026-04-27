@@ -764,20 +764,62 @@ function SettingsPanel({
   );
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [importStatus, setImportStatus] = useState<{ kind: "ok" | "err"; msg: string } | null>(null);
+  const [validateOnly, setValidateOnly] = useState(false);
+  // Hold full validation report so the panel can render a structured issue list,
+  // not just a single one-line message.
+  const [importReport, setImportReport] = useState<
+    | { fileName: string; mode: "applied" | "validated" | "rejected"; report: ValidationReport }
+    | null
+  >(null);
 
-  const handleImportFile = async (file: File) => {
+  const handleImportFile = async (file: File, dryRun: boolean) => {
+    setImportReport(null);
     try {
-      if (file.size > 64 * 1024) throw new Error("File too large (>64KB).");
+      if (file.size > 64 * 1024) {
+        setImportReport({
+          fileName: file.name,
+          mode: "rejected",
+          report: {
+            ok: false,
+            shape: "invalid",
+            issues: [{ level: "error", path: "$", message: `File too large (${file.size} bytes > 65536).` }],
+            parsed: null,
+          },
+        });
+        return;
+      }
       const text = await file.text();
-      const next = parseSettingsJson(text);
-      onChange(next);
-      setImportStatus({ kind: "ok", msg: `Imported "${file.name}". Values clamped to allowed ranges where needed.` });
+      const report = validateSettingsJson(text);
+      // Validate-only mode NEVER mutates current settings — even on a clean file.
+      if (dryRun) {
+        setImportReport({ fileName: file.name, mode: "validated", report });
+        return;
+      }
+      if (report.ok && report.parsed) {
+        onChange(report.parsed);
+        setImportReport({ fileName: file.name, mode: "applied", report });
+      } else {
+        setImportReport({ fileName: file.name, mode: "rejected", report });
+      }
     } catch (err) {
-      const msg = err instanceof Error ? err.message : "Could not parse file.";
-      setImportStatus({ kind: "err", msg: `Import failed: ${msg}` });
+      const msg = err instanceof Error ? err.message : "Could not read file.";
+      setImportReport({
+        fileName: file.name,
+        mode: "rejected",
+        report: {
+          ok: false,
+          shape: "invalid",
+          issues: [{ level: "error", path: "$", message: msg }],
+          parsed: null,
+        },
+      });
     }
   };
+
+  // Read validateOnly through a ref so the input's onChange (created once per
+  // render) always sees the latest toggle state without rebinding listeners.
+  const validateOnlyRef = useRef(validateOnly);
+  useEffect(() => { validateOnlyRef.current = validateOnly; }, [validateOnly]);
 
   return (
     <div className="mt-6 rounded-xl border border-[color:var(--border)] bg-white/80 p-5 md:p-6">
@@ -798,22 +840,37 @@ function SettingsPanel({
             className="hidden"
             onChange={(e) => {
               const file = e.target.files?.[0];
-              if (file) void handleImportFile(file);
+              if (file) void handleImportFile(file, validateOnlyRef.current);
               // Reset so re-selecting the same file still fires onChange.
               e.target.value = "";
             }}
           />
+          <label
+            className={`flex items-center gap-1.5 rounded-md border border-[color:var(--border)] px-2.5 py-1.5 text-[11px] font-semibold normal-case tracking-normal ${disabled ? "opacity-50" : "cursor-pointer hover:bg-zinc-50"}`}
+            title="When on, the next file you pick will be checked but NOT applied to your current settings."
+          >
+            <input
+              type="checkbox"
+              checked={validateOnly}
+              onChange={(e) => setValidateOnly(e.target.checked)}
+              disabled={disabled}
+              className="h-3.5 w-3.5"
+            />
+            <span className="uppercase tracking-[0.12em]">Validate only</span>
+          </label>
           <button
             type="button"
             onClick={() => {
-              setImportStatus(null);
+              setImportReport(null);
               fileInputRef.current?.click();
             }}
             disabled={disabled}
             className="rounded-md border border-[color:var(--border)] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] hover:bg-zinc-50 disabled:opacity-50"
-            title="Load reliability settings from a JSON file"
+            title={validateOnly
+              ? "Pick a JSON file — it will be checked and reported but not applied."
+              : "Load reliability settings from a JSON file."}
           >
-            Import JSON
+            {validateOnly ? "Validate JSON…" : "Import JSON"}
           </button>
           <button
             type="button"
@@ -853,17 +910,21 @@ function SettingsPanel({
         </div>
       </div>
 
-      {importStatus && (
-        <div
-          role="status"
-          className={`mt-3 rounded-md border px-3 py-2 text-[12px] ${
-            importStatus.kind === "ok"
-              ? "border-emerald-200 bg-emerald-50 text-emerald-800"
-              : "border-rose-200 bg-rose-50 text-rose-800"
-          }`}
-        >
-          {importStatus.msg}
-        </div>
+      {importReport && (
+        <ImportReportCard
+          fileName={importReport.fileName}
+          mode={importReport.mode}
+          report={importReport.report}
+          onApply={
+            importReport.mode === "validated" && importReport.report.ok && importReport.report.parsed
+              ? () => {
+                  onChange(importReport.report.parsed!);
+                  setImportReport({ ...importReport, mode: "applied" });
+                }
+              : undefined
+          }
+          onDismiss={() => setImportReport(null)}
+        />
       )}
 
       <div className="mt-5 grid gap-4 md:grid-cols-3">
