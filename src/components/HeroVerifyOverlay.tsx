@@ -563,6 +563,39 @@ export function HeroVerifyOverlay() {
     },
   });
 
+  /**
+   * Validate the assembled payload against `hero-verify-report/v3`
+   * BEFORE we trigger any download. The CSV path also validates because
+   * its rows are derived from this same in-memory shape.
+   * Returns `true` if valid, or if the user explicitly confirms an
+   * override; `false` to abort.
+   */
+  const validateBeforeDownload = (
+    payload: unknown,
+    format: "JSON" | "CSV",
+  ): boolean => {
+    const result = validateReportV3(payload);
+    if (result.ok) {
+      // eslint-disable-next-line no-console
+      console.info(
+        `[hero-verify] schema-check OK — payload conforms to hero-verify-report/v3 (${format})`,
+      );
+      setSchemaCheck({ ok: true, at: Date.now(), format });
+      return true;
+    }
+    // eslint-disable-next-line no-console
+    console.warn(
+      `[hero-verify] schema-check FAILED for ${format} — payload does not conform to hero-verify-report/v3`,
+      result.issues,
+    );
+    setSchemaCheck({ ok: false, at: Date.now(), format, issues: result.issues });
+    if (typeof window === "undefined") return false;
+    return window.confirm(
+      `Schema check FAILED for ${format} (hero-verify-report/v3):\n\n` +
+        formatIssues(result.issues).slice(0, 600) +
+        "\n\nDownload anyway?",
+    );
+  };
 
   const handleExportJson = () => {
     if (typeof window === "undefined") return;
