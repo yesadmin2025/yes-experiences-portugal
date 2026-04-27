@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouterState } from "@tanstack/react-router";
+import { toast } from "sonner";
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
 
 /**
