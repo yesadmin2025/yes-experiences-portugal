@@ -699,6 +699,31 @@ export function HeroCopyDiff() {
             >
               Accept as baseline
             </button>
+            <button
+              type="button"
+              onClick={exportDiff}
+              data-action="copy-diff"
+              style={{
+                background:
+                  copyStatus === "ok"
+                    ? "#10b981"
+                    : copyStatus === "fail"
+                      ? "#dc2626"
+                      : "rgba(255,255,255,0.12)",
+                color: "#fff",
+                border: "1px solid rgba(255,255,255,0.2)",
+                borderRadius: 4,
+                padding: "6px 10px",
+                cursor: "pointer",
+                fontSize: 11,
+              }}
+            >
+              {copyStatus === "ok"
+                ? "Copied ✓"
+                : copyStatus === "fail"
+                  ? "Copy failed"
+                  : "Copy diff JSON"}
+            </button>
           </div>
           <div style={{ marginTop: 8, opacity: 0.55, fontSize: 10 }}>
             Toggle: Shift+H+R · or ?hero-debug
