@@ -819,7 +819,7 @@ function SettingsPanel({
   // Hold full validation report so the panel can render a structured issue list,
   // not just a single one-line message.
   const [importReport, setImportReport] = useState<
-    | { fileName: string; mode: "applied" | "validated" | "rejected"; report: ValidationReport }
+    | { fileName: string; mode: "applied" | "validated" | "rejected" | "current"; report: ValidationReport }
     | null
   >(null);
 
