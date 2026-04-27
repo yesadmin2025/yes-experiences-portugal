@@ -277,7 +277,7 @@ async function runOnce() {
   return { summary, totalFailures, manualChecks };
 }
 
-const WATCH = process.argv.includes("--watch");
+const WATCH = CLI.watch;
 
 if (!WATCH) {
   const { totalFailures, manualChecks } = await runOnce();
