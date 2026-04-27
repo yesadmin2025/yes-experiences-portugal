@@ -407,11 +407,21 @@ jobs:
         #   • the precedence expression is mistyped and silently picks
         #     up something out-of-band.
         #
-        # The resolved values are exposed as step outputs (`report`,
-        # `logs`, `meta`), and the three upload steps below consume
-        # those outputs instead of re-evaluating the precedence
-        # expression — so there is exactly ONE source of truth for the
-        # effective retention, and it has been validated.
+        # The resolved values are exposed as step outputs and consumed
+        # by the three upload steps below — so there is exactly ONE
+        # source of truth for the effective retention, and it has been
+        # validated. The job re-exports them under the parent `outputs:`
+        # block so downstream jobs can reference them too.
+        #
+        # Outputs (reference as `steps.retention.outputs.<name>`):
+        #   report  → effective retention (days) for hero-copy-qa-report
+        #   logs    → effective retention (days) for hero-copy-qa-logs
+        #   meta    → effective retention (days) for hero-copy-qa-meta
+        #
+        # The library also prints a single grep-friendly debug line:
+        #   🔎 retention.outputs: report=<n> logs=<n> meta=<n> (max=90, default=14)
+        # — useful for `gh run view --log | grep retention.outputs` when
+        # triaging "what retention did this run actually use?".
         #
         # All precedence/validation logic lives in
         # scripts/ci/retention-lib.sh (shared with the per-input
