@@ -19,6 +19,7 @@ import { describe, it, expect } from "vitest";
 import { spawnSync } from "node:child_process";
 import { readFileSync, writeFileSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
+// (tmpdir is still used for the report-output dirs in test 1)
 import { resolve, join } from "node:path";
 
 const PROJECT_ROOT = resolve(__dirname, "..", "..");
