@@ -289,6 +289,52 @@ function consumeForceRefresh(): boolean {
   }
 }
 
+/**
+ * Decide whether the post-route-boundary refresh should run.
+ *
+ * Pure function — no I/O, no globals — so it can be unit tested in
+ * isolation. Inputs intentionally mirror the call site:
+ *
+ *   • isIndex          — did we just enter the index route?
+ *   • forced           — was the one-shot override armed?
+ *   • baselineVersion  — version stored in localStorage (or null)
+ *   • currentVersion   — HERO_COPY_VERSION at runtime
+ *
+ * Returns { shouldRefresh, reason } where `reason` is one of:
+ *   "not-index"     → navigated away from "/", nothing to do
+ *   "forced"        → reset-button override bypasses the guard
+ *   "no-baseline"   → first run; nothing to compare against, refresh anyway
+ *   "version-diff"  → versions differ, a meaningful diff is possible
+ *   "version-match" → versions match, guard skips the refresh
+ */
+export type RefreshDecisionReason =
+  | "not-index"
+  | "forced"
+  | "no-baseline"
+  | "version-diff"
+  | "version-match";
+
+export type RefreshDecision = {
+  shouldRefresh: boolean;
+  reason: RefreshDecisionReason;
+};
+
+export function evaluateRefreshDecision(input: {
+  isIndex: boolean;
+  forced: boolean;
+  baselineVersion: string | null;
+  currentVersion: string;
+}): RefreshDecision {
+  const { isIndex, forced, baselineVersion, currentVersion } = input;
+  if (!isIndex) return { shouldRefresh: false, reason: "not-index" };
+  if (forced) return { shouldRefresh: true, reason: "forced" };
+  if (baselineVersion === null)
+    return { shouldRefresh: true, reason: "no-baseline" };
+  if (baselineVersion === currentVersion)
+    return { shouldRefresh: false, reason: "version-match" };
+  return { shouldRefresh: true, reason: "version-diff" };
+}
+
 function readInitialPanelVisibility(): boolean {
   if (typeof window === "undefined") return false;
   try {

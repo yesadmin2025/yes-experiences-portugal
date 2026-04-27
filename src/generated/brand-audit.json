@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-04-27T00:46:00.457Z",
-  "filesScanned": 30,
+  "generatedAt": "2026-04-27T01:32:55.896Z",
+  "filesScanned": 34,
   "approvedPalette": {
     "teal": "#295B61",
     "teal-2": "#2A7C82",
@@ -18,10 +18,10 @@
     "#cccccc"
   ],
   "counts": {
-    "total": 57,
+    "total": 91,
     "approved": 38,
-    "allowlisted": 19,
-    "mismatch": 0
+    "allowlisted": 24,
+    "mismatch": 29
   },
   "findings": [
     {
@@ -41,6 +41,312 @@
       "normalized": "#c9a96a",
       "snippet": "className=\"absolute top-1/2 -translate-y-1/2 h-2 w-2 rounded-full bg-[color:var(--gold,#C9A96A)] shadow-[0_0_6px_rgba(201,169,106,0.8)]\"",
       "status": "approved"
+    },
+    {
+      "file": "src/components/HeroCopyDiff.tsx",
+      "line": 158,
+      "col": 14,
+      "raw": "#9ca3af",
+      "normalized": "#9ca3af",
+      "snippet": "\"color:#9ca3af\",",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/HeroCopyDiff.tsx",
+      "line": 167,
+      "col": 14,
+      "raw": "#9ca3af",
+      "normalized": "#9ca3af",
+      "snippet": "\"color:#9ca3af\",",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/HeroCopyDiff.tsx",
+      "line": 176,
+      "col": 12,
+      "raw": "#f59e0b",
+      "normalized": "#f59e0b",
+      "snippet": "\"color:#f59e0b;font-weight:bold\",",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/HeroCopyDiff.tsx",
+      "line": 483,
+      "col": 14,
+      "raw": "#9ca3af",
+      "normalized": "#9ca3af",
+      "snippet": "\"color:#9ca3af\",",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/HeroCopyDiff.tsx",
+      "line": 497,
+      "col": 19,
+      "raw": "#10b981",
+      "normalized": "#10b981",
+      "snippet": "ok ? \"color:#10b981\" : \"color:#ef4444\",",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/HeroCopyDiff.tsx",
+      "line": 497,
+      "col": 37,
+      "raw": "#ef4444",
+      "normalized": "#ef4444",
+      "snippet": "ok ? \"color:#10b981\" : \"color:#ef4444\",",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/HeroCopyDiff.tsx",
+      "line": 529,
+      "col": 18,
+      "raw": "#10b981",
+      "normalized": "#10b981",
+      "snippet": "\"color:#10b981\",",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/HeroCopyDiff.tsx",
+      "line": 544,
+      "col": 63,
+      "raw": "#9ca3af",
+      "normalized": "#9ca3af",
+      "snippet": "console.info(\"%c[hero-copy] baseline cleared\", \"color:#9ca3af\");",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/HeroCopyDiff.tsx",
+      "line": 597,
+      "col": 31,
+      "raw": "#f59e0b",
+      "normalized": "#f59e0b",
+      "snippet": "outline: 2px dashed #f59e0b !important;",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/HeroCopyDiff.tsx",
+      "line": 603,
+      "col": 63,
+      "raw": "#10b981",
+      "normalized": "#10b981",
+      "snippet": "[data-hero-diff-highlight=\"added\"]   { outline-color: #10b981 !important; }",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/HeroCopyDiff.tsx",
+      "line": 604,
+      "col": 63,
+      "raw": "#ef4444",
+      "normalized": "#ef4444",
+      "snippet": "[data-hero-diff-highlight=\"removed\"] { outline-color: #ef4444 !important; }",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/HeroCopyDiff.tsx",
+      "line": 605,
+      "col": 63,
+      "raw": "#f59e0b",
+      "normalized": "#f59e0b",
+      "snippet": "[data-hero-diff-highlight=\"changed\"] { outline-color: #f59e0b !important; }",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/HeroCopyDiff.tsx",
+      "line": 673,
+      "col": 14,
+      "raw": "#f59e0b",
+      "normalized": "#f59e0b",
+      "snippet": "\"color:#f59e0b\",",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/HeroCopyDiff.tsx",
+      "line": 720,
+      "col": 14,
+      "raw": "#9ca3af",
+      "normalized": "#9ca3af",
+      "snippet": "\"color:#9ca3af\",",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/HeroCopyDiff.tsx",
+      "line": 755,
+      "col": 18,
+      "raw": "#9ca3af",
+      "normalized": "#9ca3af",
+      "snippet": "\"color:#9ca3af\",",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/HeroCopyDiff.tsx",
+      "line": 771,
+      "col": 20,
+      "raw": "#10b981",
+      "normalized": "#10b981",
+      "snippet": "\"color:#10b981\",",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/HeroCopyDiff.tsx",
+      "line": 785,
+      "col": 20,
+      "raw": "#ef4444",
+      "normalized": "#ef4444",
+      "snippet": "\"color:#ef4444\",",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/HeroCopyDiff.tsx",
+      "line": 793,
+      "col": 16,
+      "raw": "#9ca3af",
+      "normalized": "#9ca3af",
+      "snippet": "\"color:#9ca3af\",",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/HeroCopyDiff.tsx",
+      "line": 950,
+      "col": 23,
+      "raw": "#0f0f0f",
+      "normalized": "#0f0f0f",
+      "snippet": "background: #0f0f0f !important;",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/HeroCopyDiff.tsx",
+      "line": 951,
+      "col": 18,
+      "raw": "#fafafa",
+      "normalized": "#fafafa",
+      "snippet": "color: #fafafa !important;",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/HeroCopyDiff.tsx",
+      "line": 975,
+      "col": 21,
+      "raw": "#fafafa",
+      "normalized": "#fafafa",
+      "snippet": "color: \"#fafafa\",",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/HeroCopyDiff.tsx",
+      "line": 1005,
+      "col": 25,
+      "raw": "#fafafa",
+      "normalized": "#fafafa",
+      "snippet": "color: \"#fafafa\",",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/HeroCopyDiff.tsx",
+      "line": 1049,
+      "col": 59,
+      "raw": "#10b981",
+      "normalized": "#10b981",
+      "snippet": "lastAction.action === \"accepted\" ? \"#10b981\" : \"#dc2626\",",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/HeroCopyDiff.tsx",
+      "line": 1049,
+      "col": 71,
+      "raw": "#dc2626",
+      "normalized": "#dc2626",
+      "snippet": "lastAction.action === \"accepted\" ? \"#10b981\" : \"#dc2626\",",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/HeroCopyDiff.tsx",
+      "line": 1050,
+      "col": 29,
+      "raw": "#fff",
+      "normalized": "#ffffff",
+      "snippet": "color: \"#fff\",",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/components/HeroCopyDiff.tsx",
+      "line": 1082,
+      "col": 30,
+      "raw": "#dc2626",
+      "normalized": "#dc2626",
+      "snippet": "background: \"#dc2626\",",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/HeroCopyDiff.tsx",
+      "line": 1083,
+      "col": 25,
+      "raw": "#fff",
+      "normalized": "#ffffff",
+      "snippet": "color: \"#fff\",",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/components/HeroCopyDiff.tsx",
+      "line": 1103,
+      "col": 25,
+      "raw": "#fff",
+      "normalized": "#ffffff",
+      "snippet": "color: \"#fff\",",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/components/HeroCopyDiff.tsx",
+      "line": 1127,
+      "col": 26,
+      "raw": "#10b981",
+      "normalized": "#10b981",
+      "snippet": "\"color:#10b981\",",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/HeroCopyDiff.tsx",
+      "line": 1135,
+      "col": 25,
+      "raw": "#fff",
+      "normalized": "#ffffff",
+      "snippet": "color: \"#fff\",",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/components/HeroCopyDiff.tsx",
+      "line": 1152,
+      "col": 24,
+      "raw": "#10b981",
+      "normalized": "#10b981",
+      "snippet": "? \"#10b981\"",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/HeroCopyDiff.tsx",
+      "line": 1154,
+      "col": 26,
+      "raw": "#dc2626",
+      "normalized": "#dc2626",
+      "snippet": "? \"#dc2626\"",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/HeroCopyDiff.tsx",
+      "line": 1156,
+      "col": 25,
+      "raw": "#fff",
+      "normalized": "#ffffff",
+      "snippet": "color: \"#fff\",",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/components/HeroCopyDiff.tsx",
+      "line": 1215,
+      "col": 14,
+      "raw": "#f59e0b",
+      "normalized": "#f59e0b",
+      "snippet": "\"color:#f59e0b\",",
+      "status": "mismatch"
     },
     {
       "file": "src/components/Navbar.tsx",
