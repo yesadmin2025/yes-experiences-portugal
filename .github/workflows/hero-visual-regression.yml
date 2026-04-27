@@ -1,0 +1,80 @@
+name: Hero Visual Regression
+
+# Runs the Playwright hero visual regression suite on every pull request.
+# Required check — failures (screenshots exceeding the pixel-diff budget
+# defined in playwright.config.ts: maxDiffPixelRatio 0.002) block merges
+# when this workflow is added as a required status check in the repo's
+# branch protection rules.
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Cancel in-flight runs for the same PR when new commits are pushed.
+concurrency:
+  group: hero-visual-regression-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  visual-regression:
+    name: Hero visual regression (Chromium)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package.json', 'bun.lockb') }}
+          restore-keys: |
+            playwright-${{ runner.os }}-
+
+      - name: Install Playwright Chromium + system deps
+        # Always install OS deps (cache only covers the browser binary).
+        run: |
+          if [ "${{ steps.playwright-cache.outputs.cache-hit }}" = "true" ]; then
+            bunx playwright install-deps chromium
+          else
+            bunx playwright install --with-deps chromium
+          fi
+
+      - name: Run hero visual regression suite
+        # Scope to the hero spec only — this workflow's contract is the
+        # hero layout, not the full e2e suite.
+        run: bunx playwright test e2e/hero-visual-regression.spec.ts --reporter=github,html
+        env:
+          CI: "true"
+
+      - name: Upload Playwright report (diffs + traces)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 14
+
+      - name: Upload failed snapshot diffs
+        # test-results/ contains -actual.png, -expected.png, -diff.png for
+        # every failed screenshot assertion. Crucial for reviewing why a
+        # PR exceeded the pixel-diff threshold.
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: snapshot-diffs
+          path: test-results/
+          retention-days: 14
