@@ -220,6 +220,102 @@ const reviews = [
   },
 ];
 
+/**
+ * Decision-card route validator.
+ *
+ * Cross-checks every entry in `startPaths` against its `expectedTo` route
+ * at mount, logs the result to the console (one grouped `console.info`
+ * per page load), and exposes a small visible status strip directly under
+ * the card grid.
+ *
+ * The strip is rendered:
+ *   • always in development (`import.meta.env.DEV`)
+ *   • on production preview when the URL contains `?debug-routes`
+ * Otherwise it stays hidden so end-users never see QA chrome.
+ */
+function RouteValidationStrip() {
+  const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const debugFlag = params.has("debug-routes");
+    const visible = import.meta.env.DEV || debugFlag;
+    setShow(visible);
+
+    // Always log — useful in production console even when the strip is hidden.
+    const results = startPaths.map((p) => ({
+      destination: p.destination,
+      label: p.cta,
+      to: p.to,
+      expectedTo: p.expectedTo,
+      ok: p.to === p.expectedTo,
+    }));
+    const allOk = results.every((r) => r.ok);
+    /* eslint-disable no-console */
+    console.groupCollapsed(
+      `%c[YES] Decision-card route check — ${allOk ? "PASS ✓" : "FAIL ✗"}`,
+      `color:${allOk ? "#2e7d32" : "#c62828"};font-weight:600`,
+    );
+    results.forEach((r) => {
+      console.info(
+        `${r.ok ? "✓" : "✗"} ${r.destination.padEnd(13)} → ${r.to}` +
+          (r.ok ? "" : `  (expected ${r.expectedTo})`) +
+          `   [label: "${r.label}"]`,
+      );
+    });
+    console.groupEnd();
+    /* eslint-enable no-console */
+  }, []);
+
+  if (!show) return null;
+
+  const checks = startPaths.map((p) => ({
+    destination: p.destination,
+    to: p.to,
+    expectedTo: p.expectedTo,
+    label: p.cta,
+    ok: p.to === p.expectedTo,
+  }));
+  const allOk = checks.every((c) => c.ok);
+
+  return (
+    <div
+      role="status"
+      aria-live="polite"
+      aria-label="Decision card route validation"
+      className="mt-10 max-w-6xl mx-auto border border-dashed border-[color:var(--border)] bg-[color:var(--card)] px-5 py-4 text-[12px] text-[color:var(--charcoal-soft)] font-mono"
+    >
+      <p className="flex items-center gap-2 text-[10.5px] uppercase tracking-[0.24em]">
+        <span
+          aria-hidden="true"
+          className={`inline-block w-2 h-2 rounded-full ${
+            allOk ? "bg-emerald-600" : "bg-red-600"
+          }`}
+        />
+        Route validation — {allOk ? "all 4 paths OK" : "MISMATCH detected"}
+      </p>
+      <ul className="mt-3 grid sm:grid-cols-2 lg:grid-cols-4 gap-2 list-none p-0">
+        {checks.map((c) => (
+          <li
+            key={c.destination}
+            className={`flex items-center justify-between gap-3 px-3 py-2 border ${
+              c.ok
+                ? "border-emerald-600/30 text-[color:var(--charcoal)]"
+                : "border-red-600/40 text-red-700"
+            }`}
+          >
+            <span className="font-semibold">{c.destination}</span>
+            <span className="opacity-80">
+              {c.to}
+              {c.ok ? " ✓" : ` ✗ (expected ${c.expectedTo})`}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 function HomePage() {
   // Pointer-driven parallax — writes --hero-px / --hero-py (-1 → 1) to the
   // section. Image and vignette read those vars via inline calc() to shift
