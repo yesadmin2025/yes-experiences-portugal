@@ -256,6 +256,30 @@ async function main() {
     fail(1, report);
   }
 
+  // Compose the EXACT request that `apply` mode would send. Used by
+  // both apply-dry-run (print only) and apply (print + send), so the
+  // two paths can never disagree about what would be written.
+  const writePath = `repos/${REPO}/branches/${BRANCH}/protection/required_status_checks/contexts`;
+  const writeBody = { contexts: [expected] };
+
+  if (MODE === "apply-dry-run") {
+    process.stdout.write(`${report}\n\n`);
+    process.stdout.write(
+      `🧪 MODE=apply-dry-run — NO write performed.\n` +
+        `   The following request WOULD be sent in MODE=apply:\n\n` +
+        `     POST ${API}/${writePath}\n` +
+        `     Content-Type: application/json\n` +
+        `     Body: ${JSON.stringify(writeBody)}\n\n` +
+        `   Endpoint is additive — it would add the missing context to the\n` +
+        `   existing list of ${before.length} context${before.length === 1 ? "" : "s"} ` +
+        `without removing or reordering any.\n\n` +
+        `   Predicted contexts after apply (${before.length + 1}): ` +
+        `${JSON.stringify([...before, expected])}\n\n` +
+        `   Re-run this workflow with mode=apply to perform the write.\n`,
+    );
+    return;
+  }
+
   // MODE === "apply" — additive only.
   process.stdout.write(`${report}\n\n`);
   process.stdout.write(`🔧 MODE=apply — adding the missing context (additive).\n`);
