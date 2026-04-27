@@ -395,6 +395,14 @@ function TypographyAuditPage() {
             >
               {running ? "Auditing…" : "Re-run audit"}
             </button>
+            <button
+              type="button"
+              onClick={() => setSettingsOpen((v) => !v)}
+              aria-expanded={settingsOpen}
+              className="rounded-md border border-[color:var(--border)] px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.12em]"
+            >
+              {settingsOpen ? "Hide settings" : "Settings"}
+            </button>
             <a
               href="/"
               className="rounded-md border border-[color:var(--border)] px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.12em]"
@@ -402,6 +410,14 @@ function TypographyAuditPage() {
               ← Back to site
             </a>
           </div>
+          {settingsOpen && (
+            <SettingsPanel
+              settings={settings}
+              onChange={setSettings}
+              onReset={() => setSettings(DEFAULT_SETTINGS)}
+              disabled={running}
+            />
+          )}
         </div>
       </header>
 
