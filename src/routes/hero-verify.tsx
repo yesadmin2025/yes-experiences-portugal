@@ -102,6 +102,21 @@ function HeroVerifyPage() {
     }
   }, [targetOverride, checkAllPages]);
 
+  const downloadJson = useCallback(() => {
+    if (!result) return;
+    const blob = new Blob([JSON.stringify(result, null, 2)], {
+      type: "application/json",
+    });
+    triggerDownload(blob, buildFilename(result, "json"));
+  }, [result]);
+
+  const downloadCsv = useCallback(() => {
+    if (!result) return;
+    const csv = toCsv(result);
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    triggerDownload(blob, buildFilename(result, "csv"));
+  }, [result]);
+
   return (
     <main className="mx-auto max-w-3xl px-6 py-12 font-sans">
       <h1 className="text-2xl font-semibold tracking-tight">
@@ -146,6 +161,27 @@ function HeroVerifyPage() {
               ? "Run check on all pages"
               : "Run check now"}
         </button>
+
+        {result && (
+          <div className="flex flex-wrap gap-2 pt-2">
+            <button
+              onClick={downloadJson}
+              className="inline-flex items-center justify-center rounded-md border border-border bg-background px-3 py-1.5 text-xs font-medium hover:bg-accent"
+            >
+              Download JSON
+            </button>
+            <button
+              onClick={downloadCsv}
+              className="inline-flex items-center justify-center rounded-md border border-border bg-background px-3 py-1.5 text-xs font-medium hover:bg-accent"
+            >
+              Download CSV
+            </button>
+            <span className="self-center text-xs text-muted-foreground">
+              Use these in CI logs or to share results.
+            </span>
+          </div>
+        )}
+
         <p className="text-xs text-muted-foreground">
           Source version: <code>{HERO_COPY_VERSION}</code>
         </p>
@@ -349,4 +385,148 @@ function CheckRow({ check }: { check: CheckResult }) {
       </span>
     </li>
   );
+}
+
+function triggerDownload(blob: Blob, filename: string) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function buildFilename(result: VerifyResponse, ext: "json" | "csv") {
+  const stamp = new Date().toISOString().replace(/[:.]/g, "-");
+  const scope = isMulti(result) ? "all" : "single";
+  const status = result.ok ? "ok" : "fail";
+  return `hero-verify-${scope}-${status}-${stamp}.${ext}`;
+}
+
+function csvEscape(value: string | number | boolean | null | undefined) {
+  if (value === null || value === undefined) return "";
+  const s = String(value);
+  if (/[",\n\r]/.test(s)) return `"${s.replace(/"/g, '""')}"`;
+  return s;
+}
+
+function toCsv(result: VerifyResponse): string {
+  const header = [
+    "scope",
+    "path",
+    "url",
+    "ok",
+    "httpStatus",
+    "liveVersion",
+    "versionMatch",
+    "missingKey",
+    "expected",
+    "specDriftKey",
+    "specExpected",
+    "specActual",
+    "checkedAt",
+  ];
+  const rows: string[][] = [header];
+  const checkedAt = result.checkedAt;
+
+  // Spec drift rows (apply to whole report, not per page)
+  if (result.specDrift && !result.specDrift.ok) {
+    for (const d of result.specDrift.drifted) {
+      rows.push([
+        "spec_drift",
+        "",
+        "",
+        "false",
+        "",
+        "",
+        "",
+        "",
+        "",
+        d.key,
+        d.expected,
+        d.actual,
+        checkedAt,
+      ]);
+    }
+  }
+
+  if (isMulti(result)) {
+    for (const page of result.pages) {
+      if (page.missing.length === 0) {
+        rows.push([
+          "page",
+          page.path,
+          page.url,
+          String(page.ok),
+          String(page.httpStatus),
+          page.liveVersion ?? "",
+          page.versionMatch === null ? "" : String(page.versionMatch),
+          "",
+          "",
+          "",
+          "",
+          "",
+          checkedAt,
+        ]);
+      } else {
+        for (const m of page.missing) {
+          rows.push([
+            "page",
+            page.path,
+            page.url,
+            String(page.ok),
+            String(page.httpStatus),
+            page.liveVersion ?? "",
+            page.versionMatch === null ? "" : String(page.versionMatch),
+            m.key,
+            m.expected,
+            "",
+            "",
+            "",
+            checkedAt,
+          ]);
+        }
+      }
+    }
+  } else {
+    if (result.missing.length === 0) {
+      rows.push([
+        "page",
+        "/",
+        result.target,
+        String(result.ok),
+        String(result.httpStatus),
+        result.liveVersion ?? "",
+        result.versionMatch === null ? "" : String(result.versionMatch),
+        "",
+        "",
+        "",
+        "",
+        "",
+        checkedAt,
+      ]);
+    } else {
+      for (const m of result.missing) {
+        rows.push([
+          "page",
+          "/",
+          result.target,
+          String(result.ok),
+          String(result.httpStatus),
+          result.liveVersion ?? "",
+          result.versionMatch === null ? "" : String(result.versionMatch),
+          m.key,
+          m.expected,
+          "",
+          "",
+          "",
+          checkedAt,
+        ]);
+      }
+    }
+  }
+
+  return rows.map((r) => r.map(csvEscape).join(",")).join("\n");
 }
