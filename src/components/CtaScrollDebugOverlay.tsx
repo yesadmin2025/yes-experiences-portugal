@@ -162,7 +162,7 @@ export function CtaScrollDebugOverlay({ targetRef }: Props) {
         </div>
         <div className="relative h-1.5 rounded-full bg-white/10 mb-2.5">
           <div
-            className="absolute top-1/2 -translate-y-1/2 h-2 w-2 rounded-full bg-[color:var(--gold,color:var(--gold))] shadow-[0_0_6px_rgba(201,169,106,0.8)]"
+            className="absolute top-1/2 -translate-y-1/2 h-2 w-2 rounded-full bg-[color:var(--gold)] shadow-[0_0_6px_rgba(201,169,106,0.8)]"
             style={{ left: `calc(${scalePct}% - 4px)` }}
           />
         </div>
