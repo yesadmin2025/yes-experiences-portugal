@@ -973,13 +973,10 @@ function HomePage() {
               className="serif text-[2.25rem] md:text-5xl mt-5 leading-[1.08]"
             >
               Confirm them as they are. <br />
-              <span className="italic">Or tailor them, your way.</span>
+              <span className="italic">Or shape them your way.</span>
             </h2>
-            <p className="mt-3 text-[12px] uppercase tracking-[0.24em] text-[color:var(--gold)]">
-              Instant confirmation across all experiences.
-            </p>
             <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
-              Three private experiences crafted by our locals — confirm them as they are, or reshape every detail. Either way, it's yours in seconds.
+              Three private plans crafted by our locals — confirm as they are, or reshape every detail. Either way, it's yours in seconds.
             </p>
           </div>
 
