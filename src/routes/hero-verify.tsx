@@ -173,10 +173,43 @@ function HeroVerifyPage() {
           </div>
         )}
 
+        <div className="flex flex-wrap items-center gap-3 border-t border-border pt-3">
+          <label className="flex items-center gap-2 text-sm">
+            <input
+              type="checkbox"
+              checked={compareMode}
+              onChange={(e) => setCompareMode(e.target.checked)}
+              disabled={!compareEntries}
+              className="size-4"
+            />
+            Compare last two runs
+          </label>
+          <span className="text-xs text-muted-foreground">
+            History: {history.length} run(s)
+            {!compareEntries && " — need at least 2 to compare"}
+          </span>
+          {history.length > 0 && (
+            <button
+              onClick={handleClearHistory}
+              className="ml-auto text-xs text-muted-foreground underline-offset-2 hover:underline"
+            >
+              Clear history
+            </button>
+          )}
+        </div>
+
         <p className="text-xs text-muted-foreground">
           Source version: <code>{HERO_COPY_VERSION}</code>
         </p>
       </div>
+
+      {compareMode && compareEntries && diff && (
+        <DiffView
+          before={compareEntries[0]}
+          after={compareEntries[1]}
+          changes={diff}
+        />
+      )}
 
       {result?.specDrift && !result.specDrift.ok && (
         <section className="mt-6 rounded-lg border border-amber-500/40 bg-amber-500/5 p-4">
