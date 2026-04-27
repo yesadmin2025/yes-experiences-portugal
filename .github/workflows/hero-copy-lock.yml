@@ -141,6 +141,17 @@ jobs:
     # deployed environment still drifts (cached HTML, stale build, CDN
     # purge lag), so this job runs in parallel and produces a CI-grade
     # JSON artifact regardless of the byte-exact lock outcome.
+    #
+    # Outputs (re-exported from the `retention` step so downstream jobs
+    # can reference them as `needs.qa-report.outputs.*`):
+    #   report_retention_days  → effective retention for hero-copy-qa-report
+    #   logs_retention_days    → effective retention for hero-copy-qa-logs
+    #   meta_retention_days    → effective retention for hero-copy-qa-meta
+    # All three are post-precedence, post-validation values (1..90).
+    outputs:
+      report_retention_days: ${{ steps.retention.outputs.report }}
+      logs_retention_days:   ${{ steps.retention.outputs.logs }}
+      meta_retention_days:   ${{ steps.retention.outputs.meta }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
