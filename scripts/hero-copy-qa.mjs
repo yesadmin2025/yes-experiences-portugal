@@ -165,6 +165,70 @@ if (TARGETS.length === 0) {
   process.exit(EXIT.FLAG_MISCONFIG);
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// JSON report (CI contract).
+//
+// Schema (stable):
+//   {
+//     "schema": "hero-copy-qa@1",
+//     "ts": "2026-04-27T12:34:56.789Z",
+//     "mode": "one-shot" | "watch",
+//     "runIndex": 1,
+//     "exitCode": 0,
+//     "exitName": "OK",
+//     "filter": { "target": "all" },
+//     "targets": [{ name, url, status, driftKeys, fetchFailed }],
+//     "totals": { "drift": 0, "fetchFailed": 0, "manual": 0 }
+//   }
+//
+// Bump "schema" if a breaking change is ever made so consumers can pin.
+// ─────────────────────────────────────────────────────────────────────────────
+import { writeFileSync } from "node:fs";
+
+const exitNameOf = (code) =>
+  Object.entries(EXIT).find(([, v]) => v === code)?.[0] ?? "UNKNOWN";
+
+function buildReport({ summary, mode, runIndex, exitCode }) {
+  const targetsOut = TARGETS.map((t) => {
+    const s = summary?.find((x) => x.target === t.name);
+    return {
+      name: t.name,
+      url: t.url,
+      status: s?.status ?? "unknown",
+      driftKeys: s?.driftKeys ?? [],
+      fetchFailed: s?.status === "fetch_failed",
+    };
+  });
+  return {
+    schema: "hero-copy-qa@1",
+    ts: new Date().toISOString(),
+    mode,
+    runIndex,
+    exitCode,
+    exitName: exitNameOf(exitCode),
+    filter: { target: CLI.target },
+    targets: targetsOut,
+    totals: {
+      drift: targetsOut.filter((t) => t.status === "drift").length,
+      fetchFailed: targetsOut.filter((t) => t.fetchFailed).length,
+      manual: targetsOut.filter((t) => t.status === "manual").length,
+    },
+  };
+}
+
+function emitReport(report) {
+  if (!CLI.reportJson) return;
+  const line = JSON.stringify(report);
+  if (CLI.reportJson === "-") {
+    process.stdout.write(line + "\n");
+  } else {
+    try {
+      writeFileSync(CLI.reportJson, line + "\n");
+    } catch (err) {
+      console.log(`\x1b[31m⚠ Failed to write JSON report to ${CLI.reportJson}: ${err.message}\x1b[0m`);
+    }
+  }
+}
 // The localization checklist — every string here must appear verbatim in the
 // served HTML of every target. Order is intentional (top-to-bottom in the UI).
 const CHECKS = [
