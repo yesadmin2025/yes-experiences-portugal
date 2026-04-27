@@ -262,6 +262,7 @@ async function runOnce() {
   const summary = [];
   let totalFailures = 0;
   let manualChecks = 0;
+  let fetchFailures = 0;
 
   for (const target of TARGETS) {
     console.log(`${BOLD}${target.name}${RESET} ${DIM}${target.url}${RESET}`);
@@ -283,6 +284,7 @@ async function runOnce() {
       }
       console.log(`  ${RED}✗ Fetch failed: ${err.message}${RESET}\n`);
       totalFailures++;
+      fetchFailures++;
       summary.push({ target: target.name, status: "fetch_failed", driftKeys: [] });
       continue;
     }
