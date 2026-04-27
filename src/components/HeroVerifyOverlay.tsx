@@ -320,6 +320,13 @@ export function HeroVerifyOverlay() {
       }}
       data-hero-verify-overlay="active"
     >
+      {/* Local keyframes — scoped under the overlay only. */}
+      <style>{`
+        @keyframes heroVerifyPulse {
+          0%, 100% { box-shadow: 0 0 0 3px rgba(34,197,94,0.25); }
+          50% { box-shadow: 0 0 0 6px rgba(34,197,94,0.05); }
+        }
+      `}</style>
       {/* Per-field outlines + badges */}
       {reports.map((r) => {
         if (!r.rect) return null;
