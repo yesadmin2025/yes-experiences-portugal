@@ -50,7 +50,7 @@ export function Navbar() {
               width={909}
               height={579}
               alt="YES experiences PORTUGAL"
-              className="block h-[42px] md:h-[50px] lg:h-[56px] w-auto select-none"
+              className="block h-[48px] md:h-[52px] lg:h-[58px] w-auto select-none drop-shadow-[0_1px_0_rgba(255,255,255,0.4)]"
               draggable={false}
               fetchPriority="high"
               decoding="async"
