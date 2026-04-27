@@ -735,6 +735,11 @@ function HomePage() {
                 <li key={p.title} className="reveal-stagger h-full">
                   <Link
                     to={p.to}
+                    aria-label={p.ariaLabel}
+                    data-destination={p.destination}
+                    data-expected-to={p.expectedTo}
+                    data-actual-to={p.to}
+                    data-route-ok={p.to === p.expectedTo ? "true" : "false"}
                     className={`group relative flex flex-col h-full p-7 md:p-8 transition-all duration-500 overflow-hidden ${styles.card}`}
                   >
                     {/* Top rail — distinct accent pattern per card
