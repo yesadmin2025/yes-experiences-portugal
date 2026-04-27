@@ -24,7 +24,7 @@ import editViewpoint from "@/assets/edit-viewpoint.jpg";
 import { ArrowRight, Star, MapPin, Compass, Clock } from "lucide-react";
 import { PlatformBadge } from "@/components/PlatformBadge";
 import { HeroMetaProbe } from "@/components/HeroMetaProbe";
-import { HeroCopyDiff, HeroCopyDiffResetButton } from "@/components/HeroCopyDiff";
+import { HeroCopyDiff } from "@/components/HeroCopyDiff";
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
 
 export const Route = createFileRoute("/")({
@@ -231,18 +231,21 @@ function HomePage() {
 
         <div className="container-x relative z-10 pb-24 md:pb-36 pt-32 md:pt-40">
           <div className="max-w-3xl text-[color:var(--ivory)]">
-            {/* Eyebrow — locked to one line on mobile via whitespace-nowrap +
+            {/* Eyebrow — horizontally centered within the hero content
+                column. Locked to one line on mobile via whitespace-nowrap +
                 a smaller base size + tighter tracking. Symmetric ✦ ✦ flank
                 with equal gap so the · separators in the copy don't cause
                 visual drift around the words. */}
-            <span
-              data-hero-field="eyebrow"
-              className="inline-flex items-center gap-2 sm:gap-3 whitespace-nowrap text-[8.5px] sm:text-[10.5px] md:text-[11px] uppercase tracking-[0.14em] sm:tracking-[0.24em] md:tracking-[0.28em] text-[color:var(--gold-soft)] opacity-0 animate-[heroFade_1.1s_ease-out_0.3s_forwards] -ml-px"
-            >
-              <span className="text-[color:var(--gold)]">✦</span>
-              <span className="whitespace-nowrap">{HERO_COPY.eyebrow}</span>
-              <span className="text-[color:var(--gold)]">✦</span>
-            </span>
+            <div className="flex justify-center">
+              <span
+                data-hero-field="eyebrow"
+                className="inline-flex items-center gap-2 sm:gap-3 whitespace-nowrap text-[8.5px] sm:text-[10.5px] md:text-[11px] uppercase tracking-[0.14em] sm:tracking-[0.24em] md:tracking-[0.28em] text-[color:var(--gold-soft)] opacity-0 animate-[heroFade_1.1s_ease-out_0.3s_forwards]"
+              >
+                <span className="text-[color:var(--gold)]">✦</span>
+                <span className="whitespace-nowrap">{HERO_COPY.eyebrow}</span>
+                <span className="text-[color:var(--gold)]">✦</span>
+              </span>
+            </div>
 
             {/* Headline — tighter leading + a quietly heavier weight on
                 line 2 ("You write the story") for editorial emphasis
@@ -274,54 +277,74 @@ function HomePage() {
             </p>
 
             {/* CTA group.
-                Mobile: stacked, identical full-column width via w-full on
-                each link inside a max-w container so primary and secondary
-                are perfectly aligned and equally sized.
-                ≥sm: side-by-side at natural width with a consistent 16px
-                horizontal gap. Vertical gap (gap-4) and increased y-padding
-                (py-5) give each button a more premium target without
-                breaking the editorial rhythm. */}
+                Both buttons share an IDENTICAL internal layout:
+                  • Equal width (w-full on mobile, flex-1 + matched basis on
+                    desktop so both buttons are exactly the same width)
+                  • Equal height (same py-5, same line-height, same border)
+                  • Text centered horizontally inside the button
+                  • Arrow absolutely pinned to the right with the same
+                    distance from the right edge in BOTH buttons
+                  • Same horizontal padding budget (pl-9 pr-12) so the
+                    centered label has symmetric breathing room and the
+                    arrow never collides with descenders.
+                Constrained to max-w-xl so the pair stays anchored to the
+                hero content column rather than stretching the full width. */}
             <div
               ref={ctaGroupRef}
-              className="cta-magnet-group mt-10 md:mt-12 flex flex-col sm:flex-row sm:flex-wrap gap-4 sm:gap-4 w-full max-w-sm sm:max-w-none opacity-0 animate-[heroFade_1.4s_ease-out_1.25s_forwards]"
+              className="cta-magnet-group mt-10 md:mt-12 flex flex-col sm:flex-row gap-4 w-full max-w-sm sm:max-w-xl opacity-0 animate-[heroFade_1.4s_ease-out_1.25s_forwards]"
             >
               <Link
                 to="/builder"
                 data-hero-field="primaryCta"
-                className="cta-primary cta-attention cta-breathe group inline-flex w-full sm:w-auto items-center justify-center gap-3 px-9 py-5 text-[12px] md:text-[12.5px] lg:text-[13px] tracking-[0.22em] md:tracking-[0.2em] uppercase font-light leading-[1.55]"
+                className="cta-primary cta-attention cta-breathe group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-center text-center pl-9 pr-12 py-5 text-[12px] md:text-[12.5px] lg:text-[13px] tracking-[0.22em] md:tracking-[0.2em] uppercase font-light leading-[1.55]"
               >
-                {HERO_COPY.primaryCta}
-                <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform duration-300" />
+                <span className="block">{HERO_COPY.primaryCta}</span>
+                <ArrowRight
+                  size={13}
+                  className="absolute right-5 top-1/2 -translate-y-1/2 group-hover:translate-x-1 transition-transform duration-300"
+                />
               </Link>
               <Link
                 to="/experiences"
                 data-cta-stagger
                 data-hero-field="secondaryCta"
-                className="cta-secondary-dark cta-attention cta-breathe group inline-flex w-full sm:w-auto items-center justify-center gap-3 px-9 py-5 text-[12px] md:text-[12.5px] lg:text-[13px] tracking-[0.22em] md:tracking-[0.2em] uppercase font-light leading-[1.55] border-[1.5px]"
+                className="cta-secondary-dark cta-attention cta-breathe group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-center text-center pl-9 pr-12 py-5 text-[12px] md:text-[12.5px] lg:text-[13px] tracking-[0.22em] md:tracking-[0.2em] uppercase font-light leading-[1.55] border-[1.5px]"
               >
-                {HERO_COPY.secondaryCta}
-                <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform duration-300" />
+                <span className="block">{HERO_COPY.secondaryCta}</span>
+                <ArrowRight
+                  size={13}
+                  className="absolute right-5 top-1/2 -translate-y-1/2 group-hover:translate-x-1 transition-transform duration-300"
+                />
               </Link>
             </div>
 
-            {/* Microcopy — slightly smaller and brighter for at-a-glance
-                reassurance, with the same left edge as the column. */}
-            <div className="mt-8 md:mt-10 max-w-lg opacity-0 animate-[heroFade_1.4s_ease-out_1.5s_forwards]">
+            {/* Microcopy — sits inside the same max-w-xl rail as the CTAs
+                so its left edge anchors cleanly to the buttons above.
+                Tightened top spacing brings it into clear relationship with
+                the CTAs (no longer feels detached). */}
+            <div className="mt-6 md:mt-7 max-w-xl opacity-0 animate-[heroFade_1.4s_ease-out_1.5s_forwards]">
               <p
                 data-hero-field="microcopy"
-                className="text-[13px] md:text-[14px] text-[color:var(--ivory)]/95 leading-[1.75] font-light tracking-[0.01em]"
+                className="text-[13px] md:text-[14px] text-[color:var(--ivory)]/95 leading-[1.75] font-light tracking-[0.01em] text-left"
               >
                 {HERO_COPY.microcopy}
               </p>
             </div>
 
-            <p
-              data-hero-field="brandLine"
-              className="mt-10 md:mt-12 text-[10.5px] uppercase tracking-[0.32em] text-[color:var(--gold-soft)] flex items-center gap-3 opacity-0 animate-[heroFade_1.4s_ease-out_1.75s_forwards]"
-            >
-              <span className="h-px w-6 bg-[color:var(--gold)]" />
-              {HERO_COPY.brandLine}
-            </p>
+            {/* Brand line — centered within the hero content column with
+                generous, symmetric vertical breathing room so it reads as
+                an intentional editorial sign-off rather than a floating
+                tag. Symmetric hairlines flank the copy. */}
+            <div className="mt-12 md:mt-16 flex justify-center opacity-0 animate-[heroFade_1.4s_ease-out_1.75s_forwards]">
+              <p
+                data-hero-field="brandLine"
+                className="text-[10.5px] uppercase tracking-[0.32em] text-[color:var(--gold-soft)] inline-flex items-center gap-3 text-center"
+              >
+                <span className="h-px w-6 bg-[color:var(--gold)]" />
+                <span>{HERO_COPY.brandLine}</span>
+                <span className="h-px w-6 bg-[color:var(--gold)]" />
+              </p>
+            </div>
 
             {/* Hidden hero-copy probe.
                 Not visible to users, but discoverable in DevTools or via
@@ -422,13 +445,6 @@ function HomePage() {
                 localStorage baseline and logs changed fields. Manual
                 controls live on `window.__heroCopy`. Renders nothing. */}
             <HeroCopyDiff />
-
-            {/* On-page reset: clears persisted outlines and arms a one-shot
-                flag so the next navigation back to "/" forces a full diff
-                refresh, bypassing the version guard. */}
-            <div className="mt-6 opacity-0 animate-[heroFade_1.4s_ease-out_2s_forwards]">
-              <HeroCopyDiffResetButton />
-            </div>
           </div>
         </div>
       </section>
