@@ -720,10 +720,10 @@ function HomePage() {
                     <Sparkles size={13} /> The Studio
                   </span>
                   <h3 className="serif text-[1.85rem] mt-6 leading-[1.1]">
-                    Build your <span className="italic">own.</span>
+                    Create your <span className="italic">own.</span>
                   </h3>
                   <p className="mt-4 text-[15px] text-[color:var(--ivory)]/90 leading-[1.7] font-light">
-                    Don't see exactly what you want? Design a private journey from scratch — guided by a local, finalized in days.
+                    Design your experience in real time. Confirm it the moment it feels right — no forms, no waiting.
                   </p>
                 </div>
                 <span className="inline-flex items-center gap-2 text-[12px] uppercase tracking-[0.22em] text-[color:var(--gold-soft)] group-hover:translate-x-1 transition-transform">
