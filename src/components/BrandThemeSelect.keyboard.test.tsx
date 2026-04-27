@@ -104,10 +104,21 @@ describe("BrandThemeSelect — keyboard transition from invalid → valid", () =
     const messages = errorSpy.mock.calls.map(
       (c: unknown[]) => String(c[0] ?? ""),
     );
+    // The invalid initial value was logged.
     expect(
-      messages.some((m: string) => /\[brand-lock\].*emerald-on-mauve/.test(m)),
+      messages.some((m: string) =>
+        /\[brand-lock\].*received an unsupported.*emerald-on-mauve/.test(m),
+      ),
     ).toBe(true);
-    expect(messages.some((m: string) => /gold-on-charcoal/.test(m))).toBe(false);
+    // The valid replacement was NOT logged as unsupported. Note: the
+    // log line for the invalid render *does* mention gold-on-charcoal
+    // in its "allowed values" list, so we match on the "received an
+    // unsupported … gold-on-charcoal" shape, not the bare string.
+    expect(
+      messages.some((m: string) =>
+        /received an unsupported.*gold-on-charcoal/.test(m),
+      ),
+    ).toBe(false);
   });
 
   it("repeated valid → valid keyboard changes never re-introduce aria-invalid", () => {
