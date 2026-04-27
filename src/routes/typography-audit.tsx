@@ -645,6 +645,22 @@ function SettingsPanel({
     0,
   );
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [importStatus, setImportStatus] = useState<{ kind: "ok" | "err"; msg: string } | null>(null);
+
+  const handleImportFile = async (file: File) => {
+    try {
+      if (file.size > 64 * 1024) throw new Error("File too large (>64KB).");
+      const text = await file.text();
+      const next = parseSettingsJson(text);
+      onChange(next);
+      setImportStatus({ kind: "ok", msg: `Imported "${file.name}". Values clamped to allowed ranges where needed.` });
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Could not parse file.";
+      setImportStatus({ kind: "err", msg: `Import failed: ${msg}` });
+    }
+  };
+
   return (
     <div className="mt-6 rounded-xl border border-[color:var(--border)] bg-white/80 p-5 md:p-6">
       <div className="flex flex-wrap items-baseline justify-between gap-3">
@@ -657,6 +673,30 @@ function SettingsPanel({
         <div className="flex flex-wrap items-center gap-3 text-[11px] uppercase tracking-[0.12em]">
           <span className="rounded-full bg-zinc-100 px-2.5 py-1 text-zinc-700">{enabledCount}/3 stages on</span>
           <span className="rounded-full bg-zinc-100 px-2.5 py-1 text-zinc-700">≤{(totalBudget / 1000).toFixed(1)}s/route worst-case</span>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="application/json,.json"
+            className="hidden"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) void handleImportFile(file);
+              // Reset so re-selecting the same file still fires onChange.
+              e.target.value = "";
+            }}
+          />
+          <button
+            type="button"
+            onClick={() => {
+              setImportStatus(null);
+              fileInputRef.current?.click();
+            }}
+            disabled={disabled}
+            className="rounded-md border border-[color:var(--border)] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] hover:bg-zinc-50 disabled:opacity-50"
+            title="Load reliability settings from a JSON file"
+          >
+            Import JSON
+          </button>
           <button
             type="button"
             onClick={() => {
@@ -694,6 +734,19 @@ function SettingsPanel({
           </button>
         </div>
       </div>
+
+      {importStatus && (
+        <div
+          role="status"
+          className={`mt-3 rounded-md border px-3 py-2 text-[12px] ${
+            importStatus.kind === "ok"
+              ? "border-emerald-200 bg-emerald-50 text-emerald-800"
+              : "border-rose-200 bg-rose-50 text-rose-800"
+          }`}
+        >
+          {importStatus.msg}
+        </div>
+      )}
 
       <div className="mt-5 grid gap-4 md:grid-cols-3">
         {STAGE_META.map(({ key, label, hint }) => {
