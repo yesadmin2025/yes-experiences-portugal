@@ -1160,12 +1160,16 @@ function SettingsPanel({
 }
 
 function ImportReportCard({
-  fileName, mode, report, onApply, onDismiss,
+  fileName, mode, report, onApply, onAutoFix, autoFixChanges, onDismiss,
 }: {
   fileName: string;
   mode: "applied" | "validated" | "rejected" | "current";
   report: ValidationReport;
   onApply?: () => void;
+  /** Apply a one-click corrected settings object derived from this report. */
+  onAutoFix?: () => void;
+  /** Human-readable list of changes the auto-fix would make. */
+  autoFixChanges?: string[];
   onDismiss: () => void;
 }) {
   const errors   = report.issues.filter((i) => i.level === "error");
