@@ -341,7 +341,7 @@ export function MobileStickyCTA() {
               data-state={submitting ? "submitting" : sheetOpen ? "open" : "idle"}
               className={[
                 "group inline-flex items-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-white",
-                "border border-[color:var(--gold)]/70 px-4 py-3 text-[10.5px] tracking-[0.2em] uppercase whitespace-nowrap",
+                "border border-[color:var(--gold)] px-4 py-3 text-[10.5px] tracking-[0.2em] uppercase whitespace-nowrap",
                 "transition-[opacity,background-color] duration-300",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-white",
                 submitting ? "opacity-70 pointer-events-none cursor-default" : "",
