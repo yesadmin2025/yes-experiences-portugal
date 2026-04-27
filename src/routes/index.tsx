@@ -883,9 +883,9 @@ function HomePage() {
                       {p.line}
                     </p>
                     <span
-                      className={`mt-7 inline-flex items-center gap-2 text-[11.5px] uppercase tracking-[0.24em] font-medium group-hover:translate-x-1 transition-transform duration-300 ${styles.cta}`}
+                      className={`mt-7 inline-flex items-center gap-2 text-[14px] tracking-[0.005em] font-medium group-hover:translate-x-1 transition-transform duration-300 ${styles.cta}`}
                     >
-                      {p.cta} <ArrowRight size={13} />
+                      {p.cta} <ArrowRight size={14} />
                     </span>
                   </Link>
                 </li>
