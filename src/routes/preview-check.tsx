@@ -81,8 +81,8 @@ function PreviewCheckPage() {
 
   return (
     <main className="min-h-screen bg-background text-foreground">
-      <header className="border-b border-border/60 bg-card/40 backdrop-blur">
-        <div className="mx-auto max-w-5xl px-4 py-6 flex items-center justify-between gap-4">
+      <header className="sticky top-0 z-20 border-b border-border/60 bg-card/80 backdrop-blur">
+        <div className="mx-auto max-w-5xl px-4 py-6 flex flex-wrap items-center justify-between gap-4">
           <div>
             <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
               Internal · Visual QA
@@ -92,12 +92,33 @@ function PreviewCheckPage() {
               {completed} / {CHECKS.length} sections confirmed
             </p>
           </div>
-          <Link
-            to="/"
-            className="text-sm underline underline-offset-4 hover:text-primary"
-          >
-            ← Back to site
-          </Link>
+          <div className="flex items-center gap-3">
+            <label htmlFor="jump-section" className="sr-only">
+              Jump to section
+            </label>
+            <select
+              id="jump-section"
+              defaultValue=""
+              onChange={handleDropdownJump}
+              className="text-sm rounded-md border border-border bg-background px-3 py-2 hover:bg-accent hover:text-accent-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
+              aria-label="Jump to a preview section"
+            >
+              <option value="" disabled>
+                Jump to section…
+              </option>
+              {CHECKS.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.label} {c.hash ? `(${c.hash})` : ""}
+                </option>
+              ))}
+            </select>
+            <Link
+              to="/"
+              className="text-sm underline underline-offset-4 hover:text-primary"
+            >
+              ← Back to site
+            </Link>
+          </div>
         </div>
       </header>
 
