@@ -732,6 +732,22 @@ export function HeroVerifyOverlay() {
    * `format` defaults to whatever was last attempted so the legend rows
    * stay coherent with the user's original intent.
    */
+  /**
+   * Standalone "Re-run self-check" action. Just re-runs the diff
+   * self-check and updates the green/red row in the overlay — no
+   * payload rebuild, no schema-tag guard. Useful when the user has
+   * just edited hero copy and wants to refresh the diff before
+   * deciding whether to regenerate the payload.
+   */
+  const handleRerunSelfCheck = () => {
+    const r = runDiffSelfCheck();
+    // eslint-disable-next-line no-console
+    console.info(
+      `[hero-verify] manual self-check re-run — ${r.ok ? "OK" : "FAILED"}`,
+      { divergentFields: r.divergentFields, checkedFields: r.checkedFields },
+    );
+  };
+
   const handleRegeneratePayload = () => {
     if (typeof window === "undefined") return;
     const format: "JSON" | "CSV" = schemaTagCheck?.format ?? "JSON";
