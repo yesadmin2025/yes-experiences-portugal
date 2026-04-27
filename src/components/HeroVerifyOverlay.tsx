@@ -27,6 +27,7 @@
  *   `HERO_COPY`, so a drift between source and spec also surfaces here.
  */
 import { useEffect, useMemo, useState } from "react";
+import { HERO_COPY_VERSION } from "@/content/hero-copy";
 import { HERO_COPY_SPEC, type HeroSpecKey } from "@/content/hero-copy.spec";
 
 type FieldStatus = "match" | "loose" | "mismatch" | "missing";
