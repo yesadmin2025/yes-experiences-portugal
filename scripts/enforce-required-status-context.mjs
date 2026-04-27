@@ -95,9 +95,9 @@ if (!TOKEN) {
   fail(
     2,
     `BRANCH_PROTECTION_TOKEN secret is missing. The default GITHUB_TOKEN ` +
-      `cannot ${MODE === "apply" ? "modify" : "read"} branch protection — ` +
+      `cannot ${IS_WRITE ? "modify" : "read"} branch protection — ` +
       `provide a PAT or GitHub App token with ` +
-      `\`Administration: ${MODE === "apply" ? "Read and write" : "Read"}\` ` +
+      `\`Administration: ${IS_WRITE ? "Read and write" : "Read"}\` ` +
       `on this repository.`,
   );
 }
