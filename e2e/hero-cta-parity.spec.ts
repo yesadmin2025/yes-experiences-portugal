@@ -1,7 +1,12 @@
-import { test, expect, type Page, type Locator } from "@playwright/test";
+import { test, expect } from "@playwright/test";
+import {
+  gotoHero,
+  measureCta,
+  runParityChecks,
+} from "./cta-parity-helpers";
 
 /**
- * Hero CTA — parity contract.
+ * Hero CTA — parity contract (mobile).
  *
  * After every spacing tweak to surrounding hero elements (eyebrow,
  * subheadline, microcopy, brand line), the two CTA buttons themselves
@@ -15,111 +20,18 @@ import { test, expect, type Page, type Locator } from "@playwright/test";
  *     within the button, vertically centered)
  *
  * The differentiator between primary and secondary lives in *fill vs
- * border / color* — never in geometry. This spec locks that contract.
+ * border / color* — never in geometry. This spec locks that contract
+ * at the project's default mobile viewport (Pixel 5).
  *
- * Tolerances are sub-pixel (≤ 0.5px) to absorb font hinting jitter
- * across Chromium builds while still catching real regressions.
+ * Every check is recorded via `runParityChecks` and surfaced in the CI
+ * step summary by `e2e/reporters/cta-parity-summary.ts`, so a regression
+ * shows the exact field + measured delta without digging into traces.
  */
 
-const ROUTE = "/";
-const PX_TOLERANCE = 0.5;
-
-async function gotoHero(page: Page) {
-  await page.goto(ROUTE);
-  const h1 = page.locator("h1.hero-h1");
-  await expect(h1).toBeVisible();
-  await page.waitForFunction(() => {
-    const el = document.querySelector("h1.hero-h1") as HTMLElement | null;
-    return !!el && getComputedStyle(el).opacity === "1";
-  });
-  // Freeze any in-flight CTA fade/breathe animations so measurements are stable.
-  await page.addStyleTag({
-    content: `
-      *, *::before, *::after {
-        animation-duration: 0s !important;
-        animation-delay: 0s !important;
-        transition-duration: 0s !important;
-      }
-      .cta-breathe, .cta-attention { animation: none !important; }
-    `,
-  });
-  await page.waitForTimeout(150);
-}
-
-type CtaMetrics = {
-  width: number;
-  height: number;
-  paddingTop: number;
-  paddingRight: number;
-  paddingBottom: number;
-  paddingLeft: number;
-  fontSize: number;
-  lineHeight: number;
-  letterSpacing: number;
-  textTransform: string;
-  textAlign: string;
-  iconWidth: number;
-  iconHeight: number;
-  iconRightOffset: number; // distance from icon's right edge to button's right edge
-  iconVerticalCenterOffset: number; // |icon midY − button midY|
-};
-
-async function measure(cta: Locator): Promise<CtaMetrics> {
-  return cta.evaluate((el) => {
-    const button = el as HTMLElement;
-    const cs = getComputedStyle(button);
-    const rect = button.getBoundingClientRect();
-    const icon = button.querySelector("svg") as SVGElement | null;
-    if (!icon) {
-      throw new Error("CTA is missing its icon (svg)");
-    }
-    const iconRect = icon.getBoundingClientRect();
-
-    const lh =
-      cs.lineHeight === "normal"
-        ? parseFloat(cs.fontSize) * 1.2
-        : parseFloat(cs.lineHeight);
-
-    return {
-      width: rect.width,
-      height: rect.height,
-      paddingTop: parseFloat(cs.paddingTop),
-      paddingRight: parseFloat(cs.paddingRight),
-      paddingBottom: parseFloat(cs.paddingBottom),
-      paddingLeft: parseFloat(cs.paddingLeft),
-      fontSize: parseFloat(cs.fontSize),
-      lineHeight: lh,
-      letterSpacing:
-        cs.letterSpacing === "normal" ? 0 : parseFloat(cs.letterSpacing),
-      textTransform: cs.textTransform,
-      textAlign: cs.textAlign,
-      iconWidth: iconRect.width,
-      iconHeight: iconRect.height,
-      iconRightOffset: rect.right - iconRect.right,
-      iconVerticalCenterOffset: Math.abs(
-        iconRect.top + iconRect.height / 2 - (rect.top + rect.height / 2),
-      ),
-    };
-  });
-}
-
-function expectClose(
-  label: string,
-  a: number,
-  b: number,
-  tolerance = PX_TOLERANCE,
-) {
-  const delta = Math.abs(a - b);
-  expect(
-    delta,
-    `${label}: primary=${a.toFixed(2)} vs secondary=${b.toFixed(2)} (Δ ${delta.toFixed(2)}px, max ${tolerance}px)`,
-  ).toBeLessThanOrEqual(tolerance);
-}
-
-test.describe("Hero CTA — primary vs secondary parity", () => {
+test.describe("Hero CTA — primary vs secondary parity (mobile)", () => {
   test("both CTAs share identical width, padding, typography, and icon layout", async ({
     page,
-  }) => {
+  }, testInfo) => {
     await gotoHero(page);
 
     const primary = page.getByRole("link", {
@@ -134,37 +46,22 @@ test.describe("Hero CTA — primary vs secondary parity", () => {
     await expect(primary).toBeVisible();
     await expect(secondary).toBeVisible();
 
-    const [p, s] = await Promise.all([measure(primary), measure(secondary)]);
+    const [p, s] = await Promise.all([
+      measureCta(primary),
+      measureCta(secondary),
+    ]);
 
-    // ─── Geometry ───────────────────────────────────────────────────
-    expectClose("width", p.width, s.width);
-    expectClose("height", p.height, s.height, 1); // border-[1.5px] vs none can shift by ≤ 1px
-    expectClose("padding-top", p.paddingTop, s.paddingTop);
-    expectClose("padding-right", p.paddingRight, s.paddingRight);
-    expectClose("padding-bottom", p.paddingBottom, s.paddingBottom);
-    expectClose("padding-left", p.paddingLeft, s.paddingLeft);
-
-    // ─── Typography ─────────────────────────────────────────────────
-    expectClose("font-size", p.fontSize, s.fontSize);
-    expectClose("line-height", p.lineHeight, s.lineHeight);
-    expectClose("letter-spacing", p.letterSpacing, s.letterSpacing, 0.05);
-    expect(s.textTransform).toBe(p.textTransform);
-    expect(s.textTransform).toBe("uppercase");
-    expect(s.textAlign).toBe(p.textAlign);
-    expect(s.textAlign).toBe("left");
-
-    // ─── Icon layout ────────────────────────────────────────────────
-    expectClose("icon-width", p.iconWidth, s.iconWidth);
-    expectClose("icon-height", p.iconHeight, s.iconHeight);
-    expectClose("icon right offset", p.iconRightOffset, s.iconRightOffset);
-    expect(
-      p.iconVerticalCenterOffset,
-      `primary icon should be vertically centered (off by ${p.iconVerticalCenterOffset.toFixed(2)}px)`,
-    ).toBeLessThanOrEqual(1);
-    expect(
-      s.iconVerticalCenterOffset,
-      `secondary icon should be vertically centered (off by ${s.iconVerticalCenterOffset.toFixed(2)}px)`,
-    ).toBeLessThanOrEqual(1);
+    const vp = page.viewportSize() ?? { width: 0, height: 0 };
+    await runParityChecks(
+      testInfo,
+      {
+        label: `mobile (${vp.width}×${vp.height})`,
+        width: vp.width,
+        height: vp.height,
+      },
+      p,
+      s,
+    );
   });
 
   test("both CTAs render an arrow icon (not a decorative replacement)", async ({
