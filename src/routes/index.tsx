@@ -820,7 +820,7 @@ function HomePage() {
                       to="/experiences"
                       className="inline-flex items-center gap-2 text-[11.5px] uppercase tracking-[0.24em] font-semibold text-[color:var(--teal)] hover:text-[color:var(--teal-2)] transition-colors"
                     >
-                      Book it <ArrowRight size={12} />
+                      Confirm it <ArrowRight size={12} />
                     </Link>
                     <span className="h-3 w-px bg-[color:var(--border)]" aria-hidden="true" />
                     <Link
