@@ -91,6 +91,11 @@ const EXIT = Object.freeze({
 //                                        diverges from the contract the script
 //                                        exits EXIT.RUNTIME_ERROR (it's a
 //                                        script bug, not content drift).
+//   --report-json-schema                 print the strict-validator schema
+//                                        (version + shape) as JSON to stdout
+//                                        and exit 0. No fetches performed.
+//                                        Lets tests/CI assert the schema name
+//                                        matches "hero-copy-qa@N".
 //
 // Without --strict-flags, unknown flags are warnings (back-compat); with it,
 // CI can guarantee no silent typos.
@@ -105,6 +110,7 @@ function parseArgs(argv) {
     strictFlags: false,
     reportJson: null, // null = off; "-" = stdout; else file path
     reportJsonStrict: false,
+    reportJsonSchema: false,
   };
   const errors = [];
   const strict = argv.includes("--strict-flags");
@@ -117,6 +123,7 @@ function parseArgs(argv) {
     else if (raw === "--strict-flags") opts.strictFlags = true;
     else if (raw === "--fail-fast") opts.failFast = true;
     else if (raw === "--report-json-strict") opts.reportJsonStrict = true;
+    else if (raw === "--report-json-schema") opts.reportJsonSchema = true;
     else if (raw === "--preview-only") opts.target = "preview";
     else if (raw === "--production-only" || raw === "--prod-only") opts.target = "production";
     else if (raw === "--report-json") opts.reportJson = "-";
@@ -252,6 +259,24 @@ const REPORT_SCHEMA_SHAPE = {
   targetKeys: ["name", "url", "status", "driftKeys", "fetchFailed"],
   totalsKeys: ["drift", "fetchFailed", "manual"],
 };
+
+// ─────────────────────────────────────────────────────────────────────────────
+// --report-json-schema: print the strict-validator schema and exit cleanly.
+//
+// Handled here (not in parseArgs) because REPORT_SCHEMA + REPORT_SCHEMA_SHAPE
+// must be defined first. Runs BEFORE any fetch / target work, so it's safe in
+// air-gapped CI and never triggers network exit codes. Output goes to real
+// stdout regardless of --report-json (we use process.stdout.write to bypass
+// the console.log redirect installed earlier).
+// ─────────────────────────────────────────────────────────────────────────────
+if (CLI.reportJsonSchema) {
+  const schemaDoc = {
+    schema: REPORT_SCHEMA,
+    shape: REPORT_SCHEMA_SHAPE,
+  };
+  process.stdout.write(JSON.stringify(schemaDoc, null, 2) + "\n");
+  process.exit(EXIT.OK);
+}
 
 function validateReport(report) {
   const errs = [];
