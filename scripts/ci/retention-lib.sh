@@ -165,6 +165,17 @@ retention_validate_effective() {
 # every resolved value, and writes the result to GITHUB_OUTPUT as
 # `report=`, `logs=`, `meta=`.
 #
+# Outputs (consumed by the upload steps as steps.<id>.outputs.*):
+#   report  → effective retention (days) for hero-copy-qa-report
+#   logs    → effective retention (days) for hero-copy-qa-logs
+#   meta    → effective retention (days) for hero-copy-qa-meta
+#
+# Logging:
+#   - emits a single-line, easy-to-grep `🔎 retention.outputs:` summary
+#     (key=value pairs separated by spaces) so a CI log reader can
+#     answer "what retention did this run actually use?" with one grep.
+#   - also emits a multi-line "uploads will use:" block for humans.
+#
 # Returns 0 on OK, 1 if any effective value is invalid. Caller should
 # `exit 1` on non-zero return so the upload steps' guard
 # (`steps.retention.outcome == 'success'`) skips them.
@@ -197,6 +208,13 @@ retention_resolve_all() {
     echo "meta=$meta_eff"
   } >> "$GITHUB_OUTPUT"
 
+  # Single-line debug summary — grep-friendly. Keep this format stable;
+  # downstream log scrapers / dashboards may key off the `🔎
+  # retention.outputs:` prefix.
+  echo ""
+  echo "🔎 retention.outputs: report=$report_eff logs=$logs_eff meta=$meta_eff (max=$RETENTION_MAX, default=$RETENTION_DEFAULT)"
+
+  # Multi-line block for humans scanning the step output.
   echo ""
   echo "All effective retentions valid; uploads will use:"
   echo "  hero-copy-qa-report : $report_eff day(s)"
