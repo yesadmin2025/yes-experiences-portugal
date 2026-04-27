@@ -33,7 +33,7 @@ export function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="fixed top-0 inset-x-0 z-50 bg-white/95 backdrop-blur-md border-b border-[color:var(--gold)]/20 shadow-[0_8px_24px_-20px_rgba(15,23,42,0.18)] opacity-0 animate-[headerFade_900ms_ease-out_forwards]">
+    <header className="fixed top-0 inset-x-0 z-50 bg-white/95 backdrop-blur-md border-b border-[color:var(--charcoal)]/15 shadow-[0_8px_24px_-20px_rgba(15,23,42,0.18)] opacity-0 animate-[headerFade_900ms_ease-out_forwards]">
       <div className="container-x">
         <div className="flex items-center justify-between h-[68px] md:h-[80px] lg:h-[88px]">
           {/* Official master logo — uploaded brand asset, used as-is.
@@ -90,7 +90,7 @@ export function Navbar() {
               the container's right edge); padding lives in container-x
               so the trigger sits at the same gutter as the logo. */}
           <button
-            className="lg:hidden inline-flex items-center justify-center h-11 w-11 border border-[color:var(--gold)]/40 hover:border-[color:var(--gold)] text-[color:var(--charcoal)] hover:text-[color:var(--teal)] transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+            className="lg:hidden inline-flex items-center justify-center h-11 w-11 border border-[color:var(--charcoal-soft)] hover:border-[color:var(--teal)] text-[color:var(--charcoal)] hover:text-[color:var(--teal)] transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             onClick={() => setOpen(!open)}
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
