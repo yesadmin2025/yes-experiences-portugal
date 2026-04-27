@@ -380,7 +380,10 @@ async function tick(reason) {
   running = true;
   console.clear();
   console.log(
-    `${DIM}[${fmtTimestamp()}]${RESET} ${BOLD}qa:hero-copy --watch${RESET} ${DIM}(${reason})${RESET}\n`,
+    `${DIM}[${fmtTimestamp()}]${RESET} ${BOLD}qa:hero-copy --watch${RESET} ${DIM}(${reason})${RESET}`,
+  );
+  console.log(
+    `${DIM}target=${CLI.target} debounce=${CLI.debounceMs}ms targets=[${TARGETS.map((t) => t.name).join(", ")}]${RESET}\n`,
   );
   try {
     const { summary } = await runOnce();
