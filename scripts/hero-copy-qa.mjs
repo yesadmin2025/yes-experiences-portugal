@@ -123,6 +123,7 @@ function parseArgs(argv) {
     else if (raw === "--strict-flags") opts.strictFlags = true;
     else if (raw === "--fail-fast") opts.failFast = true;
     else if (raw === "--report-json-strict") opts.reportJsonStrict = true;
+    else if (raw === "--report-json-schema") opts.reportJsonSchema = true;
     else if (raw === "--preview-only") opts.target = "preview";
     else if (raw === "--production-only" || raw === "--prod-only") opts.target = "production";
     else if (raw === "--report-json") opts.reportJson = "-";
