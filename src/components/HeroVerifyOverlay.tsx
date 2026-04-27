@@ -432,27 +432,48 @@ export function HeroVerifyOverlay() {
             ))}
           </ul>
         </details>
-        <button
-          type="button"
-          onClick={handleExport}
-          style={{
-            marginTop: 10,
-            width: "100%",
-            background: "white",
-            color: "rgb(15, 23, 42)",
-            border: "none",
-            borderRadius: 6,
-            padding: "8px 10px",
-            fontSize: 11.5,
-            fontWeight: 700,
-            letterSpacing: "0.06em",
-            textTransform: "uppercase",
-            cursor: "pointer",
-            boxShadow: "0 2px 6px rgba(0,0,0,0.25)",
-          }}
-        >
-          ⬇ Export report (JSON)
-        </button>
+        <div style={{ display: "flex", gap: 6, marginTop: 10 }}>
+          <button
+            type="button"
+            onClick={handleExportJson}
+            style={{
+              flex: 1,
+              background: "white",
+              color: "rgb(15, 23, 42)",
+              border: "none",
+              borderRadius: 6,
+              padding: "8px 10px",
+              fontSize: 11,
+              fontWeight: 700,
+              letterSpacing: "0.06em",
+              textTransform: "uppercase",
+              cursor: "pointer",
+              boxShadow: "0 2px 6px rgba(0,0,0,0.25)",
+            }}
+          >
+            ⬇ JSON
+          </button>
+          <button
+            type="button"
+            onClick={handleExportCsv}
+            style={{
+              flex: 1,
+              background: "rgb(34, 197, 94)",
+              color: "white",
+              border: "none",
+              borderRadius: 6,
+              padding: "8px 10px",
+              fontSize: 11,
+              fontWeight: 700,
+              letterSpacing: "0.06em",
+              textTransform: "uppercase",
+              cursor: "pointer",
+              boxShadow: "0 2px 6px rgba(0,0,0,0.25)",
+            }}
+          >
+            ⬇ CSV
+          </button>
+        </div>
       </div>
     </div>
   );
