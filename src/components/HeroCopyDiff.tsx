@@ -261,6 +261,33 @@ const SR_ONLY: React.CSSProperties = {
  */
 const PANEL_VISIBILITY_KEY = "hero-copy:panel-visible";
 const OUTLINES_KEY = "hero-copy:last-outlines";
+/**
+ * One-shot "force refresh on next route boundary" flag. Set by the
+ * <HeroCopyDiffResetButton/> on the index page. The route-boundary effect
+ * consumes (reads + clears) this flag and, when present, bypasses the
+ * version guard so the next refresh always runs end-to-end.
+ */
+const FORCE_REFRESH_KEY = "hero-copy:force-refresh-next";
+
+function armForceRefresh() {
+  if (typeof window === "undefined") return;
+  try {
+    sessionStorage.setItem(FORCE_REFRESH_KEY, "1");
+  } catch {
+    /* ignore */
+  }
+}
+
+function consumeForceRefresh(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    const armed = sessionStorage.getItem(FORCE_REFRESH_KEY) === "1";
+    if (armed) sessionStorage.removeItem(FORCE_REFRESH_KEY);
+    return armed;
+  } catch {
+    return false;
+  }
+}
 
 function readInitialPanelVisibility(): boolean {
   if (typeof window === "undefined") return false;
