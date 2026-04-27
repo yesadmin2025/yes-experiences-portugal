@@ -374,6 +374,11 @@ function HomePage() {
                 that TanStack Router injected for this route. Stays in
                 sync via a MutationObserver on document.head. */}
             <HeroMetaProbe />
+
+            {/* Hidden diff helper — on mount, compares HERO_COPY to a
+                localStorage baseline and logs changed fields. Manual
+                controls live on `window.__heroCopy`. Renders nothing. */}
+            <HeroCopyDiff />
           </div>
         </div>
       </section>
