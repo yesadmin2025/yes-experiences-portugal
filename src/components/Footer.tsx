@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Instagram, Facebook, Youtube, Linkedin } from "lucide-react";
-import { Logo } from "@/components/Logo";
+import logoGold from "@/assets/yes-logo-approved-gold-silk.png";
 
 const SOCIALS = [
   { href: "https://instagram.com/", label: "Instagram", Icon: Instagram },
@@ -15,9 +15,26 @@ export function Footer() {
       <div className="container-x py-24 md:py-28">
         <div className="grid md:grid-cols-4 gap-14">
           <div className="md:col-span-1">
-            {/* Footer wordmark — gold variant of the shared Logo component.
-                Identical scaling ladder and focus contract as the header. */}
-            <Logo variant="gold" priority="low" />
+            {/* Gold variant of the approved header artwork — same silhouette
+                and scale, with a softer champagne-gold finish for the dark
+                footer surface. */}
+            <Link
+              to="/"
+              className="inline-block rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--charcoal-deep)]"
+              aria-label="YES experiences PORTUGAL — Home"
+            >
+              <img
+                src={logoGold}
+                width={909}
+                height={579}
+                alt="YES experiences PORTUGAL"
+                className="block h-[60px] md:h-[64px] lg:h-[68px] w-auto select-none"
+                draggable={false}
+                loading="lazy"
+                decoding="async"
+                style={{ imageRendering: "auto" }}
+              />
+            </Link>
             <p className="mt-8 text-[14.5px] text-[color:var(--ivory)]/85 leading-[1.8] max-w-xs" style={{ fontWeight: 320, letterSpacing: "0.005em" }}>
               Private, designed Portugal experiences — crafted around your story by passionate
               local experts.
