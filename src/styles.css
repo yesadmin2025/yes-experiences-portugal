@@ -296,6 +296,48 @@
       line-height: 1.1;
     }
   }
+
+  /* ─────────────────────────────────────────────────────────────
+     HERO MOBILE VERTICAL RHYTHM — locked tokens.
+     The seam between the secondary CTA, the instant-confirmation
+     microcopy and the two-line "WE SAY YES" signature is the most
+     fragile part of the mobile hero: any tightening here makes the
+     section feel cramped and breaks the premium "Story → Action →
+     Trust → Signature" flow.
+
+     These tokens are the ONLY source of truth for those gaps and
+     the internal line gap of the brand signature on mobile. They
+     are locked by an e2e test (`hero-mobile-rhythm.spec.ts`); do
+     not bypass them with ad-hoc `mt-*` utilities on the affected
+     elements.
+
+     - hero-rhythm-cta-to-microcopy : secondary CTA → microcopy
+     - hero-rhythm-microcopy-to-signature : microcopy → brand line
+     - hero-rhythm-signature-line-gap : gap between the two lines
+       of "WHATEVER YOU HAVE IN MIND, / WE SAY YES."
+     ───────────────────────────────────────────────────────────── */
+  :root {
+    --hero-rhythm-cta-to-microcopy: 40px;        /* mobile */
+    --hero-rhythm-microcopy-to-signature: 56px;  /* mobile */
+    --hero-rhythm-signature-line-gap: 6px;       /* mobile */
+  }
+  @media (min-width: 768px) {
+    :root {
+      --hero-rhythm-cta-to-microcopy: 32px;
+      --hero-rhythm-microcopy-to-signature: 64px;
+      --hero-rhythm-signature-line-gap: 6px;
+    }
+  }
+  .hero-rhythm-cta-to-microcopy {
+    margin-top: var(--hero-rhythm-cta-to-microcopy) !important;
+  }
+  .hero-rhythm-microcopy-to-signature {
+    margin-top: var(--hero-rhythm-microcopy-to-signature) !important;
+  }
+  .hero-rhythm-signature-line-gap {
+    gap: var(--hero-rhythm-signature-line-gap) !important;
+  }
+
   .eyebrow {
     @apply inline-flex items-center gap-3 text-[11px] uppercase tracking-[0.28em] text-[color:var(--charcoal-soft)];
   }
