@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Menu, X, ArrowRight } from "lucide-react";
-import logoTeal from "@/assets/yes-logo-approved.png";
+import { Logo } from "@/components/Logo";
 
 // Desktop nav — full editorial set, kept compact in tracking so all 8
 // items fit gracefully on a single row at lg+ widths.
@@ -36,27 +36,10 @@ export function Navbar() {
     <header className="fixed top-0 inset-x-0 z-50 bg-white/95 backdrop-blur-md border-b border-[color:var(--charcoal)]/15 shadow-[0_8px_24px_-20px_rgba(15,23,42,0.18)] opacity-0 animate-[headerFade_900ms_ease-out_forwards]">
       <div className="container-x">
         <div className="flex items-center justify-between h-[80px] md:h-[88px] lg:h-[96px]">
-          {/* Official master logo — uploaded brand asset, used as-is.
-              Logo height is tuned so the "PORTUGAL" wordmark beneath the
-              YES lockup remains legible on mobile while keeping a calm
-              ~70% bar-height ratio at every breakpoint. */}
-          <Link
-            to="/"
-            className="flex-shrink-0 inline-flex items-center h-full rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
-            aria-label="YES experiences PORTUGAL — Home"
-          >
-            <img
-              src={logoTeal}
-              width={909}
-              height={579}
-              alt="YES experiences PORTUGAL"
-              className="block h-[60px] md:h-[64px] lg:h-[68px] w-auto select-none"
-              draggable={false}
-              fetchPriority="high"
-              decoding="async"
-              style={{ imageRendering: "auto", filter: "drop-shadow(0 1px 0 rgba(255,255,255,0.4))" }}
-            />
-          </Link>
+          {/* Brand wordmark — single shared <Logo/> component is the only
+              place that imports the artwork. Header and footer share its
+              size ladder, focus ring, and color treatment. */}
+          <Logo variant="teal" priority="high" className="flex-shrink-0 h-full" />
 
           {/* Desktop nav + CTA — right side, vertically centered.
               Default text: charcoal (var(--charcoal), 13.58:1). Hover/active: teal (7.60:1).
