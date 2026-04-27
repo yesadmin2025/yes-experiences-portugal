@@ -149,11 +149,16 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
+          SERVER_URL: ${{ github.server_url }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
           MODE: ${{ steps.mode.outputs.mode }}
           HEADLINE: ${{ steps.enforce.outputs.headline }}
           EXIT_CODE: ${{ steps.enforce.outputs.exit_code }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          # Pin source links to the PR's head SHA so the link always
+          # points at the exact code under review, not whatever main
+          # looks like when someone clicks the link weeks later.
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         # Idempotent comment: a hidden HTML marker
         # (<!-- required-check-enforcer -->) lets us find and PATCH the
         # existing comment on subsequent runs instead of spamming the PR.
@@ -161,6 +166,21 @@ jobs:
           set -euo pipefail
 
           MARKER='<!-- required-check-enforcer -->'
+
+          # Resolve the line number of the homepage-structure job's
+          # `name:` field at the PR's head SHA. This makes the deep
+          # link land on the exact line that defines the required
+          # status check context — not the top of the file.
+          NAME_LINE=$(grep -nE '^    name: ' .github/workflows/homepage-structure.yml | head -n1 | cut -d: -f1)
+          NAME_LINE="${NAME_LINE:-30}" # fallback if grep fails
+
+          WORKFLOW_FILE_URL="${SERVER_URL}/${REPO}/blob/${HEAD_SHA}/.github/workflows/homepage-structure.yml"
+          WORKFLOW_JOB_URL="${WORKFLOW_FILE_URL}#L${NAME_LINE}"
+          # GitHub Actions UI listing of all runs for this workflow —
+          # the fastest place to confirm the job's reported check name
+          # ("Playwright — homepage structure (mobile breakpoints)")
+          # against what's in branch protection.
+          WORKFLOW_RUNS_URL="${SERVER_URL}/${REPO}/actions/workflows/homepage-structure.yml"
 
           # Fence the script output in a code block; truncate to keep
           # the comment under GitHub's 65,536-char body limit with
@@ -174,11 +194,12 @@ ${MARKER}
 | Field | Value |
 | --- | --- |
 | Mode | \`${MODE}\` |
-| Workflow | \`.github/workflows/homepage-structure.yml\` |
-| Job key | \`homepage-structure\` |
+| Workflow file | [\`.github/workflows/homepage-structure.yml\`](${WORKFLOW_FILE_URL}) |
+| Job (defines required check name) | [\`homepage-structure\` — line ${NAME_LINE}](${WORKFLOW_JOB_URL}) |
+| Workflow runs | [Actions → Homepage Structure Lock](${WORKFLOW_RUNS_URL}) |
 | Protected branch | \`main\` |
 | Script exit code | \`${EXIT_CODE}\` |
-| Run | [view logs](${RUN_URL}) |
+| This run | [view logs](${RUN_URL}) |
 
 <details><summary>Enforcer output (click to expand)</summary>
 
@@ -188,7 +209,8 @@ ${OUTPUT}
 
 </details>
 
-> Comment auto-updated by \`.github/workflows/required-check-enforcer.yml\`.
+> Links to the workflow file and job are pinned to commit \`${HEAD_SHA}\` so they always reflect the code under review.
+> Comment auto-updated by [\`.github/workflows/required-check-enforcer.yml\`](${SERVER_URL}/${REPO}/blob/${HEAD_SHA}/.github/workflows/required-check-enforcer.yml).
 > To preview a self-heal without writing, run the workflow manually with mode \`apply-dry-run\`.
 EOF
 )
