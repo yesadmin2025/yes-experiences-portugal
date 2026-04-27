@@ -1117,20 +1117,17 @@
   will-change: filter;
 }
 
-/* Teal-on-ivory (Navbar header).
-   Pure compositing nudge — no halo, no outline. The 1.02 contrast bump
-   lives entirely inside the glyph footprint, so there is nothing to
-   spill onto the surrounding white bar. */
+/* Teal-on-ivory (Navbar header) — recipe lives in
+   --logo-filter-teal-on-ivory so it can be retuned globally without
+   touching this rule. */
 .logo-mark--teal-on-ivory {
-  filter: contrast(1.02) saturate(1.0);
+  filter: var(--logo-filter-teal-on-ivory);
 }
 
-/* Gold-on-charcoal (Footer over --charcoal-deep).
-   The dark surface absorbs slightly more contrast headroom before the
-   eye reads any hue shift, so we go to 1.03. Still no shadow / no halo —
-   any apparent "depth" is the GPU re-rastering at device pixel density. */
+/* Gold-on-charcoal (Footer over --charcoal-deep) — recipe lives in
+   --logo-filter-gold-on-charcoal. */
 .logo-mark--gold-on-charcoal {
-  filter: contrast(1.03) saturate(1.0);
+  filter: var(--logo-filter-gold-on-charcoal);
 }
 
 /* Reduced-motion / low-power: surrender the compositor layer and the
