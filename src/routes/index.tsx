@@ -622,12 +622,12 @@ function HomePage() {
       <section className="py-24 md:py-36 bg-[color:var(--ivory)]" aria-labelledby="how-it-works-title">
         <div className="container-x">
           <div className="reveal text-center max-w-2xl mx-auto mb-14 md:mb-20">
-            <span className="eyebrow">How it works</span>
+            <span className="eyebrow">How you create it</span>
             <h2 id="how-it-works-title" className="serif text-[2.25rem] md:text-5xl mt-5 leading-[1.08]">
-              Three steps. <span className="italic">No friction.</span>
+              Designed by you. <span className="italic">Confirmed instantly.</span>
             </h2>
             <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
-              From first message to the moment you arrive — handled entirely by one local team.
+              You're not requesting a tour. You're creating an experience — and confirming it in real time.
             </p>
           </div>
 
