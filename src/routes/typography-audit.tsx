@@ -173,11 +173,14 @@ type RouteResult = {
 // Returns { ok: true, samples } or { ok: false, error }.
 type AttemptResult = { ok: true; samples: Sample[] } | { ok: false; error: string };
 
+type SampleOpts = { fontsReadyCapMs: number; postLoadSettleMs: number };
+
 const sampleViaIframe = (
   iframe: HTMLIFrameElement,
   path: string,
   timeoutMs: number,
   ssrFallback: boolean,
+  opts: SampleOpts,
 ): Promise<AttemptResult> => new Promise((resolve) => {
   let settled = false;
   const settle = (r: AttemptResult) => {
