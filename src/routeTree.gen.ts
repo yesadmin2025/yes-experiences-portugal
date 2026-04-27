@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TypographyAuditRouteImport } from './routes/typography-audit'
 import { Route as ProposalsRouteImport } from './routes/proposals'
 import { Route as MultiDayRouteImport } from './routes/multi-day'
 import { Route as LocalStoriesRouteImport } from './routes/local-stories'
@@ -23,6 +24,11 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiVerifyHeroRouteImport } from './routes/api/verify-hero'
 
+const TypographyAuditRoute = TypographyAuditRouteImport.update({
+  id: '/typography-audit',
+  path: '/typography-audit',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProposalsRoute = ProposalsRouteImport.update({
   id: '/proposals',
   path: '/proposals',
@@ -102,6 +108,7 @@ export interface FileRoutesByFullPath {
   '/local-stories': typeof LocalStoriesRoute
   '/multi-day': typeof MultiDayRoute
   '/proposals': typeof ProposalsRoute
+  '/typography-audit': typeof TypographyAuditRoute
   '/api/verify-hero': typeof ApiVerifyHeroRoute
 }
 export interface FileRoutesByTo {
@@ -117,6 +124,7 @@ export interface FileRoutesByTo {
   '/local-stories': typeof LocalStoriesRoute
   '/multi-day': typeof MultiDayRoute
   '/proposals': typeof ProposalsRoute
+  '/typography-audit': typeof TypographyAuditRoute
   '/api/verify-hero': typeof ApiVerifyHeroRoute
 }
 export interface FileRoutesById {
@@ -133,6 +141,7 @@ export interface FileRoutesById {
   '/local-stories': typeof LocalStoriesRoute
   '/multi-day': typeof MultiDayRoute
   '/proposals': typeof ProposalsRoute
+  '/typography-audit': typeof TypographyAuditRoute
   '/api/verify-hero': typeof ApiVerifyHeroRoute
 }
 export interface FileRouteTypes {
@@ -150,6 +159,7 @@ export interface FileRouteTypes {
     | '/local-stories'
     | '/multi-day'
     | '/proposals'
+    | '/typography-audit'
     | '/api/verify-hero'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -165,6 +175,7 @@ export interface FileRouteTypes {
     | '/local-stories'
     | '/multi-day'
     | '/proposals'
+    | '/typography-audit'
     | '/api/verify-hero'
   id:
     | '__root__'
@@ -180,6 +191,7 @@ export interface FileRouteTypes {
     | '/local-stories'
     | '/multi-day'
     | '/proposals'
+    | '/typography-audit'
     | '/api/verify-hero'
   fileRoutesById: FileRoutesById
 }
@@ -196,11 +208,19 @@ export interface RootRouteChildren {
   LocalStoriesRoute: typeof LocalStoriesRoute
   MultiDayRoute: typeof MultiDayRoute
   ProposalsRoute: typeof ProposalsRoute
+  TypographyAuditRoute: typeof TypographyAuditRoute
   ApiVerifyHeroRoute: typeof ApiVerifyHeroRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/typography-audit': {
+      id: '/typography-audit'
+      path: '/typography-audit'
+      fullPath: '/typography-audit'
+      preLoaderRoute: typeof TypographyAuditRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/proposals': {
       id: '/proposals'
       path: '/proposals'
@@ -308,17 +328,9 @@ const rootRouteChildren: RootRouteChildren = {
   LocalStoriesRoute: LocalStoriesRoute,
   MultiDayRoute: MultiDayRoute,
   ProposalsRoute: ProposalsRoute,
+  TypographyAuditRoute: TypographyAuditRoute,
   ApiVerifyHeroRoute: ApiVerifyHeroRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}
