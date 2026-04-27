@@ -619,12 +619,63 @@ EOF
   # filtered out by path/branch rules upstream).
   # ─────────────────────────────────────────────────────────────────
 
+  url-validation-exit-code-guard:
+    # Trip-wire that runs BEFORE any of the three branching handlers and
+    # asserts `needs.enforce.outputs.url_validation_exit_code` is one of
+    # the four documented values: '0' (pass), '11' (phase-1 fail),
+    # '12' (phase-2 fail), or '13' (both). Any other value (empty, "1",
+    # "2", "abc", etc.) means the contract between the `comment` step
+    # and downstream consumers is broken — fail loudly here so the bug
+    # surfaces in CI immediately, instead of silently skipping every
+    # handler (which is what would happen if a stale/empty value flowed
+    # through to the equality checks below).
+    #
+    # Each handler lists this guard in its `needs:` so GHA evaluates the
+    # handler's `if:` expression only AFTER the guard has produced a
+    # verdict. `if: always()` on the handlers preserves the original
+    # behaviour (they still run when `enforce` is `failure`), but the
+    # guard short-circuits the whole branch when the value is invalid.
+    name: URL validation exit code guard (contract check)
+    needs: enforce
+    if: always() && needs.enforce.result != 'skipped'
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - name: Assert exit code is in the documented set
+        env:
+          EXIT_CODE: ${{ needs.enforce.outputs.url_validation_exit_code }}
+        run: |
+          set -euo pipefail
+          echo "Observed url_validation_exit_code: \"${EXIT_CODE:-<empty>}\""
+          case "${EXIT_CODE}" in
+            0|11|12|13)
+              echo "✅ Exit code \"${EXIT_CODE}\" is in the documented set {0,11,12,13}."
+              ;;
+            "")
+              echo "❌ url_validation_exit_code is EMPTY — the comment step in the"
+              echo "   enforce job did not write the output, or the output was not"
+              echo "   exposed at the job level. Check:"
+              echo "     1. steps.comment.id is 'comment'"
+              echo "     2. enforce.outputs.url_validation_exit_code maps to it"
+              echo "     3. the comment step actually reached the GITHUB_OUTPUT write"
+              exit 1
+              ;;
+            *)
+              echo "❌ url_validation_exit_code \"${EXIT_CODE}\" is NOT in the documented"
+              echo "   set {0,11,12,13}. The comment step's exit-code mapping has drifted"
+              echo "   from the contract — update both the producer (comment step) and"
+              echo "   every consumer's if: clause together."
+              exit 1
+              ;;
+          esac
+
   url-validation-passed:
     name: URL validation passed (post-validation hook)
-    needs: enforce
+    needs: [enforce, url-validation-exit-code-guard]
     if: |
       always()
       && needs.enforce.result != 'skipped'
+      && needs.url-validation-exit-code-guard.result == 'success'
       && needs.enforce.outputs.url_validation_exit_code == '0'
     runs-on: ubuntu-latest
     timeout-minutes: 1
@@ -638,13 +689,16 @@ EOF
 
   url-validation-phase1-failure-handler:
     name: URL validation — phase 1 failure handler
-    needs: enforce
+    needs: [enforce, url-validation-exit-code-guard]
     # Triggers on phase-1-only (11) AND combined (13). Numeric compare
     # via string equality is intentional — GitHub Actions expression
-    # context coerces both sides to strings.
+    # context coerces both sides to strings. Gated on the guard so a
+    # bogus exit code (e.g. empty, "1") cannot accidentally trigger
+    # this handler via the equality check.
     if: |
       always()
       && needs.enforce.result != 'skipped'
+      && needs.url-validation-exit-code-guard.result == 'success'
       && (needs.enforce.outputs.url_validation_exit_code == '11'
           || needs.enforce.outputs.url_validation_exit_code == '13')
     runs-on: ubuntu-latest
@@ -667,11 +721,14 @@ EOF
 
   url-validation-phase2-failure-handler:
     name: URL validation — phase 2 failure handler
-    needs: enforce
-    # Triggers on phase-2-only (12) AND combined (13).
+    needs: [enforce, url-validation-exit-code-guard]
+    # Triggers on phase-2-only (12) AND combined (13). Gated on the
+    # guard so an out-of-contract exit code can never reach the
+    # equality check below.
     if: |
       always()
       && needs.enforce.result != 'skipped'
+      && needs.url-validation-exit-code-guard.result == 'success'
       && (needs.enforce.outputs.url_validation_exit_code == '12'
           || needs.enforce.outputs.url_validation_exit_code == '13')
     runs-on: ubuntu-latest
