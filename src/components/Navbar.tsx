@@ -35,11 +35,11 @@ export function Navbar() {
   return (
     <header className="fixed top-0 inset-x-0 z-50 bg-white/95 backdrop-blur-md border-b border-[color:var(--charcoal)]/15 shadow-[0_8px_24px_-20px_rgba(15,23,42,0.18)] opacity-0 animate-[headerFade_900ms_ease-out_forwards]">
       <div className="container-x">
-        <div className="flex items-center justify-between h-[68px] md:h-[80px] lg:h-[88px]">
+        <div className="flex items-center justify-between h-[80px] md:h-[88px] lg:h-[96px]">
           {/* Official master logo — uploaded brand asset, used as-is.
-              Logo height is a fixed ratio of the bar height (~62%) at every
-              breakpoint so the lockup sits on the same optical baseline on
-              mobile and desktop. */}
+              Logo height is tuned so the "PORTUGAL" wordmark beneath the
+              YES lockup remains legible on mobile while keeping a calm
+              ~70% bar-height ratio at every breakpoint. */}
           <Link
             to="/"
             className="flex-shrink-0 inline-flex items-center h-full rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
@@ -50,7 +50,7 @@ export function Navbar() {
               width={909}
               height={579}
               alt="YES experiences PORTUGAL"
-              className="block h-[48px] md:h-[52px] lg:h-[58px] w-auto select-none drop-shadow-[0_1px_0_rgba(255,255,255,0.4)]"
+              className="block h-[60px] md:h-[64px] lg:h-[68px] w-auto select-none drop-shadow-[0_1px_0_rgba(255,255,255,0.4)]"
               draggable={false}
               fetchPriority="high"
               decoding="async"
