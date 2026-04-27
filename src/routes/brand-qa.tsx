@@ -1,6 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import auditReport from "@/generated/brand-audit.json";
+import { BrandThemeSelect } from "@/components/BrandThemeSelect";
+import { Logo } from "@/components/Logo";
+import type { BrandLogoTheme } from "@/lib/brand-tokens";
 
 export const Route = createFileRoute("/brand-qa")({
   component: BrandQAPage,
@@ -167,6 +170,9 @@ function BrandQAPage() {
             {allPass ? "All checks pass" : "Mismatch detected"}
           </span>
         </header>
+
+        {/* Brand theme selector — runtime-guarded */}
+        <BrandThemeSelectorPanel />
 
         {/* Palette swatches */}
         <section className="mb-12">
