@@ -35,9 +35,11 @@ export function Navbar() {
   return (
     <header className="fixed top-0 inset-x-0 z-50 bg-white/95 backdrop-blur-md border-b border-[color:var(--gold)]/20 shadow-[0_8px_24px_-20px_rgba(15,23,42,0.18)] opacity-0 animate-[headerFade_900ms_ease-out_forwards]">
       <div className="container-x">
-        <div className="flex items-center justify-between h-[72px] md:h-[80px] lg:h-[88px]">
+        <div className="flex items-center justify-between h-[68px] md:h-[80px] lg:h-[88px]">
           {/* Official master logo — uploaded brand asset, used as-is.
-              Sized for premium presence with breathing room in the header. */}
+              Logo height is a fixed ratio of the bar height (~62%) at every
+              breakpoint so the lockup sits on the same optical baseline on
+              mobile and desktop. */}
           <Link
             to="/"
             className="flex-shrink-0 inline-flex items-center h-full rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
@@ -48,7 +50,7 @@ export function Navbar() {
               width={909}
               height={579}
               alt="YES experiences PORTUGAL"
-              className="block h-[52px] md:h-[60px] lg:h-[68px] w-auto select-none"
+              className="block h-[42px] md:h-[50px] lg:h-[56px] w-auto select-none"
               draggable={false}
               fetchPriority="high"
               decoding="async"
@@ -81,15 +83,20 @@ export function Navbar() {
             </Link>
           </nav>
 
-          {/* Mobile menu button — right, vertically centered. */}
+          {/* Mobile menu button — sized as a square that mirrors the
+              desktop CTA's optical weight: same hairline gold frame,
+              same charcoal-on-white palette, vertically centered with
+              the logo. No negative margins (those broke alignment with
+              the container's right edge); padding lives in container-x
+              so the trigger sits at the same gutter as the logo. */}
           <button
-            className="lg:hidden inline-flex items-center justify-center h-10 w-10 -mr-2 text-[color:var(--charcoal)] hover:text-[color:var(--teal)] transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+            className="lg:hidden inline-flex items-center justify-center h-11 w-11 border border-[color:var(--gold)]/40 hover:border-[color:var(--gold)] text-[color:var(--charcoal)] hover:text-[color:var(--teal)] transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             onClick={() => setOpen(!open)}
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
             aria-controls="mobile-nav"
           >
-            {open ? <X size={22} strokeWidth={2} /> : <Menu size={22} strokeWidth={2} />}
+            {open ? <X size={20} strokeWidth={1.75} /> : <Menu size={20} strokeWidth={1.75} />}
           </button>
         </div>
       </div>
