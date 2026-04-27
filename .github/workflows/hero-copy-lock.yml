@@ -183,7 +183,70 @@ jobs:
         env:
           CI: "true"
 
-      - name: Upload hero-copy QA JSON report
+      - name: Write run metadata (qa-logs/meta.json)
+        # Bundles GitHub run context next to the script logs so a
+        # downloaded artifact is self-describing — no need to cross-
+        # reference the GitHub UI to know which commit/workflow/runner
+        # produced these logs. Always runs (even on QA failure) so the
+        # metadata exists for the most interesting (failing) runs.
+        # `mkdir -p` is defensive: if the QA step crashed before the
+        # earlier mkdir we still want to ship metadata.
+        # `jq -n --arg` is used (rather than a heredoc) so any quirky
+        # characters in branch names / actor handles are JSON-escaped
+        # correctly.
+        if: always()
+        run: |
+          mkdir -p qa-logs
+          EXIT_CODE="$(cat qa-logs/exit-code.txt 2>/dev/null || echo unknown)"
+          jq -n \
+            --arg generatedAt "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+            --arg workflow    "${{ github.workflow }}" \
+            --arg job         "${{ github.job }}" \
+            --arg runId       "${{ github.run_id }}" \
+            --arg runNumber   "${{ github.run_number }}" \
+            --arg runAttempt  "${{ github.run_attempt }}" \
+            --arg eventName   "${{ github.event_name }}" \
+            --arg ref         "${{ github.ref }}" \
+            --arg refName     "${{ github.ref_name }}" \
+            --arg sha         "${{ github.sha }}" \
+            --arg actor       "${{ github.actor }}" \
+            --arg repository  "${{ github.repository }}" \
+            --arg runnerOS    "${{ runner.os }}" \
+            --arg runnerArch  "${{ runner.arch }}" \
+            --arg nodeVersion "$(node --version)" \
+            --arg bunVersion  "$(bun --version 2>/dev/null || echo unavailable)" \
+            --arg exitCode    "$EXIT_CODE" \
+            '{
+              schema: "hero-copy-qa-meta@1",
+              generatedAt: $generatedAt,
+              github: {
+                workflow:   $workflow,
+                job:        $job,
+                runId:      $runId,
+                runNumber:  $runNumber,
+                runAttempt: $runAttempt,
+                eventName:  $eventName,
+                ref:        $ref,
+                refName:    $refName,
+                sha:        $sha,
+                actor:      $actor,
+                repository: $repository
+              },
+              runner: {
+                os:   $runnerOS,
+                arch: $runnerArch
+              },
+              versions: {
+                node: $nodeVersion,
+                bun:  $bunVersion
+              },
+              qa: {
+                exitCode: $exitCode
+              }
+            }' > qa-logs/meta.json
+          echo "Wrote qa-logs/meta.json:"
+          cat qa-logs/meta.json
+
         # Always upload — drift, fetch failures, and runtime errors are
         # exactly the cases where the JSON is most useful for triage.
         # Retention is configurable from `workflow_dispatch` (default 14
