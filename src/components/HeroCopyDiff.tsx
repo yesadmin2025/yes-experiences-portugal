@@ -357,6 +357,8 @@ export function HeroCopyDiff() {
       setBaseline: () => {
         const snap = currentSnapshot();
         writeBaseline(snap);
+        // New baseline → previously persisted outlines no longer apply.
+        clearPersistedOutlines();
         console.info(
           "%c[hero-copy] baseline updated",
           "color:#10b981",
@@ -371,6 +373,7 @@ export function HeroCopyDiff() {
         } catch {
           /* ignore */
         }
+        clearPersistedOutlines();
         console.info("%c[hero-copy] baseline cleared", "color:#9ca3af");
         refresh();
       },
