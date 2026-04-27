@@ -260,6 +260,24 @@ const REPORT_SCHEMA_SHAPE = {
   totalsKeys: ["drift", "fetchFailed", "manual"],
 };
 
+// ─────────────────────────────────────────────────────────────────────────────
+// --report-json-schema: print the strict-validator schema and exit cleanly.
+//
+// Handled here (not in parseArgs) because REPORT_SCHEMA + REPORT_SCHEMA_SHAPE
+// must be defined first. Runs BEFORE any fetch / target work, so it's safe in
+// air-gapped CI and never triggers network exit codes. Output goes to real
+// stdout regardless of --report-json (we use process.stdout.write to bypass
+// the console.log redirect installed earlier).
+// ─────────────────────────────────────────────────────────────────────────────
+if (CLI.reportJsonSchema) {
+  const schemaDoc = {
+    schema: REPORT_SCHEMA,
+    shape: REPORT_SCHEMA_SHAPE,
+  };
+  process.stdout.write(JSON.stringify(schemaDoc, null, 2) + "\n");
+  process.exit(EXIT.OK);
+}
+
 function validateReport(report) {
   const errs = [];
   const E = (path, msg) => errs.push(`${path}: ${msg}`);
