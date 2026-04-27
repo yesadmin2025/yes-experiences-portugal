@@ -430,6 +430,10 @@ export function HeroCopyDiff() {
     if (typeof window === "undefined") return;
 
     setPanelVisible(readInitialPanelVisibility());
+    setLastAction(readLastAction());
+
+    // Tick once a minute so the relative timestamp ("3m ago") stays current.
+    const tickId = window.setInterval(() => setNowTick((n) => n + 1), 60_000);
 
     window.__heroCopy = {
       diff: () => {
@@ -445,6 +449,7 @@ export function HeroCopyDiff() {
         // New baseline → previously persisted outlines no longer apply.
         clearPersistedOutlines();
         clearRenderedOutlines();
+        recordAction("accepted", snap.version);
         console.info(
           "%c[hero-copy] baseline updated",
           "color:#10b981",
@@ -461,6 +466,7 @@ export function HeroCopyDiff() {
         }
         clearPersistedOutlines();
         clearRenderedOutlines();
+        recordAction("reset", null);
         console.info("%c[hero-copy] baseline cleared", "color:#9ca3af");
         refresh();
       },
