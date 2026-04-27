@@ -656,8 +656,38 @@ export function HeroCopyDiff() {
 
     // Re-run the diff if we just landed back on the index so any genuine
     // copy change since the baseline is re-detected and (if so) freshly
-    // outlined and persisted from scratch.
-    if (isIndex) refresh();
+    // outlined and persisted from scratch. Logged either way so you can
+    // tell at a glance whether the boundary triggered a fresh diff or
+    // intentionally skipped it (e.g. when navigating away from index).
+    if (isIndex) {
+      try {
+        const next = refresh();
+        console.info(
+          "%c[hero-copy] post-boundary diff refresh: ok",
+          "color:#10b981",
+          {
+            prev,
+            next: pathname,
+            status: next.status,
+            changed: next.rows.length,
+            baselineVersion: next.baselineVersion,
+            currentVersion: next.currentVersion,
+          },
+        );
+      } catch (err) {
+        console.warn(
+          "%c[hero-copy] post-boundary diff refresh: failed",
+          "color:#ef4444",
+          { prev, next: pathname, error: err },
+        );
+      }
+    } else {
+      console.info(
+        "%c[hero-copy] post-boundary diff refresh: skipped",
+        "color:#9ca3af",
+        { prev, next: pathname, reason: "leaving index route" },
+      );
+    }
 
     if (hadOutlines) {
       // Brief, low-noise toast. Auto-dismisses after the diff refresh has
