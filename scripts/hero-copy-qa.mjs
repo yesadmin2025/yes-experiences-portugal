@@ -110,6 +110,7 @@ function parseArgs(argv) {
     strictFlags: false,
     reportJson: null, // null = off; "-" = stdout; else file path
     reportJsonStrict: false,
+    reportJsonSchema: false,
   };
   const errors = [];
   const strict = argv.includes("--strict-flags");
