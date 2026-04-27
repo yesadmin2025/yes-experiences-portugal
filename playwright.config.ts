@@ -21,6 +21,11 @@ export default defineConfig({
     baseURL: process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:8080",
     trace: "retain-on-failure",
     video: "retain-on-failure",
+    // Allow overriding the Chromium executable (useful in sandboxes
+    // where the Playwright-bundled headless shell is missing system libs).
+    launchOptions: process.env.PLAYWRIGHT_CHROMIUM_PATH
+      ? { executablePath: process.env.PLAYWRIGHT_CHROMIUM_PATH }
+      : undefined,
   },
   // Snapshot config — visual regression tests. A 0.2% pixel-diff budget
   // tolerates sub-pixel font rendering jitter without hiding real layout
