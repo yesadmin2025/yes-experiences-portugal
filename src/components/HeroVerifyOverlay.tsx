@@ -276,6 +276,13 @@ export function HeroVerifyOverlay() {
   // text in place). Default ON; togglable from the legend.
   const [liveMode, setLiveMode] = useState(true);
   const [lastUpdated, setLastUpdated] = useState<number | null>(null);
+  // Result of the most recent pre-export diff self-check. `null` until
+  // the user runs an export. Surfaced in the legend with a green/red row.
+  const [selfCheck, setSelfCheck] = useState<{
+    ok: boolean;
+    at: number;
+    divergences: { key: string; reason: string }[];
+  } | null>(null);
 
   // Activate only when ?verify=hero is present.
   useEffect(() => {
@@ -394,12 +401,111 @@ export function HeroVerifyOverlay() {
     return out;
   };
 
-  // Build the export payload + trigger a JSON file download. Captures the
-  // page URL, viewport, version hash, per-field expected/actual/status,
-  // diff segments, and summary counts so the file is self-contained for
-  // CI logs and post-hoc auditing.
+  /**
+   * Pre-export self-check.
+   *
+   * Re-derives a fresh set of reports + diff segments straight from the
+   * live DOM and compares them byte-for-byte to the diff segments held in
+   * `fieldDiffs` (which is what feeds BOTH the on-screen diff list AND
+   * the JSON/CSV export). If anything differs — segment count, segment
+   * types, or segment text — we surface it visibly so you don't ship a
+   * report that disagrees with what you can see on screen.
+   *
+   * Returns true when everything matches; false otherwise (and writes a
+   * console.warn + a transient `divergences` state for the legend).
+   */
+  const runDiffSelfCheck = (): boolean => {
+    if (typeof document === "undefined") return true;
+    const liveReports = computeReports();
+    const liveDiffs = new Map(
+      liveReports.map((r) => {
+        const hasBoth = r.actual !== null;
+        return [r.key, hasBoth ? diffChars(r.expected, r.actual ?? "") : null] as const;
+      }),
+    );
+    const exportedDiffs = new Map(fieldDiffs.map((d) => [d.key, d.segments]));
+
+    type Divergence = {
+      key: string;
+      reason: string;
+      live: DiffSegment[] | null;
+      exported: DiffSegment[] | null;
+    };
+    const divergences: Divergence[] = [];
+
+    // Union of keys from both sides — catches missing entries on either.
+    const allKeys = new Set<HeroSpecKey>([
+      ...liveDiffs.keys(),
+      ...exportedDiffs.keys(),
+    ]);
+
+    for (const key of allKeys) {
+      const live = liveDiffs.get(key) ?? null;
+      const exp = exportedDiffs.get(key) ?? null;
+
+      if (live === null && exp === null) continue;
+      if (live === null || exp === null) {
+        divergences.push({
+          key,
+          reason: live === null ? "live missing diff" : "exported missing diff",
+          live,
+          exported: exp,
+        });
+        continue;
+      }
+      if (live.length !== exp.length) {
+        divergences.push({
+          key,
+          reason: `segment count differs (live=${live.length}, exported=${exp.length})`,
+          live,
+          exported: exp,
+        });
+        continue;
+      }
+      for (let i = 0; i < live.length; i++) {
+        if (live[i].type !== exp[i].type || live[i].text !== exp[i].text) {
+          divergences.push({
+            key,
+            reason: `segment ${i} differs`,
+            live,
+            exported: exp,
+          });
+          break;
+        }
+      }
+    }
+
+    if (divergences.length > 0) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        "[hero-verify] export self-check FAILED — on-screen diff and export diverge",
+        divergences,
+      );
+      setSelfCheck({ ok: false, at: Date.now(), divergences });
+      return false;
+    }
+
+    // eslint-disable-next-line no-console
+    console.info(
+      "[hero-verify] export self-check OK — on-screen diff matches export byte-for-byte",
+    );
+    setSelfCheck({ ok: true, at: Date.now(), divergences: [] });
+    return true;
+  };
+
+
   const handleExportJson = () => {
     if (typeof window === "undefined") return;
+    // Block the export if the live DOM diff and the about-to-be-exported
+    // diff disagree. The user can still re-trigger after acknowledging.
+    if (!runDiffSelfCheck()) {
+      const proceed = window.confirm(
+        "Export self-check FAILED: on-screen diff and JSON disagree.\n\n" +
+          "See console + the red row in the overlay for details.\n\n" +
+          "Download anyway?",
+      );
+      if (!proceed) return;
+    }
     const diffByKey = new Map(fieldDiffs.map((d) => [d.key, d.segments]));
     const payload = {
       schema: "hero-verify-report/v2",
@@ -455,6 +561,14 @@ export function HeroVerifyOverlay() {
 
   const handleExportCsv = () => {
     if (typeof window === "undefined") return;
+    if (!runDiffSelfCheck()) {
+      const proceed = window.confirm(
+        "Export self-check FAILED: on-screen diff and CSV disagree.\n\n" +
+          "See console + the red row in the overlay for details.\n\n" +
+          "Download anyway?",
+      );
+      if (!proceed) return;
+    }
     const diffByKey = new Map(fieldDiffs.map((d) => [d.key, d.segments]));
     const header = [
       "key",
@@ -710,12 +824,15 @@ export function HeroVerifyOverlay() {
           </summary>
           <ul style={{ marginTop: 8, paddingLeft: 14 }}>
             {reports.map((r) => {
-              // Compute a char-level diff only for non-match fields with
-              // both sides present. Matched fields just show the expected.
+              // Reuse the SAME memoized segments as the JSON/CSV exports
+              // so the on-screen diff and the downloaded artifacts cannot
+              // drift. The pre-export self-check verifies this invariant.
               const showDiff =
                 r.actual !== null &&
                 (r.status === "mismatch" || r.status === "loose");
-              const segments = showDiff ? diffChars(r.expected, r.actual ?? "") : null;
+              const segments = showDiff
+                ? fieldDiffs.find((d) => d.key === r.key)?.segments ?? null
+                : null;
               return (
                 <li key={r.key} style={{ marginBottom: 10 }}>
                   <span style={{ color: STATUS_COLOR[r.status] }}>
@@ -752,6 +869,43 @@ export function HeroVerifyOverlay() {
             })}
           </ul>
         </details>
+        {selfCheck && (
+          <div
+            style={{
+              marginTop: 10,
+              padding: "6px 8px",
+              borderRadius: 6,
+              fontSize: 11,
+              lineHeight: 1.45,
+              background: selfCheck.ok
+                ? "rgba(34,197,94,0.12)"
+                : "rgba(239,68,68,0.16)",
+              border: `1px solid ${
+                selfCheck.ok ? "rgba(34,197,94,0.45)" : "rgba(239,68,68,0.55)"
+              }`,
+              color: selfCheck.ok ? "rgb(187, 247, 208)" : "rgb(254, 202, 202)",
+            }}
+          >
+            <strong style={{ letterSpacing: "0.04em" }}>
+              {selfCheck.ok ? "✓ Self-check OK" : "✕ Self-check FAILED"}
+            </strong>
+            <span style={{ opacity: 0.75, marginLeft: 6 }}>
+              {new Date(selfCheck.at).toLocaleTimeString()}
+            </span>
+            {!selfCheck.ok && selfCheck.divergences.length > 0 && (
+              <ul style={{ margin: "4px 0 0", paddingLeft: 16 }}>
+                {selfCheck.divergences.slice(0, 4).map((d, i) => (
+                  <li key={i}>
+                    <strong>{d.key}</strong>: {d.reason}
+                  </li>
+                ))}
+                {selfCheck.divergences.length > 4 && (
+                  <li>+{selfCheck.divergences.length - 4} more (see console)</li>
+                )}
+              </ul>
+            )}
+          </div>
+        )}
         <div style={{ display: "flex", gap: 6, marginTop: 10 }}>
           <button
             type="button"
