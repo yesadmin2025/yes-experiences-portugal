@@ -21,16 +21,22 @@ export const Route = createFileRoute("/brand-qa")({
  * APPROVED BRAND PALETTE — single source of truth.
  * Any drift between this list and the live CSS variables (or hex codes
  * referenced anywhere in the app) is reported as a failure below.
+ *
+ * NOTE: this file is the brand QA reference. The literal hex values below
+ * are intentional — they are the canonical truth that the audit tool
+ * (`scripts/site-brand-audit.mjs`) compares the rest of the codebase
+ * against. Do not rewrite them to var() form.
  */
+// brand-audit-ignore-file
 const APPROVED = {
-  teal: "var(--teal)",
-  "teal-2": "var(--teal-2)",
-  gold: "var(--gold)",
-  "gold-soft": "var(--gold-soft)",
-  ivory: "var(--ivory)",
-  sand: "var(--sand)",
-  charcoal: "var(--charcoal)",
-  "charcoal-soft": "var(--charcoal-soft)",
+  teal: "#295B61",
+  "teal-2": "#2A7C82",
+  gold: "#C9A96A",
+  "gold-soft": "#E1CFA6",
+  ivory: "#FAF8F3",
+  sand: "#F4EFE7",
+  charcoal: "#2E2E2E",
+  "charcoal-soft": "#6B6B6B",
 } as const;
 
 type TokenName = keyof typeof APPROVED;
@@ -44,7 +50,7 @@ const ALLOWLIST = new Set(
     "#000000",
     "#fff",
     "#ffffff",
-    "color:var(--charcoal-deep)", // dark-mode card surface
+    "#1f1f1f", // dark-mode card surface
     "#ccc", // recharts internal selectors only
   ].map((h) => h.toLowerCase()),
 );
