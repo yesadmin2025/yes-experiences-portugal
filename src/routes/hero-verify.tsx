@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
 import {
   buildFilename,
@@ -13,6 +13,13 @@ import {
   type SpecDrift,
   type VerifyResponse,
 } from "@/lib/hero-verify-download";
+import {
+  clearHistory,
+  loadHistory,
+  saveRun,
+  type HistoryEntry,
+} from "@/lib/hero-verify-history";
+import { diffReports, type FieldChange } from "@/lib/hero-verify-diff";
 
 export const Route = createFileRoute("/hero-verify")({
   head: () => ({
@@ -29,6 +36,13 @@ function HeroVerifyPage() {
   const [loading, setLoading] = useState(false);
   const [targetOverride, setTargetOverride] = useState("");
   const [checkAllPages, setCheckAllPages] = useState(false);
+  const [history, setHistory] = useState<HistoryEntry[]>([]);
+  const [compareMode, setCompareMode] = useState(false);
+
+  // Hydrate history from localStorage after mount (SSR-safe).
+  useEffect(() => {
+    setHistory(loadHistory());
+  }, []);
 
   const runCheck = useCallback(async () => {
     setLoading(true);
@@ -41,6 +55,7 @@ function HeroVerifyPage() {
       const res = await fetch(`/api/verify-hero${qs}`, { cache: "no-store" });
       const json = (await res.json()) as VerifyResponse;
       setResult(json);
+      setHistory(saveRun(json));
     } catch (err) {
       setResult({
         ok: false,
@@ -73,6 +88,25 @@ function HeroVerifyPage() {
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
     triggerDownload(blob, buildFilename(result, "csv"));
   }, [result]);
+
+  const handleClearHistory = useCallback(() => {
+    clearHistory();
+    setHistory([]);
+    setCompareMode(false);
+  }, []);
+
+  // The two most recent runs, oldest first.
+  const compareEntries = useMemo<[HistoryEntry, HistoryEntry] | null>(() => {
+    if (history.length < 2) return null;
+    const last = history[history.length - 1];
+    const prev = history[history.length - 2];
+    return [prev, last];
+  }, [history]);
+
+  const diff = useMemo<FieldChange[] | null>(() => {
+    if (!compareMode || !compareEntries) return null;
+    return diffReports(compareEntries[0].result, compareEntries[1].result);
+  }, [compareMode, compareEntries]);
 
   return (
     <main className="mx-auto max-w-3xl px-6 py-12 font-sans">
@@ -139,10 +173,43 @@ function HeroVerifyPage() {
           </div>
         )}
 
+        <div className="flex flex-wrap items-center gap-3 border-t border-border pt-3">
+          <label className="flex items-center gap-2 text-sm">
+            <input
+              type="checkbox"
+              checked={compareMode}
+              onChange={(e) => setCompareMode(e.target.checked)}
+              disabled={!compareEntries}
+              className="size-4"
+            />
+            Compare last two runs
+          </label>
+          <span className="text-xs text-muted-foreground">
+            History: {history.length} run(s)
+            {!compareEntries && " — need at least 2 to compare"}
+          </span>
+          {history.length > 0 && (
+            <button
+              onClick={handleClearHistory}
+              className="ml-auto text-xs text-muted-foreground underline-offset-2 hover:underline"
+            >
+              Clear history
+            </button>
+          )}
+        </div>
+
         <p className="text-xs text-muted-foreground">
           Source version: <code>{HERO_COPY_VERSION}</code>
         </p>
       </div>
+
+      {compareMode && compareEntries && diff && (
+        <DiffView
+          before={compareEntries[0]}
+          after={compareEntries[1]}
+          changes={diff}
+        />
+      )}
 
       {result?.specDrift && !result.specDrift.ok && (
         <section className="mt-6 rounded-lg border border-amber-500/40 bg-amber-500/5 p-4">
@@ -340,6 +407,93 @@ function CheckRow({ check }: { check: CheckResult }) {
       >
         {check.found ? "found" : "MISSING"}
       </span>
+    </li>
+  );
+}
+
+function DiffView({
+  before,
+  after,
+  changes,
+}: {
+  before: HistoryEntry;
+  after: HistoryEntry;
+  changes: FieldChange[];
+}) {
+  const grouped = useMemo(() => {
+    const g: Record<string, FieldChange[]> = {
+      report: [],
+      spec_drift: [],
+      page: [],
+    };
+    for (const c of changes) g[c.scope].push(c);
+    return g;
+  }, [changes]);
+
+  return (
+    <section className="mt-6 space-y-4">
+      <header className="rounded-lg border border-border bg-muted/30 p-4">
+        <strong className="text-sm">
+          Comparing last two runs
+          {changes.length === 0 && " — no differences"}
+        </strong>
+        <dl className="mt-2 grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
+          <dt className="text-muted-foreground">Before</dt>
+          <dd>{new Date(before.savedAt).toLocaleString()}</dd>
+          <dt className="text-muted-foreground">After</dt>
+          <dd>{new Date(after.savedAt).toLocaleString()}</dd>
+          <dt className="text-muted-foreground">Total changes</dt>
+          <dd>{changes.length}</dd>
+        </dl>
+      </header>
+
+      {(["report", "spec_drift", "page"] as const).map((scope) =>
+        grouped[scope].length === 0 ? null : (
+          <div
+            key={scope}
+            className="rounded-lg border border-border overflow-hidden"
+          >
+            <div className="bg-muted/40 px-3 py-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              {scope === "report"
+                ? "Report-level"
+                : scope === "spec_drift"
+                  ? "Spec drift"
+                  : "Per-page"}
+            </div>
+            <ul className="divide-y divide-border">
+              {grouped[scope].map((c, i) => (
+                <DiffRow key={`${scope}-${i}`} change={c} />
+              ))}
+            </ul>
+          </div>
+        ),
+      )}
+    </section>
+  );
+}
+
+function DiffRow({ change }: { change: FieldChange }) {
+  const tone =
+    change.kind === "added"
+      ? "bg-green-500/5 border-l-green-500"
+      : change.kind === "removed"
+        ? "bg-red-500/5 border-l-red-500"
+        : "bg-amber-500/5 border-l-amber-500";
+
+  return (
+    <li className={`border-l-4 px-3 py-2 text-xs ${tone}`}>
+      <div className="flex items-center justify-between gap-2">
+        <code className="font-medium">{change.path}</code>
+        <span className="rounded bg-background px-1.5 py-0.5 text-[10px] font-medium uppercase">
+          {change.kind}
+        </span>
+      </div>
+      <div className="mt-1 grid grid-cols-[auto_1fr] gap-x-2 gap-y-0.5">
+        <span className="text-muted-foreground">before</span>
+        <span className="break-words text-red-700">{change.before}</span>
+        <span className="text-muted-foreground">after</span>
+        <span className="break-words text-green-700">{change.after}</span>
+      </div>
     </li>
   );
 }
