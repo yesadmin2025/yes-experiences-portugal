@@ -1016,7 +1016,7 @@ function HomePage() {
                       to="/builder"
                       className="inline-flex items-center gap-2 text-[11.5px] uppercase tracking-[0.24em] font-medium text-[color:var(--charcoal-soft)] hover:text-[color:var(--teal)] transition-colors"
                     >
-                      Tailor it <ArrowRight size={12} />
+                      Tailor & confirm <ArrowRight size={12} />
                     </Link>
                   </div>
                 </div>
