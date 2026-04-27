@@ -783,7 +783,17 @@ export function HeroCopyDiff() {
               onClick={() => {
                 const snap = currentSnapshot();
                 writeBaseline(snap);
+                // Accepting the current copy as the new baseline means
+                // there is — by definition — nothing to highlight anymore.
+                // Clear both the persisted payload AND any outline already
+                // painted on the DOM so the visual disappears immediately.
                 clearPersistedOutlines();
+                clearRenderedOutlines();
+                console.info(
+                  "%c[hero-copy] baseline accepted via UI — outlines cleared",
+                  "color:#10b981",
+                  `version=${snap.version}`,
+                );
                 refresh();
               }}
               data-action="accept-current"
