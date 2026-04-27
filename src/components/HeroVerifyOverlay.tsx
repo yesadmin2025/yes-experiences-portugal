@@ -578,6 +578,66 @@ export function HeroVerifyOverlay() {
   });
 
   /**
+   * Hard pre-flight guard: verify the payload literally has
+   * `schema === "hero-verify-report/v3"`. This runs BEFORE the full Zod
+   * validation so we can give an unambiguous, non-overridable error
+   * when the version tag is missing or has drifted. Any failure aborts
+   * the download — there is no confirm prompt because a wrong/missing
+   * version tag means downstream audit tools cannot route the file.
+   */
+  const EXPECTED_SCHEMA_TAG = "hero-verify-report/v3" as const;
+  const assertSchemaTag = (
+    payload: unknown,
+    format: "JSON" | "CSV",
+  ): boolean => {
+    const tag =
+      payload && typeof payload === "object"
+        ? (payload as { schema?: unknown }).schema
+        : undefined;
+    let reason: "missing" | "wrong-type" | "mismatch" | null = null;
+    if (tag === undefined || tag === null) reason = "missing";
+    else if (typeof tag !== "string") reason = "wrong-type";
+    else if (tag !== EXPECTED_SCHEMA_TAG) reason = "mismatch";
+
+    if (reason === null) {
+      setSchemaTagCheck({
+        ok: true,
+        at: Date.now(),
+        format,
+        tag: tag as string,
+      });
+      return true;
+    }
+    const human =
+      reason === "missing"
+        ? `Missing "schema" field — expected "${EXPECTED_SCHEMA_TAG}".`
+        : reason === "wrong-type"
+          ? `"schema" field is ${typeof tag}, not a string. Expected "${EXPECTED_SCHEMA_TAG}".`
+          : `"schema" field is "${String(tag)}" — expected "${EXPECTED_SCHEMA_TAG}".`;
+    // eslint-disable-next-line no-console
+    console.error(
+      `[hero-verify] schema-tag guard BLOCKED ${format} download — ${human}`,
+      { actual: tag, expected: EXPECTED_SCHEMA_TAG },
+    );
+    setSchemaTagCheck({
+      ok: false,
+      at: Date.now(),
+      format,
+      reason,
+      actual: tag,
+    });
+    if (typeof window !== "undefined") {
+      window.alert(
+        `Download blocked.\n\n${human}\n\n` +
+          `The export was not written to disk because downstream audit ` +
+          `tools rely on the "${EXPECTED_SCHEMA_TAG}" version tag to ` +
+          `parse the payload.`,
+      );
+    }
+    return false;
+  };
+
+  /**
    * Validate the assembled payload against `hero-verify-report/v3`
    * BEFORE we trigger any download. The CSV path also validates because
    * its rows are derived from this same in-memory shape.
