@@ -654,7 +654,92 @@ function HomePage() {
         </div>
       </section>
 
-      {/* 3 — HOW IT WORKS
+      {/* 3 — START PATHS
+          Four explicit product paths, surfaced immediately after the trust
+          signal so the user understands every way they can engage with the
+          brand. Mobile: 2-up grid. Desktop: 4-up. The Studio card is the
+          visually distinct teal card to anchor the "build from scratch"
+          path as the most differentiated option. */}
+      <section
+        className="py-24 md:py-32 bg-[color:var(--ivory)] border-b border-[color:var(--border)]"
+        aria-labelledby="start-paths-title"
+      >
+        <div className="container-x">
+          <div className="reveal text-center max-w-2xl mx-auto mb-12 md:mb-16">
+            <span className="eyebrow">Four ways in</span>
+            <h2
+              id="start-paths-title"
+              className="serif text-[2.25rem] md:text-5xl mt-5 leading-[1.08]"
+            >
+              Choose how <span className="italic">you want to start.</span>
+            </h2>
+            <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
+              Book a signature, tailor one your way, design from scratch, or plan a moment that matters.
+            </p>
+          </div>
+
+          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6 list-none p-0 max-w-6xl mx-auto">
+            {startPaths.map((p) => {
+              const Icon = p.icon;
+              const isTeal = p.accent === "teal";
+              return (
+                <li key={p.title} className="reveal-stagger h-full">
+                  <Link
+                    to={p.to}
+                    className={`group relative flex flex-col h-full p-7 md:p-8 transition-all duration-500 ${
+                      isTeal
+                        ? "bg-[color:var(--teal)] text-[color:var(--ivory)] hover:bg-[color:var(--teal-2)]"
+                        : "bg-[color:var(--card)] border border-[color:var(--border)] text-[color:var(--charcoal)] hover:border-[color:var(--teal)]/30 hover:shadow-[0_24px_50px_-24px_rgba(41,91,97,0.18)]"
+                    }`}
+                  >
+                    <span
+                      className={`inline-flex items-center justify-center w-11 h-11 mb-6 border ${
+                        isTeal
+                          ? "border-[color:var(--gold)]/40 text-[color:var(--gold-soft)]"
+                          : "border-[color:var(--gold)]/40 text-[color:var(--teal)]"
+                      }`}
+                    >
+                      <Icon size={18} strokeWidth={1.5} />
+                    </span>
+                    <span
+                      className={`text-[10.5px] uppercase tracking-[0.3em] ${
+                        isTeal ? "text-[color:var(--gold)]" : "text-[color:var(--gold)]"
+                      }`}
+                    >
+                      {p.eyebrow}
+                    </span>
+                    <h3
+                      className={`serif text-[1.4rem] md:text-[1.5rem] mt-3 leading-[1.15] ${
+                        isTeal ? "text-[color:var(--ivory)]" : "text-[color:var(--charcoal)]"
+                      }`}
+                    >
+                      {p.title}
+                    </h3>
+                    <p
+                      className={`mt-3 text-[14.5px] leading-[1.65] font-light flex-1 ${
+                        isTeal
+                          ? "text-[color:var(--ivory)]/85"
+                          : "text-[color:var(--charcoal-soft)]"
+                      }`}
+                    >
+                      {p.line}
+                    </p>
+                    <span
+                      className={`mt-7 inline-flex items-center gap-2 text-[11.5px] uppercase tracking-[0.24em] font-medium group-hover:translate-x-1 transition-transform duration-300 ${
+                        isTeal ? "text-[color:var(--gold-soft)]" : "text-[color:var(--teal)]"
+                      }`}
+                    >
+                      {p.cta} <ArrowRight size={13} />
+                    </span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      </section>
+
+      {/* 4 — HOW IT WORKS
           Mobile-first 3-step editorial layout. Sets expectations + removes
           friction immediately after the trust signal. Generous vertical
           rhythm; numbers + icons + short copy, never paragraphs. */}
