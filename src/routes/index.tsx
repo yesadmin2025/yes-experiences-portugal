@@ -21,7 +21,7 @@ import editCoastal from "@/assets/edit-coastal-road.jpg";
 import editWinery from "@/assets/edit-winery.jpg";
 import editMarket from "@/assets/edit-market.jpg";
 import editViewpoint from "@/assets/edit-viewpoint.jpg";
-import { ArrowRight, Star, MapPin, Compass, Clock, Sparkles, MessageSquare, PenLine, Plane, Heart, Lock, Wand2, Zap } from "lucide-react";
+import { ArrowRight, Star, Compass, Sparkles, PenLine, Heart, Lock, Wand2, Zap } from "lucide-react";
 import { PlatformBadge } from "@/components/PlatformBadge";
 import { HeroMetaProbe } from "@/components/HeroMetaProbe";
 import { HeroCopyDiff } from "@/components/HeroCopyDiff";
@@ -60,13 +60,13 @@ export const Route = createFileRoute("/")({
 const types = [
   {
     title: "Private Day Experiences",
-    line: "One unhurried day, designed entirely around you — at your pace, in your story.",
+    line: "A starting point for a single, unhurried day — take it as it is, or shape it entirely around you.",
     img: catPrivate,
     to: "/day-tours",
   },
   {
     title: "Multi-Day Journeys",
-    line: "Several days woven into one continuous story — coast to vineyard, city to village.",
+    line: "Several days woven into one story — coast to vineyard, city to village. Yours to follow, or to redesign.",
     img: catMultiday,
     to: "/multi-day",
   },
@@ -131,21 +131,21 @@ const editorial = [
 const howItWorks = [
   {
     step: "01",
-    icon: MessageSquare,
-    title: "Tell us your story",
-    line: "A short conversation — who's traveling, what you love, the pace that feels right. No forms, no friction.",
+    icon: Sparkles,
+    title: "Start with a spark",
+    line: "A place you've dreamed of. A moment to mark. An idea, half-formed. Begin from anywhere — we'll take it from there.",
   },
   {
     step: "02",
     icon: PenLine,
-    title: "We design it around you",
-    line: "Your local experience designer crafts a fully private journey — places, people, timing — and refines it until it's exactly right.",
+    title: "Shape it, your way",
+    line: "Choose the pace, the stops, the people you meet. Adjust in real time, with local knowledge guiding every choice.",
   },
   {
     step: "03",
-    icon: Plane,
-    title: "You travel, we host",
-    line: "Drivers, guides, hosts and a single point of contact — every detail handled so you can simply be present.",
+    icon: Zap,
+    title: "Confirm. Instantly.",
+    line: "No forms. No waiting. No back-and-forth. The moment it feels right, it's yours — confirmed on the spot.",
   },
 ];
 
@@ -168,7 +168,7 @@ const pillars = [
   {
     icon: Zap,
     title: "Instant",
-    line: "From idea to confirmed itinerary in days, not weeks — with a real human behind every reply.",
+    line: "Real-time creation. Instant confirmation. No requests, no waiting — your experience is locked the moment you say yes.",
   },
 ];
 
@@ -622,12 +622,12 @@ function HomePage() {
       <section className="py-24 md:py-36 bg-[color:var(--ivory)]" aria-labelledby="how-it-works-title">
         <div className="container-x">
           <div className="reveal text-center max-w-2xl mx-auto mb-14 md:mb-20">
-            <span className="eyebrow">How it works</span>
+            <span className="eyebrow">How you create it</span>
             <h2 id="how-it-works-title" className="serif text-[2.25rem] md:text-5xl mt-5 leading-[1.08]">
-              Three steps. <span className="italic">No friction.</span>
+              Designed by you. <span className="italic">Confirmed instantly.</span>
             </h2>
             <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
-              From first message to the moment you arrive — handled entirely by one local team.
+              You're not requesting a tour. You're creating an experience — and confirming it in real time.
             </p>
           </div>
 
@@ -670,7 +670,7 @@ function HomePage() {
               to="/builder"
               className="cta-primary inline-flex items-center gap-2 px-8 py-[16px] text-[12.5px] uppercase tracking-[0.2em] font-semibold"
             >
-              Start designing yours
+              Start creating yours
               <ArrowRight size={15} />
             </Link>
           </div>
@@ -681,12 +681,12 @@ function HomePage() {
       <section className="py-24 md:py-40 bg-[color:var(--sand)]">
         <div className="container-x">
           <div className="reveal text-center max-w-2xl mx-auto mb-14 md:mb-20">
-            <span className="eyebrow">The experiences</span>
+            <span className="eyebrow">Starting points</span>
             <h2 className="serif text-[2.25rem] md:text-5xl mt-5 leading-[1.08]">
-              Three ways <span className="italic">to travel Portugal</span>
+              Inspiration, <span className="italic">not fixed itineraries.</span>
             </h2>
             <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
-              All private. All tailored. All hosted by a local team that knows where to take you.
+              Experience them as they are — or shape them entirely around you. Every starting point is yours to redesign.
             </p>
           </div>
 
@@ -720,10 +720,10 @@ function HomePage() {
                     <Sparkles size={13} /> The Studio
                   </span>
                   <h3 className="serif text-[1.85rem] mt-6 leading-[1.1]">
-                    Build your <span className="italic">own.</span>
+                    Create your <span className="italic">own.</span>
                   </h3>
                   <p className="mt-4 text-[15px] text-[color:var(--ivory)]/90 leading-[1.7] font-light">
-                    Don't see exactly what you want? Design a private journey from scratch — guided by a local, finalized in days.
+                    Design your experience in real time. Confirm it the moment it feels right — no forms, no waiting.
                   </p>
                 </div>
                 <span className="inline-flex items-center gap-2 text-[12px] uppercase tracking-[0.22em] text-[color:var(--gold-soft)] group-hover:translate-x-1 transition-transform">
@@ -934,38 +934,38 @@ function HomePage() {
             <div className="relative max-w-2xl">
               <span className="eyebrow">Begin</span>
               <h2 className="serif text-4xl md:text-5xl mt-6">
-                Your Portugal story <br />
-                <span className="italic text-[color:var(--teal)]">starts with a single step.</span>
+                Create your experience. <br />
+                <span className="italic text-[color:var(--teal)]">Confirm it instantly.</span>
               </h2>
               <p className="mt-7 text-[17px] text-[color:var(--charcoal-soft)] leading-[1.75] max-w-lg">
-                Open the Experience Studio and design a private journey around you —
-                or speak with a local experience designer for a fully bespoke proposal.
+                Open the Studio and design your private journey in real time —
+                or speak with a local who'll shape it alongside you.
               </p>
               <div className="mt-10 flex flex-wrap gap-4">
                 <Link
                   to="/builder"
                   className="cta-primary inline-flex items-center gap-2 px-9 py-[18px] text-[12.5px] uppercase tracking-[0.22em] font-semibold"
                 >
-                  Design &amp; Secure Your Experience
+                  Create &amp; Confirm Now
                   <ArrowRight size={15} />
                 </Link>
                 <Link
                   to="/contact"
                   className="cta-secondary-light inline-flex items-center gap-2 px-9 py-[18px] text-[12.5px] uppercase tracking-[0.22em] font-semibold"
                 >
-                  Speak with our team
+                  Speak with a local
                 </Link>
               </div>
 
               <div className="mt-11 flex flex-wrap gap-x-8 gap-y-3 text-[12px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)]">
                 <span className="inline-flex items-center gap-2">
-                  <Compass size={13} className="text-[color:var(--gold)]" /> Local hands
+                  <Zap size={13} className="text-[color:var(--gold)]" /> Instant confirmation
                 </span>
                 <span className="inline-flex items-center gap-2">
-                  <MapPin size={13} className="text-[color:var(--gold)]" /> Hidden places
+                  <Lock size={13} className="text-[color:var(--gold)]" /> Always private
                 </span>
                 <span className="inline-flex items-center gap-2">
-                  <Clock size={13} className="text-[color:var(--gold)]" /> Designed at your pace
+                  <Compass size={13} className="text-[color:var(--gold)]" /> Local knowledge
                 </span>
               </div>
             </div>
