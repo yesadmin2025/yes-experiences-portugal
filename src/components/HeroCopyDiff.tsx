@@ -389,6 +389,7 @@ export function HeroCopyDiff() {
           /* ignore */
         }
         clearPersistedOutlines();
+        clearRenderedOutlines();
         console.info("%c[hero-copy] baseline cleared", "color:#9ca3af");
         refresh();
       },
