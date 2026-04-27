@@ -208,6 +208,37 @@ retention_resolve_all() {
   retention_validate_effective "hero-copy-qa-meta   retention" "$meta_eff"   || failed=1
 
   if [ "$failed" -ne 0 ]; then
+    # Failure-path debug dump — printed BEFORE the human-readable
+    # refusal lines so a reviewer scrolling the job log sees the raw
+    # facts (what the user passed, what the resolver computed, and
+    # which precedence chain produced each effective value) right
+    # next to the ::error annotations from retention_validate_effective.
+    #
+    # Format mirrors the success-path `🔎 retention.outputs:` line:
+    # a single grep-friendly prefix (`🔎 retention.debug:`) followed
+    # by a multi-line block. Empty raw inputs are rendered as
+    # `<empty>` so a missing value is never confused with a literal
+    # empty string in the log. The chain notation lists slots in
+    # precedence order with `||` separators and ends in
+    # `default=$RETENTION_DEFAULT`, matching the comments in the
+    # workflow YAML.
+    local report_raw="${QA_REPORT_RETENTION:-<empty>}"
+    local logs_raw="${QA_LOGS_RETENTION:-<empty>}"
+    local meta_raw="${QA_META_RETENTION:-<empty>}"
+    echo ""
+    echo "🔎 retention.debug: validation FAILED — dumping inputs, resolved values, and precedence chains:"
+    echo "  raw inputs:"
+    echo "    qa_report_retention_days = $report_raw"
+    echo "    qa_logs_retention_days   = $logs_raw"
+    echo "    qa_meta_retention_days   = $meta_raw"
+    echo "  resolved effective values:"
+    echo "    hero-copy-qa-report = $report_eff"
+    echo "    hero-copy-qa-logs   = $logs_eff"
+    echo "    hero-copy-qa-meta   = $meta_eff"
+    echo "  precedence chains (first non-empty wins, else default):"
+    echo "    hero-copy-qa-report : qa_report_retention_days || default=$RETENTION_DEFAULT"
+    echo "    hero-copy-qa-logs   : qa_logs_retention_days || qa_report_retention_days || default=$RETENTION_DEFAULT"
+    echo "    hero-copy-qa-meta   : qa_meta_retention_days || qa_logs_retention_days || qa_report_retention_days || default=$RETENTION_DEFAULT"
     echo ""
     echo "Refusing to upload artifacts: at least one effective retention value is invalid."
     echo "GitHub allows 1..$RETENTION_MAX days for actions/upload-artifact@v4."
