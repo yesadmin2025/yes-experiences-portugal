@@ -1220,7 +1220,7 @@ function SettingsPanel({
             </span>
             <button
               type="button"
-              onClick={() => setPublishReady(false)}
+              onClick={() => setPublishReadyFor(null)}
               className="rounded-md border border-emerald-300 bg-white/70 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] hover:bg-white"
             >
               Dismiss
