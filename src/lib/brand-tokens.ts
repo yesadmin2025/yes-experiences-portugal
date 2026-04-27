@@ -50,6 +50,88 @@ export const BRAND_LOGO_VARIANTS = {
 export type BrandLogoTheme = keyof typeof BRAND_LOGO_VARIANTS;
 
 /**
+ * The default theme returned by `assertBrandLogoTheme` when an invalid
+ * value is passed in production. Picked because it is the
+ * highest-contrast variant on the most common (light) surface, so a
+ * silent fallback is still on-brand.
+ */
+export const DEFAULT_BRAND_LOGO_THEME: BrandLogoTheme = "teal-on-ivory";
+
+/**
+ * The set of valid `BrandLogoTheme` values, derived from
+ * `BRAND_LOGO_VARIANTS`. Exported so call sites (forms, settings UIs,
+ * URL parsers) can validate against it without re-typing the union.
+ */
+export const BRAND_LOGO_THEMES = Object.keys(
+  BRAND_LOGO_VARIANTS,
+) as BrandLogoTheme[];
+
+export function isBrandLogoTheme(value: unknown): value is BrandLogoTheme {
+  return (
+    typeof value === "string" &&
+    (BRAND_LOGO_THEMES as readonly string[]).includes(value)
+  );
+}
+
+/**
+ * Runtime guard for any value that is supposed to be a
+ * `BrandLogoTheme`. Behaviour:
+ *
+ *  - Valid value → returned as-is, typed.
+ *  - Invalid value → in **dev** (`import.meta.env.DEV`, or NODE_ENV
+ *    === "development"/"test"), logs a loud `console.error` AND throws
+ *    so the React error boundary surfaces the offending call site. In
+ *    **production**, logs a `console.error` and falls back to
+ *    `DEFAULT_BRAND_LOGO_THEME` so a stray prop never blanks the page.
+ *
+ * `componentName` is included in the message so the error points
+ * straight at the component that mis-routed the value.
+ */
+export function assertBrandLogoTheme(
+  value: unknown,
+  componentName = "<unknown>",
+): BrandLogoTheme {
+  if (isBrandLogoTheme(value)) return value;
+  const allowed = BRAND_LOGO_THEMES.map((t) => `"${t}"`).join(", ");
+  const received =
+    value === undefined
+      ? "undefined"
+      : value === null
+        ? "null"
+        : `${typeof value} ${JSON.stringify(value)}`;
+  const message =
+    `[brand-lock] <${componentName}> received an unsupported brand ` +
+    `theme: ${received}. Allowed values: ${allowed}.`;
+  // eslint-disable-next-line no-console
+  console.error(message);
+  if (isDevEnvironment()) {
+    // Throw so React surfaces the failing component in the dev error
+    // overlay (or our defaultErrorComponent) instead of silently
+    // rendering a fallback theme.
+    throw new Error(message);
+  }
+  return DEFAULT_BRAND_LOGO_THEME;
+}
+
+function isDevEnvironment(): boolean {
+  // Vite client/SSR — `import.meta.env.DEV` is true in `vite dev`,
+  // false in `vite build`. Wrapped in try/catch because some bundlers
+  // throw on the bare `import.meta` access in non-ESM contexts.
+  try {
+    const envFlag = (import.meta as unknown as { env?: { DEV?: boolean } })
+      .env?.DEV;
+    if (typeof envFlag === "boolean") return envFlag;
+  } catch {
+    /* fall through to NODE_ENV */
+  }
+  if (typeof process !== "undefined" && process.env) {
+    const node = process.env.NODE_ENV;
+    return node === "development" || node === "test" || node === undefined;
+  }
+  return false;
+}
+
+/**
  * Files that are EXEMPT from the "no hard-coded brand hex" rule. These
  * are the canonical sources where the hex literally has to live:
  *  - `src/styles.css` declares the CSS custom properties.
