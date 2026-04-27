@@ -101,21 +101,19 @@ function composite(fgHex, alpha, bgHex) {
 }
 
 const WHITE = "#FFFFFF"; // header bg is white/95 ≈ #FFFFFF for contrast purposes
-// Effective opaque equivalents of the alpha-modified frames actually rendered.
-const CHARCOAL_30_ON_WHITE = composite(APPROVED.charcoal, 0.3, WHITE); // hamburger frame
-const CHARCOAL_12_ON_WHITE = composite(APPROVED.charcoal, 0.12, WHITE); // header bottom border
+// Effective opaque equivalent of the alpha-modified header divider.
+const CHARCOAL_15_ON_WHITE = composite(APPROVED.charcoal, 0.15, WHITE);
 const pairs = [
   { name: "Charcoal link on white bg", fg: APPROVED.charcoal, bg: WHITE, min: 4.5 },
   { name: "Teal hover/active on white bg", fg: APPROVED.teal, bg: WHITE, min: 4.5 },
   { name: "Ivory CTA label on teal fill", fg: APPROVED.ivory, bg: APPROVED.teal, min: 4.5 },
   { name: "Charcoal mobile link on white", fg: APPROVED.charcoal, bg: WHITE, min: 4.5 },
-  // Non-text decorative borders: WCAG 1.4.11 needs ≥ 3:1 against adjacent color.
-  { name: "Hamburger frame (charcoal/30) on white", fg: CHARCOAL_30_ON_WHITE, bg: WHITE, min: 3.0 },
+  // Non-text decorative borders: WCAG 1.4.11 needs ≥ 3:1 for actionable frames.
+  { name: "Hamburger frame (charcoal-soft) on white", fg: APPROVED["charcoal-soft"], bg: WHITE, min: 3.0 },
   { name: "Gold border on teal (desktop CTA frame)", fg: APPROVED.gold, bg: APPROVED.teal, min: 3.0 },
-  // Header bottom border is informational separator, not an actionable frame —
-  // WCAG allows lower contrast for purely decorative dividers, so we only
-  // require it to be visible (≥ 1.3:1) rather than meeting the 3:1 frame rule.
-  { name: "Header bottom hairline (charcoal/12) on white", fg: CHARCOAL_12_ON_WHITE, bg: WHITE, min: 1.3 },
+  // Header bottom hairline is a decorative divider, not a frame around an
+  // action — 1.3:1 visibility is enough.
+  { name: "Header bottom hairline (charcoal/15) on white", fg: CHARCOAL_15_ON_WHITE, bg: WHITE, min: 1.3 },
 ];
 const results = pairs.map((p) => ({ ...p, ratio: contrast(p.fg, p.bg) }));
 
