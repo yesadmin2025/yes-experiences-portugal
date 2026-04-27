@@ -900,7 +900,10 @@ function SettingsPanel({
   >(null);
   // Set by the "Validate, apply & publish" button after a successful run.
   // The actual publish happens in the Lovable editor — we just surface a CTA.
-  const [publishReady, setPublishReady] = useState(false);
+  // We store the settings snapshot that produced this CTA so any later edit
+  // (slider, toggle, reset, import) automatically dismisses the stale banner.
+  const [publishReadyFor, setPublishReadyFor] = useState<AuditSettings | null>(null);
+  const publishReady = publishReadyFor !== null && publishReadyFor === settings;
 
   const handleImportFile = async (file: File, dryRun: boolean, autoFix: boolean) => {
     setImportReport(null);
