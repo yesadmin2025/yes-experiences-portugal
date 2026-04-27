@@ -22,6 +22,7 @@ import { ArrowRight, Star, Compass, Sparkles, PenLine, Heart, Lock, Wand2, Zap, 
 import { PlatformBadge } from "@/components/PlatformBadge";
 import { HeroMetaProbe } from "@/components/HeroMetaProbe";
 import { HeroCopyDiff } from "@/components/HeroCopyDiff";
+import { HeroVerifyOverlay } from "@/components/HeroVerifyOverlay";
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
 
 export const Route = createFileRoute("/")({
