@@ -1,3 +1,4 @@
+// rev 2 — real Viator photos + 10-tour catalog
 /**
  * YES Experiences Portugal — Signature Tours.
  *
