@@ -486,6 +486,7 @@ describe("Typography regression — section headlines (token sweep)", () => {
         hits.length,
         `No tokenized section headlines found in ${file}`,
       ).toBeGreaterThan(0);
+      captured.sectionSweeps[page] = hits;
       expect(hits).toMatchSnapshot();
     });
   }
