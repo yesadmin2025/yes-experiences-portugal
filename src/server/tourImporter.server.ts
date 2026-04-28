@@ -118,11 +118,31 @@ export async function scrapeCatalog(): Promise<ScrapedTour[]> {
       "";
     const price =
       Number(block.match(/From\s*€\s*([\d.,]+)/i)?.[1]?.replace(/[.,]/g, "")) || 0;
-    const imageUrl =
-      html
-        .substring(Math.max(0, m.index - 800), m.index)
-        .match(/src="(https:\/\/yesexperiences\.pt\/wp-content\/uploads\/[^"]+\.(?:avif|jpg|jpeg|png|webp))"/i)?.[1] ??
-      null;
+    // Look in a wider window before AND after the heading; cards put the image
+    // either above the title (preview thumb) or in the link wrapper.
+    const window = html.substring(
+      Math.max(0, m.index - 2000),
+      Math.min(html.length, m.index + (m[0]?.length ?? 0) + 1500),
+    );
+    const imgRe = /(?:data-lazy-src|data-src|src)="(https:\/\/yesexperiences\.pt\/wp-content\/uploads\/[^"]+\.(?:avif|jpg|jpeg|png|webp))"/gi;
+    let imageUrl: string | null = null;
+    let im: RegExpExecArray | null;
+    while ((im = imgRe.exec(window)) !== null) {
+      const candidate = im[1];
+      // Skip tiny placeholder/spacer images
+      if (/[-_](?:1x1|placeholder|spacer)\./i.test(candidate)) continue;
+      imageUrl = candidate;
+      break;
+    }
+    // Fallback: try srcset (take the largest entry)
+    if (!imageUrl) {
+      const srcset = window.match(/srcset="([^"]+yesexperiences\.pt\/wp-content\/uploads\/[^"]+)"/i)?.[1];
+      if (srcset) {
+        const entries = srcset.split(",").map((s) => s.trim().split(/\s+/));
+        const best = entries.sort((a, b) => (parseInt(b[1] ?? "0") || 0) - (parseInt(a[1] ?? "0") || 0))[0];
+        imageUrl = best?.[0] ?? null;
+      }
+    }
 
     tours.set(id, {
       id,

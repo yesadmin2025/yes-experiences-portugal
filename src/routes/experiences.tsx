@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
 import { ArrowRight, Clock, MapPin, Pencil, ExternalLink } from "lucide-react";
 import { signatureTours } from "@/data/signatureTours";
+import { useImportedTourImages } from "@/hooks/use-imported-tour-images";
 
 export const Route = createFileRoute("/experiences")({
   head: () => ({
@@ -24,6 +25,7 @@ export const Route = createFileRoute("/experiences")({
 });
 
 function ExperiencesPage() {
+  const { resolve } = useImportedTourImages();
   return (
     <SiteLayout>
       <section className="pt-32 pb-12 bg-[color:var(--sand)] text-center">
@@ -46,7 +48,7 @@ function ExperiencesPage() {
               <article key={t.id} className="group flex flex-col">
                 <div className="lift-layer-sm relative aspect-[4/5] overflow-hidden mb-5 shadow-[0_10px_30px_-20px_rgba(46,46,46,0.25)] group-hover:shadow-[0_28px_55px_-22px_rgba(41,91,97,0.3)]">
                   <img
-                    src={t.img}
+                    src={resolve(t)}
                     alt={t.title}
                     loading="lazy"
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
