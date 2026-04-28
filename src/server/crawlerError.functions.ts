@@ -35,8 +35,16 @@ async function readLogTail(): Promise<string | null> {
   return null;
 }
 
-export const getLastCrawlerError = createServerFn({ method: "GET" }).handler(
-  async (): Promise<CrawlerErrorInfo> => {
+export type CrawlerErrorStrategy = "root-cause" | "last-error";
+
+export const getLastCrawlerError = createServerFn({ method: "GET" })
+  .inputValidator(
+    (data: { strategy?: CrawlerErrorStrategy } | undefined) => ({
+      strategy: (data?.strategy ?? "root-cause") as CrawlerErrorStrategy,
+    }),
+  )
+  .handler(async ({ data }): Promise<CrawlerErrorInfo> => {
+    const { strategy } = data;
     const log = await readLogTail();
     if (!log) {
       return {
