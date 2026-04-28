@@ -754,3 +754,4 @@ export const STOP_THEME_IMG: Record<StopTheme, string> = {
   "troia-comporta": imgTroiaComporta,
   "wild-beaches-picnic": imgWildBeachesPicnic,
 };
+
