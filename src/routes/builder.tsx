@@ -556,7 +556,7 @@ function StepPanel(props: {
    Individual steps
    ============================================================ */
 
-function StepHeader({ title, sub }: { eyebrow?: string; title: string; sub?: string }) {
+function StepHeader({ title, sub }: { title: React.ReactNode; sub?: React.ReactNode }) {
   return (
     <div className="animate-fade-in">
       <h2 className="serif text-[26px] md:text-[34px] leading-[1.15] text-[color:var(--charcoal)]">
