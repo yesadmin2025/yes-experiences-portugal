@@ -4,6 +4,7 @@ import { ArrowRight, Clock, MapPin } from "lucide-react";
 import { signatureTours } from "@/data/signatureTours";
 import { useImportedTourImages } from "@/hooks/use-imported-tour-images";
 import { ImageQualityToggle } from "@/components/ImageQualityToggle";
+import { ContrastAuditPanel } from "@/components/dev/ContrastAuditPanel";
 
 export const Route = createFileRoute("/experiences")({
   head: () => ({
@@ -102,6 +103,7 @@ function ExperiencesPage() {
       </section>
 
       <CtaStrip />
+      <ContrastAuditPanel label="Experiences Audit" />
     </SiteLayout>
   );
 }
