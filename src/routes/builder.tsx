@@ -2129,7 +2129,7 @@ function InvestmentPanel({ s, days, investment }: { s: BuilderState; days: numbe
         </p>
       </div>
       <p className="mt-2 text-[12px] text-[color:var(--charcoal-soft)] italic">
-        Private experience, local guide and curated stops included. Reserved instantly through our integrated booking system.
+        Private guide, real route, curated stops included. Confirm instantly through our integrated booking system — no forms, no waiting.
       </p>
     </div>
   );
@@ -2137,20 +2137,22 @@ function InvestmentPanel({ s, days, investment }: { s: BuilderState; days: numbe
 
 function DesignerNudge() {
   return (
-    <Link
-      to="/contact"
+    <a
+      href="https://wa.me/351000000000?text=Hi%21%20I%27d%20love%20a%20local%27s%20help%20shaping%20my%20journey%20in%20Portugal."
+      target="_blank"
+      rel="noopener noreferrer"
       className="block bg-[color:var(--sand)] border border-[color:var(--border)] p-4 rounded-sm hover:border-[color:var(--teal)]/40 transition-colors"
     >
       <div className="flex items-start gap-3">
         <MessageCircle size={16} className="text-[color:var(--teal)] mt-0.5" />
         <div>
-          <p className="serif text-[14px] text-[color:var(--charcoal)]">Want a hand?</p>
+          <p className="serif text-[14px] text-[color:var(--charcoal)]">Need help shaping it?</p>
           <p className="text-[12px] text-[color:var(--charcoal-soft)] italic mt-0.5">
-            A local designer can refine your story with you — anytime.
+            A local is here in real time — ask anything, anytime.
           </p>
         </div>
       </div>
-    </Link>
+    </a>
   );
 }
 
