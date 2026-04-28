@@ -1000,6 +1000,7 @@ function HomePage() {
               className="btn-solid btn-solid--outline"
             >
               Explore all signatures <ArrowRight size={14} />
+            </Link>
           </div>
         </div>
       </section>
