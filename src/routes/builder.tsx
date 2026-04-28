@@ -706,12 +706,28 @@ function PreviewablePills({
               onPreview(null);
             }}
             onPointerCancel={() => { cancelLongPress(); onPreview(null); }}
+            onFocus={(e) => {
+              // Only treat as keyboard focus, not focus from a pointer click.
+              if (e.currentTarget.matches(":focus-visible")) onPreview(o.id);
+            }}
+            onBlur={() => { if (previewing) onPreview(null); }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                // Preserve native click selection: prevent the synthesized click
+                // (which would also fire onSelect) and call onSelect once here.
+                e.preventDefault();
+                onSelect(o.id);
+              } else if (e.key === "Escape" && previewing) {
+                onPreview(null);
+                e.currentTarget.blur();
+              }
+            }}
             onClick={() => {
               // Suppress click if we long-pressed (would feel like a misfire).
               if (longPressed.current) { longPressed.current = false; return; }
               onSelect(o.id);
             }}
-            className={`group relative inline-flex items-center gap-2 px-4 py-2.5 border text-sm transition-all touch-manipulation select-none ${
+            className={`group relative inline-flex items-center gap-2 px-4 py-2.5 border text-sm transition-all touch-manipulation select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--background)] ${
               active
                 ? "border-[color:var(--teal)] bg-[color:var(--teal)] text-[color:var(--ivory)]"
                 : previewing
