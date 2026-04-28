@@ -27,8 +27,8 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ToursTourIdRouteImport } from './routes/tours.$tourId'
 import { Route as ApiVerifyHeroRouteImport } from './routes/api/verify-hero'
 import { Route as ApiImgRouteImport } from './routes/api/img'
-import { Route as AdminImportToursRouteImport } from './routes/admin.import-tours'
 import { Route as AdminTourLinkAuditRouteImport } from './routes/admin.tour-link-audit'
+import { Route as AdminImportToursRouteImport } from './routes/admin.import-tours'
 
 const TypographyAuditRoute = TypographyAuditRouteImport.update({
   id: '/typography-audit',
@@ -120,14 +120,14 @@ const ApiImgRoute = ApiImgRouteImport.update({
   path: '/api/img',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminImportToursRoute = AdminImportToursRouteImport.update({
-  id: '/admin/import-tours',
-  path: '/admin/import-tours',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AdminTourLinkAuditRoute = AdminTourLinkAuditRouteImport.update({
   id: '/admin/tour-link-audit',
   path: '/admin/tour-link-audit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminImportToursRoute = AdminImportToursRouteImport.update({
+  id: '/admin/import-tours',
+  path: '/admin/import-tours',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -418,18 +418,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiImgRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/import-tours': {
-      id: '/admin/import-tours'
-      path: '/admin/import-tours'
-      fullPath: '/admin/import-tours'
-      preLoaderRoute: typeof AdminImportToursRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/admin/tour-link-audit': {
       id: '/admin/tour-link-audit'
       path: '/admin/tour-link-audit'
       fullPath: '/admin/tour-link-audit'
       preLoaderRoute: typeof AdminTourLinkAuditRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/import-tours': {
+      id: '/admin/import-tours'
+      path: '/admin/import-tours'
+      fullPath: '/admin/import-tours'
+      preLoaderRoute: typeof AdminImportToursRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
