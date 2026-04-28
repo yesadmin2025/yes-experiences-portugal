@@ -235,21 +235,71 @@ function pickYes(stage: keyof typeof YES_LINES, seed: number) {
    Page
    ============================================================ */
 
+function stateFromSearch(search: ReturnType<typeof useSearchType>): BuilderState {
+  return {
+    name: search.n ?? "",
+    region: search.r ?? null,
+    groupType: search.g ?? null,
+    guests: search.gs ?? null,
+    duration: search.d ?? null,
+    styles: search.st ?? [],
+    highlights: search.hl ?? [],
+    pace: search.p ?? null,
+    enhancements: search.en ?? [],
+    tier: search.t ?? null,
+  };
+}
+
+// Helper type alias for the search shape
+type useSearchType = ReturnType<typeof Route.useSearch>;
+
+function searchFromState(s: BuilderState, stepIdx: number) {
+  return {
+    n: s.name || undefined,
+    r: s.region ?? undefined,
+    g: s.groupType ?? undefined,
+    gs: s.guests ?? undefined,
+    d: s.duration ?? undefined,
+    st: s.styles.length ? s.styles : undefined,
+    hl: s.highlights.length ? s.highlights : undefined,
+    p: s.pace ?? undefined,
+    en: s.enhancements.length ? s.enhancements : undefined,
+    t: s.tier ?? undefined,
+    step: stepIdx || undefined,
+  };
+}
+
 function BuilderPage() {
   const search = Route.useSearch();
-  const [s, setS] = useState<BuilderState>(emptyState);
-  const [stepIdx, setStepIdx] = useState(0);
+  const navigate = useNavigate({ from: "/builder" });
+  // Initialize from URL so deep links restore state on first render
+  const [s, setS] = useState<BuilderState>(() => stateFromSearch(search));
+  const [stepIdx, setStepIdx] = useState<number>(() => search.step ?? 0);
   const [view, setView] = useState<"story" | "timeline" | "map">("story");
   const [mobileTab, setMobileTab] = useState<"build" | "preview">("build");
+  const hydratedTourRef = useRef<string | null>(null);
 
-  // Deep-link seed: /builder?tour=<id>
+  // Deep-link seed: /builder?tour=<id> — only when no persisted state present
   useEffect(() => {
-    if (!search.tour) return;
+    if (!search.tour || hydratedTourRef.current === search.tour) return;
     const tour = signatureTours.find((t) => t.id === search.tour);
     if (!tour) return;
+    hydratedTourRef.current = search.tour;
+    const hasPersisted = !!(search.r || search.st?.length || search.hl?.length || search.t);
+    if (hasPersisted) return;
     setS((p) => ({ ...p, ...tour.seed, name: p.name || "" }));
-    setStepIdx(2); // jump past welcome+name
-  }, [search.tour]);
+    setStepIdx(2);
+  }, [search.tour, search.r, search.st, search.hl, search.t]);
+
+  // Sync state → URL (debounced via microtask, replace history)
+  useEffect(() => {
+    const next = searchFromState(s, stepIdx);
+    navigate({
+      search: (prev) => ({ ...prev, ...next, tour: prev.tour }),
+      replace: true,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [s, stepIdx]);
 
   const update = <K extends keyof BuilderState>(k: K, v: BuilderState[K]) =>
     setS((p) => ({ ...p, [k]: v }));
