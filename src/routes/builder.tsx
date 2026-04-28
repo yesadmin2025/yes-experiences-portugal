@@ -556,16 +556,537 @@ function StepPanel(props: {
    Individual steps
    ============================================================ */
 
-function StepHeader({ eyebrow, title, sub }: { eyebrow: string; title: string; sub?: string }) {
+function StepHeader({ title, sub }: { eyebrow?: string; title: string; sub?: string }) {
   return (
-    <div>
-      <span className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--charcoal-soft)]">{eyebrow}</span>
-      <h2 className="serif text-2xl md:text-3xl mt-2 leading-tight text-[color:var(--charcoal)]">{title}</h2>
-      {sub && <p className="mt-2 text-[13px] text-[color:var(--charcoal-soft)]">{sub}</p>}
+    <div className="animate-fade-in">
+      <h2 className="serif text-[26px] md:text-[34px] leading-[1.15] text-[color:var(--charcoal)]">
+        {title}
+      </h2>
+      {sub && (
+        <p className="mt-2.5 text-[13px] md:text-[14px] text-[color:var(--charcoal-soft)] italic leading-relaxed">
+          {sub}
+        </p>
+      )}
     </div>
   );
 }
 
+/* Image-led moment card — replaces form tiles across the builder */
+function MomentCard({
+  image,
+  name,
+  line,
+  selected,
+  onClick,
+  aspect = "aspect-[4/5]",
+}: {
+  image: string;
+  name: string;
+  line?: string;
+  selected: boolean;
+  onClick: () => void;
+  aspect?: string;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={selected}
+      className={`group relative ${aspect} overflow-hidden rounded-sm text-left transition-all duration-300 ${
+        selected
+          ? "ring-2 ring-[color:var(--teal)] ring-offset-2 ring-offset-[color:var(--ivory)]"
+          : "ring-1 ring-[color:var(--border)] hover:ring-[color:var(--teal)]/50"
+      }`}
+    >
+      <div
+        className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-[1.04]"
+        style={{ backgroundImage: `url(${image})` }}
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
+      {selected && (
+        <div className="absolute top-2.5 right-2.5 h-7 w-7 rounded-full bg-[color:var(--teal)] grid place-items-center shadow-lg animate-scale-in">
+          <Check size={14} className="text-[color:var(--ivory)]" />
+        </div>
+      )}
+      <div className="absolute inset-x-0 bottom-0 p-3.5">
+        <p className="serif text-[15px] md:text-[16px] text-white leading-tight">{name}</p>
+        {line && (
+          <p className="mt-1 text-[11px] text-white/80 italic leading-snug line-clamp-2">{line}</p>
+        )}
+      </div>
+    </button>
+  );
+}
+
+/* ============================================================
+   Step content — emotional, image-led
+   ============================================================ */
+
+const WELCOME_IMG =
+  "https://images.unsplash.com/photo-1555881400-74d7acaacd8b?w=1400&q=80&auto=format&fit=crop";
+
+function WelcomeStep({ onStart }: { onStart: () => void }) {
+  return (
+    <div className="-mx-5 md:-mx-7 -mt-4 animate-fade-in">
+      <div
+        className="relative aspect-[4/5] md:aspect-[16/10] bg-cover bg-center"
+        style={{ backgroundImage: `url(${WELCOME_IMG})` }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/30 to-black/80" />
+        <div className="relative h-full flex flex-col justify-end p-6 md:p-10 text-center">
+          <p className="text-[10px] uppercase tracking-[0.32em] text-[color:var(--gold-soft)]">
+            Your story begins
+          </p>
+          <h2 className="serif text-3xl md:text-5xl mt-3 leading-[1.1] text-white">
+            What if Portugal <span className="italic">was already waiting</span> for you?
+          </h2>
+          <p className="mt-4 text-[14px] md:text-[15px] text-white/85 italic max-w-md mx-auto leading-relaxed">
+            Not a form. A few honest questions, a few beautiful choices — and a story that becomes yours, page by page.
+          </p>
+          <button
+            onClick={onStart}
+            className="mt-7 mx-auto inline-flex items-center gap-2 bg-[color:var(--ivory)] text-[color:var(--charcoal)] px-7 py-3.5 text-[11px] uppercase tracking-[0.22em] hover:bg-white transition-colors"
+          >
+            Begin my story <ArrowRight size={14} />
+          </button>
+          <p className="mt-5 text-[10px] uppercase tracking-[0.28em] text-white/60">
+            Private only · Designed by locals
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function NameStep({ value, onChange, onNext }: { value: string; onChange: (v: string) => void; onNext: () => void }) {
+  return (
+    <div>
+      <StepHeader
+        title={<>Every great story <span className="italic text-[color:var(--teal)]">has a name</span>.</> as unknown as string}
+        sub="Yours, a friend's, the person you're surprising. Skip if you'd rather stay anonymous."
+      />
+      <input
+        type="text"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        onKeyDown={(e) => e.key === "Enter" && onNext()}
+        placeholder="Maria, John, Carlos…"
+        autoFocus
+        className="mt-6 w-full bg-transparent border-b-2 border-[color:var(--border)] focus:border-[color:var(--teal)] outline-none py-3 serif text-2xl md:text-3xl text-[color:var(--charcoal)] placeholder:text-[color:var(--charcoal-soft)]/40 transition-colors"
+      />
+      {value && (
+        <p className="mt-4 text-[13px] text-[color:var(--charcoal-soft)] italic animate-fade-in">
+          Beautiful. We'll call it <span className="not-italic serif text-[color:var(--teal)]">{value}'s Portugal Experience</span>.
+        </p>
+      )}
+    </div>
+  );
+}
+
+/* Image + evocative line per region */
+const REGION_META: Record<string, { image: string; line: string }> = {
+  lisbon: {
+    image: "https://images.unsplash.com/photo-1555881400-74d7acaacd8b?w=900&q=80&auto=format&fit=crop",
+    line: "Light on tiles, the river at sunset, hidden hills.",
+  },
+  porto: {
+    image: "https://images.unsplash.com/photo-1555990538-32d6d63a8aae?w=900&q=80&auto=format&fit=crop",
+    line: "Granite, port wine, the slow turn of the Douro.",
+  },
+  alentejo: {
+    image: "https://images.unsplash.com/photo-1502780402662-acc01917cf6f?w=900&q=80&auto=format&fit=crop",
+    line: "Endless plains, cork oaks, long quiet meals.",
+  },
+  algarve: {
+    image: "https://images.unsplash.com/photo-1518509562904-e7ef99cddc85?w=900&q=80&auto=format&fit=crop",
+    line: "Golden cliffs, hidden coves, the sound of the sea.",
+  },
+};
+
+function RegionStep({ value, onPick }: { value: string | null; onPick: (v: string) => void }) {
+  return (
+    <div>
+      <StepHeader
+        title={<>Where does your story <span className="italic text-[color:var(--teal)]">begin?</span></> as unknown as string}
+        sub="Choose the place that already lives in your imagination."
+      />
+      <div className="mt-5 grid grid-cols-2 gap-2.5">
+        {regionOpts.map((r) => {
+          const meta = REGION_META[r.id];
+          return (
+            <MomentCard
+              key={r.id}
+              image={meta.image}
+              name={r.name}
+              line={meta.line}
+              selected={value === r.id}
+              onClick={() => onPick(r.id)}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+const GROUP_META: Record<string, { image: string; line: string }> = {
+  couple: {
+    image: "https://images.unsplash.com/photo-1518621736915-f3b1c41bfd00?w=800&q=80&auto=format&fit=crop",
+    line: "Slow mornings, long looks, a bottle to share.",
+  },
+  family: {
+    image: "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?w=800&q=80&auto=format&fit=crop",
+    line: "Stories the children will keep for life.",
+  },
+  friends: {
+    image: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&q=80&auto=format&fit=crop",
+    line: "The trip everyone keeps talking about.",
+  },
+  solo: {
+    image: "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&q=80&auto=format&fit=crop",
+    line: "Just you, a guide who listens, a country to discover.",
+  },
+  "private-group": {
+    image: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=800&q=80&auto=format&fit=crop",
+    line: "A private celebration — your people, your pace.",
+  },
+};
+
+function GroupStep({ value, onPick }: { value: string | null; onPick: (v: string) => void }) {
+  return (
+    <div>
+      <StepHeader
+        title={<>Who's <span className="italic text-[color:var(--teal)]">with you?</span></> as unknown as string}
+        sub="Every story is shaped by the people in it."
+      />
+      <div className="mt-5 grid grid-cols-2 gap-2.5">
+        {groupTypes.map((g) => {
+          const meta = GROUP_META[g.id];
+          return (
+            <MomentCard
+              key={g.id}
+              image={meta.image}
+              name={g.name}
+              line={meta.line}
+              selected={value === g.id}
+              onClick={() => onPick(g.id)}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function GuestsStep({ value, onPick }: { value: string | null; onPick: (v: string) => void }) {
+  return (
+    <div>
+      <StepHeader
+        title={<>How <span className="italic text-[color:var(--teal)]">intimate</span> should it feel?</> as unknown as string}
+        sub="A whispered table for two, or a long banquet under the stars."
+      />
+      <div className="mt-5 grid grid-cols-2 gap-2.5">
+        {guestSizes.map((g) => {
+          const sel = value === g.id;
+          return (
+            <button
+              key={g.id}
+              onClick={() => onPick(g.id)}
+              aria-pressed={sel}
+              className={`p-5 rounded-sm border text-left transition-all ${
+                sel
+                  ? "border-[color:var(--teal)] bg-[color:var(--teal)]/5"
+                  : "border-[color:var(--border)] hover:border-[color:var(--teal)]/40"
+              }`}
+            >
+              <span className="serif text-3xl text-[color:var(--charcoal)] block leading-none">{g.label}</span>
+              <span className="mt-2 block text-[11px] uppercase tracking-[0.2em] text-[color:var(--charcoal-soft)]">
+                {g.sub}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+const DURATION_LINE: Record<string, string> = {
+  halfday: "An afternoon that feels like a small holiday.",
+  fullday: "Sunrise hopes, sunset memories — one perfect day.",
+  twoday: "Long enough to slow down, short enough to crave more.",
+  threeday: "A real journey — chapters, not snapshots.",
+  week: "Time to belong here. Time to be changed by it.",
+};
+
+function DurationStep({ value, onPick }: { value: string | null; onPick: (v: string) => void }) {
+  return (
+    <div>
+      <StepHeader
+        title={<>How long is <span className="italic text-[color:var(--teal)]">your chapter?</span></> as unknown as string}
+        sub="Time is the most beautiful ingredient. Choose generously."
+      />
+      <div className="mt-5 space-y-2.5">
+        {durationOpts.map((d) => {
+          const sel = value === d.id;
+          return (
+            <button
+              key={d.id}
+              onClick={() => onPick(d.id)}
+              aria-pressed={sel}
+              className={`w-full p-4 rounded-sm border text-left transition-all ${
+                sel
+                  ? "border-[color:var(--teal)] bg-[color:var(--teal)]/5"
+                  : "border-[color:var(--border)] hover:border-[color:var(--teal)]/40"
+              }`}
+            >
+              <div className="flex items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <div className="flex items-baseline gap-2 flex-wrap">
+                    <span className="serif text-[18px] text-[color:var(--charcoal)]">{d.label}</span>
+                    <span className="text-[10px] uppercase tracking-[0.2em] text-[color:var(--charcoal-soft)]">
+                      {d.sub}
+                    </span>
+                  </div>
+                  <p className="mt-1 text-[12px] text-[color:var(--charcoal-soft)] italic">{DURATION_LINE[d.id]}</p>
+                </div>
+                {sel && <Check size={16} className="text-[color:var(--teal)] shrink-0" />}
+              </div>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+const STYLE_META: Record<string, { image: string; line: string }> = {
+  wine: {
+    image: "https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?w=800&q=80&auto=format&fit=crop",
+    line: "Family wineries, cool cellars, a glass that tells a story.",
+  },
+  gastronomy: {
+    image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80&auto=format&fit=crop",
+    line: "Markets at dawn, long lunches, the chef who knows your name.",
+  },
+  nature: {
+    image: "https://images.unsplash.com/photo-1502780402662-acc01917cf6f?w=800&q=80&auto=format&fit=crop",
+    line: "Quiet trails, wild viewpoints, the smell of pine and salt.",
+  },
+  heritage: {
+    image: "https://images.unsplash.com/photo-1555881400-74d7acaacd8b?w=800&q=80&auto=format&fit=crop",
+    line: "Hand-painted tiles, old chapels, palaces that whisper.",
+  },
+  coastal: {
+    image: "https://images.unsplash.com/photo-1518509562904-e7ef99cddc85?w=800&q=80&auto=format&fit=crop",
+    line: "Hidden coves, fishing boats, the sea writing your day.",
+  },
+};
+
+function StyleStep({ values, onToggle }: { values: string[]; onToggle: (id: string) => void }) {
+  return (
+    <div>
+      <StepHeader
+        title={<>What makes you <span className="italic text-[color:var(--teal)]">come alive?</span></> as unknown as string}
+        sub="Pick as many as you like — your story softly adapts to each."
+      />
+      <div className="mt-5 grid grid-cols-2 gap-2.5">
+        {styleOpts.map((s) => {
+          const meta = STYLE_META[s.id];
+          return (
+            <MomentCard
+              key={s.id}
+              image={meta.image}
+              name={s.name}
+              line={meta.line}
+              selected={values.includes(s.id)}
+              onClick={() => onToggle(s.id)}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+const HIGHLIGHT_IMG: Record<string, string> = {
+  livramento: "https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=600&q=80&auto=format&fit=crop",
+  boat: "https://images.unsplash.com/photo-1518509562904-e7ef99cddc85?w=600&q=80&auto=format&fit=crop",
+  jeep: "https://images.unsplash.com/photo-1533873984035-25970ab07461?w=600&q=80&auto=format&fit=crop",
+  tiles: "https://images.unsplash.com/photo-1555881400-74d7acaacd8b?w=600&q=80&auto=format&fit=crop",
+  cheese: "https://images.unsplash.com/photo-1486297678162-eb2a19b0a32d?w=600&q=80&auto=format&fit=crop",
+  tasting: "https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?w=600&q=80&auto=format&fit=crop",
+  portinho: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80&auto=format&fit=crop",
+  sesimbra: "https://images.unsplash.com/photo-1530541930197-ff16ac917b0e?w=600&q=80&auto=format&fit=crop",
+  viewpoint: "https://images.unsplash.com/photo-1502780402662-acc01917cf6f?w=600&q=80&auto=format&fit=crop",
+  dinosaur: "https://images.unsplash.com/photo-1519834022362-8b3e996d2c3a?w=600&q=80&auto=format&fit=crop",
+  ginjinha: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=600&q=80&auto=format&fit=crop",
+};
+
+function HighlightsStep({ values, onToggle }: { values: string[]; onToggle: (id: string) => void }) {
+  return (
+    <div>
+      <StepHeader
+        title={<>Add the <span className="italic text-[color:var(--teal)]">small magic</span>.</> as unknown as string}
+        sub="The little moments — a tasting, a viewpoint, a workshop — that make a day truly yours."
+      />
+      <div className="mt-5 grid grid-cols-2 sm:grid-cols-3 gap-2">
+        {highlightOpts.map((h) => (
+          <MomentCard
+            key={h.id}
+            image={HIGHLIGHT_IMG[h.id] ?? STYLE_META.heritage.image}
+            name={h.short}
+            selected={values.includes(h.id)}
+            onClick={() => onToggle(h.id)}
+            aspect="aspect-square"
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+const PACE_IMG: Record<string, string> = {
+  slow: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=900&q=80&auto=format&fit=crop",
+  balanced: "https://images.unsplash.com/photo-1502780402662-acc01917cf6f?w=900&q=80&auto=format&fit=crop",
+  rich: "https://images.unsplash.com/photo-1518509562904-e7ef99cddc85?w=900&q=80&auto=format&fit=crop",
+};
+
+function PaceStep({ value, onPick }: { value: string | null; onPick: (v: string) => void }) {
+  return (
+    <div>
+      <StepHeader
+        title={<>What <span className="italic text-[color:var(--teal)]">rhythm</span> do you want?</> as unknown as string}
+        sub="There are no wrong answers — only the pace that feels like you."
+      />
+      <div className="mt-5 space-y-2.5">
+        {paceOpts.map((p) => (
+          <MomentCard
+            key={p.id}
+            image={PACE_IMG[p.id]}
+            name={p.name}
+            line={p.line}
+            selected={value === p.id}
+            onClick={() => onPick(p.id)}
+            aspect="aspect-[16/7]"
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+const ENH_META: Record<string, { image: string; line: string }> = {
+  photographer: {
+    image: "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=700&q=80&auto=format&fit=crop",
+    line: "Quiet, beautiful, never posed — memories that stay.",
+  },
+  chef: {
+    image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=700&q=80&auto=format&fit=crop",
+    line: "A private table, the chef cooking just for you.",
+  },
+  music: {
+    image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=700&q=80&auto=format&fit=crop",
+    line: "Fado at sunset. Guitar over dinner. Goosebumps.",
+  },
+  florals: {
+    image: "https://images.unsplash.com/photo-1487530811176-3780de880c2d?w=700&q=80&auto=format&fit=crop",
+    line: "Hand-tied florals to mark the moment.",
+  },
+  transfer: {
+    image: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=700&q=80&auto=format&fit=crop",
+    line: "A premium car, a discreet driver, doors that just open.",
+  },
+};
+
+function EnhancementsStep({ values, onToggle }: { values: string[]; onToggle: (id: string) => void }) {
+  return (
+    <div>
+      <StepHeader
+        title={<>Add a little <span className="italic text-[color:var(--teal)]">magic.</span></> as unknown as string}
+        sub="Optional touches that turn a beautiful day into an unforgettable one."
+      />
+      <div className="mt-5 grid grid-cols-2 gap-2.5">
+        {enhancementOpts.map((e) => {
+          const meta = ENH_META[e.id];
+          return (
+            <MomentCard
+              key={e.id}
+              image={meta.image}
+              name={e.name}
+              line={meta.line}
+              selected={values.includes(e.id)}
+              onClick={() => onToggle(e.id)}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+const TIER_IMG: Record<string, string> = {
+  signature: "https://images.unsplash.com/photo-1502780402662-acc01917cf6f?w=1000&q=80&auto=format&fit=crop",
+  atelier: "https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?w=1000&q=80&auto=format&fit=crop",
+  couture: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1000&q=80&auto=format&fit=crop",
+};
+
+function TierStep({ value, onPick }: { value: string | null; onPick: (v: string) => void }) {
+  return (
+    <div>
+      <StepHeader
+        title={<>Choose the <span className="italic text-[color:var(--teal)]">level of care.</span></> as unknown as string}
+        sub="From signature beauty to fully bespoke — your story, dressed your way."
+      />
+      <div className="mt-5 space-y-3">
+        {tierOpts.map((t) => {
+          const sel = value === t.id;
+          return (
+            <button
+              key={t.id}
+              onClick={() => onPick(t.id)}
+              aria-pressed={sel}
+              className={`group relative w-full overflow-hidden rounded-sm text-left transition-all ${
+                sel
+                  ? "ring-2 ring-[color:var(--teal)] ring-offset-2 ring-offset-[color:var(--ivory)]"
+                  : "ring-1 ring-[color:var(--border)] hover:ring-[color:var(--teal)]/50"
+              }`}
+            >
+              <div className="relative aspect-[16/7]">
+                <div
+                  className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-[1.04]"
+                  style={{ backgroundImage: `url(${TIER_IMG[t.id]})` }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/40 to-black/20" />
+                <div className="relative h-full flex flex-col justify-between p-4 md:p-5">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <t.icon size={14} className="text-[color:var(--gold-soft)]" />
+                      <span className="text-[10px] uppercase tracking-[0.28em] text-[color:var(--gold-soft)]">
+                        {t.name}
+                      </span>
+                    </div>
+                    {sel && (
+                      <div className="h-7 w-7 rounded-full bg-[color:var(--teal)] grid place-items-center animate-scale-in">
+                        <Check size={14} className="text-[color:var(--ivory)]" />
+                      </div>
+                    )}
+                  </div>
+                  <div>
+                    <p className="serif text-[18px] md:text-[20px] text-white leading-tight italic">{t.line}</p>
+                    <p className="mt-1.5 text-[11px] uppercase tracking-[0.22em] text-white/80">
+                      from €{t.priceFrom.toLocaleString()}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 function WelcomeStep({ onStart }: { onStart: () => void }) {
   return (
     <div className="text-center py-4">
