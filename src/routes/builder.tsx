@@ -31,6 +31,8 @@ import {
   Clock,
   Save,
   Award,
+  Share2,
+  Check as CheckIcon,
 } from "lucide-react";
 
 const builderSearchSchema = z.object({
