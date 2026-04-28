@@ -1136,14 +1136,15 @@ function HomePage() {
               <li key={o.eyebrow} className="reveal-stagger h-full">
                 <Link
                   to={o.to}
-                  className="group relative flex flex-col h-full min-h-[20rem] p-7 md:p-8 bg-[color:var(--charcoal-deep)] border border-[color:var(--border)] hover:border-[color:var(--gold)]/40 hover:-translate-y-1 hover:shadow-[0_24px_55px_-22px_rgba(41,91,97,0.32)] transition-all duration-500 overflow-hidden"
+                  className="editorial-card group relative flex flex-col h-full min-h-[20rem] p-7 md:p-8 bg-[color:var(--charcoal-deep)] border border-[color:var(--border)] hover:border-[color:var(--gold)]/45 overflow-hidden"
                 >
                   <img
                     src={o.bg}
                     alt=""
                     aria-hidden="true"
                     loading="lazy"
-                    className="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-65 scale-[1.02] group-hover:scale-[1.07] transition-all duration-[1400ms] ease-out"
+                    data-card-image
+                    className="absolute inset-0 w-full h-full object-cover opacity-50"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/95 via-[color:var(--charcoal-deep)]/65 to-[color:var(--charcoal-deep)]/35" />
                   <span className="relative z-[1] text-[10.5px] uppercase tracking-[0.3em] text-[color:var(--gold-soft)]">
