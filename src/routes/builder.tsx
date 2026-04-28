@@ -411,7 +411,9 @@ function BuilderPage() {
                   active={!!previewHighlight}
                   onClear={() => setPreviewHighlight(null)}
                 >
-                  <RealLeafletMap region={s.region} />
+                  <Suspense fallback={<div className="aspect-[4/5] bg-[color:var(--card)] border border-[color:var(--border)] grid place-items-center text-xs text-[color:var(--charcoal-soft)] uppercase tracking-[0.2em]">Loading map…</div>}>
+                    <RealLeafletMap region={s.region} />
+                  </Suspense>
                 </SwipeToClearPreview>
                 <LiveSummary
                   s={s}
