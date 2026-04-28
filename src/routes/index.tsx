@@ -910,6 +910,13 @@ function HomePage() {
 
           <RouteValidationStrip />
         </div>
+        <DecisionStepper
+          sectionId="decision-flow"
+          steps={startPaths.map((p) => ({
+            id: `decision-card-${p.slug}`,
+            label: p.stepLabel,
+          }))}
+        />
       </section>
 
       {/* 4 — BUILDER (CORE PRODUCT)
