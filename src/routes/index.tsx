@@ -1335,9 +1335,8 @@ function HomePage() {
                 Write your story. <br />
                 <span className="italic text-[color:var(--teal)]">Confirm it instantly.</span>
               </h2>
-              <p className="mt-7 text-[17px] text-[color:var(--charcoal-soft)] leading-[1.75] max-w-lg">
-                Choose a signature, tailor one, or design from scratch — every path confirms
-                instantly.
+              <p className="mt-7 text-[12.5px] md:text-[13px] uppercase tracking-[0.28em] text-[color:var(--charcoal)] font-medium">
+                Instant confirmation. No forms. No waiting.
               </p>
               <div className="mt-10 flex flex-wrap gap-4">
                 <Link
@@ -1363,18 +1362,6 @@ function HomePage() {
                   A local designer can shape it with you.
                 </Link>
               </p>
-
-              <div className="mt-11 flex flex-wrap gap-x-8 gap-y-3 text-[12px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)]">
-                <span className="inline-flex items-center gap-2">
-                  <Zap size={13} className="text-[color:var(--gold)]" /> Instant confirmation
-                </span>
-                <span className="inline-flex items-center gap-2">
-                  <Lock size={13} className="text-[color:var(--gold)]" /> Always private
-                </span>
-                <span className="inline-flex items-center gap-2">
-                  <Compass size={13} className="text-[color:var(--gold)]" /> Local knowledge
-                </span>
-              </div>
             </div>
           </div>
         </div>
