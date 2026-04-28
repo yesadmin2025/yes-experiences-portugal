@@ -54,6 +54,36 @@ function AdminImportPage() {
   } | null>(null);
 
   const runImport = useServerFn(runTourImport);
+  const callListRules = useServerFn(listMappingRules);
+  const callSaveRules = useServerFn(saveMappingRules);
+  const callDeleteRules = useServerFn(deleteMappingRules);
+
+  type RuleRow = {
+    id: string;
+    name: string;
+    notes: string | null;
+    rules: unknown;
+    is_active: boolean;
+    updated_at: string;
+  };
+  const [rulesList, setRulesList] = useState<RuleRow[]>([]);
+  const [editingRuleId, setEditingRuleId] = useState<string | "new" | null>(null);
+  const [ruleDraft, setRuleDraft] = useState<{
+    name: string;
+    notes: string;
+    json: string;
+    isActive: boolean;
+  }>({ name: "", notes: "", json: JSON.stringify(DEFAULT_MAPPING_RULES, null, 2), isActive: false });
+  const [savingRules, setSavingRules] = useState(false);
+
+  const refreshRules = async () => {
+    try {
+      const r = await callListRules();
+      setRulesList(r.rules as RuleRow[]);
+    } catch (e) {
+      // silent — admin gate handles auth errors below
+    }
+  };
 
   useEffect(() => {
     let mounted = true;
