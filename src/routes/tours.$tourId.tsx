@@ -289,8 +289,13 @@ function Block({
 }
 
 function RelatedTours({ currentId }: { currentId: string }) {
-  const others = signatureTours.filter((t) => t.id !== currentId).slice(0, 3);
+  // Validate every related tour id against the live catalog before rendering.
+  // Prevents broken links if the catalog is edited while a related list is stale.
+  const others = signatureTours
+    .filter((t) => t.id !== currentId && isValidTourId(t.id))
+    .slice(0, 3);
   const { resolveImg } = useImportedTourImages();
+  if (others.length === 0) return null;
   return (
     <section className="py-16">
       <div className="container-x max-w-5xl">
