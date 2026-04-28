@@ -1000,7 +1000,65 @@ function HomePage() {
               className="btn-solid btn-solid--outline"
             >
               Explore all signatures <ArrowRight size={14} />
-            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* 5a — TAILOR A SIGNATURE (explanation)
+          Clarifies what tailoring actually means: small adjustments
+          INSIDE a chosen Signature, not full custom design (that's the
+          Studio). Visual: a real workshop scene + editorial copy. */}
+      <section
+        className="bg-[color:var(--ivory)] section-y-sm border-t border-[color:var(--border)]"
+        aria-labelledby="tailor-title"
+      >
+        <div className="container-x">
+          <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-center max-w-6xl mx-auto">
+            <div className="reveal lg:col-span-7">
+              <span className="eyebrow">Tailor a Signature</span>
+              <h2
+                id="tailor-title"
+                className="t-h2 mt-5"
+              >
+                Love the route, <span className="italic">your own rhythm.</span>
+              </h2>
+              <p className="mt-6 text-[16px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.75] max-w-xl font-light">
+                Love the route but want a different rhythm? Adjust selected details while keeping the journey intact.
+              </p>
+              <ul className="mt-7 space-y-2.5 list-none p-0 text-[14.5px] text-[color:var(--charcoal)] font-light">
+                {[
+                  "Swap a tasting for a long lunch",
+                  "Add a sunset stop, slow down a morning",
+                  "Same route, your pace",
+                ].map((item) => (
+                  <li key={item} className="flex items-baseline gap-3">
+                    <span className="text-[color:var(--gold)] text-[10px] tracking-[0.3em] mt-0.5 shrink-0">✦</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-6 text-[13.5px] italic font-light text-[color:var(--charcoal-soft)] leading-[1.7] max-w-md">
+                Tailoring stays inside the chosen tour. To design something entirely your own, open the Studio.
+              </p>
+              <Link
+                to="/experiences"
+                className="btn-solid btn-solid--outline mt-9"
+              >
+                Tailor a Signature <ArrowRight size={14} />
+              </Link>
+            </div>
+            <div className="reveal lg:col-span-5">
+              <div className="editorial-card relative overflow-hidden border border-[color:var(--border)] aspect-[4/5]">
+                <img
+                  src={imgAzeitaoWorkshop}
+                  alt="A small Azeitão workshop — the kind of stop you'd shape to your rhythm"
+                  loading="lazy"
+                  data-card-image
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal)]/60 via-transparent to-transparent" />
+              </div>
+            </div>
           </div>
         </div>
       </section>
