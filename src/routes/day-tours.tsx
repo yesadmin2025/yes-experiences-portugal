@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
-import { Clock, MapPin, Pencil, ExternalLink } from "lucide-react";
+import { ArrowRight, Clock, MapPin } from "lucide-react";
 import { signatureTours } from "@/data/signatureTours";
 import { useImportedTourImages } from "@/hooks/use-imported-tour-images";
 import { ImageQualityToggle } from "@/components/ImageQualityToggle";
@@ -45,7 +45,13 @@ function DayToursPage() {
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {dayTours.map((t) => (
-            <article key={t.id} className="group flex flex-col">
+            <Link
+              key={t.id}
+              to="/tours/$tourId"
+              params={{ tourId: t.id }}
+              className="group flex flex-col text-left"
+              aria-label={`Open ${t.title}`}
+            >
               <div className="lift-layer-sm relative aspect-[4/5] overflow-hidden mb-5 shadow-[0_10px_30px_-20px_rgba(46,46,46,0.25)] group-hover:shadow-[0_28px_55px_-22px_rgba(41,91,97,0.3)]">
                 <img
                   {...resolveImg(t, "lg")}
@@ -62,7 +68,9 @@ function DayToursPage() {
               <p className="text-xs uppercase tracking-[0.3em] text-[color:var(--gold)]">
                 {t.region}
               </p>
-              <h3 className="serif text-2xl mt-2">{t.title}</h3>
+              <h3 className="serif text-2xl mt-2 group-hover:text-[color:var(--teal)] transition-colors">
+                {t.title}
+              </h3>
 
               <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs uppercase tracking-[0.2em] text-[color:var(--charcoal-soft)]">
                 <span className="flex items-center gap-1.5">
@@ -78,24 +86,10 @@ function DayToursPage() {
                 {t.blurb}
               </p>
 
-              <div className="mt-5 flex flex-col sm:flex-row gap-2.5">
-                <a
-                  href={t.bookingUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] px-5 py-3 text-sm tracking-wide transition-all"
-                >
-                  Book this tour <ExternalLink size={14} />
-                </a>
-                <Link
-                  to="/builder"
-                  search={{ tour: t.id }}
-                  className="inline-flex items-center justify-center gap-2 border border-[color:var(--border)] hover:border-[color:var(--gold)] text-[color:var(--charcoal)] px-5 py-3 text-sm tracking-wide transition-all"
-                >
-                  <Pencil size={14} /> Tailor in studio
-                </Link>
-              </div>
-            </article>
+              <span className="mt-5 inline-flex items-center gap-2 text-sm tracking-wide text-[color:var(--teal)] group-hover:gap-3 transition-all">
+                View tour & customise <ArrowRight size={14} />
+              </span>
+            </Link>
           ))}
           </div>
         </div>
