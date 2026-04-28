@@ -246,10 +246,11 @@ function ChapterStrip({ tour }: { tour: SignatureTour }) {
             >
               <div className="relative aspect-[5/3] overflow-hidden">
                 <img
-                  src={STOP_THEME_IMG[s.imageTheme]}
+                  src={stopImage(s)}
                   alt={s.label}
                   loading="lazy"
                   decoding="async"
+                  style={{ objectPosition: stopFocal(s) }}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <span className="absolute top-3 left-3 w-7 h-7 flex items-center justify-center text-[11px] bg-[color:var(--ivory)]/95 border border-[color:var(--gold)] text-[color:var(--gold)]">
