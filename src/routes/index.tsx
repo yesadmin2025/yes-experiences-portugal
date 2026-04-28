@@ -792,14 +792,34 @@ function HomePage() {
                         className="absolute inset-0 w-full h-full object-cover opacity-95 transition-transform duration-[450ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
                       />
                     )}
-                    {/* Cinematic readability gradient — calibrated to keep
-                        text consistently legible across all four lifestyle
-                        photos (including the brighter golden-hour scenes). */}
+                    {/* Per-image readability gradient. Each photo was sampled
+                        for top/mid/bottom luminance and the stops tuned so the
+                        text band (bottom 35%) hits the same legibility target
+                        (~WCAG AA on white serif). Brighter scenes get stronger
+                        bottom scrims; already-dark scenes get lighter overlays
+                        so the imagery breathes. */}
                     <div
                       aria-hidden="true"
-                      className="absolute inset-0 bg-gradient-to-t from-black/90 from-[18%] via-black/55 via-[55%] to-black/15"
+                      className={
+                        "absolute inset-0 " +
+                        (p.slug === "signature"
+                          // Bright top (sky) + bright lower band (table) →
+                          // strong bottom scrim AND a top scrim for the eyebrow.
+                          ? "bg-[linear-gradient(to_top,rgba(0,0,0,0.94)_0%,rgba(0,0,0,0.86)_22%,rgba(0,0,0,0.55)_55%,rgba(0,0,0,0.35)_80%,rgba(0,0,0,0.45)_100%)]"
+                          : p.slug === "tailor"
+                          // Already very dark throughout → light, even overlay
+                          // that only lifts contrast in the text band.
+                          ? "bg-[linear-gradient(to_top,rgba(0,0,0,0.72)_0%,rgba(0,0,0,0.55)_28%,rgba(0,0,0,0.30)_60%,rgba(0,0,0,0.18)_100%)]"
+                          : p.slug === "studio"
+                          // Mid-bright top, darker bottom → moderate bottom
+                          // scrim with a soft top wash for the icon/eyebrow.
+                          ? "bg-[linear-gradient(to_top,rgba(0,0,0,0.88)_0%,rgba(0,0,0,0.72)_25%,rgba(0,0,0,0.42)_58%,rgba(0,0,0,0.22)_85%,rgba(0,0,0,0.32)_100%)]"
+                          // moment — very bright top (sky), dark bottom →
+                          // strong top scrim, lighter bottom (image already dark).
+                          : "bg-[linear-gradient(to_top,rgba(0,0,0,0.78)_0%,rgba(0,0,0,0.62)_22%,rgba(0,0,0,0.42)_55%,rgba(0,0,0,0.40)_80%,rgba(0,0,0,0.55)_100%)]")
+                      }
                     />
-                    {/* Subtle film grain via radial vignette for depth. */}
+                    {/* Radial vignette — kept uniform for depth consistency. */}
                     <div
                       aria-hidden="true"
                       className="absolute inset-0 opacity-45 mix-blend-multiply [background:radial-gradient(120%_80%_at_50%_0%,transparent_50%,rgba(0,0,0,0.6)_100%)]"
