@@ -407,7 +407,7 @@ function BuilderPage() {
                   active={!!previewHighlight}
                   onClear={() => setPreviewHighlight(null)}
                 >
-                  <PremiumMap region={s.region} highlights={s.highlights} days={days} isMultiDay={isMultiDay} previewHighlight={previewHighlight} />
+                  <RealLeafletMap region={s.region} />
                 </SwipeToClearPreview>
                 <LiveSummary
                   s={s}
