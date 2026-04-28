@@ -1,4 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
+import { setResponseHeaders } from "@tanstack/react-start/server";
 import { promises as fs } from "fs";
 
 export type CrawlerErrorInfo = {
