@@ -23,50 +23,122 @@ exports[`Typography regression — section headlines (token sweep) > [home] all 
   {
     "cls": "t-h2 mt-5",
     "tag": "h2",
+    "trace": {
+      "file": "src/routes/index.tsx",
+      "index": 0,
+      "line": 783,
+      "selector": "h2.t-h2",
+    },
   },
   {
     "cls": "t-h2 mt-5",
     "tag": "h2",
+    "trace": {
+      "file": "src/routes/index.tsx",
+      "index": 1,
+      "line": 990,
+      "selector": "h2.t-h2",
+    },
   },
   {
     "cls": "t-lead mt-5",
     "tag": "p",
+    "trace": {
+      "file": "src/routes/index.tsx",
+      "index": 0,
+      "line": 996,
+      "selector": "p.t-lead",
+    },
   },
   {
     "cls": "t-h2 mt-5",
     "tag": "h2",
+    "trace": {
+      "file": "src/routes/index.tsx",
+      "index": 2,
+      "line": 1031,
+      "selector": "h2.t-h2",
+    },
   },
   {
     "cls": "t-h2 mt-5",
     "tag": "h2",
+    "trace": {
+      "file": "src/routes/index.tsx",
+      "index": 3,
+      "line": 1212,
+      "selector": "h2.t-h2",
+    },
   },
   {
     "cls": "t-lead mt-5",
     "tag": "p",
+    "trace": {
+      "file": "src/routes/index.tsx",
+      "index": 1,
+      "line": 1218,
+      "selector": "p.t-lead",
+    },
   },
   {
     "cls": "t-h2 mt-5",
     "tag": "h2",
+    "trace": {
+      "file": "src/routes/index.tsx",
+      "index": 4,
+      "line": 1329,
+      "selector": "h2.t-h2",
+    },
   },
   {
     "cls": "t-lead mt-5 max-w-xl mx-auto",
     "tag": "p",
+    "trace": {
+      "file": "src/routes/index.tsx",
+      "index": 2,
+      "line": 1332,
+      "selector": "p.t-lead",
+    },
   },
   {
     "cls": "t-h3 text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]",
     "tag": "h3",
+    "trace": {
+      "file": "src/routes/index.tsx",
+      "index": 0,
+      "line": 1356,
+      "selector": "h3.t-h3",
+    },
   },
   {
     "cls": "t-h2 mt-6",
     "tag": "h2",
+    "trace": {
+      "file": "src/routes/index.tsx",
+      "index": 5,
+      "line": 1489,
+      "selector": "h2.t-h2",
+    },
   },
   {
     "cls": "t-h2 mt-5",
     "tag": "h2",
+    "trace": {
+      "file": "src/routes/index.tsx",
+      "index": 6,
+      "line": 1624,
+      "selector": "h2.t-h2",
+    },
   },
   {
     "cls": "t-lead mt-5",
     "tag": "p",
+    "trace": {
+      "file": "src/routes/index.tsx",
+      "index": 3,
+      "line": 1627,
+      "selector": "p.t-lead",
+    },
   },
 ]
 `;
@@ -76,18 +148,42 @@ exports[`Typography regression — section headlines (token sweep) > [multi-day]
   {
     "cls": "t-h2 mt-4 text-[color:var(--charcoal)]",
     "tag": "h2",
+    "trace": {
+      "file": "src/routes/multi-day.tsx",
+      "index": 0,
+      "line": 228,
+      "selector": "h2.t-h2",
+    },
   },
   {
     "cls": "t-h2 mt-4 text-[color:var(--charcoal)]",
     "tag": "h2",
+    "trace": {
+      "file": "src/routes/multi-day.tsx",
+      "index": 1,
+      "line": 264,
+      "selector": "h2.t-h2",
+    },
   },
   {
     "cls": "t-h2 mt-4 text-white",
     "tag": "h2",
+    "trace": {
+      "file": "src/routes/multi-day.tsx",
+      "index": 2,
+      "line": 315,
+      "selector": "h2.t-h2",
+    },
   },
   {
     "cls": "t-h2 mt-4 text-[color:var(--charcoal)]",
     "tag": "h2",
+    "trace": {
+      "file": "src/routes/multi-day.tsx",
+      "index": 3,
+      "line": 333,
+      "selector": "h2.t-h2",
+    },
   },
 ]
 `;
@@ -97,14 +193,32 @@ exports[`Typography regression — section headlines (token sweep) > [proposals]
   {
     "cls": "t-h2 mt-4 text-[color:var(--charcoal)]",
     "tag": "h2",
+    "trace": {
+      "file": "src/routes/proposals.tsx",
+      "index": 0,
+      "line": 166,
+      "selector": "h2.t-h2",
+    },
   },
   {
     "cls": "t-h2 mt-4 text-[color:var(--charcoal)]",
     "tag": "h2",
+    "trace": {
+      "file": "src/routes/proposals.tsx",
+      "index": 1,
+      "line": 203,
+      "selector": "h2.t-h2",
+    },
   },
   {
     "cls": "t-h2 mt-4 text-white",
     "tag": "h2",
+    "trace": {
+      "file": "src/routes/proposals.tsx",
+      "index": 2,
+      "line": 256,
+      "selector": "h2.t-h2",
+    },
   },
 ]
 `;
