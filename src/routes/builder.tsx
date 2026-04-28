@@ -1290,50 +1290,60 @@ function TimelineView({ s }: { s: BuilderState }) {
             </p>
           )}
 
-          <ol className="mt-6 space-y-5">
-            {chapters.map((c, i) => (
-              <li key={i} className="flex gap-4 animate-fade-in">
-                {/* Rail */}
-                <div className="flex flex-col items-center">
-                  <div className="relative h-10 w-10 shrink-0 rounded-full bg-[color:var(--teal)]/10 border border-[color:var(--teal)]/30 grid place-items-center">
-                    <c.icon size={15} className="text-[color:var(--teal)]" />
-                  </div>
-                  {i < chapters.length - 1 && (
-                    <div className="w-px flex-1 bg-gradient-to-b from-[color:var(--teal)]/30 to-[color:var(--border)] mt-1" />
-                  )}
-                </div>
-
-                {/* Content */}
-                <div className="flex-1 pb-2 min-w-0">
-                  <div className="flex items-baseline gap-2 flex-wrap">
-                    <span className="text-[10px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
-                      Chapter {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <span className="text-[10px] uppercase tracking-[0.18em] text-[color:var(--charcoal-soft)]">
-                      · {c.when}
-                    </span>
-                  </div>
-                  <p className="serif text-[17px] md:text-[18px] text-[color:var(--charcoal)] mt-1 leading-snug">
-                    {c.label}
-                  </p>
-                  <p className="text-[13px] text-[color:var(--charcoal-soft)] leading-relaxed mt-1.5">
-                    {c.line}
-                  </p>
-                  {c.tags && c.tags.length > 0 && (
-                    <div className="mt-2 flex flex-wrap gap-1.5">
-                      {c.tags.map((t) => (
-                        <span
-                          key={t}
-                          className="px-2 py-0.5 text-[10px] uppercase tracking-[0.16em] bg-[color:var(--sand)] text-[color:var(--charcoal-soft)] rounded-full"
-                        >
-                          {t}
-                        </span>
-                      ))}
+          <ol className="mt-6 space-y-1.5">
+            {chapters.map((c, i) => {
+              const prev = chapters[i - 1];
+              const showSlotHeader = !prev || prev.slot !== c.slot;
+              const isLast = i === chapters.length - 1;
+              return (
+                <li key={i} className="animate-fade-in">
+                  {showSlotHeader && (
+                    <div className="flex items-center gap-2 mt-4 mb-2 first:mt-0">
+                      <span className="text-[10px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
+                        {c.when}
+                      </span>
+                      <span className="flex-1 h-px bg-[color:var(--border)]" />
                     </div>
                   )}
-                </div>
-              </li>
-            ))}
+                  <div className="flex gap-4">
+                    {/* Rail */}
+                    <div className="flex flex-col items-center">
+                      <div className="relative h-10 w-10 shrink-0 rounded-full bg-[color:var(--teal)]/10 border border-[color:var(--teal)]/30 grid place-items-center">
+                        <c.icon size={15} className="text-[color:var(--teal)]" />
+                      </div>
+                      {!isLast && (
+                        <div className="w-px flex-1 bg-gradient-to-b from-[color:var(--teal)]/30 to-[color:var(--border)] mt-1 min-h-[24px]" />
+                      )}
+                    </div>
+
+                    {/* Content */}
+                    <div className="flex-1 pb-3 min-w-0">
+                      <span className="text-[10px] uppercase tracking-[0.28em] text-[color:var(--charcoal-soft)]">
+                        Chapter {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <p className="serif text-[17px] md:text-[18px] text-[color:var(--charcoal)] mt-1 leading-snug">
+                        {c.label}
+                      </p>
+                      <p className="text-[13px] text-[color:var(--charcoal-soft)] leading-relaxed mt-1.5">
+                        {c.line}
+                      </p>
+                      {c.tags && c.tags.length > 0 && (
+                        <div className="mt-2 flex flex-wrap gap-1.5">
+                          {c.tags.map((t) => (
+                            <span
+                              key={t}
+                              className="px-2 py-0.5 text-[10px] uppercase tracking-[0.16em] bg-[color:var(--sand)] text-[color:var(--charcoal-soft)] rounded-full"
+                            >
+                              {t}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </li>
+              );
+            })}
           </ol>
 
           <p className="mt-6 pt-4 border-t border-[color:var(--border)] text-[11px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)] text-center">
