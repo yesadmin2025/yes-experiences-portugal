@@ -17,8 +17,6 @@ import {
   Star,
   Compass,
   Sparkles,
-  PenLine,
-  Heart,
   Lock,
   Wand2,
   Zap,
