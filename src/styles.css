@@ -300,6 +300,7 @@
     padding-bottom: var(--section-y-sm);
   }
 
+  /* ─────────────────────────────────────────────────────────────
      HERO H1 — display rhythm tuned per breakpoint.
      Mobile: airier line-height for readability at small sizes.
      Tablet → desktop: tracking tightens and leading compresses
