@@ -33,6 +33,7 @@ import {
 
 const builderSearchSchema = z.object({
   tour: fallback(z.string().optional(), undefined),
+  journey: fallback(z.string().optional(), undefined), // multi-day journey style hint
   // Persisted builder state (all optional so empty URL = empty builder)
   n: fallback(z.string().optional(), undefined),         // name
   r: fallback(z.string().optional(), undefined),         // region
@@ -144,6 +145,67 @@ const tierOpts = [
   { id: "atelier", name: "Atelier", priceFrom: 3400, line: "Higher-touch — premium properties, deeper access.", icon: Gem },
   { id: "couture", name: "Couture", priceFrom: 6200, line: "Fully bespoke — anything is possible.", icon: Heart },
 ];
+
+/* ============================================================
+   Multi-day journey style seeds (from /multi-day cards)
+   ============================================================ */
+
+type JourneySeed = {
+  region?: string;
+  duration?: string;
+  styles?: string[];
+  highlights?: string[];
+  pace?: string;
+  groupType?: string;
+};
+
+const JOURNEY_SEEDS: Record<string, JourneySeed> = {
+  "wine-coast": {
+    region: "lisbon",
+    duration: "threeday",
+    styles: ["wine", "coastal", "gastronomy"],
+    highlights: ["tasting", "boat", "portinho"],
+    pace: "balanced",
+  },
+  hidden: {
+    region: "lisbon",
+    duration: "threeday",
+    styles: ["nature", "heritage"],
+    highlights: ["jeep", "viewpoint", "sesimbra"],
+    pace: "slow",
+  },
+  family: {
+    region: "lisbon",
+    duration: "threeday",
+    styles: ["coastal", "nature"],
+    highlights: ["boat", "sesimbra", "portinho"],
+    pace: "balanced",
+    groupType: "family",
+  },
+  romantic: {
+    region: "lisbon",
+    duration: "threeday",
+    styles: ["wine", "coastal", "gastronomy"],
+    highlights: ["tasting", "portinho", "viewpoint"],
+    pace: "slow",
+    groupType: "couple",
+  },
+  "culture-food": {
+    region: "alentejo",
+    duration: "threeday",
+    styles: ["heritage", "gastronomy"],
+    highlights: ["livramento", "tiles", "cheese"],
+    pace: "balanced",
+  },
+  corporate: {
+    region: "lisbon",
+    duration: "threeday",
+    styles: ["wine", "gastronomy", "coastal"],
+    highlights: ["tasting", "boat", "portinho"],
+    pace: "balanced",
+    groupType: "private-group",
+  },
+};
 
 /* ============================================================
    State
@@ -275,6 +337,27 @@ function BuilderPage() {
   // (view toggle removed — story, map and timeline are fused in <LiveCanvas/>)
   const [mobileTab, setMobileTab] = useState<"build" | "preview">("build");
   const hydratedTourRef = useRef<string | null>(null);
+  const hydratedJourneyRef = useRef<string | null>(null);
+
+  // Deep-link seed: /builder?journey=<style> — multi-day mode from style cards
+  useEffect(() => {
+    if (!search.journey || hydratedJourneyRef.current === search.journey) return;
+    const seed = JOURNEY_SEEDS[search.journey];
+    if (!seed) return;
+    hydratedJourneyRef.current = search.journey;
+    const hasPersisted = !!(search.r || search.st?.length || search.hl?.length || search.t);
+    if (hasPersisted) return;
+    setS((p) => ({
+      ...p,
+      region: seed.region ?? p.region,
+      duration: seed.duration ?? p.duration,
+      groupType: seed.groupType ?? p.groupType,
+      styles: seed.styles ?? p.styles,
+      highlights: seed.highlights ?? p.highlights,
+      pace: seed.pace ?? p.pace,
+    }));
+    setStepIdx(2);
+  }, [search.journey, search.r, search.st, search.hl, search.t]);
 
   // Deep-link seed: /builder?tour=<id> — only when no persisted state present
   useEffect(() => {
@@ -292,7 +375,7 @@ function BuilderPage() {
   useEffect(() => {
     const next = searchFromState(s, stepIdx);
     navigate({
-      search: (prev) => ({ ...prev, ...next, tour: prev.tour }),
+      search: (prev) => ({ ...prev, ...next, tour: prev.tour, journey: prev.journey }),
       replace: true,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
