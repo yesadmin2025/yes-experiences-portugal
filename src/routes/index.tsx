@@ -442,7 +442,7 @@ function HomePage() {
                 Mobile vertical rhythm: 40px from headline. */}
             <p
               data-hero-field="subheadline"
-              className="mt-10 md:mt-10 text-[18px] md:text-[22px] text-[color:var(--ivory)]/90 max-w-lg leading-[1.7] md:leading-[1.75] font-light text-left opacity-0 animate-[heroFade_1.4s_ease-out_0.95s_forwards]"
+              className="mt-8 md:mt-10 text-[17px] md:text-[22px] text-[color:var(--ivory)]/95 max-w-md md:max-w-lg leading-[1.6] md:leading-[1.75] font-light text-left opacity-0 animate-[heroFade_1.4s_ease-out_0.95s_forwards] [text-shadow:0_1px_8px_rgba(0,0,0,0.3)]"
             >
               {HERO_COPY.subheadline}
             </p>
