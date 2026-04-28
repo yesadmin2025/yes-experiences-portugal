@@ -28,7 +28,7 @@
 
 import fs from "node:fs";
 import path from "node:path";
-import { describe, it, expect, beforeAll } from "vitest";
+import { describe, it, expect, beforeAll, afterAll } from "vitest";
 
 const ROOT = path.resolve(__dirname, "../..");
 const read = (p: string) => fs.readFileSync(path.join(ROOT, p), "utf8");
@@ -74,6 +74,233 @@ beforeAll(async () => {
   // No-op for this static suite, but locks in the contract: any
   // future test that reads computed styles MUST run after settle.
   await settleLayout();
+});
+
+/* ── Diff artifact recorder ──────────────────────────────────────
+ * Every test records what it captured into this in-memory store.
+ * After the suite runs, afterAll writes:
+ *   test-output/typography/current.json  — full machine-readable dump
+ *   test-output/typography/previous.json — last run, for diffing
+ *   test-output/typography/diff.html     — side-by-side HTML of drift
+ *                                          (only written if drift exists)
+ *   test-output/typography/diff.json     — same drift as JSON
+ * Drift is grouped by category + key (page/role, page, selector) so
+ * it's obvious which token, headline class, or breakpoint changed.
+ * ──────────────────────────────────────────────────────────────── */
+
+type Captured = {
+  headlines: Record<string, string>;
+  sectionSweeps: Record<string, Array<{ tag: string; cls: string }>>;
+  tokenRules: Record<string, string>;
+};
+
+const captured: Captured = {
+  headlines: {},
+  sectionSweeps: {},
+  tokenRules: {},
+};
+
+const ARTIFACT_DIR = path.join(ROOT, "test-output", "typography");
+const CURRENT_PATH = path.join(ARTIFACT_DIR, "current.json");
+const PREVIOUS_PATH = path.join(ARTIFACT_DIR, "previous.json");
+const DIFF_HTML_PATH = path.join(ARTIFACT_DIR, "diff.html");
+const DIFF_JSON_PATH = path.join(ARTIFACT_DIR, "diff.json");
+
+function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+/** Inline word-level diff between two strings (very small, no deps). */
+function inlineDiff(prev: string, next: string): string {
+  if (prev === next) return `<span class="same">${escapeHtml(next)}</span>`;
+  const a = prev.split(/(\s+)/);
+  const b = next.split(/(\s+)/);
+  const aSet = new Set(a);
+  const bSet = new Set(b);
+  const left = a
+    .map((tok) =>
+      bSet.has(tok)
+        ? `<span class="same">${escapeHtml(tok)}</span>`
+        : `<span class="del">${escapeHtml(tok)}</span>`,
+    )
+    .join("");
+  const right = b
+    .map((tok) =>
+      aSet.has(tok)
+        ? `<span class="same">${escapeHtml(tok)}</span>`
+        : `<span class="add">${escapeHtml(tok)}</span>`,
+    )
+    .join("");
+  return `<div class="row"><div class="prev">${left}</div><div class="next">${right}</div></div>`;
+}
+
+/** Detect which @media breakpoint(s) drifted inside a token rule diff. */
+function affectedBreakpoints(prev: string, next: string): string[] {
+  const lineRe = /^(base|@media \([^)]+\)):/gm;
+  const lines = new Set<string>();
+  for (const block of [prev, next]) {
+    const ls = block.split("\n");
+    for (const l of ls) {
+      const m = l.match(/^(base|@media \([^)]+\)):\s*(.*)$/);
+      if (m) lines.add(m[1]);
+    }
+  }
+  // Find which line keys differ between prev and next
+  const drifted: string[] = [];
+  const prevMap = new Map<string, string>();
+  const nextMap = new Map<string, string>();
+  for (const l of prev.split("\n")) {
+    const m = l.match(/^(base|@media \([^)]+\)):\s*(.*)$/);
+    if (m) prevMap.set(m[1], m[2]);
+  }
+  for (const l of next.split("\n")) {
+    const m = l.match(/^(base|@media \([^)]+\)):\s*(.*)$/);
+    if (m) nextMap.set(m[1], m[2]);
+  }
+  for (const key of lines) {
+    if (prevMap.get(key) !== nextMap.get(key)) drifted.push(key);
+  }
+  return drifted;
+}
+
+type DriftEntry = {
+  category: "headline" | "sectionSweep" | "tokenRule";
+  key: string; // page::role | page | selector
+  breakpoints?: string[]; // for tokenRule
+  prev: string | null;
+  next: string | null;
+};
+
+function computeDrift(prev: Captured | null, next: Captured): DriftEntry[] {
+  const drift: DriftEntry[] = [];
+  if (!prev) return drift;
+
+  const allHeadlineKeys = new Set([
+    ...Object.keys(prev.headlines),
+    ...Object.keys(next.headlines),
+  ]);
+  for (const key of allHeadlineKeys) {
+    const p = prev.headlines[key] ?? null;
+    const n = next.headlines[key] ?? null;
+    if (p !== n) drift.push({ category: "headline", key, prev: p, next: n });
+  }
+
+  const allSweepKeys = new Set([
+    ...Object.keys(prev.sectionSweeps),
+    ...Object.keys(next.sectionSweeps),
+  ]);
+  for (const key of allSweepKeys) {
+    const p = JSON.stringify(prev.sectionSweeps[key] ?? null, null, 2);
+    const n = JSON.stringify(next.sectionSweeps[key] ?? null, null, 2);
+    if (p !== n) drift.push({ category: "sectionSweep", key, prev: p, next: n });
+  }
+
+  const allTokenKeys = new Set([
+    ...Object.keys(prev.tokenRules),
+    ...Object.keys(next.tokenRules),
+  ]);
+  for (const key of allTokenKeys) {
+    const p = prev.tokenRules[key] ?? "";
+    const n = next.tokenRules[key] ?? "";
+    if (p !== n) {
+      drift.push({
+        category: "tokenRule",
+        key,
+        breakpoints: affectedBreakpoints(p, n),
+        prev: p,
+        next: n,
+      });
+    }
+  }
+
+  return drift;
+}
+
+function renderDiffHtml(drift: DriftEntry[]): string {
+  const groups = {
+    headline: drift.filter((d) => d.category === "headline"),
+    sectionSweep: drift.filter((d) => d.category === "sectionSweep"),
+    tokenRule: drift.filter((d) => d.category === "tokenRule"),
+  };
+  const section = (title: string, items: DriftEntry[]) => {
+    if (items.length === 0) return "";
+    const rows = items
+      .map((d) => {
+        const bp =
+          d.breakpoints && d.breakpoints.length
+            ? `<div class="bp">drifted at: ${d.breakpoints
+                .map((b) => `<code>${escapeHtml(b)}</code>`)
+                .join(", ")}</div>`
+            : "";
+        return `
+          <article>
+            <header><h3>${escapeHtml(d.key)}</h3>${bp}</header>
+            ${inlineDiff(d.prev ?? "(missing)", d.next ?? "(missing)")}
+          </article>`;
+      })
+      .join("");
+    return `<section><h2>${title} <span class="count">${items.length}</span></h2>${rows}</section>`;
+  };
+
+  return `<!doctype html>
+<html><head><meta charset="utf-8"><title>Typography drift</title>
+<style>
+  body { font: 14px/1.5 -apple-system, system-ui, sans-serif; margin: 0; padding: 24px 32px; background: #0b0b0c; color: #e8e6df; }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  .meta { color: #8a8a8a; margin-bottom: 24px; font-size: 12px; }
+  section { margin-bottom: 32px; }
+  section h2 { font-size: 16px; border-bottom: 1px solid #2a2a2a; padding-bottom: 6px; }
+  .count { background: #c4a25a; color: #1a1a1a; border-radius: 999px; padding: 1px 8px; font-size: 11px; margin-left: 6px; vertical-align: middle; }
+  article { background: #131315; border: 1px solid #25252a; border-radius: 8px; padding: 12px 14px; margin: 10px 0; }
+  article header h3 { font-size: 13px; margin: 0 0 4px; color: #c4a25a; font-weight: 600; }
+  .bp { font-size: 11px; color: #8a8a8a; margin-bottom: 8px; }
+  .bp code { background: #1f1f24; padding: 1px 6px; border-radius: 4px; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .prev, .next { background: #08080a; border-radius: 6px; padding: 10px 12px; font: 12px/1.55 ui-monospace, monospace; word-break: break-all; white-space: pre-wrap; }
+  .prev { border-left: 3px solid #6b2b2b; }
+  .next { border-left: 3px solid #2b6b3a; }
+  .same { color: #6b6b6b; }
+  .del  { background: #3a1414; color: #ff8a8a; padding: 0 2px; border-radius: 3px; }
+  .add  { background: #143a1f; color: #8aff9c; padding: 0 2px; border-radius: 3px; }
+  .empty { color: #8a8a8a; padding: 20px; text-align: center; }
+</style>
+</head><body>
+  <h1>Typography drift report</h1>
+  <div class="meta">Generated ${new Date().toISOString()} · ${drift.length} change${drift.length === 1 ? "" : "s"} since last run</div>
+  ${drift.length === 0 ? '<div class="empty">No drift detected.</div>' : section("Headline class strings", groups.headline) + section("Section-headline sweeps", groups.sectionSweep) + section("Token CSS rules", groups.tokenRule)}
+</body></html>`;
+}
+
+afterAll(() => {
+  fs.mkdirSync(ARTIFACT_DIR, { recursive: true });
+
+  // Load previous run for diffing (if any)
+  let previous: Captured | null = null;
+  if (fs.existsSync(CURRENT_PATH)) {
+    try {
+      previous = JSON.parse(fs.readFileSync(CURRENT_PATH, "utf8")) as Captured;
+      fs.writeFileSync(PREVIOUS_PATH, JSON.stringify(previous, null, 2));
+    } catch {
+      previous = null;
+    }
+  }
+
+  // Always write the current dump
+  fs.writeFileSync(CURRENT_PATH, JSON.stringify(captured, null, 2));
+
+  // Compute and write drift artifacts
+  const drift = computeDrift(previous, captured);
+  fs.writeFileSync(DIFF_JSON_PATH, JSON.stringify(drift, null, 2));
+  fs.writeFileSync(DIFF_HTML_PATH, renderDiffHtml(drift));
+
+  // eslint-disable-next-line no-console
+  console.log(
+    `\n[typography] ${drift.length} drift entr${drift.length === 1 ? "y" : "ies"} → ${path.relative(ROOT, DIFF_HTML_PATH)}`,
+  );
 });
 
 /* ── 1. Headline class strings, pulled from source ──────────────── */
@@ -214,6 +441,7 @@ describe("Typography regression — headline class strings", () => {
       expect(match, `Could not locate ${h.role} in ${h.file}`).toBeTruthy();
       // Normalize whitespace so a re-format doesn't trip the snapshot
       const cls = match![1].split(/\s+/).filter(Boolean).join(" ");
+      captured.headlines[`${h.page} :: ${h.role}`] = cls;
       expect(cls).toMatchSnapshot();
     });
   }
@@ -258,6 +486,7 @@ describe("Typography regression — section headlines (token sweep)", () => {
         hits.length,
         `No tokenized section headlines found in ${file}`,
       ).toBeGreaterThan(0);
+      captured.sectionSweeps[page] = hits;
       expect(hits).toMatchSnapshot();
     });
   }
@@ -269,6 +498,7 @@ describe("Typography regression — token rules from styles.css", () => {
     it(`token ${sel}`, () => {
       const rules = extractTokenRules(css, sel);
       expect(rules, `No rules found for ${sel}`).not.toBe("");
+      captured.tokenRules[sel] = rules;
       expect(rules).toMatchSnapshot();
     });
   }
