@@ -100,6 +100,15 @@ export const Route = createFileRoute("/api/img")({
         const accept =
           request.headers.get("Accept") ?? "image/avif,image/webp,image/*,*/*;q=0.8";
 
+        const widthParam = url.searchParams.get("w");
+        const qualityParam = url.searchParams.get("q");
+        const cacheKey = buildCacheKey({
+          upstream,
+          width: widthParam ? Number(widthParam) : null,
+          quality: qualityParam ? Number(qualityParam) : null,
+          accept,
+        });
+
         const upstreamRes = await fetch(upstream.toString(), {
           headers: {
             Accept: accept,
@@ -107,8 +116,10 @@ export const Route = createFileRoute("/api/img")({
               "Mozilla/5.0 (compatible; YesExperiencesImageProxy/1.0; +https://yesexperiences.pt)",
             Referer: "https://yesexperiences.pt/",
           },
-          // Let the platform cache this response.
-          cf: { cacheEverything: true, cacheTtl: 2592000 },
+          // Let the platform cache this response. The cache key folds in the
+          // negotiated Accept variant + quantised w/q so AVIF/WebP/JPEG and
+          // different sizes never collide.
+          cf: { cacheEverything: true, cacheTtl: 2592000, cacheKey },
         } as RequestInit);
 
         if (!upstreamRes.ok || !upstreamRes.body) {
@@ -124,8 +135,11 @@ export const Route = createFileRoute("/api/img")({
         const len = upstreamRes.headers.get("Content-Length");
         if (len) headers.set("Content-Length", len);
         for (const [k, v] of Object.entries(CACHE_HEADERS)) headers.set(k, v);
-        // Vary on Accept so AVIF/WebP/JPEG variants don't collide in caches.
+        // Vary on Accept so AVIF/WebP/JPEG variants don't collide in caches
+        // even when an intermediate cache ignores our explicit cacheKey.
         headers.set("Vary", "Accept");
+        // Surface the negotiated variant for debugging / log inspection.
+        headers.set("X-Img-Variant", pickAcceptVariant(accept));
 
         return new Response(upstreamRes.body, { status: 200, headers });
       },
