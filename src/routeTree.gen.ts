@@ -28,6 +28,7 @@ import { Route as ToursTourIdRouteImport } from './routes/tours.$tourId'
 import { Route as ApiVerifyHeroRouteImport } from './routes/api/verify-hero'
 import { Route as ApiImgRouteImport } from './routes/api/img'
 import { Route as AdminImportToursRouteImport } from './routes/admin.import-tours'
+import { Route as AdminTourLinkAuditRouteImport } from './routes/admin.tour-link-audit'
 
 const TypographyAuditRoute = TypographyAuditRouteImport.update({
   id: '/typography-audit',
@@ -124,6 +125,11 @@ const AdminImportToursRoute = AdminImportToursRouteImport.update({
   path: '/admin/import-tours',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminTourLinkAuditRoute = AdminTourLinkAuditRouteImport.update({
+  id: '/admin/tour-link-audit',
+  path: '/admin/tour-link-audit',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -142,6 +148,7 @@ export interface FileRoutesByFullPath {
   '/proposals': typeof ProposalsRoute
   '/typography-audit': typeof TypographyAuditRoute
   '/admin/import-tours': typeof AdminImportToursRoute
+  '/admin/tour-link-audit': typeof AdminTourLinkAuditRoute
   '/api/img': typeof ApiImgRoute
   '/api/verify-hero': typeof ApiVerifyHeroRoute
   '/tours/$tourId': typeof ToursTourIdRoute
@@ -163,6 +170,7 @@ export interface FileRoutesByTo {
   '/proposals': typeof ProposalsRoute
   '/typography-audit': typeof TypographyAuditRoute
   '/admin/import-tours': typeof AdminImportToursRoute
+  '/admin/tour-link-audit': typeof AdminTourLinkAuditRoute
   '/api/img': typeof ApiImgRoute
   '/api/verify-hero': typeof ApiVerifyHeroRoute
   '/tours/$tourId': typeof ToursTourIdRoute
@@ -185,6 +193,7 @@ export interface FileRoutesById {
   '/proposals': typeof ProposalsRoute
   '/typography-audit': typeof TypographyAuditRoute
   '/admin/import-tours': typeof AdminImportToursRoute
+  '/admin/tour-link-audit': typeof AdminTourLinkAuditRoute
   '/api/img': typeof ApiImgRoute
   '/api/verify-hero': typeof ApiVerifyHeroRoute
   '/tours/$tourId': typeof ToursTourIdRoute
@@ -208,6 +217,7 @@ export interface FileRouteTypes {
     | '/proposals'
     | '/typography-audit'
     | '/admin/import-tours'
+    | '/admin/tour-link-audit'
     | '/api/img'
     | '/api/verify-hero'
     | '/tours/$tourId'
@@ -229,6 +239,7 @@ export interface FileRouteTypes {
     | '/proposals'
     | '/typography-audit'
     | '/admin/import-tours'
+    | '/admin/tour-link-audit'
     | '/api/img'
     | '/api/verify-hero'
     | '/tours/$tourId'
@@ -250,6 +261,7 @@ export interface FileRouteTypes {
     | '/proposals'
     | '/typography-audit'
     | '/admin/import-tours'
+    | '/admin/tour-link-audit'
     | '/api/img'
     | '/api/verify-hero'
     | '/tours/$tourId'
@@ -272,6 +284,7 @@ export interface RootRouteChildren {
   ProposalsRoute: typeof ProposalsRoute
   TypographyAuditRoute: typeof TypographyAuditRoute
   AdminImportToursRoute: typeof AdminImportToursRoute
+  AdminTourLinkAuditRoute: typeof AdminTourLinkAuditRoute
   ApiImgRoute: typeof ApiImgRoute
   ApiVerifyHeroRoute: typeof ApiVerifyHeroRoute
   ToursTourIdRoute: typeof ToursTourIdRoute
@@ -412,6 +425,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminImportToursRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/tour-link-audit': {
+      id: '/admin/tour-link-audit'
+      path: '/admin/tour-link-audit'
+      fullPath: '/admin/tour-link-audit'
+      preLoaderRoute: typeof AdminTourLinkAuditRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -432,6 +452,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProposalsRoute: ProposalsRoute,
   TypographyAuditRoute: TypographyAuditRoute,
   AdminImportToursRoute: AdminImportToursRoute,
+  AdminTourLinkAuditRoute: AdminTourLinkAuditRoute,
   ApiImgRoute: ApiImgRoute,
   ApiVerifyHeroRoute: ApiVerifyHeroRoute,
   ToursTourIdRoute: ToursTourIdRoute,
