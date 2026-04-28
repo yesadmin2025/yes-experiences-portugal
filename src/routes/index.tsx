@@ -37,6 +37,7 @@ import { HeroCopyDiff } from "@/components/HeroCopyDiff";
 import { HeroVerifyOverlay } from "@/components/HeroVerifyOverlay";
 import { DecisionStepper } from "@/components/DecisionStepper";
 import { SignatureCarousel } from "@/components/SignatureCarousel";
+import { LiveMapPreview } from "@/components/LiveMapPreview";
 import { ContrastAudit } from "@/components/dev/ContrastAudit";
 
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
