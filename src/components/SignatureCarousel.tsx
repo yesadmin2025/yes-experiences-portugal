@@ -108,14 +108,15 @@ export function SignatureCarousel({ items }: Props) {
             <Link
               to="/tours/$tourId"
               params={{ tourId: s.id }}
-              className="block relative overflow-hidden aspect-[4/5] shadow-[0_20px_50px_-28px_rgba(46,46,46,0.4)] transition-shadow duration-700 group-hover:shadow-[0_36px_70px_-28px_rgba(41,91,97,0.45)]"
+              className="editorial-card block relative overflow-hidden aspect-[4/5] border border-[color:var(--border)] active:scale-[1.01] active:transition-transform active:duration-150"
               aria-label={`Open journey — ${s.title}`}
             >
               <img
                 src={s.img}
                 alt={s.title}
                 loading="lazy"
-                className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1600ms] ease-out group-hover:scale-[1.05]"
+                data-card-image
+                className="absolute inset-0 w-full h-full object-cover"
               />
               {/* Cinematic bottom-anchored wash. Top kept light so the
                   photography breathes; bottom carries the legibility. */}
