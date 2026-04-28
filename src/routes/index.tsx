@@ -34,6 +34,15 @@ import { HeroCopyDiff } from "@/components/HeroCopyDiff";
 import { HeroVerifyOverlay } from "@/components/HeroVerifyOverlay";
 
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
+import { signatureTours, isValidTourId } from "@/data/signatureTours";
+
+// Featured tour ids for the homepage signatures showcase.
+// Must exist in the catalog (`signatureTours`) — validated below at render time.
+const FEATURED_TOUR_IDS = [
+  "arrabida-wine-allinclusive",
+  "sintra-cascais",
+  "troia-comporta",
+] as const;
 
 export const Route = createFileRoute("/")({
   headers: () => ({
