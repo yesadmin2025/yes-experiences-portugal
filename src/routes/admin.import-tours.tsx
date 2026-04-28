@@ -126,9 +126,7 @@ function AdminImportPage() {
 
       const { data: rows } = await supabase
         .from("imported_tours")
-        .select(
-          "id,title,region_label,duration_label,duration_hours,price_from,theme,styles,highlights,pace,tier,fits_best,blurb,stops,imported_at"
-        )
+        .select(SELECT_COLS)
         .order("imported_at", { ascending: false });
       setTours((rows as ImportedRow[]) ?? []);
       if (roleRow) await refreshRules();
@@ -210,9 +208,7 @@ function AdminImportPage() {
       });
       const { data: rows } = await supabase
         .from("imported_tours")
-        .select(
-          "id,title,region_label,duration_label,duration_hours,price_from,theme,styles,highlights,pace,tier,fits_best,blurb,stops,imported_at"
-        )
+        .select(SELECT_COLS)
         .order("imported_at", { ascending: false });
       setTours((rows as ImportedRow[]) ?? []);
       if (result.status === "success") toast.success(`Imported ${result.toursImported} tours`);
