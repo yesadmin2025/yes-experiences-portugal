@@ -717,7 +717,7 @@ function HomePage() {
         aria-labelledby="start-paths-title"
       >
         <div className="container-x">
-          <div className="reveal text-center max-w-2xl mx-auto mb-12 md:mb-16">
+          <div className="reveal text-center max-w-2xl mx-auto mb-14 md:mb-20">
             <span className="eyebrow">Where to begin</span>
             <h2
               id="start-paths-title"
@@ -725,18 +725,8 @@ function HomePage() {
             >
               Choose how <span className="italic">you want to start.</span>
             </h2>
-            <p className="t-lead mt-5">
-              Four ways in. Every one confirms instantly — no forms, no waiting.
-            </p>
-            <p className="mt-3 text-[13.5px] italic font-light text-[color:var(--charcoal-soft)]">
-              A local guide is always available, in real time, if you want help.{" "}
-              <Link
-                to="/contact"
-                className="underline decoration-[color:var(--gold)]/60 underline-offset-4 hover:text-[color:var(--teal)] transition-colors"
-              >
-                Talk to a designer
-              </Link>
-              .
+            <p className="mt-5 text-[14.5px] md:text-[15.5px] text-[color:var(--charcoal-soft)] font-light leading-[1.6] max-w-md mx-auto">
+              Four ways in. Pick one — decide in seconds.
             </p>
           </div>
 
