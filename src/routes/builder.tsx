@@ -1180,11 +1180,30 @@ function LiveCanvas({ s, title }: { s: BuilderState; title: string }) {
   const heroImg = useMemo(() => pickHeroImage(s), [s]);
   const [activeIdx, setActiveIdx] = useState<number | null>(null);
   const itemRefs = useRef<(HTMLLIElement | null)[]>([]);
+  const pinRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const mapScrollRef = useRef<HTMLDivElement | null>(null);
 
   const region = s.region ? REGION_CANVAS[s.region] : null;
   const placedChapters = chapters
     .map((c, i) => ({ c, i }))
     .filter((x) => !!x.c.coord);
+
+  // Pre-compute interlude prose between consecutive chapters.
+  const interludes = useMemo(() => buildInterludes(chapters, s), [chapters, s]);
+
+  // When activeIdx changes, scroll the corresponding pin into view inside the
+  // swipeable map container (mobile-only behavior, harmless on desktop).
+  useEffect(() => {
+    if (activeIdx == null) return;
+    const pinIdx = placedChapters.findIndex((p) => p.i === activeIdx);
+    if (pinIdx < 0) return;
+    const pinEl = pinRefs.current[pinIdx];
+    const container = mapScrollRef.current;
+    if (!pinEl || !container) return;
+    const pinLeft = pinEl.offsetLeft;
+    const targetLeft = Math.max(0, pinLeft - container.clientWidth / 2 + pinEl.clientWidth / 2);
+    container.scrollTo({ left: targetLeft, behavior: "smooth" });
+  }, [activeIdx, placedChapters]);
 
   const scrollToChapter = (i: number) => {
     const el = itemRefs.current[i];
@@ -1216,69 +1235,77 @@ function LiveCanvas({ s, title }: { s: BuilderState; title: string }) {
         </div>
       </div>
 
-      {/* INLINE REGIONAL CANVAS — only when a region is chosen */}
+      {/* INLINE REGIONAL CANVAS — only when a region is chosen.
+          On mobile the inner canvas is wider than the viewport so the user can
+          swipe across Portugal; pins stay synced to chapter cards. */}
       {region ? (
-        <div
-          className="relative aspect-[16/9] bg-cover bg-center border-t border-[color:var(--border)]"
-          style={{
-            backgroundImage: `linear-gradient(180deg, rgba(245,239,223,0.0) 0%, rgba(245,239,223,0.55) 100%), url(${region.bg})`,
-          }}
-        >
-          {/* Soft topography wash */}
-          <div className="absolute inset-0 bg-[color:var(--ivory)]/15 mix-blend-overlay" />
+        <div className="relative border-t border-[color:var(--border)]">
+          <div
+            ref={mapScrollRef}
+            className="overflow-x-auto overflow-y-hidden snap-x snap-mandatory scrollbar-none"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          >
+            <div
+              className="relative aspect-[16/9] bg-cover bg-center w-[160%] sm:w-[130%] md:w-full snap-start"
+              style={{
+                backgroundImage: `linear-gradient(180deg, rgba(245,239,223,0.0) 0%, rgba(245,239,223,0.55) 100%), url(${region.bg})`,
+              }}
+            >
+              <div className="absolute inset-0 bg-[color:var(--ivory)]/15 mix-blend-overlay pointer-events-none" />
 
-          {/* Pins */}
-          {placedChapters.map(({ c, i }, pinIdx) => {
-            const active = activeIdx === i;
-            return (
-              <button
-                key={i}
-                type="button"
-                onClick={() => scrollToChapter(i)}
-                onMouseEnter={() => setActiveIdx(i)}
-                onMouseLeave={() => setActiveIdx((cur) => (cur === i ? null : cur))}
-                aria-label={`Chapter ${pinIdx + 1}: ${c.label}`}
-                className="absolute -translate-x-1/2 -translate-y-full focus:outline-none group"
-                style={{ left: `${c.coord!.x}%`, top: `${c.coord!.y}%` }}
-              >
-                {/* Drop pin */}
-                <div
-                  className={`relative h-9 w-9 rounded-full grid place-items-center transition-all duration-300 ${
-                    active
-                      ? "bg-[color:var(--teal)] scale-110 shadow-[0_6px_20px_rgba(12,91,102,0.5)]"
-                      : "bg-[color:var(--ivory)] border border-[color:var(--teal)]/50 group-hover:bg-[color:var(--teal)]/15"
-                  }`}
-                >
-                  <span
-                    className={`serif text-[12px] font-semibold ${
-                      active ? "text-[color:var(--ivory)]" : "text-[color:var(--teal)]"
-                    }`}
+              {placedChapters.map(({ c, i }, pinIdx) => {
+                const active = activeIdx === i;
+                return (
+                  <button
+                    key={i}
+                    ref={(el) => {
+                      pinRefs.current[pinIdx] = el;
+                    }}
+                    type="button"
+                    onClick={() => scrollToChapter(i)}
+                    onMouseEnter={() => setActiveIdx(i)}
+                    onMouseLeave={() => setActiveIdx((cur) => (cur === i ? null : cur))}
+                    aria-label={`Chapter ${pinIdx + 1}: ${c.label}`}
+                    className="absolute -translate-x-1/2 -translate-y-full focus:outline-none group"
+                    style={{ left: `${c.coord!.x}%`, top: `${c.coord!.y}%` }}
                   >
-                    {pinIdx + 1}
-                  </span>
-                </div>
-                {/* Pulse */}
-                {active && (
-                  <span className="absolute inset-0 rounded-full bg-[color:var(--teal)]/30 animate-ping" />
-                )}
-                {/* Tooltip on active */}
-                {active && (
-                  <div className="absolute left-1/2 -translate-x-1/2 mt-2 whitespace-nowrap px-2.5 py-1 bg-[color:var(--charcoal)] text-[color:var(--ivory)] text-[10px] uppercase tracking-[0.18em] rounded-sm pointer-events-none">
-                    {c.label}
-                  </div>
-                )}
-              </button>
-            );
-          })}
+                    <div
+                      className={`relative h-9 w-9 rounded-full grid place-items-center transition-all duration-300 ${
+                        active
+                          ? "bg-[color:var(--teal)] scale-110 shadow-[0_6px_20px_rgba(12,91,102,0.5)]"
+                          : "bg-[color:var(--ivory)] border border-[color:var(--teal)]/50 group-hover:bg-[color:var(--teal)]/15"
+                      }`}
+                    >
+                      <span
+                        className={`serif text-[12px] font-semibold ${
+                          active ? "text-[color:var(--ivory)]" : "text-[color:var(--teal)]"
+                        }`}
+                      >
+                        {pinIdx + 1}
+                      </span>
+                    </div>
+                    {active && (
+                      <span className="absolute inset-0 rounded-full bg-[color:var(--teal)]/30 animate-ping" />
+                    )}
+                    {active && (
+                      <div className="absolute left-1/2 -translate-x-1/2 mt-2 whitespace-nowrap px-2.5 py-1 bg-[color:var(--charcoal)] text-[color:var(--ivory)] text-[10px] uppercase tracking-[0.18em] rounded-sm pointer-events-none">
+                        {c.label}
+                      </div>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
 
-          {/* Region badge */}
-          <div className="absolute top-3 left-3 px-2.5 py-1 bg-[color:var(--ivory)]/90 backdrop-blur text-[10px] uppercase tracking-[0.22em] text-[color:var(--charcoal)] rounded-sm flex items-center gap-1.5">
+          {/* Region badge — fixed on top of the swipe container */}
+          <div className="absolute top-3 left-3 px-2.5 py-1 bg-[color:var(--ivory)]/90 backdrop-blur text-[10px] uppercase tracking-[0.22em] text-[color:var(--charcoal)] rounded-sm flex items-center gap-1.5 pointer-events-none">
             <MapIcon size={11} className="text-[color:var(--teal)]" />
             {region.label}
           </div>
           {placedChapters.length > 0 && (
-            <div className="absolute bottom-3 right-3 px-2.5 py-1 bg-[color:var(--charcoal)]/85 text-[color:var(--ivory)] text-[10px] uppercase tracking-[0.22em] rounded-sm">
-              {placedChapters.length} stop{placedChapters.length === 1 ? "" : "s"} on the route
+            <div className="absolute bottom-3 right-3 px-2.5 py-1 bg-[color:var(--charcoal)]/85 text-[color:var(--ivory)] text-[10px] uppercase tracking-[0.22em] rounded-sm pointer-events-none">
+              {placedChapters.length} stop{placedChapters.length === 1 ? "" : "s"} · swipe to explore
             </div>
           )}
         </div>
@@ -1393,6 +1420,20 @@ function LiveCanvas({ s, title }: { s: BuilderState; title: string }) {
                     )}
                   </div>
                 </div>
+
+                {/* Interlude — short poetic bridge to the next chapter */}
+                {!isLast && interludes[i] && (
+                  <div className="flex gap-4 mt-1.5">
+                    <div className="flex flex-col items-center w-10 shrink-0">
+                      <div className="w-px flex-1 bg-[color:var(--border)] min-h-[8px]" />
+                      <div className="h-1.5 w-1.5 rounded-full bg-[color:var(--gold)]/60 my-1" />
+                      <div className="w-px flex-1 bg-[color:var(--border)] min-h-[8px]" />
+                    </div>
+                    <p className="flex-1 text-[12.5px] md:text-[13px] text-[color:var(--charcoal-soft)] italic leading-relaxed pb-3 pt-1">
+                      {interludes[i]}
+                    </p>
+                  </div>
+                )}
               </li>
             );
           })}
@@ -1406,6 +1447,119 @@ function LiveCanvas({ s, title }: { s: BuilderState; title: string }) {
       )}
     </div>
   );
+}
+
+/* ============================================================
+   Interludes — short poetic bridges between chapters.
+   Result is an array indexed by chapter position; entry i is the
+   text shown after chapter i (so the last index is unused).
+   The voice and choice of bridge adapt to region, highlights,
+   enhancements, tier and the current chapter's slot transition.
+   ============================================================ */
+function buildInterludes(chapters: Chapter[], s: BuilderState): (string | null)[] {
+  if (chapters.length < 2) return chapters.map(() => null);
+  const v = groupVoice(s);
+  const region = regionOpts.find((r) => r.id === s.region)?.name;
+  const tier = tierOpts.find((t) => t.id === s.tier)?.id;
+
+  const out: (string | null)[] = [];
+  for (let i = 0; i < chapters.length; i++) {
+    if (i === chapters.length - 1) {
+      out.push(null);
+      continue;
+    }
+    const cur = chapters[i];
+    const next = chapters[i + 1];
+
+    // Skip a bridge when both sides are ambient (no place change).
+    if (
+      (cur.slot === "PRELUDE" || cur.slot === "EPILOGUE") &&
+      (next.slot === "PRELUDE" || next.slot === "EPILOGUE")
+    ) {
+      out.push(null);
+      continue;
+    }
+
+    out.push(pickInterlude(cur, next, s, v, region, tier));
+  }
+  return out;
+}
+
+function pickInterlude(
+  cur: Chapter,
+  next: Chapter,
+  s: BuilderState,
+  v: ReturnType<typeof groupVoice>,
+  region: string | undefined,
+  tier: string | undefined,
+): string {
+  const movingToWater =
+    next.tags?.some((t) => /boat|coast|water|cove/i.test(t)) ||
+    /boat|coast|sea|cove|ocean/i.test(next.label);
+  const movingToTable =
+    next.tags?.some((t) => /lunch|table|chef|dinner|tasting/i.test(t)) ||
+    /lunch|dinner|table|chef|tasting/i.test(next.label);
+  const movingToVines =
+    next.tags?.some((t) => /wine|vine|cellar|tasting/i.test(t)) ||
+    /wine|vines|cellar|winery/i.test(next.label);
+  const movingToMarket = /market|stall|tasca/i.test(next.label);
+  const movingToHeritage =
+    /tile|chapel|palace|castle|monastery|cathedral|museum|village|town/i.test(next.label);
+  const slowDown = s.pace === "slow";
+
+  if (cur.slot === "PRELUDE") {
+    return "And then, quietly, the day actually begins.";
+  }
+  if (next.slot === "EPILOGUE") {
+    return "And then, just as it should, the day starts to soften.";
+  }
+
+  if (movingToWater) {
+    return s.enhancements.includes("transfer")
+      ? `The car slips down toward the coast. Doors open and ${v.you} can already smell the salt.`
+      : `The road bends, the air changes, and suddenly there is water on both sides of ${v.your} window.`;
+  }
+  if (movingToVines) {
+    return region
+      ? `${region} unfolds in long, slow rows of vines as ${v.you} ${v.verbBe} pulled gently into wine country.`
+      : `The road climbs into the vines, and the world goes quiet in that particular Portuguese way.`;
+  }
+  if (movingToTable) {
+    return slowDown
+      ? `There is no rush to the next table. ${capitalize(v.you)} drift toward it the way ${v.you} would drift toward an old friend.`
+      : `Hunger arrives on cue. Somewhere ahead, a table has been waiting since this morning — and your guide is already known there.`;
+  }
+  if (movingToMarket) {
+    return `The streets get narrower, the smells get louder, and ${v.your} guide leads ${v.you} into the part of town only locals really know.`;
+  }
+  if (movingToHeritage) {
+    return tier === "couture"
+      ? `A door that is normally closed has been quietly opened for ${v.you}. No queue. No crowd. Just stone, and time.`
+      : `${capitalize(v.you)} step out of the modern hour and into something much older.`;
+  }
+
+  if (cur.slot === "MORNING" || cur.slot === "DAWN" || cur.slot === "LATE_MORNING") {
+    if (next.slot === "MIDDAY" || next.slot === "EARLY_AFTERNOON") {
+      return `The morning has done its work. The light shifts, ${v.you} ${v.verbBe} a little hungrier, a little more here.`;
+    }
+  }
+  if (cur.slot === "EARLY_AFTERNOON" || cur.slot === "MIDDAY") {
+    if (next.slot === "AFTERNOON" || next.slot === "GOLDEN_HOUR") {
+      return `Lunch lingers, then loosens its grip. ${capitalize(v.you)} step back into the afternoon, looser, slower, lighter.`;
+    }
+  }
+  if (next.slot === "GOLDEN_HOUR") {
+    return `The light starts to lean. Everything Portuguese — stone, water, wine — turns honey-coloured for the next hour.`;
+  }
+  if (next.slot === "EVENING" || next.slot === "SUNSET") {
+    return tier === "couture"
+      ? `Day folds quietly into evening. The next chapter has been hand-set, lit, and waiting for ${v.you}.`
+      : `The day folds itself into evening, and a different kind of Portugal begins.`;
+  }
+
+  return region
+    ? `Between one moment and the next, ${region} keeps unfolding around ${v.you}.`
+    : `Between one moment and the next, the day keeps quietly arranging itself around ${v.you}.`;
 }
 
 function pickHeroImage(s: BuilderState): string {
