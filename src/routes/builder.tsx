@@ -337,6 +337,27 @@ function BuilderPage() {
   // (view toggle removed — story, map and timeline are fused in <LiveCanvas/>)
   const [mobileTab, setMobileTab] = useState<"build" | "preview">("build");
   const hydratedTourRef = useRef<string | null>(null);
+  const hydratedJourneyRef = useRef<string | null>(null);
+
+  // Deep-link seed: /builder?journey=<style> — multi-day mode from style cards
+  useEffect(() => {
+    if (!search.journey || hydratedJourneyRef.current === search.journey) return;
+    const seed = JOURNEY_SEEDS[search.journey];
+    if (!seed) return;
+    hydratedJourneyRef.current = search.journey;
+    const hasPersisted = !!(search.r || search.st?.length || search.hl?.length || search.t);
+    if (hasPersisted) return;
+    setS((p) => ({
+      ...p,
+      region: seed.region ?? p.region,
+      duration: seed.duration ?? p.duration,
+      groupType: seed.groupType ?? p.groupType,
+      styles: seed.styles ?? p.styles,
+      highlights: seed.highlights ?? p.highlights,
+      pace: seed.pace ?? p.pace,
+    }));
+    setStepIdx(2);
+  }, [search.journey, search.r, search.st, search.hl, search.t]);
 
   // Deep-link seed: /builder?tour=<id> — only when no persisted state present
   useEffect(() => {
