@@ -1000,12 +1000,12 @@ function HomePage() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-7 max-w-5xl mx-auto">
             {signatures.map((s) => (
               <article key={s.id} className="reveal-stagger group flex flex-col">
-                <div className="lift-layer-sm flex flex-col h-full">
+                <div className="lift-layer-sm flex flex-col h-full p-3 -m-3 rounded-sm transition-all duration-500 ease-out hover:-translate-y-1 hover:bg-[color:var(--ivory)]/60 hover:shadow-[0_22px_50px_-30px_rgba(41,91,97,0.25)]">
                   <Link
                     to="/tours/$tourId"
                     params={{ tourId: s.id }}
                     className="relative overflow-hidden aspect-[4/5] mb-5 shadow-[0_10px_30px_-20px_rgba(46,46,46,0.28)] group-hover:shadow-[0_28px_55px_-22px_rgba(41,91,97,0.32)] transition-shadow duration-700 block"
-                    aria-label={`See ${s.title}`}
+                    aria-label={`Confirm this journey — ${s.title}`}
                   >
                     <img
                       src={s.img}
@@ -1016,7 +1016,9 @@ function HomePage() {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/80 via-[color:var(--charcoal)]/15 to-transparent" />
                   </Link>
-                  <h3 className="serif text-[1.5rem] text-[color:var(--charcoal)]">{s.title}</h3>
+                  <h3 className="serif text-[1.5rem] text-[color:var(--charcoal)] transition-colors duration-300 group-hover:text-[color:var(--teal)]">
+                    {s.title}
+                  </h3>
                   <p className="mt-3 text-[15px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
                     {s.line}
                   </p>
@@ -1024,9 +1026,14 @@ function HomePage() {
                     <Link
                       to="/tours/$tourId"
                       params={{ tourId: s.id }}
-                      className="inline-flex items-center gap-2 text-[14px] tracking-[0.005em] font-medium text-[color:var(--teal)] hover:text-[color:var(--teal-2)] transition-colors"
+                      aria-label={`Confirm this journey — ${s.title}`}
+                      className="group/cta inline-flex items-center gap-2 text-[14px] tracking-[0.005em] font-medium text-[color:var(--teal)] hover:text-[color:var(--teal-2)] transition-colors"
                     >
-                      Confirm instantly <ArrowRight size={13} />
+                      Confirm this journey
+                      <ArrowRight
+                        size={13}
+                        className="transition-transform duration-300 ease-out group-hover/cta:translate-x-0.5 group-hover:translate-x-0.5"
+                      />
                     </Link>
                     <span className="h-3 w-px bg-[color:var(--border)]" aria-hidden="true" />
                     <Link
@@ -1049,6 +1056,75 @@ function HomePage() {
             >
               Explore all signatures <ArrowRight size={14} />
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* 5b — BEYOND DAY TOURS
+          A short, dedicated section that signals to the visitor that this is
+          NOT just day tours: extended journeys + special-moment plans. Two
+          equal-weight blocks, premium and minimal — each links to its
+          dedicated section/route below. */}
+      <section
+        className="py-20 md:py-28 bg-[color:var(--ivory)] border-y border-[color:var(--border)]"
+        aria-labelledby="beyond-title"
+      >
+        <div className="container-x">
+          <div className="reveal text-center max-w-xl mx-auto mb-10 md:mb-14">
+            <span className="eyebrow">Beyond a single day</span>
+            <h2
+              id="beyond-title"
+              className="sr-only"
+            >
+              Beyond a single day
+            </h2>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-5 md:gap-7 max-w-5xl mx-auto">
+            {[
+              {
+                eyebrow: "Extended journeys",
+                title: "For more than a day",
+                line: "From one day to full journeys across Portugal.",
+                to: "/multi-day" as const,
+                cta: "Discover multi-day",
+                ariaLabel:
+                  "Discover extended journeys — from one day to full journeys across Portugal",
+              },
+              {
+                eyebrow: "Special occasions",
+                title: "For moments that matter",
+                line: "Proposals, celebrations, corporate and private groups.",
+                to: "/proposals" as const,
+                cta: "Plan a moment",
+                ariaLabel:
+                  "Plan a moment — proposals, celebrations, corporate and private groups",
+              },
+            ].map((b) => (
+              <Link
+                key={b.title}
+                to={b.to}
+                aria-label={b.ariaLabel}
+                className="reveal-stagger group flex flex-col p-8 md:p-10 bg-[color:var(--card)] border border-[color:var(--border)] hover:border-[color:var(--teal)]/35 hover:-translate-y-0.5 hover:shadow-[0_24px_55px_-28px_rgba(41,91,97,0.22)] transition-all duration-500"
+              >
+                <span className="text-[10.5px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
+                  {b.eyebrow}
+                </span>
+                <h3 className="serif text-[1.75rem] md:text-[2rem] mt-3 text-[color:var(--charcoal)] leading-[1.12] transition-colors duration-300 group-hover:text-[color:var(--teal)]">
+                  {b.title}
+                </h3>
+                <p className="mt-4 text-[15.5px] md:text-[16px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
+                  {b.line}
+                </p>
+                <span className="mt-7 inline-flex items-center gap-2 text-[13.5px] tracking-[0.005em] font-medium text-[color:var(--teal)]">
+                  {b.cta}
+                  <ArrowRight
+                    size={13}
+                    className="transition-transform duration-300 ease-out group-hover:translate-x-1"
+                  />
+                </span>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
