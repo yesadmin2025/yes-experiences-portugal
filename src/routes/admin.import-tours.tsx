@@ -4,8 +4,14 @@ import { SiteLayout } from "@/components/SiteLayout";
 import { supabase } from "@/integrations/supabase/client";
 import { useServerFn } from "@tanstack/react-start";
 import { runTourImport } from "@/server/tourImporter.functions";
+import {
+  listMappingRules,
+  saveMappingRules,
+  deleteMappingRules,
+} from "@/server/mappingRules.functions";
+import { DEFAULT_MAPPING_RULES } from "@/data/defaultMappingRules";
 import { toast } from "sonner";
-import { Loader2, RefreshCw, Check, AlertTriangle } from "lucide-react";
+import { Loader2, RefreshCw, Check, AlertTriangle, Sliders, Trash2, Plus } from "lucide-react";
 
 export const Route = createFileRoute("/admin/import-tours")({
   head: () => ({
