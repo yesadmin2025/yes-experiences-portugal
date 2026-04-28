@@ -816,7 +816,7 @@ function HomePage() {
                         aria-hidden="true"
                         loading="lazy"
                         data-card-image
-                        className="absolute inset-0 w-full h-full object-cover opacity-95 transition-transform duration-[700ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:scale-[1.03] group-focus-visible:scale-[1.03] group-active:scale-[1.025]"
+                        className="absolute inset-0 w-full h-full object-cover opacity-95 transition-transform duration-[700ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:scale-[1.03] group-focus-visible:scale-[1.03] group-active:scale-[1.03] group-data-[tapped=true]:scale-[1.03]"
                       />
                     )}
                     {/* Per-image readability gradient. Each photo was sampled
