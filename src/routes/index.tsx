@@ -865,6 +865,20 @@ function HomePage() {
                   rail: "h-px bg-[image:repeating-linear-gradient(90deg,var(--gold)_0_6px,transparent_6px_12px)]",
                   ribbon: null,
                 },
+                // 5 · Multi-day — soft ivory with a teal-to-gold rail
+                // and squared icon tile. Distinct from card 1 by rail
+                // and icon shape.
+                "ivory-2": {
+                  card: "bg-[color:var(--card)] border border-[color:var(--border)] text-[color:var(--charcoal)] hover:border-[color:var(--gold)]/45 hover:shadow-[0_24px_50px_-24px_rgba(178,140,71,0.18)]",
+                  iconWrap:
+                    "rounded-none border border-[color:var(--charcoal)]/20 text-[color:var(--charcoal)] bg-[color:var(--ivory)]",
+                  eyebrow: "text-[color:var(--charcoal-soft)]",
+                  title: "text-[color:var(--charcoal)]",
+                  line: "text-[color:var(--charcoal-soft)]",
+                  cta: "text-[color:var(--teal)]",
+                  rail: "h-[2px] bg-gradient-to-r from-[color:var(--teal)]/0 via-[color:var(--teal)]/55 to-[color:var(--gold)]/55",
+                  ribbon: null,
+                },
               }[p.accent];
 
               return (
