@@ -410,12 +410,13 @@ function CrawlerErrorPanel() {
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [strategy, setStrategy] = useState<CrawlerErrorStrategy>("root-cause");
 
-  const capture = async () => {
+  const capture = async (s: CrawlerErrorStrategy = strategy) => {
     setLoading(true);
     setErr(null);
     try {
-      const data = await getLastCrawlerError();
+      const data = await getLastCrawlerError({ data: { strategy: s } });
       setInfo(data);
     } catch (e) {
       setErr(e instanceof Error ? e.message : String(e));
@@ -425,8 +426,9 @@ function CrawlerErrorPanel() {
   };
 
   useEffect(() => {
-    void capture();
-  }, []);
+    void capture(strategy);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [strategy]);
 
   const fileHref = info?.file
     ? `vscode://file/${info.file}${info.line ? `:${info.line}${info.column ? `:${info.column}` : ""}` : ""}`
