@@ -912,6 +912,7 @@ const HIGHLIGHT_IMG: Record<string, string> = {
 };
 
 function HighlightsStep({ values, onToggle }: { values: string[]; onToggle: (id: string) => void }) {
+  const tooMany = values.length >= 5;
   return (
     <div>
       <StepHeader
@@ -930,6 +931,14 @@ function HighlightsStep({ values, onToggle }: { values: string[]; onToggle: (id:
           />
         ))}
       </div>
+      {tooMany && (
+        <div className="mt-4 p-3.5 border border-[color:var(--gold)]/40 bg-[color:var(--gold)]/8 rounded-sm flex items-start gap-2.5 animate-fade-in">
+          <Sun size={14} className="text-[color:var(--gold)] mt-0.5 shrink-0" />
+          <p className="text-[12.5px] text-[color:var(--charcoal)] leading-relaxed">
+            This may feel rushed. Want to slow the rhythm? <span className="italic text-[color:var(--charcoal-soft)]">Locals suggest 3–4 highlights per day so each moment can breathe.</span>
+          </p>
+        </div>
+      )}
     </div>
   );
 }
