@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-04-28T22:26:02.106Z",
-  "filesScanned": 94,
+  "generatedAt": "2026-04-28T23:55:03.194Z",
+  "filesScanned": 99,
   "approvedPalette": {
     "teal": "#295B61",
     "teal-2": "#2A7C82",
@@ -18,12 +18,219 @@
     "#cccccc"
   ],
   "counts": {
-    "total": 102,
-    "approved": 25,
-    "allowlisted": 19,
-    "mismatch": 58
+    "total": 131,
+    "approved": 26,
+    "allowlisted": 20,
+    "mismatch": 85
   },
   "findings": [
+    {
+      "file": "src/__tests__/typography-regression.test.ts",
+      "line": 323,
+      "col": 106,
+      "raw": "#0b0b0c",
+      "normalized": "#0b0b0c",
+      "snippet": "body { font: 14px/1.5 -apple-system, system-ui, sans-serif; margin: 0; padding: 24px 32px; background: #0b0b0c; color: #e8e6df; }",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/__tests__/typography-regression.test.ts",
+      "line": 323,
+      "col": 122,
+      "raw": "#e8e6df",
+      "normalized": "#e8e6df",
+      "snippet": "body { font: 14px/1.5 -apple-system, system-ui, sans-serif; margin: 0; padding: 24px 32px; background: #0b0b0c; color: #e8e6df; }",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/__tests__/typography-regression.test.ts",
+      "line": 325,
+      "col": 18,
+      "raw": "#8a8a8a",
+      "normalized": "#8a8a8a",
+      "snippet": ".meta { color: #8a8a8a; margin-bottom: 24px; font-size: 12px; }",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/__tests__/typography-regression.test.ts",
+      "line": 327,
+      "col": 58,
+      "raw": "#2a2a2a",
+      "normalized": "#2a2a2a",
+      "snippet": "section h2 { font-size: 16px; border-bottom: 1px solid #2a2a2a; padding-bottom: 6px; }",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/__tests__/typography-regression.test.ts",
+      "line": 328,
+      "col": 24,
+      "raw": "#c4a25a",
+      "normalized": "#c4a25a",
+      "snippet": ".count { background: #c4a25a; color: #1a1a1a; border-radius: 999px; padding: 1px 8px; font-size: 11px; margin-left: 6px; vertical-align: middle; }",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/__tests__/typography-regression.test.ts",
+      "line": 328,
+      "col": 40,
+      "raw": "#1a1a1a",
+      "normalized": "#1a1a1a",
+      "snippet": ".count { background: #c4a25a; color: #1a1a1a; border-radius: 999px; padding: 1px 8px; font-size: 11px; margin-left: 6px; vertical-align: middle; }",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/__tests__/typography-regression.test.ts",
+      "line": 329,
+      "col": 25,
+      "raw": "#131315",
+      "normalized": "#131315",
+      "snippet": "article { background: #131315; border: 1px solid #25252a; border-radius: 8px; padding: 12px 14px; margin: 10px 0; }",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/__tests__/typography-regression.test.ts",
+      "line": 329,
+      "col": 52,
+      "raw": "#25252a",
+      "normalized": "#25252a",
+      "snippet": "article { background: #131315; border: 1px solid #25252a; border-radius: 8px; padding: 12px 14px; margin: 10px 0; }",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/__tests__/typography-regression.test.ts",
+      "line": 330,
+      "col": 64,
+      "raw": "#c4a25a",
+      "normalized": "#c4a25a",
+      "snippet": "article header h3 { font-size: 13px; margin: 0 0 4px; color: #c4a25a; font-weight: 600; }",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/__tests__/typography-regression.test.ts",
+      "line": 331,
+      "col": 33,
+      "raw": "#8a8a8a",
+      "normalized": "#8a8a8a",
+      "snippet": ".bp { font-size: 11px; color: #8a8a8a; margin-bottom: 8px; }",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/__tests__/typography-regression.test.ts",
+      "line": 332,
+      "col": 26,
+      "raw": "#1f1f24",
+      "normalized": "#1f1f24",
+      "snippet": ".bp code { background: #1f1f24; padding: 1px 6px; border-radius: 4px; }",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/__tests__/typography-regression.test.ts",
+      "line": 333,
+      "col": 36,
+      "raw": "#8a8a8a",
+      "normalized": "#8a8a8a",
+      "snippet": ".trace { font-size: 11px; color: #8a8a8a; margin-bottom: 8px; }",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/__tests__/typography-regression.test.ts",
+      "line": 334,
+      "col": 29,
+      "raw": "#1f1f24",
+      "normalized": "#1f1f24",
+      "snippet": ".trace code { background: #1f1f24; padding: 1px 6px; border-radius: 4px; color: #c4a25a; }",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/__tests__/typography-regression.test.ts",
+      "line": 334,
+      "col": 83,
+      "raw": "#c4a25a",
+      "normalized": "#c4a25a",
+      "snippet": ".trace code { background: #1f1f24; padding: 1px 6px; border-radius: 4px; color: #c4a25a; }",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/__tests__/typography-regression.test.ts",
+      "line": 336,
+      "col": 30,
+      "raw": "#08080a",
+      "normalized": "#08080a",
+      "snippet": ".prev, .next { background: #08080a; border-radius: 6px; padding: 10px 12px; font: 12px/1.55 ui-monospace, monospace; word-break: break-all; white-space: pre-wra",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/__tests__/typography-regression.test.ts",
+      "line": 337,
+      "col": 34,
+      "raw": "#6b2b2b",
+      "normalized": "#6b2b2b",
+      "snippet": ".prev { border-left: 3px solid #6b2b2b; }",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/__tests__/typography-regression.test.ts",
+      "line": 338,
+      "col": 34,
+      "raw": "#2b6b3a",
+      "normalized": "#2b6b3a",
+      "snippet": ".next { border-left: 3px solid #2b6b3a; }",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/__tests__/typography-regression.test.ts",
+      "line": 339,
+      "col": 18,
+      "raw": "#6b6b6b",
+      "normalized": "#6b6b6b",
+      "snippet": ".same { color: #6b6b6b; }",
+      "status": "approved"
+    },
+    {
+      "file": "src/__tests__/typography-regression.test.ts",
+      "line": 340,
+      "col": 23,
+      "raw": "#3a1414",
+      "normalized": "#3a1414",
+      "snippet": ".del  { background: #3a1414; color: #ff8a8a; padding: 0 2px; border-radius: 3px; }",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/__tests__/typography-regression.test.ts",
+      "line": 340,
+      "col": 39,
+      "raw": "#ff8a8a",
+      "normalized": "#ff8a8a",
+      "snippet": ".del  { background: #3a1414; color: #ff8a8a; padding: 0 2px; border-radius: 3px; }",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/__tests__/typography-regression.test.ts",
+      "line": 341,
+      "col": 23,
+      "raw": "#143a1f",
+      "normalized": "#143a1f",
+      "snippet": ".add  { background: #143a1f; color: #8aff9c; padding: 0 2px; border-radius: 3px; }",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/__tests__/typography-regression.test.ts",
+      "line": 341,
+      "col": 39,
+      "raw": "#8aff9c",
+      "normalized": "#8aff9c",
+      "snippet": ".add  { background: #143a1f; color: #8aff9c; padding: 0 2px; border-radius: 3px; }",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/__tests__/typography-regression.test.ts",
+      "line": 342,
+      "col": 19,
+      "raw": "#8a8a8a",
+      "normalized": "#8a8a8a",
+      "snippet": ".empty { color: #8a8a8a; padding: 20px; text-align: center; }",
+      "status": "mismatch"
+    },
     {
       "file": "src/components/HeroCopyDiff.tsx",
       "line": 159,
@@ -808,6 +1015,24 @@
       "status": "mismatch"
     },
     {
+      "file": "src/routes/multi-day.tsx",
+      "line": 610,
+      "col": 60,
+      "raw": "#0a1f24",
+      "normalized": "#0a1f24",
+      "snippet": "<rect x=\"0\" y=\"0\" width=\"100\" height=\"100\" fill=\"#0a1f24\" />",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/multi-day.tsx",
+      "line": 614,
+      "col": 19,
+      "raw": "#1a3338",
+      "normalized": "#1a3338",
+      "snippet": "fill=\"#1a3338\"",
+      "status": "mismatch"
+    },
+    {
       "file": "src/styles.css",
       "line": 60,
       "col": 11,
@@ -873,15 +1098,33 @@
     {
       "file": "src/styles.css",
       "line": 67,
-      "col": 20,
+      "col": 27,
       "raw": "#5a5a5a",
       "normalized": "#5a5a5a",
-      "snippet": "--charcoal-soft: #5a5a5a;",
+      "snippet": "/* Secondary text — was #5a5a5a, deepened to #555 so secondary copy on",
       "status": "mismatch"
     },
     {
       "file": "src/styles.css",
-      "line": 68,
+      "line": 67,
+      "col": 48,
+      "raw": "#555",
+      "normalized": "#555555",
+      "snippet": "/* Secondary text — was #5a5a5a, deepened to #555 so secondary copy on",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/styles.css",
+      "line": 69,
+      "col": 20,
+      "raw": "#555555",
+      "normalized": "#555555",
+      "snippet": "--charcoal-soft: #555555;",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/styles.css",
+      "line": 70,
       "col": 20,
       "raw": "#1f1f1f",
       "normalized": "#1f1f1f",
@@ -890,7 +1133,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 73,
+      "line": 75,
       "col": 11,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -899,7 +1142,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 75,
+      "line": 77,
       "col": 14,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -908,7 +1151,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 86,
+      "line": 88,
       "col": 29,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -917,7 +1160,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 208,
+      "line": 210,
       "col": 11,
       "raw": "#1f1f1f",
       "normalized": "#1f1f1f",
@@ -926,7 +1169,16 @@
     },
     {
       "file": "src/styles.css",
-      "line": 777,
+      "line": 242,
+      "col": 66,
+      "raw": "#555",
+      "normalized": "#555555",
+      "snippet": "reset weight via the cascade. The deepened --charcoal-soft (#555)",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/styles.css",
+      "line": 785,
       "col": 12,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -935,7 +1187,16 @@
     },
     {
       "file": "src/styles.css",
-      "line": 964,
+      "line": 972,
+      "col": 12,
+      "raw": "#ffffff",
+      "normalized": "#ffffff",
+      "snippet": "color: #ffffff;",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/styles.css",
+      "line": 1225,
       "col": 12,
       "raw": "#ffffff",
       "normalized": "#ffffff",

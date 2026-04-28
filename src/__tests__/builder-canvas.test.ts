@@ -235,4 +235,120 @@ describe("Builder canvas — typography & spacing landmarks", () => {
     // guarding against.
     expect(selected.gap).toBe(unselected.gap);
   });
+
+  it("Two sequential customizations leave header + first card landmarks unchanged", async () => {
+    /**
+     * Simulates a real user flow on a single step:
+     *   1. Initial render — Option A is the first card, nothing selected.
+     *   2. User picks Option B (different experience) — selection moves
+     *      to the second card, the first card flips back to unselected.
+     *   3. User opens detail and a `line` (sub-line) is added to the
+     *      currently-selected card.
+     *
+     * Across all three render passes, the StepHeader landmarks AND the
+     * first MomentCard's typography landmarks (className contract +
+     * computed inline styles for moment-card / moment-name) MUST remain
+     * byte-identical. The header → first-card vertical gap MUST also
+     * be preserved — customizing options cannot reflow the canvas.
+     */
+    type Pass = {
+      header: LandmarkSnapshot[];
+      firstCard: LandmarkSnapshot[];
+      gap: number;
+    };
+
+    const OPTIONS: Array<{ name: string; image: string }> = [
+      { name: "Quinta do Crasto", image: SAMPLE_IMG },
+      { name: "Niepoort cellars", image: SAMPLE_IMG },
+    ];
+
+    const renderStep = (
+      selectedIndex: number | null,
+      lineForSelected?: string,
+    ) =>
+      measureWithSettle<Pass>(
+        React.createElement(
+          "div",
+          null,
+          React.createElement(StepHeader, {
+            title: "Pick a winery",
+            sub: "We'll tailor the visit around your pace.",
+          }),
+          React.createElement(
+            "div",
+            { style: { marginTop: "20px" } },
+            ...OPTIONS.map((opt, i) =>
+              React.createElement(MomentCard, {
+                key: opt.name,
+                image: opt.image,
+                name: opt.name,
+                selected: selectedIndex === i,
+                line:
+                  selectedIndex === i && lineForSelected
+                    ? lineForSelected
+                    : undefined,
+                onClick: () => {},
+              }),
+            ),
+          ),
+        ),
+        (root) => {
+          const headerEl = root.querySelector<HTMLElement>(
+            '[data-builder-landmark="step-header"]',
+          )!;
+          const firstCardEl = root.querySelectorAll<HTMLElement>(
+            '[data-builder-landmark="moment-card"]',
+          )[0]!;
+
+          // Snapshot landmarks scoped to header + first card only.
+          const header = snapshotLandmarks(headerEl.parentElement as HTMLElement)
+            .filter((l) => l.selector.startsWith("step-"));
+          const firstCard = snapshotLandmarks(
+            firstCardEl.parentElement as HTMLElement,
+          )
+            // Only the first card; ignore landmarks from sibling cards.
+            .filter((_, idx, arr) => {
+              // landmarks are emitted in DOM order; the first
+              // moment-card and its descendant moment-name belong to
+              // index 0. We keep landmarks until we hit a second
+              // moment-card.
+              const seenSecondCard = arr
+                .slice(0, idx)
+                .filter((l) => l.selector === "moment-card").length;
+              return seenSecondCard === 0;
+            });
+
+          const h = headerEl.getBoundingClientRect();
+          const c = firstCardEl.getBoundingClientRect();
+          return {
+            header,
+            firstCard,
+            gap: Math.round(c.top - h.bottom),
+          };
+        },
+        { width: 393 },
+      );
+
+    // Pass 1: nothing selected (first card is the "default focus").
+    const initial = await renderStep(null);
+    // Pass 2: user picks the SECOND option — first card returns to
+    // unselected; we're verifying picking a *different* experience
+    // doesn't disturb the first card's landmarks.
+    const switched = await renderStep(1);
+    // Pass 3: user adds a detail line on the selected (second) card.
+    // The first card still has no line — its landmarks must not move.
+    const withDetail = await renderStep(1, "Vintage cellars overlooking the Douro");
+
+    // Header landmarks: byte-identical across all three passes.
+    expect(switched.header).toEqual(initial.header);
+    expect(withDetail.header).toEqual(initial.header);
+
+    // First card landmarks: byte-identical across all three passes.
+    expect(switched.firstCard).toEqual(initial.firstCard);
+    expect(withDetail.firstCard).toEqual(initial.firstCard);
+
+    // Vertical rhythm: header→first-card gap is invariant.
+    expect(switched.gap).toBe(initial.gap);
+    expect(withDetail.gap).toBe(initial.gap);
+  });
 });
