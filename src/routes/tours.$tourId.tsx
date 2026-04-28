@@ -205,12 +205,13 @@ function TourHero({
             >
               <Sparkles size={14} /> Reserve instantly
             </a>
-            <a
-              href="#tailor"
+            <Link
+              to="/tours/$tourId/tailor"
+              params={{ tourId: tour.id }}
               className="flex-1 inline-flex items-center justify-center gap-2 border border-[color:var(--charcoal)]/25 hover:border-[color:var(--gold)] text-[color:var(--charcoal)] px-6 py-4 text-sm tracking-wide transition-all min-h-[52px]"
             >
               Tailor this Signature
-            </a>
+            </Link>
           </div>
         </div>
       </section>
@@ -766,12 +767,13 @@ function FinalCta({ tour }: { tour: SignatureTour }) {
           >
             <Sparkles size={14} /> Reserve instantly
           </a>
-          <a
-            href="#tailor"
+          <Link
+            to="/tours/$tourId/tailor"
+            params={{ tourId: tour.id }}
             className="inline-flex items-center justify-center gap-2 border border-[color:var(--ivory)]/40 hover:border-[color:var(--gold)] text-[color:var(--ivory)] px-7 py-4 text-sm tracking-wide transition-all min-h-[52px]"
           >
             Tailor this Signature <ArrowRight size={14} />
-          </a>
+          </Link>
         </div>
 
         <p className="mt-5 text-[11px] uppercase tracking-[0.24em] text-[color:var(--ivory)]/65">

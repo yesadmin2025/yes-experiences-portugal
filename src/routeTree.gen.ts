@@ -29,6 +29,7 @@ import { Route as ApiVerifyHeroRouteImport } from './routes/api/verify-hero'
 import { Route as ApiImgRouteImport } from './routes/api/img'
 import { Route as AdminTourLinkAuditRouteImport } from './routes/admin.tour-link-audit'
 import { Route as AdminImportToursRouteImport } from './routes/admin.import-tours'
+import { Route as ToursTourIdTailorRouteImport } from './routes/tours.$tourId.tailor'
 
 const TypographyAuditRoute = TypographyAuditRouteImport.update({
   id: '/typography-audit',
@@ -130,6 +131,11 @@ const AdminImportToursRoute = AdminImportToursRouteImport.update({
   path: '/admin/import-tours',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ToursTourIdTailorRoute = ToursTourIdTailorRouteImport.update({
+  id: '/tailor',
+  path: '/tailor',
+  getParentRoute: () => ToursTourIdRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -151,7 +157,8 @@ export interface FileRoutesByFullPath {
   '/admin/tour-link-audit': typeof AdminTourLinkAuditRoute
   '/api/img': typeof ApiImgRoute
   '/api/verify-hero': typeof ApiVerifyHeroRoute
-  '/tours/$tourId': typeof ToursTourIdRoute
+  '/tours/$tourId': typeof ToursTourIdRouteWithChildren
+  '/tours/$tourId/tailor': typeof ToursTourIdTailorRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -173,7 +180,8 @@ export interface FileRoutesByTo {
   '/admin/tour-link-audit': typeof AdminTourLinkAuditRoute
   '/api/img': typeof ApiImgRoute
   '/api/verify-hero': typeof ApiVerifyHeroRoute
-  '/tours/$tourId': typeof ToursTourIdRoute
+  '/tours/$tourId': typeof ToursTourIdRouteWithChildren
+  '/tours/$tourId/tailor': typeof ToursTourIdTailorRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -196,7 +204,8 @@ export interface FileRoutesById {
   '/admin/tour-link-audit': typeof AdminTourLinkAuditRoute
   '/api/img': typeof ApiImgRoute
   '/api/verify-hero': typeof ApiVerifyHeroRoute
-  '/tours/$tourId': typeof ToursTourIdRoute
+  '/tours/$tourId': typeof ToursTourIdRouteWithChildren
+  '/tours/$tourId/tailor': typeof ToursTourIdTailorRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -221,6 +230,7 @@ export interface FileRouteTypes {
     | '/api/img'
     | '/api/verify-hero'
     | '/tours/$tourId'
+    | '/tours/$tourId/tailor'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -243,6 +253,7 @@ export interface FileRouteTypes {
     | '/api/img'
     | '/api/verify-hero'
     | '/tours/$tourId'
+    | '/tours/$tourId/tailor'
   id:
     | '__root__'
     | '/'
@@ -265,6 +276,7 @@ export interface FileRouteTypes {
     | '/api/img'
     | '/api/verify-hero'
     | '/tours/$tourId'
+    | '/tours/$tourId/tailor'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -287,7 +299,7 @@ export interface RootRouteChildren {
   AdminTourLinkAuditRoute: typeof AdminTourLinkAuditRoute
   ApiImgRoute: typeof ApiImgRoute
   ApiVerifyHeroRoute: typeof ApiVerifyHeroRoute
-  ToursTourIdRoute: typeof ToursTourIdRoute
+  ToursTourIdRoute: typeof ToursTourIdRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -432,8 +444,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminImportToursRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tours/$tourId/tailor': {
+      id: '/tours/$tourId/tailor'
+      path: '/tailor'
+      fullPath: '/tours/$tourId/tailor'
+      preLoaderRoute: typeof ToursTourIdTailorRouteImport
+      parentRoute: typeof ToursTourIdRoute
+    }
   }
 }
+
+interface ToursTourIdRouteChildren {
+  ToursTourIdTailorRoute: typeof ToursTourIdTailorRoute
+}
+
+const ToursTourIdRouteChildren: ToursTourIdRouteChildren = {
+  ToursTourIdTailorRoute: ToursTourIdTailorRoute,
+}
+
+const ToursTourIdRouteWithChildren = ToursTourIdRoute._addFileChildren(
+  ToursTourIdRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -455,7 +486,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminTourLinkAuditRoute: AdminTourLinkAuditRoute,
   ApiImgRoute: ApiImgRoute,
   ApiVerifyHeroRoute: ApiVerifyHeroRoute,
-  ToursTourIdRoute: ToursTourIdRoute,
+  ToursTourIdRoute: ToursTourIdRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
