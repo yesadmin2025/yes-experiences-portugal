@@ -358,10 +358,13 @@ function BuilderPage() {
           <div className="text-center">
             <span className="eyebrow">YES Experience Studio</span>
             <h1 className="serif text-3xl md:text-5xl mt-4 leading-tight text-[color:var(--charcoal)]">
-              Start <span className="italic text-[color:var(--teal)]">your way</span>
+              Start with <span className="italic text-[color:var(--teal)]">anything</span>
             </h1>
-            <p className="mt-3 text-[13px] md:text-sm text-[color:var(--charcoal-soft)] italic">
-              We'll guide you as you build — shaped within what works best on the ground.
+            <p className="mt-3 text-[13px] md:text-sm text-[color:var(--charcoal-soft)] italic max-w-xl mx-auto">
+              A place, a moment, a region, or an idea — shape it into a real Portugal journey, in real time.
+            </p>
+            <p className="mt-2 text-[10px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
+              Instant confirmation when your journey is ready
             </p>
           </div>
 
