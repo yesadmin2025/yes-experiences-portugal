@@ -29,6 +29,7 @@ import { HeroMetaProbe } from "@/components/HeroMetaProbe";
 import { HeroCopyDiff } from "@/components/HeroCopyDiff";
 import { HeroVerifyOverlay } from "@/components/HeroVerifyOverlay";
 import { DecisionStepper } from "@/components/DecisionStepper";
+import { ContrastAudit } from "@/components/dev/ContrastAudit";
 
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
 import { signatureTours, isValidTourId } from "@/data/signatureTours";
