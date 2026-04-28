@@ -153,7 +153,7 @@ function TourDetailPage() {
 
           <Block icon={<Check size={14} />} title="What's included">
             <ul className="space-y-2.5 text-sm leading-relaxed">
-              {tour.included.map((h) => (
+              {(tour.included ?? []).map((h) => (
                 <li key={h} className="flex gap-2.5">
                   <Check
                     size={14}
