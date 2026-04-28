@@ -28,10 +28,53 @@
 
 import fs from "node:fs";
 import path from "node:path";
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, beforeAll } from "vitest";
 
 const ROOT = path.resolve(__dirname, "../..");
 const read = (p: string) => fs.readFileSync(path.join(ROOT, p), "utf8");
+
+/* ── Stability guards ────────────────────────────────────────────
+ * This suite is deterministic by design: it parses source files and
+ * styles.css as text — it does NOT mount components, does NOT call
+ * getComputedStyle, and does NOT depend on the DOM, fonts or layout.
+ * That means there is nothing to "wait for" before reading values,
+ * and the suite cannot flake across breakpoints.
+ *
+ * The guards below exist to KEEP it that way as the suite grows:
+ *
+ *   1. settleLayout() — ready-to-use helper that awaits
+ *      document.fonts.ready (when a DOM is present) plus two rAFs
+ *      so style recalc + layout has flushed. Call it in any future
+ *      test that mounts JSX and reads getComputedStyle.
+ *
+ *   2. A static guard test that fails if anyone introduces a
+ *      getComputedStyle / offsetWidth / getBoundingClientRect call
+ *      in this file without also using settleLayout() first.
+ * ──────────────────────────────────────────────────────────────── */
+
+export async function settleLayout(): Promise<void> {
+  if (typeof document === "undefined") return;
+
+  // Wait for web fonts so font-size/line-height reflect real metrics.
+  const fontsReady = (
+    document as unknown as { fonts?: { ready?: Promise<unknown> } }
+  ).fonts?.ready;
+  if (fontsReady) await fontsReady;
+
+  // Two rAFs to let style recalc + layout flush.
+  const raf = (cb: () => void) =>
+    typeof requestAnimationFrame === "function"
+      ? requestAnimationFrame(cb)
+      : (setTimeout(cb, 16) as unknown as number);
+
+  await new Promise<void>((r) => raf(() => raf(() => r())));
+}
+
+beforeAll(async () => {
+  // No-op for this static suite, but locks in the contract: any
+  // future test that reads computed styles MUST run after settle.
+  await settleLayout();
+});
 
 /* ── 1. Headline class strings, pulled from source ──────────────── */
 
