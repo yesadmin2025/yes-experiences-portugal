@@ -28,6 +28,7 @@ import { Route as ToursTourIdRouteImport } from './routes/tours.$tourId'
 import { Route as ApiVerifyHeroRouteImport } from './routes/api/verify-hero'
 import { Route as ApiImgRouteImport } from './routes/api/img'
 import { Route as AdminImportToursRouteImport } from './routes/admin.import-tours'
+import { Route as AdminTourLinkAuditRouteImport } from './routes/admin.tour-link-audit'
 
 const TypographyAuditRoute = TypographyAuditRouteImport.update({
   id: '/typography-audit',
