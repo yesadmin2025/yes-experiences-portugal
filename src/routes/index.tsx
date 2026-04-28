@@ -155,7 +155,7 @@ const startPaths = [
     accent: "ivory" as const,
     slug: "signature",
     stepLabel: "Signature",
-    bg: decisionSignature,
+    bg: imgArrabidaWineWinery,
   },
   {
     icon: Wand2,
@@ -170,7 +170,7 @@ const startPaths = [
     accent: "sand" as const,
     slug: "tailor",
     stepLabel: "Tailor",
-    bg: decisionTailor,
+    bg: imgAzeitaoWorkshop,
   },
   {
     icon: Sparkles,
@@ -185,7 +185,7 @@ const startPaths = [
     accent: "teal" as const,
     slug: "studio",
     stepLabel: "Studio",
-    bg: decisionStudio,
+    bg: imgTroiaFerry,
   },
   {
     icon: Gift,
@@ -200,7 +200,7 @@ const startPaths = [
     accent: "charcoal" as const,
     slug: "moment",
     stepLabel: "Moment",
-    bg: decisionMoment,
+    bg: imgArrabidaWineLunch,
   },
 ];
 
@@ -1033,7 +1033,7 @@ function HomePage() {
                 cta: "Plan a moment",
                 ariaLabel:
                   "For moments that matter — proposals, celebrations, corporate and private groups",
-                bg: catProposals,
+                bg: imgSintraCabo,
               },
             ].map((b) => (
               <Link
@@ -1154,21 +1154,21 @@ function HomePage() {
                 title: "A moment they'll never forget",
                 line: "A hidden viewpoint, a private dinner, a perfectly timed pause — quietly extraordinary.",
                 to: "/proposals" as const,
-                bg: expRomantic,
+                bg: imgSintraCabo,
               },
               {
                 eyebrow: "Celebrations",
                 title: "Birthdays, anniversaries, milestones",
                 line: "Gather the people who matter, in places that feel made for the occasion.",
                 to: "/proposals" as const,
-                bg: expGastronomy,
+                bg: imgArrabidaWineLunch,
               },
               {
                 eyebrow: "Corporate",
                 title: "Teams, incentives, retreats",
                 line: "Refined private programs that feel nothing like a hotel ballroom.",
                 to: "/corporate" as const,
-                bg: catCorporate,
+                bg: imgArrabidaBoatCoves,
               },
             ].map((o) => (
               <li key={o.eyebrow} className="reveal-stagger h-full">
