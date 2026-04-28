@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { auditTourLinks } from "@/server/tourLinkAudit.functions";
 import type { TourLinkAuditReport } from "@/server/tourLinkAudit.server";
 import { checkRouteFile, type RouteFileCheckResult } from "@/server/routeFileCheck.functions";
