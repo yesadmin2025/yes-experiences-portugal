@@ -510,13 +510,40 @@ function CrawlerErrorPanel() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [strategy]);
 
-  // After a re-scan completes (loading transitions true -> false), auto-scroll
-  // the results section into view — only when the toggle is enabled.
+  // While a scan is running, watch for the user manually scrolling away from
+  // the position they were at when the scan started. We ignore programmatic
+  // scrolls we trigger ourselves via a short flag window.
   useEffect(() => {
-    if (autoScroll && wasLoadingRef.current && !loading && (info || err)) {
-      requestAnimationFrame(() => {
-        resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-      });
+    if (!loading || typeof window === "undefined") return;
+    const onScroll = () => {
+      if (programmaticScrollRef.current) return;
+      const start = scanStartScrollRef.current;
+      if (start == null) return;
+      if (Math.abs(window.scrollY - start) > 24) {
+        userMovedDuringScanRef.current = true;
+      }
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [loading]);
+
+  // After a re-scan completes (loading true -> false), auto-scroll the results
+  // section into view — only if the toggle is enabled AND the user hasn't
+  // manually scrolled the panel away during the scan.
+  useEffect(() => {
+    if (wasLoadingRef.current && !loading && (info || err)) {
+      if (autoScroll && !userMovedDuringScanRef.current) {
+        programmaticScrollRef.current = true;
+        requestAnimationFrame(() => {
+          resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+          // Clear the programmatic flag after the smooth scroll settles.
+          window.setTimeout(() => {
+            programmaticScrollRef.current = false;
+          }, 800);
+        });
+      } else if (autoScroll && userMovedDuringScanRef.current) {
+        setSkippedAutoScroll(true);
+      }
     }
     wasLoadingRef.current = loading;
   }, [loading, info, err, autoScroll]);
