@@ -1420,6 +1420,20 @@ function LiveCanvas({ s, title }: { s: BuilderState; title: string }) {
                     )}
                   </div>
                 </div>
+
+                {/* Interlude — short poetic bridge to the next chapter */}
+                {!isLast && interludes[i] && (
+                  <div className="flex gap-4 mt-1.5">
+                    <div className="flex flex-col items-center w-10 shrink-0">
+                      <div className="w-px flex-1 bg-[color:var(--border)] min-h-[8px]" />
+                      <div className="h-1.5 w-1.5 rounded-full bg-[color:var(--gold)]/60 my-1" />
+                      <div className="w-px flex-1 bg-[color:var(--border)] min-h-[8px]" />
+                    </div>
+                    <p className="flex-1 text-[12.5px] md:text-[13px] text-[color:var(--charcoal-soft)] italic leading-relaxed pb-3 pt-1">
+                      {interludes[i]}
+                    </p>
+                  </div>
+                )}
               </li>
             );
           })}
