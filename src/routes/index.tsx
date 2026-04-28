@@ -1125,39 +1125,6 @@ function HomePage() {
         </div>
       </section>
 
-      {/* 5 — DIFFERENTIATION
-          Four pillars. Minimal mobile-first grid: 2-up on mobile, 4-up on
-          desktop. Icon + one-word title + one short line. */}
-      <section className="py-24 md:py-36 bg-[color:var(--ivory)]" aria-labelledby="pillars-title">
-        <div className="container-x">
-          <div className="reveal text-center max-w-2xl mx-auto mb-14 md:mb-16">
-            <span className="eyebrow">Why YES</span>
-            <h2 id="pillars-title" className="serif text-[2.25rem] md:text-5xl mt-5 leading-[1.08]">
-              The difference, <span className="italic">in four words.</span>
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12 md:gap-y-10 max-w-5xl mx-auto">
-            {pillars.map((p) => {
-              const Icon = p.icon;
-              return (
-                <div key={p.title} className="reveal-stagger flex flex-col items-start text-left">
-                  <span className="inline-flex items-center justify-center w-11 h-11 md:w-12 md:h-12 text-[color:var(--teal)] border border-[color:var(--gold)]/40 mb-5">
-                    <Icon size={18} strokeWidth={1.5} />
-                  </span>
-                  <h3 className="serif text-[1.35rem] md:text-[1.45rem] text-[color:var(--charcoal)] leading-[1.15]">
-                    {p.title}
-                  </h3>
-                  <p className="mt-3 text-[14.5px] text-[color:var(--charcoal-soft)] leading-[1.65] font-light max-w-[28ch]">
-                    {p.line}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
       {/* 6 — MULTI-DAY JOURNEYS */}
       <section className="bg-[color:var(--sand)] py-24 md:py-40">
         <div className="container-x">
