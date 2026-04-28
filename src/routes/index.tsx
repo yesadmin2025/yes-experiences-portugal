@@ -1322,7 +1322,7 @@ function HomePage() {
             {/* Soft photographic wash — adds atmospheric depth without
                 losing the sand surface or harming text contrast. */}
             <img
-              src={expWine}
+              src={imgArrabidaWineHero}
               alt=""
               aria-hidden="true"
               loading="lazy"
