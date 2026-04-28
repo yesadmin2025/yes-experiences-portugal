@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { signatureTours } from "@/data/signatureTours";
+import { useImageQuality, type ImageQuality } from "@/hooks/use-image-quality";
 
 type Row = { id: string; image_url: string | null; source_url: string };
 
