@@ -664,6 +664,15 @@ function CrawlerErrorPanel() {
             <RefreshCw size={11} className={loading ? "animate-spin" : ""} />
             {loading ? "Capturing…" : "Capture latest error"}
           </button>
+          <label className="inline-flex items-center gap-1.5 border border-[color:var(--border)] bg-white px-2.5 py-1 text-xs cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={autoScroll}
+              onChange={(e) => setAutoScroll(e.target.checked)}
+              className="h-3 w-3 accent-[color:var(--gold)]"
+            />
+            Auto-scroll to results
+          </label>
           {info?.raw && (
             <button
               type="button"
