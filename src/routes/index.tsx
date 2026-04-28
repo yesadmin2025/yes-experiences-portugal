@@ -829,44 +829,72 @@ function HomePage() {
                     data-expected-to={p.expectedTo}
                     data-actual-to={p.to}
                     data-route-ok={p.to === p.expectedTo ? "true" : "false"}
-                    className={`group relative flex flex-col h-full p-7 md:p-8 transition-all duration-500 overflow-hidden ${styles.card}`}
+                    className={`group relative flex flex-col h-full min-h-[22rem] md:min-h-[26rem] p-7 md:p-8 transition-all duration-500 overflow-hidden hover:-translate-y-1 hover:scale-[1.015] ${styles.card}`}
                   >
+                    {/* Photographic background — soft, slow zoom on hover.
+                        Sits BEHIND the per-accent surface tint via a
+                        gradient overlay tuned to the accent so each card
+                        keeps its identity (ivory / sand / teal / charcoal)
+                        while gaining real photography. */}
+                    {p.bg && (
+                      <>
+                        <img
+                          src={p.bg}
+                          alt=""
+                          aria-hidden="true"
+                          loading="lazy"
+                          className="absolute inset-0 w-full h-full object-cover opacity-[0.32] group-hover:opacity-[0.42] transition-all duration-[1400ms] ease-out scale-[1.02] group-hover:scale-[1.08]"
+                        />
+                        <div
+                          aria-hidden="true"
+                          className={`absolute inset-0 ${
+                            p.accent === "teal"
+                              ? "bg-gradient-to-br from-[color:var(--teal)]/92 via-[color:var(--teal)]/82 to-[color:var(--teal-2)]/88"
+                              : p.accent === "charcoal"
+                                ? "bg-gradient-to-br from-[color:var(--charcoal-deep)]/92 via-[color:var(--charcoal-deep)]/85 to-[color:var(--charcoal)]/90"
+                                : p.accent === "sand"
+                                  ? "bg-gradient-to-br from-[color:var(--sand)]/93 via-[color:var(--sand)]/85 to-[color:var(--ivory)]/82"
+                                  : "bg-gradient-to-br from-[color:var(--card)]/94 via-[color:var(--card)]/86 to-[color:var(--ivory)]/82"
+                          }`}
+                        />
+                      </>
+                    )}
                     {/* Top rail — distinct accent pattern per card
                         (solid teal · soft-gold gradient · thick gold ·
                         dotted gold) so each path is identifiable at a
                         glance even before reading the title. */}
                     <span
                       aria-hidden="true"
-                      className={`absolute top-0 left-0 right-0 ${styles.rail}`}
+                      className={`absolute top-0 left-0 right-0 z-[1] ${styles.rail}`}
                     />
                     {styles.ribbon && (
                       <span
                         aria-hidden="true"
-                        className="absolute top-4 right-4 text-[9.5px] uppercase tracking-[0.26em] px-2.5 py-1 bg-[color:var(--gold)] text-[color:var(--charcoal-deep)] font-semibold"
+                        className="absolute top-4 right-4 z-[2] text-[9.5px] uppercase tracking-[0.26em] px-2.5 py-1 bg-[color:var(--gold)] text-[color:var(--charcoal-deep)] font-semibold"
                       >
                         {styles.ribbon}
                       </span>
                     )}
                     <span
-                      className={`inline-flex items-center justify-center w-11 h-11 mb-6 border ${styles.iconWrap}`}
+                      className={`relative z-[1] inline-flex items-center justify-center w-11 h-11 mb-6 border backdrop-blur-[2px] ${styles.iconWrap}`}
                     >
                       <Icon size={18} strokeWidth={1.5} />
                     </span>
-                    <span className={`text-[10.5px] uppercase tracking-[0.3em] ${styles.eyebrow}`}>
+                    <span className={`relative z-[1] text-[10.5px] uppercase tracking-[0.3em] ${styles.eyebrow}`}>
                       {p.eyebrow}
                     </span>
                     <h3
-                      className={`t-h3 mt-3 ${styles.title}`}
+                      className={`relative z-[1] serif mt-3 text-[1.5rem] md:text-[1.7rem] leading-[1.15] tracking-[-0.005em] ${styles.title}`}
                     >
                       {p.title}
                     </h3>
                     <p
-                      className={`mt-3 text-[14.5px] leading-[1.65] font-light flex-1 ${styles.line}`}
+                      className={`relative z-[1] mt-3 text-[14.5px] leading-[1.65] font-light flex-1 ${styles.line}`}
                     >
                       {p.line}
                     </p>
                     <span
-                      className={`mt-7 inline-flex items-center gap-2 text-[14px] tracking-[0.005em] font-medium group-hover:translate-x-1 transition-transform duration-300 ${styles.cta}`}
+                      className={`relative z-[1] mt-7 inline-flex items-center gap-2 text-[14px] tracking-[0.005em] font-medium group-hover:translate-x-1 transition-transform duration-300 ${styles.cta}`}
                     >
                       {p.cta} <ArrowRight size={14} />
                     </span>
