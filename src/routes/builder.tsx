@@ -210,6 +210,9 @@ const seeds: { id: string; kind: string; label: string; sub: string; patch: Part
 function BuilderPage() {
   const [s, setS] = useState<BuilderState>(emptyState);
   const [mobileView, setMobileView] = useState<"build" | "map">("build");
+  // Hovered/long-pressed highlight chip — drives a temporary route extension
+  // and pin pulse on the map. Cleared on leave / release.
+  const [previewHighlight, setPreviewHighlight] = useState<string | null>(null);
 
   // Has the user begun? Drives the intro/active split.
   const started =
@@ -317,6 +320,8 @@ function BuilderPage() {
                   update={update}
                   toggle={toggle}
                   reset={() => setS(emptyState)}
+                  previewHighlight={previewHighlight}
+                  onPreviewHighlight={setPreviewHighlight}
                 />
               )}
             </div>
@@ -324,7 +329,7 @@ function BuilderPage() {
             {/* RIGHT — live map + summary */}
             <aside className={`lg:col-span-5 xl:col-span-5 ${mobileView === "map" ? "" : "hidden lg:block"}`}>
               <div className="lg:sticky lg:top-[120px] space-y-5">
-                <PremiumMap region={s.region} highlights={s.highlights} days={days} isMultiDay={isMultiDay} />
+                <PremiumMap region={s.region} highlights={s.highlights} days={days} isMultiDay={isMultiDay} previewHighlight={previewHighlight} />
                 <LiveSummary
                   s={s}
                   days={days}
@@ -431,11 +436,15 @@ function ActiveBuilder({
   update,
   toggle,
   reset,
+  previewHighlight,
+  onPreviewHighlight,
 }: {
   s: BuilderState;
   update: <K extends keyof BuilderState>(k: K, v: BuilderState[K]) => void;
   toggle: (k: "styles" | "highlights" | "enhancements", id: string) => void;
   reset: () => void;
+  previewHighlight: string | null;
+  onPreviewHighlight: (id: string | null) => void;
 }) {
   return (
     <div className="space-y-8">
@@ -491,12 +500,16 @@ function ActiveBuilder({
         />
       </Block>
 
-      <Block title="Signature moments" hint="The kind only locals know to suggest.">
-        <Pills
+      <Block
+        title="Signature moments"
+        hint="Hover or hold to preview on the map."
+      >
+        <PreviewablePills
           options={highlightOpts.map((h) => ({ id: h.id, label: h.name }))}
           selected={s.highlights}
           onSelect={(id) => toggle("highlights", id)}
-          multi
+          previewId={previewHighlight}
+          onPreview={onPreviewHighlight}
         />
       </Block>
 
@@ -630,6 +643,94 @@ function Pills({
         );
       })}
       {multi && selected.length > 0 && (
+        <span className="self-center text-[10px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)] ml-1">
+          {selected.length} chosen
+        </span>
+      )}
+    </div>
+  );
+}
+
+/** Pill list with hover/long-press preview.
+ *  - Desktop: pointerenter / pointerleave preview.
+ *  - Touch: holding for 300 ms previews without selecting; lift cancels.
+ *  - Tap (short) selects/toggles as normal. */
+function PreviewablePills({
+  options,
+  selected,
+  onSelect,
+  previewId,
+  onPreview,
+}: {
+  options: { id: string; label: string }[];
+  selected: string[];
+  onSelect: (id: string) => void;
+  previewId: string | null;
+  onPreview: (id: string | null) => void;
+}) {
+  const pressTimer = useRef<number | null>(null);
+  const longPressed = useRef(false);
+
+  const startLongPress = (id: string) => {
+    longPressed.current = false;
+    if (pressTimer.current) window.clearTimeout(pressTimer.current);
+    pressTimer.current = window.setTimeout(() => {
+      longPressed.current = true;
+      onPreview(id);
+    }, 300);
+  };
+  const cancelLongPress = () => {
+    if (pressTimer.current) {
+      window.clearTimeout(pressTimer.current);
+      pressTimer.current = null;
+    }
+  };
+
+  return (
+    <div className="flex flex-wrap gap-2">
+      {options.map((o) => {
+        const active = selected.includes(o.id);
+        const previewing = previewId === o.id;
+        return (
+          <button
+            key={o.id}
+            // Pointer events cover mouse + touch + pen.
+            onPointerEnter={(e) => { if (e.pointerType === "mouse") onPreview(o.id); }}
+            onPointerLeave={(e) => {
+              if (e.pointerType === "mouse") onPreview(null);
+              cancelLongPress();
+            }}
+            onPointerDown={(e) => { if (e.pointerType !== "mouse") startLongPress(o.id); }}
+            onPointerUp={() => {
+              cancelLongPress();
+              onPreview(null);
+            }}
+            onPointerCancel={() => { cancelLongPress(); onPreview(null); }}
+            onClick={() => {
+              // Suppress click if we long-pressed (would feel like a misfire).
+              if (longPressed.current) { longPressed.current = false; return; }
+              onSelect(o.id);
+            }}
+            className={`group relative inline-flex items-center gap-2 px-4 py-2.5 border text-sm transition-all touch-manipulation select-none ${
+              active
+                ? "border-[color:var(--teal)] bg-[color:var(--teal)] text-[color:var(--ivory)]"
+                : previewing
+                  ? "border-[color:var(--gold)] bg-[color:var(--gold)]/10 text-[color:var(--charcoal)] -translate-y-0.5 shadow-[0_10px_24px_-14px_rgba(201,169,106,0.6)]"
+                  : "border-[color:var(--border)] bg-[color:var(--card)] text-[color:var(--charcoal)] hover:border-[color:var(--gold)]"
+            }`}
+            aria-pressed={active}
+          >
+            {active && <Check size={13} strokeWidth={3} />}
+            <span>{o.label}</span>
+            {previewing && !active && (
+              <span className="ml-1 text-[10px] uppercase tracking-[0.18em] text-[color:var(--gold)]">
+                preview
+              </span>
+            )}
+          </button>
+        );
+      })}
+      {selected.length > 0 && (
         <span className="self-center text-[10px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)] ml-1">
           {selected.length} chosen
         </span>
@@ -806,11 +907,13 @@ function PremiumMap({
   highlights,
   days,
   isMultiDay,
+  previewHighlight,
 }: {
   region: string | null;
   highlights: string[];
   days: number;
   isMultiDay: boolean;
+  previewHighlight?: string | null;
 }) {
   // Curated stops for the chosen region, scaled by day count.
   const stops = useMemo(() => {
@@ -820,8 +923,21 @@ function PremiumMap({
     return base.slice(0, desired).map((p, i) => ({ ...p, day: isMultiDay ? Math.floor(i / 2) + 1 : 1 }));
   }, [region, highlights.length, days, isMultiDay]);
 
+  // Ghost stop driven by hover/long-press preview. Uses the next available
+  // curated point for the region — only shown if not already a real stop.
+  const ghostStop = useMemo(() => {
+    if (!region || !previewHighlight) return null;
+    if (highlights.includes(previewHighlight)) return null;
+    const base = regionStops[region] ?? [];
+    const next = base[stops.length] ?? base[base.length - 1];
+    if (!next) return null;
+    return { ...next, day: isMultiDay ? Math.floor(stops.length / 2) + 1 : 1 };
+  }, [region, previewHighlight, highlights, stops.length, isMultiDay]);
+
   const center = region ? regionMap[region] : null;
-  const allPoints = center ? [center, ...stops] : [];
+  const allPoints = center
+    ? [center, ...stops, ...(ghostStop ? [ghostStop] : [])]
+    : [];
 
   const pathD = useMemo(() => {
     if (allPoints.length < 2) return "";
@@ -953,6 +1069,61 @@ function PremiumMap({
               </g>
             );
           })}
+
+          {/* Ghost stop — appears while a moment chip is hovered/long-pressed.
+              Animates in with a pulsing halo so users see exactly where the
+              route would extend. */}
+          {ghostStop && (
+            <g style={{ animation: "ys-pop 320ms cubic-bezier(0.34,1.56,0.64,1) backwards" }}>
+              {/* Pulsing halo on the upcoming stop */}
+              <circle cx={ghostStop.x} cy={ghostStop.y - 1.4} r="3" fill="var(--gold)" opacity="0.18">
+                <animate attributeName="r" values="3;5;3" dur="1.4s" repeatCount="indefinite" />
+                <animate attributeName="opacity" values="0.32;0;0.32" dur="1.4s" repeatCount="indefinite" />
+              </circle>
+              {/* Outline-only teardrop — visually marked as preview */}
+              <path
+                d={`M ${ghostStop.x} ${ghostStop.y - 3.2} C ${ghostStop.x + 2} ${ghostStop.y - 3.2} ${ghostStop.x + 2} ${ghostStop.y - 0.4} ${ghostStop.x} ${ghostStop.y + 1.2} C ${ghostStop.x - 2} ${ghostStop.y - 0.4} ${ghostStop.x - 2} ${ghostStop.y - 3.2} ${ghostStop.x} ${ghostStop.y - 3.2} Z`}
+                fill="var(--ivory)"
+                stroke="var(--gold)"
+                strokeWidth="0.45"
+                strokeDasharray="0.8 0.6"
+                filter="url(#markerShadow)"
+              />
+              <circle cx={ghostStop.x} cy={ghostStop.y - 1.8} r="0.55" fill="var(--gold)" />
+              {/* Preview label */}
+              <g style={{ animation: "ys-fade 280ms ease-out 120ms backwards" }}>
+                <rect
+                  x={ghostStop.x + 2.2}
+                  y={ghostStop.y - 3.4}
+                  width={ghostStop.label.length * 1.35 + 4.5}
+                  height="3"
+                  rx="0.5"
+                  fill="var(--gold)"
+                  opacity="0.95"
+                />
+                <text
+                  x={ghostStop.x + 3.2}
+                  y={ghostStop.y - 1.3}
+                  fontSize="2"
+                  fill="var(--charcoal-deep)"
+                  fontFamily="ui-sans-serif, system-ui"
+                  style={{ letterSpacing: "0.05em" }}
+                >
+                  {ghostStop.label} ·
+                </text>
+                <text
+                  x={ghostStop.x + 3.2 + ghostStop.label.length * 1.35 + 0.4}
+                  y={ghostStop.y - 1.3}
+                  fontSize="1.4"
+                  fill="var(--ivory)"
+                  fontFamily="ui-sans-serif, system-ui"
+                  style={{ letterSpacing: "0.18em", textTransform: "uppercase" }}
+                >
+                  preview
+                </text>
+              </g>
+            </g>
+          )}
         </svg>
 
         {!region && (
