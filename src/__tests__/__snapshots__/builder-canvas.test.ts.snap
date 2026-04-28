@@ -1,0 +1,189 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Builder canvas — typography & spacing landmarks > MomentCard landmarks are stable across selected / line variants 1`] = `
+{
+  "selected": [
+    {
+      "className": "aspect-[4/5] duration-300 group overflow-hidden relative ring-2 ring-[color:var(--teal)] ring-offset-2 ring-offset-[color:var(--ivory)] rounded-sm text-left transition-all",
+      "inline": {
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "medium",
+        "fontStyle": "normal",
+        "lineHeight": "normal",
+        "marginBottom": "0",
+        "marginTop": "0",
+        "paddingBottom": "0",
+        "paddingTop": "0",
+      },
+      "selector": "moment-card",
+    },
+    {
+      "className": "leading-tight md:text-[16px] serif text-[15px] text-white",
+      "inline": {
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "medium",
+        "fontStyle": "normal",
+        "lineHeight": "normal",
+        "marginBottom": "0",
+        "marginTop": "0",
+        "paddingBottom": "0",
+        "paddingTop": "0",
+      },
+      "selector": "moment-name",
+    },
+  ],
+  "selectedWithLine": [
+    {
+      "className": "aspect-[4/5] duration-300 group overflow-hidden relative ring-2 ring-[color:var(--teal)] ring-offset-2 ring-offset-[color:var(--ivory)] rounded-sm text-left transition-all",
+      "inline": {
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "medium",
+        "fontStyle": "normal",
+        "lineHeight": "normal",
+        "marginBottom": "0",
+        "marginTop": "0",
+        "paddingBottom": "0",
+        "paddingTop": "0",
+      },
+      "selector": "moment-card",
+    },
+    {
+      "className": "leading-tight md:text-[16px] serif text-[15px] text-white",
+      "inline": {
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "medium",
+        "fontStyle": "normal",
+        "lineHeight": "normal",
+        "marginBottom": "0",
+        "marginTop": "0",
+        "paddingBottom": "0",
+        "paddingTop": "0",
+      },
+      "selector": "moment-name",
+    },
+    {
+      "className": "italic leading-snug line-clamp-2 mt-1 text-[11px] text-white/80",
+      "inline": {
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "medium",
+        "fontStyle": "normal",
+        "lineHeight": "normal",
+        "marginBottom": "0",
+        "marginTop": "0",
+        "paddingBottom": "0",
+        "paddingTop": "0",
+      },
+      "selector": "moment-line",
+    },
+  ],
+  "unselected": [
+    {
+      "className": "aspect-[4/5] duration-300 group hover:ring-[color:var(--teal)]/50 overflow-hidden relative ring-1 ring-[color:var(--border)] rounded-sm text-left transition-all",
+      "inline": {
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "medium",
+        "fontStyle": "normal",
+        "lineHeight": "normal",
+        "marginBottom": "0",
+        "marginTop": "0",
+        "paddingBottom": "0",
+        "paddingTop": "0",
+      },
+      "selector": "moment-card",
+    },
+    {
+      "className": "leading-tight md:text-[16px] serif text-[15px] text-white",
+      "inline": {
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "medium",
+        "fontStyle": "normal",
+        "lineHeight": "normal",
+        "marginBottom": "0",
+        "marginTop": "0",
+        "paddingBottom": "0",
+        "paddingTop": "0",
+      },
+      "selector": "moment-name",
+    },
+  ],
+}
+`;
+
+exports[`Builder canvas — typography & spacing landmarks > StepHeader landmarks are stable when a sub-line is added 1`] = `
+{
+  "noSub": [
+    {
+      "className": "animate-fade-in",
+      "inline": {
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "medium",
+        "fontStyle": "normal",
+        "lineHeight": "normal",
+        "marginBottom": "0",
+        "marginTop": "0",
+        "paddingBottom": "0",
+        "paddingTop": "0",
+      },
+      "selector": "step-header",
+    },
+    {
+      "className": "leading-[1.15] md:text-[34px] serif text-[26px] text-[color:var(--charcoal)]",
+      "inline": {
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "1.5em",
+        "fontStyle": "normal",
+        "lineHeight": "normal",
+        "marginBottom": "0",
+        "marginTop": "0",
+        "paddingBottom": "0",
+        "paddingTop": "0",
+      },
+      "selector": "step-title",
+    },
+  ],
+  "withSub": [
+    {
+      "className": "animate-fade-in",
+      "inline": {
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "medium",
+        "fontStyle": "normal",
+        "lineHeight": "normal",
+        "marginBottom": "0",
+        "marginTop": "0",
+        "paddingBottom": "0",
+        "paddingTop": "0",
+      },
+      "selector": "step-header",
+    },
+    {
+      "className": "leading-[1.15] md:text-[34px] serif text-[26px] text-[color:var(--charcoal)]",
+      "inline": {
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "1.5em",
+        "fontStyle": "normal",
+        "lineHeight": "normal",
+        "marginBottom": "0",
+        "marginTop": "0",
+        "paddingBottom": "0",
+        "paddingTop": "0",
+      },
+      "selector": "step-title",
+    },
+    {
+      "className": "italic leading-relaxed md:text-[14px] mt-2.5 text-[13px] text-[color:var(--charcoal-soft)]",
+      "inline": {
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "medium",
+        "fontStyle": "normal",
+        "lineHeight": "normal",
+        "marginBottom": "0",
+        "marginTop": "0",
+        "paddingBottom": "0",
+        "paddingTop": "0",
+      },
+      "selector": "step-sub",
+    },
+  ],
+}
+`;
