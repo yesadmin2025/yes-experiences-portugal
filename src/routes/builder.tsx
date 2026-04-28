@@ -1262,61 +1262,396 @@ function pickHeroImage(s: BuilderState): string {
 
 /* Timeline view — Bible §7.3 */
 function TimelineView({ s }: { s: BuilderState }) {
-  const blocks = useMemo(() => buildTimeline(s), [s]);
+  const chapters = useMemo(() => buildTimeline(s), [s]);
+  const intro = useMemo(() => buildTimelineIntro(s), [s]);
+
   return (
     <div className="bg-[color:var(--card)] border border-[color:var(--border)] p-5 md:p-6 rounded-sm">
-      <span className="text-[10px] uppercase tracking-[0.24em] text-[color:var(--gold)]">
-        Your day, hour by hour
-      </span>
-      {blocks.length === 0 ? (
-        <p className="mt-4 text-[14px] text-[color:var(--charcoal-soft)] italic">
-          As you make choices, your timeline will appear here.
+      <div className="flex items-center justify-between gap-3">
+        <span className="text-[10px] uppercase tracking-[0.24em] text-[color:var(--gold)]">
+          Your story, chapter by chapter
+        </span>
+        {chapters.length > 0 && (
+          <span className="text-[10px] uppercase tracking-[0.18em] text-[color:var(--charcoal-soft)]">
+            {chapters.length} chapter{chapters.length === 1 ? "" : "s"}
+          </span>
+        )}
+      </div>
+
+      {chapters.length === 0 ? (
+        <p className="mt-4 text-[14px] text-[color:var(--charcoal-soft)] italic leading-relaxed">
+          Make a few choices and your story will unfold here — chapter by chapter, hour by hour.
         </p>
       ) : (
-        <ol className="mt-5 space-y-4">
-          {blocks.map((b, i) => (
-            <li key={i} className="flex gap-4">
-              <div className="flex flex-col items-center">
-                <div className="h-8 w-8 rounded-full bg-[color:var(--teal)]/10 border border-[color:var(--teal)]/30 grid place-items-center">
-                  <b.icon size={14} className="text-[color:var(--teal)]" />
+        <>
+          {intro && (
+            <p className="mt-4 text-[13px] md:text-[14px] text-[color:var(--charcoal)] italic leading-relaxed border-l-2 border-[color:var(--teal)]/40 pl-3">
+              {intro}
+            </p>
+          )}
+
+          <ol className="mt-6 space-y-5">
+            {chapters.map((c, i) => (
+              <li key={i} className="flex gap-4 animate-fade-in">
+                {/* Rail */}
+                <div className="flex flex-col items-center">
+                  <div className="relative h-10 w-10 shrink-0 rounded-full bg-[color:var(--teal)]/10 border border-[color:var(--teal)]/30 grid place-items-center">
+                    <c.icon size={15} className="text-[color:var(--teal)]" />
+                  </div>
+                  {i < chapters.length - 1 && (
+                    <div className="w-px flex-1 bg-gradient-to-b from-[color:var(--teal)]/30 to-[color:var(--border)] mt-1" />
+                  )}
                 </div>
-                {i < blocks.length - 1 && <div className="w-px flex-1 bg-[color:var(--border)] mt-1" />}
-              </div>
-              <div className="flex-1 pb-2">
-                <p className="text-[10px] uppercase tracking-[0.22em] text-[color:var(--gold)]">{b.when}</p>
-                <p className="serif text-[15px] text-[color:var(--charcoal)] mt-0.5">{b.label}</p>
-                <p className="text-[12px] text-[color:var(--charcoal-soft)] italic mt-1">{b.line}</p>
-              </div>
-            </li>
-          ))}
-        </ol>
+
+                {/* Content */}
+                <div className="flex-1 pb-2 min-w-0">
+                  <div className="flex items-baseline gap-2 flex-wrap">
+                    <span className="text-[10px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
+                      Chapter {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span className="text-[10px] uppercase tracking-[0.18em] text-[color:var(--charcoal-soft)]">
+                      · {c.when}
+                    </span>
+                  </div>
+                  <p className="serif text-[17px] md:text-[18px] text-[color:var(--charcoal)] mt-1 leading-snug">
+                    {c.label}
+                  </p>
+                  <p className="text-[13px] text-[color:var(--charcoal-soft)] leading-relaxed mt-1.5">
+                    {c.line}
+                  </p>
+                  {c.tags && c.tags.length > 0 && (
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      {c.tags.map((t) => (
+                        <span
+                          key={t}
+                          className="px-2 py-0.5 text-[10px] uppercase tracking-[0.16em] bg-[color:var(--sand)] text-[color:var(--charcoal-soft)] rounded-full"
+                        >
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ol>
+
+          <p className="mt-6 pt-4 border-t border-[color:var(--border)] text-[11px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)] text-center">
+            Every chapter is private · designed with your local guide
+          </p>
+        </>
       )}
     </div>
   );
 }
 
-function buildTimeline(s: BuilderState) {
-  const blocks: { when: string; label: string; line: string; icon: typeof Sun }[] = [];
+/* ============================================================
+   Chapter-by-chapter timeline — adapts to every selection
+   ============================================================ */
+
+type Chapter = {
+  when: string;
+  label: string;
+  line: string;
+  icon: typeof Sun;
+  tags?: string[];
+  weight: number; // ordering hint
+};
+
+function groupVoice(s: BuilderState) {
+  switch (s.groupType) {
+    case "couple":
+      return { you: "the two of you", your: "your", verbBe: "are", possessive: "your", soft: "for two" };
+    case "family":
+      return { you: "the whole family", your: "the family's", verbBe: "are", possessive: "your", soft: "for the family" };
+    case "friends":
+      return { you: "you and your friends", your: "your", verbBe: "are", possessive: "your", soft: "with friends" };
+    case "solo":
+      return { you: "you", your: "your", verbBe: "are", possessive: "your", soft: "for you alone" };
+    case "private-group":
+      return { you: "your group", your: "the group's", verbBe: "is", possessive: "your", soft: "for your private group" };
+    default:
+      return { you: "you", your: "your", verbBe: "are", possessive: "your", soft: "" };
+  }
+}
+
+function buildTimelineIntro(s: BuilderState): string | null {
+  if (!s.region && !s.styles.length) return null;
+  const v = groupVoice(s);
+  const region = regionOpts.find((r) => r.id === s.region)?.name;
+  const tier = tierOpts.find((t) => t.id === s.tier)?.name;
+  const opening = region
+    ? `${region}. The morning light is just starting to soften, and ${v.you} ${v.verbBe} about to step into a day designed entirely around ${v.your} story.`
+    : `A day designed entirely around ${v.your} story is about to begin.`;
+  const closing =
+    tier === "Couture"
+      ? " Every detail — every door, every glass, every quiet pause — has been shaped by hand."
+      : tier === "Atelier"
+        ? " The pace is slower, the access deeper, the touch lighter than you'd expect."
+        : "";
+  return opening + closing;
+}
+
+function buildTimeline(s: BuilderState): Chapter[] {
+  const v = groupVoice(s);
+  const region = regionOpts.find((r) => r.id === s.region)?.name;
+  const chapters: Chapter[] = [];
+
+  /* ---- Chapter 1 — opening ---- */
   if (s.highlights.includes("livramento") || s.styles.includes("gastronomy")) {
-    blocks.push({ when: "Morning", label: "Local market discovery", line: "Flavors, color, and the morning energy of a real Portuguese market.", icon: UtensilsCrossed });
+    chapters.push({
+      when: "Morning",
+      label: "First light at the local market",
+      line: `Livramento wakes up in color — fishmongers calling, fruit stacked like a painting, the smell of fresh bread. Your local guide hands ${v.you} a small tasting basket and the day begins with your senses, not your itinerary.`,
+      icon: UtensilsCrossed,
+      tags: ["Tasting basket", "Local farmers"],
+      weight: 10,
+    });
   } else if (s.region) {
-    blocks.push({ when: "Morning", label: "Pickup with your local guide", line: "Your day starts gently — coffee, introductions, and the road ahead.", icon: Sun });
+    chapters.push({
+      when: "Morning",
+      label: `A gentle arrival in ${region}`,
+      line: `Your local guide meets ${v.you} where the day feels right — coffee in hand, the route already softly mapped. No rush. Introductions feel more like a conversation between friends than the start of a tour.`,
+      icon: Sun,
+      tags: ["Private pickup", "Local guide"],
+      weight: 10,
+    });
   }
+
+  /* ---- Workshop / cultural mid-morning ---- */
+  if (s.highlights.includes("tiles")) {
+    chapters.push({
+      when: "Late morning",
+      label: "Hands in the clay, paint on the tile",
+      line: `A small atelier opens its doors just for ${v.you}. The artisan shows ${v.you} the centuries-old gestures, then steps back. ${capitalize(v.your)} hands move slower than expected — and the tile ${v.you === "you" ? "you" : "you all"} paint today will travel home with you.`,
+      icon: Landmark,
+      tags: ["Private workshop", "Take home a piece"],
+      weight: 18,
+    });
+  }
+  if (s.highlights.includes("cheese")) {
+    chapters.push({
+      when: "Late morning",
+      label: "The Azeitão cheese cellar",
+      line: `Down stone steps into a cool cellar where wheels of sheep's cheese rest in silence. The cheesemaker pours a glass of moscatel, hands ${v.you} a knife, and explains why the texture changes with the season.`,
+      icon: UtensilsCrossed,
+      tags: ["Family producer", "Tasting"],
+      weight: 18,
+    });
+  }
+
+  /* ---- Wine / tasting midday ---- */
   if (s.styles.includes("wine") || s.highlights.includes("tasting")) {
-    blocks.push({ when: "Midday", label: "Boutique winery tasting", line: "A small family producer — landscape, tradition, and a quiet table.", icon: Wine });
+    chapters.push({
+      when: "Midday",
+      label: "A boutique winery, just for you",
+      line: `The vines stretch out below as the winemaker — usually impossible to meet — walks ${v.you} between the rows. Inside, a quiet table is set with three wines, a few small plates, and the feeling that this place opened today only because ${v.you} ${v.verbBe} here.`,
+      icon: Wine,
+      tags: ["Family producer", "Private tasting"],
+      weight: 25,
+    });
   }
-  if (s.highlights.includes("boat") || s.styles.includes("coastal")) {
-    blocks.push({ when: "Afternoon", label: "Coastal boat or scenic drive", line: "Hidden coves and roads only locals know.", icon: Waves });
+
+  /* ---- Lunch ---- */
+  if (s.highlights.includes("portinho")) {
+    chapters.push({
+      when: "Early afternoon",
+      label: "Lunch with your feet in the sand",
+      line: `Portinho da Arrábida — a small white village folded into the cliffs. The chef has chosen the catch this morning. Lunch is long, the wine is cold, and time stops being something you measure.`,
+      icon: UtensilsCrossed,
+      tags: ["Fresh catch", "Slow lunch"],
+      weight: 32,
+    });
+  } else if (s.styles.includes("gastronomy")) {
+    chapters.push({
+      when: "Early afternoon",
+      label: "A long table, a chef's hand",
+      line: `A quiet local restaurant where the chef knows ${v.your} guide by name. Plates arrive without ceremony — and each one tells a small story of the region.`,
+      icon: UtensilsCrossed,
+      tags: ["Local chef", "Tasting menu"],
+      weight: 32,
+    });
+  }
+
+  /* ---- Adventure / coast / nature afternoon ---- */
+  if (s.highlights.includes("boat")) {
+    chapters.push({
+      when: "Afternoon",
+      label: "On the water in Arrábida",
+      line: `A private boat slips out of harbor. Sea-green coves appear one after another, and the captain anchors in the quietest one. ${capitalize(v.you)} swim, or just float, while the cliffs glow gold above.`,
+      icon: Waves,
+      tags: ["Private boat", "Hidden coves", "Swim stop"],
+      weight: 40,
+    });
   } else if (s.highlights.includes("jeep")) {
-    blocks.push({ when: "Afternoon", label: "Off-the-beaten-path", line: "4×4 across landscapes most travelers never see.", icon: Mountain });
+    chapters.push({
+      when: "Afternoon",
+      label: "Off the map, into the hills",
+      line: `The 4×4 leaves the road and climbs into a Portugal most travelers never see — pine forests, ancient stone walls, a single shepherd waving from far away.`,
+      icon: Mountain,
+      tags: ["Off-road", "Hidden viewpoints"],
+      weight: 40,
+    });
+  } else if (s.highlights.includes("sesimbra")) {
+    chapters.push({
+      when: "Afternoon",
+      label: "A wander through Sesimbra",
+      line: `A fishing village that still smells of the sea and the morning's catch. ${capitalize(v.you)} walk slowly along the harbor, stop for an espresso, and let the rhythm of the village set ${v.your} pace.`,
+      icon: Waves,
+      tags: ["Old village", "Harbor walk"],
+      weight: 40,
+    });
+  } else if (s.styles.includes("nature") || s.styles.includes("coastal")) {
+    chapters.push({
+      when: "Afternoon",
+      label: "Slow roads, wild views",
+      line: `Your guide takes the long way — the one that's longer on the map and shorter in the heart. ${capitalize(v.you)} stop wherever ${v.you === "you" ? "you" : "you all"} want, as often as ${v.you === "you" ? "you" : "you all"} want.`,
+      icon: Mountain,
+      tags: ["Scenic drive", "Photo stops"],
+      weight: 40,
+    });
   }
-  if (s.highlights.includes("portinho") || s.styles.includes("gastronomy")) {
-    blocks.push({ when: "Late afternoon", label: "Long, slow lunch", line: "A traditional table with the right view, the right wine.", icon: UtensilsCrossed });
+
+  /* ---- Heritage stop ---- */
+  if (s.highlights.includes("viewpoint") || s.styles.includes("heritage")) {
+    chapters.push({
+      when: "Late afternoon",
+      label: "A viewpoint only locals know",
+      line: `A small dirt road, a short walk, and then — the view. Nobody else here. Just the wind, the cliffs, and the kind of silence that makes ${v.you} reach for ${v.your} camera, then put it away again.`,
+      icon: Camera,
+      tags: ["Hidden viewpoint"],
+      weight: 48,
+    });
   }
+  if (s.highlights.includes("dinosaur")) {
+    chapters.push({
+      when: "Late afternoon",
+      label: "Footprints from before time",
+      line: `At Cabo Espichel, fossilized dinosaur tracks climb a vertical cliff above the ocean. Your guide tells ${v.you} the story of how they got there — and the day suddenly feels much, much bigger.`,
+      icon: Mountain,
+      tags: ["Geology", "Wow moment"],
+      weight: 48,
+    });
+  }
+  if (s.highlights.includes("ginjinha")) {
+    chapters.push({
+      when: "Late afternoon",
+      label: "A ginjinha in a chocolate cup",
+      line: `A tiny doorway in Óbidos. A glass of ruby cherry liqueur, served in a dark chocolate cup. ${capitalize(v.you)} eat the cup. ${capitalize(v.you)} laugh. ${capitalize(v.you)} order another.`,
+      icon: Wine,
+      tags: ["Local ritual"],
+      weight: 48,
+    });
+  }
+
+  /* ---- Enhancement chapters ---- */
+  if (s.enhancements.includes("photographer")) {
+    chapters.push({
+      when: "Throughout the day",
+      label: "A quiet camera in the background",
+      line: `Your private photographer is barely visible — and that's the point. No posing, no smiles on cue. Just ${v.you}, exactly as you are, in the most beautiful corners of the day.`,
+      icon: Camera,
+      tags: ["Private photographer"],
+      weight: 55,
+    });
+  }
+  if (s.enhancements.includes("music")) {
+    chapters.push({
+      when: "Golden hour",
+      label: "Live fado, the sun on its way down",
+      line: `A guitarist arrives. Then the singer. The first note of fado moves through the room and ${v.you === "you" ? "you" : "everyone"} stops talking — without anyone deciding to.`,
+      icon: Music,
+      tags: ["Live music", "Fado"],
+      weight: 60,
+    });
+  }
+  if (s.enhancements.includes("florals")) {
+    chapters.push({
+      when: "Golden hour",
+      label: "Florals on the table, set just for you",
+      line: `A florist has been by. The table waiting for ${v.you} is wild and beautiful — branches, herbs, a few quiet candles. Nothing about it feels like a hotel.`,
+      icon: Sparkles,
+      tags: ["Bespoke florals"],
+      weight: 60,
+    });
+  }
+  if (s.enhancements.includes("chef")) {
+    chapters.push({
+      when: "Evening",
+      label: "A private chef, a private kitchen",
+      line: `Back at the villa, a Portuguese chef is already cooking. ${capitalize(v.you)} pour a glass and watch — or step into the kitchen. Dinner is exactly as long, and exactly as quiet, as ${v.you} want it to be.`,
+      icon: UtensilsCrossed,
+      tags: ["Private chef", "At home"],
+      weight: 65,
+    });
+  }
+  if (s.enhancements.includes("transfer")) {
+    chapters.push({
+      when: "Throughout the day",
+      label: "A car that just appears",
+      line: `A premium vehicle and a discreet driver. Doors open before ${v.you} reach for them. Bags vanish. The day moves without a single small friction.`,
+      icon: MapPin,
+      tags: ["Premium transfer"],
+      weight: 5, // appears near the start
+    });
+  }
+
+  /* ---- Pace-driven closing chapter ---- */
   if (s.pace === "slow") {
-    blocks.push({ when: "Evening", label: "Sunset moment", line: "The day closes the way it should — quietly, beautifully.", icon: Moon });
+    chapters.push({
+      when: "Sunset",
+      label: "The day closes the way it should",
+      line: `Somewhere quiet, somewhere high. ${capitalize(v.you)} watch the light go gold, then pink, then dark blue. Nobody speaks much. Nobody needs to.`,
+      icon: Moon,
+      tags: ["Sunset moment"],
+      weight: 75,
+    });
+  } else if (s.pace === "rich") {
+    chapters.push({
+      when: "Evening",
+      label: "One more taste before the day ends",
+      line: `A last stop ${v.you} weren't expecting — a little bar, a tiny tasting room, a chef ${v.your} guide insists ${v.you} meet. The day refuses to end politely.`,
+      icon: Music,
+      tags: ["Bonus stop"],
+      weight: 75,
+    });
+  } else if (s.pace === "balanced" && (s.region || s.styles.length)) {
+    chapters.push({
+      when: "Early evening",
+      label: "Drop-off, slow goodbyes",
+      line: `Your guide drops ${v.you} off where the day began — but nothing about ${v.you} feels the same. Plans for tomorrow can wait until tomorrow.`,
+      icon: Moon,
+      tags: ["Private return"],
+      weight: 75,
+    });
   }
-  return blocks;
+
+  /* ---- Tier-driven epilogue ---- */
+  if (s.tier === "couture") {
+    chapters.push({
+      when: "Epilogue",
+      label: "A small surprise, signed by your designer",
+      line: `Back in ${v.your} room, something is waiting — a handwritten note, a small gift chosen for ${v.you} alone. This is what Couture means: somebody, somewhere, has been thinking about ${v.you} all day.`,
+      icon: Heart,
+      tags: ["Couture touch"],
+      weight: 90,
+    });
+  } else if (s.tier === "atelier") {
+    chapters.push({
+      when: "Epilogue",
+      label: "A quiet word from your designer",
+      line: `An evening message from the designer who built this day. A photograph, a thought for tomorrow, an open invitation to change anything that didn't feel right.`,
+      icon: MessageCircle,
+      tags: ["Atelier follow-up"],
+      weight: 90,
+    });
+  }
+
+  return chapters.sort((a, b) => a.weight - b.weight);
+}
+
+function capitalize(s: string) {
+  return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
 /* DNA panel — Bible §14 (editable) */
