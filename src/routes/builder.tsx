@@ -24,6 +24,9 @@ import {
 } from "lucide-react";
 
 export const Route = createFileRoute("/builder")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    tour: typeof search.tour === "string" ? search.tour : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Experience Studio — YES experiences Portugal" },
