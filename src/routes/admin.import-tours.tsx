@@ -65,6 +65,7 @@ const SIGNATURE_BY_URL = new Map(
 
 function AdminImportPage() {
   const navigate = useNavigate();
+  const { filter } = Route.useSearch();
   const [session, setSession] = useState<Session | null>(null);
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
   const [tours, setTours] = useState<ImportedRow[]>([]);
