@@ -237,13 +237,11 @@
   p {
     color: var(--charcoal);
   }
-  /* Secondary copy default — when an explicit text-[color:var(--charcoal-soft)]
-     is used, ensure the weight stays substantive on mobile (was inheriting
-     410 from body but Tailwind utilities sometimes drop it back to 400 in
-     leaf nodes — this guarantees parity site-wide). */
-  .text-\\[color\\:var\\(--charcoal-soft\\)\\] {
-    font-weight: 410;
-  }
+  /* Secondary copy weight — body inherits 410, but Tailwind utilities
+     applied to leaf nodes (e.g. <span class="text-[12px] ...">) sometimes
+     reset weight via the cascade. The deepened --charcoal-soft (#555)
+     plus the body-level 410 already keep secondary text crisp on mobile;
+     no extra selector needed. */
   /* ─────────────────────────────────────────────────────────────
      TYPOGRAPHIC HIERARCHY — couture, restrained, premium.
      Thinner weight curve so display type reads as fine couture rather
