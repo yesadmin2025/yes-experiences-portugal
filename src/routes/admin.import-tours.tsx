@@ -459,6 +459,7 @@ function AdminImportPage() {
             )}
           </div>
 
+          <h2 className="serif text-2xl mt-12">
             Imported tours <span className="text-sm text-[color:var(--charcoal-soft)]">({tours.length})</span>
           </h2>
 
