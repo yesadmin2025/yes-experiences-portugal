@@ -18,6 +18,97 @@ exports[`Typography regression — headline class strings > [proposals] hero h1 
 
 exports[`Typography regression — headline class strings > [proposals] hero subhead 1`] = `"mt-5 max-w-md md:max-w-xl mx-auto text-[15px] md:text-[16px] text-white/95 italic leading-[1.65] md:leading-relaxed [text-shadow:0_1px_8px_rgba(0,0,0,0.35)]"`;
 
+exports[`Typography regression — section headlines (token sweep) > [home] all tokenized section headlines 1`] = `
+[
+  {
+    "cls": "t-h2 mt-5",
+    "tag": "h2",
+  },
+  {
+    "cls": "t-h2 mt-5",
+    "tag": "h2",
+  },
+  {
+    "cls": "t-lead mt-5",
+    "tag": "p",
+  },
+  {
+    "cls": "t-h2 mt-5",
+    "tag": "h2",
+  },
+  {
+    "cls": "t-h2 mt-5",
+    "tag": "h2",
+  },
+  {
+    "cls": "t-lead mt-5",
+    "tag": "p",
+  },
+  {
+    "cls": "t-h2 mt-5",
+    "tag": "h2",
+  },
+  {
+    "cls": "t-lead mt-5 max-w-xl mx-auto",
+    "tag": "p",
+  },
+  {
+    "cls": "t-h3 text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]",
+    "tag": "h3",
+  },
+  {
+    "cls": "t-h2 mt-6",
+    "tag": "h2",
+  },
+  {
+    "cls": "t-h2 mt-5",
+    "tag": "h2",
+  },
+  {
+    "cls": "t-lead mt-5",
+    "tag": "p",
+  },
+]
+`;
+
+exports[`Typography regression — section headlines (token sweep) > [multi-day] all tokenized section headlines 1`] = `
+[
+  {
+    "cls": "t-h2 mt-4 text-[color:var(--charcoal)]",
+    "tag": "h2",
+  },
+  {
+    "cls": "t-h2 mt-4 text-[color:var(--charcoal)]",
+    "tag": "h2",
+  },
+  {
+    "cls": "t-h2 mt-4 text-white",
+    "tag": "h2",
+  },
+  {
+    "cls": "t-h2 mt-4 text-[color:var(--charcoal)]",
+    "tag": "h2",
+  },
+]
+`;
+
+exports[`Typography regression — section headlines (token sweep) > [proposals] all tokenized section headlines 1`] = `
+[
+  {
+    "cls": "t-h2 mt-4 text-[color:var(--charcoal)]",
+    "tag": "h2",
+  },
+  {
+    "cls": "t-h2 mt-4 text-[color:var(--charcoal)]",
+    "tag": "h2",
+  },
+  {
+    "cls": "t-h2 mt-4 text-white",
+    "tag": "h2",
+  },
+]
+`;
+
 exports[`Typography regression — token rules from styles.css > token .hero-h1 1`] = `
 "base: letter-spacing: -0.012em; line-height: 1.08;
 base: letter-spacing: -0.014em; line-height: 1.04;
