@@ -142,7 +142,7 @@ function TourDetailPage() {
         <div className="container-x max-w-5xl grid md:grid-cols-2 gap-8 md:gap-12">
           <Block icon={<Sparkles size={14} />} title="Highlights">
             <ul className="space-y-2.5 text-sm leading-relaxed">
-              {tour.highlights.map((h) => (
+              {(tour.highlights ?? []).map((h) => (
                 <li key={h} className="flex gap-2.5">
                   <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[color:var(--gold)] flex-shrink-0" />
                   <span>{h}</span>
