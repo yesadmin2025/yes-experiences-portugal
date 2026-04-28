@@ -33,6 +33,7 @@ import {
 
 const builderSearchSchema = z.object({
   tour: fallback(z.string().optional(), undefined),
+  journey: fallback(z.string().optional(), undefined), // multi-day journey style hint
   // Persisted builder state (all optional so empty URL = empty builder)
   n: fallback(z.string().optional(), undefined),         // name
   r: fallback(z.string().optional(), undefined),         // region
