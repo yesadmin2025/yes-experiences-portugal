@@ -1127,6 +1127,7 @@ function HomePage() {
                       src={s.img}
                       alt={s.title}
                       loading="lazy"
+                      style={{ objectPosition: (s as { focal?: string }).focal ?? "50% 50%" }}
                       className="w-full h-full object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.08]"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/80 via-[color:var(--charcoal)]/15 to-transparent" />
