@@ -733,3 +733,43 @@ function Pill({
   );
 }
 
+
+/**
+ * Single filter chip in the imported-tours list. Selection is mirrored to the
+ * URL via TanStack Router search params so filters survive refresh + can be
+ * shared with teammates.
+ */
+function FilterPill({
+  value,
+  current,
+  count,
+  icon,
+  children,
+}: {
+  value: FilterValue;
+  current: FilterValue;
+  count: number;
+  icon: React.ReactNode | null;
+  children: React.ReactNode;
+}) {
+  const active = value === current;
+  return (
+    <Link
+      from="/admin/import-tours"
+      to="."
+      search={{ filter: value }}
+      replace
+      aria-pressed={active}
+      className={[
+        "inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] uppercase tracking-[0.2em] border transition-colors",
+        active
+          ? "border-[color:var(--charcoal)] bg-[color:var(--charcoal)] text-[color:var(--ivory)]"
+          : "border-[color:var(--border)] text-[color:var(--charcoal-soft)] hover:text-[color:var(--charcoal)] hover:border-[color:var(--gold)]",
+      ].join(" ")}
+    >
+      {icon}
+      {children}
+      <span className={active ? "opacity-80" : "opacity-60"}>· {count}</span>
+    </Link>
+  );
+}
