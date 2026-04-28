@@ -125,6 +125,8 @@ const startPaths = [
     ariaLabel:
       "Open the Studio — design your day in real time with a local guide and confirm instantly",
     accent: "teal" as const,
+    slug: "studio",
+    stepLabel: "Studio",
   },
   {
     icon: BookOpen,
@@ -137,6 +139,8 @@ const startPaths = [
     expectedTo: "/experiences",
     ariaLabel: "Explore Signature Experiences — opens the Signatures catalog",
     accent: "ivory" as const,
+    slug: "signature",
+    stepLabel: "Signature",
   },
   {
     icon: Wand2,
@@ -149,6 +153,8 @@ const startPaths = [
     expectedTo: "/experiences",
     ariaLabel: "Tailor a Signature — open the catalog and reshape every detail",
     accent: "sand" as const,
+    slug: "tailor",
+    stepLabel: "Tailor",
   },
   {
     icon: CalendarDays,
@@ -161,6 +167,8 @@ const startPaths = [
     expectedTo: "/multi-day",
     ariaLabel: "Discover multi-day journeys — connected days across regions",
     accent: "ivory-2" as const,
+    slug: "multi-day",
+    stepLabel: "Multi-day",
   },
   {
     icon: Gift,
@@ -173,6 +181,8 @@ const startPaths = [
     expectedTo: "/proposals",
     ariaLabel: "Plan a Celebration or Group — opens proposals & groups",
     accent: "charcoal" as const,
+    slug: "celebrations",
+    stepLabel: "Celebrate",
   },
 ];
 
