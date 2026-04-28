@@ -485,6 +485,18 @@ function CrawlerErrorPanel() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [strategy]);
 
+  // After a re-scan completes (loading transitions true -> false), auto-scroll
+  // the results section into view.
+  useEffect(() => {
+    if (wasLoadingRef.current && !loading && (info || err)) {
+      // Wait one frame so the results node is actually in the DOM.
+      requestAnimationFrame(() => {
+        resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    }
+    wasLoadingRef.current = loading;
+  }, [loading, info, err]);
+
   const fileHref = info?.file
     ? `vscode://file/${info.file}${info.line ? `:${info.line}${info.column ? `:${info.column}` : ""}` : ""}`
     : null;
