@@ -235,7 +235,9 @@ function pickYes(stage: keyof typeof YES_LINES, seed: number) {
    Page
    ============================================================ */
 
-function stateFromSearch(search: ReturnType<typeof useSearchType>): BuilderState {
+type BuilderSearch = z.infer<typeof builderSearchSchema>;
+
+function stateFromSearch(search: BuilderSearch): BuilderState {
   return {
     name: search.n ?? "",
     region: search.r ?? null,
@@ -249,9 +251,6 @@ function stateFromSearch(search: ReturnType<typeof useSearchType>): BuilderState
     tier: search.t ?? null,
   };
 }
-
-// Helper type alias for the search shape
-type useSearchType = ReturnType<typeof Route.useSearch>;
 
 function searchFromState(s: BuilderState, stepIdx: number) {
   return {
