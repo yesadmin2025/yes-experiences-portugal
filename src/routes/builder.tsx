@@ -276,7 +276,7 @@ function BuilderPage() {
   // Initialize from URL so deep links restore state on first render
   const [s, setS] = useState<BuilderState>(() => stateFromSearch(search));
   const [stepIdx, setStepIdx] = useState<number>(() => search.step ?? 0);
-  const [view, setView] = useState<"story" | "timeline" | "map">("story");
+  // (view toggle removed — story, map and timeline are fused in <LiveCanvas/>)
   const [mobileTab, setMobileTab] = useState<"build" | "preview">("build");
   const hydratedTourRef = useRef<string | null>(null);
 
