@@ -1104,6 +1104,29 @@ function PremiumMap({
   const dayColor = (d: number) =>
     d === 1 ? "var(--teal)" : d === 2 ? "var(--teal-2)" : d === 3 ? "var(--gold)" : "var(--charcoal-soft)";
 
+  // Cluster overlapping stops at lower zoom levels. Threshold is in SVG units
+  // and shrinks as zoom increases, so clusters break apart when zooming in.
+  type Stop = (typeof stops)[number];
+  type Cluster = { x: number; y: number; items: (Stop & { index: number })[] };
+  const clusters = useMemo<Cluster[]>(() => {
+    if (stops.length === 0) return [];
+    const threshold = 5 / zoom; // SVG units; ~5 at zoom=1, ~1.25 at zoom=4
+    const out: Cluster[] = [];
+    stops.forEach((p, idx) => {
+      const item = { ...p, index: idx };
+      const found = out.find((c) => Math.hypot(c.x - p.x, c.y - p.y) <= threshold);
+      if (found) {
+        found.items.push(item);
+        // Recompute centroid
+        found.x = found.items.reduce((s, it) => s + it.x, 0) / found.items.length;
+        found.y = found.items.reduce((s, it) => s + it.y, 0) / found.items.length;
+      } else {
+        out.push({ x: p.x, y: p.y, items: [item] });
+      }
+    });
+    return out;
+  }, [stops, zoom]);
+
   return (
     <div className="bg-[color:var(--card)] border border-[color:var(--border)] overflow-hidden">
       <div className="flex items-baseline justify-between px-5 pt-5">
