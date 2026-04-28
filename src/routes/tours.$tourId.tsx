@@ -232,7 +232,7 @@ function ChapterStrip({ tour }: { tour: SignatureTour }) {
             <h2 className="serif text-2xl sm:text-3xl mt-2">The story, stop by stop</h2>
           </div>
           <span className="hidden sm:inline text-[11px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)]">
-            {tour.stops.length} chapters
+            {(tour.stops?.length ?? 0)} chapters
           </span>
         </div>
 
