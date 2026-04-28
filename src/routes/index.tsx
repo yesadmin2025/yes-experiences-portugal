@@ -494,7 +494,7 @@ function HomePage() {
                 Prefer guidance?{" "}
                 <Link
                   to="/contact"
-                  className="link-soft"
+                  className="link-soft link-soft--persistent text-[color:var(--ivory)]"
                 >
                   A local designer can shape it with you.
                 </Link>
@@ -1327,7 +1327,7 @@ function HomePage() {
                 Prefer guidance?{" "}
                 <Link
                   to="/contact"
-                  className="link-soft"
+                  className="link-soft link-soft--persistent"
                 >
                   A local designer can shape it with you.
                 </Link>
