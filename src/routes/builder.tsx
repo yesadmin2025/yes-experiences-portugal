@@ -1080,9 +1080,26 @@ function PremiumMap({
       .join(" ");
   }, [allPoints]);
 
-  // Smoothly tween the viewBox whenever the region changes.
-  const targetVb = useMemo(() => regionViewBox(region), [region]);
-  const animatedViewBox = useAnimatedViewBox(targetVb, 750);
+  // Zoom: 1 = base region framing.
+  const [zoom, setZoom] = useState(1);
+  const ZOOM_MIN = 0.5;
+  const ZOOM_MAX = 4;
+  const ZOOM_STEP = 1.4;
+  useEffect(() => { setZoom(1); }, [region]);
+
+  const targetVb = useMemo(() => {
+    const base = regionViewBox(region);
+    const w = base.w / zoom;
+    const h = base.h / zoom;
+    const cx = base.x + base.w / 2;
+    const cy = base.y + base.h / 2;
+    return { x: cx - w / 2, y: cy - h / 2, w, h };
+  }, [region, zoom]);
+  const animatedViewBox = useAnimatedViewBox(targetVb, 450);
+
+  const zoomIn = () => setZoom((z) => Math.min(ZOOM_MAX, +(z * ZOOM_STEP).toFixed(3)));
+  const zoomOut = () => setZoom((z) => Math.max(ZOOM_MIN, +(z / ZOOM_STEP).toFixed(3)));
+  const zoomReset = () => setZoom(1);
 
   const dayColor = (d: number) =>
     d === 1 ? "var(--teal)" : d === 2 ? "var(--teal-2)" : d === 3 ? "var(--gold)" : "var(--charcoal-soft)";
