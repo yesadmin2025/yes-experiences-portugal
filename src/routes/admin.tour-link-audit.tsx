@@ -1,11 +1,14 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
+import type { FileRoutesByPath } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { auditTourLinks } from "@/server/tourLinkAudit.functions";
 import type { TourLinkAuditReport } from "@/server/tourLinkAudit.server";
 import { SiteLayout } from "@/components/SiteLayout";
 import { AlertTriangle, Check, RefreshCw, FileSearch, Link2Off } from "lucide-react";
 
-export const Route = createFileRoute("/admin/tour-link-audit")({
+const tourLinkAuditRoutePath = "/admin/tour-link-audit" as keyof FileRoutesByPath;
+
+export const Route = createFileRoute(tourLinkAuditRoutePath)({
   beforeLoad: () => {
     if (!import.meta.env.DEV) {
       throw new Error("Tour link audit is only available in development.");
