@@ -20,7 +20,7 @@ export const Route = createFileRoute("/multi-day")({
       {
         property: "og:description",
         content:
-          "Pick a Signature tour for each day. We refine pace, transfers and stays and confirm everything by WhatsApp.",
+          "Pick a Signature experience for each day. We shape pace, transfers and stays — reserved instantly with real-time confirmation.",
       },
     ],
   }),
@@ -90,8 +90,8 @@ function MultiDayPage() {
             Multi-Day <span className="italic text-[color:var(--teal)]">Portugal Journeys</span>
           </h1>
           <p className="mt-5 max-w-xl mx-auto text-[color:var(--charcoal-soft)]">
-            Pick one of our Signature tours for each day. We handle pace, transfers and stays —
-            and confirm everything with you on WhatsApp.
+            Pick one of our Signature experiences for each day. We shape pace, transfers and stays —
+            reserved instantly, with real-time confirmation.
           </p>
         </div>
       </section>
@@ -216,10 +216,13 @@ function MultiDayPage() {
               rel="noopener noreferrer"
               className="inline-flex w-full items-center justify-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] px-5 py-3.5 text-sm tracking-wide transition-all"
             >
-              <MessageCircle size={16} /> Send my journey on WhatsApp
+              <MessageCircle size={16} /> Reserve instantly
             </a>
             <p className="mt-2 text-[11px] text-[color:var(--charcoal-soft)] text-center">
-              We confirm pace, transfers and stays before any payment.
+              Confirm in real time — secured directly on this site.
+            </p>
+            <p className="mt-1 text-[10px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)]/80 text-center">
+              Reservations handled securely through our integrated booking system.
             </p>
           </div>
         </div>

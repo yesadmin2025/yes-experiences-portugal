@@ -9,44 +9,55 @@ import { ArrowRight } from "lucide-react";
 
 const FAQS: { q: string; a: React.ReactNode }[] = [
   {
-    q: "Can I really book my experience instantly?",
-    a: "Yes. Design and secure your private experience directly on the platform — no waiting for confirmation emails.",
+    q: "What's the difference between Signature, Tailored and the Studio?",
+    a: (
+      <>
+        <strong>Signature</strong> experiences are complete, designed to be enjoyed as they are.
+        {" "}<strong>Tailored Signature</strong> lets you adjust a few details — date, pace,
+        small variations — within that specific experience. The <strong>Studio</strong> is for
+        building a journey from scratch: intuitive, guided, and shaped within what works on the ground.
+      </>
+    ),
+  },
+  {
+    q: "Can I really reserve my experience instantly?",
+    a: "Yes. Reserve directly on this site with real-time confirmation — no waiting, no email chase.",
+  },
+  {
+    q: "Is the booking secure?",
+    a: "Yes. Reservations are handled securely through our integrated booking system, with immediate confirmation.",
   },
   {
     q: "Do you cover all of Portugal?",
-    a: "Yes. We design experiences across the entire country. If your route isn't fully available in the builder, refine it with a local experience designer.",
+    a: "Yes. We design experiences across the country. The Studio guides you within realistic routes and timings — so what you build is always feasible on the day.",
   },
   {
     q: "Is everything private?",
-    a: "Yes. Every experience is fully private and tailored to you and your group — solo, couple, family, or larger.",
+    a: "Yes. Every experience is fully private — solo, couple, family or larger group.",
   },
   {
-    q: "Can I customise my experience?",
-    a: "Yes. Adjust and refine your experience at any time, before or after booking.",
+    q: "Can I customise a Signature experience?",
+    a: "Within that experience — yes. Tailored Signature lets you change the date, pace, group size and small variations available in that tour. The story and route stay intact.",
   },
   {
-    q: "What if I need help designing it?",
-    a: "Build it yourself, or refine it with a local experience designer at any stage.",
+    q: "What if I want something completely different?",
+    a: "Open the Studio and start your way — with a place, a region or a feeling. We'll guide you as you build, with intelligent suggestions drawn from our real experiences.",
   },
   {
     q: "What is the Experience Investment?",
-    a: "The total cost of your curated experience, based on your selections, group size, and duration.",
+    a: "The total cost of your experience, based on your selections, group size and duration. Confirmed in real time before you reserve.",
   },
   {
-    q: "What happens after I book?",
-    a: "You receive immediate confirmation and your full experience details. Everything is handled seamlessly.",
+    q: "What happens after I reserve?",
+    a: "You receive immediate confirmation and your full experience details. Everything is handled seamlessly on this site.",
   },
   {
     q: "What is your cancellation policy?",
-    a: "Most experiences can be cancelled free of charge up to 24 hours before. Full details are always shown before booking.",
+    a: "Most experiences can be cancelled free of charge up to 24 hours before. Full details are always shown before you reserve.",
   },
   {
     q: "Do you offer multi-day experiences?",
-    a: "Yes. Design private multi-day journeys across Portugal.",
-  },
-  {
-    q: "Are these authentic local experiences?",
-    a: "Yes. Every experience is rooted in local knowledge, hidden places, and genuine connections.",
+    a: "Yes. Design private multi-day journeys — with realistic transfers, pacing and stays.",
   },
 ];
 
