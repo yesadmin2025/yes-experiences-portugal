@@ -1,63 +1,52 @@
-import { Link } from "@tanstack/react-router";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { ArrowRight } from "lucide-react";
+import { MessageCircle } from "lucide-react";
+import { whatsappHref } from "@/components/WhatsAppFab";
 
-const FAQS: { q: string; a: React.ReactNode }[] = [
+const FAQS: { q: string; a: string }[] = [
   {
-    q: "What's the difference between Signature, Tailored and the Studio?",
-    a: (
-      <>
-        <strong>Signature</strong> experiences are complete, designed to be enjoyed as they are.
-        {" "}<strong>Tailored Signature</strong> lets you adjust a few details — date, pace,
-        small variations — within that specific experience. The <strong>Studio</strong> is for
-        building a journey from scratch: intuitive, guided, and shaped within what works on the ground.
-      </>
-    ),
+    q: "Can I confirm instantly?",
+    a: "Yes. Experiences can be confirmed directly on the website. No forms, no waiting.",
   },
   {
-    q: "Can I really reserve my experience instantly?",
-    a: "Yes. Reserve directly on this site with real-time confirmation — no waiting, no email chase.",
+    q: "What is the difference between Signature, Tailored and Builder?",
+    a: "Signature is ready as it is. Tailored adjusts selected details inside that tour. Builder starts from scratch using guided, realistic options.",
   },
   {
-    q: "Is the booking secure?",
-    a: "Yes. Reservations are handled securely through our integrated booking system, with immediate confirmation.",
+    q: "Can I get help from a local?",
+    a: "Yes. Real-time guidance is available whenever you want help.",
   },
   {
     q: "Do you cover all of Portugal?",
-    a: "Yes. We design experiences across the country. The Studio guides you within realistic routes and timings — so what you build is always feasible on the day.",
+    a: "Yes — with routes planned realistically, around timing, geography and availability.",
   },
   {
-    q: "Is everything private?",
-    a: "Yes. Every experience is fully private — solo, couple, family or larger group.",
+    q: "Can you organize proposals or celebrations?",
+    a: "Yes. Private proposals, anniversaries, birthdays, honeymoons and intimate celebrations.",
   },
   {
-    q: "Can I customise a Signature experience?",
-    a: "Within that experience — yes. Tailored Signature lets you change the date, pace, group size and small variations available in that tour. The story and route stay intact.",
+    q: "Do you work with groups or corporate?",
+    a: "Yes. Private groups, incentives and corporate experiences — with full logistics support.",
   },
   {
-    q: "What if I want something completely different?",
-    a: "Open the Studio and start your way — with a place, a region or a feeling. We'll guide you as you build, with intelligent suggestions drawn from our real experiences.",
+    q: "Are all experiences private?",
+    a: "Yes. We design private experiences only.",
   },
   {
-    q: "What is the Experience Investment?",
-    a: "The total cost of your experience, based on your selections, group size and duration. Confirmed in real time before you reserve.",
+    q: "Can I create a multi-day journey?",
+    a: "Yes. Shape it in the Studio, or with a local in real time.",
   },
   {
-    q: "What happens after I reserve?",
-    a: "You receive immediate confirmation and your full experience details. Everything is handled seamlessly on this site.",
+    q: "What can I tailor in a Signature?",
+    a: "Selected details inside that specific tour — pace, timing and the options available within it.",
   },
   {
-    q: "What is your cancellation policy?",
-    a: "Most experiences can be cancelled free of charge up to 24 hours before. Full details are always shown before you reserve.",
-  },
-  {
-    q: "Do you offer multi-day experiences?",
-    a: "Yes. Design private multi-day journeys — with realistic transfers, pacing and stays.",
+    q: "What happens after I confirm?",
+    a: "You receive confirmation and full details through our integrated booking system.",
   },
 ];
 
