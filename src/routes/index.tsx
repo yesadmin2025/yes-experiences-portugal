@@ -884,41 +884,27 @@ function HomePage() {
 
             <div className="reveal lg:col-span-5">
               <div className="relative">
-                {/* Atmospheric photo behind the steps panel — adds
-                    image presence to the Studio block without
-                    competing with the panel content. */}
-                <div className="absolute -inset-3 md:-inset-4 -z-[1] overflow-hidden">
-                  <img
-                    src={expNature}
-                    alt=""
-                    aria-hidden="true"
-                    loading="lazy"
-                    className="w-full h-full object-cover opacity-40 scale-[1.04]"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-br from-[color:var(--teal)]/88 via-[color:var(--teal)]/72 to-[color:var(--charcoal-deep)]/82" />
-                </div>
-                <div className="relative border border-[color:var(--gold)]/30 p-8 md:p-10 bg-[color:var(--teal)]/65 backdrop-blur-md">
-                  <p className="text-[10.5px] uppercase tracking-[0.32em] text-[color:var(--gold)]">
-                    A studio session, in 4 moves
-                  </p>
-                  <ol className="mt-6 space-y-5 list-none p-0 text-[15px] text-[color:var(--ivory)] font-light">
-                    {[
-                      "Start your way — a place, a theme, a feeling",
-                      "Shape it as you go — pace, stops, moments",
-                      "Adjust in real time — until it feels right",
-                      "Your journey is ready. Confirm instantly.",
-                    ].map((step, i) => (
-                      <li key={step} className="flex items-baseline gap-4">
-                        <span className="text-[11px] uppercase tracking-[0.3em] text-[color:var(--gold)] font-medium w-6 shrink-0">
-                          0{i + 1}
-                        </span>
-                        <span>{step}</span>
-                      </li>
-                    ))}
-                  </ol>
-                </div>
-                <div className="absolute -top-4 -right-4 hidden md:block w-20 h-20 border border-[color:var(--gold)]/40" />
+                {/* Live, animated routing preview — replaces the static
+                    panel. Communicates "alive, real-time, magic" without
+                    loading a real map SDK on mobile. */}
+                <LiveMapPreview />
+                <div className="absolute -top-4 -right-4 hidden md:block w-20 h-20 border border-[color:var(--gold)]/40 pointer-events-none" />
               </div>
+              <ol className="mt-6 grid grid-cols-2 gap-x-5 gap-y-3 list-none p-0 text-[12.5px] text-[color:var(--ivory)]/85 font-light">
+                {[
+                  "Start your way",
+                  "Shape it as you go",
+                  "Adjust in real time",
+                  "Confirm instantly",
+                ].map((step, i) => (
+                  <li key={step} className="flex items-baseline gap-2.5">
+                    <span className="text-[10px] uppercase tracking-[0.28em] text-[color:var(--gold)] font-medium shrink-0">
+                      0{i + 1}
+                    </span>
+                    <span>{step}</span>
+                  </li>
+                ))}
+              </ol>
             </div>
           </div>
         </div>
