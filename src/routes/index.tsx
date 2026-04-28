@@ -844,7 +844,7 @@ function HomePage() {
                   line: "text-[color:var(--ivory)]/85",
                   cta: "text-[color:var(--gold-soft)]",
                   rail: "h-[3px] bg-[color:var(--gold)]",
-                  ribbon: "Most flexible",
+                  ribbon: "Core experience",
                 },
                 // 4 · Celebrations — deep charcoal, dotted gold rail,
                 // rounded gold-soft icon tile, ivory CTA.
