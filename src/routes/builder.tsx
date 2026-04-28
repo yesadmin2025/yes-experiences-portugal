@@ -1,6 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
-import { RealLeafletMap } from "@/components/RealLeafletMap";
+import { lazy, Suspense } from "react";
+const RealLeafletMap = lazy(() =>
+  import("@/components/RealLeafletMap").then((m) => ({ default: m.RealLeafletMap })),
+);
 import { signatureTours } from "@/data/signatureTours";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
