@@ -1,3 +1,4 @@
+// rev 2 — real Viator photos + 10-tour catalog
 /**
  * YES Experiences Portugal — Signature Tours.
  *
@@ -754,3 +755,4 @@ export const STOP_THEME_IMG: Record<StopTheme, string> = {
   "troia-comporta": imgTroiaComporta,
   "wild-beaches-picnic": imgWildBeachesPicnic,
 };
+
