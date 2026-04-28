@@ -608,6 +608,25 @@ function CrawlerErrorPanel() {
           </div>
         )}
 
+        {skippedAutoScroll && (info || err) && (
+          <div className="mb-2 flex items-center justify-between gap-2 border border-[color:var(--border)] bg-[color:var(--sand)]/40 px-2.5 py-1.5 text-[11px] text-[color:var(--charcoal-soft)]">
+            <span>Auto-scroll skipped — you moved the page during the scan.</span>
+            <button
+              type="button"
+              onClick={() => {
+                programmaticScrollRef.current = true;
+                resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+                setSkippedAutoScroll(false);
+                window.setTimeout(() => {
+                  programmaticScrollRef.current = false;
+                }, 800);
+              }}
+              className="underline hover:text-[color:var(--charcoal)]"
+            >
+              Jump to results
+            </button>
+          </div>
+        )}
         <div ref={resultsRef} className="scroll-mt-4">
           {err && (
             <p className="text-xs text-red-800">
