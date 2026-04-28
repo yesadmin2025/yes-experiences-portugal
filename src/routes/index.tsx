@@ -1184,12 +1184,13 @@ function HomePage() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 md:gap-7">
             {editorial.map((e) => (
               <article key={e.title} className="group reveal-stagger">
-                <div className="relative overflow-hidden aspect-[4/5] mb-4 md:mb-5 shadow-[0_10px_30px_-22px_rgba(46,46,46,0.35)] group-hover:shadow-[0_24px_50px_-22px_rgba(41,91,97,0.28)] transition-shadow duration-700">
+                <div className="editorial-card relative overflow-hidden aspect-[4/5] mb-4 md:mb-5 border border-[color:var(--border)]">
                   <img
                     src={e.img}
                     alt={e.title}
                     loading="lazy"
-                    className="w-full h-full object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.08]"
+                    data-card-image
+                    className="w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal)]/88 via-[color:var(--charcoal)]/25 to-transparent" />
                   <div className="absolute left-4 right-4 bottom-4 md:left-5 md:right-5 md:bottom-5">
@@ -1199,7 +1200,7 @@ function HomePage() {
                     </h3>
                   </div>
                 </div>
-                <p className="text-[14px] md:text-[15.5px] text-[color:var(--charcoal)] leading-[1.65] font-light max-w-[34ch]">
+                <p className="text-[14.5px] md:text-[15.5px] text-[color:var(--charcoal)] leading-[1.7] max-w-[34ch]">
                   {e.line}
                 </p>
               </article>
