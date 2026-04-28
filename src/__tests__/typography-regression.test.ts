@@ -330,6 +330,8 @@ function renderDiffHtml(drift: DriftEntry[]): string {
   article header h3 { font-size: 13px; margin: 0 0 4px; color: #c4a25a; font-weight: 600; }
   .bp { font-size: 11px; color: #8a8a8a; margin-bottom: 8px; }
   .bp code { background: #1f1f24; padding: 1px 6px; border-radius: 4px; }
+  .trace { font-size: 11px; color: #8a8a8a; margin-bottom: 8px; }
+  .trace code { background: #1f1f24; padding: 1px 6px; border-radius: 4px; color: #c4a25a; }
   .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .prev, .next { background: #08080a; border-radius: 6px; padding: 10px 12px; font: 12px/1.55 ui-monospace, monospace; word-break: break-all; white-space: pre-wrap; }
   .prev { border-left: 3px solid #6b2b2b; }
