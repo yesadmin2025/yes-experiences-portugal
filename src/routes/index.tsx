@@ -1246,7 +1246,7 @@ function HomePage() {
           <div className="grid md:grid-cols-3 gap-6 md:gap-7">
             {reviews.map((r, i) => (
               <figure key={i} className="group reveal-stagger h-full">
-                <div className="lift-layer-sm bg-[color:var(--card)] border border-[color:var(--border)] group-hover:border-[color:var(--teal)]/25 group-hover:shadow-[0_24px_50px_-24px_rgba(41,91,97,0.2)] p-7 md:p-9 h-full flex flex-col">
+                <div className="editorial-card bg-[color:var(--card)] border border-[color:var(--border)] hover:border-[color:var(--gold)]/45 p-7 md:p-9 h-full flex flex-col">
                   <div className="flex gap-0.5 text-[color:var(--gold)] mb-5">
                     {[...Array(5)].map((_, idx) => (
                       <Star key={idx} size={13} fill="currentColor" />
