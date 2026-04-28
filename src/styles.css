@@ -1392,6 +1392,57 @@
   }
 }
 
+/* ─────────────────────────────────────────────────────────────
+   .cta-doorway — premium CTA whose gold underline animates from
+   a 28px tick to the full label width on:
+     • hover (mouse)
+     • focus-visible (keyboard)
+     • active (touch hold / press) — critical on mobile where
+       hover is unavailable
+   The label color also shifts to gold on activation, so the
+   "doorway opening" reads even without animation.
+   Pair with `group` on the parent <Link> so the whole card is
+   the activation surface (full tap target preserved).
+   ───────────────────────────────────────────────────────────── */
+.cta-doorway__label {
+  position: relative;
+  isolation: isolate;
+}
+.cta-doorway__label::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 1px;
+  width: 28px;
+  background: var(--gold);
+  transition:
+    width 320ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    background-color 220ms ease;
+  will-change: width;
+}
+/* All three trigger states extend the underline. */
+.group:hover .cta-doorway__label::after,
+.group:focus-visible .cta-doorway__label::after,
+.group:active .cta-doorway__label::after,
+.cta-doorway:hover .cta-doorway__label::after,
+.cta-doorway:focus-visible .cta-doorway__label::after,
+.cta-doorway:active .cta-doorway__label::after {
+  width: 100%;
+}
+/* Touch-hold gets a slightly slower bloom so it reads as
+   intentional (not a UI flash). */
+.group:active .cta-doorway__label::after,
+.cta-doorway:active .cta-doorway__label::after {
+  transition-duration: 240ms;
+  background: var(--gold-soft);
+}
+@media (prefers-reduced-motion: reduce) {
+  .cta-doorway__label::after {
+    transition: none !important;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   [class*="animate-[heroFade"],
   [class*="animate-[heroZoom"],
