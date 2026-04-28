@@ -45,11 +45,11 @@ export function WhatsAppFab() {
       <span
         role="tooltip"
         className={
-          "pointer-events-none absolute left-full top-1/2 -translate-y-1/2 ml-3 whitespace-nowrap " +
+          "pointer-events-none absolute right-full top-1/2 -translate-y-1/2 mr-3 whitespace-nowrap " +
           "px-3 py-1.5 text-[11px] uppercase tracking-[0.18em] font-medium " +
           "bg-[color:var(--charcoal-deep)] text-[color:var(--ivory)] " +
           "shadow-[0_8px_24px_-12px_rgba(0,0,0,0.4)] " +
-          "opacity-0 -translate-x-1 transition-all duration-300 " +
+          "opacity-0 translate-x-1 transition-all duration-300 " +
           "group-hover:opacity-100 group-hover:translate-x-0 " +
           "group-focus-within:opacity-100 group-focus-within:translate-x-0"
         }
