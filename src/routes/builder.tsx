@@ -150,7 +150,14 @@ const tierOpts = [
    Multi-day journey style seeds (from /multi-day cards)
    ============================================================ */
 
-type JourneySeed = Partial<Pick<BuilderState, "region" | "duration" | "styles" | "highlights" | "pace" | "groupType">>;
+type JourneySeed = {
+  region?: string;
+  duration?: string;
+  styles?: string[];
+  highlights?: string[];
+  pace?: string;
+  groupType?: string;
+};
 
 const JOURNEY_SEEDS: Record<string, JourneySeed> = {
   "wine-coast": {
