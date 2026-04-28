@@ -519,9 +519,20 @@ function CrawlerErrorPanel() {
         )}
 
         <div className="mt-3 flex flex-wrap items-center gap-2">
+          <label className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-[0.2em] text-[color:var(--charcoal-soft)]">
+            Strategy
+            <select
+              value={strategy}
+              onChange={(e) => setStrategy(e.target.value as CrawlerErrorStrategy)}
+              className="border border-[color:var(--border)] bg-white px-2 py-1 text-xs normal-case tracking-normal"
+            >
+              <option value="root-cause">Root-cause markers</option>
+              <option value="last-error">Last error</option>
+            </select>
+          </label>
           <button
             type="button"
-            onClick={capture}
+            onClick={() => void capture()}
             disabled={loading}
             className="inline-flex items-center gap-1.5 border border-[color:var(--border)] hover:border-[color:var(--gold)] bg-white px-2.5 py-1 text-xs disabled:opacity-50"
           >
