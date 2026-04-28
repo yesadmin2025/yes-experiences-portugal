@@ -427,9 +427,26 @@ function CrawlerErrorPanel() {
     }
   }, [strategy]);
 
+  const [scanStep, setScanStep] = useState(0);
+  const [scanStartedAt, setScanStartedAt] = useState<number | null>(null);
+  const [elapsed, setElapsed] = useState(0);
+
+  const scanSteps = [
+    "Connecting to dev-server log…",
+    "Reading log tail…",
+    "Stripping ANSI codes…",
+    strategy === "root-cause"
+      ? "Matching root-cause markers…"
+      : "Locating last error marker…",
+    "Extracting file:line:col…",
+  ];
+
   const capture = async (s: CrawlerErrorStrategy = strategy) => {
     setLoading(true);
     setErr(null);
+    setScanStep(0);
+    setScanStartedAt(Date.now());
+    setElapsed(0);
     try {
       // Pass a fresh timestamp so the RPC URL changes on every call,
       // bypassing any browser/proxy cache and forcing a re-scan.
@@ -441,8 +458,24 @@ function CrawlerErrorPanel() {
       setErr(e instanceof Error ? e.message : String(e));
     } finally {
       setLoading(false);
+      setScanStartedAt(null);
     }
   };
+
+  // Animate the step messaging + elapsed timer while a scan is in flight.
+  useEffect(() => {
+    if (!loading || scanStartedAt == null) return;
+    const stepTimer = setInterval(() => {
+      setScanStep((s) => Math.min(s + 1, scanSteps.length - 1));
+    }, 220);
+    const elapsedTimer = setInterval(() => {
+      setElapsed(Date.now() - scanStartedAt);
+    }, 100);
+    return () => {
+      clearInterval(stepTimer);
+      clearInterval(elapsedTimer);
+    };
+  }, [loading, scanStartedAt, scanSteps.length]);
 
   // Re-scan on every page load (mount) and whenever strategy changes.
   useEffect(() => {
