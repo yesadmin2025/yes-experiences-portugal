@@ -214,6 +214,8 @@ export function RealLeafletMap({ region }: { region: string | null }) {
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
+    const el = containerRef.current;
+    if (!el || el.clientWidth === 0 || el.clientHeight === 0) return;
     if (region && REGION_CENTERS[region]) {
       const c = REGION_CENTERS[region];
       map.flyTo([c.lat, c.lng], c.zoom, { duration: 0.8 });
