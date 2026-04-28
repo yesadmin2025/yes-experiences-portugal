@@ -29,7 +29,7 @@ function ExperiencesPage() {
   const { resolveImg } = useImportedTourImages();
   return (
     <SiteLayout>
-      <section className="pt-32 pb-[var(--section-y-sm)] bg-[color:var(--sand)] text-center">
+      <section data-audit="experiences-hero" className="pt-32 pb-[var(--section-y-sm)] bg-[color:var(--sand)] text-center">
         <div className="container-x">
           <span className="eyebrow">Signature Collection</span>
           <h1 className="serif text-4xl md:text-6xl mt-5 leading-tight">
