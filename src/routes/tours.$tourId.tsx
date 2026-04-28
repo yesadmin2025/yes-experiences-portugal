@@ -107,7 +107,7 @@ function TourDetailPage() {
                   A day at a glance
                 </span>
                 <ul className="mt-3 space-y-2.5">
-                  {tour.pace.map((p, i) => (
+                  {tour.pace.map((p: string, i: number) => (
                     <li key={p} className="flex items-start gap-3 text-sm">
                       <span className="mt-0.5 flex-shrink-0 w-6 h-6 border border-[color:var(--gold)] text-[color:var(--gold)] text-[11px] flex items-center justify-center">
                         {i + 1}

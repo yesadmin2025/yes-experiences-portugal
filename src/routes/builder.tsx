@@ -1,7 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
 import { signatureTours } from "@/data/signatureTours";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
+const RealLeafletMap = lazy(() =>
+  import("@/components/RealLeafletMap").then((m) => ({ default: m.RealLeafletMap })),
+);
 import {
   ArrowRight,
   Check,
@@ -407,7 +410,9 @@ function BuilderPage() {
                   active={!!previewHighlight}
                   onClear={() => setPreviewHighlight(null)}
                 >
-                  <PremiumMap region={s.region} highlights={s.highlights} days={days} isMultiDay={isMultiDay} previewHighlight={previewHighlight} />
+                  <Suspense fallback={<div className="aspect-[4/5] bg-[color:var(--card)] border border-[color:var(--border)] grid place-items-center text-xs text-[color:var(--charcoal-soft)] uppercase tracking-[0.2em]">Loading map…</div>}>
+                    <RealLeafletMap region={s.region} />
+                  </Suspense>
                 </SwipeToClearPreview>
                 <LiveSummary
                   s={s}

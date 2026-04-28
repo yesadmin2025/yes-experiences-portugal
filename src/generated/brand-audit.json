@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-04-28T16:03:01.715Z",
-  "filesScanned": 81,
+  "generatedAt": "2026-04-28T16:13:40.376Z",
+  "filesScanned": 82,
   "approvedPalette": {
     "teal": "#295B61",
     "teal-2": "#2A7C82",
@@ -18,10 +18,10 @@
     "#cccccc"
   ],
   "counts": {
-    "total": 100,
-    "approved": 25,
-    "allowlisted": 23,
-    "mismatch": 52
+    "total": 154,
+    "approved": 40,
+    "allowlisted": 31,
+    "mismatch": 83
   },
   "findings": [
     {
@@ -568,77 +568,176 @@
       "file": "src/routes/builder.tsx",
       "line": 1195,
       "col": 44,
-      "raw": "#cfe3e6",
-      "normalized": "#cfe3e6",
-      "snippet": "<stop offset=\"0%\" stopColor=\"#cfe3e6\" />",
+      "raw": "#3b6e85",
+      "normalized": "#3b6e85",
+      "snippet": "<stop offset=\"0%\" stopColor=\"#3b6e85\" />",
       "status": "mismatch"
     },
     {
       "file": "src/routes/builder.tsx",
       "line": 1196,
       "col": 45,
-      "raw": "#9fc4cc",
-      "normalized": "#9fc4cc",
-      "snippet": "<stop offset=\"60%\" stopColor=\"#9fc4cc\" />",
+      "raw": "#5b8ea3",
+      "normalized": "#5b8ea3",
+      "snippet": "<stop offset=\"45%\" stopColor=\"#5b8ea3\" />",
       "status": "mismatch"
     },
     {
       "file": "src/routes/builder.tsx",
       "line": 1197,
-      "col": 46,
-      "raw": "#6ea3ad",
-      "normalized": "#6ea3ad",
-      "snippet": "<stop offset=\"100%\" stopColor=\"#6ea3ad\" />",
+      "col": 45,
+      "raw": "#9cc1cf",
+      "normalized": "#9cc1cf",
+      "snippet": "<stop offset=\"80%\" stopColor=\"#9cc1cf\" />",
       "status": "mismatch"
     },
     {
       "file": "src/routes/builder.tsx",
-      "line": 1201,
-      "col": 44,
-      "raw": "#f3ead6",
-      "normalized": "#f3ead6",
-      "snippet": "<stop offset=\"0%\" stopColor=\"#f3ead6\" />",
+      "line": 1198,
+      "col": 46,
+      "raw": "#c7dee5",
+      "normalized": "#c7dee5",
+      "snippet": "<stop offset=\"100%\" stopColor=\"#c7dee5\" />",
       "status": "mismatch"
     },
     {
       "file": "src/routes/builder.tsx",
       "line": 1202,
-      "col": 45,
-      "raw": "#e8dcb8",
-      "normalized": "#e8dcb8",
-      "snippet": "<stop offset=\"55%\" stopColor=\"#e8dcb8\" />",
+      "col": 44,
+      "raw": "#eadfb8",
+      "normalized": "#eadfb8",
+      "snippet": "<stop offset=\"0%\" stopColor=\"#eadfb8\" />",
       "status": "mismatch"
     },
     {
       "file": "src/routes/builder.tsx",
       "line": 1203,
-      "col": 46,
-      "raw": "#d6c596",
-      "normalized": "#d6c596",
-      "snippet": "<stop offset=\"100%\" stopColor=\"#d6c596\" />",
+      "col": 45,
+      "raw": "#d8c98f",
+      "normalized": "#d8c98f",
+      "snippet": "<stop offset=\"40%\" stopColor=\"#d8c98f\" />",
       "status": "mismatch"
     },
     {
       "file": "src/routes/builder.tsx",
-      "line": 1207,
+      "line": 1204,
+      "col": 45,
+      "raw": "#b89d62",
+      "normalized": "#b89d62",
+      "snippet": "<stop offset=\"75%\" stopColor=\"#b89d62\" />",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1205,
+      "col": 46,
+      "raw": "#8f7a48",
+      "normalized": "#8f7a48",
+      "snippet": "<stop offset=\"100%\" stopColor=\"#8f7a48\" />",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1209,
       "col": 44,
-      "raw": "#ece4d0",
-      "normalized": "#ece4d0",
-      "snippet": "<stop offset=\"0%\" stopColor=\"#ece4d0\" />",
+      "raw": "#e2d5a8",
+      "normalized": "#e2d5a8",
+      "snippet": "<stop offset=\"0%\" stopColor=\"#e2d5a8\" />",
       "status": "mismatch"
     },
     {
       "file": "src/routes/builder.tsx",
-      "line": 1208,
+      "line": 1210,
+      "col": 45,
+      "raw": "#c9b683",
+      "normalized": "#c9b683",
+      "snippet": "<stop offset=\"55%\" stopColor=\"#c9b683\" />",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1211,
       "col": 46,
-      "raw": "#d4c8a8",
-      "normalized": "#d4c8a8",
-      "snippet": "<stop offset=\"100%\" stopColor=\"#d4c8a8\" />",
+      "raw": "#9c8754",
+      "normalized": "#9c8754",
+      "snippet": "<stop offset=\"100%\" stopColor=\"#9c8754\" />",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1215,
+      "col": 44,
+      "raw": "#5e4a24",
+      "normalized": "#5e4a24",
+      "snippet": "<stop offset=\"0%\" stopColor=\"#5e4a24\" stopOpacity=\"0.55\" />",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1216,
+      "col": 45,
+      "raw": "#7a5f30",
+      "normalized": "#7a5f30",
+      "snippet": "<stop offset=\"60%\" stopColor=\"#7a5f30\" stopOpacity=\"0.18\" />",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1217,
+      "col": 46,
+      "raw": "#7a5f30",
+      "normalized": "#7a5f30",
+      "snippet": "<stop offset=\"100%\" stopColor=\"#7a5f30\" stopOpacity=\"0\" />",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1221,
+      "col": 44,
+      "raw": "#4d6b3c",
+      "normalized": "#4d6b3c",
+      "snippet": "<stop offset=\"0%\" stopColor=\"#4d6b3c\" stopOpacity=\"0.32\" />",
       "status": "mismatch"
     },
     {
       "file": "src/routes/builder.tsx",
       "line": 1222,
+      "col": 46,
+      "raw": "#4d6b3c",
+      "normalized": "#4d6b3c",
+      "snippet": "<stop offset=\"100%\" stopColor=\"#4d6b3c\" stopOpacity=\"0\" />",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1226,
+      "col": 44,
+      "raw": "#f5e9c5",
+      "normalized": "#f5e9c5",
+      "snippet": "<stop offset=\"0%\" stopColor=\"#f5e9c5\" stopOpacity=\"0.9\" />",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1227,
+      "col": 46,
+      "raw": "#f5e9c5",
+      "normalized": "#f5e9c5",
+      "snippet": "<stop offset=\"100%\" stopColor=\"#f5e9c5\" stopOpacity=\"0\" />",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1242,
+      "col": 122,
+      "raw": "#fff8e0",
+      "normalized": "#fff8e0",
+      "snippet": "<feSpecularLighting in=\"blur\" surfaceScale=\"3\" specularConstant=\"0.7\" specularExponent=\"18\" lightingColor=\"#fff8e0\" result=\"spec\">",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1250,
       "col": 57,
       "raw": "#000",
       "normalized": "#000000",
@@ -647,16 +746,25 @@
     },
     {
       "file": "src/routes/builder.tsx",
-      "line": 1230,
-      "col": 34,
+      "line": 1254,
+      "col": 75,
       "raw": "#ffffff",
       "normalized": "#ffffff",
-      "snippet": "<g fill=\"none\" stroke=\"#ffffff\" strokeWidth=\"0.18\" opacity=\"0.35\">",
+      "snippet": "<path d=\"M 0 1.5 Q 1.5 0 3 1.5 T 6 1.5\" fill=\"none\" stroke=\"#ffffff\" strokeWidth=\"0.08\" opacity=\"0.35\" />",
       "status": "allowlisted"
     },
     {
       "file": "src/routes/builder.tsx",
-      "line": 1254,
+      "line": 1263,
+      "col": 34,
+      "raw": "#ffffff",
+      "normalized": "#ffffff",
+      "snippet": "<g fill=\"none\" stroke=\"#ffffff\" strokeWidth=\"0.18\" opacity=\"0.4\">",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1291,
       "col": 21,
       "raw": "#b8a878",
       "normalized": "#b8a878",
@@ -665,7 +773,7 @@
     },
     {
       "file": "src/routes/builder.tsx",
-      "line": 1352,
+      "line": 1389,
       "col": 21,
       "raw": "#9a8657",
       "normalized": "#9a8657",
@@ -674,88 +782,259 @@
     },
     {
       "file": "src/routes/builder.tsx",
-      "line": 1365,
+      "line": 1420,
       "col": 34,
-      "raw": "#7ca7b8",
-      "normalized": "#7ca7b8",
-      "snippet": "<g fill=\"none\" stroke=\"#7ca7b8\" strokeWidth=\"0.32\" opacity=\"0.85\" strokeLinecap=\"round\">",
+      "raw": "#6b5326",
+      "normalized": "#6b5326",
+      "snippet": "<g fill=\"none\" stroke=\"#6b5326\" strokeWidth=\"0.18\" opacity=\"0.55\" strokeLinecap=\"round\" strokeLinejoin=\"round\" style={{ pointerEvents: \"none\" }}>",
       "status": "mismatch"
     },
     {
       "file": "src/routes/builder.tsx",
-      "line": 1378,
+      "line": 1428,
+      "col": 34,
+      "raw": "#5b8ea3",
+      "normalized": "#5b8ea3",
+      "snippet": "<g fill=\"none\" stroke=\"#5b8ea3\" strokeWidth=\"0.38\" opacity=\"0.9\" strokeLinecap=\"round\" strokeLinejoin=\"round\">",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1443,
+      "col": 34,
+      "raw": "#dff1f6",
+      "normalized": "#dff1f6",
+      "snippet": "<g fill=\"none\" stroke=\"#dff1f6\" strokeWidth=\"0.12\" opacity=\"0.7\" strokeLinecap=\"round\">",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1449,
+      "col": 20,
+      "raw": "#5b8ea3",
+      "normalized": "#5b8ea3",
+      "snippet": "<g fill=\"#5b8ea3\" stroke=\"#dff1f6\" strokeWidth=\"0.1\" opacity=\"0.85\">",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1449,
+      "col": 37,
+      "raw": "#dff1f6",
+      "normalized": "#dff1f6",
+      "snippet": "<g fill=\"#5b8ea3\" stroke=\"#dff1f6\" strokeWidth=\"0.1\" opacity=\"0.85\">",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1465,
+      "col": 58,
+      "raw": "#3a2f12",
+      "normalized": "#3a2f12",
+      "snippet": "<circle cx={c.x} cy={c.y} r=\"0.55\" fill=\"#3a2f12\" opacity=\"0.65\" />",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1466,
+      "col": 58,
+      "raw": "#fff",
+      "normalized": "#ffffff",
+      "snippet": "<circle cx={c.x} cy={c.y} r=\"0.25\" fill=\"#fff\" opacity=\"0.9\" />",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1471,
+      "col": 25,
+      "raw": "#3a2f12",
+      "normalized": "#3a2f12",
+      "snippet": "fill=\"#3a2f12\"",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1484,
       "col": 80,
-      "raw": "#9a8657",
-      "normalized": "#9a8657",
-      "snippet": "<ellipse cx=\"6\" cy=\"108\" rx=\"2.2\" ry=\"1\" fill=\"url(#land)\" stroke=\"#9a8657\" strokeWidth=\"0.22\" />",
+      "raw": "#7a6633",
+      "normalized": "#7a6633",
+      "snippet": "<ellipse cx=\"6\" cy=\"108\" rx=\"2.2\" ry=\"1\" fill=\"url(#land)\" stroke=\"#7a6633\" strokeWidth=\"0.22\" />",
       "status": "mismatch"
     },
     {
       "file": "src/routes/builder.tsx",
-      "line": 1379,
+      "line": 1485,
       "col": 81,
-      "raw": "#9a8657",
-      "normalized": "#9a8657",
-      "snippet": "<ellipse cx=\"3\" cy=\"86\" rx=\"1.5\" ry=\"0.7\" fill=\"url(#land)\" stroke=\"#9a8657\" strokeWidth=\"0.2\" />",
+      "raw": "#7a6633",
+      "normalized": "#7a6633",
+      "snippet": "<ellipse cx=\"3\" cy=\"86\" rx=\"1.5\" ry=\"0.7\" fill=\"url(#land)\" stroke=\"#7a6633\" strokeWidth=\"0.2\" />",
       "status": "mismatch"
     },
     {
       "file": "src/routes/builder.tsx",
-      "line": 1380,
+      "line": 1486,
       "col": 81,
-      "raw": "#9a8657",
-      "normalized": "#9a8657",
-      "snippet": "<ellipse cx=\"5.2\" cy=\"84\" rx=\"1\" ry=\"0.5\" fill=\"url(#land)\" stroke=\"#9a8657\" strokeWidth=\"0.2\" />",
+      "raw": "#7a6633",
+      "normalized": "#7a6633",
+      "snippet": "<ellipse cx=\"5.2\" cy=\"84\" rx=\"1\" ry=\"0.5\" fill=\"url(#land)\" stroke=\"#7a6633\" strokeWidth=\"0.2\" />",
       "status": "mismatch"
     },
     {
       "file": "src/routes/builder.tsx",
-      "line": 1385,
+      "line": 1487,
+      "col": 56,
+      "raw": "#3a2f12",
+      "normalized": "#3a2f12",
+      "snippet": "<text x=\"6\" y=\"112.6\" fontSize=\"1.4\" fill=\"#3a2f12\" opacity=\"0.55\" textAnchor=\"middle\" fontFamily=\"ui-serif, Georgia, serif\" fontStyle=\"italic\">Madeira</text>",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1488,
+      "col": 55,
+      "raw": "#3a2f12",
+      "normalized": "#3a2f12",
+      "snippet": "<text x=\"3.8\" y=\"90\" fontSize=\"1.4\" fill=\"#3a2f12\" opacity=\"0.55\" textAnchor=\"middle\" fontFamily=\"ui-serif, Georgia, serif\" fontStyle=\"italic\">Açores</text>",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1494,
       "col": 47,
-      "raw": "#5a6a72",
-      "normalized": "#5a6a72",
-      "snippet": "<circle r=\"3\" fill=\"none\" stroke=\"#5a6a72\" strokeWidth=\"0.2\" />",
+      "raw": "#3f4a50",
+      "normalized": "#3f4a50",
+      "snippet": "<circle r=\"3\" fill=\"none\" stroke=\"#3f4a50\" strokeWidth=\"0.2\" />",
       "status": "mismatch"
     },
     {
       "file": "src/routes/builder.tsx",
-      "line": 1386,
+      "line": 1495,
       "col": 61,
-      "raw": "#5a6a72",
-      "normalized": "#5a6a72",
-      "snippet": "<path d=\"M 0 -3 L 0.6 0 L 0 3 L -0.6 0 Z\" fill=\"#5a6a72\" />",
+      "raw": "#3f4a50",
+      "normalized": "#3f4a50",
+      "snippet": "<path d=\"M 0 -3 L 0.5 0 L 0 3 L -0.5 0 Z\" fill=\"#3f4a50\" />",
       "status": "mismatch"
     },
     {
       "file": "src/routes/builder.tsx",
-      "line": 1387,
+      "line": 1496,
+      "col": 61,
+      "raw": "#3f4a50",
+      "normalized": "#3f4a50",
+      "snippet": "<path d=\"M -3 0 L 0 0.5 L 3 0 L 0 -0.5 Z\" fill=\"#3f4a50\" opacity=\"0.5\" />",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1497,
       "col": 75,
       "raw": "#3f4a50",
       "normalized": "#3f4a50",
-      "snippet": "<text x=\"0\" y=\"-3.6\" fontSize=\"1.6\" textAnchor=\"middle\" fill=\"#3f4a50\" fontFamily=\"ui-sans-serif, system-ui\">N</text>",
+      "snippet": "<text x=\"0\" y=\"-3.6\" fontSize=\"1.6\" textAnchor=\"middle\" fill=\"#3f4a50\" fontFamily=\"ui-serif, Georgia, serif\" fontWeight=\"700\">N</text>",
       "status": "mismatch"
     },
     {
       "file": "src/routes/builder.tsx",
-      "line": 1391,
-      "col": 20,
+      "line": 1502,
+      "col": 60,
+      "raw": "#3a2f12",
+      "normalized": "#3a2f12",
+      "snippet": "<rect x=\"0\" y=\"0\" width=\"6\" height=\"0.6\" fill=\"#3a2f12\" />",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1503,
+      "col": 74,
+      "raw": "#3a2f12",
+      "normalized": "#3a2f12",
+      "snippet": "<rect x=\"6\" y=\"0\" width=\"6\" height=\"0.6\" fill=\"none\" stroke=\"#3a2f12\" strokeWidth=\"0.15\" />",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1504,
+      "col": 55,
+      "raw": "#3a2f12",
+      "normalized": "#3a2f12",
+      "snippet": "<text x=\"0\" y=\"-0.6\" fontSize=\"1.3\" fill=\"#3a2f12\" fontFamily=\"ui-serif, Georgia, serif\">0</text>",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1505,
+      "col": 56,
+      "raw": "#3a2f12",
+      "normalized": "#3a2f12",
+      "snippet": "<text x=\"12\" y=\"-0.6\" fontSize=\"1.3\" fill=\"#3a2f12\" fontFamily=\"ui-serif, Georgia, serif\" textAnchor=\"end\" dx=\"0\">100 km</text>",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1510,
+      "col": 93,
       "raw": "#7a6a3e",
       "normalized": "#7a6a3e",
-      "snippet": "<g fill=\"#7a6a3e\" fontFamily=\"ui-serif, Georgia, serif\" opacity=\"0.55\" style={{ pointerEvents: \"none\" }}>",
+      "snippet": "<text x=\"72\" y=\"50\" fontSize=\"3.6\" fontStyle=\"italic\" letterSpacing=\"0.4\" fill=\"#7a6a3e\" opacity=\"0.6\">ESPAÑA</text>",
       "status": "mismatch"
     },
     {
       "file": "src/routes/builder.tsx",
-      "line": 1393,
+      "line": 1511,
       "col": 92,
-      "raw": "#456973",
-      "normalized": "#456973",
-      "snippet": "<text x=\"6\" y=\"60\" fontSize=\"2.4\" fontStyle=\"italic\" letterSpacing=\"0.4\" fill=\"#456973\">ATLÂNTICO</text>",
+      "raw": "#2c5560",
+      "normalized": "#2c5560",
+      "snippet": "<text x=\"8\" y=\"60\" fontSize=\"2.6\" fontStyle=\"italic\" letterSpacing=\"0.6\" fill=\"#2c5560\" opacity=\"0.65\">ATLÂNTICO</text>",
       "status": "mismatch"
     },
     {
       "file": "src/routes/builder.tsx",
-      "line": 1435,
+      "line": 1512,
+      "col": 92,
+      "raw": "#2c5560",
+      "normalized": "#2c5560",
+      "snippet": "<text x=\"8\" y=\"64\" fontSize=\"1.6\" fontStyle=\"italic\" letterSpacing=\"0.5\" fill=\"#2c5560\" opacity=\"0.5\">Oceano</text>",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1513,
+      "col": 73,
+      "raw": "#5a4a1e",
+      "normalized": "#5a4a1e",
+      "snippet": "<text x=\"30\" y=\"14\" fontSize=\"1.5\" fontStyle=\"italic\" fill=\"#5a4a1e\" opacity=\"0.6\" letterSpacing=\"0.3\">MINHO</text>",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1514,
+      "col": 73,
+      "raw": "#5a4a1e",
+      "normalized": "#5a4a1e",
+      "snippet": "<text x=\"32\" y=\"50\" fontSize=\"1.5\" fontStyle=\"italic\" fill=\"#5a4a1e\" opacity=\"0.6\" letterSpacing=\"0.3\">BEIRAS</text>",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1515,
+      "col": 73,
+      "raw": "#5a4a1e",
+      "normalized": "#5a4a1e",
+      "snippet": "<text x=\"36\" y=\"92\" fontSize=\"1.6\" fontStyle=\"italic\" fill=\"#5a4a1e\" opacity=\"0.6\" letterSpacing=\"0.4\">ALENTEJO</text>",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1516,
+      "col": 74,
+      "raw": "#5a4a1e",
+      "normalized": "#5a4a1e",
+      "snippet": "<text x=\"36\" y=\"118\" fontSize=\"1.5\" fontStyle=\"italic\" fill=\"#5a4a1e\" opacity=\"0.6\" letterSpacing=\"0.4\">ALGARVE</text>",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1559,
       "col": 96,
       "raw": "#000",
       "normalized": "#000000",
@@ -764,7 +1043,7 @@
     },
     {
       "file": "src/routes/builder.tsx",
-      "line": 1468,
+      "line": 1592,
       "col": 74,
       "raw": "#000",
       "normalized": "#000000",
@@ -922,6 +1201,213 @@
       "raw": "#ffffff",
       "normalized": "#ffffff",
       "snippet": "color: #ffffff;",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 290,
+      "col": 17,
+      "raw": "#000",
+      "normalized": "#000000",
+      "snippet": "\"black\": \"#000\",",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 291,
+      "col": 17,
+      "raw": "#fff",
+      "normalized": "#ffffff",
+      "snippet": "\"white\": \"#fff\",",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 293,
+      "col": 22,
+      "raw": "#2e2e2e",
+      "normalized": "#2e2e2e",
+      "snippet": "\"foreground\": \"#2e2e2e\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 294,
+      "col": 16,
+      "raw": "#ffffff",
+      "normalized": "#ffffff",
+      "snippet": "\"card\": \"#ffffff\",",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 295,
+      "col": 27,
+      "raw": "#2e2e2e",
+      "normalized": "#2e2e2e",
+      "snippet": "\"card-foreground\": \"#2e2e2e\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 296,
+      "col": 19,
+      "raw": "#ffffff",
+      "normalized": "#ffffff",
+      "snippet": "\"popover\": \"#ffffff\",",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 297,
+      "col": 30,
+      "raw": "#2e2e2e",
+      "normalized": "#2e2e2e",
+      "snippet": "\"popover-foreground\": \"#2e2e2e\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 299,
+      "col": 30,
+      "raw": "#faf8f3",
+      "normalized": "#faf8f3",
+      "snippet": "\"primary-foreground\": \"#faf8f3\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 300,
+      "col": 21,
+      "raw": "#f4efe7",
+      "normalized": "#f4efe7",
+      "snippet": "\"secondary\": \"#f4efe7\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 301,
+      "col": 32,
+      "raw": "#2e2e2e",
+      "normalized": "#2e2e2e",
+      "snippet": "\"secondary-foreground\": \"#2e2e2e\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 302,
+      "col": 17,
+      "raw": "#f4efe7",
+      "normalized": "#f4efe7",
+      "snippet": "\"muted\": \"#f4efe7\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 303,
+      "col": 28,
+      "raw": "#5a5a5a",
+      "normalized": "#5a5a5a",
+      "snippet": "\"muted-foreground\": \"#5a5a5a\",",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 304,
+      "col": 18,
+      "raw": "#c9a96a",
+      "normalized": "#c9a96a",
+      "snippet": "\"accent\": \"#c9a96a\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 305,
+      "col": 29,
+      "raw": "#2e2e2e",
+      "normalized": "#2e2e2e",
+      "snippet": "\"accent-foreground\": \"#2e2e2e\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 307,
+      "col": 34,
+      "raw": "#ffffff",
+      "normalized": "#ffffff",
+      "snippet": "\"destructive-foreground\": \"#ffffff\",",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 311,
+      "col": 16,
+      "raw": "#c9a96a",
+      "normalized": "#c9a96a",
+      "snippet": "\"gold\": \"#c9a96a\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 312,
+      "col": 21,
+      "raw": "#e1cfa6",
+      "normalized": "#e1cfa6",
+      "snippet": "\"gold-soft\": \"#e1cfa6\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 314,
+      "col": 18,
+      "raw": "#2a7c82",
+      "normalized": "#2a7c82",
+      "snippet": "\"teal-2\": \"#2a7c82\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 315,
+      "col": 17,
+      "raw": "#faf8f3",
+      "normalized": "#faf8f3",
+      "snippet": "\"ivory\": \"#faf8f3\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 316,
+      "col": 16,
+      "raw": "#f4efe7",
+      "normalized": "#f4efe7",
+      "snippet": "\"sand\": \"#f4efe7\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 317,
+      "col": 20,
+      "raw": "#2e2e2e",
+      "normalized": "#2e2e2e",
+      "snippet": "\"charcoal\": \"#2e2e2e\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 318,
+      "col": 25,
+      "raw": "#5a5a5a",
+      "normalized": "#5a5a5a",
+      "snippet": "\"charcoal-soft\": \"#5a5a5a\",",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 319,
+      "col": 25,
+      "raw": "#1f1f1f",
+      "normalized": "#1f1f1f",
+      "snippet": "\"charcoal-deep\": \"#1f1f1f\"",
       "status": "allowlisted"
     }
   ]
