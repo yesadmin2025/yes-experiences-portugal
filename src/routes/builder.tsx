@@ -907,11 +907,13 @@ function PremiumMap({
   highlights,
   days,
   isMultiDay,
+  previewHighlight,
 }: {
   region: string | null;
   highlights: string[];
   days: number;
   isMultiDay: boolean;
+  previewHighlight?: string | null;
 }) {
   // Curated stops for the chosen region, scaled by day count.
   const stops = useMemo(() => {
@@ -921,8 +923,21 @@ function PremiumMap({
     return base.slice(0, desired).map((p, i) => ({ ...p, day: isMultiDay ? Math.floor(i / 2) + 1 : 1 }));
   }, [region, highlights.length, days, isMultiDay]);
 
+  // Ghost stop driven by hover/long-press preview. Uses the next available
+  // curated point for the region — only shown if not already a real stop.
+  const ghostStop = useMemo(() => {
+    if (!region || !previewHighlight) return null;
+    if (highlights.includes(previewHighlight)) return null;
+    const base = regionStops[region] ?? [];
+    const next = base[stops.length] ?? base[base.length - 1];
+    if (!next) return null;
+    return { ...next, day: isMultiDay ? Math.floor(stops.length / 2) + 1 : 1 };
+  }, [region, previewHighlight, highlights, stops.length, isMultiDay]);
+
   const center = region ? regionMap[region] : null;
-  const allPoints = center ? [center, ...stops] : [];
+  const allPoints = center
+    ? [center, ...stops, ...(ghostStop ? [ghostStop] : [])]
+    : [];
 
   const pathD = useMemo(() => {
     if (allPoints.length < 2) return "";
