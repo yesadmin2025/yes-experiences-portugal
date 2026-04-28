@@ -1,27 +1,64 @@
-// rev 2 — real Viator photos + 10-tour catalog
-/**
- * YES Experiences Portugal — Signature Tours.
- *
- * Catalog reflects exactly the live, bookable YES tours. No fictional or
- * legacy products are listed. Titles are SEO-friendly rewrites; copy is
- * native YES voice (never copied from any external listing).
- *
- * Each tour points to a real photo of that experience, downloaded once and
- * reused across the whole site (cards, hero, /tours/$id, builder seeds,
- * multi-day picker). No stock imagery.
- */
+// rev 3 — multi-photo Viator galleries + per-stop images
+// -----------------------------------------------------------------------------
+// Each tour now has:
+//   - `img`  → hero photo (used on cards, hero, og:image)
+//   - `gallery` → 3–4 supporting Viator photos for the detail page
+//   - `stops[].image` (optional) → explicit per-stop photo. When absent, the
+//     stop falls back to the tour hero via `STOP_THEME_IMG[imageTheme]`.
+//
+// All photos are sourced from the live Viator product galleries
+// (media.tacdn.com), downloaded once at the largest available variant
+// (720x480), then upscaled with Lanczos + light unsharp to ~1600w for crisp
+// retina rendering. No stock photography is used anywhere on the site.
 
-// Real per-tour photos (one hero each, reused everywhere on the site).
-import imgArrabidaBoat from "@/assets/tours/arrabida-boat.jpg";
-import imgArrabidaWineAllInclusive from "@/assets/tours/arrabida-wine-allinclusive.jpg";
-import imgAzeitaoCheese from "@/assets/tours/azeitao-cheese.jpg";
+// ── Hero photos (one per tour, also used for cards + og:image) ─────────────
+import imgArrabidaBoatHero from "@/assets/tours/arrabida-boat/hero.jpg";
+import imgArrabidaWineHero from "@/assets/tours/arrabida-wine-allinclusive/hero.jpg";
+import imgAzeitaoCheeseHero from "@/assets/tours/azeitao-cheese/hero.jpg";
+import imgSintraCascaisHero from "@/assets/tours/sintra-cascais/hero.jpg";
+import imgTroiaComportaHero from "@/assets/tours/troia-comporta/hero.jpg";
+import imgTomarCoimbraHero from "@/assets/tours/tomar-coimbra/hero.jpg";
+import imgFatimaNazareObidosHero from "@/assets/tours/fatima-nazare-obidos/hero.jpg";
+// Tours without a per-stop folder yet — keep the original single photos.
 import imgEvoraAlentejo from "@/assets/tours/evora-alentejo.jpg";
-import imgFatimaNazareObidos from "@/assets/tours/fatima-nazare-obidos.jpg";
-import imgSintraCascais from "@/assets/tours/sintra-cascais.jpg";
 import imgTilesWorkshop from "@/assets/tours/tiles-workshop.jpg";
-import imgTomarCoimbra from "@/assets/tours/tomar-coimbra.jpg";
-import imgTroiaComporta from "@/assets/tours/troia-comporta.jpg";
 import imgWildBeachesPicnic from "@/assets/tours/wild-beaches-picnic.jpg";
+
+// ── Per-stop / gallery photos for the 7 tours with full Viator galleries ──
+import imgArrabidaWineViewpoint from "@/assets/tours/arrabida-wine-allinclusive/viewpoint.jpg";
+import imgArrabidaWineWinery from "@/assets/tours/arrabida-wine-allinclusive/winery.jpg";
+import imgArrabidaWineLunch from "@/assets/tours/arrabida-wine-allinclusive/lunch.jpg";
+import imgArrabidaWineSesimbra from "@/assets/tours/arrabida-wine-allinclusive/sesimbra.jpg";
+
+import imgArrabidaBoatCoves from "@/assets/tours/arrabida-boat/coves.jpg";
+import imgArrabidaBoatPortinho from "@/assets/tours/arrabida-boat/portinho.jpg";
+import imgArrabidaBoatSesimbra from "@/assets/tours/arrabida-boat/sesimbra.jpg";
+import imgArrabidaBoatExtra from "@/assets/tours/arrabida-boat/extra.jpg";
+
+import imgAzeitaoWorkshop from "@/assets/tours/azeitao-cheese/workshop.jpg";
+import imgAzeitaoWinery from "@/assets/tours/azeitao-cheese/winery.jpg";
+import imgAzeitaoSesimbra from "@/assets/tours/azeitao-cheese/sesimbra.jpg";
+import imgAzeitaoExtra from "@/assets/tours/azeitao-cheese/extra.jpg";
+
+import imgSintraEstates from "@/assets/tours/sintra-cascais/estates.jpg";
+import imgSintraCabo from "@/assets/tours/sintra-cascais/cabo-da-roca.jpg";
+import imgSintraCascais2 from "@/assets/tours/sintra-cascais/cascais.jpg";
+import imgSintraExtra from "@/assets/tours/sintra-cascais/extra.jpg";
+
+import imgTroiaFerry from "@/assets/tours/troia-comporta/ferry.jpg";
+import imgTroiaRuins from "@/assets/tours/troia-comporta/ruins.jpg";
+import imgTroiaBeach from "@/assets/tours/troia-comporta/beach.jpg";
+import imgTroiaExtra from "@/assets/tours/troia-comporta/extra.jpg";
+
+import imgTomarConvento from "@/assets/tours/tomar-coimbra/convento.jpg";
+import imgTomarCoimbra2 from "@/assets/tours/tomar-coimbra/coimbra.jpg";
+import imgTomarMondego from "@/assets/tours/tomar-coimbra/mondego.jpg";
+import imgTomarExtra from "@/assets/tours/tomar-coimbra/extra.jpg";
+
+import imgFatimaSanctuary from "@/assets/tours/fatima-nazare-obidos/fatima.jpg";
+import imgFatimaNazare from "@/assets/tours/fatima-nazare-obidos/nazare.jpg";
+import imgFatimaObidos from "@/assets/tours/fatima-nazare-obidos/obidos.jpg";
+import imgFatimaExtra from "@/assets/tours/fatima-nazare-obidos/extra.jpg";
 
 export type TourSeed = {
   region?: string;
@@ -34,9 +71,8 @@ export type TourSeed = {
   guests?: string;
 };
 
-/** A single stop along a Signature tour. `imageTheme` is the tour id —
- *  every stop reuses the tour's own real photo so the visual identity stays
- *  consistent across cards, hero and per-stop chapters. */
+/** Used by older code paths to fall back to the tour hero when a stop has
+ *  no explicit `image` override. */
 export type StopTheme =
   | "arrabida-boat"
   | "arrabida-wine-allinclusive"
@@ -49,10 +85,19 @@ export type StopTheme =
   | "troia-comporta"
   | "wild-beaches-picnic";
 
+/** A single stop along a Signature tour. `image` is the explicit per-stop
+ *  photo when available; otherwise the stop falls back to the tour hero
+ *  via `STOP_THEME_IMG[imageTheme]`.
+ *
+ *  `focal` controls the CSS object-position used when the photo is cropped
+ *  into a tile (default `center`). Override per-stop when the subject lives
+ *  off-center so the crop stays beautiful at every breakpoint. */
 export type TourStop = {
   label: string;
   story: string;
   imageTheme: StopTheme;
+  image?: string;
+  focal?: string;
 };
 
 export type SignatureTour = {
@@ -72,7 +117,11 @@ export type SignatureTour = {
   included: string[];
   idealFor: string[];
   notes: string[];
-  img: string;                // real photo of this tour
+  img: string;                // hero photo of this tour
+  /** Default object-position for the hero crop (e.g. "50% 35%"). */
+  focal?: string;
+  /** Supporting Viator photos used in the detail-page gallery strip. */
+  gallery?: string[];
   /** Internal reference — used by the importer & admin tools. Never linked. */
   bookingUrl: string;
   /** Deprecated — kept for compatibility with older importer code. */
@@ -120,21 +169,29 @@ export const signatureTours: SignatureTour[] = [
         label: "Cristo Rei viewpoint",
         story: "First stop above the Tagus — Lisbon laid out, the bridge gleaming below.",
         imageTheme: "arrabida-wine-allinclusive",
+        image: imgArrabidaWineViewpoint,
+        focal: "50% 40%",
       },
       {
         label: "Family winery in Azeitão",
         story: "Cellar walk and a guided tasting with the people who pressed the grapes.",
         imageTheme: "arrabida-wine-allinclusive",
+        image: imgArrabidaWineWinery,
+        focal: "50% 45%",
       },
       {
         label: "Long traditional lunch",
         story: "Regional plates and pairings, the natural park visible through the windows.",
         imageTheme: "arrabida-wine-allinclusive",
+        image: imgArrabidaWineLunch,
+        focal: "50% 50%",
       },
       {
         label: "Sesimbra harbour",
         story: "A quiet end-of-day walk by the fishing boats before the drive back.",
         imageTheme: "arrabida-wine-allinclusive",
+        image: imgArrabidaWineSesimbra,
+        focal: "50% 55%",
       },
     ],
     highlights: [
@@ -160,7 +217,9 @@ export const signatureTours: SignatureTour[] = [
     notes: [
       "Designation of origin in Setúbal is famous for Moscatel — your guide tailors the order to your palate.",
     ],
-    img: imgArrabidaWineAllInclusive,
+    img: imgArrabidaWineHero,
+    focal: "50% 45%",
+    gallery: [imgArrabidaWineViewpoint, imgArrabidaWineWinery, imgArrabidaWineLunch, imgArrabidaWineSesimbra],
     bookingUrl:
       "https://yesexperiences.pt/tour/private-full-day-wine-tour-setubal-arrabida/",
     seed: {
@@ -225,6 +284,7 @@ export const signatureTours: SignatureTour[] = [
       "Bring swimwear and a light layer.",
     ],
     img: imgWildBeachesPicnic,
+    focal: "50% 50%",
     bookingUrl:
       "https://yesexperiences.pt/tour/4x4-jeep-and-beach-private-tour-in-arrabida-sesimbra-with-picnic/",
     seed: {
@@ -255,16 +315,22 @@ export const signatureTours: SignatureTour[] = [
         label: "Arrábida coves by boat",
         story: "Boat into the park's secret beaches — swim, snorkel or simply drift.",
         imageTheme: "arrabida-boat",
+        image: imgArrabidaBoatCoves,
+        focal: "50% 55%",
       },
       {
         label: "Lunch in Portinho",
         story: "A long lunch by the water — grilled fish, white wine, no rush.",
         imageTheme: "arrabida-boat",
+        image: imgArrabidaBoatPortinho,
+        focal: "50% 55%",
       },
       {
         label: "Sesimbra at dusk",
         story: "The fishing village glows. Final stroll along the harbour before the drive home.",
         imageTheme: "arrabida-boat",
+        image: imgArrabidaBoatSesimbra,
+        focal: "50% 50%",
       },
     ],
     highlights: [
@@ -289,7 +355,9 @@ export const signatureTours: SignatureTour[] = [
       "Boat departures depend on sea conditions — your guide reroutes naturally if needed.",
       "Bring swimwear and a light layer for the boat.",
     ],
-    img: imgArrabidaBoat,
+    img: imgArrabidaBoatHero,
+    focal: "50% 45%",
+    gallery: [imgArrabidaBoatCoves, imgArrabidaBoatPortinho, imgArrabidaBoatSesimbra, imgArrabidaBoatExtra],
     bookingUrl:
       "https://yesexperiences.pt/tour/private-full-day-arrabida-and-sesimbra-with-included-boat-tour-from-lisbon/",
     seed: {
@@ -354,6 +422,7 @@ export const signatureTours: SignatureTour[] = [
       "Tiles are fired after you leave; we ship them to your home address on request.",
     ],
     img: imgTilesWorkshop,
+    focal: "50% 50%",
     bookingUrl:
       "https://yesexperiences.pt/tour/tiles-painting-workshop-with-wine-tasting-and-sesimbra-private-tour/",
     seed: {
@@ -384,16 +453,22 @@ export const signatureTours: SignatureTour[] = [
         label: "Hands-on cheese workshop",
         story: "Fresh sheep's milk, a wooden mould, your initials. You take a wheel home.",
         imageTheme: "azeitao-cheese",
+        image: imgAzeitaoWorkshop,
+        focal: "50% 50%",
       },
       {
         label: "Local winery tasting",
         story: "Three glasses, a quiet patio, a producer who happily talks all afternoon.",
         imageTheme: "azeitao-cheese",
+        image: imgAzeitaoWinery,
+        focal: "50% 45%",
       },
       {
         label: "Sesimbra by the sea",
         story: "A coastal walk, fresh fish, and time slowing down with the tide.",
         imageTheme: "azeitao-cheese",
+        image: imgAzeitaoSesimbra,
+        focal: "50% 55%",
       },
     ],
     highlights: [
@@ -417,7 +492,9 @@ export const signatureTours: SignatureTour[] = [
     notes: [
       "Vegetarian-friendly. Vegan or dairy-free guests can join the workshop and skip tastings — let us know in advance.",
     ],
-    img: imgAzeitaoCheese,
+    img: imgAzeitaoCheeseHero,
+    focal: "50% 45%",
+    gallery: [imgAzeitaoWorkshop, imgAzeitaoWinery, imgAzeitaoSesimbra, imgAzeitaoExtra],
     bookingUrl:
       "https://yesexperiences.pt/tour/journey-through-azeitao-a-unique-cheese-making-and-wine-tasting-day-out/",
     seed: {
@@ -448,16 +525,22 @@ export const signatureTours: SignatureTour[] = [
         label: "Sintra's hidden estates",
         story: "Quiet gardens and the romantic palaces — without the bus-tour crush.",
         imageTheme: "sintra-cascais",
+        image: imgSintraEstates,
+        focal: "50% 45%",
       },
       {
         label: "Cabo da Roca",
         story: "The western edge of Europe. Wind, cliffs, the Atlantic stretched flat.",
         imageTheme: "sintra-cascais",
+        image: imgSintraCabo,
+        focal: "50% 50%",
       },
       {
         label: "Cascais courtyard tasting",
         story: "A small bar in the old town, three local wines, no rush to leave.",
         imageTheme: "sintra-cascais",
+        image: imgSintraCascais2,
+        focal: "50% 55%",
       },
     ],
     highlights: [
@@ -480,7 +563,9 @@ export const signatureTours: SignatureTour[] = [
     notes: [
       "Palace interior tickets are optional — your guide books them on request.",
     ],
-    img: imgSintraCascais,
+    img: imgSintraCascaisHero,
+    focal: "50% 45%",
+    gallery: [imgSintraEstates, imgSintraCabo, imgSintraCascais2, imgSintraExtra],
     bookingUrl:
       "https://yesexperiences.pt/tour/hidden-gems-sintra-cascais-private-tour-with-wine-tasting/",
     seed: {
@@ -511,16 +596,22 @@ export const signatureTours: SignatureTour[] = [
         label: "Sado estuary crossing",
         story: "The ferry ride — dolphins are common, rice fields open on the other side.",
         imageTheme: "troia-comporta",
+        image: imgTroiaFerry,
+        focal: "50% 45%",
       },
       {
         label: "Tróia Roman ruins",
         story: "One of the Iberian Peninsula's largest Roman fish-salting sites — quiet, sea-side, surprisingly intact.",
         imageTheme: "troia-comporta",
+        image: imgTroiaRuins,
+        focal: "50% 50%",
       },
       {
         label: "Comporta beach & lunch",
         story: "Pine forests and white sand, a long lunch in a thatched-roof restaurant.",
         imageTheme: "troia-comporta",
+        image: imgTroiaBeach,
+        focal: "50% 60%",
       },
     ],
     highlights: [
@@ -543,7 +634,9 @@ export const signatureTours: SignatureTour[] = [
     notes: [
       "Lunch and tastings can be added on request — tell us your style and we'll arrange them.",
     ],
-    img: imgTroiaComporta,
+    img: imgTroiaComportaHero,
+    focal: "50% 50%",
+    gallery: [imgTroiaFerry, imgTroiaRuins, imgTroiaBeach, imgTroiaExtra],
     bookingUrl:
       "https://yesexperiences.pt/tour/private-troia-comporta-tour-from-lisbon/",
     seed: {
@@ -607,6 +700,7 @@ export const signatureTours: SignatureTour[] = [
       "It's a long day — pickup typically at 8:00, return after 19:00. Worth it.",
     ],
     img: imgEvoraAlentejo,
+    focal: "50% 50%",
     bookingUrl:
       "https://yesexperiences.pt/tour/private-full-day-evora-and-alentejo-wine-tour-from-lisbon/",
     seed: {
@@ -637,16 +731,22 @@ export const signatureTours: SignatureTour[] = [
         label: "Convento de Cristo, Tomar",
         story: "The Templar fortress — round church, manueline window, layers of orders.",
         imageTheme: "tomar-coimbra",
+        image: imgTomarConvento,
+        focal: "50% 45%",
       },
       {
         label: "Coimbra University",
         story: "The Joanina library, the law students' black capes, the bell over the river.",
         imageTheme: "tomar-coimbra",
+        image: imgTomarCoimbra2,
+        focal: "50% 45%",
       },
       {
         label: "Old town along the Mondego",
         story: "Steep lanes, a fado bar, an easy walk back as the river turns gold.",
         imageTheme: "tomar-coimbra",
+        image: imgTomarMondego,
+        focal: "50% 55%",
       },
     ],
     highlights: [
@@ -668,7 +768,9 @@ export const signatureTours: SignatureTour[] = [
     notes: [
       "Library entry has timed slots — your guide pre-books on the day.",
     ],
-    img: imgTomarCoimbra,
+    img: imgTomarCoimbraHero,
+    focal: "50% 45%",
+    gallery: [imgTomarConvento, imgTomarCoimbra2, imgTomarMondego, imgTomarExtra],
     bookingUrl:
       "https://yesexperiences.pt/tour/private-private-full-day-tour-from-lisbon-to-tomar-coimbra/",
     seed: {
@@ -699,16 +801,22 @@ export const signatureTours: SignatureTour[] = [
         label: "Sanctuary of Fátima",
         story: "Quiet time at the chapel of apparitions — pilgrims, candles, peace.",
         imageTheme: "fatima-nazare-obidos",
+        image: imgFatimaSanctuary,
+        focal: "50% 45%",
       },
       {
         label: "Nazaré cliffs",
         story: "The lighthouse over the canyon that makes the world's biggest waves.",
         imageTheme: "fatima-nazare-obidos",
+        image: imgFatimaNazare,
+        focal: "50% 50%",
       },
       {
         label: "Óbidos & Ginjinha",
         story: "Medieval walls, narrow lanes, cherry liqueur in a chocolate cup.",
         imageTheme: "fatima-nazare-obidos",
+        image: imgFatimaObidos,
+        focal: "50% 45%",
       },
     ],
     highlights: [
@@ -731,7 +839,9 @@ export const signatureTours: SignatureTour[] = [
     notes: [
       "Big waves at Nazaré peak in winter — but the cliff view is stunning year-round.",
     ],
-    img: imgFatimaNazareObidos,
+    img: imgFatimaNazareObidosHero,
+    focal: "50% 45%",
+    gallery: [imgFatimaSanctuary, imgFatimaNazare, imgFatimaObidos, imgFatimaExtra],
     bookingUrl:
       "https://yesexperiences.pt/tour/private-full-day-tour-from-lisbon-discover-fatima-nazare-and-obidos/",
     seed: {
@@ -752,18 +862,30 @@ export function seedToSearchParams(tour: SignatureTour): string {
   return params.toString();
 }
 
-/** Per-tour image map. Stops reuse their tour's own real photo so cards,
- *  hero and chapter strips share one consistent visual identity. */
+/** Per-tour hero image map. Used as the fallback for stops that don't have
+ *  an explicit `image`. */
 export const STOP_THEME_IMG: Record<StopTheme, string> = {
-  "arrabida-boat": imgArrabidaBoat,
-  "arrabida-wine-allinclusive": imgArrabidaWineAllInclusive,
-  "azeitao-cheese": imgAzeitaoCheese,
+  "arrabida-boat": imgArrabidaBoatHero,
+  "arrabida-wine-allinclusive": imgArrabidaWineHero,
+  "azeitao-cheese": imgAzeitaoCheeseHero,
   "evora-alentejo": imgEvoraAlentejo,
-  "fatima-nazare-obidos": imgFatimaNazareObidos,
-  "sintra-cascais": imgSintraCascais,
+  "fatima-nazare-obidos": imgFatimaNazareObidosHero,
+  "sintra-cascais": imgSintraCascaisHero,
   "tiles-workshop": imgTilesWorkshop,
-  "tomar-coimbra": imgTomarCoimbra,
-  "troia-comporta": imgTroiaComporta,
+  "tomar-coimbra": imgTomarCoimbraHero,
+  "troia-comporta": imgTroiaComportaHero,
   "wild-beaches-picnic": imgWildBeachesPicnic,
 };
 
+/** Resolve the image to render for a given stop, with fallback to the tour
+ *  hero. Use this in components instead of reading `s.image` directly so
+ *  the fallback logic stays in one place. */
+export function stopImage(stop: TourStop): string {
+  return stop.image ?? STOP_THEME_IMG[stop.imageTheme];
+}
+
+/** Resolve the focal point (object-position) for a stop, falling back to
+ *  centered. */
+export function stopFocal(stop: TourStop): string {
+  return stop.focal ?? "50% 50%";
+}
