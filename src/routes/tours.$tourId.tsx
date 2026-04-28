@@ -176,10 +176,10 @@ function TourDetailPage() {
             </ul>
           </Block>
 
-          {tour.notes.length > 0 && (
+          {(tour.notes?.length ?? 0) > 0 && (
             <Block icon={<Info size={14} />} title="Good to know">
               <ul className="space-y-2.5 text-sm leading-relaxed text-[color:var(--charcoal-soft)]">
-                {tour.notes.map((h) => (
+                {(tour.notes ?? []).map((h) => (
                   <li key={h} className="flex gap-2.5">
                     <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[color:var(--charcoal-soft)] flex-shrink-0" />
                     <span>{h}</span>
