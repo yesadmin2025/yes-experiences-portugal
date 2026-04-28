@@ -402,7 +402,7 @@ function BuilderPage() {
         </div>
       </div>
 
-      <section className="py-6 md:py-12">
+      <section className="section-y-app">
         <div className="container-x">
           <div className="grid lg:grid-cols-12 gap-8 lg:gap-10">
             {/* LEFT — controls */}
