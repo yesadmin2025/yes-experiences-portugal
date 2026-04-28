@@ -744,7 +744,7 @@ function HomePage() {
               Choose how <span className="italic">you want to start.</span>
             </h2>
             <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
-              Five ways in. Every one confirms instantly — no forms, no waiting.
+              Four ways in. Every one confirms instantly — no forms, no waiting.
             </p>
             <p className="mt-3 text-[13.5px] italic font-light text-[color:var(--charcoal-soft)]">
               A local guide is always available, in real time, if you want help.{" "}
