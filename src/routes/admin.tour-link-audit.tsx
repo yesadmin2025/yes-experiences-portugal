@@ -394,6 +394,202 @@ function RouteTreeTroubleshooting() {
           </li>
         </ul>
       </div>
+
+      <SuggestedActions />
+    </div>
+  );
+}
+
+const ROUTE_FILE = "src/routes/admin.tour-link-audit.tsx";
+const EXPECTED_PATH = "/admin/tour-link-audit";
+
+function SuggestedActions() {
+  const [check, setCheck] = useState<RouteFileCheckResult | null>(null);
+  const [checking, setChecking] = useState(false);
+  const [copied, setCopied] = useState<string | null>(null);
+
+  const runCheck = async () => {
+    setChecking(true);
+    try {
+      const res = await checkRouteFile({
+        data: { relativeFilePath: ROUTE_FILE, expectedRoutePath: EXPECTED_PATH },
+      });
+      setCheck(res);
+    } catch {
+      setCheck(null);
+    } finally {
+      setChecking(false);
+    }
+  };
+
+  useEffect(() => {
+    void runCheck();
+  }, []);
+
+  const copy = async (text: string, key: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(key);
+      setTimeout(() => setCopied((c) => (c === key ? null : c)), 1500);
+    } catch {
+      /* noop */
+    }
+  };
+
+  const literalOk = !!check?.hasLiteralCreateFileRoute && !!check?.matches;
+  const treeOk = !!check?.routeTreeContainsExpected;
+
+  type Action = {
+    key: string;
+    title: string;
+    why: string;
+    status: "ok" | "warn" | "todo";
+    primary?: { label: string; onClick: () => void };
+    secondary?: { label: string; href: string; copyText?: string };
+  };
+
+  const actions: Action[] = [
+    {
+      key: "literal",
+      title: "Confirm createFileRoute uses a string literal",
+      why: literalOk
+        ? `Found literal "${check?.literalPath}" — matches expected route.`
+        : check?.hasLiteralCreateFileRoute
+          ? `Literal is "${check.literalPath}" but expected "${EXPECTED_PATH}".`
+          : "No string-literal createFileRoute() call found. The crawler needs a plain literal.",
+      status: literalOk ? "ok" : "todo",
+      primary: { label: "Re-check file", onClick: runCheck },
+      secondary: {
+        label: ROUTE_FILE,
+        href: `vscode://file/${ROUTE_FILE}`,
+        copyText: ROUTE_FILE,
+      },
+    },
+    {
+      key: "tree",
+      title: "Verify route is in routeTree.gen.ts",
+      why: treeOk
+        ? `Route "${EXPECTED_PATH}" is registered in the generated tree.`
+        : check?.routeTreeExists
+          ? "Generated tree exists but does NOT contain this route — crawler is stale."
+          : "src/routeTree.gen.ts is missing — the plugin hasn't generated it yet.",
+      status: treeOk ? "ok" : "warn",
+      primary: { label: "Re-probe tree", onClick: runCheck },
+      secondary: {
+        label: "src/routeTree.gen.ts",
+        href: `vscode://file/src/routeTree.gen.ts`,
+        copyText: "src/routeTree.gen.ts",
+      },
+    },
+    {
+      key: "restart",
+      title: "Restart the dev server",
+      why: "Forces a fresh route-tree crawl. Use this when the file is correct but the tree is stale.",
+      status: treeOk && literalOk ? "ok" : "todo",
+      primary: {
+        label: "Copy command",
+        onClick: () => copy("touch vite.config.ts", "restart"),
+      },
+      secondary: {
+        label: "vite.config.ts",
+        href: `vscode://file/vite.config.ts`,
+        copyText: "vite.config.ts",
+      },
+    },
+    {
+      key: "cache",
+      title: "Clear Vite & TanStack caches",
+      why:
+        check?.cacheDirs.filter((d) => d.exists).map((d) => d.path).join(", ") ||
+        "No cache dirs detected.",
+      status: "todo",
+      primary: {
+        label: "Copy command",
+        onClick: () =>
+          copy("rm -rf node_modules/.vite .tanstack dist", "cache"),
+      },
+    },
+  ];
+
+  return (
+    <div className="mt-6">
+      <h3 className="text-xs uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)] flex items-center gap-2">
+        <Zap size={12} /> Suggested next actions
+      </h3>
+      {checking && !check && (
+        <p className="mt-2 text-xs text-[color:var(--charcoal-soft)]">
+          Inspecting route file…
+        </p>
+      )}
+      <ul className="mt-3 space-y-2">
+        {actions.map((a) => {
+          const dot =
+            a.status === "ok"
+              ? "bg-emerald-500"
+              : a.status === "warn"
+                ? "bg-amber-500"
+                : "bg-[color:var(--charcoal-soft)]";
+          return (
+            <li
+              key={a.key}
+              className="border border-[color:var(--border)] p-3 text-sm"
+            >
+              <div className="flex items-start gap-2">
+                <span className={`mt-1.5 inline-block h-2 w-2 rounded-full ${dot}`} />
+                <div className="flex-1 min-w-0">
+                  <div className="font-medium">{a.title}</div>
+                  <div className="mt-1 text-xs text-[color:var(--charcoal-soft)] break-words">
+                    {a.why}
+                  </div>
+                  <div className="mt-2 flex flex-wrap items-center gap-2">
+                    {a.primary && (
+                      <button
+                        type="button"
+                        onClick={a.primary.onClick}
+                        className="inline-flex items-center gap-1.5 border border-[color:var(--border)] hover:border-[color:var(--gold)] px-2.5 py-1 text-xs"
+                      >
+                        {a.primary.label.startsWith("Copy") ? (
+                          <Copy size={11} />
+                        ) : (
+                          <RefreshCw size={11} />
+                        )}
+                        {a.primary.label}
+                        {copied === a.key && (
+                          <span className="text-emerald-700">✓</span>
+                        )}
+                      </button>
+                    )}
+                    {a.secondary && (
+                      <>
+                        <a
+                          href={a.secondary.href}
+                          className="inline-flex items-center gap-1.5 border border-[color:var(--border)] hover:border-[color:var(--gold)] px-2.5 py-1 text-xs font-mono"
+                        >
+                          <ExternalLink size={11} />
+                          {a.secondary.label}
+                        </a>
+                        {a.secondary.copyText && (
+                          <button
+                            type="button"
+                            onClick={() =>
+                              copy(a.secondary!.copyText!, `${a.key}-path`)
+                            }
+                            className="inline-flex items-center gap-1 text-[11px] text-[color:var(--charcoal-soft)] hover:text-[color:var(--charcoal)]"
+                            title="Copy file path"
+                          >
+                            <Copy size={10} />
+                            {copied === `${a.key}-path` ? "copied" : "path"}
+                          </button>
+                        )}
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 }
