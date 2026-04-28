@@ -739,6 +739,7 @@ function PreviewablePills({
   );
 }
 
+function IconCards({
   options,
   selected,
   onSelect,
