@@ -958,7 +958,20 @@ function HomePage() {
 
             <div className="reveal lg:col-span-5">
               <div className="relative">
-                <div className="border border-[color:var(--gold)]/30 p-8 md:p-10 bg-[color:var(--teal-2)]/40 backdrop-blur-sm">
+                {/* Atmospheric photo behind the steps panel — adds
+                    image presence to the Studio block without
+                    competing with the panel content. */}
+                <div className="absolute -inset-3 md:-inset-4 -z-[1] overflow-hidden">
+                  <img
+                    src={expNature}
+                    alt=""
+                    aria-hidden="true"
+                    loading="lazy"
+                    className="w-full h-full object-cover opacity-40 scale-[1.04] transition-transform duration-[2200ms] ease-out hover:scale-[1.1]"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-br from-[color:var(--teal)]/85 via-[color:var(--teal)]/70 to-[color:var(--teal-2)]/80" />
+                </div>
+                <div className="relative border border-[color:var(--gold)]/30 p-8 md:p-10 bg-[color:var(--teal-2)]/55 backdrop-blur-md">
                   <p className="text-[10.5px] uppercase tracking-[0.32em] text-[color:var(--gold)]">
                     A studio session, in 4 moves
                   </p>
