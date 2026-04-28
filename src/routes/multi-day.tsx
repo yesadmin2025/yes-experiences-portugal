@@ -275,7 +275,7 @@ function MultiDayPage() {
               <li key={j.id}>
                 <Link
                   to="/builder"
-                  search={{ tour: j.builderHint } as never}
+                  search={{ journey: j.builderHint } as never}
                   className="group relative block aspect-[4/5] overflow-hidden rounded-sm ring-1 ring-[color:var(--border)] hover:ring-[color:var(--teal)]/50 transition-all"
                 >
                   <div
