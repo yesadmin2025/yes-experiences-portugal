@@ -46,6 +46,7 @@ const SIZES: Record<CardSize, string> = {
  */
 export function useImportedTourImages() {
   const [rows, setRows] = useState<Row[]>([]);
+  const { quality } = useImageQuality();
 
   useEffect(() => {
     let cancelled = false;
@@ -76,15 +77,20 @@ export function useImportedTourImages() {
       const live = byUrl.get(normalize(tour.bookingUrl));
       if (!live) return tour.img;
       if (opts?.raw) return live;
-      const width = opts?.width ?? (opts?.size ? CARD_WIDTHS[opts.size] : CARD_WIDTHS.md);
-      return proxied(live, width);
+      const baseWidth =
+        opts?.width ?? (opts?.size ? CARD_WIDTHS[opts.size] : CARD_WIDTHS.md);
+      return proxied(live, scaleForQuality(baseWidth, quality));
     };
-  }, [byUrl]);
+  }, [byUrl, quality]);
 
   /**
    * Returns props (`src`, `srcSet`, `sizes`) suitable for spreading onto an
    * `<img>` so the browser can pick the smallest useful variant for the
    * current breakpoint and DPR.
+   *
+   * The `sizes` attribute and the layout never change between quality modes —
+   * only the candidate widths shift up (crisp) or down (fast), so toggling
+   * never causes layout shift.
    */
   const resolveImg = useMemo(() => {
     return (
@@ -93,13 +99,29 @@ export function useImportedTourImages() {
     ): { src: string; srcSet?: string; sizes?: string } => {
       const live = byUrl.get(normalize(tour.bookingUrl));
       if (!live) return { src: tour.img };
-      const widths = SRCSET_WIDTHS[size];
+      const widths = SRCSET_WIDTHS[size].map((w) => scaleForQuality(w, quality));
       const srcSet = widths.map((w) => `${proxied(live, w)} ${w}w`).join(", ");
-      return { src: proxied(live, CARD_WIDTHS[size]), srcSet, sizes: SIZES[size] };
+      return {
+        src: proxied(live, scaleForQuality(CARD_WIDTHS[size], quality)),
+        srcSet,
+        sizes: SIZES[size],
+      };
     };
-  }, [byUrl]);
+  }, [byUrl, quality]);
 
-  return { resolve, resolveImg, hasLive: rows.length > 0 };
+  return { resolve, resolveImg, hasLive: rows.length > 0, quality };
+}
+
+/**
+ * Scales a candidate width by the active quality preference and snaps to the
+ * proxy's bucket grid so cache keys still converge across viewports.
+ *
+ * - `fast`  → ~70% of base (smaller bytes, faster cards)
+ * - `crisp` → ~150% of base (sharper on retina)
+ */
+export function scaleForQuality(width: number, quality: ImageQuality): number {
+  const factor = quality === "crisp" ? 1.5 : 0.7;
+  return quantizeWidth(Math.round(width * factor));
 }
 
 function normalize(url: string): string {
