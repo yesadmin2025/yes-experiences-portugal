@@ -185,6 +185,7 @@ export function RealLeafletMap({ region }: { region: string | null }) {
       },
     });
     for (const m of markers) {
+      if (!Number.isFinite(m.lat) || !Number.isFinite(m.lng)) continue;
       const color = REGION_COLORS[m.region] ?? REGION_COLORS.lisbon;
       const marker = L.marker([m.lat, m.lng], { icon: makeDivIcon(color, 1) });
       const tourList = m.tours.length
