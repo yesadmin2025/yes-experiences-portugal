@@ -505,7 +505,35 @@ describe("Typography regression — headline class strings", () => {
       expect(match, `Could not locate ${h.role} in ${h.file}`).toBeTruthy();
       // Normalize whitespace so a re-format doesn't trip the snapshot
       const cls = match![1].split(/\s+/).filter(Boolean).join(" ");
-      captured.headlines[`${h.page} :: ${h.role}`] = cls;
+
+      // Trace info: pull tag from the matched substring, derive selector,
+      // count how many earlier identical (tag+selector) hits already
+      // appeared in this file → 0-based occurrence index.
+      const matchedSlice = match![0];
+      const tagMatch = matchedSlice.match(/^<\s*([a-zA-Z][a-zA-Z0-9]*)/);
+      const tag = tagMatch ? tagMatch[1] : "unknown";
+      const selector = selectorFor(tag, cls);
+      const offset = match!.index ?? src.indexOf(matchedSlice);
+      const before = src.slice(0, offset);
+      const occurrenceRe = new RegExp(
+        `<${tag}\\b[^>]*\\sclassName="[^"]*\\b${selector
+          .split(".")
+          .slice(1)
+          .join(".")
+          .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`,
+        "g",
+      );
+      const index = (before.match(occurrenceRe) ?? []).length;
+
+      captured.headlines[`${h.page} :: ${h.role}`] = {
+        value: cls,
+        trace: {
+          selector,
+          index,
+          file: h.file,
+          line: lineOf(src, offset),
+        },
+      };
       expect(cls).toMatchSnapshot();
     });
   }
