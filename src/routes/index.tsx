@@ -112,49 +112,6 @@ const editorial = [
   },
 ];
 
-const howItWorks = [
-  {
-    step: "01",
-    icon: BookOpen,
-    title: "Start with an idea, a place or a plan",
-    line: "A signature, a region, or a blank slate — wherever feels right.",
-  },
-  {
-    step: "02",
-    icon: PenLine,
-    title: "Shape it your way, in real time",
-    line: "Adjust the pace, the stops, the people you meet — as you go.",
-  },
-  {
-    step: "03",
-    icon: Zap,
-    title: "Confirm instantly — no waiting",
-    line: "No forms. No requests. The moment it feels right, it's yours.",
-  },
-];
-
-const pillars = [
-  {
-    icon: Heart,
-    title: "Local",
-    line: "Designed and hosted by Portuguese locals — the people, places and pace only insiders know.",
-  },
-  {
-    icon: Lock,
-    title: "Private",
-    line: "Always just your group. No strangers, no shared buses — every experience entirely yours.",
-  },
-  {
-    icon: Wand2,
-    title: "Tailored",
-    line: "Built around how you travel — your pace, your interests, the moments that matter to you.",
-  },
-  {
-    icon: Zap,
-    title: "Instant",
-    line: "Real-time creation. Instant confirmation. No requests, no waiting — your experience is locked the moment you say yes.",
-  },
-];
 
 const startPaths = [
   {
