@@ -1449,6 +1449,119 @@ function LiveCanvas({ s, title }: { s: BuilderState; title: string }) {
   );
 }
 
+/* ============================================================
+   Interludes — short poetic bridges between chapters.
+   Result is an array indexed by chapter position; entry i is the
+   text shown after chapter i (so the last index is unused).
+   The voice and choice of bridge adapt to region, highlights,
+   enhancements, tier and the current chapter's slot transition.
+   ============================================================ */
+function buildInterludes(chapters: Chapter[], s: BuilderState): (string | null)[] {
+  if (chapters.length < 2) return chapters.map(() => null);
+  const v = groupVoice(s);
+  const region = regionOpts.find((r) => r.id === s.region)?.name;
+  const tier = tierOpts.find((t) => t.id === s.tier)?.id;
+
+  const out: (string | null)[] = [];
+  for (let i = 0; i < chapters.length; i++) {
+    if (i === chapters.length - 1) {
+      out.push(null);
+      continue;
+    }
+    const cur = chapters[i];
+    const next = chapters[i + 1];
+
+    // Skip a bridge when both sides are ambient (no place change).
+    if (
+      (cur.slot === "PRELUDE" || cur.slot === "EPILOGUE") &&
+      (next.slot === "PRELUDE" || next.slot === "EPILOGUE")
+    ) {
+      out.push(null);
+      continue;
+    }
+
+    out.push(pickInterlude(cur, next, s, v, region, tier));
+  }
+  return out;
+}
+
+function pickInterlude(
+  cur: Chapter,
+  next: Chapter,
+  s: BuilderState,
+  v: ReturnType<typeof groupVoice>,
+  region: string | undefined,
+  tier: string | undefined,
+): string {
+  const movingToWater =
+    next.tags?.some((t) => /boat|coast|water|cove/i.test(t)) ||
+    /boat|coast|sea|cove|ocean/i.test(next.label);
+  const movingToTable =
+    next.tags?.some((t) => /lunch|table|chef|dinner|tasting/i.test(t)) ||
+    /lunch|dinner|table|chef|tasting/i.test(next.label);
+  const movingToVines =
+    next.tags?.some((t) => /wine|vine|cellar|tasting/i.test(t)) ||
+    /wine|vines|cellar|winery/i.test(next.label);
+  const movingToMarket = /market|stall|tasca/i.test(next.label);
+  const movingToHeritage =
+    /tile|chapel|palace|castle|monastery|cathedral|museum|village|town/i.test(next.label);
+  const slowDown = s.pace === "slow";
+
+  if (cur.slot === "PRELUDE") {
+    return "And then, quietly, the day actually begins.";
+  }
+  if (next.slot === "EPILOGUE") {
+    return "And then, just as it should, the day starts to soften.";
+  }
+
+  if (movingToWater) {
+    return s.enhancements.includes("transfer")
+      ? `The car slips down toward the coast. Doors open and ${v.you} can already smell the salt.`
+      : `The road bends, the air changes, and suddenly there is water on both sides of ${v.your} window.`;
+  }
+  if (movingToVines) {
+    return region
+      ? `${region} unfolds in long, slow rows of vines as ${v.you} ${v.verbBe} pulled gently into wine country.`
+      : `The road climbs into the vines, and the world goes quiet in that particular Portuguese way.`;
+  }
+  if (movingToTable) {
+    return slowDown
+      ? `There is no rush to the next table. ${capitalize(v.you)} drift toward it the way ${v.you} would drift toward an old friend.`
+      : `Hunger arrives on cue. Somewhere ahead, a table has been waiting since this morning — and your guide is already known there.`;
+  }
+  if (movingToMarket) {
+    return `The streets get narrower, the smells get louder, and ${v.your} guide leads ${v.you} into the part of town only locals really know.`;
+  }
+  if (movingToHeritage) {
+    return tier === "couture"
+      ? `A door that is normally closed has been quietly opened for ${v.you}. No queue. No crowd. Just stone, and time.`
+      : `${capitalize(v.you)} step out of the modern hour and into something much older.`;
+  }
+
+  if (cur.slot === "MORNING" || cur.slot === "DAWN" || cur.slot === "LATE_MORNING") {
+    if (next.slot === "MIDDAY" || next.slot === "EARLY_AFTERNOON") {
+      return `The morning has done its work. The light shifts, ${v.you} ${v.verbBe} a little hungrier, a little more here.`;
+    }
+  }
+  if (cur.slot === "EARLY_AFTERNOON" || cur.slot === "MIDDAY") {
+    if (next.slot === "AFTERNOON" || next.slot === "GOLDEN_HOUR") {
+      return `Lunch lingers, then loosens its grip. ${capitalize(v.you)} step back into the afternoon, looser, slower, lighter.`;
+    }
+  }
+  if (next.slot === "GOLDEN_HOUR") {
+    return `The light starts to lean. Everything Portuguese — stone, water, wine — turns honey-coloured for the next hour.`;
+  }
+  if (next.slot === "EVENING" || next.slot === "NIGHT") {
+    return tier === "couture"
+      ? `Day folds quietly into evening. The next chapter has been hand-set, lit, and waiting for ${v.you}.`
+      : `The day folds itself into evening, and a different kind of Portugal begins.`;
+  }
+
+  return region
+    ? `Between one moment and the next, ${region} keeps unfolding around ${v.you}.`
+    : `Between one moment and the next, the day keeps quietly arranging itself around ${v.you}.`;
+}
+
 function pickHeroImage(s: BuilderState): string {
   const base = "https://images.unsplash.com/";
   if (s.highlights.includes("boat") || s.styles.includes("coastal")) {
