@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowRight,
   Check,
@@ -682,10 +682,12 @@ function IconCards({
    Premium map — animated, brand-styled, smoothly zooms to region
    ============================================================ */
 
-const FULL_VIEW = { x: 0, y: 0, w: 100, h: 130 };
+const FULL_VIEW: ViewBox = { x: 0, y: 0, w: 100, h: 130 };
 
-function regionViewBox(region: string | null): string {
-  if (!region) return `${FULL_VIEW.x} ${FULL_VIEW.y} ${FULL_VIEW.w} ${FULL_VIEW.h}`;
+interface ViewBox { x: number; y: number; w: number; h: number }
+
+function regionViewBox(region: string | null): ViewBox {
+  if (!region) return FULL_VIEW;
   const c = regionMap[region];
   // Zoom: 60×80 window centered on region (≈40% area), clamped to silhouette.
   const w = 60, h = 78;
@@ -693,7 +695,101 @@ function regionViewBox(region: string | null): string {
   let y = c.y - h / 2;
   x = Math.max(-5, Math.min(x, FULL_VIEW.w - w + 5));
   y = Math.max(-5, Math.min(y, FULL_VIEW.h - h + 5));
-  return `${x} ${y} ${w} ${h}`;
+  return { x, y, w, h };
+}
+
+const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+
+/** Smoothly tween the SVG viewBox attribute over `duration` ms.
+ *  CSS `transition` does NOT animate SVG presentation attributes like
+ *  viewBox, so we drive it manually with requestAnimationFrame. */
+function useAnimatedViewBox(target: ViewBox, duration = 750): string {
+  const [vb, setVb] = useState<ViewBox>(target);
+  const fromRef = useRef<ViewBox>(target);
+  const startRef = useRef<number>(0);
+  const rafRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    // Skip if no change
+    const cur = fromRef.current;
+    if (cur.x === target.x && cur.y === target.y && cur.w === target.w && cur.h === target.h) return;
+
+    const from = { ...vb };
+    fromRef.current = target;
+    startRef.current = performance.now();
+
+    const step = (now: number) => {
+      const t = Math.min(1, (now - startRef.current) / duration);
+      const e = easeInOutCubic(t);
+      setVb({
+        x: from.x + (target.x - from.x) * e,
+        y: from.y + (target.y - from.y) * e,
+        w: from.w + (target.w - from.w) * e,
+        h: from.h + (target.h - from.h) * e,
+      });
+      if (t < 1) rafRef.current = requestAnimationFrame(step);
+    };
+
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    rafRef.current = requestAnimationFrame(step);
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [target.x, target.y, target.w, target.h, duration]);
+
+  return `${vb.x.toFixed(3)} ${vb.y.toFixed(3)} ${vb.w.toFixed(3)} ${vb.h.toFixed(3)}`;
+}
+
+/** Animated route stroke that re-draws on every change.
+ *  Measures the actual path length with getTotalLength() so the dash
+ *  always matches — no clipping, no gap at the end. */
+function AnimatedRoute({ d, duration = 850 }: { d: string; duration?: number }) {
+  const ref = useRef<SVGPathElement | null>(null);
+  const [length, setLength] = useState(0);
+  const [offset, setOffset] = useState(0);
+  const rafRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (!ref.current || !d) return;
+    // Measure the new path
+    const len = ref.current.getTotalLength();
+    setLength(len);
+    setOffset(len);
+
+    const start = performance.now();
+    const step = (now: number) => {
+      const t = Math.min(1, (now - start) / duration);
+      const e = easeInOutCubic(t);
+      setOffset(len * (1 - e));
+      if (t < 1) rafRef.current = requestAnimationFrame(step);
+    };
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    rafRef.current = requestAnimationFrame(step);
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, [d, duration]);
+
+  if (!d) return null;
+  return (
+    <g>
+      {/* Soft glow underlay — full stroke, doesn't animate the dash */}
+      <path d={d} fill="none" stroke="var(--teal)" strokeWidth="1.4" opacity="0.18" />
+      {/* Main stroke — animates from length → 0 */}
+      <path
+        ref={ref}
+        d={d}
+        fill="none"
+        stroke="var(--teal)"
+        strokeWidth="0.55"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeDasharray={length || 1}
+        strokeDashoffset={offset}
+      />
+    </g>
+  );
 }
 
 function PremiumMap({
@@ -718,7 +814,6 @@ function PremiumMap({
   const center = region ? regionMap[region] : null;
   const allPoints = center ? [center, ...stops] : [];
 
-  // Animate the route stroke each time the path changes.
   const pathD = useMemo(() => {
     if (allPoints.length < 2) return "";
     return allPoints
@@ -726,8 +821,9 @@ function PremiumMap({
       .join(" ");
   }, [allPoints]);
 
-  // Re-trigger CSS animation by changing key when route changes.
-  const routeKey = pathD;
+  // Smoothly tween the viewBox whenever the region changes.
+  const targetVb = useMemo(() => regionViewBox(region), [region]);
+  const animatedViewBox = useAnimatedViewBox(targetVb, 750);
 
   const dayColor = (d: number) =>
     d === 1 ? "var(--teal)" : d === 2 ? "var(--teal-2)" : d === 3 ? "var(--gold)" : "var(--charcoal-soft)";
@@ -745,10 +841,9 @@ function PremiumMap({
 
       <div className="relative aspect-[4/5] mt-3 mx-5 mb-5 bg-gradient-to-b from-[color:var(--sand)] to-[color:var(--ivory)] overflow-hidden">
         <svg
-          viewBox={regionViewBox(region)}
+          viewBox={animatedViewBox}
           className="w-full h-full"
           preserveAspectRatio="xMidYMid meet"
-          style={{ transition: "all 800ms cubic-bezier(0.65, 0, 0.35, 1)" }}
           aria-label="Journey map"
         >
           <defs>
@@ -783,27 +878,13 @@ function PremiumMap({
 
           {/* Region glow */}
           {center && (
-            <circle cx={center.x} cy={center.y} r="14" fill="url(#centerGlow)" />
+            <circle cx={center.x} cy={center.y} r="14" fill="url(#centerGlow)"
+              style={{ transition: "cx 600ms cubic-bezier(0.65,0,0.35,1), cy 600ms cubic-bezier(0.65,0,0.35,1)" }}
+            />
           )}
 
-          {/* Animated route */}
-          {pathD && (
-            <g key={routeKey}>
-              {/* Soft glow underlay */}
-              <path d={pathD} fill="none" stroke="var(--teal)" strokeWidth="1.4" opacity="0.18" />
-              {/* Main animated stroke */}
-              <path
-                d={pathD}
-                fill="none"
-                stroke="var(--teal)"
-                strokeWidth="0.55"
-                strokeLinecap="round"
-                strokeDasharray="120"
-                strokeDashoffset="120"
-                style={{ animation: "ys-draw 900ms cubic-bezier(0.65,0,0.35,1) forwards" }}
-              />
-            </g>
-          )}
+          {/* Animated route — re-draws on every change */}
+          <AnimatedRoute d={pathD} />
 
           {/* Centre marker (region) */}
           {center && (
