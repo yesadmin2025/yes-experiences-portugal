@@ -958,7 +958,7 @@ function HomePage() {
             <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] leading-[1.7] font-light">
               Curated routes designed to be enjoyed as they are.
             </p>
-            <p className="mt-3 text-[13.5px] md:text-[14px] italic font-light text-[color:var(--charcoal-soft)]/85">
+            <p className="mt-3 text-[13.5px] md:text-[14px] italic font-light text-[color:var(--charcoal-soft)]">
               You can adjust selected elements to match your rhythm.
             </p>
           </div>
