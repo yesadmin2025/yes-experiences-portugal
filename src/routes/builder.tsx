@@ -34,9 +34,24 @@ import {
 } from "lucide-react";
 
 export const Route = createFileRoute("/builder")({
-  validateSearch: (search: Record<string, unknown>): { tour?: string } => ({
-    tour: typeof search.tour === "string" ? search.tour : undefined,
-  }),
+const builderSearchSchema = z.object({
+  tour: fallback(z.string().optional(), undefined),
+  // Persisted builder state (all optional so empty URL = empty builder)
+  n: fallback(z.string().optional(), undefined),         // name
+  r: fallback(z.string().optional(), undefined),         // region
+  g: fallback(z.string().optional(), undefined),         // groupType
+  gs: fallback(z.string().optional(), undefined),        // guests
+  d: fallback(z.string().optional(), undefined),         // duration
+  st: fallback(z.array(z.string()), []).default([]),     // styles
+  hl: fallback(z.array(z.string()), []).default([]),     // highlights
+  p: fallback(z.string().optional(), undefined),         // pace
+  en: fallback(z.array(z.string()), []).default([]),     // enhancements
+  t: fallback(z.string().optional(), undefined),         // tier
+  step: fallback(z.number().int().min(0).max(11), 0).default(0),
+});
+
+export const Route = createFileRoute("/builder")({
+  validateSearch: zodValidator(builderSearchSchema),
   head: () => ({
     meta: [
       { title: "YES Experience Studio — Design Your Portugal Experience" },
