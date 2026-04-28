@@ -1114,7 +1114,7 @@ function RevealStep({ s, title, investment }: { s: BuilderState; title: string; 
       </div>
 
       <p className="mt-5 text-[13px] text-[color:var(--charcoal-soft)]">
-        Your experience is ready. Your local guide is ready. You can reserve now, save for later, or refine it with your designer.
+        Your experience is ready. Confirm instantly — your local guide is reserved in real time, directly on this site.
       </p>
 
       {/* CTA trio */}
@@ -1123,7 +1123,7 @@ function RevealStep({ s, title, investment }: { s: BuilderState; title: string; 
           to="/contact"
           className="w-full inline-flex items-center justify-center gap-2 bg-[color:var(--teal)] text-[color:var(--ivory)] px-6 py-4 text-[11px] uppercase tracking-[0.22em] hover:bg-[color:var(--teal-2)] transition-colors"
         >
-          Secure Your Experience <ArrowRight size={13} />
+          Reserve Instantly <ArrowRight size={13} />
         </Link>
         <button className="w-full inline-flex items-center justify-center gap-2 bg-[color:var(--card)] border border-[color:var(--border)] text-[color:var(--charcoal)] px-6 py-3.5 text-[11px] uppercase tracking-[0.22em] hover:border-[color:var(--teal)]/40 transition-colors">
           <Save size={13} /> Save My Experience
@@ -2100,7 +2100,7 @@ function InvestmentPanel({ s, days, investment }: { s: BuilderState; days: numbe
         </p>
       </div>
       <p className="mt-2 text-[12px] text-[color:var(--charcoal-soft)] italic">
-        Private experience, local guide and curated stops included. Final value confirmed at booking.
+        Private experience, local guide and curated stops included. Reserved instantly through our integrated booking system.
       </p>
     </div>
   );
