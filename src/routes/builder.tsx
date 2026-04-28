@@ -25,7 +25,7 @@ import {
   Map as MapIcon,
   MessageCircle,
   
-  Save,
+  
   Award,
   Share2,
   Check as CheckIcon,
