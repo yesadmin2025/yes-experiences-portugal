@@ -54,7 +54,14 @@ export const getLastCrawlerError = createServerFn({ method: "GET" }).handler(
     const lines = log.split("\n");
 
     // Patterns that indicate a TanStack route crawler / Vite build error.
+    // Ordered by usefulness so root-cause build errors beat follow-on overlay noise.
+    const rootCauseMarkers = [
+      /Error transforming route file/i,
+      /expected route id to be a string literal/i,
+      /@import must precede all other statements/i,
+    ];
     const errorMarkers = [
+      ...rootCauseMarkers,
       /router-generator-plugin/i,
       /start-router-plugin/i,
       /\[tanstack[^\]]*\]/i,
@@ -73,9 +80,26 @@ export const getLastCrawlerError = createServerFn({ method: "GET" }).handler(
 
     let lastIdx = -1;
     let matchedSource: string | null = null;
-    for (let i = lines.length - 1; i >= 0; i--) {
-      const ln = lines[i];
-      for (const re of errorMarkers) {
+    const findLast = (markers: RegExp[]) => {
+      for (let i = lines.length - 1; i >= 0; i--) {
+        const ln = lines[i];
+        for (const re of markers) {
+          if (re.test(ln)) return { index: i, source: re.source };
+        }
+      }
+      return null;
+    };
+    const rootCause = findLast(rootCauseMarkers);
+    const match = rootCause ?? findLast(errorMarkers);
+    if (match) {
+      lastIdx = match.index;
+      matchedSource = match.source;
+    }
+
+    if (lastIdx === -1) {
+      for (let i = lines.length - 1; i >= 0; i--) {
+        const ln = lines[i];
+        for (const re of errorMarkers) {
         if (re.test(ln)) {
           lastIdx = i;
           matchedSource = re.source;
@@ -83,6 +107,7 @@ export const getLastCrawlerError = createServerFn({ method: "GET" }).handler(
         }
       }
       if (lastIdx !== -1) break;
+      }
     }
 
     if (lastIdx === -1) {
