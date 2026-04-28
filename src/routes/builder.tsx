@@ -22,6 +22,9 @@ import {
   Map as MapIcon,
   Pencil,
   MessageCircle,
+  Plus,
+  Minus,
+  RotateCcw,
 } from "lucide-react";
 
 export const Route = createFileRoute("/builder")({
