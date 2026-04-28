@@ -30,63 +30,111 @@ type Props = {
   steps: DecisionStep[];
 };
 
+/** Runtime guard: keep only well-formed step entries. */
+function sanitizeSteps(steps: unknown): DecisionStep[] {
+  if (!Array.isArray(steps)) return [];
+  const seen = new Set<string>();
+  const out: DecisionStep[] = [];
+  for (const s of steps) {
+    if (!s || typeof s !== "object") continue;
+    const id = (s as Record<string, unknown>).id;
+    const label = (s as Record<string, unknown>).label;
+    if (typeof id !== "string" || !id) continue;
+    if (typeof label !== "string" || !label) continue;
+    if (seen.has(id)) continue;
+    seen.add(id);
+    out.push({ id, label });
+  }
+  return out;
+}
+
 export function DecisionStepper({ sectionId, steps }: Props) {
+  const safeSteps = sanitizeSteps(steps);
   const [visible, setVisible] = useState(false);
-  const [activeId, setActiveId] = useState<string | null>(steps[0]?.id ?? null);
+  const [activeId, setActiveId] = useState<string | null>(safeSteps[0]?.id ?? null);
+  const [hasError, setHasError] = useState(false);
   const ratiosRef = useRef<Map<string, number>>(new Map());
 
   // Track section visibility — show stepper only while section is on screen.
   useEffect(() => {
-    const section = document.getElementById(sectionId);
-    if (!section) return;
-    const io = new IntersectionObserver(
-      ([entry]) => setVisible(entry.isIntersecting),
-      { threshold: 0.05 }
-    );
-    io.observe(section);
-    return () => io.disconnect();
+    try {
+      const section = document.getElementById(sectionId);
+      if (!section) return;
+      const io = new IntersectionObserver(
+        ([entry]) => setVisible(entry.isIntersecting),
+        { threshold: 0.05 }
+      );
+      io.observe(section);
+      return () => io.disconnect();
+    } catch (err) {
+      console.warn("[DecisionStepper] section observer failed", err);
+      setHasError(true);
+    }
   }, [sectionId]);
 
   // Track which card is most visible.
   useEffect(() => {
-    const els = steps
-      .map((s) => document.getElementById(s.id))
-      .filter((el): el is HTMLElement => el !== null);
-    if (els.length === 0) return;
+    try {
+      const els = safeSteps
+        .map((s) => document.getElementById(s.id))
+        .filter((el): el is HTMLElement => el !== null);
+      if (els.length === 0) return;
 
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          ratiosRef.current.set(e.target.id, e.intersectionRatio);
-        }
-        let bestId: string | null = null;
-        let bestRatio = 0;
-        for (const [id, r] of ratiosRef.current) {
-          if (r > bestRatio) {
-            bestRatio = r;
-            bestId = id;
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            ratiosRef.current.set(e.target.id, e.intersectionRatio);
           }
+          let bestId: string | null = null;
+          let bestRatio = 0;
+          for (const [id, r] of ratiosRef.current) {
+            if (r > bestRatio) {
+              bestRatio = r;
+              bestId = id;
+            }
+          }
+          if (bestId && bestRatio > 0) setActiveId(bestId);
+        },
+        {
+          threshold: [0, 0.25, 0.5, 0.75, 1],
+          rootMargin: "-30% 0px -45% 0px",
         }
-        if (bestId && bestRatio > 0) setActiveId(bestId);
-      },
-      {
-        // Multiple thresholds for fine-grained tracking as cards scroll.
-        threshold: [0, 0.25, 0.5, 0.75, 1],
-        // Bias toward the upper-middle so the "current" card feels right
-        // as the user reads down.
-        rootMargin: "-30% 0px -45% 0px",
-      }
-    );
-    els.forEach((el) => io.observe(el));
-    return () => io.disconnect();
-  }, [steps]);
+      );
+      els.forEach((el) => io.observe(el));
+      return () => io.disconnect();
+    } catch (err) {
+      console.warn("[DecisionStepper] card observer failed", err);
+      setHasError(true);
+    }
+  }, [safeSteps]);
 
   const handleJump = (id: string) => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "center" });
+    try {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "center" });
+    } catch (err) {
+      console.warn("[DecisionStepper] scroll failed", err);
+    }
   };
+
+  // Fallback: render an unobtrusive minimal indicator if something is off
+  // (no valid steps, or an observer/runtime error). Never crash the page.
+  if (hasError || safeSteps.length === 0) {
+    return (
+      <nav
+        aria-label="Decision flow progress (unavailable)"
+        aria-hidden="true"
+        className="pointer-events-none fixed right-2 sm:right-4 top-1/2 -translate-y-1/2 z-30 opacity-40"
+      >
+        <span
+          className="block w-1.5 h-1.5 rounded-full bg-[color:var(--charcoal)]/30"
+          title="Stepper unavailable"
+        />
+      </nav>
+    );
+  }
 
   return (
     <nav
@@ -97,7 +145,7 @@ export function DecisionStepper({ sectionId, steps }: Props) {
       }`}
     >
       <ul className="list-none p-0 m-0 flex flex-col items-end gap-3">
-        {steps.map((s) => {
+        {safeSteps.map((s) => {
           const isActive = s.id === activeId;
           return (
             <li key={s.id} className="pointer-events-auto">
