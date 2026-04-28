@@ -1181,35 +1181,46 @@ function HomePage() {
                 title: "A moment they'll never forget",
                 line: "A hidden viewpoint, a private dinner, a perfectly timed pause — quietly extraordinary.",
                 to: "/proposals" as const,
+                bg: expRomantic,
               },
               {
                 eyebrow: "Celebrations",
                 title: "Birthdays, anniversaries, milestones",
                 line: "Gather the people who matter, in places that feel made for the occasion.",
                 to: "/proposals" as const,
+                bg: expGastronomy,
               },
               {
                 eyebrow: "Corporate",
                 title: "Teams, incentives, retreats",
                 line: "Refined private programs that feel nothing like a hotel ballroom.",
                 to: "/corporate" as const,
+                bg: catCorporate,
               },
             ].map((o) => (
               <li key={o.eyebrow} className="reveal-stagger h-full">
                 <Link
                   to={o.to}
-                  className="group flex flex-col h-full p-7 md:p-8 bg-[color:var(--card)] border border-[color:var(--border)] hover:border-[color:var(--teal)]/30 hover:shadow-[0_24px_50px_-24px_rgba(41,91,97,0.18)] transition-all duration-500"
+                  className="group relative flex flex-col h-full min-h-[20rem] p-7 md:p-8 bg-[color:var(--charcoal-deep)] border border-[color:var(--border)] hover:border-[color:var(--gold)]/40 hover:-translate-y-1 hover:shadow-[0_24px_55px_-22px_rgba(41,91,97,0.32)] transition-all duration-500 overflow-hidden"
                 >
-                  <span className="text-[10.5px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
+                  <img
+                    src={o.bg}
+                    alt=""
+                    aria-hidden="true"
+                    loading="lazy"
+                    className="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-65 scale-[1.02] group-hover:scale-[1.07] transition-all duration-[1400ms] ease-out"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/95 via-[color:var(--charcoal-deep)]/65 to-[color:var(--charcoal-deep)]/35" />
+                  <span className="relative z-[1] text-[10.5px] uppercase tracking-[0.3em] text-[color:var(--gold-soft)]">
                     {o.eyebrow}
                   </span>
-                  <h3 className="t-h3 mt-3 text-[color:var(--charcoal)]">
+                  <h3 className="relative z-[1] serif mt-3 text-[1.4rem] md:text-[1.55rem] leading-[1.15] tracking-[-0.005em] text-[color:var(--ivory)]">
                     {o.title}
                   </h3>
-                  <p className="mt-3 text-[14.5px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light flex-1">
+                  <p className="relative z-[1] mt-3 text-[14.5px] text-[color:var(--ivory)]/85 leading-[1.7] font-light flex-1">
                     {o.line}
                   </p>
-                  <span className="mt-7 inline-flex items-center gap-2 text-[14px] tracking-[0.005em] font-medium text-[color:var(--teal)] group-hover:translate-x-1 transition-transform">
+                  <span className="relative z-[1] mt-7 inline-flex items-center gap-2 text-[14px] tracking-[0.005em] font-medium text-[color:var(--gold-soft)] group-hover:text-[color:var(--gold)] group-hover:translate-x-1 transition-all">
                     Design &amp; confirm instantly <ArrowRight size={13} />
                   </span>
                 </Link>
