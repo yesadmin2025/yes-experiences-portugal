@@ -125,6 +125,11 @@ const AdminImportToursRoute = AdminImportToursRouteImport.update({
   path: '/admin/import-tours',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminTourLinkAuditRoute = AdminTourLinkAuditRouteImport.update({
+  id: '/admin/tour-link-audit',
+  path: '/admin/tour-link-audit',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
