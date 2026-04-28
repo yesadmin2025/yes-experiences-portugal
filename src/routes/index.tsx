@@ -644,34 +644,25 @@ function HomePage() {
             "Google, Google — official review platform".
           • Decorative glyphs and column dividers are aria-hidden. */}
       <section
-        className="bg-[color:var(--ivory)] border-b border-[color:var(--border)] py-16 md:py-20"
+        className="bg-[color:var(--ivory)] border-b border-[color:var(--border)] py-14 md:py-16"
         aria-labelledby="trust-bar-title"
       >
         <h2 id="trust-bar-title" className="sr-only">
-          Trusted by international travelers — 5.0 average rating
+          700+ 5-star reviews
         </h2>
 
         <div className="container-x">
-          {/* Intro: eyebrow → 5 gold stars + 5.0 → supporting line. */}
-          <div className="flex flex-col items-center text-center gap-4">
-            <p
-              className="reveal-stagger text-[11px] uppercase tracking-[0.34em] text-[color:var(--charcoal)]"
-              style={{ transitionDelay: "0ms" }}
-              id="trust-bar-eyebrow"
-            >
-              Trusted by international travelers
-            </p>
-
+          <div className="flex flex-col items-center text-center gap-3.5">
             <p
               className="reveal-stagger flex items-center gap-1 text-[color:var(--gold)]"
-              style={{ transitionDelay: "110ms" }}
+              style={{ transitionDelay: "0ms" }}
               role="img"
               aria-label="Rated 5 out of 5 stars"
             >
               {[...Array(5)].map((_, i) => (
                 <Star
                   key={i}
-                  size={16}
+                  size={15}
                   fill="currentColor"
                   strokeWidth={0}
                   aria-hidden="true"
@@ -681,45 +672,20 @@ function HomePage() {
             </p>
 
             <p
-              className="reveal-stagger text-[15px] text-[color:var(--charcoal-soft)] leading-[1.7]"
-              style={{ transitionDelay: "220ms" }}
+              className="reveal-stagger serif text-[1.5rem] md:text-[1.75rem] text-[color:var(--charcoal)] leading-[1.2]"
+              style={{ transitionDelay: "110ms" }}
               id="trust-bar-summary"
             >
-              700+ 5-star reviews
+              700+ <span className="italic">5-star reviews</span>
+            </p>
+
+            <p
+              className="reveal-stagger text-[11px] uppercase tracking-[0.32em] text-[color:var(--charcoal-soft)]"
+              style={{ transitionDelay: "220ms" }}
+            >
+              Google · TripAdvisor · Trustpilot
             </p>
           </div>
-
-          {/* Platform marks — true 3-column grid; the three cells continue
-              the same 110ms cadence (330 → 440 → 550 ms) so the whole
-              Trust Bar reads as one unbroken reveal.
-              Per brief: under each platform name we show an "Official
-              platform" caption — a small hairline tag with a tiny gold
-              checkmark — instead of repeating the star/rating badge that
-              already appears once at the top of the section. */}
-          <ul
-            className="mt-12 mx-auto grid grid-cols-5 items-center list-none p-0 gap-x-1 sm:gap-x-3 max-w-[480px] sm:max-w-2xl"
-            aria-label="Official review platforms"
-          >
-            {[
-              { key: "google" as const },
-              { key: "tripadvisor" as const },
-              { key: "viator" as const },
-              { key: "getyourguide" as const },
-              { key: "trustpilot" as const },
-            ].map((p, i) => {
-              return (
-                <li
-                  key={p.key}
-                  className="reveal-stagger flex items-center justify-center px-1 sm:px-2 py-2"
-                  style={{ transitionDelay: `${330 + i * 90}ms` }}
-                >
-                  <div className="flex items-center justify-center h-8 sm:h-9 md:h-10 w-full">
-                    <PlatformBadge platform={p.key} />
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
         </div>
       </section>
 
