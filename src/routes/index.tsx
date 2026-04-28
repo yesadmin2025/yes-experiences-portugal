@@ -1364,6 +1364,20 @@ function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Sticky mobile CTA — visible only on mobile, anchors the primary
+          action across the whole homepage scroll. */}
+      <div
+        className="fixed bottom-0 inset-x-0 z-40 md:hidden border-t border-[color:var(--gold)]/30 bg-[color:var(--charcoal-deep)]/95 backdrop-blur-md px-4 py-3"
+        style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 12px)" }}
+      >
+        <Link
+          to="/builder"
+          className="flex items-center justify-center gap-2 w-full py-3.5 bg-[color:var(--gold)] text-[color:var(--charcoal-deep)] text-[13px] uppercase tracking-[0.22em] font-semibold shadow-[0_10px_30px_-12px_rgba(201,169,106,0.6)]"
+        >
+          Create Your Story <ArrowRight size={14} />
+        </Link>
+      </div>
     </SiteLayout>
   );
 }
