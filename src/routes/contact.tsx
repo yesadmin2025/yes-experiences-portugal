@@ -59,7 +59,7 @@ function Page() {
                 <Field label="What are you dreaming of?" name="message" textarea />
                 <button
                   type="submit"
-                  className="bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] px-8 py-3.5 text-sm tracking-wide transition-colors"
+                  className="inline-flex items-center justify-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] px-7 py-3.5 text-[11px] uppercase tracking-[0.22em] transition-colors"
                 >
                   Send Message
                 </button>
