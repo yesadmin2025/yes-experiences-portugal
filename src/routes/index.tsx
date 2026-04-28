@@ -128,13 +128,13 @@ const startPaths = [
   {
     icon: BookOpen,
     eyebrow: "Ready to go",
-    title: "Signature Journeys",
-    line: "Start with something already beautifully put together.",
+    title: "Explore Signature Experiences",
+    line: "Start from a curated journey.",
     cta: "Explore",
     to: "/experiences",
     destination: "Signatures",
     expectedTo: "/experiences",
-    ariaLabel: "Signature Journeys — start with something already beautifully put together",
+    ariaLabel: "Explore Signature Experiences — start from a curated journey",
     accent: "ivory" as const,
     slug: "signature",
     stepLabel: "Signature",
@@ -144,12 +144,12 @@ const startPaths = [
     icon: Wand2,
     eyebrow: "Tailored",
     title: "Tailor a Signature",
-    line: "Adjust the details to match your rhythm.",
+    line: "Adjust selected details to match your rhythm.",
     cta: "Tailor it",
     to: "/experiences",
     destination: "Tailoring",
     expectedTo: "/experiences",
-    ariaLabel: "Tailor a Signature — adjust the details to match your rhythm",
+    ariaLabel: "Tailor a Signature — adjust selected details to match your rhythm",
     accent: "sand" as const,
     slug: "tailor",
     stepLabel: "Tailor",
@@ -159,12 +159,12 @@ const startPaths = [
     icon: Sparkles,
     eyebrow: "Live · Real-time",
     title: "Build Your Own",
-    line: "Shape your journey from the ground up, in real time.",
+    line: "Create your journey in real time and confirm instantly.",
     cta: "Open Studio",
     to: "/builder",
     destination: "Studio",
     expectedTo: "/builder",
-    ariaLabel: "Build Your Own — shape your journey from the ground up, in real time",
+    ariaLabel: "Build Your Own — create your journey in real time and confirm instantly",
     accent: "teal" as const,
     slug: "studio",
     stepLabel: "Studio",
@@ -174,12 +174,12 @@ const startPaths = [
     icon: Gift,
     eyebrow: "Occasions",
     title: "Plan a Moment",
-    line: "For proposals, celebrations and shared experiences.",
+    line: "Proposals, celebrations, corporate and groups.",
     cta: "Plan",
     to: "/proposals",
     destination: "Celebrations",
     expectedTo: "/proposals",
-    ariaLabel: "Plan a Moment — for proposals, celebrations and shared experiences",
+    ariaLabel: "Plan a Moment — proposals, celebrations, corporate and groups",
     accent: "charcoal" as const,
     slug: "moment",
     stepLabel: "Moment",
@@ -668,7 +668,7 @@ function HomePage() {
         </h2>
 
         <div className="container-x">
-          <div className="flex flex-col items-center text-center gap-3.5">
+          <div className="flex flex-col items-center text-center gap-4">
             <p
               className="reveal-stagger flex items-center gap-1 text-[color:var(--gold)]"
               style={{ transitionDelay: "0ms" }}
@@ -678,7 +678,7 @@ function HomePage() {
               {[...Array(5)].map((_, i) => (
                 <Star
                   key={i}
-                  size={15}
+                  size={16}
                   fill="currentColor"
                   strokeWidth={0}
                   aria-hidden="true"
@@ -688,16 +688,44 @@ function HomePage() {
             </p>
 
             <p
-              className="reveal-stagger serif text-[1.5rem] md:text-[1.75rem] text-[color:var(--charcoal)] leading-[1.2]"
+              className="reveal-stagger serif text-[1.6rem] md:text-[2rem] text-[color:var(--charcoal)] leading-[1.15]"
               style={{ transitionDelay: "110ms" }}
               id="trust-bar-summary"
             >
               700+ <span className="italic">5-star reviews</span>
             </p>
 
+            {/* Real client moments — small overlapping photo strip to
+                signal that real people are behind the rating. Uses real
+                photography from the editorial set. */}
+            <div
+              className="reveal-stagger flex items-center gap-3 mt-1"
+              style={{ transitionDelay: "180ms" }}
+              aria-hidden="true"
+            >
+              <div className="flex -space-x-2.5">
+                {[expRomantic, expGastronomy, expWine, expNature, editMarket].map((src, i) => (
+                  <span
+                    key={i}
+                    className="inline-block w-9 h-9 md:w-10 md:h-10 rounded-full overflow-hidden border-2 border-[color:var(--ivory)] shadow-[0_2px_6px_-2px_rgba(46,46,46,0.25)] bg-[color:var(--card)]"
+                  >
+                    <img
+                      src={src}
+                      alt=""
+                      loading="lazy"
+                      className="w-full h-full object-cover"
+                    />
+                  </span>
+                ))}
+              </div>
+              <span className="text-[12px] md:text-[12.5px] tracking-[0.04em] text-[color:var(--charcoal-soft)] font-light italic">
+                from real moments, real travellers
+              </span>
+            </div>
+
             <p
-              className="reveal-stagger text-[11px] uppercase tracking-[0.32em] text-[color:var(--charcoal-soft)]"
-              style={{ transitionDelay: "220ms" }}
+              className="reveal-stagger text-[11px] uppercase tracking-[0.32em] text-[color:var(--charcoal-soft)] mt-1"
+              style={{ transitionDelay: "260ms" }}
             >
               Google · TripAdvisor · Trustpilot
             </p>
@@ -717,7 +745,7 @@ function HomePage() {
         aria-labelledby="start-paths-title"
       >
         <div className="container-x">
-          <div className="reveal text-center max-w-2xl mx-auto mb-12 md:mb-16">
+          <div className="reveal text-center max-w-2xl mx-auto mb-14 md:mb-20">
             <span className="eyebrow">Where to begin</span>
             <h2
               id="start-paths-title"
@@ -725,22 +753,12 @@ function HomePage() {
             >
               Choose how <span className="italic">you want to start.</span>
             </h2>
-            <p className="t-lead mt-5">
-              Four ways in. Every one confirms instantly — no forms, no waiting.
-            </p>
-            <p className="mt-3 text-[13.5px] italic font-light text-[color:var(--charcoal-soft)]">
-              A local guide is always available, in real time, if you want help.{" "}
-              <Link
-                to="/contact"
-                className="underline decoration-[color:var(--gold)]/60 underline-offset-4 hover:text-[color:var(--teal)] transition-colors"
-              >
-                Talk to a designer
-              </Link>
-              .
+            <p className="mt-5 text-[14.5px] md:text-[15.5px] text-[color:var(--charcoal-soft)] font-light leading-[1.6] max-w-md mx-auto">
+              Four ways in. Pick one — decide in seconds.
             </p>
           </div>
 
-          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6 list-none p-0 max-w-6xl mx-auto">
+          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-7 md:gap-9 list-none p-0 max-w-6xl mx-auto">
             {startPaths.map((p) => {
               const Icon = p.icon;
               // Four distinct visual treatments — each card reads as a
@@ -920,7 +938,7 @@ function HomePage() {
           decision grid. Communicates: instant creation + instant
           confirmation + real-time local guidance. */}
       <section
-        className="bg-[color:var(--teal)] text-[color:var(--ivory)] section-y-lg relative overflow-hidden"
+        className="bg-[color:var(--teal)] text-[color:var(--ivory)] section-y-lg relative overflow-hidden py-24 md:py-36"
         aria-labelledby="studio-title"
       >
         <div className="absolute -top-32 -right-32 w-[28rem] h-[28rem] rounded-full border border-[color:var(--gold)]/15 pointer-events-none" />
@@ -938,21 +956,21 @@ function HomePage() {
               </span>
               <h2
                 id="studio-title"
-                className="t-display mt-6"
+                className="serif mt-7 text-[2.6rem] sm:text-[3.4rem] md:text-[4.4rem] lg:text-[5rem] leading-[0.98] tracking-[-0.018em]"
               >
                 Create it, <span className="italic text-[color:var(--gold-soft)]">live.</span>
               </h2>
-              <p className="mt-7 text-[17px] md:text-[19px] lg:text-[20px] text-[color:var(--ivory)] leading-[1.55] max-w-xl font-light">
-                Build your journey in real time and confirm instantly.
+              <p className="mt-8 text-[19px] md:text-[22px] lg:text-[24px] text-[color:var(--ivory)] leading-[1.5] max-w-xl font-light">
+                Build your journey in real time — and confirm instantly.
               </p>
-              <p className="mt-4 text-[14.5px] md:text-[15.5px] italic font-light text-[color:var(--gold-soft)] leading-[1.7] max-w-xl">
-                A local guide is always available if you want help.
+              <p className="mt-5 text-[15px] md:text-[16px] italic font-light text-[color:var(--gold-soft)] leading-[1.7] max-w-xl">
+                A local guide is available anytime if you want help.
               </p>
               <Link
                 to="/builder"
-                className="inline-flex items-center gap-2 mt-10 px-10 py-[18px] text-[15.5px] tracking-[0.005em] font-medium bg-[color:var(--gold)] text-[color:var(--charcoal-deep)] hover:bg-[color:var(--gold-soft)] hover:-translate-y-0.5 shadow-[0_14px_36px_-12px_rgba(201,169,106,0.6)] transition-all duration-500"
+                className="inline-flex items-center gap-2.5 mt-12 px-12 py-[20px] text-[16px] tracking-[0.005em] font-semibold bg-[color:var(--gold)] text-[color:var(--charcoal-deep)] hover:bg-[color:var(--gold-soft)] hover:-translate-y-0.5 shadow-[0_18px_44px_-14px_rgba(201,169,106,0.7)] transition-all duration-500"
               >
-                Open Studio <ArrowRight size={15} />
+                Open Studio <ArrowRight size={17} />
               </Link>
             </div>
 
@@ -1059,12 +1077,12 @@ function HomePage() {
             {[
               {
                 eyebrow: "Extended journeys",
-                title: "For more than a day",
-                line: "From one day to full journeys across Portugal.",
+                title: "Beyond a day",
+                line: "From private days to full journeys across Portugal.",
                 to: "/multi-day" as const,
                 cta: "Discover multi-day",
                 ariaLabel:
-                  "Discover extended journeys — from one day to full journeys across Portugal",
+                  "Beyond a day — from private days to full journeys across Portugal",
                 bg: multiDayImg,
               },
               {
@@ -1074,7 +1092,7 @@ function HomePage() {
                 to: "/proposals" as const,
                 cta: "Plan a moment",
                 ariaLabel:
-                  "Plan a moment — proposals, celebrations, corporate and private groups",
+                  "For moments that matter — proposals, celebrations, corporate and private groups",
                 bg: catProposals,
               },
             ].map((b) => (
