@@ -721,7 +721,7 @@ function HomePage() {
               aria-hidden="true"
             >
               <div className="flex -space-x-2.5">
-                {[expRomantic, expGastronomy, expWine, expNature, editMarket].map((src, i) => (
+                {[imgArrabidaWineLunch, imgArrabidaBoatCoves, imgSintraEstates, imgTroiaBeach, imgFatimaNazare].map((src, i) => (
                   <span
                     key={i}
                     className="inline-block w-9 h-9 md:w-10 md:h-10 rounded-full overflow-hidden border-2 border-[color:var(--ivory)] shadow-[0_2px_6px_-2px_rgba(46,46,46,0.25)] bg-[color:var(--card)]"
