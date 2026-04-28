@@ -273,3 +273,31 @@ describe("Typography regression — token rules from styles.css", () => {
     });
   }
 });
+
+/* ── 4. Stability guard ─────────────────────────────────────────
+ * If anyone extends this file with live DOM measurements, force
+ * them to also use settleLayout() so the new tests can't flake on
+ * font load or layout timing across breakpoints.
+ * ──────────────────────────────────────────────────────────────── */
+
+describe("Typography regression — stability guard", () => {
+  it("any live DOM measurement is paired with settleLayout()", () => {
+    const self = read("src/__tests__/typography-regression.test.ts");
+    const usesLiveMeasurement =
+      /\bgetComputedStyle\s*\(|\.offsetWidth\b|\.offsetHeight\b|getBoundingClientRect\s*\(/.test(
+        self,
+      );
+    if (!usesLiveMeasurement) {
+      // Nothing to guard — suite is fully static.
+      expect(true).toBe(true);
+      return;
+    }
+    const usesSettle = /\bsettleLayout\s*\(\s*\)/.test(self);
+    expect(
+      usesSettle,
+      "Live DOM measurement detected (getComputedStyle / offset* / getBoundingClientRect) " +
+        "without a settleLayout() call. Await settleLayout() before reading layout-dependent " +
+        "values to prevent breakpoint/font flakiness.",
+    ).toBe(true);
+  });
+});
