@@ -28,6 +28,7 @@ import { PlatformBadge } from "@/components/PlatformBadge";
 import { HeroMetaProbe } from "@/components/HeroMetaProbe";
 import { HeroCopyDiff } from "@/components/HeroCopyDiff";
 import { HeroVerifyOverlay } from "@/components/HeroVerifyOverlay";
+import { DecisionStepper } from "@/components/DecisionStepper";
 
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
 import { signatureTours, isValidTourId } from "@/data/signatureTours";
@@ -124,6 +125,8 @@ const startPaths = [
     ariaLabel:
       "Open the Studio — design your day in real time with a local guide and confirm instantly",
     accent: "teal" as const,
+    slug: "studio",
+    stepLabel: "Studio",
   },
   {
     icon: BookOpen,
@@ -136,6 +139,8 @@ const startPaths = [
     expectedTo: "/experiences",
     ariaLabel: "Explore Signature Experiences — opens the Signatures catalog",
     accent: "ivory" as const,
+    slug: "signature",
+    stepLabel: "Signature",
   },
   {
     icon: Wand2,
@@ -148,6 +153,8 @@ const startPaths = [
     expectedTo: "/experiences",
     ariaLabel: "Tailor a Signature — open the catalog and reshape every detail",
     accent: "sand" as const,
+    slug: "tailor",
+    stepLabel: "Tailor",
   },
   {
     icon: CalendarDays,
@@ -160,6 +167,8 @@ const startPaths = [
     expectedTo: "/multi-day",
     ariaLabel: "Discover multi-day journeys — connected days across regions",
     accent: "ivory-2" as const,
+    slug: "multi-day",
+    stepLabel: "Multi-day",
   },
   {
     icon: Gift,
@@ -172,6 +181,8 @@ const startPaths = [
     expectedTo: "/proposals",
     ariaLabel: "Plan a Celebration or Group — opens proposals & groups",
     accent: "charcoal" as const,
+    slug: "celebrations",
+    stepLabel: "Celebrate",
   },
 ];
 
@@ -734,6 +745,7 @@ function HomePage() {
           visually distinct teal card to anchor the "build from scratch"
           path as the most differentiated option. */}
       <section
+        id="decision-flow"
         className="py-24 md:py-32 bg-[color:var(--ivory)] border-b border-[color:var(--border)]"
         aria-labelledby="start-paths-title"
       >
@@ -839,7 +851,8 @@ function HomePage() {
               return (
                 <li
                   key={p.title}
-                  className="reveal-stagger h-full"
+                  id={`decision-card-${p.slug}`}
+                  className="reveal-stagger h-full scroll-mt-24"
                 >
                   <Link
                     to={p.to}
@@ -897,6 +910,13 @@ function HomePage() {
 
           <RouteValidationStrip />
         </div>
+        <DecisionStepper
+          sectionId="decision-flow"
+          steps={startPaths.map((p) => ({
+            id: `decision-card-${p.slug}`,
+            label: p.stepLabel,
+          }))}
+        />
       </section>
 
       {/* 4 — BUILDER (CORE PRODUCT)
