@@ -1235,69 +1235,77 @@ function LiveCanvas({ s, title }: { s: BuilderState; title: string }) {
         </div>
       </div>
 
-      {/* INLINE REGIONAL CANVAS — only when a region is chosen */}
+      {/* INLINE REGIONAL CANVAS — only when a region is chosen.
+          On mobile the inner canvas is wider than the viewport so the user can
+          swipe across Portugal; pins stay synced to chapter cards. */}
       {region ? (
-        <div
-          className="relative aspect-[16/9] bg-cover bg-center border-t border-[color:var(--border)]"
-          style={{
-            backgroundImage: `linear-gradient(180deg, rgba(245,239,223,0.0) 0%, rgba(245,239,223,0.55) 100%), url(${region.bg})`,
-          }}
-        >
-          {/* Soft topography wash */}
-          <div className="absolute inset-0 bg-[color:var(--ivory)]/15 mix-blend-overlay" />
+        <div className="relative border-t border-[color:var(--border)]">
+          <div
+            ref={mapScrollRef}
+            className="overflow-x-auto overflow-y-hidden snap-x snap-mandatory scrollbar-none"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          >
+            <div
+              className="relative aspect-[16/9] bg-cover bg-center w-[160%] sm:w-[130%] md:w-full snap-start"
+              style={{
+                backgroundImage: `linear-gradient(180deg, rgba(245,239,223,0.0) 0%, rgba(245,239,223,0.55) 100%), url(${region.bg})`,
+              }}
+            >
+              <div className="absolute inset-0 bg-[color:var(--ivory)]/15 mix-blend-overlay pointer-events-none" />
 
-          {/* Pins */}
-          {placedChapters.map(({ c, i }, pinIdx) => {
-            const active = activeIdx === i;
-            return (
-              <button
-                key={i}
-                type="button"
-                onClick={() => scrollToChapter(i)}
-                onMouseEnter={() => setActiveIdx(i)}
-                onMouseLeave={() => setActiveIdx((cur) => (cur === i ? null : cur))}
-                aria-label={`Chapter ${pinIdx + 1}: ${c.label}`}
-                className="absolute -translate-x-1/2 -translate-y-full focus:outline-none group"
-                style={{ left: `${c.coord!.x}%`, top: `${c.coord!.y}%` }}
-              >
-                {/* Drop pin */}
-                <div
-                  className={`relative h-9 w-9 rounded-full grid place-items-center transition-all duration-300 ${
-                    active
-                      ? "bg-[color:var(--teal)] scale-110 shadow-[0_6px_20px_rgba(12,91,102,0.5)]"
-                      : "bg-[color:var(--ivory)] border border-[color:var(--teal)]/50 group-hover:bg-[color:var(--teal)]/15"
-                  }`}
-                >
-                  <span
-                    className={`serif text-[12px] font-semibold ${
-                      active ? "text-[color:var(--ivory)]" : "text-[color:var(--teal)]"
-                    }`}
+              {placedChapters.map(({ c, i }, pinIdx) => {
+                const active = activeIdx === i;
+                return (
+                  <button
+                    key={i}
+                    ref={(el) => {
+                      pinRefs.current[pinIdx] = el;
+                    }}
+                    type="button"
+                    onClick={() => scrollToChapter(i)}
+                    onMouseEnter={() => setActiveIdx(i)}
+                    onMouseLeave={() => setActiveIdx((cur) => (cur === i ? null : cur))}
+                    aria-label={`Chapter ${pinIdx + 1}: ${c.label}`}
+                    className="absolute -translate-x-1/2 -translate-y-full focus:outline-none group"
+                    style={{ left: `${c.coord!.x}%`, top: `${c.coord!.y}%` }}
                   >
-                    {pinIdx + 1}
-                  </span>
-                </div>
-                {/* Pulse */}
-                {active && (
-                  <span className="absolute inset-0 rounded-full bg-[color:var(--teal)]/30 animate-ping" />
-                )}
-                {/* Tooltip on active */}
-                {active && (
-                  <div className="absolute left-1/2 -translate-x-1/2 mt-2 whitespace-nowrap px-2.5 py-1 bg-[color:var(--charcoal)] text-[color:var(--ivory)] text-[10px] uppercase tracking-[0.18em] rounded-sm pointer-events-none">
-                    {c.label}
-                  </div>
-                )}
-              </button>
-            );
-          })}
+                    <div
+                      className={`relative h-9 w-9 rounded-full grid place-items-center transition-all duration-300 ${
+                        active
+                          ? "bg-[color:var(--teal)] scale-110 shadow-[0_6px_20px_rgba(12,91,102,0.5)]"
+                          : "bg-[color:var(--ivory)] border border-[color:var(--teal)]/50 group-hover:bg-[color:var(--teal)]/15"
+                      }`}
+                    >
+                      <span
+                        className={`serif text-[12px] font-semibold ${
+                          active ? "text-[color:var(--ivory)]" : "text-[color:var(--teal)]"
+                        }`}
+                      >
+                        {pinIdx + 1}
+                      </span>
+                    </div>
+                    {active && (
+                      <span className="absolute inset-0 rounded-full bg-[color:var(--teal)]/30 animate-ping" />
+                    )}
+                    {active && (
+                      <div className="absolute left-1/2 -translate-x-1/2 mt-2 whitespace-nowrap px-2.5 py-1 bg-[color:var(--charcoal)] text-[color:var(--ivory)] text-[10px] uppercase tracking-[0.18em] rounded-sm pointer-events-none">
+                        {c.label}
+                      </div>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
 
-          {/* Region badge */}
-          <div className="absolute top-3 left-3 px-2.5 py-1 bg-[color:var(--ivory)]/90 backdrop-blur text-[10px] uppercase tracking-[0.22em] text-[color:var(--charcoal)] rounded-sm flex items-center gap-1.5">
+          {/* Region badge — fixed on top of the swipe container */}
+          <div className="absolute top-3 left-3 px-2.5 py-1 bg-[color:var(--ivory)]/90 backdrop-blur text-[10px] uppercase tracking-[0.22em] text-[color:var(--charcoal)] rounded-sm flex items-center gap-1.5 pointer-events-none">
             <MapIcon size={11} className="text-[color:var(--teal)]" />
             {region.label}
           </div>
           {placedChapters.length > 0 && (
-            <div className="absolute bottom-3 right-3 px-2.5 py-1 bg-[color:var(--charcoal)]/85 text-[color:var(--ivory)] text-[10px] uppercase tracking-[0.22em] rounded-sm">
-              {placedChapters.length} stop{placedChapters.length === 1 ? "" : "s"} on the route
+            <div className="absolute bottom-3 right-3 px-2.5 py-1 bg-[color:var(--charcoal)]/85 text-[color:var(--ivory)] text-[10px] uppercase tracking-[0.22em] rounded-sm pointer-events-none">
+              {placedChapters.length} stop{placedChapters.length === 1 ? "" : "s"} · swipe to explore
             </div>
           )}
         </div>
