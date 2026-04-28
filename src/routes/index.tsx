@@ -1357,6 +1357,16 @@ function HomePage() {
       <section className="section-y bg-[color:var(--ivory)]">
         <div className="container-x">
           <div className="reveal relative bg-[color:var(--sand)] p-12 md:p-20 overflow-hidden">
+            {/* Soft photographic wash — adds atmospheric depth without
+                losing the sand surface or harming text contrast. */}
+            <img
+              src={expWine}
+              alt=""
+              aria-hidden="true"
+              loading="lazy"
+              className="absolute inset-0 w-full h-full object-cover opacity-25 scale-[1.04]"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-[color:var(--sand)] via-[color:var(--sand)]/85 to-[color:var(--sand)]/55" />
             <div className="absolute -bottom-24 -left-24 w-80 h-80 rounded-full border border-[color:var(--gold)]/15" />
             <div className="absolute -top-12 right-1/4 w-40 h-40 rounded-full border border-[color:var(--gold)]/10" />
             <div className="relative max-w-2xl">
