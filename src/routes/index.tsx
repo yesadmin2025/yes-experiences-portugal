@@ -923,9 +923,9 @@ function HomePage() {
               </p>
               <Link
                 to="/builder"
-                className="btn-glow inline-flex items-center gap-2.5 mt-12 px-12 py-[20px] text-[16px] tracking-[0.005em] font-semibold bg-[color:var(--gold)] text-[color:var(--charcoal-deep)] hover:bg-[color:var(--gold-soft)] active:bg-[color:var(--gold-soft)] shadow-[0_18px_44px_-14px_rgba(201,169,106,0.7)]"
+                className="btn-solid btn-solid--gold mt-12"
               >
-                Open Studio <ArrowRight size={17} />
+                Open Studio <ArrowRight size={16} />
               </Link>
             </div>
 
@@ -986,7 +986,7 @@ function HomePage() {
           <div className="reveal mt-14 md:mt-16 text-center">
             <Link
               to="/experiences"
-              className="cta-secondary-light inline-flex items-center gap-2 px-8 py-[16px] text-[12.5px] uppercase tracking-[0.2em] font-semibold"
+              className="btn-solid btn-solid--outline"
             >
               Explore all signatures <ArrowRight size={14} />
             </Link>
@@ -1100,7 +1100,7 @@ function HomePage() {
               </div>
               <Link
                 to="/multi-day"
-                className="cta-primary mt-9 inline-flex items-center gap-2 px-8 py-[16px] text-[12.5px] uppercase tracking-[0.2em] font-semibold"
+                className="btn-solid btn-solid--teal mt-9"
               >
                 Discover Multi-Day Journeys
                 <ArrowRight size={15} />
@@ -1351,14 +1351,14 @@ function HomePage() {
               <div className="mt-10 flex flex-wrap gap-4">
                 <Link
                   to="/builder"
-                  className="cta-primary inline-flex items-center gap-2 px-9 py-[18px] text-[12.5px] uppercase tracking-[0.22em] font-semibold"
+                  className="btn-solid btn-solid--teal"
                 >
                   Create Your Story
                   <ArrowRight size={15} />
                 </Link>
                 <Link
                   to="/experiences"
-                  className="cta-secondary-light inline-flex items-center gap-2 px-9 py-[18px] text-[12.5px] uppercase tracking-[0.22em] font-semibold"
+                  className="btn-solid btn-solid--outline"
                 >
                   Explore Signature Experiences
                 </Link>
@@ -1377,19 +1377,9 @@ function HomePage() {
         </div>
       </section>
 
-      {/* Sticky mobile CTA — visible only on mobile, anchors the primary
-          action across the whole homepage scroll. */}
-      <div
-        className="fixed bottom-0 inset-x-0 z-40 md:hidden border-t border-[color:var(--gold)]/30 bg-[color:var(--charcoal-deep)]/95 backdrop-blur-md px-4 py-3"
-        style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 12px)" }}
-      >
-        <Link
-          to="/builder"
-          className="flex items-center justify-center gap-2 w-full py-3.5 bg-[color:var(--gold)] text-[color:var(--charcoal-deep)] text-[13px] uppercase tracking-[0.22em] font-semibold shadow-[0_10px_30px_-12px_rgba(201,169,106,0.6)]"
-        >
-          Create Your Story <ArrowRight size={14} />
-        </Link>
-      </div>
+      {/* Mobile sticky CTA — handled globally by <MobileStickyCTA /> in
+          SiteLayout. The previous in-page duplicate has been removed so
+          users no longer see two stacked sticky bars on mobile. */}
       <ContrastAudit />
     </SiteLayout>
   );
