@@ -176,6 +176,50 @@ describe("Typography regression — headline class strings", () => {
   }
 });
 
+/* ── 3b. Section-headline sweep across premium pages ─────────────
+ * For every page below, find every element whose className uses one
+ * of the typography tokens (t-h1/t-h2/t-h3/t-eyebrow/t-lead) and
+ * snapshot the full ordered list of (tag, class string) pairs.
+ *
+ * This catches:
+ *   - a section H2 losing the t-h2 token
+ *   - a token being swapped for an ad-hoc class string
+ *   - a new section being added without going through the token system
+ *   - mt-* / max-w-* spacing drift on any tokenized section heading
+ *
+ * Update with `bunx vitest run -u` when the change is intentional.
+ * ───────────────────────────────────────────────────────────────── */
+
+const SECTION_PAGES = [
+  { page: "home", file: "src/routes/index.tsx" },
+  { page: "multi-day", file: "src/routes/multi-day.tsx" },
+  { page: "proposals", file: "src/routes/proposals.tsx" },
+];
+
+const TOKEN_CLASS_RE =
+  /<(h1|h2|h3|h4|p|span|div)\b[^>]*\sclassName="([^"]*\b(?:t-h1|t-h2|t-h3|t-eyebrow|t-lead)\b[^"]*)"/g;
+
+describe("Typography regression — section headlines (token sweep)", () => {
+  for (const { page, file } of SECTION_PAGES) {
+    it(`[${page}] all tokenized section headlines`, () => {
+      const src = read(file);
+      const hits: Array<{ tag: string; cls: string }> = [];
+      let m: RegExpExecArray | null;
+      TOKEN_CLASS_RE.lastIndex = 0;
+      while ((m = TOKEN_CLASS_RE.exec(src))) {
+        const tag = m[1];
+        const cls = m[2].split(/\s+/).filter(Boolean).join(" ");
+        hits.push({ tag, cls });
+      }
+      expect(
+        hits.length,
+        `No tokenized section headlines found in ${file}`,
+      ).toBeGreaterThan(0);
+      expect(hits).toMatchSnapshot();
+    });
+  }
+});
+
 describe("Typography regression — token rules from styles.css", () => {
   const css = read("src/styles.css");
   for (const sel of TOKENS) {
