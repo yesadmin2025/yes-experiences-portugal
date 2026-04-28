@@ -41,8 +41,26 @@ export type SignatureTour = {
   pace: string[];       // 3 short cues for the card
   img: string;
   bookingUrl: string;   // direct yesexperiences.pt URL
+  /** Optional direct TripAdvisor listing. When omitted, the detail page
+   *  falls back to a TripAdvisor search query for the tour title. */
+  tripadvisorUrl?: string;
   seed: TourSeed;       // pre-fills the builder
 };
+
+/**
+ * Builds a TripAdvisor URL for a tour. Uses the curated `tripadvisorUrl`
+ * when provided; otherwise opens a TripAdvisor search for the tour title
+ * so the link is always useful even without a confirmed listing.
+ */
+export function tripadvisorHrefFor(tour: SignatureTour): string {
+  if (tour.tripadvisorUrl) return tour.tripadvisorUrl;
+  const q = encodeURIComponent(`${tour.title} Portugal`);
+  return `https://www.tripadvisor.com/Search?q=${q}`;
+}
+
+export function findTour(id: string): SignatureTour | undefined {
+  return signatureTours.find((t) => t.id === id);
+}
 
 export const signatureTours: SignatureTour[] = [
   {
