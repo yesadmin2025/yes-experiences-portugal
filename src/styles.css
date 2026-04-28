@@ -192,6 +192,14 @@
   --logo-scale-gold-on-charcoal: 0.95;
 }
 
+@media (min-width: 768px) {
+  :root {
+    --section-y: 8rem;
+    --section-y-lg: 11rem;
+    --section-y-sm: 4.5rem;
+  }
+}
+
 .dark {
   --background: var(--charcoal);
   --foreground: var(--ivory);
