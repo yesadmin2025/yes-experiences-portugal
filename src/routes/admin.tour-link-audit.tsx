@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { auditTourLinks } from "@/server/tourLinkAudit.functions";
 import type { TourLinkAuditReport } from "@/server/tourLinkAudit.server";
 import { SiteLayout } from "@/components/SiteLayout";
-import { AlertTriangle, Check, RefreshCw, FileSearch, Link2Off } from "lucide-react";
+import { AlertTriangle, Check, RefreshCw, FileSearch, Link2Off, HelpCircle, FileCode2 } from "lucide-react";
 
 export const Route = createFileRoute("/admin/tour-link-audit")({
   beforeLoad: () => {
@@ -245,9 +245,155 @@ function TourLinkAuditPage() {
               )}
             </>
           )}
+
+          <RouteTreeTroubleshooting />
         </div>
       </section>
     </SiteLayout>
+  );
+}
+
+type RouteTreeProbe = {
+  status: "loading" | "ok" | "error";
+  routeCount?: number;
+  hasAuditRoute?: boolean;
+  error?: string;
+};
+
+function RouteTreeTroubleshooting() {
+  const [probe, setProbe] = useState<RouteTreeProbe>({ status: "loading" });
+
+  const probeRouteTree = async () => {
+    setProbe({ status: "loading" });
+    try {
+      // Dynamic import so a generator failure surfaces here instead of crashing the page.
+      const mod: any = await import("@/routeTree.gen");
+      const tree = mod.routeTree;
+      const ids: string[] = [];
+      const walk = (node: any) => {
+        if (!node) return;
+        if (node.id) ids.push(node.id);
+        const children = node.children
+          ? Array.isArray(node.children)
+            ? node.children
+            : Object.values(node.children)
+          : [];
+        for (const c of children) walk(c);
+      };
+      walk(tree);
+      setProbe({
+        status: "ok",
+        routeCount: ids.length,
+        hasAuditRoute: ids.some((id) => id.includes("admin/tour-link-audit")),
+      });
+    } catch (err) {
+      setProbe({
+        status: "error",
+        error: err instanceof Error ? err.message : String(err),
+      });
+    }
+  };
+
+  useEffect(() => {
+    void probeRouteTree();
+  }, []);
+
+  const toneBorder =
+    probe.status === "ok"
+      ? probe.hasAuditRoute
+        ? "border-emerald-300 bg-emerald-50"
+        : "border-amber-300 bg-amber-50"
+      : probe.status === "error"
+        ? "border-red-300 bg-red-50"
+        : "border-[color:var(--border)] bg-[color:var(--sand)]/40";
+
+  return (
+    <div className="mt-12 border border-[color:var(--border)] p-5">
+      <h2 className="text-xs uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)] flex items-center gap-2">
+        <HelpCircle size={12} /> Troubleshooting · route crawler
+      </h2>
+
+      <div className={`mt-4 border p-4 text-sm ${toneBorder}`}>
+        <div className="flex items-center gap-2 font-medium">
+          <FileCode2 size={14} />
+          <code className="font-mono text-[12px]">src/routeTree.gen.ts</code>
+          <span className="ml-auto text-[10px] uppercase tracking-[0.2em]">
+            {probe.status}
+          </span>
+        </div>
+
+        {probe.status === "loading" && (
+          <p className="mt-2 text-xs text-[color:var(--charcoal-soft)]">
+            Probing generated route tree…
+          </p>
+        )}
+
+        {probe.status === "ok" && (
+          <ul className="mt-2 text-xs space-y-1">
+            <li>
+              <strong>Routes registered:</strong> {probe.routeCount}
+            </li>
+            <li>
+              <strong>/admin/tour-link-audit present:</strong>{" "}
+              {probe.hasAuditRoute ? "yes ✓" : "no — crawler missed this file"}
+            </li>
+          </ul>
+        )}
+
+        {probe.status === "error" && (
+          <div className="mt-2 text-xs">
+            <p className="font-medium text-red-900">Failed to load route tree.</p>
+            <pre className="mt-2 bg-white/60 p-2 overflow-x-auto whitespace-pre-wrap break-all text-[11px]">
+              {probe.error}
+            </pre>
+          </div>
+        )}
+
+        <button
+          type="button"
+          onClick={probeRouteTree}
+          className="mt-3 inline-flex items-center gap-2 border border-[color:var(--border)] hover:border-[color:var(--gold)] px-3 py-1.5 text-xs"
+        >
+          <RefreshCw size={12} /> Re-probe
+        </button>
+      </div>
+
+      <div className="mt-5 text-xs text-[color:var(--charcoal-soft)] leading-relaxed space-y-3">
+        <p>
+          <strong className="text-[color:var(--charcoal)]">Why crawling fails.</strong>{" "}
+          The TanStack Router Vite plugin statically parses files in{" "}
+          <code>src/routes/</code> and writes <code>src/routeTree.gen.ts</code>{" "}
+          before TS checks. If parsing fails, the generated tree goes stale and
+          paths like <code>/admin/tour-link-audit</code> raise{" "}
+          <code>TS2345 — not assignable to keyof FileRoutesByPath</code>.
+        </p>
+        <ul className="list-disc pl-5 space-y-1.5">
+          <li>
+            <strong>Non-literal route path.</strong>{" "}
+            <code>createFileRoute()</code> requires a plain string literal —
+            never a variable, template string, or <code>as</code> cast.
+          </li>
+          <li>
+            <strong>File name ≠ route path.</strong> Use dot-separated flat
+            files: <code>admin.tour-link-audit.tsx</code> →{" "}
+            <code>/admin/tour-link-audit</code>. Trailing slashes break it.
+          </li>
+          <li>
+            <strong>Syntax / JSX errors</strong> in any route file abort the
+            entire crawl, not just that file.
+          </li>
+          <li>
+            <strong>Manual edits to <code>routeTree.gen.ts</code></strong> are
+            overwritten on every dev reload — never edit it.
+          </li>
+          <li>
+            <strong>Stale dev cache.</strong> If the probe above shows the route
+            missing while the file exists, restart the dev server to force a
+            re-crawl.
+          </li>
+        </ul>
+      </div>
+    </div>
   );
 }
 
