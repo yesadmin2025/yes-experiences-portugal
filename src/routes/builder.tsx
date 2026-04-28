@@ -617,14 +617,20 @@ function StepPanel(props: {
    Individual steps
    ============================================================ */
 
-function StepHeader({ title, sub }: { title: React.ReactNode; sub?: React.ReactNode }) {
+export function StepHeader({ title, sub }: { title: React.ReactNode; sub?: React.ReactNode }) {
   return (
-    <div className="animate-fade-in">
-      <h2 className="serif text-[26px] md:text-[34px] leading-[1.15] text-[color:var(--charcoal)]">
+    <div className="animate-fade-in" data-builder-landmark="step-header">
+      <h2
+        data-builder-landmark="step-title"
+        className="serif text-[26px] md:text-[34px] leading-[1.15] text-[color:var(--charcoal)]"
+      >
         {title}
       </h2>
       {sub && (
-        <p className="mt-2.5 text-[13px] md:text-[14px] text-[color:var(--charcoal-soft)] italic leading-relaxed">
+        <p
+          data-builder-landmark="step-sub"
+          className="mt-2.5 text-[13px] md:text-[14px] text-[color:var(--charcoal-soft)] italic leading-relaxed"
+        >
           {sub}
         </p>
       )}
@@ -633,7 +639,7 @@ function StepHeader({ title, sub }: { title: React.ReactNode; sub?: React.ReactN
 }
 
 /* Image-led moment card — replaces form tiles across the builder */
-function MomentCard({
+export function MomentCard({
   image,
   name,
   line,
@@ -653,6 +659,8 @@ function MomentCard({
       type="button"
       onClick={onClick}
       aria-pressed={selected}
+      data-builder-landmark="moment-card"
+      data-selected={selected ? "true" : "false"}
       className={`group relative ${aspect} overflow-hidden rounded-sm text-left transition-all duration-300 ${
         selected
           ? "ring-2 ring-[color:var(--teal)] ring-offset-2 ring-offset-[color:var(--ivory)]"
@@ -670,9 +678,19 @@ function MomentCard({
         </div>
       )}
       <div className="absolute inset-x-0 bottom-0 p-3.5">
-        <p className="serif text-[15px] md:text-[16px] text-white leading-tight">{name}</p>
+        <p
+          data-builder-landmark="moment-name"
+          className="serif text-[15px] md:text-[16px] text-white leading-tight"
+        >
+          {name}
+        </p>
         {line && (
-          <p className="mt-1 text-[11px] text-white/80 italic leading-snug line-clamp-2">{line}</p>
+          <p
+            data-builder-landmark="moment-line"
+            className="mt-1 text-[11px] text-white/80 italic leading-snug line-clamp-2"
+          >
+            {line}
+          </p>
         )}
       </div>
     </button>
