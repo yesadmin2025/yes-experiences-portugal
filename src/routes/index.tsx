@@ -17,13 +17,12 @@ import {
   Star,
   Compass,
   Sparkles,
-  PenLine,
-  Heart,
   Lock,
   Wand2,
   Zap,
   BookOpen,
   Gift,
+  CalendarDays,
 } from "lucide-react";
 import { PlatformBadge } from "@/components/PlatformBadge";
 import { HeroMetaProbe } from "@/components/HeroMetaProbe";
@@ -111,101 +110,67 @@ const editorial = [
   },
 ];
 
-const howItWorks = [
-  {
-    step: "01",
-    icon: BookOpen,
-    title: "Start with an idea, a place or a plan",
-    line: "A signature, a region, or a blank slate — wherever feels right.",
-  },
-  {
-    step: "02",
-    icon: PenLine,
-    title: "Shape it your way, in real time",
-    line: "Adjust the pace, the stops, the people you meet — as you go.",
-  },
-  {
-    step: "03",
-    icon: Zap,
-    title: "Confirm instantly — no waiting",
-    line: "No forms. No requests. The moment it feels right, it's yours.",
-  },
-];
-
-const pillars = [
-  {
-    icon: Heart,
-    title: "Local",
-    line: "Designed and hosted by Portuguese locals — the people, places and pace only insiders know.",
-  },
-  {
-    icon: Lock,
-    title: "Private",
-    line: "Always just your group. No strangers, no shared buses — every experience entirely yours.",
-  },
-  {
-    icon: Wand2,
-    title: "Tailored",
-    line: "Built around how you travel — your pace, your interests, the moments that matter to you.",
-  },
-  {
-    icon: Zap,
-    title: "Instant",
-    line: "Real-time creation. Instant confirmation. No requests, no waiting — your experience is locked the moment you say yes.",
-  },
-];
 
 const startPaths = [
   {
-    icon: BookOpen,
-    eyebrow: "Instant · Ready",
-    title: "Explore Signature Experiences",
-    line: "Start from a curated plan and confirm instantly.",
-    cta: "Explore",
-    to: "/experiences",
-    destination: "Signatures",
-    expectedTo: "/experiences",
-    ariaLabel:
-      "Explore Signature Experiences — opens the Signatures catalog page, every experience confirms instantly",
-    accent: "ivory" as const,
-  },
-  {
-    icon: Wand2,
-    eyebrow: "Instant · Tailored",
-    title: "Tailor a Signature",
-    line: "Adjust a curated plan to match your style.",
-    cta: "Tailor it",
-    to: "/experiences",
-    destination: "Tailoring",
-    expectedTo: "/experiences",
-    ariaLabel:
-      "Tailor a Signature — open the Signatures catalog, reshape every detail and confirm instantly",
-    accent: "sand" as const,
-  },
-  {
     icon: Sparkles,
-    eyebrow: "The core experience · Live",
-    title: "Build Your Own (Studio)",
-    line: "Create your journey in real time — with instant confirmation.",
+    eyebrow: "Live · Real-time",
+    title: "Build from Scratch (Studio)",
+    line: "Design your day in real time, with a local on hand. Confirm the moment it feels right.",
     cta: "Open Studio",
     to: "/builder",
     destination: "Studio",
     expectedTo: "/builder",
     ariaLabel:
-      "Open the Studio — design your experience from scratch in real time and confirm instantly",
+      "Open the Studio — design your day in real time with a local guide and confirm instantly",
     accent: "teal" as const,
   },
   {
+    icon: BookOpen,
+    eyebrow: "Ready to go",
+    title: "Explore Signature Experiences",
+    line: "Curated days, ready to confirm in seconds.",
+    cta: "Explore",
+    to: "/experiences",
+    destination: "Signatures",
+    expectedTo: "/experiences",
+    ariaLabel: "Explore Signature Experiences — opens the Signatures catalog",
+    accent: "ivory" as const,
+  },
+  {
+    icon: Wand2,
+    eyebrow: "Tailored",
+    title: "Tailor a Signature",
+    line: "Start from a curated day. Reshape it to match your style.",
+    cta: "Tailor it",
+    to: "/experiences",
+    destination: "Tailoring",
+    expectedTo: "/experiences",
+    ariaLabel: "Tailor a Signature — open the catalog and reshape every detail",
+    accent: "sand" as const,
+  },
+  {
+    icon: CalendarDays,
+    eyebrow: "A few days",
+    title: "Multi-day journeys",
+    line: "Linger longer. One continuous story, across regions.",
+    cta: "Discover",
+    to: "/multi-day",
+    destination: "Multi-day",
+    expectedTo: "/multi-day",
+    ariaLabel: "Discover multi-day journeys — connected days across regions",
+    accent: "ivory-2" as const,
+  },
+  {
     icon: Gift,
-    eyebrow: "Instant · Occasions",
+    eyebrow: "Occasions",
     title: "Celebrations & Groups",
-    line: "Proposals, anniversaries, corporate and private groups.",
+    line: "Proposals, anniversaries, private groups — quietly extraordinary.",
     cta: "Plan",
     to: "/proposals",
     destination: "Celebrations",
     expectedTo: "/proposals",
-    ariaLabel:
-      "Plan a Celebration or Group experience — opens the Proposals, Celebrations and Groups page, confirms instantly",
+    ariaLabel: "Plan a Celebration or Group — opens proposals & groups",
     accent: "charcoal" as const,
   },
 ];
@@ -774,7 +739,7 @@ function HomePage() {
       >
         <div className="container-x">
           <div className="reveal text-center max-w-2xl mx-auto mb-12 md:mb-16">
-            <span className="eyebrow">Four ways in</span>
+            <span className="eyebrow">Where to begin</span>
             <h2
               id="start-paths-title"
               className="serif text-[2.25rem] md:text-5xl mt-5 leading-[1.08]"
@@ -782,10 +747,10 @@ function HomePage() {
               Choose how <span className="italic">you want to start.</span>
             </h2>
             <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
-              Every path confirms instantly. No forms, no waiting.
+              Five ways in. Every one confirms instantly — no forms, no waiting.
             </p>
             <p className="mt-3 text-[13.5px] italic font-light text-[color:var(--charcoal-soft)]">
-              A local is always available to guide you, if you want it.{" "}
+              A local guide is always available, in real time, if you want help.{" "}
               <Link
                 to="/contact"
                 className="underline decoration-[color:var(--gold)]/60 underline-offset-4 hover:text-[color:var(--teal)] transition-colors"
@@ -840,7 +805,7 @@ function HomePage() {
                   line: "text-[color:var(--ivory)]/85",
                   cta: "text-[color:var(--gold-soft)]",
                   rail: "h-[3px] bg-[color:var(--gold)]",
-                  ribbon: "Core experience",
+                  ribbon: null,
                 },
                 // 4 · Celebrations — deep charcoal, dotted gold rail,
                 // rounded gold-soft icon tile, ivory CTA.
@@ -855,12 +820,26 @@ function HomePage() {
                   rail: "h-px bg-[image:repeating-linear-gradient(90deg,var(--gold)_0_6px,transparent_6px_12px)]",
                   ribbon: null,
                 },
+                // 5 · Multi-day — soft ivory with a teal-to-gold rail
+                // and squared icon tile. Distinct from card 1 by rail
+                // and icon shape.
+                "ivory-2": {
+                  card: "bg-[color:var(--card)] border border-[color:var(--border)] text-[color:var(--charcoal)] hover:border-[color:var(--gold)]/45 hover:shadow-[0_24px_50px_-24px_rgba(178,140,71,0.18)]",
+                  iconWrap:
+                    "rounded-none border border-[color:var(--charcoal)]/20 text-[color:var(--charcoal)] bg-[color:var(--ivory)]",
+                  eyebrow: "text-[color:var(--charcoal-soft)]",
+                  title: "text-[color:var(--charcoal)]",
+                  line: "text-[color:var(--charcoal-soft)]",
+                  cta: "text-[color:var(--teal)]",
+                  rail: "h-[2px] bg-gradient-to-r from-[color:var(--teal)]/0 via-[color:var(--teal)]/55 to-[color:var(--gold)]/55",
+                  ribbon: null,
+                },
               }[p.accent];
 
               return (
                 <li
                   key={p.title}
-                  className={`reveal-stagger h-full ${p.accent === "teal" ? "sm:col-span-2 lg:col-span-2 lg:row-span-1" : ""}`}
+                  className="reveal-stagger h-full"
                 >
                   <Link
                     to={p.to}
@@ -917,74 +896,6 @@ function HomePage() {
           </ul>
 
           <RouteValidationStrip />
-        </div>
-      </section>
-
-      {/* 4 — HOW IT WORKS
-          Mobile-first 3-step editorial layout. Sets expectations + removes
-          friction immediately after the trust signal. Generous vertical
-          rhythm; numbers + icons + short copy, never paragraphs. */}
-      <section
-        className="py-24 md:py-36 bg-[color:var(--ivory)]"
-        aria-labelledby="how-it-works-title"
-      >
-        <div className="container-x">
-          <div className="reveal text-center max-w-2xl mx-auto mb-14 md:mb-20">
-            <span className="eyebrow">How you create it</span>
-            <h2
-              id="how-it-works-title"
-              className="serif text-[2.25rem] md:text-5xl mt-5 leading-[1.08]"
-            >
-              Designed by you. <span className="italic">Confirmed instantly.</span>
-            </h2>
-            <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
-              A local is always available to guide you, if you want it.
-            </p>
-          </div>
-
-          <ol className="grid md:grid-cols-3 gap-10 md:gap-8 list-none p-0 max-w-md md:max-w-none mx-auto">
-            {howItWorks.map((s, idx) => {
-              const Icon = s.icon;
-              return (
-                <li key={s.step} className="reveal-stagger relative">
-                  <div className="flex md:flex-col items-start md:items-start gap-5 md:gap-6">
-                    <div className="flex flex-col items-center md:items-start shrink-0">
-                      <span className="text-[10.5px] uppercase tracking-[0.32em] text-[color:var(--gold)] font-medium">
-                        {s.step}
-                      </span>
-                      <span className="mt-3 inline-flex items-center justify-center w-12 h-12 md:w-14 md:h-14 border border-[color:var(--gold)]/40 text-[color:var(--teal)]">
-                        <Icon size={20} strokeWidth={1.5} />
-                      </span>
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="serif text-[1.4rem] md:text-[1.55rem] text-[color:var(--charcoal)] leading-[1.2]">
-                        {s.title}
-                      </h3>
-                      <p className="mt-3 text-[15px] md:text-[15.5px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light max-w-[38ch]">
-                        {s.line}
-                      </p>
-                    </div>
-                  </div>
-                  {idx < howItWorks.length - 1 && (
-                    <span
-                      aria-hidden="true"
-                      className="hidden md:block absolute top-6 left-full w-full h-px bg-gradient-to-r from-[color:var(--gold)]/40 to-transparent -translate-x-6"
-                    />
-                  )}
-                </li>
-              );
-            })}
-          </ol>
-
-          <div className="reveal mt-14 md:mt-16 text-center">
-            <Link
-              to="/builder"
-              className="cta-primary inline-flex items-center gap-2 px-8 py-[16px] text-[12.5px] uppercase tracking-[0.2em] font-semibold"
-            >
-              Start creating yours
-              <ArrowRight size={15} />
-            </Link>
-          </div>
         </div>
       </section>
 
@@ -1165,39 +1076,6 @@ function HomePage() {
             >
               Explore all signatures <ArrowRight size={14} />
             </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* 5 — DIFFERENTIATION
-          Four pillars. Minimal mobile-first grid: 2-up on mobile, 4-up on
-          desktop. Icon + one-word title + one short line. */}
-      <section className="py-24 md:py-36 bg-[color:var(--ivory)]" aria-labelledby="pillars-title">
-        <div className="container-x">
-          <div className="reveal text-center max-w-2xl mx-auto mb-14 md:mb-16">
-            <span className="eyebrow">Why YES</span>
-            <h2 id="pillars-title" className="serif text-[2.25rem] md:text-5xl mt-5 leading-[1.08]">
-              The difference, <span className="italic">in four words.</span>
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12 md:gap-y-10 max-w-5xl mx-auto">
-            {pillars.map((p) => {
-              const Icon = p.icon;
-              return (
-                <div key={p.title} className="reveal-stagger flex flex-col items-start text-left">
-                  <span className="inline-flex items-center justify-center w-11 h-11 md:w-12 md:h-12 text-[color:var(--teal)] border border-[color:var(--gold)]/40 mb-5">
-                    <Icon size={18} strokeWidth={1.5} />
-                  </span>
-                  <h3 className="serif text-[1.35rem] md:text-[1.45rem] text-[color:var(--charcoal)] leading-[1.15]">
-                    {p.title}
-                  </h3>
-                  <p className="mt-3 text-[14.5px] text-[color:var(--charcoal-soft)] leading-[1.65] font-light max-w-[28ch]">
-                    {p.line}
-                  </p>
-                </div>
-              );
-            })}
           </div>
         </div>
       </section>
@@ -1486,6 +1364,20 @@ function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Sticky mobile CTA — visible only on mobile, anchors the primary
+          action across the whole homepage scroll. */}
+      <div
+        className="fixed bottom-0 inset-x-0 z-40 md:hidden border-t border-[color:var(--gold)]/30 bg-[color:var(--charcoal-deep)]/95 backdrop-blur-md px-4 py-3"
+        style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 12px)" }}
+      >
+        <Link
+          to="/builder"
+          className="flex items-center justify-center gap-2 w-full py-3.5 bg-[color:var(--gold)] text-[color:var(--charcoal-deep)] text-[13px] uppercase tracking-[0.22em] font-semibold shadow-[0_10px_30px_-12px_rgba(201,169,106,0.6)]"
+        >
+          Create Your Story <ArrowRight size={14} />
+        </Link>
+      </div>
     </SiteLayout>
   );
 }
