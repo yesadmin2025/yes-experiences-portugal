@@ -93,8 +93,8 @@ function ExperiencesPage() {
                   Fits best · {t.fitsBest}
                 </p>
 
-                <span className="mt-5 inline-flex items-center gap-2 text-sm tracking-wide text-[color:var(--teal)] group-hover:gap-3 transition-all">
-                  View experience & reserve <ArrowRight size={14} />
+                <span className="tour-card-link mt-5">
+                  View experience &amp; reserve <ArrowRight size={14} />
                 </span>
               </Link>
             ))}
@@ -124,7 +124,7 @@ function CtaStrip() {
           </div>
           <Link
             to="/builder"
-            className="inline-flex items-center gap-2 bg-[color:var(--gold)] hover:bg-[color:var(--gold-soft)] text-[color:var(--charcoal)] px-7 py-3.5 text-sm tracking-wide transition-all flex-shrink-0"
+            className="btn-solid btn-solid--gold flex-shrink-0"
           >
             Start the Studio
             <ArrowRight size={16} />

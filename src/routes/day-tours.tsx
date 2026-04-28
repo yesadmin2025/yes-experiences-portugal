@@ -86,8 +86,8 @@ function DayToursPage() {
                 {t.blurb}
               </p>
 
-              <span className="mt-5 inline-flex items-center gap-2 text-sm tracking-wide text-[color:var(--teal)] group-hover:gap-3 transition-all">
-                View experience & reserve <ArrowRight size={14} />
+              <span className="tour-card-link mt-5">
+                View experience &amp; reserve <ArrowRight size={14} />
               </span>
             </Link>
           ))}

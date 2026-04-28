@@ -339,9 +339,11 @@ export function MobileStickyCTA() {
               data-state={submitting ? "submitting" : sheetOpen ? "open" : "idle"}
               className={[
                 "group inline-flex items-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-white",
-                "border border-[color:var(--gold)] px-4 py-3 text-[10.5px] tracking-[0.2em] uppercase whitespace-nowrap",
-                "transition-[opacity,background-color] duration-300",
-                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-white",
+                "border border-[color:var(--gold)]/60 hover:border-[color:var(--gold)] px-4 py-3 text-[11px] font-semibold tracking-[0.12em] uppercase whitespace-nowrap",
+                "shadow-[0_8px_22px_-12px_rgba(41,91,97,0.55)] hover:shadow-[0_14px_30px_-14px_rgba(201,169,106,0.45)]",
+                "transition-[opacity,background-color,box-shadow,border-color,transform] duration-300",
+                "hover:-translate-y-[1px]",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-white",
                 submitting ? "opacity-70 pointer-events-none cursor-default" : "",
               ].join(" ")}
               aria-label="Say YES — choose how to begin your Portugal experience"
