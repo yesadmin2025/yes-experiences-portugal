@@ -4,6 +4,7 @@ import { Clock, MapPin, ArrowLeft, Check, Sparkles, Info, Heart } from "lucide-r
 import {
   signatureTours,
   findTour,
+  isValidTourId,
   STOP_THEME_IMG,
   type SignatureTour,
 } from "@/data/signatureTours";
