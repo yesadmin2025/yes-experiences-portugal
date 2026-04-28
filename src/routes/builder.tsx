@@ -1177,6 +1177,268 @@ function MapFallback() {
   );
 }
 
+/* ============================================================
+   LiveCanvas — fused Story + Map + Timeline.
+   One scrolling, image-led narrative where every chapter is also
+   a pin on a stylized regional canvas. Hovering a chapter glows
+   its pin; tapping a pin scrolls to its chapter.
+   ============================================================ */
+
+const REGION_CANVAS: Record<string, { bg: string; label: string; sub: string }> = {
+  lisbon: {
+    bg: "https://images.unsplash.com/photo-1513735492246-483525079686?w=1400&q=80&auto=format&fit=crop",
+    label: "Lisbon & Coast",
+    sub: "Tagus light, Atlantic edge",
+  },
+  porto: {
+    bg: "https://images.unsplash.com/photo-1555881400-74d7acaacd8b?w=1400&q=80&auto=format&fit=crop",
+    label: "Porto & Douro",
+    sub: "River, granite, terraced vines",
+  },
+  alentejo: {
+    bg: "https://images.unsplash.com/photo-1473625247510-8ceb1760943f?w=1400&q=80&auto=format&fit=crop",
+    label: "Alentejo",
+    sub: "Cork oaks, slow horizons",
+  },
+  algarve: {
+    bg: "https://images.unsplash.com/photo-1518509562904-e7ef99cddc85?w=1400&q=80&auto=format&fit=crop",
+    label: "Algarve",
+    sub: "Cliff coves and warm sea",
+  },
+};
+
+function LiveCanvas({ s, title }: { s: BuilderState; title: string }) {
+  const chapters = useMemo(() => buildTimeline(s), [s]);
+  const intro = useMemo(() => buildTimelineIntro(s), [s]);
+  const heroImg = useMemo(() => pickHeroImage(s), [s]);
+  const [activeIdx, setActiveIdx] = useState<number | null>(null);
+  const itemRefs = useRef<(HTMLLIElement | null)[]>([]);
+
+  const region = s.region ? REGION_CANVAS[s.region] : null;
+  const placedChapters = chapters
+    .map((c, i) => ({ c, i }))
+    .filter((x) => !!x.c.coord);
+
+  const scrollToChapter = (i: number) => {
+    const el = itemRefs.current[i];
+    if (el && typeof window !== "undefined") {
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+    setActiveIdx(i);
+  };
+
+  return (
+    <div className="bg-[color:var(--card)] border border-[color:var(--border)] overflow-hidden rounded-sm">
+      {/* HERO — story title over evolving image */}
+      <div
+        className="relative aspect-[16/10] bg-cover bg-center transition-all duration-700"
+        style={{
+          backgroundImage: `linear-gradient(180deg, rgba(31,31,31,0.05) 0%, rgba(31,31,31,0.8) 100%), url(${heroImg})`,
+        }}
+      >
+        <div className="absolute inset-0 flex flex-col justify-end p-5 md:p-7">
+          <span className="text-[10px] uppercase tracking-[0.28em] text-[color:var(--gold-soft)]">
+            Your story so far
+          </span>
+          <h3 className="serif text-2xl md:text-3xl text-white mt-1.5 leading-tight">{title}</h3>
+          {region && (
+            <p className="text-[12px] md:text-[13px] text-white/80 italic mt-1.5">
+              {region.label} · <span className="not-italic uppercase tracking-[0.2em] text-[10px]">{region.sub}</span>
+            </p>
+          )}
+        </div>
+      </div>
+
+      {/* INLINE REGIONAL CANVAS — only when a region is chosen */}
+      {region ? (
+        <div
+          className="relative aspect-[16/9] bg-cover bg-center border-t border-[color:var(--border)]"
+          style={{
+            backgroundImage: `linear-gradient(180deg, rgba(245,239,223,0.0) 0%, rgba(245,239,223,0.55) 100%), url(${region.bg})`,
+          }}
+        >
+          {/* Soft topography wash */}
+          <div className="absolute inset-0 bg-[color:var(--ivory)]/15 mix-blend-overlay" />
+
+          {/* Pins */}
+          {placedChapters.map(({ c, i }, pinIdx) => {
+            const active = activeIdx === i;
+            return (
+              <button
+                key={i}
+                type="button"
+                onClick={() => scrollToChapter(i)}
+                onMouseEnter={() => setActiveIdx(i)}
+                onMouseLeave={() => setActiveIdx((cur) => (cur === i ? null : cur))}
+                aria-label={`Chapter ${pinIdx + 1}: ${c.label}`}
+                className="absolute -translate-x-1/2 -translate-y-full focus:outline-none group"
+                style={{ left: `${c.coord!.x}%`, top: `${c.coord!.y}%` }}
+              >
+                {/* Drop pin */}
+                <div
+                  className={`relative h-9 w-9 rounded-full grid place-items-center transition-all duration-300 ${
+                    active
+                      ? "bg-[color:var(--teal)] scale-110 shadow-[0_6px_20px_rgba(12,91,102,0.5)]"
+                      : "bg-[color:var(--ivory)] border border-[color:var(--teal)]/50 group-hover:bg-[color:var(--teal)]/15"
+                  }`}
+                >
+                  <span
+                    className={`serif text-[12px] font-semibold ${
+                      active ? "text-[color:var(--ivory)]" : "text-[color:var(--teal)]"
+                    }`}
+                  >
+                    {pinIdx + 1}
+                  </span>
+                </div>
+                {/* Pulse */}
+                {active && (
+                  <span className="absolute inset-0 rounded-full bg-[color:var(--teal)]/30 animate-ping" />
+                )}
+                {/* Tooltip on active */}
+                {active && (
+                  <div className="absolute left-1/2 -translate-x-1/2 mt-2 whitespace-nowrap px-2.5 py-1 bg-[color:var(--charcoal)] text-[color:var(--ivory)] text-[10px] uppercase tracking-[0.18em] rounded-sm pointer-events-none">
+                    {c.label}
+                  </div>
+                )}
+              </button>
+            );
+          })}
+
+          {/* Region badge */}
+          <div className="absolute top-3 left-3 px-2.5 py-1 bg-[color:var(--ivory)]/90 backdrop-blur text-[10px] uppercase tracking-[0.22em] text-[color:var(--charcoal)] rounded-sm flex items-center gap-1.5">
+            <MapIcon size={11} className="text-[color:var(--teal)]" />
+            {region.label}
+          </div>
+          {placedChapters.length > 0 && (
+            <div className="absolute bottom-3 right-3 px-2.5 py-1 bg-[color:var(--charcoal)]/85 text-[color:var(--ivory)] text-[10px] uppercase tracking-[0.22em] rounded-sm">
+              {placedChapters.length} stop{placedChapters.length === 1 ? "" : "s"} on the route
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="px-5 py-4 border-t border-[color:var(--border)] bg-[color:var(--sand)]/40 flex items-center gap-2">
+          <MapIcon size={13} className="text-[color:var(--charcoal-soft)]" />
+          <p className="text-[12px] text-[color:var(--charcoal-soft)] italic">
+            Choose a region and your map will appear here — chapters and stops will pin themselves as you build.
+          </p>
+        </div>
+      )}
+
+      {/* INTRO */}
+      <div className="p-5 md:p-7 pb-3">
+        {intro ? (
+          <p className="text-[14px] md:text-[15px] text-[color:var(--charcoal)] italic leading-relaxed border-l-2 border-[color:var(--teal)]/40 pl-3.5">
+            {intro}
+          </p>
+        ) : (
+          <p className="text-[14px] text-[color:var(--charcoal-soft)] italic leading-relaxed">
+            Your local guide is waiting. Make a choice and watch your Portugal story unfold — chapter by chapter, pin by pin.
+          </p>
+        )}
+      </div>
+
+      {/* CHAPTERS — interactive list synced to map pins */}
+      {chapters.length > 0 && (
+        <ol className="px-5 md:px-7 pb-6 space-y-1.5">
+          {chapters.map((c, i) => {
+            const prev = chapters[i - 1];
+            const showSlotHeader = !prev || prev.slot !== c.slot;
+            const isLast = i === chapters.length - 1;
+            const isPlaced = !!c.coord;
+            const pinNumber = isPlaced
+              ? placedChapters.findIndex((p) => p.i === i) + 1
+              : null;
+            const active = activeIdx === i;
+            return (
+              <li
+                key={i}
+                ref={(el) => (itemRefs.current[i] = el)}
+                className="animate-fade-in"
+                onMouseEnter={() => isPlaced && setActiveIdx(i)}
+                onMouseLeave={() => isPlaced && setActiveIdx((cur) => (cur === i ? null : cur))}
+              >
+                {showSlotHeader && (
+                  <div className="flex items-center gap-2 mt-5 mb-2 first:mt-0">
+                    <span className="text-[10px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
+                      {c.when}
+                    </span>
+                    <span className="flex-1 h-px bg-[color:var(--border)]" />
+                  </div>
+                )}
+                <div
+                  className={`flex gap-4 rounded-sm transition-all ${
+                    active ? "bg-[color:var(--teal)]/5 -mx-2 px-2 py-1" : ""
+                  }`}
+                >
+                  {/* Rail with pin badge */}
+                  <div className="flex flex-col items-center">
+                    <div
+                      className={`relative h-10 w-10 shrink-0 rounded-full grid place-items-center transition-all ${
+                        active
+                          ? "bg-[color:var(--teal)] border border-[color:var(--teal)]"
+                          : "bg-[color:var(--teal)]/10 border border-[color:var(--teal)]/30"
+                      }`}
+                    >
+                      {isPlaced ? (
+                        <span
+                          className={`serif text-[12px] font-semibold ${
+                            active ? "text-[color:var(--ivory)]" : "text-[color:var(--teal)]"
+                          }`}
+                        >
+                          {pinNumber}
+                        </span>
+                      ) : (
+                        <c.icon size={14} className={active ? "text-[color:var(--ivory)]" : "text-[color:var(--teal)]"} />
+                      )}
+                    </div>
+                    {!isLast && (
+                      <div className="w-px flex-1 bg-gradient-to-b from-[color:var(--teal)]/30 to-[color:var(--border)] mt-1 min-h-[24px]" />
+                    )}
+                  </div>
+
+                  {/* Body */}
+                  <div className="flex-1 pb-3 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <c.icon size={12} className="text-[color:var(--gold)]" />
+                      <span className="text-[10px] uppercase tracking-[0.24em] text-[color:var(--charcoal-soft)]">
+                        {isPlaced ? `Stop ${String(pinNumber).padStart(2, "0")}` : "Throughout"}
+                      </span>
+                    </div>
+                    <p className="serif text-[17px] md:text-[18px] text-[color:var(--charcoal)] mt-1 leading-snug">
+                      {c.label}
+                    </p>
+                    <p className="text-[13px] text-[color:var(--charcoal-soft)] leading-relaxed mt-1.5">
+                      {c.line}
+                    </p>
+                    {c.tags && c.tags.length > 0 && (
+                      <div className="mt-2 flex flex-wrap gap-1.5">
+                        {c.tags.map((t) => (
+                          <span
+                            key={t}
+                            className="px-2 py-0.5 text-[10px] uppercase tracking-[0.16em] bg-[color:var(--sand)] text-[color:var(--charcoal-soft)] rounded-full"
+                          >
+                            {t}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </li>
+            );
+          })}
+        </ol>
+      )}
+
+      {chapters.length > 0 && (
+        <p className="px-5 md:px-7 pb-5 -mt-2 text-[11px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)] text-center">
+          Every chapter is private · designed with your local guide
+        </p>
+      )}
+    </div>
+  );
+}
+
 /* Live editorial story — Bible §6 */
 function StoryView({ s, title }: { s: BuilderState; title: string }) {
   const fragments = useMemo(() => buildStoryFragments(s), [s]);
