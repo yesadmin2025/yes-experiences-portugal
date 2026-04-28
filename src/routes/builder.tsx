@@ -329,7 +329,12 @@ function BuilderPage() {
             {/* RIGHT — live map + summary */}
             <aside className={`lg:col-span-5 xl:col-span-5 ${mobileView === "map" ? "" : "hidden lg:block"}`}>
               <div className="lg:sticky lg:top-[120px] space-y-5">
-                <PremiumMap region={s.region} highlights={s.highlights} days={days} isMultiDay={isMultiDay} previewHighlight={previewHighlight} />
+                <SwipeToClearPreview
+                  active={!!previewHighlight}
+                  onClear={() => setPreviewHighlight(null)}
+                >
+                  <PremiumMap region={s.region} highlights={s.highlights} days={days} isMultiDay={isMultiDay} previewHighlight={previewHighlight} />
+                </SwipeToClearPreview>
                 <LiveSummary
                   s={s}
                   days={days}
