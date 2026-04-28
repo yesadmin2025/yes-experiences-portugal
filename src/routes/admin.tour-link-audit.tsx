@@ -501,16 +501,15 @@ function CrawlerErrorPanel() {
   }, [strategy]);
 
   // After a re-scan completes (loading transitions true -> false), auto-scroll
-  // the results section into view.
+  // the results section into view — only when the toggle is enabled.
   useEffect(() => {
-    if (wasLoadingRef.current && !loading && (info || err)) {
-      // Wait one frame so the results node is actually in the DOM.
+    if (autoScroll && wasLoadingRef.current && !loading && (info || err)) {
       requestAnimationFrame(() => {
         resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
       });
     }
     wasLoadingRef.current = loading;
-  }, [loading, info, err]);
+  }, [loading, info, err, autoScroll]);
 
   const fileHref = info?.file
     ? `vscode://file/${info.file}${info.line ? `:${info.line}${info.column ? `:${info.column}` : ""}` : ""}`
