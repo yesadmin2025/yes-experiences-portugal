@@ -79,6 +79,7 @@ function TourDetailPage() {
               <img
                 {...resolveImg(tour, "hero")}
                 alt={tour.title}
+                style={{ objectPosition: tour.focal ?? "50% 50%" }}
                 className="w-full h-full object-cover"
               />
               <span className="absolute top-4 left-4 text-[10px] uppercase tracking-[0.25em] bg-[color:var(--ivory)]/90 text-[color:var(--teal)] px-3 py-1.5">
