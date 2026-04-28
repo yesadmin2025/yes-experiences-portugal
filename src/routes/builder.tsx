@@ -320,6 +320,8 @@ function BuilderPage() {
                   update={update}
                   toggle={toggle}
                   reset={() => setS(emptyState)}
+                  previewHighlight={previewHighlight}
+                  onPreviewHighlight={setPreviewHighlight}
                 />
               )}
             </div>
