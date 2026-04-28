@@ -329,7 +329,12 @@ function BuilderPage() {
             {/* RIGHT — live map + summary */}
             <aside className={`lg:col-span-5 xl:col-span-5 ${mobileView === "map" ? "" : "hidden lg:block"}`}>
               <div className="lg:sticky lg:top-[120px] space-y-5">
-                <PremiumMap region={s.region} highlights={s.highlights} days={days} isMultiDay={isMultiDay} previewHighlight={previewHighlight} />
+                <SwipeToClearPreview
+                  active={!!previewHighlight}
+                  onClear={() => setPreviewHighlight(null)}
+                >
+                  <PremiumMap region={s.region} highlights={s.highlights} days={days} isMultiDay={isMultiDay} previewHighlight={previewHighlight} />
+                </SwipeToClearPreview>
                 <LiveSummary
                   s={s}
                   days={days}
@@ -647,6 +652,45 @@ function Pills({
           {selected.length} chosen
         </span>
       )}
+    </div>
+  );
+}
+
+/** Wraps the live map and clears the active preview when the user
+ *  swipes horizontally on touch. Mouse/pen interactions are ignored
+ *  so desktop hover preview behavior is unchanged. */
+function SwipeToClearPreview({
+  active,
+  onClear,
+  children,
+}: {
+  active: boolean;
+  onClear: () => void;
+  children: React.ReactNode;
+}) {
+  const start = useRef<{ x: number; y: number } | null>(null);
+  const SWIPE_MIN_X = 48;
+  const SWIPE_MAX_Y = 40;
+
+  return (
+    <div
+      onPointerDown={(e) => {
+        if (e.pointerType === "mouse") return;
+        start.current = { x: e.clientX, y: e.clientY };
+      }}
+      onPointerUp={(e) => {
+        if (e.pointerType === "mouse" || !start.current) return;
+        const dx = e.clientX - start.current.x;
+        const dy = Math.abs(e.clientY - start.current.y);
+        start.current = null;
+        if (active && Math.abs(dx) >= SWIPE_MIN_X && dy <= SWIPE_MAX_Y) {
+          onClear();
+        }
+      }}
+      onPointerCancel={() => { start.current = null; }}
+      className="touch-pan-y"
+    >
+      {children}
     </div>
   );
 }
