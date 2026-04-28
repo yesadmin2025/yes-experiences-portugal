@@ -441,6 +441,7 @@ describe("Typography regression — headline class strings", () => {
       expect(match, `Could not locate ${h.role} in ${h.file}`).toBeTruthy();
       // Normalize whitespace so a re-format doesn't trip the snapshot
       const cls = match![1].split(/\s+/).filter(Boolean).join(" ");
+      captured.headlines[`${h.page} :: ${h.role}`] = cls;
       expect(cls).toMatchSnapshot();
     });
   }
