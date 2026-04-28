@@ -396,6 +396,7 @@ function RouteTreeTroubleshooting() {
         </ul>
       </div>
 
+      <CrawlerErrorPanel />
       <SuggestedActions />
     </div>
   );
