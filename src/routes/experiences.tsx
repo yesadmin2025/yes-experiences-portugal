@@ -12,13 +12,13 @@ export const Route = createFileRoute("/experiences")({
       {
         name: "description",
         content:
-          "Our signature private tours in Portugal — book as-is or tailor in the studio. Arrábida, Setúbal, Sintra, Évora, Douro, Algarve and more.",
+          "Complete private experiences across Portugal — designed to be enjoyed as they are. Reserve instantly, with real-time confirmation.",
       },
-      { property: "og:title", content: "Signature Tours — YES experiences Portugal" },
+      { property: "og:title", content: "Signature Experiences — YES experiences Portugal" },
       {
         property: "og:description",
         content:
-          "Real, top-rated private experiences. Book ready-made — or open any tour in the studio and tailor it your way.",
+          "Complete, curated private experiences. Reserve instantly — or adjust a few details within the experience to match your rhythm.",
       },
     ],
   }),
@@ -36,8 +36,8 @@ function ExperiencesPage() {
             Signature <span className="italic text-[color:var(--teal)]">Tours</span>
           </h1>
           <p className="mt-5 max-w-xl mx-auto text-[color:var(--charcoal-soft)]">
-            Our top-rated private experiences. Book one as-is — or open it in the studio
-            and tailor every stop, pace and detail.
+            Complete private experiences, designed to be enjoyed as they are.
+            Reserve instantly — or adjust a few details within the experience to match your rhythm.
           </p>
         </div>
       </section>
@@ -68,7 +68,7 @@ function ExperiencesPage() {
                     {t.theme}
                   </span>
                   <span className="absolute top-4 right-4 text-[10px] uppercase tracking-[0.22em] bg-[color:var(--gold)]/95 text-[color:var(--charcoal)] px-3 py-1.5">
-                    Tailorable
+                    Tailored Signature
                   </span>
                 </div>
 
@@ -93,7 +93,7 @@ function ExperiencesPage() {
                 </p>
 
                 <span className="mt-5 inline-flex items-center gap-2 text-sm tracking-wide text-[color:var(--teal)] group-hover:gap-3 transition-all">
-                  View tour & customise <ArrowRight size={14} />
+                  View experience & reserve <ArrowRight size={14} />
                 </span>
               </Link>
             ))}
@@ -113,10 +113,11 @@ function CtaStrip() {
         <div className="bg-[color:var(--teal)] text-[color:var(--ivory)] p-12 md:p-16 flex flex-col md:flex-row items-center justify-between gap-6">
           <div>
             <h3 className="serif text-3xl md:text-4xl">
-              Don't see your story? <span className="italic">Build your own.</span>
+              Want to start from scratch? <span className="italic">Open the Studio.</span>
             </h3>
             <p className="mt-3 text-[color:var(--ivory)]/80 max-w-lg">
-              Open the studio with a blank slate and design something completely bespoke.
+              Start your way — with a place, a region or a feeling. We'll guide you as you build,
+              shaping it within what works best on the ground.
             </p>
           </div>
           <Link

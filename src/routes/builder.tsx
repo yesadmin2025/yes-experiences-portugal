@@ -55,13 +55,13 @@ export const Route = createFileRoute("/builder")({
       {
         name: "description",
         content:
-          "Design your private Portugal experience step by step. See your story, route, timeline and investment evolve in real time.",
+          "Start your way. We'll guide you as you build — shaping your private Portugal experience within what works best on the ground. Reserve instantly when ready.",
       },
       { property: "og:title", content: "YES Experience Studio" },
       {
         property: "og:description",
         content:
-          "A premium experience configurator. Build a one-day or multi-day private journey, designed with your local guide.",
+          "Start with a place, a region or a feeling. Intelligent suggestions, realistic routes — designed with your local guide.",
       },
     ],
   }),
@@ -358,10 +358,10 @@ function BuilderPage() {
           <div className="text-center">
             <span className="eyebrow">YES Experience Studio</span>
             <h1 className="serif text-3xl md:text-5xl mt-4 leading-tight text-[color:var(--charcoal)]">
-              Design <span className="italic text-[color:var(--teal)]">your way</span>
+              Start <span className="italic text-[color:var(--teal)]">your way</span>
             </h1>
             <p className="mt-3 text-[13px] md:text-sm text-[color:var(--charcoal-soft)] italic">
-              Designed with your local guide. Signed by you.
+              We'll guide you as you build — shaped within what works best on the ground.
             </p>
           </div>
 
@@ -1114,7 +1114,7 @@ function RevealStep({ s, title, investment }: { s: BuilderState; title: string; 
       </div>
 
       <p className="mt-5 text-[13px] text-[color:var(--charcoal-soft)]">
-        Your experience is ready. Your local guide is ready. You can reserve now, save for later, or refine it with your designer.
+        Your experience is ready. Confirm instantly — your local guide is reserved in real time, directly on this site.
       </p>
 
       {/* CTA trio */}
@@ -1123,7 +1123,7 @@ function RevealStep({ s, title, investment }: { s: BuilderState; title: string; 
           to="/contact"
           className="w-full inline-flex items-center justify-center gap-2 bg-[color:var(--teal)] text-[color:var(--ivory)] px-6 py-4 text-[11px] uppercase tracking-[0.22em] hover:bg-[color:var(--teal-2)] transition-colors"
         >
-          Secure Your Experience <ArrowRight size={13} />
+          Reserve Instantly <ArrowRight size={13} />
         </Link>
         <button className="w-full inline-flex items-center justify-center gap-2 bg-[color:var(--card)] border border-[color:var(--border)] text-[color:var(--charcoal)] px-6 py-3.5 text-[11px] uppercase tracking-[0.22em] hover:border-[color:var(--teal)]/40 transition-colors">
           <Save size={13} /> Save My Experience
@@ -2100,7 +2100,7 @@ function InvestmentPanel({ s, days, investment }: { s: BuilderState; days: numbe
         </p>
       </div>
       <p className="mt-2 text-[12px] text-[color:var(--charcoal-soft)] italic">
-        Private experience, local guide and curated stops included. Final value confirmed at booking.
+        Private experience, local guide and curated stops included. Reserved instantly through our integrated booking system.
       </p>
     </div>
   );

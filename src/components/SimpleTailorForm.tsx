@@ -67,11 +67,11 @@ export function SimpleTailorForm({ tour }: { tour: SignatureTour }) {
   return (
     <div className="border border-[color:var(--border)] bg-[color:var(--card)] p-5 sm:p-7">
       <div className="flex items-center gap-2">
-        <span className="eyebrow">Tailor it</span>
+        <span className="eyebrow">Tailored Signature</span>
       </div>
-      <h2 className="serif text-2xl mt-2">Tweak a few details</h2>
+      <h2 className="serif text-2xl mt-2">Adjust a few details</h2>
       <p className="mt-2 text-sm text-[color:var(--charcoal-soft)]">
-        The route stays the same — your guide adjusts pace, stops and add-ons.
+        Match this experience to your rhythm — the route, story and local guide stay intact.
       </p>
 
       {/* Date + guests */}
@@ -228,10 +228,13 @@ export function SimpleTailorForm({ tour }: { tour: SignatureTour }) {
         rel="noopener noreferrer"
         className="mt-6 inline-flex w-full items-center justify-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] px-5 py-3.5 text-sm tracking-wide transition-all"
       >
-        <MessageCircle size={16} /> Send my request on WhatsApp
+        <MessageCircle size={16} /> Reserve instantly
       </a>
       <p className="mt-2 text-[11px] text-[color:var(--charcoal-soft)] text-center">
-        A real local replies — usually within an hour.
+        Confirm in real time — secured directly on this site.
+      </p>
+      <p className="mt-1 text-[10px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)]/80 text-center">
+        Reservations handled securely through our integrated booking system.
       </p>
     </div>
   );
