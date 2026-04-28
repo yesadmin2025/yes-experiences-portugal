@@ -1052,6 +1052,7 @@ function HomePage() {
                 cta: "Discover multi-day",
                 ariaLabel:
                   "Discover extended journeys — from one day to full journeys across Portugal",
+                bg: multiDayImg,
               },
               {
                 eyebrow: "Special occasions",
@@ -1061,24 +1062,33 @@ function HomePage() {
                 cta: "Plan a moment",
                 ariaLabel:
                   "Plan a moment — proposals, celebrations, corporate and private groups",
+                bg: catProposals,
               },
             ].map((b) => (
               <Link
                 key={b.title}
                 to={b.to}
                 aria-label={b.ariaLabel}
-                className="reveal-stagger group flex flex-col p-8 md:p-10 bg-[color:var(--card)] border border-[color:var(--border)] hover:border-[color:var(--teal)]/35 hover:-translate-y-0.5 hover:shadow-[0_24px_55px_-28px_rgba(41,91,97,0.22)] transition-all duration-500"
+                className="reveal-stagger group relative flex flex-col p-8 md:p-10 min-h-[18rem] md:min-h-[22rem] bg-[color:var(--charcoal-deep)] border border-[color:var(--border)] hover:border-[color:var(--gold)]/40 hover:-translate-y-1 hover:shadow-[0_28px_60px_-28px_rgba(41,91,97,0.3)] transition-all duration-500 overflow-hidden"
               >
-                <span className="text-[10.5px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
+                <img
+                  src={b.bg}
+                  alt=""
+                  aria-hidden="true"
+                  loading="lazy"
+                  className="absolute inset-0 w-full h-full object-cover opacity-55 group-hover:opacity-65 scale-[1.02] group-hover:scale-[1.07] transition-all duration-[1400ms] ease-out"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/95 via-[color:var(--charcoal-deep)]/65 to-[color:var(--charcoal-deep)]/30" />
+                <span className="relative z-[1] text-[10.5px] uppercase tracking-[0.3em] text-[color:var(--gold-soft)]">
                   {b.eyebrow}
                 </span>
-                <h3 className="t-h1 mt-3 text-[color:var(--charcoal)] transition-colors duration-300 group-hover:text-[color:var(--teal)]">
+                <h3 className="relative z-[1] serif mt-3 text-[1.7rem] md:text-[2rem] leading-[1.1] tracking-[-0.005em] text-[color:var(--ivory)] transition-colors duration-300 group-hover:text-[color:var(--gold-soft)]">
                   {b.title}
                 </h3>
-                <p className="mt-4 text-[15.5px] md:text-[16px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
+                <p className="relative z-[1] mt-4 text-[15px] md:text-[16px] text-[color:var(--ivory)]/85 leading-[1.7] font-light">
                   {b.line}
                 </p>
-                <span className="mt-7 inline-flex items-center gap-2 text-[13.5px] tracking-[0.005em] font-medium text-[color:var(--teal)]">
+                <span className="relative z-[1] mt-auto pt-7 inline-flex items-center gap-2 text-[13.5px] tracking-[0.005em] font-medium text-[color:var(--gold-soft)] group-hover:text-[color:var(--gold)] transition-colors">
                   {b.cta}
                   <ArrowRight
                     size={13}
