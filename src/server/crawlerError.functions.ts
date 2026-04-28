@@ -40,11 +40,18 @@ export type CrawlerErrorStrategy = "root-cause" | "last-error";
 
 export const getLastCrawlerError = createServerFn({ method: "GET" })
   .inputValidator(
-    (data: { strategy?: CrawlerErrorStrategy } | undefined) => ({
+    (data: { strategy?: CrawlerErrorStrategy; _ts?: number } | undefined) => ({
       strategy: (data?.strategy ?? "root-cause") as CrawlerErrorStrategy,
     }),
   )
   .handler(async ({ data }): Promise<CrawlerErrorInfo> => {
+    // Disable any caching so reloads always re-scan the log.
+    setResponseHeaders(
+      new Headers({
+        "Cache-Control": "no-store, no-cache, must-revalidate",
+        Pragma: "no-cache",
+      }),
+    );
     const { strategy } = data;
     const log = await readLogTail();
     if (!log) {
