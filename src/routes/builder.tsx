@@ -1394,41 +1394,128 @@ function PremiumMap({
           <path
             d="M 22 6 L 54 6 L 56 110 L 22 110 Z"
             fill="url(#hatch)"
-            opacity="0.6"
+            opacity="0.45"
             style={{ pointerEvents: "none" }}
           />
 
-          {/* Major rivers — Douro, Tagus, Sado, Guadiana */}
-          <g fill="none" stroke="#7ca7b8" strokeWidth="0.32" opacity="0.85" strokeLinecap="round">
-            {/* Douro: from inland Spain west to Porto estuary */}
-            <path d="M 53 24 C 48 23 44 22 38 22 L 34 23" />
+          {/* Mountain ranges — Peneda-Gerês (NW), Estrela (centre),
+              Montejunto-Sintra (W), São Mamede (Alentejo), Monchique (S) */}
+          <g style={{ pointerEvents: "none" }}>
+            <ellipse cx="38" cy="14" rx="6" ry="3.5" fill="url(#mountain)" />
+            <ellipse cx="42" cy="46" rx="8" ry="4" fill="url(#mountain)" />
+            <ellipse cx="50" cy="66" rx="6" ry="3" fill="url(#mountain)" />
+            <ellipse cx="42" cy="108" rx="5" ry="2.4" fill="url(#mountain)" />
+            <ellipse cx="22" cy="76" rx="3" ry="1.6" fill="url(#mountain)" />
+          </g>
+
+          {/* Forested regions — north Minho, Serra da Estrela slopes, Algarve hills */}
+          <g style={{ pointerEvents: "none" }}>
+            <ellipse cx="34" cy="18" rx="7" ry="4" fill="url(#forest)" />
+            <ellipse cx="40" cy="50" rx="8" ry="5" fill="url(#forest)" />
+            <ellipse cx="46" cy="92" rx="6" ry="3.5" fill="url(#forest)" />
+            <ellipse cx="44" cy="110" rx="5" ry="2" fill="url(#forest)" />
+          </g>
+
+          {/* Tiny mountain glyphs to suggest peaks (very subtle) */}
+          <g fill="none" stroke="#6b5326" strokeWidth="0.18" opacity="0.55" strokeLinecap="round" strokeLinejoin="round" style={{ pointerEvents: "none" }}>
+            <path d="M 36 13 l 1 -1.5 l 1 1.5 M 39 13 l 1 -1.5 l 1 1.5" />
+            <path d="M 40 46 l 1.2 -1.8 l 1.2 1.8 M 43 46 l 1.2 -1.8 l 1.2 1.8 M 46 46 l 1 -1.5 l 1 1.5" />
+            <path d="M 48 66 l 1 -1.5 l 1 1.5 M 51 66 l 1 -1.5 l 1 1.5" />
+            <path d="M 41 108 l 1 -1.4 l 1 1.4 M 43.5 108 l 1 -1.4 l 1 1.4" />
+          </g>
+
+          {/* Major rivers — Minho, Douro, Mondego, Tagus, Sado, Guadiana */}
+          <g fill="none" stroke="#5b8ea3" strokeWidth="0.38" opacity="0.9" strokeLinecap="round" strokeLinejoin="round">
+            {/* Minho: northern border */}
+            <path d="M 53 8 C 48 9 42 10 38 11 L 34 12" />
+            {/* Douro: from inland Spain meandering west to Porto estuary */}
+            <path d="M 53 24 C 48 22 45 25 42 23 C 39 21 36 24 34 23" />
+            {/* Mondego: into Coimbra/Figueira */}
+            <path d="M 50 56 C 46 56 42 58 38 60 L 33 62" />
             {/* Tagus: from Spain SE-NW into Lisbon estuary */}
-            <path d="M 53 74 C 46 75 38 77 32 78 L 27 78" />
+            <path d="M 53 74 C 48 73 44 77 40 76 C 36 75 32 79 28 78 L 26 78.5" />
             {/* Sado: into Setúbal */}
             <path d="M 44 84 C 40 84 36 84 33 83" />
-            {/* Guadiana: south border with Spain */}
-            <path d="M 56 96 C 56 102 56 108 56 110" />
+            {/* Guadiana: south border with Spain, drops to Algarve coast */}
+            <path d="M 56 90 C 56 96 56 102 56 108 L 56 111" />
+          </g>
+          {/* River highlights — thin white centerline for sparkle */}
+          <g fill="none" stroke="#dff1f6" strokeWidth="0.12" opacity="0.7" strokeLinecap="round">
+            <path d="M 53 24 C 48 22 45 25 42 23 C 39 21 36 24 34 23" />
+            <path d="M 53 74 C 48 73 44 77 40 76 C 36 75 32 79 28 78" />
+          </g>
+
+          {/* Lakes / reservoirs — Alqueva (largest in Europe), Castelo de Bode */}
+          <g fill="#5b8ea3" stroke="#dff1f6" strokeWidth="0.1" opacity="0.85">
+            <path d="M 51 92 q 1.5 -1 3 0 q 0.5 1.5 -0.5 2.4 q -1.8 0.6 -2.8 -0.4 q -0.7 -1 0.3 -2 z" />
+            <ellipse cx="44" cy="62" rx="0.9" ry="0.5" />
+          </g>
+
+          {/* Major cities as small dots with serif labels */}
+          <g style={{ pointerEvents: "none" }}>
+            {[
+              { x: 38, y: 22, n: "Porto" },
+              { x: 28, y: 78, n: "Lisboa" },
+              { x: 46, y: 64, n: "Coimbra" },
+              { x: 36, y: 18, n: "Braga" },
+              { x: 54, y: 84, n: "Évora" },
+              { x: 48, y: 110, n: "Faro" },
+            ].map((c) => (
+              <g key={c.n}>
+                <circle cx={c.x} cy={c.y} r="0.55" fill="#3a2f12" opacity="0.65" />
+                <circle cx={c.x} cy={c.y} r="0.25" fill="#fff" opacity="0.9" />
+                <text
+                  x={c.x + 0.9}
+                  y={c.y + 0.6}
+                  fontSize="1.7"
+                  fill="#3a2f12"
+                  opacity="0.55"
+                  fontFamily="ui-serif, Georgia, serif"
+                  fontStyle="italic"
+                >
+                  {c.n}
+                </text>
+              </g>
+            ))}
           </g>
 
           {/* Madeira & Azores hint */}
-          <g opacity="0.7">
-            <ellipse cx="6" cy="108" rx="2.2" ry="1" fill="url(#land)" stroke="#9a8657" strokeWidth="0.22" />
-            <ellipse cx="3" cy="86" rx="1.5" ry="0.7" fill="url(#land)" stroke="#9a8657" strokeWidth="0.2" />
-            <ellipse cx="5.2" cy="84" rx="1" ry="0.5" fill="url(#land)" stroke="#9a8657" strokeWidth="0.2" />
+          <g opacity="0.8">
+            <ellipse cx="6" cy="108" rx="2.2" ry="1" fill="url(#land)" stroke="#7a6633" strokeWidth="0.22" />
+            <ellipse cx="3" cy="86" rx="1.5" ry="0.7" fill="url(#land)" stroke="#7a6633" strokeWidth="0.2" />
+            <ellipse cx="5.2" cy="84" rx="1" ry="0.5" fill="url(#land)" stroke="#7a6633" strokeWidth="0.2" />
+            <text x="6" y="112.6" fontSize="1.4" fill="#3a2f12" opacity="0.55" textAnchor="middle" fontFamily="ui-serif, Georgia, serif" fontStyle="italic">Madeira</text>
+            <text x="3.8" y="90" fontSize="1.4" fill="#3a2f12" opacity="0.55" textAnchor="middle" fontFamily="ui-serif, Georgia, serif" fontStyle="italic">Açores</text>
           </g>
 
           {/* Compass rose — top-right, decorative */}
-          <g transform="translate(94 10)" opacity="0.55">
-            <circle r="3" fill="none" stroke="#5a6a72" strokeWidth="0.2" />
-            <path d="M 0 -3 L 0.6 0 L 0 3 L -0.6 0 Z" fill="#5a6a72" />
-            <text x="0" y="-3.6" fontSize="1.6" textAnchor="middle" fill="#3f4a50" fontFamily="ui-sans-serif, system-ui">N</text>
+          <g transform="translate(94 10)" opacity="0.6">
+            <circle r="3" fill="var(--ivory)" opacity="0.4" />
+            <circle r="3" fill="none" stroke="#3f4a50" strokeWidth="0.2" />
+            <path d="M 0 -3 L 0.5 0 L 0 3 L -0.5 0 Z" fill="#3f4a50" />
+            <path d="M -3 0 L 0 0.5 L 3 0 L 0 -0.5 Z" fill="#3f4a50" opacity="0.5" />
+            <text x="0" y="-3.6" fontSize="1.6" textAnchor="middle" fill="#3f4a50" fontFamily="ui-serif, Georgia, serif" fontWeight="700">N</text>
+          </g>
+
+          {/* Scale bar */}
+          <g transform="translate(72 122)" opacity="0.6" style={{ pointerEvents: "none" }}>
+            <rect x="0" y="0" width="6" height="0.6" fill="#3a2f12" />
+            <rect x="6" y="0" width="6" height="0.6" fill="none" stroke="#3a2f12" strokeWidth="0.15" />
+            <text x="0" y="-0.6" fontSize="1.3" fill="#3a2f12" fontFamily="ui-serif, Georgia, serif">0</text>
+            <text x="12" y="-0.6" fontSize="1.3" fill="#3a2f12" fontFamily="ui-serif, Georgia, serif" textAnchor="end" dx="0">100 km</text>
           </g>
 
           {/* Region labels — faint, like a real atlas */}
-          <g fill="#7a6a3e" fontFamily="ui-serif, Georgia, serif" opacity="0.55" style={{ pointerEvents: "none" }}>
-            <text x="68" y="50" fontSize="3.4" fontStyle="italic" letterSpacing="0.3">ESPAÑA</text>
-            <text x="6" y="60" fontSize="2.4" fontStyle="italic" letterSpacing="0.4" fill="#456973">ATLÂNTICO</text>
+          <g fontFamily="ui-serif, Georgia, serif" style={{ pointerEvents: "none" }}>
+            <text x="72" y="50" fontSize="3.6" fontStyle="italic" letterSpacing="0.4" fill="#7a6a3e" opacity="0.6">ESPAÑA</text>
+            <text x="8" y="60" fontSize="2.6" fontStyle="italic" letterSpacing="0.6" fill="#2c5560" opacity="0.65">ATLÂNTICO</text>
+            <text x="8" y="64" fontSize="1.6" fontStyle="italic" letterSpacing="0.5" fill="#2c5560" opacity="0.5">Oceano</text>
+            <text x="30" y="14" fontSize="1.5" fontStyle="italic" fill="#5a4a1e" opacity="0.6" letterSpacing="0.3">MINHO</text>
+            <text x="32" y="50" fontSize="1.5" fontStyle="italic" fill="#5a4a1e" opacity="0.6" letterSpacing="0.3">BEIRAS</text>
+            <text x="36" y="92" fontSize="1.6" fontStyle="italic" fill="#5a4a1e" opacity="0.6" letterSpacing="0.4">ALENTEJO</text>
+            <text x="36" y="118" fontSize="1.5" fontStyle="italic" fill="#5a4a1e" opacity="0.6" letterSpacing="0.4">ALGARVE</text>
           </g>
+
 
           {/* Region glow */}
           {center && (
