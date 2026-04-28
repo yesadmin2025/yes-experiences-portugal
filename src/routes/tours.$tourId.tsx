@@ -1,7 +1,12 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
-import { Clock, MapPin, ExternalLink, ArrowLeft, Star } from "lucide-react";
-import { signatureTours, findTour, tripadvisorHrefFor } from "@/data/signatureTours";
+import { Clock, MapPin, ArrowLeft, Check, Sparkles, Info, Heart } from "lucide-react";
+import {
+  signatureTours,
+  findTour,
+  STOP_THEME_IMG,
+  type SignatureTour,
+} from "@/data/signatureTours";
 import { SimpleTailorForm } from "@/components/SimpleTailorForm";
 import { useImportedTourImages } from "@/hooks/use-imported-tour-images";
 
@@ -13,7 +18,7 @@ export const Route = createFileRoute("/tours/$tourId")({
   },
   head: ({ loaderData }) => {
     const t = loaderData?.tour;
-    if (!t) return { meta: [{ title: "Tour — YES experiences Portugal" }] };
+    if (!t) return { meta: [{ title: "Signature Experience — YES experiences Portugal" }] };
     return {
       meta: [
         { title: `${t.title} — YES experiences Portugal` },
@@ -29,15 +34,15 @@ export const Route = createFileRoute("/tours/$tourId")({
     <SiteLayout>
       <section className="pt-32 pb-20 min-h-[60vh]">
         <div className="container-x max-w-xl text-center">
-          <h1 className="serif text-4xl">Tour not found</h1>
+          <h1 className="serif text-4xl">Experience not found</h1>
           <p className="mt-4 text-[color:var(--charcoal-soft)]">
-            That tour doesn't exist anymore.
+            That Signature Experience doesn't exist anymore.
           </p>
           <Link
             to="/experiences"
             className="mt-8 inline-flex items-center gap-2 border border-[color:var(--border)] hover:border-[color:var(--gold)] px-5 py-3 text-sm"
           >
-            <ArrowLeft size={14} /> Back to all tours
+            <ArrowLeft size={14} /> Back to all experiences
           </Link>
         </div>
       </section>
@@ -49,25 +54,25 @@ export const Route = createFileRoute("/tours/$tourId")({
 function TourDetailPage() {
   const { tour } = Route.useLoaderData();
   const { resolveImg } = useImportedTourImages();
-  const tripadvisor = tripadvisorHrefFor(tour);
 
   return (
     <SiteLayout>
-      <section className="pt-28 pb-6">
+      {/* Breadcrumb */}
+      <section className="pt-28 pb-4">
         <div className="container-x max-w-5xl">
           <Link
             to="/experiences"
             className="inline-flex items-center gap-1.5 text-xs uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)] hover:text-[color:var(--charcoal)]"
           >
-            <ArrowLeft size={12} /> All Signature Tours
+            <ArrowLeft size={12} /> All Signature Experiences
           </Link>
         </div>
       </section>
 
-      <section className="pb-12">
+      {/* Hero + meta */}
+      <section className="pb-10">
         <div className="container-x max-w-5xl">
           <div className="grid lg:grid-cols-[1.1fr_1fr] gap-8 lg:gap-12">
-            {/* Hero image */}
             <div className="lift-layer-sm relative aspect-[4/5] sm:aspect-[5/6] overflow-hidden shadow-[0_20px_50px_-30px_rgba(46,46,46,0.35)]">
               <img
                 {...resolveImg(tour, "hero")}
@@ -77,11 +82,13 @@ function TourDetailPage() {
               <span className="absolute top-4 left-4 text-[10px] uppercase tracking-[0.25em] bg-[color:var(--ivory)]/90 text-[color:var(--teal)] px-3 py-1.5">
                 {tour.theme}
               </span>
+              <span className="absolute top-4 right-4 text-[10px] uppercase tracking-[0.22em] bg-[color:var(--gold)]/95 text-[color:var(--charcoal)] px-3 py-1.5">
+                Signature
+              </span>
             </div>
 
-            {/* Header content */}
             <div className="flex flex-col">
-              <span className="eyebrow">Signature Tour</span>
+              <span className="eyebrow">Signature Experience</span>
               <h1 className="serif text-3xl sm:text-4xl md:text-5xl mt-3 leading-tight">
                 {tour.title}
               </h1>
@@ -95,78 +102,176 @@ function TourDetailPage() {
                 <span className="text-[color:var(--teal)]">From €{tour.priceFrom}</span>
               </div>
 
-              <p className="mt-6 text-[15px] leading-relaxed text-[color:var(--charcoal)]">
-                {tour.blurb}
+              <p className="mt-6 serif text-xl sm:text-2xl leading-snug text-[color:var(--charcoal)]">
+                {tour.intro}
               </p>
-              <p className="mt-4 text-[11px] uppercase tracking-[0.22em] text-[color:var(--gold)]">
+
+              <p className="mt-5 text-[11px] uppercase tracking-[0.22em] text-[color:var(--gold)]">
                 Fits best · {tour.fitsBest}
               </p>
 
-              <div className="mt-6 border-t border-[color:var(--border)] pt-5">
-                <span className="text-[10px] uppercase tracking-[0.25em] text-[color:var(--charcoal-soft)]">
-                  A day at a glance
-                </span>
-                <ul className="mt-3 space-y-2.5">
-                  {tour.pace.map((p: string, i: number) => (
-                    <li key={p} className="flex items-start gap-3 text-sm">
-                      <span className="mt-0.5 flex-shrink-0 w-6 h-6 border border-[color:var(--gold)] text-[color:var(--gold)] text-[11px] flex items-center justify-center">
-                        {i + 1}
-                      </span>
-                      <span>{p}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="mt-7 flex flex-col gap-2.5">
-                <a
-                  href={tour.bookingUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] px-5 py-3.5 text-sm tracking-wide transition-all"
-                >
-                  Book on YES experiences <ExternalLink size={14} />
-                </a>
-                <a
-                  href={tripadvisor}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 border border-[color:var(--border)] hover:border-[color:var(--gold)] text-[color:var(--charcoal)] px-5 py-3.5 text-sm tracking-wide transition-all"
-                >
-                  <Star size={14} /> Read reviews on TripAdvisor <ExternalLink size={12} />
-                </a>
-              </div>
+              <a
+                href="#tailor"
+                className="mt-7 inline-flex items-center justify-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] px-5 py-3.5 text-sm tracking-wide transition-all"
+              >
+                <Sparkles size={14} /> Tailor this experience
+              </a>
+              <p className="mt-2 text-[11px] text-[color:var(--charcoal-soft)] text-center">
+                Shaped around your dates, pace and interests — a real local replies in under an hour.
+              </p>
             </div>
           </div>
         </div>
       </section>
 
+      {/* Day at a glance — chapter strip with contextual imagery */}
+      <ChapterStrip tour={tour} />
+
+      {/* Structured blocks: highlights, included, ideal for, notes */}
+      <section className="py-12">
+        <div className="container-x max-w-5xl grid md:grid-cols-2 gap-8 md:gap-12">
+          <Block icon={<Sparkles size={14} />} title="Highlights">
+            <ul className="space-y-2.5 text-sm leading-relaxed">
+              {tour.highlights.map((h) => (
+                <li key={h} className="flex gap-2.5">
+                  <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[color:var(--gold)] flex-shrink-0" />
+                  <span>{h}</span>
+                </li>
+              ))}
+            </ul>
+          </Block>
+
+          <Block icon={<Check size={14} />} title="What's included">
+            <ul className="space-y-2.5 text-sm leading-relaxed">
+              {tour.included.map((h) => (
+                <li key={h} className="flex gap-2.5">
+                  <Check
+                    size={14}
+                    className="mt-0.5 text-[color:var(--teal)] flex-shrink-0"
+                  />
+                  <span>{h}</span>
+                </li>
+              ))}
+            </ul>
+          </Block>
+
+          <Block icon={<Heart size={14} />} title="Ideal for">
+            <ul className="space-y-2.5 text-sm leading-relaxed">
+              {tour.idealFor.map((h) => (
+                <li key={h} className="flex gap-2.5">
+                  <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[color:var(--teal)] flex-shrink-0" />
+                  <span>{h}</span>
+                </li>
+              ))}
+            </ul>
+          </Block>
+
+          {tour.notes.length > 0 && (
+            <Block icon={<Info size={14} />} title="Good to know">
+              <ul className="space-y-2.5 text-sm leading-relaxed text-[color:var(--charcoal-soft)]">
+                {tour.notes.map((h) => (
+                  <li key={h} className="flex gap-2.5">
+                    <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[color:var(--charcoal-soft)] flex-shrink-0" />
+                    <span>{h}</span>
+                  </li>
+                ))}
+              </ul>
+            </Block>
+          )}
+        </div>
+      </section>
+
       {/* Tailor */}
-      <section id="tailor" className="py-12 bg-[color:var(--sand)]/40">
+      <section id="tailor" className="py-12 bg-[color:var(--sand)]/40 scroll-mt-24">
         <div className="container-x max-w-5xl grid lg:grid-cols-[1fr_1.1fr] gap-8 lg:gap-12 items-start">
           <div>
-            <span className="eyebrow">Customise</span>
+            <span className="eyebrow">Make it yours</span>
             <h2 className="serif text-3xl sm:text-4xl mt-3">
-              Make it yours — without rebuilding it.
+              Tailor this experience — instantly.
             </h2>
             <p className="mt-4 text-sm text-[color:var(--charcoal-soft)] leading-relaxed">
-              You picked the story. Now adjust just the details that matter for you:
-              date, group size, pace, add-ons, and which stops to keep. Send your
-              request and a real local replies — usually within an hour.
+              The story stays. You decide the rest — date, group size, pace, add-ons,
+              which stops to keep. Send your details and a real local replies, usually
+              within an hour.
             </p>
             <ul className="mt-5 space-y-2 text-sm">
               <li>· No accounts. No long forms.</li>
-              <li>· Same trusted guide and route.</li>
-              <li>· Pay only after we confirm.</li>
+              <li>· Same trusted local guide and route.</li>
+              <li>· Confirm only when you're happy with the plan.</li>
             </ul>
           </div>
           <SimpleTailorForm tour={tour} />
         </div>
       </section>
 
-      {/* Related */}
       <RelatedTours currentId={tour.id} />
     </SiteLayout>
+  );
+}
+
+function ChapterStrip({ tour }: { tour: SignatureTour }) {
+  return (
+    <section className="py-10 border-t border-b border-[color:var(--border)] bg-[color:var(--ivory)]">
+      <div className="container-x max-w-5xl">
+        <div className="flex items-end justify-between mb-6">
+          <div>
+            <span className="eyebrow">A day at a glance</span>
+            <h2 className="serif text-2xl sm:text-3xl mt-2">The story, stop by stop</h2>
+          </div>
+          <span className="hidden sm:inline text-[11px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)]">
+            {tour.stops.length} chapters
+          </span>
+        </div>
+
+        <ol className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {tour.stops.map((s, i) => (
+            <li
+              key={s.label}
+              className="group relative flex flex-col bg-[color:var(--card)] border border-[color:var(--border)] overflow-hidden"
+            >
+              <div className="relative aspect-[5/3] overflow-hidden">
+                <img
+                  src={STOP_THEME_IMG[s.imageTheme]}
+                  alt={s.label}
+                  loading="lazy"
+                  decoding="async"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                <span className="absolute top-3 left-3 w-7 h-7 flex items-center justify-center text-[11px] bg-[color:var(--ivory)]/95 border border-[color:var(--gold)] text-[color:var(--gold)]">
+                  {i + 1}
+                </span>
+              </div>
+              <div className="p-4">
+                <h3 className="serif text-lg leading-snug">{s.label}</h3>
+                <p className="mt-1.5 text-sm text-[color:var(--charcoal-soft)] leading-relaxed">
+                  {s.story}
+                </p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  );
+}
+
+function Block({
+  icon,
+  title,
+  children,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div>
+      <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-[color:var(--charcoal-soft)]">
+        <span className="text-[color:var(--gold)]">{icon}</span>
+        {title}
+      </div>
+      <div className="mt-4">{children}</div>
+    </div>
   );
 }
 
@@ -177,7 +282,7 @@ function RelatedTours({ currentId }: { currentId: string }) {
     <section className="py-16">
       <div className="container-x max-w-5xl">
         <span className="eyebrow">More like this</span>
-        <h2 className="serif text-2xl sm:text-3xl mt-3">Other Signature Tours</h2>
+        <h2 className="serif text-2xl sm:text-3xl mt-3">Other Signature Experiences</h2>
         <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {others.map((t) => (
             <Link
