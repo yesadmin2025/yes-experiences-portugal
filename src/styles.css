@@ -544,9 +544,9 @@
   }
   .t-lead {
     font-family: var(--font-sans);
-    font-size: 15.5px;
+    font-size: 16px;
     line-height: 1.7;
-    font-weight: 350;
+    font-weight: 400;
     color: var(--charcoal);
   }
   @media (min-width: 768px) {
