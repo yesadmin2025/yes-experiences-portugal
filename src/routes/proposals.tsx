@@ -163,7 +163,7 @@ function ProposalsPage() {
       <section className="py-14 md:py-20 bg-[color:var(--sand)]">
         <div className="container-x max-w-3xl text-center">
           <span className="eyebrow">Why it matters</span>
-          <h2 className="serif text-[26px] md:text-4xl mt-4 leading-[1.15] text-[color:var(--charcoal)]">
+          <h2 className="t-h2 mt-4 text-[color:var(--charcoal)]">
             A moment is built from{" "}
             <span className="italic text-[color:var(--teal)]">small, true things</span>.
           </h2>
@@ -200,7 +200,7 @@ function ProposalsPage() {
         <div className="container-x">
           <div className="text-center max-w-2xl mx-auto">
             <span className="eyebrow">Begin with a feeling</span>
-            <h2 className="serif text-[26px] md:text-4xl mt-4 leading-tight text-[color:var(--charcoal)]">
+            <h2 className="t-h2 mt-4 text-[color:var(--charcoal)]">
               Six <span className="italic text-[color:var(--teal)]">starting moments</span>.
             </h2>
             <p className="mt-3 text-[13px] md:text-[14px] text-[color:var(--charcoal-soft)] italic">
@@ -253,7 +253,7 @@ function ProposalsPage() {
             <span className="text-[10px] uppercase tracking-[0.32em] text-[color:var(--gold-soft)]">
               How a moment is shaped
             </span>
-            <h2 className="serif text-[26px] md:text-4xl mt-4 leading-tight text-white">
+            <h2 className="t-h2 mt-4 text-white">
               Quietly, <span className="italic text-[color:var(--gold-soft)]">step by step</span>.
             </h2>
           </div>

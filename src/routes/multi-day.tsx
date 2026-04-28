@@ -225,7 +225,7 @@ function MultiDayPage() {
       <section className="py-14 md:py-20 bg-[color:var(--sand)]">
         <div className="container-x max-w-3xl text-center">
           <span className="eyebrow">The idea</span>
-          <h2 className="serif text-[26px] md:text-4xl mt-4 leading-[1.15] text-[color:var(--charcoal)]">
+          <h2 className="t-h2 mt-4 text-[color:var(--charcoal)]">
             Built from <span className="italic text-[color:var(--teal)]">real regional days</span>,
             not country-wide checklists.
           </h2>
@@ -261,7 +261,7 @@ function MultiDayPage() {
         <div className="container-x">
           <div className="text-center max-w-2xl mx-auto">
             <span className="eyebrow">Journey styles</span>
-            <h2 className="serif text-[26px] md:text-4xl mt-4 leading-tight text-[color:var(--charcoal)]">
+            <h2 className="t-h2 mt-4 text-[color:var(--charcoal)]">
               Choose a <span className="italic text-[color:var(--teal)]">starting feeling</span>.
             </h2>
             <p className="mt-3 text-[13px] md:text-[14px] text-[color:var(--charcoal-soft)] italic">
@@ -312,7 +312,7 @@ function MultiDayPage() {
             <span className="text-[10px] uppercase tracking-[0.32em] text-[color:var(--gold-soft)]">
               An example flow
             </span>
-            <h2 className="serif text-[26px] md:text-4xl mt-4 leading-tight text-white">
+            <h2 className="t-h2 mt-4 text-white">
               How a <span className="italic text-[color:var(--gold-soft)]">5-day journey</span> can move.
             </h2>
             <p className="mt-3 text-[13px] md:text-[14px] text-white/70 italic">
@@ -330,7 +330,7 @@ function MultiDayPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 items-center">
             <div>
               <span className="eyebrow">Studio Builder</span>
-              <h2 className="serif text-[26px] md:text-4xl mt-4 leading-tight text-[color:var(--charcoal)]">
+              <h2 className="t-h2 mt-4 text-[color:var(--charcoal)]">
                 Open the Studio
                 <br />
                 <span className="italic text-[color:var(--teal)]">in multi-day mode</span>.
