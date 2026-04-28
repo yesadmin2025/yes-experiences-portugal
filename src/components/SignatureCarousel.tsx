@@ -168,14 +168,17 @@ export function SignatureCarousel({ items }: Props) {
               aria-selected={isActive}
               aria-label={`Go to slide ${i + 1}: ${s.title}`}
               onClick={() => scrollToIndex(i)}
-              className={`block rounded-full transition-all duration-500 ${
-                isActive
-                  ? "w-6 h-1.5 bg-[color:var(--gold)]"
-                  : "w-1.5 h-1.5 bg-[color:var(--charcoal)]/25 hover:bg-[color:var(--charcoal)]/45"
-              }`}
-            />
-          );
-        })}
+              className="relative inline-flex items-center justify-center w-9 h-9 -mx-1 group/dot"
+            >
+              <span
+                aria-hidden="true"
+                className={`block rounded-full transition-all duration-300 ${
+                  isActive
+                    ? "w-6 h-1.5 bg-[color:var(--gold)]"
+                    : "w-1.5 h-1.5 bg-[color:var(--charcoal)]/25 group-active/dot:bg-[color:var(--charcoal)]/55"
+                }`}
+              />
+            </button>
       </div>
     </div>
   );
