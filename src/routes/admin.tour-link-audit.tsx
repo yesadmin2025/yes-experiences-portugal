@@ -5,7 +5,7 @@ import type { TourLinkAuditReport } from "@/server/tourLinkAudit.server";
 import { checkRouteFile, type RouteFileCheckResult } from "@/server/routeFileCheck.functions";
 import { getLastCrawlerError, type CrawlerErrorInfo, type CrawlerErrorStrategy } from "@/server/crawlerError.functions";
 import { SiteLayout } from "@/components/SiteLayout";
-import { AlertTriangle, Check, RefreshCw, FileSearch, Link2Off, HelpCircle, FileCode2, Zap, Copy, ExternalLink, Bug } from "lucide-react";
+import { AlertTriangle, Check, RefreshCw, FileSearch, Link2Off, HelpCircle, FileCode2, Zap, Copy, ExternalLink, Bug, RotateCcw } from "lucide-react";
 
 export const Route = createFileRoute("/admin/tour-link-audit")({
   beforeLoad: () => {
@@ -609,6 +609,22 @@ function CrawlerErrorPanel() {
               <option value="last-error">Last error</option>
             </select>
           </label>
+          <button
+            type="button"
+            onClick={() => {
+              if (strategy === "root-cause") {
+                void capture("root-cause");
+              } else {
+                setStrategy("root-cause");
+              }
+            }}
+            disabled={loading}
+            title="Reset to default strategy and re-scan"
+            className="inline-flex items-center gap-1.5 border border-[color:var(--border)] hover:border-[color:var(--gold)] bg-white px-2.5 py-1 text-xs disabled:opacity-50"
+          >
+            <RotateCcw size={11} />
+            Reset to default
+          </button>
           <button
             type="button"
             onClick={() => void capture()}
