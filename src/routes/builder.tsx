@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
+import { RealLeafletMap } from "@/components/RealLeafletMap";
 import { signatureTours } from "@/data/signatureTours";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
