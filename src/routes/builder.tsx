@@ -134,29 +134,44 @@ const regionOpts = [
    instead of evenly-spaced dots around the centre. Coordinates again
    live in the silhouette's viewBox. */
 const regionStops: Record<string, { x: number; y: number; label: string; tag: string }[]> = {
+  // From Lisbon — the real YES experiences playground: south of the Tagus
+  // through Azeitão, Setúbal, Arrábida and Sesimbra, plus Sintra & Cascais.
   lisbon: [
+    { x: 28, y: 76, label: "Cristo Rei", tag: "Viewpoint" },
+    { x: 30, y: 80, label: "Azeitão", tag: "Cheese & wine" },
+    { x: 33, y: 82, label: "Setúbal · Livramento", tag: "Market" },
+    { x: 36, y: 82, label: "Arrábida Natural Park", tag: "Nature" },
+    { x: 35, y: 84, label: "Portinho da Arrábida", tag: "Coast" },
+    { x: 32, y: 86, label: "Sesimbra", tag: "Fishing village" },
+    { x: 29, y: 86, label: "Cabo Espichel", tag: "Dinosaur prints" },
     { x: 22, y: 76, label: "Sintra", tag: "Heritage" },
-    { x: 32, y: 82, label: "Setúbal", tag: "Coast" },
-    { x: 26, y: 70, label: "Mafra", tag: "Quiet" },
-    { x: 36, y: 74, label: "Arrábida", tag: "Nature" },
+    { x: 20, y: 78, label: "Cascais", tag: "Coast" },
   ],
   porto: [
+    { x: 38, y: 22, label: "Porto", tag: "City" },
     { x: 46, y: 24, label: "Douro Valley", tag: "Wine" },
-    { x: 38, y: 20, label: "Guimarães", tag: "Heritage" },
     { x: 52, y: 28, label: "Pinhão", tag: "River" },
-    { x: 30, y: 30, label: "Aveiro", tag: "Coast" },
+    { x: 36, y: 18, label: "Braga", tag: "Heritage" },
+    { x: 40, y: 20, label: "Guimarães", tag: "Heritage" },
   ],
   alentejo: [
-    { x: 54, y: 84, label: "Évora", tag: "Heritage" },
-    { x: 60, y: 92, label: "Monsaraz", tag: "Quiet" },
     { x: 42, y: 96, label: "Comporta", tag: "Coast" },
-    { x: 56, y: 78, label: "Estremoz", tag: "Wine" },
+    { x: 54, y: 84, label: "Évora", tag: "Heritage" },
+    { x: 56, y: 82, label: "Alentejo wineries", tag: "Wine" },
+    { x: 60, y: 92, label: "Monsaraz", tag: "Quiet" },
+    { x: 50, y: 70, label: "Tomar", tag: "Templar" },
+    { x: 46, y: 64, label: "Coimbra", tag: "University" },
+    { x: 38, y: 60, label: "Fátima", tag: "Sanctuary" },
+    { x: 32, y: 58, label: "Nazaré", tag: "Coast" },
+    { x: 28, y: 64, label: "Óbidos", tag: "Ginjinha" },
   ],
   algarve: [
     { x: 38, y: 112, label: "Lagos", tag: "Coast" },
-    { x: 54, y: 110, label: "Tavira", tag: "Quiet" },
-    { x: 50, y: 116, label: "Ria Formosa", tag: "Nature" },
+    { x: 40, y: 114, label: "Benagil Caves", tag: "Boat ride" },
+    { x: 36, y: 116, label: "Vicentine Coast", tag: "Wild coast" },
     { x: 42, y: 108, label: "Monchique", tag: "Mountain" },
+    { x: 50, y: 116, label: "Ria Formosa", tag: "Nature" },
+    { x: 54, y: 110, label: "Tavira", tag: "Quiet" },
   ],
 };
 
