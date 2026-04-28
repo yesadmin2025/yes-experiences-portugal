@@ -525,7 +525,10 @@ function AdminImportPage() {
           </div>
 
           <h2 className="serif text-2xl mt-12">
-            Imported tours <span className="text-sm text-[color:var(--charcoal-soft)]">({tours.length})</span>
+            Imported tours{" "}
+            <span className="text-sm text-[color:var(--charcoal-soft)]">
+              ({filter === "all" ? tours.length : `${filteredTours.length} of ${tours.length}`})
+            </span>
           </h2>
 
           {tours.length > 0 && (
@@ -557,13 +560,41 @@ function AdminImportPage() {
             </div>
           )}
 
+          {tours.length > 0 && (
+            <div className="mt-5 flex flex-wrap gap-2">
+              <FilterPill value="all" current={filter} count={stats.total} icon={null}>
+                All
+              </FilterPill>
+              <FilterPill value="with-image" current={filter} count={stats.withImage} icon={<ImageIcon size={11} />}>
+                With image
+              </FilterPill>
+              <FilterPill value="missing-image" current={filter} count={stats.missingImage} icon={<ImageOff size={11} />}>
+                Missing image
+              </FilterPill>
+              <FilterPill value="matched" current={filter} count={stats.matched} icon={<Link2 size={11} />}>
+                Matched signature
+              </FilterPill>
+              <FilterPill value="unmatched" current={filter} count={stats.total - stats.matched} icon={<Link2Off size={11} />}>
+                Unmatched
+              </FilterPill>
+            </div>
+          )}
+
           {tours.length === 0 ? (
             <p className="mt-4 text-sm text-[color:var(--charcoal-soft)]">
               Nothing imported yet. Click <strong>Run import now</strong> to fetch.
             </p>
+          ) : filteredTours.length === 0 ? (
+            <p className="mt-6 text-sm text-[color:var(--charcoal-soft)]">
+              No tours match this filter.{" "}
+              <Link from="/admin/import-tours" to="." search={{ filter: "all" }} className="underline">
+                Show all
+              </Link>
+              .
+            </p>
           ) : (
             <ul className="mt-6 space-y-4">
-              {tours.map((t) => {
+              {filteredTours.map((t) => {
                 const matched = SIGNATURE_BY_URL.has(normalizeUrl(t.source_url));
                 const hasImage = !!t.image_url;
                 return (
