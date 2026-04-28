@@ -651,7 +651,94 @@ function Pills({
   );
 }
 
-function IconCards({
+/** Pill list with hover/long-press preview.
+ *  - Desktop: pointerenter / pointerleave preview.
+ *  - Touch: holding for 300 ms previews without selecting; lift cancels.
+ *  - Tap (short) selects/toggles as normal. */
+function PreviewablePills({
+  options,
+  selected,
+  onSelect,
+  previewId,
+  onPreview,
+}: {
+  options: { id: string; label: string }[];
+  selected: string[];
+  onSelect: (id: string) => void;
+  previewId: string | null;
+  onPreview: (id: string | null) => void;
+}) {
+  const pressTimer = useRef<number | null>(null);
+  const longPressed = useRef(false);
+
+  const startLongPress = (id: string) => {
+    longPressed.current = false;
+    if (pressTimer.current) window.clearTimeout(pressTimer.current);
+    pressTimer.current = window.setTimeout(() => {
+      longPressed.current = true;
+      onPreview(id);
+    }, 300);
+  };
+  const cancelLongPress = () => {
+    if (pressTimer.current) {
+      window.clearTimeout(pressTimer.current);
+      pressTimer.current = null;
+    }
+  };
+
+  return (
+    <div className="flex flex-wrap gap-2">
+      {options.map((o) => {
+        const active = selected.includes(o.id);
+        const previewing = previewId === o.id;
+        return (
+          <button
+            key={o.id}
+            // Pointer events cover mouse + touch + pen.
+            onPointerEnter={(e) => { if (e.pointerType === "mouse") onPreview(o.id); }}
+            onPointerLeave={(e) => {
+              if (e.pointerType === "mouse") onPreview(null);
+              cancelLongPress();
+            }}
+            onPointerDown={(e) => { if (e.pointerType !== "mouse") startLongPress(o.id); }}
+            onPointerUp={() => {
+              cancelLongPress();
+              onPreview(null);
+            }}
+            onPointerCancel={() => { cancelLongPress(); onPreview(null); }}
+            onClick={() => {
+              // Suppress click if we long-pressed (would feel like a misfire).
+              if (longPressed.current) { longPressed.current = false; return; }
+              onSelect(o.id);
+            }}
+            className={`group relative inline-flex items-center gap-2 px-4 py-2.5 border text-sm transition-all touch-manipulation select-none ${
+              active
+                ? "border-[color:var(--teal)] bg-[color:var(--teal)] text-[color:var(--ivory)]"
+                : previewing
+                  ? "border-[color:var(--gold)] bg-[color:var(--gold)]/10 text-[color:var(--charcoal)] -translate-y-0.5 shadow-[0_10px_24px_-14px_rgba(201,169,106,0.6)]"
+                  : "border-[color:var(--border)] bg-[color:var(--card)] text-[color:var(--charcoal)] hover:border-[color:var(--gold)]"
+            }`}
+            aria-pressed={active}
+          >
+            {active && <Check size={13} strokeWidth={3} />}
+            <span>{o.label}</span>
+            {previewing && !active && (
+              <span className="ml-1 text-[10px] uppercase tracking-[0.18em] text-[color:var(--gold)]">
+                preview
+              </span>
+            )}
+          </button>
+        );
+      })}
+      {selected.length > 0 && (
+        <span className="self-center text-[10px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)] ml-1">
+          {selected.length} chosen
+        </span>
+      )}
+    </div>
+  );
+}
+
   options,
   selected,
   onSelect,
