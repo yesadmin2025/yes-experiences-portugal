@@ -44,11 +44,11 @@ export function FloatingActions() {
 
   return (
     <div
-      // On mobile, sit above the MobileStickyCTA bar (~64px tall + iOS
-      // safe-area inset) so the scroll-to-top arrow never overlaps it.
-      // From md+ there's no sticky bar, so we drop back to the original
-      // bottom-8 spacing.
-      className="fixed right-5 md:right-8 z-40 flex flex-col items-end gap-3 print:hidden bottom-24 md:bottom-8"
+      // On mobile, sit above BOTH the MobileStickyCTA bar (~64px) and the
+      // WhatsApp FAB (~56px + spacing) so nothing overlaps. On md+ there's
+      // no sticky bar, so we drop back to a calm offset that still clears
+      // the WhatsApp FAB sitting at bottom-8.
+      className="fixed right-5 md:right-8 z-40 flex flex-col items-end gap-3 print:hidden bottom-44 md:bottom-28"
       style={{ marginBottom: "env(safe-area-inset-bottom, 0px)" }}
       // Single source of truth for the hidden state — removes children
       // from focus, AT, and pointer hit-testing while pre-hero.
