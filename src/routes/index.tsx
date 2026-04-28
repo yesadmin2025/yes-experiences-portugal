@@ -668,7 +668,7 @@ function HomePage() {
         </h2>
 
         <div className="container-x">
-          <div className="flex flex-col items-center text-center gap-3.5">
+          <div className="flex flex-col items-center text-center gap-4">
             <p
               className="reveal-stagger flex items-center gap-1 text-[color:var(--gold)]"
               style={{ transitionDelay: "0ms" }}
@@ -678,7 +678,7 @@ function HomePage() {
               {[...Array(5)].map((_, i) => (
                 <Star
                   key={i}
-                  size={15}
+                  size={16}
                   fill="currentColor"
                   strokeWidth={0}
                   aria-hidden="true"
@@ -688,16 +688,44 @@ function HomePage() {
             </p>
 
             <p
-              className="reveal-stagger serif text-[1.5rem] md:text-[1.75rem] text-[color:var(--charcoal)] leading-[1.2]"
+              className="reveal-stagger serif text-[1.6rem] md:text-[2rem] text-[color:var(--charcoal)] leading-[1.15]"
               style={{ transitionDelay: "110ms" }}
               id="trust-bar-summary"
             >
               700+ <span className="italic">5-star reviews</span>
             </p>
 
+            {/* Real client moments — small overlapping photo strip to
+                signal that real people are behind the rating. Uses real
+                photography from the editorial set. */}
+            <div
+              className="reveal-stagger flex items-center gap-3 mt-1"
+              style={{ transitionDelay: "180ms" }}
+              aria-hidden="true"
+            >
+              <div className="flex -space-x-2.5">
+                {[expRomantic, expGastronomy, expWine, expNature, editMarket].map((src, i) => (
+                  <span
+                    key={i}
+                    className="inline-block w-9 h-9 md:w-10 md:h-10 rounded-full overflow-hidden border-2 border-[color:var(--ivory)] shadow-[0_2px_6px_-2px_rgba(46,46,46,0.25)] bg-[color:var(--card)]"
+                  >
+                    <img
+                      src={src}
+                      alt=""
+                      loading="lazy"
+                      className="w-full h-full object-cover"
+                    />
+                  </span>
+                ))}
+              </div>
+              <span className="text-[12px] md:text-[12.5px] tracking-[0.04em] text-[color:var(--charcoal-soft)] font-light italic">
+                from real moments, real travellers
+              </span>
+            </div>
+
             <p
-              className="reveal-stagger text-[11px] uppercase tracking-[0.32em] text-[color:var(--charcoal-soft)]"
-              style={{ transitionDelay: "220ms" }}
+              className="reveal-stagger text-[11px] uppercase tracking-[0.32em] text-[color:var(--charcoal-soft)] mt-1"
+              style={{ transitionDelay: "260ms" }}
             >
               Google · TripAdvisor · Trustpilot
             </p>
