@@ -1038,7 +1038,10 @@ function HomePage() {
                   </li>
                 ))}
               </ul>
-              <p className="mt-6 text-[13.5px] italic font-light text-[color:var(--charcoal-soft)] leading-[1.7] max-w-md">
+              <p className="mt-6 text-[13.5px] italic font-light text-[color:var(--gold-soft)] leading-[1.7] max-w-md">
+                A moment designed around your rhythm.
+              </p>
+              <p className="mt-2 text-[13px] italic font-light text-[color:var(--charcoal-soft)] leading-[1.7] max-w-md">
                 Tailoring stays inside the chosen tour. To design something entirely your own, open the Studio.
               </p>
               <Link
