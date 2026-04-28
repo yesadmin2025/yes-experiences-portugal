@@ -118,8 +118,71 @@ function AdminImportPage() {
         )
         .order("imported_at", { ascending: false });
       setTours((rows as ImportedRow[]) ?? []);
+      if (roleRow) await refreshRules();
     })();
   }, [session]);
+
+  const startNewRule = () => {
+    setEditingRuleId("new");
+    setRuleDraft({
+      name: "Custom mapping",
+      notes: "",
+      json: JSON.stringify(DEFAULT_MAPPING_RULES, null, 2),
+      isActive: rulesList.length === 0,
+    });
+  };
+
+  const editRule = (r: RuleRow) => {
+    setEditingRuleId(r.id);
+    setRuleDraft({
+      name: r.name,
+      notes: r.notes ?? "",
+      json: JSON.stringify(r.rules, null, 2),
+      isActive: r.is_active,
+    });
+  };
+
+  const cancelEdit = () => setEditingRuleId(null);
+
+  const onSaveRule = async () => {
+    let parsed: unknown;
+    try {
+      parsed = JSON.parse(ruleDraft.json);
+    } catch {
+      toast.error("Mapping rules JSON is invalid");
+      return;
+    }
+    setSavingRules(true);
+    try {
+      await callSaveRules({
+        data: {
+          id: editingRuleId && editingRuleId !== "new" ? editingRuleId : undefined,
+          name: ruleDraft.name,
+          notes: ruleDraft.notes || null,
+          rules: parsed,
+          isActive: ruleDraft.isActive,
+        },
+      });
+      toast.success("Mapping rules saved");
+      setEditingRuleId(null);
+      await refreshRules();
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Save failed");
+    } finally {
+      setSavingRules(false);
+    }
+  };
+
+  const onDeleteRule = async (id: string) => {
+    if (!confirm("Delete this mapping rule set?")) return;
+    try {
+      await callDeleteRules({ data: { id } });
+      toast.success("Deleted");
+      await refreshRules();
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Delete failed");
+    }
+  };
 
   const onImport = async () => {
     setLoading(true);
