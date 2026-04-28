@@ -908,6 +908,7 @@ function RevealStep({ s, title, investment }: { s: BuilderState; title: string; 
         <button className="w-full inline-flex items-center justify-center gap-2 bg-[color:var(--card)] border border-[color:var(--border)] text-[color:var(--charcoal)] px-6 py-3.5 text-[11px] uppercase tracking-[0.22em] hover:border-[color:var(--teal)]/40 transition-colors">
           <Save size={13} /> Save My Experience
         </button>
+        <ShareLinkButton />
         <Link
           to="/contact"
           className="w-full inline-flex items-center justify-center gap-2 text-[color:var(--charcoal-soft)] px-6 py-2 text-[11px] uppercase tracking-[0.22em] hover:text-[color:var(--teal)] transition-colors"
