@@ -404,6 +404,7 @@ function RouteTreeTroubleshooting() {
 
 const ROUTE_FILE = "src/routes/admin.tour-link-audit.tsx";
 const EXPECTED_PATH = "/admin/tour-link-audit";
+const STRATEGY_STORAGE_KEY = "crawlerError.strategy";
 
 function CrawlerErrorPanel() {
   const [info, setInfo] = useState<CrawlerErrorInfo | null>(null);
