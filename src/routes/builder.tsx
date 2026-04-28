@@ -79,12 +79,20 @@ const styleOpts = [
   { id: "coastal", name: "Coastal & Sea", icon: Waves },
 ];
 
+/* Highlights are real ingredients of YES experiences tours — used as
+   "Signature moments" chips. Each one maps to an actual on-tour activity. */
 const highlightOpts = [
-  { id: "market", name: "Local market at dawn", short: "Market" },
-  { id: "viewpoint", name: "Secret viewpoint", short: "Viewpoint" },
-  { id: "tasting", name: "Private tasting", short: "Tasting" },
-  { id: "longlunch", name: "Long lunch with locals", short: "Long lunch" },
-  { id: "atelier", name: "Artisan atelier visit", short: "Atelier" },
+  { id: "livramento", name: "Livramento Market tasting", short: "Livramento" },
+  { id: "boat", name: "Arrábida boat tour", short: "Boat tour" },
+  { id: "jeep", name: "4×4 Jeep off-the-beaten-path", short: "4×4 Jeep" },
+  { id: "tiles", name: "Hand-painted tiles workshop", short: "Tiles workshop" },
+  { id: "cheese", name: "Azeitão cheese workshop", short: "Cheese workshop" },
+  { id: "tasting", name: "Private winery tasting", short: "Wine tasting" },
+  { id: "portinho", name: "Lunch at Portinho da Arrábida", short: "Portinho lunch" },
+  { id: "sesimbra", name: "Sesimbra fishing village", short: "Sesimbra" },
+  { id: "viewpoint", name: "Arrábida secret viewpoint", short: "Viewpoint" },
+  { id: "dinosaur", name: "Cabo Espichel dinosaur footprints", short: "Dinosaur prints" },
+  { id: "ginjinha", name: "Óbidos Ginjinha tasting", short: "Ginjinha" },
 ];
 
 const paceOpts = [
