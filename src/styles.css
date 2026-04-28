@@ -558,7 +558,7 @@
     font-family: var(--font-sans);
     font-size: 15px;
     line-height: 1.7;
-    font-weight: 380;
+    font-weight: 400;
     color: var(--charcoal);
   }
   @media (min-width: 768px) {
