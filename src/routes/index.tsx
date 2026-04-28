@@ -709,7 +709,7 @@ function HomePage() {
             >
               Choose how <span className="italic">you want to start.</span>
             </h2>
-            <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
+            <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] leading-[1.7] font-light">
               Four ways in. Every one confirms instantly — no forms, no waiting.
             </p>
             <p className="mt-3 text-[13.5px] italic font-light text-[color:var(--charcoal-soft)]">
@@ -955,7 +955,7 @@ function HomePage() {
             >
               Signature <span className="italic">Journeys.</span>
             </h2>
-            <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
+            <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] leading-[1.7] font-light">
               Curated routes designed to be enjoyed as they are.
             </p>
             <p className="mt-3 text-[13.5px] md:text-[14px] italic font-light text-[color:var(--charcoal-soft)]/85">
@@ -1163,7 +1163,7 @@ function HomePage() {
             <p className="mt-5 text-[12.5px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
               Proposals · Celebrations · Corporate · Groups
             </p>
-            <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
+            <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] leading-[1.7] font-light">
               From intimate plans to larger groups — all designed your way and confirmed instantly.
             </p>
           </div>
@@ -1224,7 +1224,7 @@ function HomePage() {
             <h2 className="serif text-[2.25rem] md:text-5xl lg:text-[3.4rem] mt-5 leading-[1.08]">
               The Portugal <span className="italic">we travel ourselves</span>
             </h2>
-            <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.7] max-w-xl mx-auto font-light">
+            <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] leading-[1.7] max-w-xl mx-auto font-light">
               Notes from the road — the places we keep returning to, away from the crowds.
             </p>
           </div>
