@@ -1095,7 +1095,7 @@ function PremiumMap({
         </span>
       </div>
 
-      <div className="relative aspect-[4/5] mt-3 mx-5 mb-5 bg-gradient-to-b from-[color:var(--sand)] to-[color:var(--ivory)] overflow-hidden">
+      <div className="relative aspect-[4/5] mt-3 mx-5 mb-5 overflow-hidden rounded-sm">
         <svg
           viewBox={animatedViewBox}
           className="w-full h-full"
@@ -1103,94 +1103,207 @@ function PremiumMap({
           aria-label="Journey map"
         >
           <defs>
+            {/* Ocean — deep teal fading to lighter near the shore */}
+            <linearGradient id="ocean" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#cfe3e6" />
+              <stop offset="60%" stopColor="#9fc4cc" />
+              <stop offset="100%" stopColor="#6ea3ad" />
+            </linearGradient>
+            {/* Land — warm relief with soft inland shading */}
             <linearGradient id="land" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="var(--ivory)" />
-              <stop offset="100%" stopColor="var(--sand)" />
+              <stop offset="0%" stopColor="#f3ead6" />
+              <stop offset="55%" stopColor="#e8dcb8" />
+              <stop offset="100%" stopColor="#d6c596" />
+            </linearGradient>
+            {/* Spain — slightly muted so Portugal pops */}
+            <linearGradient id="spain" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#ece4d0" />
+              <stop offset="100%" stopColor="#d4c8a8" />
             </linearGradient>
             <radialGradient id="centerGlow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="var(--teal)" stopOpacity="0.18" />
+              <stop offset="0%" stopColor="var(--teal)" stopOpacity="0.22" />
               <stop offset="100%" stopColor="var(--teal)" stopOpacity="0" />
             </radialGradient>
             <filter id="markerShadow" x="-50%" y="-50%" width="200%" height="200%">
-              <feDropShadow dx="0" dy="0.3" stdDeviation="0.4" floodOpacity="0.35" />
+              <feDropShadow dx="0" dy="0.4" stdDeviation="0.5" floodOpacity="0.4" />
             </filter>
+            <filter id="landShadow" x="-10%" y="-10%" width="120%" height="120%">
+              <feDropShadow dx="0.4" dy="0.6" stdDeviation="0.8" floodOpacity="0.18" />
+            </filter>
+            {/* Subtle paper noise via crosshatch — adds depth without imagery */}
+            <pattern id="hatch" width="2" height="2" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+              <line x1="0" y1="0" x2="0" y2="2" stroke="#000" strokeWidth="0.08" opacity="0.05" />
+            </pattern>
           </defs>
 
-          {/* Sea wash — subtle parallel lines for texture */}
-          <g opacity="0.18" stroke="var(--teal)" strokeWidth="0.15">
-            {Array.from({ length: 14 }).map((_, i) => (
-              <line key={i} x1="0" y1={8 + i * 9} x2="100" y2={8 + i * 9} />
-            ))}
+          {/* Ocean base */}
+          <rect x="-20" y="-20" width="140" height="170" fill="url(#ocean)" />
+
+          {/* Bathymetry — soft contour lines parallel to the coast */}
+          <g fill="none" stroke="#ffffff" strokeWidth="0.18" opacity="0.35">
+            <path d="M 12 4 C 10 30 8 60 9 90 C 10 110 13 120 16 128" />
+            <path d="M 8 4 C 5 32 3 64 4 96 C 5 114 8 124 11 130" />
           </g>
 
-          {/* Portugal silhouette — approximates the real coastline (Minho in
-              the north → Cabo de São Vicente → Algarve south) so the marker
-              positions in regionMap/regionStops sit on recognisable land.
-              Coordinates intentionally simplified: this is a stylised
-              geographic illustration, not a survey. */}
+          {/* Spain landmass — sits behind Portugal to give context */}
           <path
             d="
-              M 36 6
-              C 38 6 40 6.5 41 8
-              L 42 11
-              C 41.5 13 41 15 41.2 17
-              L 41.8 21
-              L 42.4 25
-              C 42.8 28 43.6 31 44.6 34
-              C 45.6 37 46.6 40 47.2 43
-              C 47.8 46 48 49 48.4 52
-              L 49.2 56
-              L 50.4 60
-              L 51.6 64
-              L 52.8 68
-              L 54 72
-              C 54.6 75 55 78 55 81
-              L 54.8 84
-              L 54 87
-              C 53.2 90 52.4 93 51.4 96
-              L 50.4 100
-              C 50 102 50 104 50.2 106
-              L 51 109
-              L 52 111
-              C 51.5 112.5 50 113.4 47.8 113.6
-              L 42 113.8
-              L 36 114
-              L 30 114
-              C 27 113.8 24 113 22.2 111.6
-              L 21 110
-              L 21.4 108
-              C 22 105 22.4 102 22.4 99
-              L 22 95
-              L 21.4 91
-              L 20.8 87
-              C 20.6 84 20.6 81 20.8 78
-              L 21.2 74
-              L 21.4 70
-              C 21.4 67 21.2 64 20.8 61
-              L 20.4 57
-              L 20.4 53
-              C 20.6 50 21 47 21.6 44
-              L 22.4 40
-              C 22.8 37 22.8 34 22.4 31
-              L 21.8 27
-              L 21.6 23
-              C 22 20 22.6 17 23.6 14
-              L 25 11
-              C 26.4 9 28.4 7.6 30.8 6.8
-              C 32.4 6.2 34.2 6 36 6 Z
+              M 42 4
+              L 100 4
+              L 100 120
+              L 56 120
+              C 54 117 53 113 53 109
+              L 53.5 102
+              C 54 96 53.5 90 52.8 84
+              L 51.5 76
+              L 50 68
+              C 49 62 48.4 56 48.6 50
+              L 49.2 42
+              C 49.2 36 48.6 30 47.4 24
+              L 45.6 16
+              C 44.6 12 43.6 8 42 4 Z
             "
-            fill="url(#land)"
-            stroke="var(--gold)"
-            strokeWidth="0.35"
+            fill="url(#spain)"
+            stroke="#b8a878"
+            strokeWidth="0.25"
             opacity="0.95"
           />
+          <path
+            d="
+              M 42 4 L 100 4 L 100 120 L 56 120
+              C 54 117 53 113 53 109 L 53.5 102
+              C 54 96 53.5 90 52.8 84 L 51.5 76 L 50 68
+              C 49 62 48.4 56 48.6 50 L 49.2 42
+              C 49.2 36 48.6 30 47.4 24 L 45.6 16
+              C 44.6 12 43.6 8 42 4 Z
+            "
+            fill="url(#hatch)"
+          />
 
-          {/* Madeira & Azores hint — small rounded marks to reinforce that
-              this is Portugal, not generic Iberia. Purely decorative. */}
-          <g opacity="0.55">
-            <ellipse cx="6" cy="108" rx="2" ry="0.9" fill="var(--sand)" stroke="var(--gold)" strokeWidth="0.18" />
-            <ellipse cx="3" cy="86" rx="1.4" ry="0.7" fill="var(--sand)" stroke="var(--gold)" strokeWidth="0.18" />
-            <ellipse cx="5" cy="84" rx="1" ry="0.5" fill="var(--sand)" stroke="var(--gold)" strokeWidth="0.18" />
+          {/* Portugal silhouette — refined: Minho in the north, Douro estuary
+              at Porto, Tagus estuary at Lisbon, Sado at Setúbal, Algarve south
+              coast running east to the Guadiana. Same viewBox so all
+              regionMap/regionStops markers stay aligned. */}
+          <path
+            d="
+              M 36 5
+              C 38.6 5 40.4 5.6 41.4 7.2
+              L 41.8 10
+              C 41.4 12 40.8 14 41.2 16
+              L 41.8 20
+              L 42.4 24
+              C 42.6 26 42.4 27 41.6 26.8
+              L 39.6 26.4
+              L 38.4 26
+              C 37.6 25.6 37.4 25 38 24.4
+              L 38.6 23.6
+              C 38.2 23.4 37.6 23.6 37.2 24
+              L 36.4 24.6
+              L 36 25.4
+              L 36.6 26.4
+              C 37.6 27.2 38.8 27.6 40.2 27.8
+              L 42.6 28
+              C 43 30 43.6 32 44.4 34
+              C 45.4 37 46.4 40 47 43
+              C 47.6 46 47.8 49 48.2 52
+              L 49 56
+              L 50.2 60
+              L 51.4 64
+              L 52.6 68
+              L 53.8 72
+              C 54.4 75 54.8 78 54.8 80
+              L 53.6 80
+              L 51.6 79.4
+              C 50 79 48.4 79.6 47.6 80.6
+              L 47 81.6
+              C 46.6 82 46.6 82.4 47 82.6
+              L 49 83
+              L 51.8 83.4
+              L 54.4 83
+              L 54.2 86
+              L 53.4 89
+              C 52.6 92 51.8 95 50.8 98
+              L 49.8 102
+              L 49 104
+              C 48.6 104.4 48.6 105 49 105.4
+              L 51 106
+              L 53.6 106.2
+              L 56 106
+              L 58 106
+              C 58.4 107 58 108.2 57 109
+              L 54 110
+              L 50 110.6
+              L 46 111
+              L 42 111.2
+              L 38 111.4
+              L 34 111.6
+              L 30 111.6
+              C 27 111.4 24 110.6 22.2 109.2
+              L 21 107.6
+              L 21.4 105.6
+              C 22 102.6 22.4 99.6 22.4 96.6
+              L 22 92.6
+              L 21.4 88.6
+              L 20.8 84.6
+              C 20.6 81.6 20.6 78.6 20.8 75.6
+              L 21.2 71.6
+              L 21.4 67.6
+              C 21.4 64.6 21.2 61.6 20.8 58.6
+              L 20.4 54.6
+              L 20.4 50.6
+              C 20.6 47.6 21 44.6 21.6 41.6
+              L 22.4 37.6
+              C 22.8 34.6 22.8 31.6 22.4 28.6
+              L 21.8 24.6
+              L 21.6 20.6
+              C 22 17.6 22.6 14.6 23.6 11.6
+              L 25 8.6
+              C 26.4 6.6 28.4 5.2 30.8 4.4
+              C 32.4 3.8 34.2 3.6 36 5 Z
+            "
+            fill="url(#land)"
+            stroke="#9a8657"
+            strokeWidth="0.45"
+            filter="url(#landShadow)"
+          />
+          {/* Land hatch overlay — subtle tonal richness */}
+          <path
+            d="M 22 6 L 54 6 L 56 110 L 22 110 Z"
+            fill="url(#hatch)"
+            opacity="0.6"
+            style={{ pointerEvents: "none" }}
+          />
+
+          {/* Major rivers — Douro, Tagus, Sado, Guadiana */}
+          <g fill="none" stroke="#7ca7b8" strokeWidth="0.32" opacity="0.85" strokeLinecap="round">
+            {/* Douro: from inland Spain west to Porto estuary */}
+            <path d="M 53 24 C 48 23 44 22 38 22 L 34 23" />
+            {/* Tagus: from Spain SE-NW into Lisbon estuary */}
+            <path d="M 53 74 C 46 75 38 77 32 78 L 27 78" />
+            {/* Sado: into Setúbal */}
+            <path d="M 44 84 C 40 84 36 84 33 83" />
+            {/* Guadiana: south border with Spain */}
+            <path d="M 56 96 C 56 102 56 108 56 110" />
+          </g>
+
+          {/* Madeira & Azores hint */}
+          <g opacity="0.7">
+            <ellipse cx="6" cy="108" rx="2.2" ry="1" fill="url(#land)" stroke="#9a8657" strokeWidth="0.22" />
+            <ellipse cx="3" cy="86" rx="1.5" ry="0.7" fill="url(#land)" stroke="#9a8657" strokeWidth="0.2" />
+            <ellipse cx="5.2" cy="84" rx="1" ry="0.5" fill="url(#land)" stroke="#9a8657" strokeWidth="0.2" />
+          </g>
+
+          {/* Compass rose — top-right, decorative */}
+          <g transform="translate(94 10)" opacity="0.55">
+            <circle r="3" fill="none" stroke="#5a6a72" strokeWidth="0.2" />
+            <path d="M 0 -3 L 0.6 0 L 0 3 L -0.6 0 Z" fill="#5a6a72" />
+            <text x="0" y="-3.6" fontSize="1.6" textAnchor="middle" fill="#3f4a50" fontFamily="ui-sans-serif, system-ui">N</text>
+          </g>
+
+          {/* Region labels — faint, like a real atlas */}
+          <g fill="#7a6a3e" fontFamily="ui-serif, Georgia, serif" opacity="0.55" style={{ pointerEvents: "none" }}>
+            <text x="68" y="50" fontSize="3.4" fontStyle="italic" letterSpacing="0.3">ESPAÑA</text>
+            <text x="6" y="60" fontSize="2.4" fontStyle="italic" letterSpacing="0.4" fill="#456973">ATLÂNTICO</text>
           </g>
 
           {/* Region glow */}
@@ -1200,7 +1313,7 @@ function PremiumMap({
             />
           )}
 
-          {/* Animated route — re-draws on every change */}
+          {/* Animated route */}
           <AnimatedRoute d={pathD} />
 
           {/* Centre marker (region) */}
@@ -1214,42 +1327,54 @@ function PremiumMap({
             </g>
           )}
 
-          {/* Stops — branded teardrop markers + labels */}
+          {/* Stops — numbered pins with soft shadow + label chip */}
           {stops.map((p, i) => {
             const c = dayColor(p.day);
+            const n = i + 1;
             return (
               <g key={`${p.label}-${i}`} style={{ transition: "all 500ms cubic-bezier(0.65,0,0.35,1)" }}>
+                {/* Pin shadow ellipse on the ground */}
+                <ellipse cx={p.x} cy={p.y + 1.4} rx="1.6" ry="0.4" fill="#000" opacity="0.18" />
                 {/* Teardrop pin */}
                 <path
-                  d={`M ${p.x} ${p.y - 3.2} C ${p.x + 2} ${p.y - 3.2} ${p.x + 2} ${p.y - 0.4} ${p.x} ${p.y + 1.2} C ${p.x - 2} ${p.y - 0.4} ${p.x - 2} ${p.y - 3.2} ${p.x} ${p.y - 3.2} Z`}
+                  d={`M ${p.x} ${p.y - 4} C ${p.x + 2.4} ${p.y - 4} ${p.x + 2.4} ${p.y - 0.8} ${p.x} ${p.y + 1.2} C ${p.x - 2.4} ${p.y - 0.8} ${p.x - 2.4} ${p.y - 4} ${p.x} ${p.y - 4} Z`}
                   fill={c}
                   stroke="var(--ivory)"
-                  strokeWidth="0.35"
+                  strokeWidth="0.4"
                   filter="url(#markerShadow)"
                   style={{
                     transformOrigin: `${p.x}px ${p.y}px`,
                     animation: `ys-pop 400ms cubic-bezier(0.34,1.56,0.64,1) ${i * 80}ms backwards`,
                   }}
                 />
-                <circle cx={p.x} cy={p.y - 1.8} r="0.55" fill="var(--ivory)" />
-                {/* Label */}
-                <g
-                  style={{ animation: `ys-fade 500ms ease-out ${i * 80 + 200}ms backwards` }}
+                <circle cx={p.x} cy={p.y - 2.2} r="1.05" fill="var(--ivory)" />
+                <text
+                  x={p.x}
+                  y={p.y - 1.65}
+                  fontSize="1.5"
+                  textAnchor="middle"
+                  fill={c}
+                  fontFamily="ui-sans-serif, system-ui"
+                  fontWeight="700"
                 >
+                  {n}
+                </text>
+                {/* Label */}
+                <g style={{ animation: `ys-fade 500ms ease-out ${i * 80 + 200}ms backwards` }}>
                   <rect
-                    x={p.x + 2.2}
-                    y={p.y - 3.4}
+                    x={p.x + 2.6}
+                    y={p.y - 3.6}
                     width={p.label.length * 1.35 + 2}
                     height="3"
                     rx="0.5"
                     fill="var(--ivory)"
                     stroke={c}
-                    strokeWidth="0.18"
-                    opacity="0.95"
+                    strokeWidth="0.2"
+                    opacity="0.97"
                   />
                   <text
-                    x={p.x + 3.2}
-                    y={p.y - 1.3}
+                    x={p.x + 3.6}
+                    y={p.y - 1.5}
                     fontSize="2"
                     fill="var(--charcoal)"
                     fontFamily="ui-sans-serif, system-ui"
@@ -1262,31 +1387,26 @@ function PremiumMap({
             );
           })}
 
-          {/* Ghost stop — appears while a moment chip is hovered/long-pressed.
-              Animates in with a pulsing halo so users see exactly where the
-              route would extend. */}
+          {/* Ghost stop */}
           {ghostStop && (
             <g style={{ animation: "ys-pop 320ms cubic-bezier(0.34,1.56,0.64,1) backwards" }}>
-              {/* Pulsing halo on the upcoming stop */}
               <circle cx={ghostStop.x} cy={ghostStop.y - 1.4} r="3" fill="var(--gold)" opacity="0.18">
                 <animate attributeName="r" values="3;5;3" dur="1.4s" repeatCount="indefinite" />
                 <animate attributeName="opacity" values="0.32;0;0.32" dur="1.4s" repeatCount="indefinite" />
               </circle>
-              {/* Outline-only teardrop — visually marked as preview */}
               <path
-                d={`M ${ghostStop.x} ${ghostStop.y - 3.2} C ${ghostStop.x + 2} ${ghostStop.y - 3.2} ${ghostStop.x + 2} ${ghostStop.y - 0.4} ${ghostStop.x} ${ghostStop.y + 1.2} C ${ghostStop.x - 2} ${ghostStop.y - 0.4} ${ghostStop.x - 2} ${ghostStop.y - 3.2} ${ghostStop.x} ${ghostStop.y - 3.2} Z`}
+                d={`M ${ghostStop.x} ${ghostStop.y - 4} C ${ghostStop.x + 2.4} ${ghostStop.y - 4} ${ghostStop.x + 2.4} ${ghostStop.y - 0.8} ${ghostStop.x} ${ghostStop.y + 1.2} C ${ghostStop.x - 2.4} ${ghostStop.y - 0.8} ${ghostStop.x - 2.4} ${ghostStop.y - 4} ${ghostStop.x} ${ghostStop.y - 4} Z`}
                 fill="var(--ivory)"
                 stroke="var(--gold)"
                 strokeWidth="0.45"
                 strokeDasharray="0.8 0.6"
                 filter="url(#markerShadow)"
               />
-              <circle cx={ghostStop.x} cy={ghostStop.y - 1.8} r="0.55" fill="var(--gold)" />
-              {/* Preview label */}
+              <circle cx={ghostStop.x} cy={ghostStop.y - 2.2} r="0.6" fill="var(--gold)" />
               <g style={{ animation: "ys-fade 280ms ease-out 120ms backwards" }}>
                 <rect
-                  x={ghostStop.x + 2.2}
-                  y={ghostStop.y - 3.4}
+                  x={ghostStop.x + 2.6}
+                  y={ghostStop.y - 3.6}
                   width={ghostStop.label.length * 1.35 + 4.5}
                   height="3"
                   rx="0.5"
@@ -1294,8 +1414,8 @@ function PremiumMap({
                   opacity="0.95"
                 />
                 <text
-                  x={ghostStop.x + 3.2}
-                  y={ghostStop.y - 1.3}
+                  x={ghostStop.x + 3.6}
+                  y={ghostStop.y - 1.5}
                   fontSize="2"
                   fill="var(--charcoal-deep)"
                   fontFamily="ui-sans-serif, system-ui"
@@ -1304,8 +1424,8 @@ function PremiumMap({
                   {ghostStop.label} ·
                 </text>
                 <text
-                  x={ghostStop.x + 3.2 + ghostStop.label.length * 1.35 + 0.4}
-                  y={ghostStop.y - 1.3}
+                  x={ghostStop.x + 3.6 + ghostStop.label.length * 1.35 + 0.4}
+                  y={ghostStop.y - 1.5}
                   fontSize="1.4"
                   fill="var(--ivory)"
                   fontFamily="ui-sans-serif, system-ui"
@@ -1320,7 +1440,7 @@ function PremiumMap({
 
         {!region && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <p className="text-[11px] uppercase tracking-[0.28em] text-[color:var(--charcoal-soft)] bg-[color:var(--ivory)]/80 px-3 py-1.5">
+            <p className="text-[11px] uppercase tracking-[0.28em] text-[color:var(--charcoal-soft)] bg-[color:var(--ivory)]/85 px-3 py-1.5 rounded-sm">
               Choose a region — the map flies there
             </p>
           </div>
