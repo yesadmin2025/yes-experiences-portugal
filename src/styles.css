@@ -1520,6 +1520,19 @@
   background: var(--gold-soft);
 }
 
+/* Persistent variant — keeps a soft underline at rest so the link
+   stays discoverable when nested inside dark or atmospheric copy.
+   Hover/focus/active still trigger the gold bloom + color shift. */
+.link-soft--persistent::after {
+  right: 0;
+  background: color-mix(in oklab, var(--gold) 55%, transparent);
+}
+.link-soft--persistent:hover::after,
+.link-soft--persistent:focus-visible::after,
+.link-soft--persistent:active::after {
+  background: var(--gold);
+}
+
 /* Soft gold focus halo on existing system CTAs for keyboard /
    external-keyboard parity. Transform/shadow systems already own
    the rest of the interaction. */
