@@ -88,10 +88,11 @@
   --input: rgba(46, 46, 46, 0.18);
   --ring: var(--teal);
 
-  /* Shared vertical rhythm — used by .section-y / .section-y-lg / .section-y-sm */
+  /* Shared vertical rhythm — used by .section-y / -lg / -sm / -app */
   --section-y: 5rem;
   --section-y-lg: 6rem;
   --section-y-sm: 3.5rem;
+  --section-y-app: 1.5rem; /* compact rhythm for interactive workspaces */
 
   /* ─────────────────────────────────────────────────────────────
      CTA LABEL GLOW API
@@ -197,6 +198,7 @@
     --section-y: 8rem;
     --section-y-lg: 11rem;
     --section-y-sm: 4.5rem;
+    --section-y-app: 3rem;
   }
 }
 
@@ -311,6 +313,10 @@
   .section-y-sm {
     padding-top: var(--section-y-sm);
     padding-bottom: var(--section-y-sm);
+  }
+  .section-y-app {
+    padding-top: var(--section-y-app);
+    padding-bottom: var(--section-y-app);
   }
 
   /* ─────────────────────────────────────────────────────────────
