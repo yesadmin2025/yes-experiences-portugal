@@ -894,7 +894,7 @@ function HomePage() {
               </span>
               <h2
                 id="studio-title"
-                className="serif text-[2.75rem] sm:text-[3.25rem] md:text-[4rem] lg:text-[4.75rem] mt-6 leading-[0.98] tracking-[-0.01em]"
+                className="t-display mt-6"
               >
                 Create it, <span className="italic text-[color:var(--gold-soft)]">live.</span>
               </h2>
@@ -982,7 +982,7 @@ function HomePage() {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/80 via-[color:var(--charcoal)]/15 to-transparent" />
                   </Link>
-                  <h3 className="serif text-[1.5rem] text-[color:var(--charcoal)] transition-colors duration-300 group-hover:text-[color:var(--teal)]">
+                  <h3 className="t-h3 text-[color:var(--charcoal)] transition-colors duration-300 group-hover:text-[color:var(--teal)]">
                     {s.title}
                   </h3>
                   <p className="mt-3 text-[15px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
@@ -1076,7 +1076,7 @@ function HomePage() {
                 <span className="text-[10.5px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
                   {b.eyebrow}
                 </span>
-                <h3 className="serif text-[1.75rem] md:text-[2rem] mt-3 text-[color:var(--charcoal)] leading-[1.12] transition-colors duration-300 group-hover:text-[color:var(--teal)]">
+                <h3 className="t-h1 mt-3 text-[color:var(--charcoal)] transition-colors duration-300 group-hover:text-[color:var(--teal)]">
                   {b.title}
                 </h3>
                 <p className="mt-4 text-[15.5px] md:text-[16px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
@@ -1197,7 +1197,7 @@ function HomePage() {
                   <span className="text-[10.5px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
                     {o.eyebrow}
                   </span>
-                  <h3 className="serif text-[1.4rem] md:text-[1.5rem] mt-3 text-[color:var(--charcoal)] leading-[1.2]">
+                  <h3 className="t-h3 mt-3 text-[color:var(--charcoal)]">
                     {o.title}
                   </h3>
                   <p className="mt-3 text-[14.5px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light flex-1">
