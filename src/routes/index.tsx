@@ -8,21 +8,22 @@ import { useCtaScrollScale } from "@/hooks/use-cta-scroll-scale";
 import { CtaScrollDebugOverlay, useCtaScrollDebugToggle } from "@/components/CtaScrollDebugOverlay";
 import heroImg from "@/assets/hero-coast.jpg";
 import multiDayImg from "@/assets/multi-day.jpg";
-import editCoastal from "@/assets/edit-coastal-road.jpg";
-import editWinery from "@/assets/edit-winery.jpg";
-import editMarket from "@/assets/edit-market.jpg";
-import editViewpoint from "@/assets/edit-viewpoint.jpg";
-import catProposals from "@/assets/cat-proposals.jpg";
-import catCorporate from "@/assets/cat-corporate.jpg";
-import decisionSignature from "@/assets/decision-signature.jpg";
-import decisionTailor from "@/assets/decision-tailor.jpg";
-import decisionStudio from "@/assets/decision-studio.jpg";
-import decisionMoment from "@/assets/decision-moment.jpg";
 
-import expRomantic from "@/assets/exp-romantic.jpg";
-import expGastronomy from "@/assets/exp-gastronomy.jpg";
-import expWine from "@/assets/exp-wine.jpg";
-import expNature from "@/assets/exp-nature.jpg";
+// Real Viator-sourced tour photography — used everywhere on the homepage so
+// every card and editorial moment maps to an actual stop from one of the
+// Signature tours. No stock or invented imagery is used below.
+import imgArrabidaWineHero from "@/assets/tours/arrabida-wine-allinclusive/hero.jpg";
+import imgArrabidaWineWinery from "@/assets/tours/arrabida-wine-allinclusive/winery.jpg";
+import imgArrabidaWineLunch from "@/assets/tours/arrabida-wine-allinclusive/lunch.jpg";
+import imgArrabidaWineViewpoint from "@/assets/tours/arrabida-wine-allinclusive/viewpoint.jpg";
+import imgArrabidaBoatCoves from "@/assets/tours/arrabida-boat/coves.jpg";
+import imgArrabidaBoatSesimbra from "@/assets/tours/arrabida-boat/sesimbra.jpg";
+import imgAzeitaoWorkshop from "@/assets/tours/azeitao-cheese/workshop.jpg";
+import imgSintraEstates from "@/assets/tours/sintra-cascais/estates.jpg";
+import imgSintraCabo from "@/assets/tours/sintra-cascais/cabo-da-roca.jpg";
+import imgTroiaFerry from "@/assets/tours/troia-comporta/ferry.jpg";
+import imgTroiaBeach from "@/assets/tours/troia-comporta/beach.jpg";
+import imgFatimaNazare from "@/assets/tours/fatima-nazare-obidos/nazare.jpg";
 import {
   ArrowRight,
   Star,
