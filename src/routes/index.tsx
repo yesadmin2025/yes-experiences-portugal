@@ -968,6 +968,12 @@ function HomePage() {
         </div>
       </section>
 
+      {/* 4b — BUILDER PREVIEW GALLERY
+          Real saved builds. Each card shows a Signature on the left and the
+          same day after a guest tailored it on the right — communicating
+          "browse real builds, see how a Signature becomes yours." */}
+      <BuilderPreviewGallery />
+
       {/* 5 — SIGNATURE EXPERIENCES (confirm or tailor)
           Three signature starting points. Each can be booked as-is OR
           tailored — that dual nature is communicated in the section
