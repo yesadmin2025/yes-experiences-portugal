@@ -142,7 +142,7 @@ function TourDetailPage() {
         <div className="container-x max-w-5xl grid md:grid-cols-2 gap-8 md:gap-12">
           <Block icon={<Sparkles size={14} />} title="Highlights">
             <ul className="space-y-2.5 text-sm leading-relaxed">
-              {tour.highlights.map((h) => (
+              {(tour.highlights ?? []).map((h) => (
                 <li key={h} className="flex gap-2.5">
                   <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[color:var(--gold)] flex-shrink-0" />
                   <span>{h}</span>
@@ -153,7 +153,7 @@ function TourDetailPage() {
 
           <Block icon={<Check size={14} />} title="What's included">
             <ul className="space-y-2.5 text-sm leading-relaxed">
-              {tour.included.map((h) => (
+              {(tour.included ?? []).map((h) => (
                 <li key={h} className="flex gap-2.5">
                   <Check
                     size={14}
@@ -167,7 +167,7 @@ function TourDetailPage() {
 
           <Block icon={<Heart size={14} />} title="Ideal for">
             <ul className="space-y-2.5 text-sm leading-relaxed">
-              {tour.idealFor.map((h) => (
+              {(tour.idealFor ?? []).map((h) => (
                 <li key={h} className="flex gap-2.5">
                   <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[color:var(--teal)] flex-shrink-0" />
                   <span>{h}</span>
@@ -176,10 +176,10 @@ function TourDetailPage() {
             </ul>
           </Block>
 
-          {tour.notes.length > 0 && (
+          {(tour.notes?.length ?? 0) > 0 && (
             <Block icon={<Info size={14} />} title="Good to know">
               <ul className="space-y-2.5 text-sm leading-relaxed text-[color:var(--charcoal-soft)]">
-                {tour.notes.map((h) => (
+                {(tour.notes ?? []).map((h) => (
                   <li key={h} className="flex gap-2.5">
                     <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[color:var(--charcoal-soft)] flex-shrink-0" />
                     <span>{h}</span>
@@ -232,12 +232,12 @@ function ChapterStrip({ tour }: { tour: SignatureTour }) {
             <h2 className="serif text-2xl sm:text-3xl mt-2">The story, stop by stop</h2>
           </div>
           <span className="hidden sm:inline text-[11px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)]">
-            {tour.stops.length} chapters
+            {(tour.stops?.length ?? 0)} chapters
           </span>
         </div>
 
         <ol className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {tour.stops.map((s, i) => (
+          {(tour.stops ?? []).map((s, i) => (
             <li
               key={s.label}
               className="group relative flex flex-col bg-[color:var(--card)] border border-[color:var(--border)] overflow-hidden"
