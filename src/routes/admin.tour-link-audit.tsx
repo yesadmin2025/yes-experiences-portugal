@@ -416,7 +416,11 @@ function CrawlerErrorPanel() {
     setLoading(true);
     setErr(null);
     try {
-      const data = await getLastCrawlerError({ data: { strategy: s } });
+      // Pass a fresh timestamp so the RPC URL changes on every call,
+      // bypassing any browser/proxy cache and forcing a re-scan.
+      const data = await getLastCrawlerError({
+        data: { strategy: s, _ts: Date.now() },
+      });
       setInfo(data);
     } catch (e) {
       setErr(e instanceof Error ? e.message : String(e));
@@ -425,6 +429,7 @@ function CrawlerErrorPanel() {
     }
   };
 
+  // Re-scan on every page load (mount) and whenever strategy changes.
   useEffect(() => {
     void capture(strategy);
     // eslint-disable-next-line react-hooks/exhaustive-deps
