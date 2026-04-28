@@ -35,9 +35,9 @@ export function WhatsAppFab() {
 
   return (
     <div
-      // Sit above the mobile sticky CTA (~64px) on small screens, drop
-      // back to a comfortable bottom-8 on md+.
-      className="fixed left-5 md:left-8 z-40 print:hidden bottom-24 md:bottom-8 group"
+      // Bottom-right per brief. Sit above the mobile sticky CTA (~64px) on
+      // small screens, drop back to a comfortable bottom-8 on md+.
+      className="fixed right-5 md:right-8 z-40 print:hidden bottom-24 md:bottom-8 group"
       style={{ marginBottom: "env(safe-area-inset-bottom, 0px)" }}
     >
       {/* Tooltip — appears on hover/focus-within. Positioned to the right
