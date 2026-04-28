@@ -14,7 +14,7 @@ import editMarket from "@/assets/edit-market.jpg";
 import editViewpoint from "@/assets/edit-viewpoint.jpg";
 import catProposals from "@/assets/cat-proposals.jpg";
 import catCorporate from "@/assets/cat-corporate.jpg";
-import catPrivate from "@/assets/cat-private.jpg";
+
 import expRomantic from "@/assets/exp-romantic.jpg";
 import expGastronomy from "@/assets/exp-gastronomy.jpg";
 import expWine from "@/assets/exp-wine.jpg";
