@@ -511,10 +511,36 @@ function CrawlerErrorPanel() {
       </h3>
 
       <div className={`mt-3 border p-4 text-sm ${tone}`}>
-        {loading && !info && (
-          <p className="text-xs text-[color:var(--charcoal-soft)]">
-            Reading dev-server log…
-          </p>
+        {loading && (
+          <div
+            className="mb-3 border border-[color:var(--border)] bg-white/70 p-2.5"
+            role="status"
+            aria-live="polite"
+          >
+            <div className="flex items-center justify-between gap-2 text-[11px]">
+              <span className="inline-flex items-center gap-1.5 text-[color:var(--charcoal)]">
+                <RefreshCw size={11} className="animate-spin" />
+                <span className="font-medium">Scanning logs</span>
+                <span className="text-[color:var(--charcoal-soft)]">
+                  · {strategy === "root-cause" ? "root-cause" : "last-error"}
+                </span>
+              </span>
+              <span className="font-mono text-[10px] text-[color:var(--charcoal-soft)]">
+                {(elapsed / 1000).toFixed(1)}s
+              </span>
+            </div>
+            <p className="mt-1 text-[11px] text-[color:var(--charcoal-soft)]">
+              Step {Math.min(scanStep + 1, scanSteps.length)} / {scanSteps.length}: {scanSteps[scanStep]}
+            </p>
+            <div className="mt-2 h-1 w-full overflow-hidden bg-[color:var(--sand)]/60">
+              <div
+                className="h-full bg-[color:var(--gold)] transition-all duration-200 ease-out"
+                style={{
+                  width: `${Math.round(((scanStep + 1) / scanSteps.length) * 100)}%`,
+                }}
+              />
+            </div>
+          </div>
         )}
 
         {err && (
