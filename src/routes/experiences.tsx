@@ -3,6 +3,7 @@ import { SiteLayout } from "@/components/SiteLayout";
 import { ArrowRight, Clock, MapPin, Pencil, ExternalLink } from "lucide-react";
 import { signatureTours } from "@/data/signatureTours";
 import { useImportedTourImages } from "@/hooks/use-imported-tour-images";
+import { ImageQualityToggle } from "@/components/ImageQualityToggle";
 
 export const Route = createFileRoute("/experiences")({
   head: () => ({
@@ -43,6 +44,9 @@ function ExperiencesPage() {
 
       <section className="py-16 md:py-20">
         <div className="container-x">
+          <div className="flex justify-end mb-6">
+            <ImageQualityToggle />
+          </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {signatureTours.map((t) => (
               <article key={t.id} className="group flex flex-col">
