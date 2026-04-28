@@ -1230,3 +1230,31 @@ function DesignerNudge() {
     </Link>
   );
 }
+
+function ShareLinkButton() {
+  const [copied, setCopied] = useState(false);
+  const onClick = async () => {
+    if (typeof window === "undefined") return;
+    const url = window.location.href;
+    try {
+      if (navigator.share) {
+        await navigator.share({ url, title: "My Portugal Experience" });
+        return;
+      }
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // user cancelled share — no-op
+    }
+  };
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="w-full inline-flex items-center justify-center gap-2 bg-[color:var(--card)] border border-[color:var(--border)] text-[color:var(--charcoal)] px-6 py-3.5 text-[11px] uppercase tracking-[0.22em] hover:border-[color:var(--teal)]/40 transition-colors"
+    >
+      {copied ? <><CheckIcon size={13} /> Link Copied</> : <><Share2 size={13} /> Copy Share Link</>}
+    </button>
+  );
+}
