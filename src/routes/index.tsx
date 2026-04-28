@@ -1210,7 +1210,7 @@ function HomePage() {
           <div className="reveal mt-12 md:mt-16 text-center">
             <Link
               to="/local-stories"
-              className="inline-flex items-center gap-2 text-[14px] tracking-[0.005em] text-[color:var(--teal)] hover:text-[color:var(--teal-2)] transition-colors font-medium"
+              className="inline-flex items-center gap-2 text-[14px] tracking-[0.005em] text-[color:var(--teal)] hover:text-[color:var(--charcoal)] transition-colors font-medium"
             >
               Read all local stories <ArrowRight size={14} />
             </Link>
