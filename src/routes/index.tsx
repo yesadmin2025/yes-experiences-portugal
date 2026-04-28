@@ -8,21 +8,22 @@ import { useCtaScrollScale } from "@/hooks/use-cta-scroll-scale";
 import { CtaScrollDebugOverlay, useCtaScrollDebugToggle } from "@/components/CtaScrollDebugOverlay";
 import heroImg from "@/assets/hero-coast.jpg";
 import multiDayImg from "@/assets/multi-day.jpg";
-import editCoastal from "@/assets/edit-coastal-road.jpg";
-import editWinery from "@/assets/edit-winery.jpg";
-import editMarket from "@/assets/edit-market.jpg";
-import editViewpoint from "@/assets/edit-viewpoint.jpg";
-import catProposals from "@/assets/cat-proposals.jpg";
-import catCorporate from "@/assets/cat-corporate.jpg";
-import decisionSignature from "@/assets/decision-signature.jpg";
-import decisionTailor from "@/assets/decision-tailor.jpg";
-import decisionStudio from "@/assets/decision-studio.jpg";
-import decisionMoment from "@/assets/decision-moment.jpg";
 
-import expRomantic from "@/assets/exp-romantic.jpg";
-import expGastronomy from "@/assets/exp-gastronomy.jpg";
-import expWine from "@/assets/exp-wine.jpg";
-import expNature from "@/assets/exp-nature.jpg";
+// Real Viator-sourced tour photography — used everywhere on the homepage so
+// every card and editorial moment maps to an actual stop from one of the
+// Signature tours. No stock or invented imagery is used below.
+import imgArrabidaWineHero from "@/assets/tours/arrabida-wine-allinclusive/hero.jpg";
+import imgArrabidaWineWinery from "@/assets/tours/arrabida-wine-allinclusive/winery.jpg";
+import imgArrabidaWineLunch from "@/assets/tours/arrabida-wine-allinclusive/lunch.jpg";
+import imgArrabidaWineViewpoint from "@/assets/tours/arrabida-wine-allinclusive/viewpoint.jpg";
+import imgArrabidaBoatCoves from "@/assets/tours/arrabida-boat/coves.jpg";
+import imgArrabidaBoatSesimbra from "@/assets/tours/arrabida-boat/sesimbra.jpg";
+import imgAzeitaoWorkshop from "@/assets/tours/azeitao-cheese/workshop.jpg";
+import imgSintraEstates from "@/assets/tours/sintra-cascais/estates.jpg";
+import imgSintraCabo from "@/assets/tours/sintra-cascais/cabo-da-roca.jpg";
+import imgTroiaFerry from "@/assets/tours/troia-comporta/ferry.jpg";
+import imgTroiaBeach from "@/assets/tours/troia-comporta/beach.jpg";
+import imgFatimaNazare from "@/assets/tours/fatima-nazare-obidos/nazare.jpg";
 import {
   ArrowRight,
   Star,
@@ -105,26 +106,37 @@ const signatures = FEATURED_TOUR_IDS
     pace: t.pace,
   }));
 
+// Local Stories — every entry maps to a real moment from a real Signature
+// tour, with the exact photo Viator shot at that stop. Lines are pulled
+// from the tour's own narrative, not invented around the imagery.
 const editorial = [
   {
-    title: "Hidden Coastal Roads",
-    line: "The drive from Sintra to Cabo da Roca that no guidebook quite gets right.",
-    img: editCoastal,
+    title: "Cellars in Azeitão",
+    line: "Three small family wineries in Arrábida — guided tastings poured by the people who pressed the grapes.",
+    img: imgArrabidaWineWinery,
+    to: "/tours/$tourId" as const,
+    tourId: "arrabida-wine-allinclusive",
   },
   {
-    title: "Family Wineries",
-    line: "Three generations, one cellar door, a glass poured by the winemaker himself.",
-    img: editWinery,
+    title: "Hidden Coves of Arrábida",
+    line: "A boat slips into the natural park's turquoise coves — swim, snorkel, or simply drift with the boats.",
+    img: imgArrabidaBoatCoves,
+    to: "/tours/$tourId" as const,
+    tourId: "arrabida-boat",
   },
   {
-    title: "Local Markets at Dawn",
-    line: "Where breakfast is a pastel de nata and the day's plan is written on a napkin.",
-    img: editMarket,
+    title: "Sintra's Royal Estates",
+    line: "Pena, Quinta da Regaleira, the misted gardens — the Sintra you read about, walked at a private pace.",
+    img: imgSintraEstates,
+    to: "/tours/$tourId" as const,
+    tourId: "sintra-cascais",
   },
   {
-    title: "Secret Viewpoints",
-    line: "A bend in the road. A stone wall. The whole valley below — and nobody else.",
-    img: editViewpoint,
+    title: "Where the Land Ends",
+    line: "Cabo da Roca — the western edge of continental Europe, then a long lunch by the water in Cascais.",
+    img: imgSintraCabo,
+    to: "/tours/$tourId" as const,
+    tourId: "sintra-cascais",
   },
 ];
 
@@ -143,7 +155,7 @@ const startPaths = [
     accent: "ivory" as const,
     slug: "signature",
     stepLabel: "Signature",
-    bg: decisionSignature,
+    bg: imgArrabidaWineWinery,
   },
   {
     icon: Wand2,
@@ -158,7 +170,7 @@ const startPaths = [
     accent: "sand" as const,
     slug: "tailor",
     stepLabel: "Tailor",
-    bg: decisionTailor,
+    bg: imgAzeitaoWorkshop,
   },
   {
     icon: Sparkles,
@@ -173,7 +185,7 @@ const startPaths = [
     accent: "teal" as const,
     slug: "studio",
     stepLabel: "Studio",
-    bg: decisionStudio,
+    bg: imgTroiaFerry,
   },
   {
     icon: Gift,
@@ -188,7 +200,7 @@ const startPaths = [
     accent: "charcoal" as const,
     slug: "moment",
     stepLabel: "Moment",
-    bg: decisionMoment,
+    bg: imgArrabidaWineLunch,
   },
 ];
 
@@ -709,7 +721,7 @@ function HomePage() {
               aria-hidden="true"
             >
               <div className="flex -space-x-2.5">
-                {[expRomantic, expGastronomy, expWine, expNature, editMarket].map((src, i) => (
+                {[imgArrabidaWineLunch, imgArrabidaBoatCoves, imgSintraEstates, imgTroiaBeach, imgFatimaNazare].map((src, i) => (
                   <span
                     key={i}
                     className="inline-block w-9 h-9 md:w-10 md:h-10 rounded-full overflow-hidden border-2 border-[color:var(--ivory)] shadow-[0_2px_6px_-2px_rgba(46,46,46,0.25)] bg-[color:var(--card)]"
@@ -1021,7 +1033,7 @@ function HomePage() {
                 cta: "Plan a moment",
                 ariaLabel:
                   "For moments that matter — proposals, celebrations, corporate and private groups",
-                bg: catProposals,
+                bg: imgSintraCabo,
               },
             ].map((b) => (
               <Link
@@ -1142,21 +1154,21 @@ function HomePage() {
                 title: "A moment they'll never forget",
                 line: "A hidden viewpoint, a private dinner, a perfectly timed pause — quietly extraordinary.",
                 to: "/proposals" as const,
-                bg: expRomantic,
+                bg: imgSintraCabo,
               },
               {
                 eyebrow: "Celebrations",
                 title: "Birthdays, anniversaries, milestones",
                 line: "Gather the people who matter, in places that feel made for the occasion.",
                 to: "/proposals" as const,
-                bg: expGastronomy,
+                bg: imgArrabidaWineLunch,
               },
               {
                 eyebrow: "Corporate",
                 title: "Teams, incentives, retreats",
                 line: "Refined private programs that feel nothing like a hotel ballroom.",
                 to: "/corporate" as const,
-                bg: catCorporate,
+                bg: imgArrabidaBoatCoves,
               },
             ].map((o) => (
               <li key={o.eyebrow} className="reveal-stagger h-full">
@@ -1210,25 +1222,32 @@ function HomePage() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 md:gap-7">
             {editorial.map((e) => (
               <article key={e.title} className="group reveal-stagger">
-                <div className="editorial-card relative overflow-hidden aspect-[4/5] mb-4 md:mb-5 border border-[color:var(--border)]">
-                  <img
-                    src={e.img}
-                    alt={e.title}
-                    loading="lazy"
-                    data-card-image
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal)]/88 via-[color:var(--charcoal)]/25 to-transparent" />
-                  <div className="absolute left-4 right-4 bottom-4 md:left-5 md:right-5 md:bottom-5">
-                    <span className="block h-px w-7 md:w-8 bg-[color:var(--gold)] mb-2.5 md:mb-3 opacity-90" />
-                    <h3 className="t-h3 text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
-                      {e.title}
-                    </h3>
+                <Link
+                  to={e.to}
+                  params={{ tourId: e.tourId }}
+                  aria-label={`${e.title} — open the tour`}
+                  className="block"
+                >
+                  <div className="editorial-card relative overflow-hidden aspect-[4/5] mb-4 md:mb-5 border border-[color:var(--border)]">
+                    <img
+                      src={e.img}
+                      alt={e.title}
+                      loading="lazy"
+                      data-card-image
+                      className="w-full h-full object-cover transition-transform duration-[700ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:scale-[1.04]"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal)]/88 via-[color:var(--charcoal)]/25 to-transparent" />
+                    <div className="absolute left-4 right-4 bottom-4 md:left-5 md:right-5 md:bottom-5">
+                      <span className="block h-px w-7 md:w-8 bg-[color:var(--gold)] mb-2.5 md:mb-3 opacity-90" />
+                      <h3 className="t-h3 text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
+                        {e.title}
+                      </h3>
+                    </div>
                   </div>
-                </div>
-                <p className="text-[14.5px] md:text-[15.5px] text-[color:var(--charcoal)] leading-[1.7] max-w-[34ch]">
-                  {e.line}
-                </p>
+                  <p className="text-[14.5px] md:text-[15.5px] text-[color:var(--charcoal)] leading-[1.7] max-w-[34ch]">
+                    {e.line}
+                  </p>
+                </Link>
               </article>
             ))}
           </div>
@@ -1310,7 +1329,7 @@ function HomePage() {
             {/* Soft photographic wash — adds atmospheric depth without
                 losing the sand surface or harming text contrast. */}
             <img
-              src={expWine}
+              src={imgArrabidaWineHero}
               alt=""
               aria-hidden="true"
               loading="lazy"
