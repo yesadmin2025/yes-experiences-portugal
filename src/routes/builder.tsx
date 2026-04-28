@@ -1441,257 +1441,272 @@ function buildTimeline(s: BuilderState): Chapter[] {
   const region = regionOpts.find((r) => r.id === s.region)?.name;
   const chapters: Chapter[] = [];
 
-  /* ---- Chapter 1 — opening ---- */
-  if (s.highlights.includes("livramento") || s.styles.includes("gastronomy")) {
-    chapters.push({
-      when: "Morning",
-      label: "First light at the local market",
-      line: `Livramento wakes up in color — fishmongers calling, fruit stacked like a painting, the smell of fresh bread. Your local guide hands ${v.you} a small tasting basket and the day begins with your senses, not your itinerary.`,
-      icon: UtensilsCrossed,
-      tags: ["Tasting basket", "Local farmers"],
-      weight: 10,
-    });
-  } else if (s.region) {
-    chapters.push({
-      when: "Morning",
-      label: `A gentle arrival in ${region}`,
-      line: `Your local guide meets ${v.you} where the day feels right — coffee in hand, the route already softly mapped. No rush. Introductions feel more like a conversation between friends than the start of a tour.`,
-      icon: Sun,
-      tags: ["Private pickup", "Local guide"],
-      weight: 10,
-    });
+  /* ---- PRELUDE — ambient enhancements that frame the entire day ---- */
+  if (s.enhancements.includes("transfer")) {
+    chapters.push(
+      chapter("PRELUDE", {
+        label: "A car that just appears",
+        line: `A premium vehicle and a discreet driver. Doors open before ${v.you} reach for them. Bags vanish. The day moves without a single small friction.`,
+        icon: MapPin,
+        tags: ["Premium transfer"],
+      }),
+    );
+  }
+  if (s.enhancements.includes("photographer")) {
+    chapters.push(
+      chapter("PRELUDE", {
+        label: "A quiet camera in the background",
+        line: `Your private photographer is barely visible — and that's the point. No posing, no smiles on cue. Just ${v.you}, exactly as you are, in the most beautiful corners of the day.`,
+        icon: Camera,
+        tags: ["Private photographer"],
+        offset: 1, // sits just after transfer when both present
+      }),
+    );
   }
 
-  /* ---- Workshop / cultural mid-morning ---- */
+  /* ---- DAWN / MORNING — opening chapter ---- */
+  if (s.highlights.includes("livramento") || s.styles.includes("gastronomy")) {
+    chapters.push(
+      chapter("DAWN", {
+        label: "First light at the local market",
+        line: `Livramento wakes up in color — fishmongers calling, fruit stacked like a painting, the smell of fresh bread. Your local guide hands ${v.you} a small tasting basket and the day begins with your senses, not your itinerary.`,
+        icon: UtensilsCrossed,
+        tags: ["Tasting basket", "Local farmers"],
+      }),
+    );
+  } else if (s.region) {
+    chapters.push(
+      chapter("MORNING", {
+        label: `A gentle arrival in ${region}`,
+        line: `Your local guide meets ${v.you} where the day feels right — coffee in hand, the route already softly mapped. No rush. Introductions feel more like a conversation between friends than the start of a tour.`,
+        icon: Sun,
+        tags: ["Private pickup", "Local guide"],
+      }),
+    );
+  }
+
+  /* ---- LATE MORNING — workshops, cellars ---- */
   if (s.highlights.includes("tiles")) {
-    chapters.push({
-      when: "Late morning",
-      label: "Hands in the clay, paint on the tile",
-      line: `A small atelier opens its doors just for ${v.you}. The artisan shows ${v.you} the centuries-old gestures, then steps back. ${capitalize(v.your)} hands move slower than expected — and the tile ${v.you === "you" ? "you" : "you all"} paint today will travel home with you.`,
-      icon: Landmark,
-      tags: ["Private workshop", "Take home a piece"],
-      weight: 18,
-    });
+    chapters.push(
+      chapter("LATE_MORNING", {
+        label: "Hands in the clay, paint on the tile",
+        line: `A small atelier opens its doors just for ${v.you}. The artisan shows ${v.you} the centuries-old gestures, then steps back. ${capitalize(v.your)} hands move slower than expected — and the tile ${v.you === "you" ? "you" : "you all"} paint today will travel home with you.`,
+        icon: Landmark,
+        tags: ["Private workshop", "Take home a piece"],
+      }),
+    );
   }
   if (s.highlights.includes("cheese")) {
-    chapters.push({
-      when: "Late morning",
-      label: "The Azeitão cheese cellar",
-      line: `Down stone steps into a cool cellar where wheels of sheep's cheese rest in silence. The cheesemaker pours a glass of moscatel, hands ${v.you} a knife, and explains why the texture changes with the season.`,
-      icon: UtensilsCrossed,
-      tags: ["Family producer", "Tasting"],
-      weight: 18,
-    });
+    chapters.push(
+      chapter("LATE_MORNING", {
+        label: "The Azeitão cheese cellar",
+        line: `Down stone steps into a cool cellar where wheels of sheep's cheese rest in silence. The cheesemaker pours a glass of moscatel, hands ${v.you} a knife, and explains why the texture changes with the season.`,
+        icon: UtensilsCrossed,
+        tags: ["Family producer", "Tasting"],
+        offset: 1, // sits after tiles if both present
+      }),
+    );
   }
 
-  /* ---- Wine / tasting midday ---- */
+  /* ---- MIDDAY — wine / signature tasting ---- */
   if (s.styles.includes("wine") || s.highlights.includes("tasting")) {
-    chapters.push({
-      when: "Midday",
-      label: "A boutique winery, just for you",
-      line: `The vines stretch out below as the winemaker — usually impossible to meet — walks ${v.you} between the rows. Inside, a quiet table is set with three wines, a few small plates, and the feeling that this place opened today only because ${v.you} ${v.verbBe} here.`,
-      icon: Wine,
-      tags: ["Family producer", "Private tasting"],
-      weight: 25,
-    });
+    chapters.push(
+      chapter("MIDDAY", {
+        label: "A boutique winery, just for you",
+        line: `The vines stretch out below as the winemaker — usually impossible to meet — walks ${v.you} between the rows. Inside, a quiet table is set with three wines, a few small plates, and the feeling that this place opened today only because ${v.you} ${v.verbBe} here.`,
+        icon: Wine,
+        tags: ["Family producer", "Private tasting"],
+      }),
+    );
   }
 
-  /* ---- Lunch ---- */
+  /* ---- EARLY AFTERNOON — lunch ---- */
   if (s.highlights.includes("portinho")) {
-    chapters.push({
-      when: "Early afternoon",
-      label: "Lunch with your feet in the sand",
-      line: `Portinho da Arrábida — a small white village folded into the cliffs. The chef has chosen the catch this morning. Lunch is long, the wine is cold, and time stops being something you measure.`,
-      icon: UtensilsCrossed,
-      tags: ["Fresh catch", "Slow lunch"],
-      weight: 32,
-    });
+    chapters.push(
+      chapter("EARLY_AFTERNOON", {
+        label: "Lunch with your feet in the sand",
+        line: `Portinho da Arrábida — a small white village folded into the cliffs. The chef has chosen the catch this morning. Lunch is long, the wine is cold, and time stops being something you measure.`,
+        icon: UtensilsCrossed,
+        tags: ["Fresh catch", "Slow lunch"],
+      }),
+    );
   } else if (s.styles.includes("gastronomy")) {
-    chapters.push({
-      when: "Early afternoon",
-      label: "A long table, a chef's hand",
-      line: `A quiet local restaurant where the chef knows ${v.your} guide by name. Plates arrive without ceremony — and each one tells a small story of the region.`,
-      icon: UtensilsCrossed,
-      tags: ["Local chef", "Tasting menu"],
-      weight: 32,
-    });
+    chapters.push(
+      chapter("EARLY_AFTERNOON", {
+        label: "A long table, a chef's hand",
+        line: `A quiet local restaurant where the chef knows ${v.your} guide by name. Plates arrive without ceremony — and each one tells a small story of the region.`,
+        icon: UtensilsCrossed,
+        tags: ["Local chef", "Tasting menu"],
+      }),
+    );
   }
 
-  /* ---- Adventure / coast / nature afternoon ---- */
+  /* ---- AFTERNOON — adventure, coast, nature ---- */
   if (s.highlights.includes("boat")) {
-    chapters.push({
-      when: "Afternoon",
-      label: "On the water in Arrábida",
-      line: `A private boat slips out of harbor. Sea-green coves appear one after another, and the captain anchors in the quietest one. ${capitalize(v.you)} swim, or just float, while the cliffs glow gold above.`,
-      icon: Waves,
-      tags: ["Private boat", "Hidden coves", "Swim stop"],
-      weight: 40,
-    });
+    chapters.push(
+      chapter("AFTERNOON", {
+        label: "On the water in Arrábida",
+        line: `A private boat slips out of harbor. Sea-green coves appear one after another, and the captain anchors in the quietest one. ${capitalize(v.you)} swim, or just float, while the cliffs glow gold above.`,
+        icon: Waves,
+        tags: ["Private boat", "Hidden coves", "Swim stop"],
+      }),
+    );
   } else if (s.highlights.includes("jeep")) {
-    chapters.push({
-      when: "Afternoon",
-      label: "Off the map, into the hills",
-      line: `The 4×4 leaves the road and climbs into a Portugal most travelers never see — pine forests, ancient stone walls, a single shepherd waving from far away.`,
-      icon: Mountain,
-      tags: ["Off-road", "Hidden viewpoints"],
-      weight: 40,
-    });
+    chapters.push(
+      chapter("AFTERNOON", {
+        label: "Off the map, into the hills",
+        line: `The 4×4 leaves the road and climbs into a Portugal most travelers never see — pine forests, ancient stone walls, a single shepherd waving from far away.`,
+        icon: Mountain,
+        tags: ["Off-road", "Hidden viewpoints"],
+      }),
+    );
   } else if (s.highlights.includes("sesimbra")) {
-    chapters.push({
-      when: "Afternoon",
-      label: "A wander through Sesimbra",
-      line: `A fishing village that still smells of the sea and the morning's catch. ${capitalize(v.you)} walk slowly along the harbor, stop for an espresso, and let the rhythm of the village set ${v.your} pace.`,
-      icon: Waves,
-      tags: ["Old village", "Harbor walk"],
-      weight: 40,
-    });
+    chapters.push(
+      chapter("AFTERNOON", {
+        label: "A wander through Sesimbra",
+        line: `A fishing village that still smells of the sea and the morning's catch. ${capitalize(v.you)} walk slowly along the harbor, stop for an espresso, and let the rhythm of the village set ${v.your} pace.`,
+        icon: Waves,
+        tags: ["Old village", "Harbor walk"],
+      }),
+    );
   } else if (s.styles.includes("nature") || s.styles.includes("coastal")) {
-    chapters.push({
-      when: "Afternoon",
-      label: "Slow roads, wild views",
-      line: `Your guide takes the long way — the one that's longer on the map and shorter in the heart. ${capitalize(v.you)} stop wherever ${v.you === "you" ? "you" : "you all"} want, as often as ${v.you === "you" ? "you" : "you all"} want.`,
-      icon: Mountain,
-      tags: ["Scenic drive", "Photo stops"],
-      weight: 40,
-    });
+    chapters.push(
+      chapter("AFTERNOON", {
+        label: "Slow roads, wild views",
+        line: `Your guide takes the long way — the one that's longer on the map and shorter in the heart. ${capitalize(v.you)} stop wherever ${v.you === "you" ? "you" : "you all"} want, as often as ${v.you === "you" ? "you" : "you all"} want.`,
+        icon: Mountain,
+        tags: ["Scenic drive", "Photo stops"],
+      }),
+    );
   }
 
-  /* ---- Heritage stop ---- */
+  /* ---- LATE AFTERNOON — heritage / viewpoints ---- */
   if (s.highlights.includes("viewpoint") || s.styles.includes("heritage")) {
-    chapters.push({
-      when: "Late afternoon",
-      label: "A viewpoint only locals know",
-      line: `A small dirt road, a short walk, and then — the view. Nobody else here. Just the wind, the cliffs, and the kind of silence that makes ${v.you} reach for ${v.your} camera, then put it away again.`,
-      icon: Camera,
-      tags: ["Hidden viewpoint"],
-      weight: 48,
-    });
+    chapters.push(
+      chapter("LATE_AFTERNOON", {
+        label: "A viewpoint only locals know",
+        line: `A small dirt road, a short walk, and then — the view. Nobody else here. Just the wind, the cliffs, and the kind of silence that makes ${v.you} reach for ${v.your} camera, then put it away again.`,
+        icon: Camera,
+        tags: ["Hidden viewpoint"],
+      }),
+    );
   }
   if (s.highlights.includes("dinosaur")) {
-    chapters.push({
-      when: "Late afternoon",
-      label: "Footprints from before time",
-      line: `At Cabo Espichel, fossilized dinosaur tracks climb a vertical cliff above the ocean. Your guide tells ${v.you} the story of how they got there — and the day suddenly feels much, much bigger.`,
-      icon: Mountain,
-      tags: ["Geology", "Wow moment"],
-      weight: 48,
-    });
+    chapters.push(
+      chapter("LATE_AFTERNOON", {
+        label: "Footprints from before time",
+        line: `At Cabo Espichel, fossilized dinosaur tracks climb a vertical cliff above the ocean. Your guide tells ${v.you} the story of how they got there — and the day suddenly feels much, much bigger.`,
+        icon: Mountain,
+        tags: ["Geology", "Wow moment"],
+        offset: 1,
+      }),
+    );
   }
   if (s.highlights.includes("ginjinha")) {
-    chapters.push({
-      when: "Late afternoon",
-      label: "A ginjinha in a chocolate cup",
-      line: `A tiny doorway in Óbidos. A glass of ruby cherry liqueur, served in a dark chocolate cup. ${capitalize(v.you)} eat the cup. ${capitalize(v.you)} laugh. ${capitalize(v.you)} order another.`,
-      icon: Wine,
-      tags: ["Local ritual"],
-      weight: 48,
-    });
+    chapters.push(
+      chapter("LATE_AFTERNOON", {
+        label: "A ginjinha in a chocolate cup",
+        line: `A tiny doorway in Óbidos. A glass of ruby cherry liqueur, served in a dark chocolate cup. ${capitalize(v.you)} eat the cup. ${capitalize(v.you)} laugh. ${capitalize(v.you)} order another.`,
+        icon: Wine,
+        tags: ["Local ritual"],
+        offset: 2,
+      }),
+    );
   }
 
-  /* ---- Enhancement chapters ---- */
-  if (s.enhancements.includes("photographer")) {
-    chapters.push({
-      when: "Throughout the day",
-      label: "A quiet camera in the background",
-      line: `Your private photographer is barely visible — and that's the point. No posing, no smiles on cue. Just ${v.you}, exactly as you are, in the most beautiful corners of the day.`,
-      icon: Camera,
-      tags: ["Private photographer"],
-      weight: 55,
-    });
-  }
+  /* ---- GOLDEN HOUR — atmosphere enhancements ---- */
   if (s.enhancements.includes("music")) {
-    chapters.push({
-      when: "Golden hour",
-      label: "Live fado, the sun on its way down",
-      line: `A guitarist arrives. Then the singer. The first note of fado moves through the room and ${v.you === "you" ? "you" : "everyone"} stops talking — without anyone deciding to.`,
-      icon: Music,
-      tags: ["Live music", "Fado"],
-      weight: 60,
-    });
+    chapters.push(
+      chapter("GOLDEN_HOUR", {
+        label: "Live fado, the sun on its way down",
+        line: `A guitarist arrives. Then the singer. The first note of fado moves through the room and ${v.you === "you" ? "you" : "everyone"} stops talking — without anyone deciding to.`,
+        icon: Music,
+        tags: ["Live music", "Fado"],
+      }),
+    );
   }
   if (s.enhancements.includes("florals")) {
-    chapters.push({
-      when: "Golden hour",
-      label: "Florals on the table, set just for you",
-      line: `A florist has been by. The table waiting for ${v.you} is wild and beautiful — branches, herbs, a few quiet candles. Nothing about it feels like a hotel.`,
-      icon: Sparkles,
-      tags: ["Bespoke florals"],
-      weight: 60,
-    });
-  }
-  if (s.enhancements.includes("chef")) {
-    chapters.push({
-      when: "Evening",
-      label: "A private chef, a private kitchen",
-      line: `Back at the villa, a Portuguese chef is already cooking. ${capitalize(v.you)} pour a glass and watch — or step into the kitchen. Dinner is exactly as long, and exactly as quiet, as ${v.you} want it to be.`,
-      icon: UtensilsCrossed,
-      tags: ["Private chef", "At home"],
-      weight: 65,
-    });
-  }
-  if (s.enhancements.includes("transfer")) {
-    chapters.push({
-      when: "Throughout the day",
-      label: "A car that just appears",
-      line: `A premium vehicle and a discreet driver. Doors open before ${v.you} reach for them. Bags vanish. The day moves without a single small friction.`,
-      icon: MapPin,
-      tags: ["Premium transfer"],
-      weight: 5, // appears near the start
-    });
+    chapters.push(
+      chapter("GOLDEN_HOUR", {
+        label: "Florals on the table, set just for you",
+        line: `A florist has been by. The table waiting for ${v.you} is wild and beautiful — branches, herbs, a few quiet candles. Nothing about it feels like a hotel.`,
+        icon: Sparkles,
+        tags: ["Bespoke florals"],
+        offset: 1,
+      }),
+    );
   }
 
-  /* ---- Pace-driven closing chapter ---- */
+  /* ---- SUNSET / EVENING — pace-driven closing ---- */
   if (s.pace === "slow") {
-    chapters.push({
-      when: "Sunset",
-      label: "The day closes the way it should",
-      line: `Somewhere quiet, somewhere high. ${capitalize(v.you)} watch the light go gold, then pink, then dark blue. Nobody speaks much. Nobody needs to.`,
-      icon: Moon,
-      tags: ["Sunset moment"],
-      weight: 75,
-    });
-  } else if (s.pace === "rich") {
-    chapters.push({
-      when: "Evening",
-      label: "One more taste before the day ends",
-      line: `A last stop ${v.you} weren't expecting — a little bar, a tiny tasting room, a chef ${v.your} guide insists ${v.you} meet. The day refuses to end politely.`,
-      icon: Music,
-      tags: ["Bonus stop"],
-      weight: 75,
-    });
+    chapters.push(
+      chapter("SUNSET", {
+        label: "The day closes the way it should",
+        line: `Somewhere quiet, somewhere high. ${capitalize(v.you)} watch the light go gold, then pink, then dark blue. Nobody speaks much. Nobody needs to.`,
+        icon: Moon,
+        tags: ["Sunset moment"],
+      }),
+    );
   } else if (s.pace === "balanced" && (s.region || s.styles.length)) {
-    chapters.push({
-      when: "Early evening",
-      label: "Drop-off, slow goodbyes",
-      line: `Your guide drops ${v.you} off where the day began — but nothing about ${v.you} feels the same. Plans for tomorrow can wait until tomorrow.`,
-      icon: Moon,
-      tags: ["Private return"],
-      weight: 75,
-    });
+    chapters.push(
+      chapter("SUNSET", {
+        label: "Drop-off, slow goodbyes",
+        line: `Your guide drops ${v.you} off where the day began — but nothing about ${v.you} feels the same. Plans for tomorrow can wait until tomorrow.`,
+        icon: Moon,
+        tags: ["Private return"],
+      }),
+    );
   }
 
-  /* ---- Tier-driven epilogue ---- */
+  /* ---- EVENING — chef + rich-pace bonus ---- */
+  if (s.enhancements.includes("chef")) {
+    chapters.push(
+      chapter("EVENING", {
+        label: "A private chef, a private kitchen",
+        line: `Back at the villa, a Portuguese chef is already cooking. ${capitalize(v.you)} pour a glass and watch — or step into the kitchen. Dinner is exactly as long, and exactly as quiet, as ${v.you} want it to be.`,
+        icon: UtensilsCrossed,
+        tags: ["Private chef", "At home"],
+      }),
+    );
+  }
+  if (s.pace === "rich") {
+    chapters.push(
+      chapter("EVENING", {
+        label: "One more taste before the day ends",
+        line: `A last stop ${v.you} weren't expecting — a little bar, a tiny tasting room, a chef ${v.your} guide insists ${v.you} meet. The day refuses to end politely.`,
+        icon: Music,
+        tags: ["Bonus stop"],
+        offset: 1, // after chef if both
+      }),
+    );
+  }
+
+  /* ---- EPILOGUE — tier-driven follow-up ---- */
   if (s.tier === "couture") {
-    chapters.push({
-      when: "Epilogue",
-      label: "A small surprise, signed by your designer",
-      line: `Back in ${v.your} room, something is waiting — a handwritten note, a small gift chosen for ${v.you} alone. This is what Couture means: somebody, somewhere, has been thinking about ${v.you} all day.`,
-      icon: Heart,
-      tags: ["Couture touch"],
-      weight: 90,
-    });
+    chapters.push(
+      chapter("EPILOGUE", {
+        label: "A small surprise, signed by your designer",
+        line: `Back in ${v.your} room, something is waiting — a handwritten note, a small gift chosen for ${v.you} alone. This is what Couture means: somebody, somewhere, has been thinking about ${v.you} all day.`,
+        icon: Heart,
+        tags: ["Couture touch"],
+      }),
+    );
   } else if (s.tier === "atelier") {
-    chapters.push({
-      when: "Epilogue",
-      label: "A quiet word from your designer",
-      line: `An evening message from the designer who built this day. A photograph, a thought for tomorrow, an open invitation to change anything that didn't feel right.`,
-      icon: MessageCircle,
-      tags: ["Atelier follow-up"],
-      weight: 90,
-    });
+    chapters.push(
+      chapter("EPILOGUE", {
+        label: "A quiet word from your designer",
+        line: `An evening message from the designer who built this day. A photograph, a thought for tomorrow, an open invitation to change anything that didn't feel right.`,
+        icon: MessageCircle,
+        tags: ["Atelier follow-up"],
+      }),
+    );
   }
 
-  return chapters.sort((a, b) => a.weight - b.weight);
+  // Stable sort: equal weights keep insertion order
+  return chapters
+    .map((c, i) => ({ c, i }))
+    .sort((a, b) => a.c.weight - b.c.weight || a.i - b.i)
+    .map(({ c }) => c);
 }
 
 function capitalize(s: string) {
