@@ -188,9 +188,9 @@ const startPaths = [
   },
   {
     icon: Sparkles,
-    eyebrow: "Instant · From scratch",
+    eyebrow: "The core experience · Live",
     title: "Build Your Own (Studio)",
-    line: "Create everything in real time and confirm instantly.",
+    line: "Create your journey in real time — with instant confirmation.",
     cta: "Open Studio",
     to: "/builder",
     destination: "Studio",
