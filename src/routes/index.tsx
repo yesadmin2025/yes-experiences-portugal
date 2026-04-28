@@ -1007,56 +1007,8 @@ function HomePage() {
             </p>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-7 max-w-5xl mx-auto">
-            {signatures.map((s) => (
-              <article key={s.id} className="reveal-stagger group flex flex-col">
-                <div className="lift-layer-sm flex flex-col h-full p-3 -m-3 rounded-sm transition-all duration-500 ease-out hover:-translate-y-1 hover:bg-[color:var(--ivory)]/60 hover:shadow-[0_22px_50px_-30px_rgba(41,91,97,0.25)]">
-                  <Link
-                    to="/tours/$tourId"
-                    params={{ tourId: s.id }}
-                    className="relative overflow-hidden aspect-[4/5] mb-5 shadow-[0_10px_30px_-20px_rgba(46,46,46,0.28)] group-hover:shadow-[0_28px_55px_-22px_rgba(41,91,97,0.32)] transition-shadow duration-700 block"
-                    aria-label={`Confirm this journey — ${s.title}`}
-                  >
-                    <img
-                      src={s.img}
-                      alt={s.title}
-                      loading="lazy"
-                      style={{ objectPosition: (s as { focal?: string }).focal ?? "50% 50%" }}
-                      className="w-full h-full object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.08]"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/80 via-[color:var(--charcoal)]/15 to-transparent" />
-                  </Link>
-                  <h3 className="t-h3 text-[color:var(--charcoal)] transition-colors duration-300 group-hover:text-[color:var(--teal)]">
-                    {s.title}
-                  </h3>
-                  <p className="mt-3 text-[15px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
-                    {s.line}
-                  </p>
-                  <div className="mt-5 pt-5 border-t border-[color:var(--border)] flex items-center gap-5">
-                    <Link
-                      to="/tours/$tourId"
-                      params={{ tourId: s.id }}
-                      aria-label={`Confirm this journey — ${s.title}`}
-                      className="group/cta inline-flex items-center gap-2 text-[14px] tracking-[0.005em] font-medium text-[color:var(--teal)] hover:text-[color:var(--teal-2)] transition-colors"
-                    >
-                      Confirm this journey
-                      <ArrowRight
-                        size={13}
-                        className="transition-transform duration-300 ease-out group-hover/cta:translate-x-0.5 group-hover:translate-x-0.5"
-                      />
-                    </Link>
-                    <span className="h-3 w-px bg-[color:var(--border)]" aria-hidden="true" />
-                    <Link
-                      to="/builder"
-                      search={{ tour: s.id }}
-                      className="inline-flex items-center gap-2 text-[14px] tracking-[0.005em] font-medium text-[color:var(--charcoal-soft)] hover:text-[color:var(--teal)] transition-colors"
-                    >
-                      Tailor &amp; confirm <ArrowRight size={13} />
-                    </Link>
-                  </div>
-                </div>
-              </article>
-            ))}
+          <div className="reveal max-w-6xl mx-auto">
+            <SignatureCarousel items={signatures} />
           </div>
 
           <div className="reveal mt-14 md:mt-16 text-center">
