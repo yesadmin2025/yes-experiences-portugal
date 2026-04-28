@@ -740,12 +740,23 @@ function HomePage() {
               </span>
             </div>
 
-            <p
-              className="reveal-stagger text-[11px] uppercase tracking-[0.32em] text-[color:var(--charcoal-soft)] mt-1"
+            <div
+              className="reveal-stagger mt-2 w-full max-w-3xl"
               style={{ transitionDelay: "260ms" }}
             >
-              Google · TripAdvisor · Trustpilot
-            </p>
+              <ul
+                className="flex flex-wrap items-center justify-center gap-x-9 gap-y-4 md:gap-x-12 list-none p-0 h-7 md:h-8"
+                aria-label="Featured on Google, TripAdvisor, Viator, GetYourGuide and Trustpilot"
+              >
+                {(["google", "tripadvisor", "viator", "getyourguide", "trustpilot"] as const).map(
+                  (p) => (
+                    <li key={p} className="h-full flex items-center">
+                      <PlatformBadge platform={p} />
+                    </li>
+                  ),
+                )}
+              </ul>
+            </div>
           </div>
         </div>
       </section>
