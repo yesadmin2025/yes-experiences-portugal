@@ -1141,16 +1141,8 @@ function RevealStep({ s, title, investment }: { s: BuilderState; title: string; 
 }
 
 /* ============================================================
-   Right panel — Story / Timeline / Map / DNA / Investment
+   Right panel — fused LiveCanvas + DNA + Investment
    ============================================================ */
-
-function MapFallback() {
-  return (
-    <div className="aspect-[4/5] bg-[color:var(--card)] border border-[color:var(--border)] grid place-items-center text-xs text-[color:var(--charcoal-soft)] uppercase tracking-[0.2em]">
-      Loading map…
-    </div>
-  );
-}
 
 /* ============================================================
    LiveCanvas — fused Story + Map + Timeline.
