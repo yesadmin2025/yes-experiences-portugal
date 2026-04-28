@@ -1075,10 +1075,10 @@
 /* Soft, slow, consistent — sections lift gently into place */
 .reveal {
   opacity: 0;
-  transform: translateY(28px);
+  transform: translateY(12px);
   transition:
-    opacity 1300ms cubic-bezier(0.22, 0.61, 0.36, 1),
-    transform 1300ms cubic-bezier(0.22, 0.61, 0.36, 1);
+    opacity 360ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 360ms cubic-bezier(0.22, 0.61, 0.36, 1);
   will-change: opacity, transform;
 }
 .reveal.is-visible {
@@ -1091,10 +1091,10 @@
    one after another in a calm, consistent rhythm. */
 .reveal-stagger {
   opacity: 0;
-  transform: translateY(22px);
+  transform: translateY(10px);
   transition:
-    opacity 1200ms cubic-bezier(0.22, 0.61, 0.36, 1),
-    transform 1200ms cubic-bezier(0.22, 0.61, 0.36, 1);
+    opacity 320ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 320ms cubic-bezier(0.22, 0.61, 0.36, 1);
   will-change: opacity, transform;
 }
 .reveal-stagger.is-visible {
