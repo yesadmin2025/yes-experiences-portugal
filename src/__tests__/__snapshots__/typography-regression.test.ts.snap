@@ -1,0 +1,54 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Typography regression — headline class strings > [home] hero eyebrow 1`] = `"inline-flex items-center gap-2.5 sm:gap-3.5 whitespace-nowrap text-[10.5px] sm:text-[12px] md:text-[13px] uppercase tracking-[0.18em] sm:tracking-[0.26em] md:tracking-[0.3em] text-[color:var(--gold)] opacity-0 animate-[heroFade_1.1s_ease-out_0.3s_forwards]"`;
+
+exports[`Typography regression — headline class strings > [home] hero h1 1`] = `"hero-h1 serif mt-7 md:mt-10 text-[2.05rem] sm:text-5xl md:text-7xl lg:text-[5.4rem] leading-[1.08] sm:leading-[1.04] md:leading-[0.96] tracking-[-0.012em] text-[color:var(--ivory)] text-left opacity-0 animate-[heroFade_1.4s_ease-out_0.6s_forwards] [text-shadow:0_2px_18px_rgba(0,0,0,0.35)]"`;
+
+exports[`Typography regression — headline class strings > [home] hero h1 line 2 (italic gold) 1`] = `"block italic font-medium text-[color:var(--gold-soft)] mt-1.5 md:mt-1 text-[2.2rem] sm:text-[3.4rem] md:text-[5rem] lg:text-[5.7rem] tracking-[-0.018em] leading-[1.05] md:leading-[0.96]"`;
+
+exports[`Typography regression — headline class strings > [home] hero microcopy 1`] = `"text-[14px] md:text-[14.5px] text-[color:var(--ivory)] leading-[1.65] md:leading-[1.7] font-normal tracking-[0.005em] text-center sm:text-left"`;
+
+exports[`Typography regression — headline class strings > [home] hero subheadline 1`] = `"mt-8 md:mt-10 text-[17px] md:text-[22px] text-[color:var(--ivory)]/95 max-w-md md:max-w-lg leading-[1.6] md:leading-[1.75] font-light text-left opacity-0 animate-[heroFade_1.4s_ease-out_0.95s_forwards] [text-shadow:0_1px_8px_rgba(0,0,0,0.3)]"`;
+
+exports[`Typography regression — headline class strings > [multi-day] hero h1 1`] = `"serif text-[34px] md:text-6xl mt-4 leading-[1.08] max-w-3xl mx-auto"`;
+
+exports[`Typography regression — headline class strings > [multi-day] hero subhead 1`] = `"mt-5 max-w-md md:max-w-xl mx-auto text-[15px] md:text-[16px] text-white/95 italic leading-[1.65] md:leading-relaxed [text-shadow:0_1px_8px_rgba(0,0,0,0.35)]"`;
+
+exports[`Typography regression — headline class strings > [proposals] hero h1 1`] = `"serif text-[34px] md:text-6xl mt-4 leading-[1.08] max-w-3xl mx-auto"`;
+
+exports[`Typography regression — headline class strings > [proposals] hero subhead 1`] = `"mt-5 max-w-md md:max-w-xl mx-auto text-[15px] md:text-[16px] text-white/95 italic leading-[1.65] md:leading-relaxed [text-shadow:0_1px_8px_rgba(0,0,0,0.35)]"`;
+
+exports[`Typography regression — token rules from styles.css > token .hero-h1 1`] = `
+"base: letter-spacing: -0.012em; line-height: 1.08;
+base: letter-spacing: -0.014em; line-height: 1.04;
+base: letter-spacing: -0.018em; line-height: 1.14;
+base: letter-spacing: -0.022em; line-height: 1.1;"
+`;
+
+exports[`Typography regression — token rules from styles.css > token .t-display 1`] = `
+"base: font-family: var(--font-serif); font-size: 2.75rem; line-height: 1.04; letter-spacing: -0.022em;
+base: font-size: 4rem;
+base: font-size: 4.75rem; line-height: 0.98;"
+`;
+
+exports[`Typography regression — token rules from styles.css > token .t-eyebrow 1`] = `"base: font-family: var(--font-sans); font-size: 11px; line-height: 1; letter-spacing: 0.28em; text-transform: uppercase; color: var(--charcoal-soft);"`;
+
+exports[`Typography regression — token rules from styles.css > token .t-h1 1`] = `
+"base: font-family: var(--font-serif); font-size: 2.125rem; /* 34px mobile */ line-height: 1.08; letter-spacing: -0.018em;
+base: font-size: 3.75rem; /* 60px tablet+ */ line-height: 1.04;"
+`;
+
+exports[`Typography regression — token rules from styles.css > token .t-h2 1`] = `
+"base: font-family: var(--font-serif); font-size: 1.625rem; /* 26px mobile */ line-height: 1.15; letter-spacing: -0.014em;
+base: font-size: 2.25rem; /* 36px tablet+ */ line-height: 1.1;"
+`;
+
+exports[`Typography regression — token rules from styles.css > token .t-h3 1`] = `
+"base: font-family: var(--font-serif); font-size: 1.375rem; /* 22px mobile */ line-height: 1.2; letter-spacing: -0.012em;
+base: font-size: 1.75rem; /* 28px tablet+ */ line-height: 1.18;"
+`;
+
+exports[`Typography regression — token rules from styles.css > token .t-lead 1`] = `
+"base: font-family: var(--font-sans); font-size: 16px; line-height: 1.7; font-weight: 400; color: var(--charcoal);
+base: font-size: 17px;"
+`;
