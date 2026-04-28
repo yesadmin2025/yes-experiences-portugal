@@ -1080,12 +1080,21 @@ function PremiumMap({
       .join(" ");
   }, [allPoints]);
 
-  // Zoom: 1 = base region framing.
-  const [zoom, setZoom] = useState(1);
+  // Zoom: 1 = base region framing. Per-region memory so switching regions
+  // restores the user's last zoom level for that region.
   const ZOOM_MIN = 0.5;
   const ZOOM_MAX = 4;
   const ZOOM_STEP = 1.4;
-  // Persist zoom across region changes — user explicitly asked to keep it.
+  const [zoomByRegion, setZoomByRegion] = useState<Record<string, number>>({});
+  const regionKey = region ?? "__none__";
+  const zoom = zoomByRegion[regionKey] ?? 1;
+  const setZoom = (updater: number | ((z: number) => number)) => {
+    setZoomByRegion((prev) => {
+      const current = prev[regionKey] ?? 1;
+      const next = typeof updater === "function" ? (updater as (z: number) => number)(current) : updater;
+      return { ...prev, [regionKey]: next };
+    });
+  };
 
   const targetVb = useMemo(() => {
     const base = regionViewBox(region);
@@ -1100,6 +1109,7 @@ function PremiumMap({
   const zoomIn = () => setZoom((z) => Math.min(ZOOM_MAX, +(z * ZOOM_STEP).toFixed(3)));
   const zoomOut = () => setZoom((z) => Math.max(ZOOM_MIN, +(z / ZOOM_STEP).toFixed(3)));
   const zoomReset = () => setZoom(1);
+
 
   const dayColor = (d: number) =>
     d === 1 ? "var(--teal)" : d === 2 ? "var(--teal-2)" : d === 3 ? "var(--gold)" : "var(--charcoal-soft)";
