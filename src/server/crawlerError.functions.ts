@@ -35,8 +35,16 @@ async function readLogTail(): Promise<string | null> {
   return null;
 }
 
-export const getLastCrawlerError = createServerFn({ method: "GET" }).handler(
-  async (): Promise<CrawlerErrorInfo> => {
+export type CrawlerErrorStrategy = "root-cause" | "last-error";
+
+export const getLastCrawlerError = createServerFn({ method: "GET" })
+  .inputValidator(
+    (data: { strategy?: CrawlerErrorStrategy } | undefined) => ({
+      strategy: (data?.strategy ?? "root-cause") as CrawlerErrorStrategy,
+    }),
+  )
+  .handler(async ({ data }): Promise<CrawlerErrorInfo> => {
+    const { strategy } = data;
     const log = await readLogTail();
     if (!log) {
       return {
@@ -90,24 +98,11 @@ export const getLastCrawlerError = createServerFn({ method: "GET" }).handler(
       return null;
     };
     const rootCause = findLast(rootCauseMarkers);
-    const match = rootCause ?? findLast(errorMarkers);
+    const lastErr = findLast(errorMarkers);
+    const match = strategy === "last-error" ? (lastErr ?? rootCause) : (rootCause ?? lastErr);
     if (match) {
       lastIdx = match.index;
       matchedSource = match.source;
-    }
-
-    if (lastIdx === -1) {
-      for (let i = lines.length - 1; i >= 0; i--) {
-        const ln = lines[i];
-        for (const re of errorMarkers) {
-        if (re.test(ln)) {
-          lastIdx = i;
-          matchedSource = re.source;
-          break;
-        }
-      }
-      if (lastIdx !== -1) break;
-      }
     }
 
     if (lastIdx === -1) {
@@ -137,13 +132,11 @@ export const getLastCrawlerError = createServerFn({ method: "GET" }).handler(
       file = fileMatch[1];
       line = fileMatch[2] ? Number(fileMatch[2]) : null;
       column = fileMatch[3] ? Number(fileMatch[3]) : null;
-      // Normalize absolute /dev-server/... paths to repo-relative.
       if (file.startsWith("/dev-server/")) {
         file = file.slice("/dev-server/".length);
       }
     }
 
-    // Use the marker line as the human message.
     const message = lines[lastIdx].trim();
 
     return {
@@ -156,5 +149,4 @@ export const getLastCrawlerError = createServerFn({ method: "GET" }).handler(
       capturedAt: new Date().toISOString(),
       raw: block,
     };
-  },
-);
+  });
