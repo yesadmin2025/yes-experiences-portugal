@@ -21,9 +21,11 @@ import { Route as CorporateRouteImport } from './routes/corporate'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as BuilderRouteImport } from './routes/builder'
 import { Route as BrandQaRouteImport } from './routes/brand-qa'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiVerifyHeroRouteImport } from './routes/api/verify-hero'
+import { Route as AdminImportToursRouteImport } from './routes/admin.import-tours'
 
 const TypographyAuditRoute = TypographyAuditRouteImport.update({
   id: '/typography-audit',
@@ -85,6 +87,11 @@ const BrandQaRoute = BrandQaRouteImport.update({
   path: '/brand-qa',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
@@ -100,10 +107,16 @@ const ApiVerifyHeroRoute = ApiVerifyHeroRouteImport.update({
   path: '/api/verify-hero',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminImportToursRoute = AdminImportToursRouteImport.update({
+  id: '/admin/import-tours',
+  path: '/admin/import-tours',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/auth': typeof AuthRoute
   '/brand-qa': typeof BrandQaRoute
   '/builder': typeof BuilderRoute
   '/contact': typeof ContactRoute
@@ -116,11 +129,13 @@ export interface FileRoutesByFullPath {
   '/preview-check': typeof PreviewCheckRoute
   '/proposals': typeof ProposalsRoute
   '/typography-audit': typeof TypographyAuditRoute
+  '/admin/import-tours': typeof AdminImportToursRoute
   '/api/verify-hero': typeof ApiVerifyHeroRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/auth': typeof AuthRoute
   '/brand-qa': typeof BrandQaRoute
   '/builder': typeof BuilderRoute
   '/contact': typeof ContactRoute
@@ -133,12 +148,14 @@ export interface FileRoutesByTo {
   '/preview-check': typeof PreviewCheckRoute
   '/proposals': typeof ProposalsRoute
   '/typography-audit': typeof TypographyAuditRoute
+  '/admin/import-tours': typeof AdminImportToursRoute
   '/api/verify-hero': typeof ApiVerifyHeroRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/auth': typeof AuthRoute
   '/brand-qa': typeof BrandQaRoute
   '/builder': typeof BuilderRoute
   '/contact': typeof ContactRoute
@@ -151,6 +168,7 @@ export interface FileRoutesById {
   '/preview-check': typeof PreviewCheckRoute
   '/proposals': typeof ProposalsRoute
   '/typography-audit': typeof TypographyAuditRoute
+  '/admin/import-tours': typeof AdminImportToursRoute
   '/api/verify-hero': typeof ApiVerifyHeroRoute
 }
 export interface FileRouteTypes {
@@ -158,6 +176,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/auth'
     | '/brand-qa'
     | '/builder'
     | '/contact'
@@ -170,11 +189,13 @@ export interface FileRouteTypes {
     | '/preview-check'
     | '/proposals'
     | '/typography-audit'
+    | '/admin/import-tours'
     | '/api/verify-hero'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
+    | '/auth'
     | '/brand-qa'
     | '/builder'
     | '/contact'
@@ -187,11 +208,13 @@ export interface FileRouteTypes {
     | '/preview-check'
     | '/proposals'
     | '/typography-audit'
+    | '/admin/import-tours'
     | '/api/verify-hero'
   id:
     | '__root__'
     | '/'
     | '/about'
+    | '/auth'
     | '/brand-qa'
     | '/builder'
     | '/contact'
@@ -204,12 +227,14 @@ export interface FileRouteTypes {
     | '/preview-check'
     | '/proposals'
     | '/typography-audit'
+    | '/admin/import-tours'
     | '/api/verify-hero'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  AuthRoute: typeof AuthRoute
   BrandQaRoute: typeof BrandQaRoute
   BuilderRoute: typeof BuilderRoute
   ContactRoute: typeof ContactRoute
@@ -222,6 +247,7 @@ export interface RootRouteChildren {
   PreviewCheckRoute: typeof PreviewCheckRoute
   ProposalsRoute: typeof ProposalsRoute
   TypographyAuditRoute: typeof TypographyAuditRoute
+  AdminImportToursRoute: typeof AdminImportToursRoute
   ApiVerifyHeroRoute: typeof ApiVerifyHeroRoute
 }
 
@@ -311,6 +337,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BrandQaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -332,12 +365,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiVerifyHeroRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/import-tours': {
+      id: '/admin/import-tours'
+      path: '/admin/import-tours'
+      fullPath: '/admin/import-tours'
+      preLoaderRoute: typeof AdminImportToursRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  AuthRoute: AuthRoute,
   BrandQaRoute: BrandQaRoute,
   BuilderRoute: BuilderRoute,
   ContactRoute: ContactRoute,
@@ -350,6 +391,7 @@ const rootRouteChildren: RootRouteChildren = {
   PreviewCheckRoute: PreviewCheckRoute,
   ProposalsRoute: ProposalsRoute,
   TypographyAuditRoute: TypographyAuditRoute,
+  AdminImportToursRoute: AdminImportToursRoute,
   ApiVerifyHeroRoute: ApiVerifyHeroRoute,
 }
 export const routeTree = rootRouteImport
