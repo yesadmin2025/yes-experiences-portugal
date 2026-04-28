@@ -497,47 +497,107 @@ function AdminImportPage() {
             Imported tours <span className="text-sm text-[color:var(--charcoal-soft)]">({tours.length})</span>
           </h2>
 
+          {tours.length > 0 && (
+            <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <StatCard
+                label="With image"
+                value={`${stats.withImage}/${stats.total}`}
+                tone={stats.missingImage === 0 ? "good" : "warn"}
+                icon={<ImageIcon size={14} />}
+              />
+              <StatCard
+                label="Missing image"
+                value={String(stats.missingImage)}
+                tone={stats.missingImage === 0 ? "good" : "warn"}
+                icon={<ImageOff size={14} />}
+              />
+              <StatCard
+                label="Matched signature"
+                value={`${stats.matched}/${stats.signatureTotal}`}
+                tone={stats.matched > 0 ? "good" : "muted"}
+                icon={<Link2 size={14} />}
+              />
+              <StatCard
+                label="Live on cards"
+                value={`${stats.matchedWithImage}/${stats.signatureTotal}`}
+                tone={stats.matchedWithImage > 0 ? "good" : "muted"}
+                icon={<Check size={14} />}
+              />
+            </div>
+          )}
+
           {tours.length === 0 ? (
             <p className="mt-4 text-sm text-[color:var(--charcoal-soft)]">
               Nothing imported yet. Click <strong>Run import now</strong> to fetch.
             </p>
           ) : (
             <ul className="mt-6 space-y-4">
-              {tours.map((t) => (
-                <li
-                  key={t.id}
-                  className="border border-[color:var(--border)] p-5 bg-[color:var(--card)]"
-                >
-                  <div className="flex flex-wrap items-baseline justify-between gap-3">
-                    <h3 className="serif text-xl">{t.title}</h3>
-                    <div className="flex items-center gap-3 text-[11px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)]">
-                      <span>{t.region_label}</span>
-                      <span>{t.duration_label} · {t.duration_hours}</span>
-                      <span className="text-[color:var(--teal)]">€{t.price_from}+</span>
+              {tours.map((t) => {
+                const matched = SIGNATURE_BY_URL.has(normalizeUrl(t.source_url));
+                const hasImage = !!t.image_url;
+                return (
+                  <li
+                    key={t.id}
+                    className="border border-[color:var(--border)] p-5 bg-[color:var(--card)]"
+                  >
+                    <div className="flex flex-wrap items-start justify-between gap-3">
+                      <div className="flex items-start gap-3">
+                        {hasImage ? (
+                          <img
+                            src={t.image_url!}
+                            alt=""
+                            loading="lazy"
+                            className="w-16 h-16 object-cover border border-[color:var(--border)]"
+                          />
+                        ) : (
+                          <div className="w-16 h-16 flex items-center justify-center border border-dashed border-[color:var(--border)] text-[color:var(--charcoal-soft)]">
+                            <ImageOff size={18} />
+                          </div>
+                        )}
+                        <div>
+                          <h3 className="serif text-xl">{t.title}</h3>
+                          <div className="mt-1 flex flex-wrap items-center gap-1.5">
+                            <Pill tone={hasImage ? "good" : "warn"} icon={hasImage ? <ImageIcon size={11} /> : <ImageOff size={11} />}>
+                              {hasImage ? "Image saved" : "No image"}
+                            </Pill>
+                            <Pill tone={matched ? "good" : "muted"} icon={matched ? <Link2 size={11} /> : <Link2Off size={11} />}>
+                              {matched ? "Signature match" : "Unmatched"}
+                            </Pill>
+                            {hasImage && matched && (
+                              <Pill tone="accent" icon={<Check size={11} />}>Live on cards</Pill>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 text-[11px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)]">
+                        <span>{t.region_label}</span>
+                        <span>{t.duration_label} · {t.duration_hours}</span>
+                        <span className="text-[color:var(--teal)]">€{t.price_from}+</span>
+                      </div>
                     </div>
-                  </div>
-                  <p className="mt-2 text-sm text-[color:var(--charcoal-soft)]">{t.blurb}</p>
-                  <p className="mt-2 text-[11px] uppercase tracking-[0.22em] text-[color:var(--gold)]">
-                    Fits best · {t.fits_best}
-                  </p>
-                  <div className="mt-3 flex flex-wrap gap-1.5">
-                    <Tag>{t.theme}</Tag>
-                    <Tag>{t.pace}</Tag>
-                    <Tag>{t.tier}</Tag>
-                    {t.styles.map((s) => <Tag key={s}>{s}</Tag>)}
-                  </div>
-                  <div className="mt-3 flex flex-wrap gap-1.5">
-                    {t.highlights.map((h) => (
-                      <span key={h} className="text-[11px] px-2 py-0.5 border border-[color:var(--gold)]/40 text-[color:var(--charcoal)]">
-                        {h}
-                      </span>
-                    ))}
-                  </div>
-                  <div className="mt-3 text-xs text-[color:var(--charcoal-soft)]">
-                    Stops: {t.stops.map((s) => s.label).join(" → ")}
-                  </div>
-                </li>
-              ))}
+                    <p className="mt-3 text-sm text-[color:var(--charcoal-soft)]">{t.blurb}</p>
+                    <p className="mt-2 text-[11px] uppercase tracking-[0.22em] text-[color:var(--gold)]">
+                      Fits best · {t.fits_best}
+                    </p>
+                    <div className="mt-3 flex flex-wrap gap-1.5">
+                      <Tag>{t.theme}</Tag>
+                      <Tag>{t.pace}</Tag>
+                      <Tag>{t.tier}</Tag>
+                      {t.styles.map((s) => <Tag key={s}>{s}</Tag>)}
+                    </div>
+                    <div className="mt-3 flex flex-wrap gap-1.5">
+                      {t.highlights.map((h) => (
+                        <span key={h} className="text-[11px] px-2 py-0.5 border border-[color:var(--gold)]/40 text-[color:var(--charcoal)]">
+                          {h}
+                        </span>
+                      ))}
+                    </div>
+                    <div className="mt-3 text-xs text-[color:var(--charcoal-soft)]">
+                      Stops: {t.stops.map((s) => s.label).join(" → ")}
+                    </div>
+                  </li>
+                );
+              })}
             </ul>
           )}
         </div>
