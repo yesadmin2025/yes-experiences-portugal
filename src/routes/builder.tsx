@@ -1408,69 +1408,6 @@ function LiveCanvas({ s, title }: { s: BuilderState; title: string }) {
   );
 }
 
-/* Live editorial story — Bible §6 */
-function StoryView({ s, title }: { s: BuilderState; title: string }) {
-  const fragments = useMemo(() => buildStoryFragments(s), [s]);
-  const heroImg = useMemo(() => pickHeroImage(s), [s]);
-
-  return (
-    <div className="bg-[color:var(--card)] border border-[color:var(--border)] overflow-hidden rounded-sm">
-      <div
-        className="aspect-[16/10] bg-cover bg-center transition-all duration-700"
-        style={{ backgroundImage: `linear-gradient(180deg, transparent 40%, rgba(31,31,31,0.7) 100%), url(${heroImg})` }}
-      >
-        <div className="h-full flex flex-col justify-end p-5">
-          <span className="text-[10px] uppercase tracking-[0.24em] text-[color:var(--gold-soft)]">
-            Your story so far
-          </span>
-          <h3 className="serif text-2xl text-white mt-1 leading-tight">{title}</h3>
-        </div>
-      </div>
-      <div className="p-5 md:p-6 space-y-3">
-        {fragments.length === 0 ? (
-          <p className="text-[14px] text-[color:var(--charcoal-soft)] italic leading-relaxed">
-            Your local guide is waiting. Make a choice and watch your Portugal story take shape.
-          </p>
-        ) : (
-          fragments.map((f, i) => (
-            <p key={i} className="text-[14px] text-[color:var(--charcoal)] leading-relaxed">
-              {f}
-            </p>
-          ))
-        )}
-      </div>
-    </div>
-  );
-}
-
-function buildStoryFragments(s: BuilderState): string[] {
-  const out: string[] = [];
-  const who = s.name ? s.name : "you";
-  if (s.region) {
-    const r = regionOpts.find((x) => x.id === s.region)?.name;
-    out.push(`Your day begins in ${r}, where ${who === "you" ? "your" : who + "'s"} local guide is already shaping the rhythm of the experience.`);
-  }
-  if (s.styles.includes("wine")) {
-    out.push("Your local guide introduces you to a family winery where tradition and landscape come together.");
-  }
-  if (s.highlights.includes("livramento")) {
-    out.push("Your local friend begins your day in an authentic local market full of flavors, color, and energy.");
-  }
-  if (s.styles.includes("coastal") || s.highlights.includes("boat")) {
-    out.push("Between stops, your route opens into breathtaking coastal landscapes and hidden roads only locals truly know.");
-  }
-  if (s.highlights.includes("portinho") || s.styles.includes("gastronomy")) {
-    out.push("Midday slows down beautifully with a relaxed local lunch, chosen to fit the pace and mood of your experience.");
-  }
-  if (s.pace === "slow") {
-    out.push("The day unfolds slowly — long meals, longer conversations, and time enough to feel like you belong here.");
-  }
-  if (s.tier === "couture") {
-    out.push("Every detail is shaped around you — this is Portugal at its most personal, its most refined.");
-  }
-  return out;
-}
-
 function pickHeroImage(s: BuilderState): string {
   const base = "https://images.unsplash.com/";
   if (s.highlights.includes("boat") || s.styles.includes("coastal")) {
