@@ -384,7 +384,7 @@ function BuilderPage() {
         </div>
       </section>
 
-      {/* Mobile tabs: Build / Preview */}
+      {/* Mobile tabs: Builder / Journey */}
       <div className="lg:hidden sticky top-[72px] z-30 bg-[color:var(--ivory)]/95 backdrop-blur border-b border-[color:var(--border)]">
         <div className="container-x py-3 flex justify-center">
           <div role="tablist" className="inline-flex p-1 bg-[color:var(--sand)] border border-[color:var(--border)] rounded-full">
@@ -398,7 +398,7 @@ function BuilderPage() {
                   mobileTab === t ? "bg-[color:var(--teal)] text-[color:var(--ivory)]" : "text-[color:var(--charcoal-soft)]"
                 }`}
               >
-                {t === "build" ? "Build" : "Preview"}
+                {t === "build" ? "Builder" : "Map · Story"}
               </button>
             ))}
           </div>
