@@ -110,15 +110,25 @@ function TourDetailPage() {
                 Fits best · {tour.fitsBest}
               </p>
 
+              <p className="mt-3 text-[12px] text-[color:var(--charcoal-soft)] italic">
+                A complete experience, designed to be enjoyed as it is.
+              </p>
+
               <a
                 href="#tailor"
-                className="mt-7 inline-flex items-center justify-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] px-5 py-3.5 text-sm tracking-wide transition-all"
+                className="mt-6 inline-flex items-center justify-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] px-5 py-3.5 text-sm tracking-wide transition-all"
               >
-                <Sparkles size={14} /> Tailor this experience
+                <Sparkles size={14} /> Reserve instantly
               </a>
               <p className="mt-2 text-[11px] text-[color:var(--charcoal-soft)] text-center">
-                Shaped around your dates, pace and interests — a real local replies in under an hour.
+                Confirm in real time — secured directly on this site.
               </p>
+              <a
+                href="#tailor"
+                className="mt-3 inline-flex items-center justify-center gap-1.5 text-[11px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)] hover:text-[color:var(--teal)] transition-colors"
+              >
+                Or adjust a few details first →
+              </a>
             </div>
           </div>
         </div>
@@ -185,20 +195,23 @@ function TourDetailPage() {
       <section id="tailor" className="py-12 bg-[color:var(--sand)]/40 scroll-mt-24">
         <div className="container-x max-w-5xl grid lg:grid-cols-[1fr_1.1fr] gap-8 lg:gap-12 items-start">
           <div>
-            <span className="eyebrow">Make it yours</span>
+            <span className="eyebrow">Tailored Signature</span>
             <h2 className="serif text-3xl sm:text-4xl mt-3">
-              Tailor this experience — instantly.
+              Adjust a few details — keep the experience intact.
             </h2>
             <p className="mt-4 text-sm text-[color:var(--charcoal-soft)] leading-relaxed">
-              The story stays. You decide the rest — date, group size, pace, add-ons,
-              which stops to keep. Send your details and a real local replies, usually
-              within an hour.
+              Match this experience to your rhythm. Pick your date, pace, group size,
+              guide language and any small variations available within this tour. The
+              story, route and trusted local guide stay the same.
             </p>
             <ul className="mt-5 space-y-2 text-sm">
-              <li>· No accounts. No long forms.</li>
-              <li>· Same trusted local guide and route.</li>
-              <li>· Confirm only when you're happy with the plan.</li>
+              <li>· Reserve instantly — no waiting, no email chase.</li>
+              <li>· Real-time confirmation, secured on this site.</li>
+              <li>· Same trusted local guide and curated route.</li>
             </ul>
+            <p className="mt-5 text-[11px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)]">
+              Reservations handled securely through our integrated booking system.
+            </p>
           </div>
           <SimpleTailorForm tour={tour} />
         </div>
