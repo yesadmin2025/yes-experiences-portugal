@@ -1123,14 +1123,75 @@ function PremiumMap({
             ))}
           </g>
 
-          {/* Refined Portugal silhouette — denser coastline, more detail */}
+          {/* Portugal silhouette — approximates the real coastline (Minho in
+              the north → Cabo de São Vicente → Algarve south) so the marker
+              positions in regionMap/regionStops sit on recognisable land.
+              Coordinates intentionally simplified: this is a stylised
+              geographic illustration, not a survey. */}
           <path
-            d="M 28 4 Q 24 8 25 14 Q 22 18 24 22 Q 20 26 23 30 Q 19 34 22 38 Q 18 42 21 46 Q 17 50 20 54 Q 16 58 19 62 Q 17 66 20 70 Q 18 74 22 78 Q 19 82 23 86 Q 21 90 25 94 Q 23 98 28 102 Q 30 106 35 110 Q 38 114 44 116 Q 50 118 56 116 Q 60 114 60 110 L 62 108 Q 64 104 60 100 Q 62 96 60 92 Q 64 88 60 84 Q 62 80 60 76 Q 64 72 62 68 Q 64 62 60 56 Q 62 50 60 44 Q 64 38 60 32 Q 62 26 58 20 Q 60 14 54 10 Q 48 5 40 4 Q 34 3 28 4 Z"
+            d="
+              M 36 6
+              C 38 6 40 6.5 41 8
+              L 42 11
+              C 41.5 13 41 15 41.2 17
+              L 41.8 21
+              L 42.4 25
+              C 42.8 28 43.6 31 44.6 34
+              C 45.6 37 46.6 40 47.2 43
+              C 47.8 46 48 49 48.4 52
+              L 49.2 56
+              L 50.4 60
+              L 51.6 64
+              L 52.8 68
+              L 54 72
+              C 54.6 75 55 78 55 81
+              L 54.8 84
+              L 54 87
+              C 53.2 90 52.4 93 51.4 96
+              L 50.4 100
+              C 50 102 50 104 50.2 106
+              L 51 109
+              L 52 111
+              C 51.5 112.5 50 113.4 47.8 113.6
+              L 42 113.8
+              L 36 114
+              L 30 114
+              C 27 113.8 24 113 22.2 111.6
+              L 21 110
+              L 21.4 108
+              C 22 105 22.4 102 22.4 99
+              L 22 95
+              L 21.4 91
+              L 20.8 87
+              C 20.6 84 20.6 81 20.8 78
+              L 21.2 74
+              L 21.4 70
+              C 21.4 67 21.2 64 20.8 61
+              L 20.4 57
+              L 20.4 53
+              C 20.6 50 21 47 21.6 44
+              L 22.4 40
+              C 22.8 37 22.8 34 22.4 31
+              L 21.8 27
+              L 21.6 23
+              C 22 20 22.6 17 23.6 14
+              L 25 11
+              C 26.4 9 28.4 7.6 30.8 6.8
+              C 32.4 6.2 34.2 6 36 6 Z
+            "
             fill="url(#land)"
             stroke="var(--gold)"
             strokeWidth="0.35"
             opacity="0.95"
           />
+
+          {/* Madeira & Azores hint — small rounded marks to reinforce that
+              this is Portugal, not generic Iberia. Purely decorative. */}
+          <g opacity="0.55">
+            <ellipse cx="6" cy="108" rx="2" ry="0.9" fill="var(--sand)" stroke="var(--gold)" strokeWidth="0.18" />
+            <ellipse cx="3" cy="86" rx="1.4" ry="0.7" fill="var(--sand)" stroke="var(--gold)" strokeWidth="0.18" />
+            <ellipse cx="5" cy="84" rx="1" ry="0.5" fill="var(--sand)" stroke="var(--gold)" strokeWidth="0.18" />
+          </g>
 
           {/* Region glow */}
           {center && (
