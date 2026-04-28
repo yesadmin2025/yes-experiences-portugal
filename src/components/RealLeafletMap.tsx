@@ -141,7 +141,7 @@ export function RealLeafletMap({ region }: { region: string | null }) {
       attributionControl: true,
       scrollWheelZoom: false,
     });
-    map.fitBounds(PORTUGAL_FIT);
+    map.fitBounds(PORTUGAL_BOUNDS);
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
       maxZoom: 18,
@@ -204,7 +204,7 @@ export function RealLeafletMap({ region }: { region: string | null }) {
       const c = REGION_CENTERS[region];
       map.flyTo([c.lat, c.lng], c.zoom, { duration: 0.8 });
     } else {
-      map.flyToBounds(PORTUGAL_FIT, { duration: 0.8 });
+      map.flyToBounds(PORTUGAL_BOUNDS, { duration: 0.8 });
     }
   }, [region]);
 
