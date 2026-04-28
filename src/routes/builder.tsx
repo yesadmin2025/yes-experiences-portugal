@@ -436,11 +436,15 @@ function ActiveBuilder({
   update,
   toggle,
   reset,
+  previewHighlight,
+  onPreviewHighlight,
 }: {
   s: BuilderState;
   update: <K extends keyof BuilderState>(k: K, v: BuilderState[K]) => void;
   toggle: (k: "styles" | "highlights" | "enhancements", id: string) => void;
   reset: () => void;
+  previewHighlight: string | null;
+  onPreviewHighlight: (id: string | null) => void;
 }) {
   return (
     <div className="space-y-8">
