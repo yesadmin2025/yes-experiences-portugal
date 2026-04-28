@@ -1338,6 +1338,7 @@
   .editorial-card:hover [data-card-image] {
     transform: none !important;
   }
+}
 
 /* ─────────────────────────────────────────────────────────────
    .decision-scene — cinematic full-bleed decision card
