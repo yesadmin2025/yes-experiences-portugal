@@ -1068,13 +1068,14 @@ function HomePage() {
                 <ArrowRight size={15} />
               </Link>
             </div>
-            <div className="reveal lg:order-1 relative group">
-              <div className="overflow-hidden">
+            <div className="reveal lg:order-1 relative">
+              <div className="editorial-card overflow-hidden border border-[color:var(--border)]">
                 <img
                   src={multiDayImg}
                   alt="Aerial view of Douro Valley vineyards"
                   loading="lazy"
-                  className="w-full aspect-[5/4] object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-105"
+                  data-card-image
+                  className="w-full aspect-[5/4] object-cover"
                 />
               </div>
               <div className="absolute -bottom-5 -left-5 hidden md:block w-28 h-28 border border-[color:var(--gold)]/60" />
