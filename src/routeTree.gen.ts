@@ -284,6 +284,7 @@ export interface RootRouteChildren {
   ProposalsRoute: typeof ProposalsRoute
   TypographyAuditRoute: typeof TypographyAuditRoute
   AdminImportToursRoute: typeof AdminImportToursRoute
+  AdminTourLinkAuditRoute: typeof AdminTourLinkAuditRoute
   ApiImgRoute: typeof ApiImgRoute
   ApiVerifyHeroRoute: typeof ApiVerifyHeroRoute
   ToursTourIdRoute: typeof ToursTourIdRoute
