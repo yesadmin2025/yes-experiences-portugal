@@ -644,7 +644,7 @@ function HomePage() {
             "Google, Google — official review platform".
           • Decorative glyphs and column dividers are aria-hidden. */}
       <section
-        className="bg-[color:var(--ivory)] border-b border-[color:var(--border)] py-14 md:py-16"
+        className="bg-[color:var(--ivory)] border-b border-[color:var(--border)] section-y-sm"
         aria-labelledby="trust-bar-title"
       >
         <h2 id="trust-bar-title" className="sr-only">
@@ -697,7 +697,7 @@ function HomePage() {
           path as the most differentiated option. */}
       <section
         id="decision-flow"
-        className="py-24 md:py-32 bg-[color:var(--ivory)] border-b border-[color:var(--border)]"
+        className="section-y bg-[color:var(--ivory)] border-b border-[color:var(--border)]"
         aria-labelledby="start-paths-title"
       >
         <div className="container-x">
@@ -876,7 +876,7 @@ function HomePage() {
           decision grid. Communicates: instant creation + instant
           confirmation + real-time local guidance. */}
       <section
-        className="bg-[color:var(--teal)] text-[color:var(--ivory)] py-32 md:py-44 lg:py-52 relative overflow-hidden"
+        className="bg-[color:var(--teal)] text-[color:var(--ivory)] section-y-lg relative overflow-hidden"
         aria-labelledby="studio-title"
       >
         <div className="absolute -top-32 -right-32 w-[28rem] h-[28rem] rounded-full border border-[color:var(--gold)]/15 pointer-events-none" />
@@ -945,7 +945,7 @@ function HomePage() {
           Three signature starting points. Each can be booked as-is OR
           tailored — that dual nature is communicated in the section
           intro and reinforced by the dual CTA on each card. */}
-      <section className="py-24 md:py-40 bg-[color:var(--sand)]" aria-labelledby="signatures-title">
+      <section className="section-y bg-[color:var(--sand)]" aria-labelledby="signatures-title">
         <div className="container-x">
           <div className="reveal text-center max-w-2xl mx-auto mb-14 md:mb-20">
             <span className="eyebrow">Signature Journeys</span>
@@ -1032,7 +1032,7 @@ function HomePage() {
           equal-weight blocks, premium and minimal — each links to its
           dedicated section/route below. */}
       <section
-        className="py-20 md:py-28 bg-[color:var(--ivory)] border-y border-[color:var(--border)]"
+        className="section-y-sm bg-[color:var(--ivory)] border-y border-[color:var(--border)]"
         aria-labelledby="beyond-title"
       >
         <div className="container-x">
@@ -1096,7 +1096,7 @@ function HomePage() {
       </section>
 
       {/* 6 — MULTI-DAY JOURNEYS */}
-      <section className="bg-[color:var(--sand)] py-24 md:py-40">
+      <section className="bg-[color:var(--sand)] section-y">
         <div className="container-x">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             <div className="reveal lg:order-2">
@@ -1148,7 +1148,7 @@ function HomePage() {
           routes, with the same "start from idea, tailor a signature, or
           design from scratch" framing as the rest of the site. */}
       <section
-        className="py-24 md:py-36 bg-[color:var(--ivory)] border-y border-[color:var(--border)]"
+        className="section-y bg-[color:var(--ivory)] border-y border-[color:var(--border)]"
         aria-labelledby="occasions-title"
       >
         <div className="container-x">
@@ -1217,7 +1217,7 @@ function HomePage() {
           The editorial / emotional beat — "the Portugal we travel ourselves".
           Sits between Multi-Day and Social Proof to warm the reader before
           the review block. */}
-      <section className="py-24 md:py-40 bg-[color:var(--ivory)]">
+      <section className="section-y bg-[color:var(--ivory)]">
         <div className="container-x">
           <div className="reveal text-center max-w-2xl mx-auto mb-14 md:mb-20">
             <span className="eyebrow">Local Stories &amp; Hidden Gems</span>
@@ -1268,7 +1268,7 @@ function HomePage() {
           cards stand in for the Trustpilot widget until a business profile
           is connected — each carries the platform name in the figcaption to
           read as a real platform review. */}
-      <section className="py-24 md:py-36 bg-[color:var(--sand)]" aria-labelledby="reviews-title">
+      <section className="section-y bg-[color:var(--sand)]" aria-labelledby="reviews-title">
         <div className="container-x">
           <div className="reveal text-center max-w-2xl mx-auto mb-14 md:mb-16">
             <span className="eyebrow">Voices</span>
@@ -1324,7 +1324,7 @@ function HomePage() {
       <FAQ />
 
       {/* 10 — FINAL CTA */}
-      <section className="pb-28 md:pb-36 bg-[color:var(--ivory)]">
+      <section className="section-y bg-[color:var(--ivory)]">
         <div className="container-x">
           <div className="reveal relative bg-[color:var(--sand)] p-12 md:p-20 overflow-hidden">
             <div className="absolute -bottom-24 -left-24 w-80 h-80 rounded-full border border-[color:var(--gold)]/15" />
