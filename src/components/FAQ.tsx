@@ -90,14 +90,15 @@ export function FAQ() {
           </Accordion>
 
           <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-3 text-sm text-[color:var(--charcoal-soft)]">
-            <span>Still have a question?</span>
-            <Link
-              to="/contact"
+            <span>Still wondering?</span>
+            <a
+              href={whatsappHref("Hi! I have a quick question before booking.")}
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 text-[color:var(--teal)] hover:text-[color:var(--charcoal)] transition-colors duration-300"
             >
-              Speak with our team
-              <ArrowRight size={14} />
-            </Link>
+              <MessageCircle size={14} /> Ask a local
+            </a>
           </div>
         </div>
       </div>
