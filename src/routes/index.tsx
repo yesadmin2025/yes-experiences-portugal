@@ -145,13 +145,13 @@ const startPaths = [
   {
     icon: BookOpen,
     eyebrow: "Signature",
-    title: "Signature Journeys",
-    line: "Start with something already beautifully crafted.",
+    title: "Explore Signature Journeys",
+    line: "Start with something already beautifully put together.",
     cta: "Step inside",
     to: "/experiences",
     destination: "Signatures",
     expectedTo: "/experiences",
-    ariaLabel: "Signature Journeys — start with something already beautifully crafted",
+    ariaLabel: "Explore Signature Journeys — start with something already beautifully put together",
     accent: "ivory" as const,
     slug: "signature",
     stepLabel: "Signature",
@@ -161,12 +161,12 @@ const startPaths = [
     icon: Wand2,
     eyebrow: "Tailored",
     title: "Tailor a Signature",
-    line: "Shape it to your rhythm — keep what you love, change the rest.",
+    line: "Keep the essence, adjust the rhythm.",
     cta: "Shape it",
     to: "/experiences",
     destination: "Tailoring",
     expectedTo: "/experiences",
-    ariaLabel: "Tailor a Signature — shape it to your rhythm",
+    ariaLabel: "Tailor a Signature — keep the essence, adjust the rhythm",
     accent: "sand" as const,
     slug: "tailor",
     stepLabel: "Tailor",
@@ -175,13 +175,13 @@ const startPaths = [
   {
     icon: Sparkles,
     eyebrow: "Studio",
-    title: "Build Your Own",
-    line: "Create your journey from the ground up — and confirm instantly.",
+    title: "Build from Scratch",
+    line: "Create your journey in real time.",
     cta: "Begin here",
     to: "/builder",
     destination: "Studio",
     expectedTo: "/builder",
-    ariaLabel: "Build Your Own — create your journey from the ground up",
+    ariaLabel: "Build from Scratch — create your journey in real time",
     accent: "teal" as const,
     slug: "studio",
     stepLabel: "Studio",
@@ -191,12 +191,12 @@ const startPaths = [
     icon: Gift,
     eyebrow: "Moments",
     title: "Plan a Moment",
-    line: "For moments that deserve more — proposals, celebrations, gatherings.",
+    line: "For proposals, celebrations, groups and days worth remembering.",
     cta: "Discover",
     to: "/proposals",
     destination: "Celebrations",
     expectedTo: "/proposals",
-    ariaLabel: "Plan a Moment — for moments that deserve more",
+    ariaLabel: "Plan a Moment — for proposals, celebrations and groups",
     accent: "charcoal" as const,
     slug: "moment",
     stepLabel: "Moment",
@@ -740,12 +740,23 @@ function HomePage() {
               </span>
             </div>
 
-            <p
-              className="reveal-stagger text-[11px] uppercase tracking-[0.32em] text-[color:var(--charcoal-soft)] mt-1"
+            <div
+              className="reveal-stagger mt-2 w-full max-w-3xl"
               style={{ transitionDelay: "260ms" }}
             >
-              Google · TripAdvisor · Trustpilot
-            </p>
+              <ul
+                className="flex flex-wrap items-center justify-center gap-x-9 gap-y-4 md:gap-x-12 list-none p-0 h-7 md:h-8"
+                aria-label="Featured on Google, TripAdvisor, Viator, GetYourGuide and Trustpilot"
+              >
+                {(["google", "tripadvisor", "viator", "getyourguide", "trustpilot"] as const).map(
+                  (p) => (
+                    <li key={p} className="h-full flex items-center">
+                      <PlatformBadge platform={p} />
+                    </li>
+                  ),
+                )}
+              </ul>
+            </div>
           </div>
         </div>
       </section>
@@ -916,10 +927,10 @@ function HomePage() {
                 Create it, <span className="italic text-[color:var(--gold-soft)]">live.</span>
               </h2>
               <p className="mt-8 text-[19px] md:text-[22px] lg:text-[24px] text-[color:var(--ivory)] leading-[1.5] max-w-xl font-light">
-                Build your journey in real time — and confirm instantly.
+                Start with a place, a moment, or an idea. Shape it in real time and confirm instantly.
               </p>
               <p className="mt-5 text-[15px] md:text-[16px] italic font-light text-[color:var(--gold-soft)] leading-[1.7] max-w-xl">
-                A local guide is available anytime if you want help.
+                A local is available in real time if you want help.
               </p>
               <Link
                 to="/builder"
@@ -990,6 +1001,65 @@ function HomePage() {
             >
               Explore all signatures <ArrowRight size={14} />
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* 5a — TAILOR A SIGNATURE (explanation)
+          Clarifies what tailoring actually means: small adjustments
+          INSIDE a chosen Signature, not full custom design (that's the
+          Studio). Visual: a real workshop scene + editorial copy. */}
+      <section
+        className="bg-[color:var(--ivory)] section-y-sm border-t border-[color:var(--border)]"
+        aria-labelledby="tailor-title"
+      >
+        <div className="container-x">
+          <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-center max-w-6xl mx-auto">
+            <div className="reveal lg:col-span-7">
+              <span className="eyebrow">Tailor a Signature</span>
+              <h2
+                id="tailor-title"
+                className="t-h2 mt-5"
+              >
+                Love the route, <span className="italic">your own rhythm.</span>
+              </h2>
+              <p className="mt-6 text-[16px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.75] max-w-xl font-light">
+                Love the route but want a different rhythm? Adjust selected details while keeping the journey intact.
+              </p>
+              <ul className="mt-7 space-y-2.5 list-none p-0 text-[14.5px] text-[color:var(--charcoal)] font-light">
+                {[
+                  "Swap a tasting for a long lunch",
+                  "Add a sunset stop, slow down a morning",
+                  "Same route, your pace",
+                ].map((item) => (
+                  <li key={item} className="flex items-baseline gap-3">
+                    <span className="text-[color:var(--gold)] text-[10px] tracking-[0.3em] mt-0.5 shrink-0">✦</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-6 text-[13.5px] italic font-light text-[color:var(--charcoal-soft)] leading-[1.7] max-w-md">
+                Tailoring stays inside the chosen tour. To design something entirely your own, open the Studio.
+              </p>
+              <Link
+                to="/experiences"
+                className="btn-solid btn-solid--outline mt-9"
+              >
+                Tailor a Signature <ArrowRight size={14} />
+              </Link>
+            </div>
+            <div className="reveal lg:col-span-5">
+              <div className="editorial-card relative overflow-hidden border border-[color:var(--border)] aspect-[4/5]">
+                <img
+                  src={imgAzeitaoWorkshop}
+                  alt="A small Azeitão workshop — the kind of stop you'd shape to your rhythm"
+                  loading="lazy"
+                  data-card-image
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal)]/60 via-transparent to-transparent" />
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -1360,7 +1430,7 @@ function HomePage() {
                   to="/experiences"
                   className="btn-solid btn-solid--outline"
                 >
-                  Explore Signature Experiences
+                  Explore Signature Journeys
                 </Link>
               </div>
               <p className="mt-6 text-[13.5px] italic font-light text-[color:var(--charcoal-soft)]">
@@ -1372,6 +1442,27 @@ function HomePage() {
                   A local designer can shape it with you.
                 </Link>
               </p>
+
+              {/* Brand line — closing signature, brand voice. */}
+              <div
+                className="mt-12 inline-flex items-center gap-5 md:gap-6 text-[color:var(--charcoal)]"
+                aria-label="Whatever you have in mind, we say YES"
+              >
+                <span className="h-px w-10 md:w-14 bg-gradient-to-r from-transparent to-[color:var(--gold)] shrink-0 opacity-80" />
+                <span
+                  aria-hidden="true"
+                  className="flex flex-col items-center text-[10.5px] md:text-[11px] uppercase tracking-[0.32em] leading-[1.35] text-center"
+                >
+                  <span style={{ fontWeight: 500 }}>Whatever you have in mind,</span>
+                  <span
+                    className="text-[color:var(--gold)] tracking-[0.36em] text-[12px] md:text-[12.5px]"
+                    style={{ fontWeight: 600 }}
+                  >
+                    We say YES.
+                  </span>
+                </span>
+                <span className="h-px w-10 md:w-14 bg-gradient-to-l from-transparent to-[color:var(--gold)] shrink-0 opacity-80" />
+              </div>
             </div>
           </div>
         </div>
