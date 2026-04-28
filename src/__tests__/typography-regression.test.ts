@@ -300,9 +300,16 @@ function renderDiffHtml(drift: DriftEntry[]): string {
                 .map((b) => `<code>${escapeHtml(b)}</code>`)
                 .join(", ")}</div>`
             : "";
+        const renderTrace = (t: Trace) =>
+          `<code>${escapeHtml(t.selector)}[${t.index}]</code> · <code>${escapeHtml(t.file)}:${t.line}</code>`;
+        const traceHtml = !d.trace
+          ? ""
+          : Array.isArray(d.trace)
+            ? `<div class="trace">${d.trace.map(renderTrace).join("<br/>")}</div>`
+            : `<div class="trace">${renderTrace(d.trace)}</div>`;
         return `
           <article>
-            <header><h3>${escapeHtml(d.key)}</h3>${bp}</header>
+            <header><h3>${escapeHtml(d.key)}</h3>${bp}${traceHtml}</header>
             ${inlineDiff(d.prev ?? "(missing)", d.next ?? "(missing)")}
           </article>`;
       })
