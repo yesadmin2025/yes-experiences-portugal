@@ -1069,6 +1069,61 @@ function PremiumMap({
               </g>
             );
           })}
+
+          {/* Ghost stop — appears while a moment chip is hovered/long-pressed.
+              Animates in with a pulsing halo so users see exactly where the
+              route would extend. */}
+          {ghostStop && (
+            <g style={{ animation: "ys-pop 320ms cubic-bezier(0.34,1.56,0.64,1) backwards" }}>
+              {/* Pulsing halo on the upcoming stop */}
+              <circle cx={ghostStop.x} cy={ghostStop.y - 1.4} r="3" fill="var(--gold)" opacity="0.18">
+                <animate attributeName="r" values="3;5;3" dur="1.4s" repeatCount="indefinite" />
+                <animate attributeName="opacity" values="0.32;0;0.32" dur="1.4s" repeatCount="indefinite" />
+              </circle>
+              {/* Outline-only teardrop — visually marked as preview */}
+              <path
+                d={`M ${ghostStop.x} ${ghostStop.y - 3.2} C ${ghostStop.x + 2} ${ghostStop.y - 3.2} ${ghostStop.x + 2} ${ghostStop.y - 0.4} ${ghostStop.x} ${ghostStop.y + 1.2} C ${ghostStop.x - 2} ${ghostStop.y - 0.4} ${ghostStop.x - 2} ${ghostStop.y - 3.2} ${ghostStop.x} ${ghostStop.y - 3.2} Z`}
+                fill="var(--ivory)"
+                stroke="var(--gold)"
+                strokeWidth="0.45"
+                strokeDasharray="0.8 0.6"
+                filter="url(#markerShadow)"
+              />
+              <circle cx={ghostStop.x} cy={ghostStop.y - 1.8} r="0.55" fill="var(--gold)" />
+              {/* Preview label */}
+              <g style={{ animation: "ys-fade 280ms ease-out 120ms backwards" }}>
+                <rect
+                  x={ghostStop.x + 2.2}
+                  y={ghostStop.y - 3.4}
+                  width={ghostStop.label.length * 1.35 + 4.5}
+                  height="3"
+                  rx="0.5"
+                  fill="var(--gold)"
+                  opacity="0.95"
+                />
+                <text
+                  x={ghostStop.x + 3.2}
+                  y={ghostStop.y - 1.3}
+                  fontSize="2"
+                  fill="var(--charcoal-deep)"
+                  fontFamily="ui-sans-serif, system-ui"
+                  style={{ letterSpacing: "0.05em" }}
+                >
+                  {ghostStop.label} ·
+                </text>
+                <text
+                  x={ghostStop.x + 3.2 + ghostStop.label.length * 1.35 + 0.4}
+                  y={ghostStop.y - 1.3}
+                  fontSize="1.4"
+                  fill="var(--ivory)"
+                  fontFamily="ui-sans-serif, system-ui"
+                  style={{ letterSpacing: "0.18em", textTransform: "uppercase" }}
+                >
+                  preview
+                </text>
+              </g>
+            </g>
+          )}
         </svg>
 
         {!region && (
