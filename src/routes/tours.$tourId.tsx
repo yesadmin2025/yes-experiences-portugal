@@ -5,7 +5,8 @@ import {
   signatureTours,
   findTour,
   isValidTourId,
-  STOP_THEME_IMG,
+  stopImage,
+  stopFocal,
   type SignatureTour,
 } from "@/data/signatureTours";
 import { SimpleTailorForm } from "@/components/SimpleTailorForm";
@@ -78,6 +79,7 @@ function TourDetailPage() {
               <img
                 {...resolveImg(tour, "hero")}
                 alt={tour.title}
+                style={{ objectPosition: tour.focal ?? "50% 50%" }}
                 className="w-full h-full object-cover"
               />
               <span className="absolute top-4 left-4 text-[10px] uppercase tracking-[0.25em] bg-[color:var(--ivory)]/90 text-[color:var(--teal)] px-3 py-1.5">
@@ -245,10 +247,11 @@ function ChapterStrip({ tour }: { tour: SignatureTour }) {
             >
               <div className="relative aspect-[5/3] overflow-hidden">
                 <img
-                  src={STOP_THEME_IMG[s.imageTheme]}
+                  src={stopImage(s)}
                   alt={s.label}
                   loading="lazy"
                   decoding="async"
+                  style={{ objectPosition: stopFocal(s) }}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <span className="absolute top-3 left-3 w-7 h-7 flex items-center justify-center text-[11px] bg-[color:var(--ivory)]/95 border border-[color:var(--gold)] text-[color:var(--gold)]">
@@ -316,6 +319,7 @@ function RelatedTours({ currentId }: { currentId: string }) {
                   alt={t.title}
                   loading="lazy"
                   decoding="async"
+                  style={{ objectPosition: t.focal ?? "50% 50%" }}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
               </div>
