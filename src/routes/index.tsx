@@ -12,6 +12,13 @@ import editCoastal from "@/assets/edit-coastal-road.jpg";
 import editWinery from "@/assets/edit-winery.jpg";
 import editMarket from "@/assets/edit-market.jpg";
 import editViewpoint from "@/assets/edit-viewpoint.jpg";
+import catProposals from "@/assets/cat-proposals.jpg";
+import catCorporate from "@/assets/cat-corporate.jpg";
+
+import expRomantic from "@/assets/exp-romantic.jpg";
+import expGastronomy from "@/assets/exp-gastronomy.jpg";
+import expWine from "@/assets/exp-wine.jpg";
+import expNature from "@/assets/exp-nature.jpg";
 import {
   ArrowRight,
   Star,
@@ -29,6 +36,7 @@ import { HeroMetaProbe } from "@/components/HeroMetaProbe";
 import { HeroCopyDiff } from "@/components/HeroCopyDiff";
 import { HeroVerifyOverlay } from "@/components/HeroVerifyOverlay";
 import { DecisionStepper } from "@/components/DecisionStepper";
+import { SignatureCarousel } from "@/components/SignatureCarousel";
 import { ContrastAudit } from "@/components/dev/ContrastAudit";
 
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
@@ -40,6 +48,9 @@ const FEATURED_TOUR_IDS = [
   "arrabida-wine-allinclusive",
   "sintra-cascais",
   "troia-comporta",
+  "arrabida-boat",
+  "azeitao-cheese",
+  "fatima-nazare-obidos",
 ] as const;
 
 export const Route = createFileRoute("/")({
@@ -117,58 +128,62 @@ const startPaths = [
   {
     icon: BookOpen,
     eyebrow: "Ready to go",
-    title: "Explore Signature Experiences",
-    line: "Start from a curated journey.",
+    title: "Signature Journeys",
+    line: "Start with something already beautifully put together.",
     cta: "Explore",
     to: "/experiences",
     destination: "Signatures",
     expectedTo: "/experiences",
-    ariaLabel: "Explore Signature Experiences — start from a curated journey",
+    ariaLabel: "Signature Journeys — start with something already beautifully put together",
     accent: "ivory" as const,
     slug: "signature",
     stepLabel: "Signature",
+    bg: editViewpoint,
   },
   {
     icon: Wand2,
     eyebrow: "Tailored",
     title: "Tailor a Signature",
-    line: "Adjust selected details to match your rhythm.",
+    line: "Adjust the details to match your rhythm.",
     cta: "Tailor it",
     to: "/experiences",
     destination: "Tailoring",
     expectedTo: "/experiences",
-    ariaLabel: "Tailor a Signature — adjust selected details to match your rhythm",
+    ariaLabel: "Tailor a Signature — adjust the details to match your rhythm",
     accent: "sand" as const,
     slug: "tailor",
     stepLabel: "Tailor",
+    bg: editWinery,
   },
   {
     icon: Sparkles,
     eyebrow: "Live · Real-time",
     title: "Build Your Own",
-    line: "Create your journey in real time.",
+    line: "Shape your journey from the ground up, in real time.",
     cta: "Open Studio",
     to: "/builder",
     destination: "Studio",
     expectedTo: "/builder",
-    ariaLabel: "Build Your Own — create your journey in real time",
+    ariaLabel: "Build Your Own — shape your journey from the ground up, in real time",
     accent: "teal" as const,
     slug: "studio",
     stepLabel: "Studio",
+    bg: editCoastal,
   },
   {
     icon: Gift,
     eyebrow: "Occasions",
     title: "Plan a Moment",
-    line: "Proposals, celebrations, groups and special occasions.",
+    line: "For proposals, celebrations and shared experiences.",
     cta: "Plan",
     to: "/proposals",
     destination: "Celebrations",
     expectedTo: "/proposals",
-    ariaLabel: "Plan a Moment — proposals, celebrations, groups and special occasions",
+    ariaLabel: "Plan a Moment — for proposals, celebrations and shared experiences",
     accent: "charcoal" as const,
     slug: "moment",
     stepLabel: "Moment",
+    bg: catProposals,
   },
 ];
 
@@ -814,44 +829,72 @@ function HomePage() {
                     data-expected-to={p.expectedTo}
                     data-actual-to={p.to}
                     data-route-ok={p.to === p.expectedTo ? "true" : "false"}
-                    className={`group relative flex flex-col h-full p-7 md:p-8 transition-all duration-500 overflow-hidden ${styles.card}`}
+                    className={`group relative flex flex-col h-full min-h-[22rem] md:min-h-[26rem] p-7 md:p-8 transition-all duration-500 overflow-hidden hover:-translate-y-1 hover:scale-[1.015] ${styles.card}`}
                   >
+                    {/* Photographic background — soft, slow zoom on hover.
+                        Sits BEHIND the per-accent surface tint via a
+                        gradient overlay tuned to the accent so each card
+                        keeps its identity (ivory / sand / teal / charcoal)
+                        while gaining real photography. */}
+                    {p.bg && (
+                      <>
+                        <img
+                          src={p.bg}
+                          alt=""
+                          aria-hidden="true"
+                          loading="lazy"
+                          className="absolute inset-0 w-full h-full object-cover opacity-[0.32] group-hover:opacity-[0.42] transition-all duration-[1400ms] ease-out scale-[1.02] group-hover:scale-[1.08]"
+                        />
+                        <div
+                          aria-hidden="true"
+                          className={`absolute inset-0 ${
+                            p.accent === "teal"
+                              ? "bg-gradient-to-br from-[color:var(--teal)]/92 via-[color:var(--teal)]/82 to-[color:var(--teal-2)]/88"
+                              : p.accent === "charcoal"
+                                ? "bg-gradient-to-br from-[color:var(--charcoal-deep)]/92 via-[color:var(--charcoal-deep)]/85 to-[color:var(--charcoal)]/90"
+                                : p.accent === "sand"
+                                  ? "bg-gradient-to-br from-[color:var(--sand)]/93 via-[color:var(--sand)]/85 to-[color:var(--ivory)]/82"
+                                  : "bg-gradient-to-br from-[color:var(--card)]/94 via-[color:var(--card)]/86 to-[color:var(--ivory)]/82"
+                          }`}
+                        />
+                      </>
+                    )}
                     {/* Top rail — distinct accent pattern per card
                         (solid teal · soft-gold gradient · thick gold ·
                         dotted gold) so each path is identifiable at a
                         glance even before reading the title. */}
                     <span
                       aria-hidden="true"
-                      className={`absolute top-0 left-0 right-0 ${styles.rail}`}
+                      className={`absolute top-0 left-0 right-0 z-[1] ${styles.rail}`}
                     />
                     {styles.ribbon && (
                       <span
                         aria-hidden="true"
-                        className="absolute top-4 right-4 text-[9.5px] uppercase tracking-[0.26em] px-2.5 py-1 bg-[color:var(--gold)] text-[color:var(--charcoal-deep)] font-semibold"
+                        className="absolute top-4 right-4 z-[2] text-[9.5px] uppercase tracking-[0.26em] px-2.5 py-1 bg-[color:var(--gold)] text-[color:var(--charcoal-deep)] font-semibold"
                       >
                         {styles.ribbon}
                       </span>
                     )}
                     <span
-                      className={`inline-flex items-center justify-center w-11 h-11 mb-6 border ${styles.iconWrap}`}
+                      className={`relative z-[1] inline-flex items-center justify-center w-11 h-11 mb-6 border backdrop-blur-[2px] ${styles.iconWrap}`}
                     >
                       <Icon size={18} strokeWidth={1.5} />
                     </span>
-                    <span className={`text-[10.5px] uppercase tracking-[0.3em] ${styles.eyebrow}`}>
+                    <span className={`relative z-[1] text-[10.5px] uppercase tracking-[0.3em] ${styles.eyebrow}`}>
                       {p.eyebrow}
                     </span>
                     <h3
-                      className={`t-h3 mt-3 ${styles.title}`}
+                      className={`relative z-[1] serif mt-3 text-[1.5rem] md:text-[1.7rem] leading-[1.15] tracking-[-0.005em] ${styles.title}`}
                     >
                       {p.title}
                     </h3>
                     <p
-                      className={`mt-3 text-[14.5px] leading-[1.65] font-light flex-1 ${styles.line}`}
+                      className={`relative z-[1] mt-3 text-[14.5px] leading-[1.65] font-light flex-1 ${styles.line}`}
                     >
                       {p.line}
                     </p>
                     <span
-                      className={`mt-7 inline-flex items-center gap-2 text-[14px] tracking-[0.005em] font-medium group-hover:translate-x-1 transition-transform duration-300 ${styles.cta}`}
+                      className={`relative z-[1] mt-7 inline-flex items-center gap-2 text-[14px] tracking-[0.005em] font-medium group-hover:translate-x-1 transition-transform duration-300 ${styles.cta}`}
                     >
                       {p.cta} <ArrowRight size={14} />
                     </span>
@@ -915,7 +958,20 @@ function HomePage() {
 
             <div className="reveal lg:col-span-5">
               <div className="relative">
-                <div className="border border-[color:var(--gold)]/30 p-8 md:p-10 bg-[color:var(--teal-2)]/40 backdrop-blur-sm">
+                {/* Atmospheric photo behind the steps panel — adds
+                    image presence to the Studio block without
+                    competing with the panel content. */}
+                <div className="absolute -inset-3 md:-inset-4 -z-[1] overflow-hidden">
+                  <img
+                    src={expNature}
+                    alt=""
+                    aria-hidden="true"
+                    loading="lazy"
+                    className="w-full h-full object-cover opacity-40 scale-[1.04] transition-transform duration-[2200ms] ease-out hover:scale-[1.1]"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-br from-[color:var(--teal)]/85 via-[color:var(--teal)]/70 to-[color:var(--teal-2)]/80" />
+                </div>
+                <div className="relative border border-[color:var(--gold)]/30 p-8 md:p-10 bg-[color:var(--teal-2)]/55 backdrop-blur-md">
                   <p className="text-[10.5px] uppercase tracking-[0.32em] text-[color:var(--gold)]">
                     A studio session, in 4 moves
                   </p>
@@ -964,56 +1020,8 @@ function HomePage() {
             </p>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-7 max-w-5xl mx-auto">
-            {signatures.map((s) => (
-              <article key={s.id} className="reveal-stagger group flex flex-col">
-                <div className="lift-layer-sm flex flex-col h-full p-3 -m-3 rounded-sm transition-all duration-500 ease-out hover:-translate-y-1 hover:bg-[color:var(--ivory)]/60 hover:shadow-[0_22px_50px_-30px_rgba(41,91,97,0.25)]">
-                  <Link
-                    to="/tours/$tourId"
-                    params={{ tourId: s.id }}
-                    className="relative overflow-hidden aspect-[4/5] mb-5 shadow-[0_10px_30px_-20px_rgba(46,46,46,0.28)] group-hover:shadow-[0_28px_55px_-22px_rgba(41,91,97,0.32)] transition-shadow duration-700 block"
-                    aria-label={`Confirm this journey — ${s.title}`}
-                  >
-                    <img
-                      src={s.img}
-                      alt={s.title}
-                      loading="lazy"
-                      style={{ objectPosition: (s as { focal?: string }).focal ?? "50% 50%" }}
-                      className="w-full h-full object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.08]"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/80 via-[color:var(--charcoal)]/15 to-transparent" />
-                  </Link>
-                  <h3 className="t-h3 text-[color:var(--charcoal)] transition-colors duration-300 group-hover:text-[color:var(--teal)]">
-                    {s.title}
-                  </h3>
-                  <p className="mt-3 text-[15px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
-                    {s.line}
-                  </p>
-                  <div className="mt-5 pt-5 border-t border-[color:var(--border)] flex items-center gap-5">
-                    <Link
-                      to="/tours/$tourId"
-                      params={{ tourId: s.id }}
-                      aria-label={`Confirm this journey — ${s.title}`}
-                      className="group/cta inline-flex items-center gap-2 text-[14px] tracking-[0.005em] font-medium text-[color:var(--teal)] hover:text-[color:var(--teal-2)] transition-colors"
-                    >
-                      Confirm this journey
-                      <ArrowRight
-                        size={13}
-                        className="transition-transform duration-300 ease-out group-hover/cta:translate-x-0.5 group-hover:translate-x-0.5"
-                      />
-                    </Link>
-                    <span className="h-3 w-px bg-[color:var(--border)]" aria-hidden="true" />
-                    <Link
-                      to="/builder"
-                      search={{ tour: s.id }}
-                      className="inline-flex items-center gap-2 text-[14px] tracking-[0.005em] font-medium text-[color:var(--charcoal-soft)] hover:text-[color:var(--teal)] transition-colors"
-                    >
-                      Tailor &amp; confirm <ArrowRight size={13} />
-                    </Link>
-                  </div>
-                </div>
-              </article>
-            ))}
+          <div className="reveal max-w-6xl mx-auto">
+            <SignatureCarousel items={signatures} />
           </div>
 
           <div className="reveal mt-14 md:mt-16 text-center">
@@ -1057,6 +1065,7 @@ function HomePage() {
                 cta: "Discover multi-day",
                 ariaLabel:
                   "Discover extended journeys — from one day to full journeys across Portugal",
+                bg: multiDayImg,
               },
               {
                 eyebrow: "Special occasions",
@@ -1066,24 +1075,33 @@ function HomePage() {
                 cta: "Plan a moment",
                 ariaLabel:
                   "Plan a moment — proposals, celebrations, corporate and private groups",
+                bg: catProposals,
               },
             ].map((b) => (
               <Link
                 key={b.title}
                 to={b.to}
                 aria-label={b.ariaLabel}
-                className="reveal-stagger group flex flex-col p-8 md:p-10 bg-[color:var(--card)] border border-[color:var(--border)] hover:border-[color:var(--teal)]/35 hover:-translate-y-0.5 hover:shadow-[0_24px_55px_-28px_rgba(41,91,97,0.22)] transition-all duration-500"
+                className="reveal-stagger group relative flex flex-col p-8 md:p-10 min-h-[18rem] md:min-h-[22rem] bg-[color:var(--charcoal-deep)] border border-[color:var(--border)] hover:border-[color:var(--gold)]/40 hover:-translate-y-1 hover:shadow-[0_28px_60px_-28px_rgba(41,91,97,0.3)] transition-all duration-500 overflow-hidden"
               >
-                <span className="text-[10.5px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
+                <img
+                  src={b.bg}
+                  alt=""
+                  aria-hidden="true"
+                  loading="lazy"
+                  className="absolute inset-0 w-full h-full object-cover opacity-55 group-hover:opacity-65 scale-[1.02] group-hover:scale-[1.07] transition-all duration-[1400ms] ease-out"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/95 via-[color:var(--charcoal-deep)]/65 to-[color:var(--charcoal-deep)]/30" />
+                <span className="relative z-[1] text-[10.5px] uppercase tracking-[0.3em] text-[color:var(--gold-soft)]">
                   {b.eyebrow}
                 </span>
-                <h3 className="t-h1 mt-3 text-[color:var(--charcoal)] transition-colors duration-300 group-hover:text-[color:var(--teal)]">
+                <h3 className="relative z-[1] serif mt-3 text-[1.7rem] md:text-[2rem] leading-[1.1] tracking-[-0.005em] text-[color:var(--ivory)] transition-colors duration-300 group-hover:text-[color:var(--gold-soft)]">
                   {b.title}
                 </h3>
-                <p className="mt-4 text-[15.5px] md:text-[16px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
+                <p className="relative z-[1] mt-4 text-[15px] md:text-[16px] text-[color:var(--ivory)]/85 leading-[1.7] font-light">
                   {b.line}
                 </p>
-                <span className="mt-7 inline-flex items-center gap-2 text-[13.5px] tracking-[0.005em] font-medium text-[color:var(--teal)]">
+                <span className="relative z-[1] mt-auto pt-7 inline-flex items-center gap-2 text-[13.5px] tracking-[0.005em] font-medium text-[color:var(--gold-soft)] group-hover:text-[color:var(--gold)] transition-colors">
                   {b.cta}
                   <ArrowRight
                     size={13}
@@ -1176,35 +1194,46 @@ function HomePage() {
                 title: "A moment they'll never forget",
                 line: "A hidden viewpoint, a private dinner, a perfectly timed pause — quietly extraordinary.",
                 to: "/proposals" as const,
+                bg: expRomantic,
               },
               {
                 eyebrow: "Celebrations",
                 title: "Birthdays, anniversaries, milestones",
                 line: "Gather the people who matter, in places that feel made for the occasion.",
                 to: "/proposals" as const,
+                bg: expGastronomy,
               },
               {
                 eyebrow: "Corporate",
                 title: "Teams, incentives, retreats",
                 line: "Refined private programs that feel nothing like a hotel ballroom.",
                 to: "/corporate" as const,
+                bg: catCorporate,
               },
             ].map((o) => (
               <li key={o.eyebrow} className="reveal-stagger h-full">
                 <Link
                   to={o.to}
-                  className="group flex flex-col h-full p-7 md:p-8 bg-[color:var(--card)] border border-[color:var(--border)] hover:border-[color:var(--teal)]/30 hover:shadow-[0_24px_50px_-24px_rgba(41,91,97,0.18)] transition-all duration-500"
+                  className="group relative flex flex-col h-full min-h-[20rem] p-7 md:p-8 bg-[color:var(--charcoal-deep)] border border-[color:var(--border)] hover:border-[color:var(--gold)]/40 hover:-translate-y-1 hover:shadow-[0_24px_55px_-22px_rgba(41,91,97,0.32)] transition-all duration-500 overflow-hidden"
                 >
-                  <span className="text-[10.5px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
+                  <img
+                    src={o.bg}
+                    alt=""
+                    aria-hidden="true"
+                    loading="lazy"
+                    className="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-65 scale-[1.02] group-hover:scale-[1.07] transition-all duration-[1400ms] ease-out"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/95 via-[color:var(--charcoal-deep)]/65 to-[color:var(--charcoal-deep)]/35" />
+                  <span className="relative z-[1] text-[10.5px] uppercase tracking-[0.3em] text-[color:var(--gold-soft)]">
                     {o.eyebrow}
                   </span>
-                  <h3 className="t-h3 mt-3 text-[color:var(--charcoal)]">
+                  <h3 className="relative z-[1] serif mt-3 text-[1.4rem] md:text-[1.55rem] leading-[1.15] tracking-[-0.005em] text-[color:var(--ivory)]">
                     {o.title}
                   </h3>
-                  <p className="mt-3 text-[14.5px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light flex-1">
+                  <p className="relative z-[1] mt-3 text-[14.5px] text-[color:var(--ivory)]/85 leading-[1.7] font-light flex-1">
                     {o.line}
                   </p>
-                  <span className="mt-7 inline-flex items-center gap-2 text-[14px] tracking-[0.005em] font-medium text-[color:var(--teal)] group-hover:translate-x-1 transition-transform">
+                  <span className="relative z-[1] mt-7 inline-flex items-center gap-2 text-[14px] tracking-[0.005em] font-medium text-[color:var(--gold-soft)] group-hover:text-[color:var(--gold)] group-hover:translate-x-1 transition-all">
                     Design &amp; confirm instantly <ArrowRight size={13} />
                   </span>
                 </Link>
@@ -1328,6 +1357,16 @@ function HomePage() {
       <section className="section-y bg-[color:var(--ivory)]">
         <div className="container-x">
           <div className="reveal relative bg-[color:var(--sand)] p-12 md:p-20 overflow-hidden">
+            {/* Soft photographic wash — adds atmospheric depth without
+                losing the sand surface or harming text contrast. */}
+            <img
+              src={expWine}
+              alt=""
+              aria-hidden="true"
+              loading="lazy"
+              className="absolute inset-0 w-full h-full object-cover opacity-25 scale-[1.04]"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-[color:var(--sand)] via-[color:var(--sand)]/85 to-[color:var(--sand)]/55" />
             <div className="absolute -bottom-24 -left-24 w-80 h-80 rounded-full border border-[color:var(--gold)]/15" />
             <div className="absolute -top-12 right-1/4 w-40 h-40 rounded-full border border-[color:var(--gold)]/10" />
             <div className="relative max-w-2xl">
