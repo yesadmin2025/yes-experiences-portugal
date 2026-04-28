@@ -12,7 +12,7 @@ export const Route = createFileRoute("/day-tours")({
       {
         name: "description",
         content:
-          "Private day tours across Portugal — Arrábida, Setúbal, Sintra, Évora, Douro and more. Book ready-made or tailor in the studio.",
+          "Private day experiences across Portugal — Arrábida, Setúbal, Sintra, Évora, Douro and more. Reserve instantly, with real-time confirmation.",
       },
     ],
   }),
@@ -33,7 +33,7 @@ function DayToursPage() {
           </h1>
           <p className="mt-5 max-w-xl mx-auto text-[color:var(--charcoal-soft)]">
             Private guides, refined pace, and the parts of Portugal you'll remember most.
-            Book ready-made — or open any tour in the studio and tailor it your way.
+            Reserve instantly — or adjust a few details within the experience to match your rhythm.
           </p>
         </div>
       </section>
@@ -61,7 +61,7 @@ function DayToursPage() {
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 />
                 <span className="absolute top-4 right-4 text-[10px] uppercase tracking-[0.22em] bg-[color:var(--gold)]/95 text-[color:var(--charcoal)] px-3 py-1.5">
-                  Tailorable
+                  Tailored Signature
                 </span>
               </div>
 
@@ -87,7 +87,7 @@ function DayToursPage() {
               </p>
 
               <span className="mt-5 inline-flex items-center gap-2 text-sm tracking-wide text-[color:var(--teal)] group-hover:gap-3 transition-all">
-                View tour & customise <ArrowRight size={14} />
+                View experience & reserve <ArrowRight size={14} />
               </span>
             </Link>
           ))}
