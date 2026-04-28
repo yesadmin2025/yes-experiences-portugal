@@ -8,9 +8,6 @@ import { useCtaScrollScale } from "@/hooks/use-cta-scroll-scale";
 import { CtaScrollDebugOverlay, useCtaScrollDebugToggle } from "@/components/CtaScrollDebugOverlay";
 import heroImg from "@/assets/hero-coast.jpg";
 import multiDayImg from "@/assets/multi-day.jpg";
-import expWine from "@/assets/exp-wine.jpg";
-import expCoastal from "@/assets/exp-coastal.jpg";
-import expStreet from "@/assets/exp-street.jpg";
 import editCoastal from "@/assets/edit-coastal-road.jpg";
 import editWinery from "@/assets/edit-winery.jpg";
 import editMarket from "@/assets/edit-market.jpg";
@@ -34,6 +31,15 @@ import { HeroCopyDiff } from "@/components/HeroCopyDiff";
 import { HeroVerifyOverlay } from "@/components/HeroVerifyOverlay";
 
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
+import { signatureTours, isValidTourId } from "@/data/signatureTours";
+
+// Featured tour ids for the homepage signatures showcase.
+// Must exist in the catalog (`signatureTours`) — validated below at render time.
+const FEATURED_TOUR_IDS = [
+  "arrabida-wine-allinclusive",
+  "sintra-cascais",
+  "troia-comporta",
+] as const;
 
 export const Route = createFileRoute("/")({
   headers: () => ({
@@ -71,26 +77,16 @@ export const Route = createFileRoute("/")({
   component: HomePage,
 });
 
-const signatures = [
-  {
-    title: "A Day in Hidden Douro",
-    img: expWine,
-    line: "Family wineries, schist terraces, a long lunch above the river — far from the bus routes.",
-    pace: ["Morning vineyard walk", "Long table lunch", "Sunset tasting"],
-  },
-  {
-    title: "Wild Atlantic Coast",
-    img: expCoastal,
-    line: "Coastal roads only locals drive, a fishermen's lunch, a hidden cove with no one else in sight.",
-    pace: ["Cliff walk", "Seafood by the harbor", "Hidden cove"],
-  },
-  {
-    title: "Lisbon Through Locals",
-    img: expStreet,
-    line: "The Lisbon postcards never see — quiet neighborhoods, ateliers and family-run tascas.",
-    pace: ["Morning market", "Artisan visit", "Family tavern lunch"],
-  },
-];
+const signatures = FEATURED_TOUR_IDS
+  .filter((id) => isValidTourId(id))
+  .map((id) => signatureTours.find((t) => t.id === id)!)
+  .map((t) => ({
+    id: t.id,
+    title: t.title,
+    img: t.img,
+    line: t.blurb,
+    pace: t.pace,
+  }));
 
 const editorial = [
   {
@@ -1119,9 +1115,14 @@ function HomePage() {
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-7 max-w-5xl mx-auto">
             {signatures.map((s) => (
-              <article key={s.title} className="reveal-stagger group flex flex-col">
+              <article key={s.id} className="reveal-stagger group flex flex-col">
                 <div className="lift-layer-sm flex flex-col h-full">
-                  <div className="relative overflow-hidden aspect-[4/5] mb-5 shadow-[0_10px_30px_-20px_rgba(46,46,46,0.28)] group-hover:shadow-[0_28px_55px_-22px_rgba(41,91,97,0.32)] transition-shadow duration-700">
+                  <Link
+                    to="/tours/$tourId"
+                    params={{ tourId: s.id }}
+                    className="relative overflow-hidden aspect-[4/5] mb-5 shadow-[0_10px_30px_-20px_rgba(46,46,46,0.28)] group-hover:shadow-[0_28px_55px_-22px_rgba(41,91,97,0.32)] transition-shadow duration-700 block"
+                    aria-label={`See ${s.title}`}
+                  >
                     <img
                       src={s.img}
                       alt={s.title}
@@ -1129,14 +1130,15 @@ function HomePage() {
                       className="w-full h-full object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.08]"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/80 via-[color:var(--charcoal)]/15 to-transparent" />
-                  </div>
+                  </Link>
                   <h3 className="serif text-[1.5rem] text-[color:var(--charcoal)]">{s.title}</h3>
                   <p className="mt-3 text-[15px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
                     {s.line}
                   </p>
                   <div className="mt-5 pt-5 border-t border-[color:var(--border)] flex items-center gap-5">
                     <Link
-                      to="/experiences"
+                      to="/tours/$tourId"
+                      params={{ tourId: s.id }}
                       className="inline-flex items-center gap-2 text-[14px] tracking-[0.005em] font-medium text-[color:var(--teal)] hover:text-[color:var(--teal-2)] transition-colors"
                     >
                       Confirm instantly <ArrowRight size={13} />
@@ -1144,6 +1146,7 @@ function HomePage() {
                     <span className="h-3 w-px bg-[color:var(--border)]" aria-hidden="true" />
                     <Link
                       to="/builder"
+                      search={{ tour: s.id }}
                       className="inline-flex items-center gap-2 text-[14px] tracking-[0.005em] font-medium text-[color:var(--charcoal-soft)] hover:text-[color:var(--teal)] transition-colors"
                     >
                       Tailor &amp; confirm <ArrowRight size={13} />

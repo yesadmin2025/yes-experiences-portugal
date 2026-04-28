@@ -89,6 +89,17 @@ export function findTour(id: string): SignatureTour | undefined {
   return signatureTours.find((t) => t.id === id);
 }
 
+/** True if the given id exists in the active catalog. */
+export function isValidTourId(id: string | null | undefined): boolean {
+  if (!id) return false;
+  return signatureTours.some((t) => t.id === id);
+}
+
+/** Filter a list of tour ids down to the ones that exist in the catalog. */
+export function filterValidTourIds(ids: ReadonlyArray<string | null | undefined>): string[] {
+  return ids.filter((id): id is string => isValidTourId(id));
+}
+
 export const signatureTours: SignatureTour[] = [
   {
     id: "arrabida-wine-allinclusive",
