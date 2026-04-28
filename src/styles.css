@@ -88,6 +88,11 @@
   --input: rgba(46, 46, 46, 0.18);
   --ring: var(--teal);
 
+  /* Shared vertical rhythm — used by .section-y / .section-y-lg / .section-y-sm */
+  --section-y: 5rem;
+  --section-y-lg: 6rem;
+  --section-y-sm: 3.5rem;
+
   /* ─────────────────────────────────────────────────────────────
      CTA LABEL GLOW API
      Two-tier text-shadow on hover: a tight "halo" hugging the
@@ -187,6 +192,14 @@
   --logo-scale-gold-on-charcoal: 0.95;
 }
 
+@media (min-width: 768px) {
+  :root {
+    --section-y: 8rem;
+    --section-y-lg: 11rem;
+    --section-y-sm: 4.5rem;
+  }
+}
+
 .dark {
   --background: var(--charcoal);
   --foreground: var(--ivory);
@@ -282,6 +295,24 @@
   .container-x {
     @apply mx-auto w-full max-w-[1240px] px-6 md:px-10;
   }
+  /* SHARED VERTICAL RHYTHM — one token controls the breathing room
+     between every section so the whole page reads as one calm cadence.
+       .section-y    standard section padding
+       .section-y-lg taller (anchor sections like Builder)
+       .section-y-sm shorter (trust strip, two-card rows) */
+  .section-y {
+    padding-top: var(--section-y);
+    padding-bottom: var(--section-y);
+  }
+  .section-y-lg {
+    padding-top: var(--section-y-lg);
+    padding-bottom: var(--section-y-lg);
+  }
+  .section-y-sm {
+    padding-top: var(--section-y-sm);
+    padding-bottom: var(--section-y-sm);
+  }
+
   /* ─────────────────────────────────────────────────────────────
      HERO H1 — display rhythm tuned per breakpoint.
      Mobile: airier line-height for readability at small sizes.
