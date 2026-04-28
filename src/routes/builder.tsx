@@ -1180,11 +1180,30 @@ function LiveCanvas({ s, title }: { s: BuilderState; title: string }) {
   const heroImg = useMemo(() => pickHeroImage(s), [s]);
   const [activeIdx, setActiveIdx] = useState<number | null>(null);
   const itemRefs = useRef<(HTMLLIElement | null)[]>([]);
+  const pinRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const mapScrollRef = useRef<HTMLDivElement | null>(null);
 
   const region = s.region ? REGION_CANVAS[s.region] : null;
   const placedChapters = chapters
     .map((c, i) => ({ c, i }))
     .filter((x) => !!x.c.coord);
+
+  // Pre-compute interlude prose between consecutive chapters.
+  const interludes = useMemo(() => buildInterludes(chapters, s), [chapters, s]);
+
+  // When activeIdx changes, scroll the corresponding pin into view inside the
+  // swipeable map container (mobile-only behavior, harmless on desktop).
+  useEffect(() => {
+    if (activeIdx == null) return;
+    const pinIdx = placedChapters.findIndex((p) => p.i === activeIdx);
+    if (pinIdx < 0) return;
+    const pinEl = pinRefs.current[pinIdx];
+    const container = mapScrollRef.current;
+    if (!pinEl || !container) return;
+    const pinLeft = pinEl.offsetLeft;
+    const targetLeft = Math.max(0, pinLeft - container.clientWidth / 2 + pinEl.clientWidth / 2);
+    container.scrollTo({ left: targetLeft, behavior: "smooth" });
+  }, [activeIdx, placedChapters]);
 
   const scrollToChapter = (i: number) => {
     const el = itemRefs.current[i];
