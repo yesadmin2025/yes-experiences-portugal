@@ -498,11 +498,11 @@ function HomePage() {
             <div className="hero-rhythm-cta-to-microcopy max-w-sm sm:max-w-xl mx-auto sm:mx-0 opacity-0 animate-[heroFade_1.4s_ease-out_1.5s_forwards]">
               <p
                 data-hero-field="microcopy"
-                className="text-[14px] md:text-[14.5px] text-[color:var(--ivory)] leading-[1.75] md:leading-[1.7] font-normal tracking-[0.005em] text-center sm:text-left"
+                className="text-[14px] md:text-[14.5px] text-[color:var(--ivory)] leading-[1.65] md:leading-[1.7] font-normal tracking-[0.005em] text-center sm:text-left"
               >
                 {HERO_COPY.microcopy}
               </p>
-              <p className="mt-3 text-[12.5px] md:text-[13px] text-[color:var(--ivory)]/75 italic font-light leading-[1.7] text-center sm:text-left">
+              <p className="mt-3 text-[13px] md:text-[13px] text-[color:var(--ivory)]/85 italic font-light leading-[1.65] text-center sm:text-left">
                 Prefer guidance?{" "}
                 <Link
                   to="/contact"
