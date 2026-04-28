@@ -36,8 +36,8 @@ function ExperiencesPage() {
             Signature <span className="italic text-[color:var(--teal)]">Tours</span>
           </h1>
           <p className="mt-5 max-w-xl mx-auto text-[color:var(--charcoal-soft)]">
-            Our top-rated private experiences. Book one as-is — or open it in the studio
-            and tailor every stop, pace and detail.
+            Complete private experiences, designed to be enjoyed as they are.
+            Reserve instantly — or adjust a few details within the experience to match your rhythm.
           </p>
         </div>
       </section>
@@ -68,7 +68,7 @@ function ExperiencesPage() {
                     {t.theme}
                   </span>
                   <span className="absolute top-4 right-4 text-[10px] uppercase tracking-[0.22em] bg-[color:var(--gold)]/95 text-[color:var(--charcoal)] px-3 py-1.5">
-                    Tailorable
+                    Tailored Signature
                   </span>
                 </div>
 
@@ -93,7 +93,7 @@ function ExperiencesPage() {
                 </p>
 
                 <span className="mt-5 inline-flex items-center gap-2 text-sm tracking-wide text-[color:var(--teal)] group-hover:gap-3 transition-all">
-                  View tour & customise <ArrowRight size={14} />
+                  View experience & reserve <ArrowRight size={14} />
                 </span>
               </Link>
             ))}
