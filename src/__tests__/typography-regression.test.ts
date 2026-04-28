@@ -566,13 +566,28 @@ describe("Typography regression — section headlines (token sweep)", () => {
   for (const { page, file } of SECTION_PAGES) {
     it(`[${page}] all tokenized section headlines`, () => {
       const src = read(file);
-      const hits: Array<{ tag: string; cls: string }> = [];
+      const hits: SectionHit[] = [];
+      // Track per-selector occurrence index so duplicates (e.g. three
+      // <h2 class="t-h2 …">) get a unique index 0, 1, 2.
+      const occurrence = new Map<string, number>();
       let m: RegExpExecArray | null;
       TOKEN_CLASS_RE.lastIndex = 0;
       while ((m = TOKEN_CLASS_RE.exec(src))) {
         const tag = m[1];
         const cls = m[2].split(/\s+/).filter(Boolean).join(" ");
-        hits.push({ tag, cls });
+        const selector = selectorFor(tag, cls);
+        const index = occurrence.get(selector) ?? 0;
+        occurrence.set(selector, index + 1);
+        hits.push({
+          tag,
+          cls,
+          trace: {
+            selector,
+            index,
+            file,
+            line: lineOf(src, m.index),
+          },
+        });
       }
       expect(
         hits.length,
@@ -590,7 +605,7 @@ describe("Typography regression — token rules from styles.css", () => {
     it(`token ${sel}`, () => {
       const rules = extractTokenRules(css, sel);
       expect(rules, `No rules found for ${sel}`).not.toBe("");
-      captured.tokenRules[sel] = rules;
+      captured.tokenRules[sel] = { value: rules, source: "src/styles.css" };
       expect(rules).toMatchSnapshot();
     });
   }
