@@ -319,6 +319,7 @@ function RelatedTours({ currentId }: { currentId: string }) {
                   alt={t.title}
                   loading="lazy"
                   decoding="async"
+                  style={{ objectPosition: t.focal ?? "50% 50%" }}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
               </div>
