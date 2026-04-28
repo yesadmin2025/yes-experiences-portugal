@@ -216,6 +216,7 @@ type DriftEntry = {
   category: "headline" | "sectionSweep" | "tokenRule";
   key: string; // page::role | page | selector
   breakpoints?: string[]; // for tokenRule
+  trace?: Trace | Trace[]; // selector + index + file:line traceability
   prev: string | null;
   next: string | null;
 };
@@ -229,9 +230,18 @@ function computeDrift(prev: Captured | null, next: Captured): DriftEntry[] {
     ...Object.keys(next.headlines),
   ]);
   for (const key of allHeadlineKeys) {
-    const p = prev.headlines[key] ?? null;
-    const n = next.headlines[key] ?? null;
-    if (p !== n) drift.push({ category: "headline", key, prev: p, next: n });
+    const p = prev.headlines[key]?.value ?? null;
+    const n = next.headlines[key]?.value ?? null;
+    if (p !== n) {
+      drift.push({
+        category: "headline",
+        key,
+        // Always trace to the CURRENT location when present, else the previous.
+        trace: next.headlines[key]?.trace ?? prev.headlines[key]?.trace,
+        prev: p,
+        next: n,
+      });
+    }
   }
 
   const allSweepKeys = new Set([
@@ -241,7 +251,16 @@ function computeDrift(prev: Captured | null, next: Captured): DriftEntry[] {
   for (const key of allSweepKeys) {
     const p = JSON.stringify(prev.sectionSweeps[key] ?? null, null, 2);
     const n = JSON.stringify(next.sectionSweeps[key] ?? null, null, 2);
-    if (p !== n) drift.push({ category: "sectionSweep", key, prev: p, next: n });
+    if (p !== n) {
+      drift.push({
+        category: "sectionSweep",
+        key,
+        // Trace = ordered list of every hit's location on the current page.
+        trace: (next.sectionSweeps[key] ?? []).map((h) => h.trace),
+        prev: p,
+        next: n,
+      });
+    }
   }
 
   const allTokenKeys = new Set([
@@ -249,8 +268,8 @@ function computeDrift(prev: Captured | null, next: Captured): DriftEntry[] {
     ...Object.keys(next.tokenRules),
   ]);
   for (const key of allTokenKeys) {
-    const p = prev.tokenRules[key] ?? "";
-    const n = next.tokenRules[key] ?? "";
+    const p = prev.tokenRules[key]?.value ?? "";
+    const n = next.tokenRules[key]?.value ?? "";
     if (p !== n) {
       drift.push({
         category: "tokenRule",
