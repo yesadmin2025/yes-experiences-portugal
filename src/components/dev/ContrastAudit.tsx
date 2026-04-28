@@ -100,6 +100,7 @@ type Finding = {
   fg: string;
   bg: string;
   text: string;
+  inFocus?: boolean;
 };
 
 function audit(root: Element): Finding[] {
@@ -137,6 +138,41 @@ function audit(root: Element): Finding[] {
 
 const FLAG_ATTR = "data-contrast-fail";
 
+/**
+ * Selectors that define the *focused* outline scope. A finding only gets
+ * the visual red dashed outline if it lives inside one of these regions.
+ * Off-scope findings are still reported in the console table for
+ * completeness, but won't paint the page with noise.
+ *
+ * Currently focused on:
+ *   - the homepage hero       → <section> wrapping the hero (first section)
+ *   - the decision cards      → #decision-flow
+ *   - the Builder anchor card → [aria-labelledby="studio-title"]
+ *   - the final CTA section   → the CTA panel containing "Create Your Story"
+ *   - any CTA button labels   → .cta-primary / .cta-secondary-light /
+ *                               .hero-cta-button
+ */
+const FOCUS_SELECTORS = [
+  "header",
+  "section:first-of-type", // hero
+  "#decision-flow",
+  '[aria-labelledby="studio-title"]',
+  ".cta-primary",
+  ".cta-secondary-light",
+  ".hero-cta-button",
+];
+
+function isInFocus(el: Element): boolean {
+  for (const sel of FOCUS_SELECTORS) {
+    try {
+      if (el.closest(sel)) return true;
+    } catch {
+      // Invalid selector (older browsers) — ignore
+    }
+  }
+  return false;
+}
+
 function flag(findings: Finding[]) {
   // Clear previous flags
   document.querySelectorAll(`[${FLAG_ATTR}]`).forEach((el) => {
@@ -145,6 +181,7 @@ function flag(findings: Finding[]) {
     (el as HTMLElement).style.removeProperty("outline-offset");
   });
   for (const f of findings) {
+    if (!f.inFocus) continue;
     f.el.setAttribute(FLAG_ATTR, `${f.ratio}:1 < ${f.required}:1`);
     (f.el as HTMLElement).style.outline = "1.5px dashed rgba(220, 38, 38, 0.85)";
     (f.el as HTMLElement).style.outlineOffset = "2px";
@@ -156,26 +193,60 @@ export function ContrastAudit() {
     if (!import.meta.env.DEV) return;
     let raf = 0;
     const run = () => {
-      const findings = audit(document.body);
+      const raw = audit(document.body);
+      const findings = raw.map((f) => ({ ...f, inFocus: isInFocus(f.el) }));
       flag(findings);
-      if (findings.length === 0) {
+      const focused = findings.filter((f) => f.inFocus);
+      const offscope = findings.filter((f) => !f.inFocus);
+      if (focused.length === 0 && offscope.length === 0) {
         // eslint-disable-next-line no-console
-        console.info("%c[contrast-audit] ✅ No AA failures detected.", "color:#16a34a;font-weight:600");
+        console.info(
+          "%c[contrast-audit] ✅ No AA failures detected.",
+          "color:#16a34a;font-weight:600",
+        );
       } else {
         // eslint-disable-next-line no-console
         console.warn(
-          `[contrast-audit] ⚠️ ${findings.length} text node(s) below WCAG AA. Outlined in red dashed.`,
+          `[contrast-audit] ⚠️ ${focused.length} focused failure(s) outlined · ${offscope.length} off-scope failure(s) reported only.`,
         );
-        // eslint-disable-next-line no-console
-        console.table(
-          findings.map((f) => ({
-            ratio: f.ratio,
-            required: f.required,
-            fg: f.fg,
-            bg: f.bg,
-            text: f.text,
-          })),
-        );
+        if (focused.length > 0) {
+          // eslint-disable-next-line no-console
+          console.groupCollapsed(
+            `%c[contrast-audit] FOCUSED — hero · cards · CTAs`,
+            "color:#dc2626;font-weight:600",
+          );
+          // eslint-disable-next-line no-console
+          console.table(
+            focused.map((f) => ({
+              ratio: f.ratio,
+              required: f.required,
+              fg: f.fg,
+              bg: f.bg,
+              text: f.text,
+            })),
+          );
+          // eslint-disable-next-line no-console
+          console.groupEnd();
+        }
+        if (offscope.length > 0) {
+          // eslint-disable-next-line no-console
+          console.groupCollapsed(
+            `%c[contrast-audit] OFF-SCOPE (logged only)`,
+            "color:#6b7280;font-weight:600",
+          );
+          // eslint-disable-next-line no-console
+          console.table(
+            offscope.map((f) => ({
+              ratio: f.ratio,
+              required: f.required,
+              fg: f.fg,
+              bg: f.bg,
+              text: f.text,
+            })),
+          );
+          // eslint-disable-next-line no-console
+          console.groupEnd();
+        }
       }
     };
     // Wait one frame after mount + a short delay so reveal animations,
