@@ -1545,3 +1545,185 @@ function HomePage() {
     </SiteLayout>
   );
 }
+
+/* ════════════════════════════════════════════════════════════════
+ * BUILDER PREVIEW GALLERY
+ *
+ * Browse real saved builds — each card pairs a real Signature tour
+ * with a small "tailored" delta (date, pace, swap, addition) so guests
+ * can see how a Signature becomes their own day.
+ * ════════════════════════════════════════════════════════════ */
+type SavedBuild = {
+  tourId: string;
+  guest: string;
+  origin: string;
+  scenario: string;          // short editorial line — what they wanted
+  signatureLine: string;     // the day as it ships
+  tailoredLine: string;      // the small adjustments they made
+  tags: string[];            // 2–3 tailoring tags
+};
+
+const SAVED_BUILDS: SavedBuild[] = [
+  {
+    tourId: "arrabida-wine-allinclusive",
+    guest: "Sarah & Tom",
+    origin: "London",
+    scenario: "Anniversary day, slow pace, a long lunch.",
+    signatureLine: "Three family wineries · Livramento market · Sesimbra harbour.",
+    tailoredLine: "Started 30 min later, swapped one tasting for an extended lunch.",
+    tags: ["Slower pace", "Long lunch", "10:00 pickup"],
+  },
+  {
+    tourId: "sintra-cascais",
+    guest: "The Nakamura family",
+    origin: "Tokyo",
+    scenario: "Couple + two teenagers, palace queues out.",
+    signatureLine: "Quieter Sintra estates · Cabo da Roca · Cascais courtyard tasting.",
+    tailoredLine: "Skipped the wine tasting, added a short walk along the cliffs.",
+    tags: ["Family rhythm", "No tasting", "Cliff walk"],
+  },
+  {
+    tourId: "arrabida-boat",
+    guest: "Marie & Léo",
+    origin: "Paris",
+    scenario: "Wanted more sea, less driving.",
+    signatureLine: "Arrábida coves by boat · Portinho lunch · Sesimbra at dusk.",
+    tailoredLine: "Extended the boat ride, lunch swapped for a beach picnic.",
+    tags: ["Longer boat", "Beach picnic", "Late return"],
+  },
+];
+
+function BuilderPreviewGallery() {
+  // Resolve real Signature tours — only render builds whose tour exists.
+  const builds = SAVED_BUILDS.map((b) => {
+    const tour = signatureTours.find((t) => t.id === b.tourId);
+    return tour && isValidTourId(b.tourId) ? { build: b, tour } : null;
+  }).filter((x): x is { build: SavedBuild; tour: typeof signatureTours[number] } => x !== null);
+
+  if (builds.length === 0) return null;
+
+  return (
+    <section
+      className="section-y bg-[color:var(--ivory)] border-t border-[color:var(--border)]"
+      aria-labelledby="builds-title"
+    >
+      <div className="container-x">
+        <div className="reveal text-center max-w-2xl mx-auto mb-12 md:mb-16">
+          <span className="eyebrow inline-flex items-center gap-2">
+            <span className="relative inline-flex h-1.5 w-1.5">
+              <span className="absolute inline-flex h-full w-full rounded-full bg-[color:var(--gold)] opacity-60 animate-ping" />
+              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[color:var(--gold)]" />
+            </span>
+            From the Studio
+          </span>
+          <h2 id="builds-title" className="t-h2 mt-5">
+            Real <span className="italic">builds</span>, lately.
+          </h2>
+          <p className="t-lead mt-5">
+            Browse days other guests have shaped — each one started as a Signature.
+          </p>
+          <p className="mt-3 text-[13.5px] md:text-[14px] italic font-light text-[color:var(--charcoal-soft)]">
+            Same trusted route. Their rhythm.
+          </p>
+        </div>
+
+        <div className="reveal -mx-4 px-4 overflow-x-auto overscroll-x-contain scrollbar-thin">
+          <div className="flex gap-5 md:gap-6 snap-x snap-mandatory pb-2">
+            {builds.map(({ build, tour }) => (
+              <article
+                key={build.tourId + build.guest}
+                className="shrink-0 snap-start w-[88vw] sm:w-[26rem] md:w-[28rem] bg-[color:var(--card)] border border-[color:var(--border)] overflow-hidden flex flex-col group"
+              >
+                {/* Visual: Signature image + tailored chip overlay */}
+                <div className="relative aspect-[4/3] overflow-hidden">
+                  <img
+                    src={tour.img}
+                    alt={tour.title}
+                    loading="lazy"
+                    decoding="async"
+                    style={{ objectPosition: tour.focal ?? "50% 50%" }}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/75 via-transparent to-transparent" />
+                  <span className="absolute top-3 left-3 text-[10px] uppercase tracking-[0.24em] bg-[color:var(--gold)]/95 text-[color:var(--charcoal)] px-2.5 py-1">
+                    Tailored build
+                  </span>
+                  <div className="absolute bottom-3 left-3 right-3 text-[color:var(--ivory)]">
+                    <p className="text-[10.5px] uppercase tracking-[0.24em] text-[color:var(--gold-soft)]">
+                      {build.guest} · {build.origin}
+                    </p>
+                    <p className="serif italic mt-1 text-[15px] leading-snug">
+                      "{build.scenario}"
+                    </p>
+                  </div>
+                </div>
+
+                <div className="p-5 md:p-6 flex flex-col flex-1">
+                  <h3 className="serif text-[1.15rem] leading-snug">{tour.title.split("—")[0].trim()}</h3>
+                  <p className="text-[10.5px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)] mt-1">
+                    {tour.region}
+                  </p>
+
+                  {/* Signature → Tailored diff */}
+                  <div className="mt-5 space-y-3 text-[13px]">
+                    <div className="flex gap-3">
+                      <span className="mt-0.5 text-[9.5px] uppercase tracking-[0.26em] text-[color:var(--teal)] font-medium shrink-0 w-[68px]">
+                        Signature
+                      </span>
+                      <span className="text-[color:var(--charcoal)] leading-relaxed">
+                        {build.signatureLine}
+                      </span>
+                    </div>
+                    <div className="flex gap-3">
+                      <span className="mt-0.5 text-[9.5px] uppercase tracking-[0.26em] text-[color:var(--gold)] font-medium shrink-0 w-[68px]">
+                        Tailored
+                      </span>
+                      <span className="text-[color:var(--charcoal)] leading-relaxed italic">
+                        {build.tailoredLine}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Tag chips */}
+                  <ul className="mt-5 flex flex-wrap gap-1.5 list-none p-0">
+                    {build.tags.map((t) => (
+                      <li
+                        key={t}
+                        className="text-[10px] uppercase tracking-[0.18em] text-[color:var(--charcoal-soft)] border border-[color:var(--border)] px-2 py-1"
+                      >
+                        {t}
+                      </li>
+                    ))}
+                  </ul>
+
+                  {/* Dual CTA */}
+                  <div className="mt-6 pt-5 border-t border-[color:var(--border)] flex items-center gap-3">
+                    <Link
+                      to="/tours/$tourId"
+                      params={{ tourId: tour.id }}
+                      className="flex-1 inline-flex items-center justify-center gap-1.5 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] px-4 py-3 text-[12px] uppercase tracking-[0.18em] transition-colors min-h-[44px]"
+                    >
+                      See this Signature
+                    </Link>
+                    <Link
+                      to="/builder"
+                      className="inline-flex items-center justify-center gap-1.5 text-[12px] uppercase tracking-[0.18em] text-[color:var(--charcoal-soft)] hover:text-[color:var(--teal)] px-3 py-3 min-h-[44px]"
+                    >
+                      Build yours <ArrowRight size={13} />
+                    </Link>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+
+        <div className="reveal mt-10 md:mt-12 text-center">
+          <Link to="/builder" className="btn-solid btn-solid--outline">
+            Open the Studio <ArrowRight size={15} />
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+}
