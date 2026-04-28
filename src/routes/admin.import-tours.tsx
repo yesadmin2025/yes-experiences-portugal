@@ -232,6 +232,31 @@ function AdminImportPage() {
     return session.user.email ?? session.user.id;
   }, [session]);
 
+  /**
+   * Coverage stats: how many imported tours have a saved image, how many are
+   * missing one, and how many were successfully matched to a curated
+   * SignatureTour (so the public cards on /experiences will pick up the live
+   * imagery). These power the indicator panel + the per-row badges below.
+   */
+  const stats = useMemo(() => {
+    const total = tours.length;
+    const withImage = tours.filter((t) => !!t.image_url).length;
+    const matched = tours.filter((t) =>
+      SIGNATURE_BY_URL.has(normalizeUrl(t.source_url)),
+    ).length;
+    const matchedWithImage = tours.filter(
+      (t) => !!t.image_url && SIGNATURE_BY_URL.has(normalizeUrl(t.source_url)),
+    ).length;
+    return {
+      total,
+      withImage,
+      missingImage: total - withImage,
+      matched,
+      matchedWithImage,
+      signatureTotal: signatureTours.length,
+    };
+  }, [tours]);
+
   if (!session) return null; // redirecting
 
   if (isAdmin === false) {
