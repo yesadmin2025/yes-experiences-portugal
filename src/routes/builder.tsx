@@ -395,7 +395,7 @@ function BuilderPage() {
                   </Suspense>
                 )}
 
-                <DnaPanel s={s} />
+                <DnaPanel s={s} setS={setS} />
                 <InvestmentPanel s={s} days={days} investment={investment} />
                 <DesignerNudge />
               </div>
@@ -1008,27 +1008,52 @@ function buildTimeline(s: BuilderState) {
   return blocks;
 }
 
-/* DNA panel — Bible §14 */
-function DnaPanel({ s }: { s: BuilderState }) {
+/* DNA panel — Bible §14 (editable) */
+function DnaPanel({ s, setS }: { s: BuilderState; setS: React.Dispatch<React.SetStateAction<BuilderState>> }) {
   const dna = useMemo(() => buildDna(s), [s]);
-  if (dna.bars.every((b) => b.value === 0) && dna.tags.length === 0) return null;
+
+  const setBar = (label: string, value: number) => {
+    setS((p) => applyDnaBar(p, label, Math.max(0, Math.min(5, value))));
+  };
 
   return (
     <div className="bg-[color:var(--card)] border border-[color:var(--border)] p-5 rounded-sm">
-      <span className="text-[10px] uppercase tracking-[0.24em] text-[color:var(--gold)]">Experience DNA</span>
-      <div className="mt-3 space-y-2">
+      <div className="flex items-center justify-between">
+        <span className="text-[10px] uppercase tracking-[0.24em] text-[color:var(--gold)]">Experience DNA</span>
+        <span className="text-[10px] uppercase tracking-[0.18em] text-[color:var(--charcoal-soft)] italic">tap to tune</span>
+      </div>
+      <div className="mt-3 space-y-2.5">
         {dna.bars.map((b) => (
           <div key={b.label} className="flex items-center gap-3">
             <span className="serif text-[12px] text-[color:var(--charcoal)] w-20">{b.label}</span>
-            <div className="flex-1 flex gap-1">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <div
-                  key={i}
-                  className={`h-1.5 flex-1 rounded-full ${
-                    i < b.value ? "bg-[color:var(--teal)]" : "bg-[color:var(--border)]"
-                  }`}
-                />
-              ))}
+            <div
+              className="flex-1 flex gap-1"
+              role="slider"
+              aria-label={`${b.label} intensity`}
+              aria-valuemin={0}
+              aria-valuemax={5}
+              aria-valuenow={b.value}
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === "ArrowRight" || e.key === "ArrowUp") { e.preventDefault(); setBar(b.label, b.value + 1); }
+                if (e.key === "ArrowLeft" || e.key === "ArrowDown") { e.preventDefault(); setBar(b.label, b.value - 1); }
+              }}
+            >
+              {Array.from({ length: 5 }).map((_, i) => {
+                const segValue = i + 1;
+                const active = i < b.value;
+                return (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => setBar(b.label, b.value === segValue ? segValue - 1 : segValue)}
+                    aria-label={`Set ${b.label} to ${segValue}`}
+                    className={`h-3 flex-1 rounded-full transition-all hover:opacity-80 cursor-pointer ${
+                      active ? "bg-[color:var(--teal)]" : "bg-[color:var(--border)] hover:bg-[color:var(--teal)]/30"
+                    }`}
+                  />
+                );
+              })}
             </div>
           </div>
         ))}
@@ -1062,6 +1087,40 @@ function buildDna(s: BuilderState) {
   if (s.tier === "couture") tags.push("Bespoke");
 
   return { bars, tags };
+}
+
+/* Map a DNA bar value (0-5) back into the underlying state so the story/timeline update live. */
+function applyDnaBar(p: BuilderState, label: string, value: number): BuilderState {
+  const withStyle = (styles: string[], id: string, on: boolean) =>
+    on ? (styles.includes(id) ? styles : [...styles, id]) : styles.filter((x) => x !== id);
+  const withHl = (h: string[], id: string, on: boolean) =>
+    on ? (h.includes(id) ? h : [...h, id]) : h.filter((x) => x !== id);
+
+  if (label === "Wine") {
+    return {
+      ...p,
+      styles: withStyle(p.styles, "wine", value >= 1),
+      highlights: withHl(p.highlights, "tasting", value >= 3),
+    };
+  }
+  if (label === "Nature") {
+    return {
+      ...p,
+      styles: withStyle(withStyle(p.styles, "nature", value >= 1), "coastal", value >= 3),
+    };
+  }
+  if (label === "Culture") {
+    return {
+      ...p,
+      styles: withStyle(p.styles, "heritage", value >= 1),
+      highlights: withHl(p.highlights, "tiles", value >= 3),
+    };
+  }
+  if (label === "Relax") {
+    const pace = value >= 4 ? "slow" : value >= 2 ? "balanced" : value >= 1 ? "rich" : null;
+    return { ...p, pace };
+  }
+  return p;
 }
 
 /* Investment + booking — Bible §12 */
