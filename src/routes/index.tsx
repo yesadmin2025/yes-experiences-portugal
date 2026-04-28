@@ -494,7 +494,7 @@ function HomePage() {
                 Prefer guidance?{" "}
                 <Link
                   to="/contact"
-                  className="underline decoration-[color:var(--gold)]/60 underline-offset-4 hover:text-[color:var(--gold-soft)] transition-colors"
+                  className="link-soft"
                 >
                   A local designer can shape it with you.
                 </Link>
@@ -890,7 +890,7 @@ function HomePage() {
               </p>
               <Link
                 to="/builder"
-                className="inline-flex items-center gap-2.5 mt-12 px-12 py-[20px] text-[16px] tracking-[0.005em] font-semibold bg-[color:var(--gold)] text-[color:var(--charcoal-deep)] hover:bg-[color:var(--gold-soft)] hover:-translate-y-0.5 shadow-[0_18px_44px_-14px_rgba(201,169,106,0.7)] transition-all duration-500"
+                className="btn-glow inline-flex items-center gap-2.5 mt-12 px-12 py-[20px] text-[16px] tracking-[0.005em] font-semibold bg-[color:var(--gold)] text-[color:var(--charcoal-deep)] hover:bg-[color:var(--gold-soft)] active:bg-[color:var(--gold-soft)] shadow-[0_18px_44px_-14px_rgba(201,169,106,0.7)]"
               >
                 Open Studio <ArrowRight size={17} />
               </Link>
@@ -1215,7 +1215,7 @@ function HomePage() {
           <div className="reveal mt-12 md:mt-16 text-center">
             <Link
               to="/local-stories"
-              className="inline-flex items-center gap-2 text-[14px] tracking-[0.005em] text-[color:var(--teal)] hover:text-[color:var(--charcoal)] transition-colors font-medium"
+              className="link-soft inline-flex items-center gap-2 text-[14px] tracking-[0.005em] font-medium"
             >
               Read all local stories <ArrowRight size={14} />
             </Link>
@@ -1327,7 +1327,7 @@ function HomePage() {
                 Prefer guidance?{" "}
                 <Link
                   to="/contact"
-                  className="underline decoration-[color:var(--gold)]/60 underline-offset-4 hover:text-[color:var(--teal)] transition-colors"
+                  className="link-soft"
                 >
                   A local designer can shape it with you.
                 </Link>
