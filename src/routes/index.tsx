@@ -1184,10 +1184,10 @@ function HomePage() {
       </section>
 
       {/* 7 — CELEBRATIONS & CORPORATE
-          Surfaces the "moments that matter" path: proposals, celebrations
-          and corporate. Three soft entry points that all lead to dedicated
-          routes, with the same "start from idea, tailor a signature, or
-          design from scratch" framing as the rest of the site. */}
+          Asymmetric editorial layout — breaks the rhythm of repeating
+          three-up grids. Proposals takes the large emotional frame
+          (left, full image), Celebrations and Corporate stack on the
+          right (smaller, text-led on real photography). */}
       <section
         className="section-y bg-[color:var(--ivory)] border-y border-[color:var(--border)]"
         aria-labelledby="occasions-title"
@@ -1201,42 +1201,75 @@ function HomePage() {
             >
               For moments <span className="italic">that matter.</span>
             </h2>
-            <p className="mt-5 text-[12.5px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
-              Proposals · Celebrations · Corporate · Groups
-            </p>
             <p className="t-lead mt-5">
-              From intimate plans to larger groups — all designed your way and confirmed instantly.
+              From intimate plans to larger groups — designed your way and confirmed instantly.
             </p>
           </div>
 
-          <ul className="grid sm:grid-cols-3 gap-5 md:gap-6 list-none p-0 max-w-5xl mx-auto">
-            {[
-              {
-                eyebrow: "Proposals",
-                title: "A moment they'll never forget",
-                line: "A hidden viewpoint, a private dinner, a perfectly timed pause — quietly extraordinary.",
-                to: "/proposals" as const,
-                bg: imgSintraCabo,
-              },
-              {
-                eyebrow: "Celebrations",
-                title: "Birthdays, anniversaries, milestones",
-                line: "Gather the people who matter, in places that feel made for the occasion.",
-                to: "/proposals" as const,
-                bg: imgArrabidaWineLunch,
-              },
-              {
-                eyebrow: "Corporate",
-                title: "Teams, incentives, retreats",
-                line: "Refined private programs that feel nothing like a hotel ballroom.",
-                to: "/corporate" as const,
-                bg: imgArrabidaBoatCoves,
-              },
-            ].map((o) => (
-              <li key={o.eyebrow} className="reveal-stagger h-full">
+          <div className="grid lg:grid-cols-12 gap-5 md:gap-6 max-w-6xl mx-auto">
+            {/* Proposals — large emotional frame */}
+            <Link
+              to="/proposals"
+              aria-label="Proposals — a moment they'll never forget"
+              className="reveal-stagger editorial-card group relative lg:col-span-7 flex flex-col justify-end p-8 md:p-12 min-h-[28rem] md:min-h-[34rem] bg-[color:var(--charcoal-deep)] border border-[color:var(--border)] hover:border-[color:var(--gold)]/50 overflow-hidden"
+            >
+              <img
+                src={imgSintraCabo}
+                alt=""
+                aria-hidden="true"
+                loading="lazy"
+                data-card-image
+                className="absolute inset-0 w-full h-full object-cover opacity-90 transition-transform duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:scale-[1.04]"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/95 via-[color:var(--charcoal-deep)]/55 to-[color:var(--charcoal-deep)]/15" />
+              <div className="absolute inset-0 bg-[radial-gradient(120%_80%_at_30%_100%,transparent_45%,rgba(0,0,0,0.55)_100%)]" />
+
+              <span className="relative z-[1] inline-flex items-center gap-3 text-[10.5px] uppercase tracking-[0.34em] text-[color:var(--gold)]">
+                <span className="block h-px w-6 bg-[color:var(--gold)]/80" />
+                Proposals
+              </span>
+              <h3 className="relative z-[1] serif mt-5 text-[2rem] md:text-[2.6rem] lg:text-[3rem] leading-[1.05] tracking-[-0.012em] text-[color:var(--ivory)] drop-shadow-[0_2px_18px_rgba(0,0,0,0.5)] max-w-[18ch]">
+                A moment they'll <span className="italic text-[color:var(--gold-soft)]">never forget.</span>
+              </h3>
+              <p className="relative z-[1] mt-5 text-[14.5px] md:text-[16px] text-[color:var(--ivory)]/90 leading-[1.7] font-light max-w-[40ch]">
+                A hidden viewpoint, a private dinner, a perfectly timed pause — quietly extraordinary.
+              </p>
+              <p className="relative z-[1] mt-3 text-[12.5px] italic font-light text-[color:var(--gold-soft)] leading-[1.6]">
+                A table where time slows down.
+              </p>
+              <span className="relative z-[1] mt-7 inline-flex items-center gap-2.5 text-[12px] uppercase tracking-[0.28em] font-medium text-[color:var(--ivory)] group-hover:text-[color:var(--gold)] transition-colors">
+                Plan a moment
+                <ArrowRight size={14} className="text-[color:var(--gold)] transition-transform duration-300 ease-out group-hover:translate-x-1.5" />
+              </span>
+            </Link>
+
+            {/* Right column — Celebrations + Corporate stacked */}
+            <div className="lg:col-span-5 grid grid-cols-1 gap-5 md:gap-6">
+              {[
+                {
+                  eyebrow: "Celebrations",
+                  title: "Birthdays, anniversaries, milestones",
+                  line: "Gather the people who matter, in places made for the occasion.",
+                  micro: "A toast that lingers in the room.",
+                  to: "/proposals" as const,
+                  bg: imgArrabidaWineLunch,
+                  cta: "Design a celebration",
+                },
+                {
+                  eyebrow: "Corporate & Groups",
+                  title: "Teams, incentives, retreats",
+                  line: "Refined private programs that feel nothing like a hotel ballroom.",
+                  micro: "Logistics handled. Local knowledge included.",
+                  to: "/corporate" as const,
+                  bg: imgArrabidaBoatCoves,
+                  cta: "Plan for a group",
+                },
+              ].map((o) => (
                 <Link
+                  key={o.eyebrow}
                   to={o.to}
-                  className="editorial-card group relative flex flex-col h-full min-h-[20rem] p-7 md:p-8 bg-[color:var(--charcoal-deep)] border border-[color:var(--border)] hover:border-[color:var(--gold)]/45 overflow-hidden"
+                  aria-label={`${o.eyebrow} — ${o.title}`}
+                  className="reveal-stagger editorial-card group relative flex flex-col justify-end p-7 md:p-8 min-h-[16rem] md:min-h-[16.5rem] bg-[color:var(--charcoal-deep)] border border-[color:var(--border)] hover:border-[color:var(--gold)]/45 overflow-hidden"
                 >
                   <img
                     src={o.bg}
@@ -1244,25 +1277,30 @@ function HomePage() {
                     aria-hidden="true"
                     loading="lazy"
                     data-card-image
-                    className="absolute inset-0 w-full h-full object-cover opacity-50"
+                    className="absolute inset-0 w-full h-full object-cover opacity-75 transition-transform duration-[700ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:scale-[1.03]"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/95 via-[color:var(--charcoal-deep)]/65 to-[color:var(--charcoal-deep)]/35" />
-                  <span className="relative z-[1] text-[10.5px] uppercase tracking-[0.3em] text-[color:var(--gold-soft)]">
+                  <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/92 via-[color:var(--charcoal-deep)]/55 to-[color:var(--charcoal-deep)]/15" />
+
+                  <span className="relative z-[1] text-[10px] uppercase tracking-[0.32em] text-[color:var(--gold)]">
                     {o.eyebrow}
                   </span>
-                  <h3 className="relative z-[1] serif mt-3 text-[1.4rem] md:text-[1.55rem] leading-[1.15] tracking-[-0.005em] text-[color:var(--ivory)]">
+                  <h3 className="relative z-[1] serif mt-3 text-[1.35rem] md:text-[1.5rem] leading-[1.15] tracking-[-0.005em] text-[color:var(--ivory)] drop-shadow-[0_2px_12px_rgba(0,0,0,0.5)]">
                     {o.title}
                   </h3>
-                  <p className="relative z-[1] mt-3 text-[14.5px] text-[color:var(--ivory)]/85 leading-[1.7] font-light flex-1">
+                  <p className="relative z-[1] mt-2.5 text-[13.5px] text-[color:var(--ivory)]/85 leading-[1.65] font-light">
                     {o.line}
                   </p>
-                  <span className="relative z-[1] mt-7 inline-flex items-center gap-2 text-[14px] tracking-[0.005em] font-medium text-[color:var(--gold-soft)] group-hover:text-[color:var(--gold)] group-hover:translate-x-1 transition-all">
-                    Design &amp; confirm instantly <ArrowRight size={13} />
+                  <p className="relative z-[1] mt-2 text-[12px] italic font-light text-[color:var(--gold-soft)] leading-[1.55]">
+                    {o.micro}
+                  </p>
+                  <span className="relative z-[1] mt-4 inline-flex items-center gap-2 text-[11.5px] uppercase tracking-[0.26em] font-medium text-[color:var(--ivory)] group-hover:text-[color:var(--gold)] transition-colors">
+                    {o.cta}
+                    <ArrowRight size={12} className="text-[color:var(--gold)] transition-transform duration-300 ease-out group-hover:translate-x-1" />
                   </span>
                 </Link>
-              </li>
-            ))}
-          </ul>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
