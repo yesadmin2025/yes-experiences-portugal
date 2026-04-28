@@ -1346,17 +1346,61 @@ function TimelineView({ s }: { s: BuilderState }) {
 }
 
 /* ============================================================
-   Chapter-by-chapter timeline — adapts to every selection
+   Chapter-by-chapter timeline — adapts to every selection.
+
+   Ordering model
+   --------------
+   Every chapter belongs to a single SLOT. Slots are sorted by their
+   numeric weight, lowest first. Within the same slot, chapters keep
+   their insertion order (stable sort). The slot also drives the
+   "when" label rendered on the rail, so what the user sees in the
+   UI always matches the underlying ordering.
+
+   Slot weights are spaced by 10 so individual enhancements can sit
+   slightly before/after a slot (e.g. PRELUDE + 1) without colliding.
    ============================================================ */
 
+const SLOT = {
+  PRELUDE:         { weight: 0,   label: "Throughout the day" },  // ambient enhancements that frame everything
+  DAWN:            { weight: 10,  label: "Morning" },             // arrival / market opening
+  MORNING:         { weight: 20,  label: "Morning" },
+  LATE_MORNING:    { weight: 30,  label: "Late morning" },        // workshops, cellar visits
+  MIDDAY:          { weight: 40,  label: "Midday" },              // wine, signature tasting
+  EARLY_AFTERNOON: { weight: 50,  label: "Early afternoon" },     // lunch
+  AFTERNOON:       { weight: 60,  label: "Afternoon" },           // adventure, coast, nature
+  LATE_AFTERNOON:  { weight: 70,  label: "Late afternoon" },      // viewpoints, heritage stops
+  GOLDEN_HOUR:     { weight: 80,  label: "Golden hour" },         // music, florals
+  SUNSET:          { weight: 90,  label: "Sunset" },              // pace=slow closing
+  EVENING:         { weight: 100, label: "Evening" },             // chef, pace=rich bonus
+  EPILOGUE:        { weight: 110, label: "Epilogue" },            // tier-driven follow-up
+} as const;
+
+type SlotKey = keyof typeof SLOT;
+
 type Chapter = {
-  when: string;
+  slot: SlotKey;
+  weight: number;        // resolved from slot, plus optional offset
+  when: string;          // display label, derived from slot
   label: string;
   line: string;
   icon: typeof Sun;
   tags?: string[];
-  weight: number; // ordering hint
 };
+
+function chapter(
+  slot: SlotKey,
+  data: { label: string; line: string; icon: typeof Sun; tags?: string[]; offset?: number },
+): Chapter {
+  return {
+    slot,
+    weight: SLOT[slot].weight + (data.offset ?? 0),
+    when: SLOT[slot].label,
+    label: data.label,
+    line: data.line,
+    icon: data.icon,
+    tags: data.tags,
+  };
+}
 
 function groupVoice(s: BuilderState) {
   switch (s.groupType) {
