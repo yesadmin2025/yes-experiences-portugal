@@ -197,6 +197,10 @@ const seeds: { id: string; kind: string; label: string; sub: string; patch: Part
     patch: { groupType: "friends", guests: "7-15", styles: ["gastronomy"], highlights: ["longlunch"], pace: "balanced", tier: "atelier" } },
   { id: "weekend", kind: "Idea", label: "A weekend away", sub: "Three days, no rush",
     patch: { duration: "threeday", styles: ["nature", "gastronomy"], pace: "slow" } },
+  { id: "wine-day", kind: "Idea", label: "A wine day", sub: "Cellars, family table, vineyards",
+    patch: { duration: "fullday", styles: ["wine", "gastronomy"], highlights: ["tasting", "longlunch"], pace: "balanced" } },
+  { id: "hidden-coast", kind: "Idea", label: "Hidden coast", sub: "Quiet roads, ending at the sea",
+    patch: { duration: "fullday", styles: ["coastal", "nature"], highlights: ["viewpoint"], pace: "slow" } },
 ];
 
 /* ============================================================
