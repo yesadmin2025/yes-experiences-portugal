@@ -851,7 +851,8 @@ function HomePage() {
               return (
                 <li
                   key={p.title}
-                  className="reveal-stagger h-full"
+                  id={`decision-card-${p.slug}`}
+                  className="reveal-stagger h-full scroll-mt-24"
                 >
                   <Link
                     to={p.to}
