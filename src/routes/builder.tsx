@@ -22,6 +22,9 @@ import {
   Map as MapIcon,
   Pencil,
   MessageCircle,
+  Plus,
+  Minus,
+  RotateCcw,
 } from "lucide-react";
 
 export const Route = createFileRoute("/builder")({
@@ -1077,9 +1080,26 @@ function PremiumMap({
       .join(" ");
   }, [allPoints]);
 
-  // Smoothly tween the viewBox whenever the region changes.
-  const targetVb = useMemo(() => regionViewBox(region), [region]);
-  const animatedViewBox = useAnimatedViewBox(targetVb, 750);
+  // Zoom: 1 = base region framing.
+  const [zoom, setZoom] = useState(1);
+  const ZOOM_MIN = 0.5;
+  const ZOOM_MAX = 4;
+  const ZOOM_STEP = 1.4;
+  useEffect(() => { setZoom(1); }, [region]);
+
+  const targetVb = useMemo(() => {
+    const base = regionViewBox(region);
+    const w = base.w / zoom;
+    const h = base.h / zoom;
+    const cx = base.x + base.w / 2;
+    const cy = base.y + base.h / 2;
+    return { x: cx - w / 2, y: cy - h / 2, w, h };
+  }, [region, zoom]);
+  const animatedViewBox = useAnimatedViewBox(targetVb, 450);
+
+  const zoomIn = () => setZoom((z) => Math.min(ZOOM_MAX, +(z * ZOOM_STEP).toFixed(3)));
+  const zoomOut = () => setZoom((z) => Math.max(ZOOM_MIN, +(z / ZOOM_STEP).toFixed(3)));
+  const zoomReset = () => setZoom(1);
 
   const dayColor = (d: number) =>
     d === 1 ? "var(--teal)" : d === 2 ? "var(--teal-2)" : d === 3 ? "var(--gold)" : "var(--charcoal-soft)";
@@ -1096,6 +1116,40 @@ function PremiumMap({
       </div>
 
       <div className="relative aspect-[4/5] mt-3 mx-5 mb-5 overflow-hidden rounded-sm">
+        {/* Zoom controls — top-right, tap-friendly on mobile */}
+        <div className="absolute top-2 right-2 z-10 flex flex-col gap-1.5">
+          <button
+            type="button"
+            onClick={zoomIn}
+            disabled={zoom >= ZOOM_MAX}
+            aria-label="Zoom in"
+            className="h-9 w-9 inline-flex items-center justify-center bg-[color:var(--ivory)]/95 border border-[color:var(--border)] text-[color:var(--charcoal)] shadow-sm rounded-sm active:scale-95 transition disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            <Plus size={16} />
+          </button>
+          <button
+            type="button"
+            onClick={zoomOut}
+            disabled={zoom <= ZOOM_MIN}
+            aria-label="Zoom out"
+            className="h-9 w-9 inline-flex items-center justify-center bg-[color:var(--ivory)]/95 border border-[color:var(--border)] text-[color:var(--charcoal)] shadow-sm rounded-sm active:scale-95 transition disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            <Minus size={16} />
+          </button>
+          <button
+            type="button"
+            onClick={zoomReset}
+            disabled={zoom === 1}
+            aria-label="Reset zoom"
+            className="h-9 w-9 inline-flex items-center justify-center bg-[color:var(--ivory)]/95 border border-[color:var(--border)] text-[color:var(--charcoal-soft)] shadow-sm rounded-sm active:scale-95 transition disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            <RotateCcw size={14} />
+          </button>
+        </div>
+        {/* Zoom level chip — bottom-right */}
+        <div className="absolute bottom-2 right-2 z-10 text-[9px] uppercase tracking-[0.2em] text-[color:var(--charcoal-soft)] bg-[color:var(--ivory)]/85 px-2 py-1 rounded-sm border border-[color:var(--border)] pointer-events-none">
+          {Math.round(zoom * 100)}%
+        </div>
         <svg
           viewBox={animatedViewBox}
           className="w-full h-full"

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-28T12:54:05.466Z",
+  "generatedAt": "2026-04-28T13:00:19.676Z",
   "filesScanned": 81,
   "approvedPalette": {
     "teal": "#295B61",
@@ -18,10 +18,10 @@
     "#cccccc"
   ],
   "counts": {
-    "total": 77,
+    "total": 99,
     "approved": 25,
-    "allowlisted": 19,
-    "mismatch": 33
+    "allowlisted": 22,
+    "mismatch": 52
   },
   "findings": [
     {
@@ -562,6 +562,204 @@
       "raw": "#ccc",
       "normalized": "#cccccc",
       "snippet": "\"#ccc\", // recharts internal selectors only",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1108,
+      "col": 44,
+      "raw": "#cfe3e6",
+      "normalized": "#cfe3e6",
+      "snippet": "<stop offset=\"0%\" stopColor=\"#cfe3e6\" />",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1109,
+      "col": 45,
+      "raw": "#9fc4cc",
+      "normalized": "#9fc4cc",
+      "snippet": "<stop offset=\"60%\" stopColor=\"#9fc4cc\" />",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1110,
+      "col": 46,
+      "raw": "#6ea3ad",
+      "normalized": "#6ea3ad",
+      "snippet": "<stop offset=\"100%\" stopColor=\"#6ea3ad\" />",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1114,
+      "col": 44,
+      "raw": "#f3ead6",
+      "normalized": "#f3ead6",
+      "snippet": "<stop offset=\"0%\" stopColor=\"#f3ead6\" />",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1115,
+      "col": 45,
+      "raw": "#e8dcb8",
+      "normalized": "#e8dcb8",
+      "snippet": "<stop offset=\"55%\" stopColor=\"#e8dcb8\" />",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1116,
+      "col": 46,
+      "raw": "#d6c596",
+      "normalized": "#d6c596",
+      "snippet": "<stop offset=\"100%\" stopColor=\"#d6c596\" />",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1120,
+      "col": 44,
+      "raw": "#ece4d0",
+      "normalized": "#ece4d0",
+      "snippet": "<stop offset=\"0%\" stopColor=\"#ece4d0\" />",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1121,
+      "col": 46,
+      "raw": "#d4c8a8",
+      "normalized": "#d4c8a8",
+      "snippet": "<stop offset=\"100%\" stopColor=\"#d4c8a8\" />",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1135,
+      "col": 57,
+      "raw": "#000",
+      "normalized": "#000000",
+      "snippet": "<line x1=\"0\" y1=\"0\" x2=\"0\" y2=\"2\" stroke=\"#000\" strokeWidth=\"0.08\" opacity=\"0.05\" />",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1143,
+      "col": 34,
+      "raw": "#ffffff",
+      "normalized": "#ffffff",
+      "snippet": "<g fill=\"none\" stroke=\"#ffffff\" strokeWidth=\"0.18\" opacity=\"0.35\">",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1167,
+      "col": 21,
+      "raw": "#b8a878",
+      "normalized": "#b8a878",
+      "snippet": "stroke=\"#b8a878\"",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1265,
+      "col": 21,
+      "raw": "#9a8657",
+      "normalized": "#9a8657",
+      "snippet": "stroke=\"#9a8657\"",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1278,
+      "col": 34,
+      "raw": "#7ca7b8",
+      "normalized": "#7ca7b8",
+      "snippet": "<g fill=\"none\" stroke=\"#7ca7b8\" strokeWidth=\"0.32\" opacity=\"0.85\" strokeLinecap=\"round\">",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1291,
+      "col": 80,
+      "raw": "#9a8657",
+      "normalized": "#9a8657",
+      "snippet": "<ellipse cx=\"6\" cy=\"108\" rx=\"2.2\" ry=\"1\" fill=\"url(#land)\" stroke=\"#9a8657\" strokeWidth=\"0.22\" />",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1292,
+      "col": 81,
+      "raw": "#9a8657",
+      "normalized": "#9a8657",
+      "snippet": "<ellipse cx=\"3\" cy=\"86\" rx=\"1.5\" ry=\"0.7\" fill=\"url(#land)\" stroke=\"#9a8657\" strokeWidth=\"0.2\" />",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1293,
+      "col": 81,
+      "raw": "#9a8657",
+      "normalized": "#9a8657",
+      "snippet": "<ellipse cx=\"5.2\" cy=\"84\" rx=\"1\" ry=\"0.5\" fill=\"url(#land)\" stroke=\"#9a8657\" strokeWidth=\"0.2\" />",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1298,
+      "col": 47,
+      "raw": "#5a6a72",
+      "normalized": "#5a6a72",
+      "snippet": "<circle r=\"3\" fill=\"none\" stroke=\"#5a6a72\" strokeWidth=\"0.2\" />",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1299,
+      "col": 61,
+      "raw": "#5a6a72",
+      "normalized": "#5a6a72",
+      "snippet": "<path d=\"M 0 -3 L 0.6 0 L 0 3 L -0.6 0 Z\" fill=\"#5a6a72\" />",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1300,
+      "col": 75,
+      "raw": "#3f4a50",
+      "normalized": "#3f4a50",
+      "snippet": "<text x=\"0\" y=\"-3.6\" fontSize=\"1.6\" textAnchor=\"middle\" fill=\"#3f4a50\" fontFamily=\"ui-sans-serif, system-ui\">N</text>",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1304,
+      "col": 20,
+      "raw": "#7a6a3e",
+      "normalized": "#7a6a3e",
+      "snippet": "<g fill=\"#7a6a3e\" fontFamily=\"ui-serif, Georgia, serif\" opacity=\"0.55\" style={{ pointerEvents: \"none\" }}>",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1306,
+      "col": 92,
+      "raw": "#456973",
+      "normalized": "#456973",
+      "snippet": "<text x=\"6\" y=\"60\" fontSize=\"2.4\" fontStyle=\"italic\" letterSpacing=\"0.4\" fill=\"#456973\">ATLÂNTICO</text>",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/builder.tsx",
+      "line": 1337,
+      "col": 74,
+      "raw": "#000",
+      "normalized": "#000000",
+      "snippet": "<ellipse cx={p.x} cy={p.y + 1.4} rx=\"1.6\" ry=\"0.4\" fill=\"#000\" opacity=\"0.18\" />",
       "status": "allowlisted"
     },
     {
