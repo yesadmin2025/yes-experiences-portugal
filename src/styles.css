@@ -1386,10 +1386,25 @@
 
 @keyframes heroZoom {
   from {
-    transform: scale(1.08);
+    transform: scale(1.08) translate3d(0, 0, 0);
   }
   to {
-    transform: scale(1);
+    transform: scale(1.12) translate3d(-1.2%, -0.6%, 0);
+  }
+}
+
+/* Continuous, breath-like drift that takes over after the initial zoom-in
+   so the hero background always has subtle motion. Amplitude kept small
+   (≤1.5% / scale 1.10–1.13) to never compete with overlay legibility. */
+@keyframes heroDrift {
+  0% {
+    transform: scale(1.12) translate3d(-1.2%, -0.6%, 0);
+  }
+  50% {
+    transform: scale(1.13) translate3d(0.8%, 0.4%, 0);
+  }
+  100% {
+    transform: scale(1.12) translate3d(-1.2%, -0.6%, 0);
   }
 }
 
