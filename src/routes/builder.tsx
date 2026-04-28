@@ -1190,36 +1190,68 @@ function PremiumMap({
           aria-label="Journey map"
         >
           <defs>
-            {/* Ocean — deep teal fading to lighter near the shore */}
-            <linearGradient id="ocean" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#cfe3e6" />
-              <stop offset="60%" stopColor="#9fc4cc" />
-              <stop offset="100%" stopColor="#6ea3ad" />
+            {/* Ocean — deep Atlantic blue fading toward the shelf */}
+            <linearGradient id="ocean" x1="0" y1="0" x2="1" y2="0.6">
+              <stop offset="0%" stopColor="#3b6e85" />
+              <stop offset="45%" stopColor="#5b8ea3" />
+              <stop offset="80%" stopColor="#9cc1cf" />
+              <stop offset="100%" stopColor="#c7dee5" />
             </linearGradient>
-            {/* Land — warm relief with soft inland shading */}
+            {/* Land — warm Iberian relief: coastal plains → uplands */}
             <linearGradient id="land" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#f3ead6" />
-              <stop offset="55%" stopColor="#e8dcb8" />
-              <stop offset="100%" stopColor="#d6c596" />
+              <stop offset="0%" stopColor="#eadfb8" />
+              <stop offset="40%" stopColor="#d8c98f" />
+              <stop offset="75%" stopColor="#b89d62" />
+              <stop offset="100%" stopColor="#8f7a48" />
             </linearGradient>
-            {/* Spain — slightly muted so Portugal pops */}
+            {/* Spain — drier, more muted so Portugal pops */}
             <linearGradient id="spain" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#ece4d0" />
-              <stop offset="100%" stopColor="#d4c8a8" />
+              <stop offset="0%" stopColor="#e2d5a8" />
+              <stop offset="55%" stopColor="#c9b683" />
+              <stop offset="100%" stopColor="#9c8754" />
             </linearGradient>
+            {/* Mountain shading — applied as overlay over land */}
+            <radialGradient id="mountain" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="#5e4a24" stopOpacity="0.55" />
+              <stop offset="60%" stopColor="#7a5f30" stopOpacity="0.18" />
+              <stop offset="100%" stopColor="#7a5f30" stopOpacity="0" />
+            </radialGradient>
+            {/* Forested patches — subtle green cast */}
+            <radialGradient id="forest" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="#4d6b3c" stopOpacity="0.32" />
+              <stop offset="100%" stopColor="#4d6b3c" stopOpacity="0" />
+            </radialGradient>
+            {/* Coastal sand glow at the land/sea boundary */}
+            <radialGradient id="coastGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="#f5e9c5" stopOpacity="0.9" />
+              <stop offset="100%" stopColor="#f5e9c5" stopOpacity="0" />
+            </radialGradient>
             <radialGradient id="centerGlow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="var(--teal)" stopOpacity="0.22" />
+              <stop offset="0%" stopColor="var(--teal)" stopOpacity="0.28" />
               <stop offset="100%" stopColor="var(--teal)" stopOpacity="0" />
             </radialGradient>
             <filter id="markerShadow" x="-50%" y="-50%" width="200%" height="200%">
               <feDropShadow dx="0" dy="0.4" stdDeviation="0.5" floodOpacity="0.4" />
             </filter>
             <filter id="landShadow" x="-10%" y="-10%" width="120%" height="120%">
-              <feDropShadow dx="0.4" dy="0.6" stdDeviation="0.8" floodOpacity="0.18" />
+              <feDropShadow dx="0.5" dy="0.9" stdDeviation="1.1" floodOpacity="0.28" />
             </filter>
-            {/* Subtle paper noise via crosshatch — adds depth without imagery */}
+            {/* Hill-shading: inner glow to fake terrain relief on land */}
+            <filter id="reliefShade" x="-10%" y="-10%" width="120%" height="120%">
+              <feGaussianBlur in="SourceAlpha" stdDeviation="0.9" result="blur" />
+              <feSpecularLighting in="blur" surfaceScale="3" specularConstant="0.7" specularExponent="18" lightingColor="#fff8e0" result="spec">
+                <feDistantLight azimuth="315" elevation="55" />
+              </feSpecularLighting>
+              <feComposite in="spec" in2="SourceAlpha" operator="in" result="specOut" />
+              <feComposite in="SourceGraphic" in2="specOut" operator="arithmetic" k1="0" k2="1" k3="0.55" k4="0" />
+            </filter>
+            {/* Paper grain — very subtle */}
             <pattern id="hatch" width="2" height="2" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
               <line x1="0" y1="0" x2="0" y2="2" stroke="#000" strokeWidth="0.08" opacity="0.05" />
+            </pattern>
+            {/* Wave pattern for ocean texture */}
+            <pattern id="waves" width="6" height="3" patternUnits="userSpaceOnUse">
+              <path d="M 0 1.5 Q 1.5 0 3 1.5 T 6 1.5" fill="none" stroke="#ffffff" strokeWidth="0.08" opacity="0.35" />
             </pattern>
           </defs>
 
