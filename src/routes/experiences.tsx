@@ -108,7 +108,7 @@ function ExperiencesPage() {
 
 function CtaStrip() {
   return (
-    <section className="pb-24">
+    <section className="section-y-sm pt-0">
       <div className="container-x">
         <div className="bg-[color:var(--teal)] text-[color:var(--ivory)] p-12 md:p-16 flex flex-col md:flex-row items-center justify-between gap-6">
           <div>
