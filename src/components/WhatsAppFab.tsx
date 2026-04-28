@@ -59,7 +59,7 @@ export function WhatsAppFab() {
           "group-focus-within:opacity-100 group-focus-within:translate-x-0"
         }
       >
-        Chat with a local
+        Ask a local
       </span>
 
       <a
