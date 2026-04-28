@@ -1060,6 +1060,75 @@ function HomePage() {
         </div>
       </section>
 
+      {/* 5b — BEYOND DAY TOURS
+          A short, dedicated section that signals to the visitor that this is
+          NOT just day tours: extended journeys + special-moment plans. Two
+          equal-weight blocks, premium and minimal — each links to its
+          dedicated section/route below. */}
+      <section
+        className="py-20 md:py-28 bg-[color:var(--ivory)] border-y border-[color:var(--border)]"
+        aria-labelledby="beyond-title"
+      >
+        <div className="container-x">
+          <div className="reveal text-center max-w-xl mx-auto mb-10 md:mb-14">
+            <span className="eyebrow">Beyond a single day</span>
+            <h2
+              id="beyond-title"
+              className="sr-only"
+            >
+              Beyond a single day
+            </h2>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-5 md:gap-7 max-w-5xl mx-auto">
+            {[
+              {
+                eyebrow: "Extended journeys",
+                title: "For more than a day",
+                line: "From one day to full journeys across Portugal.",
+                to: "/multi-day" as const,
+                cta: "Discover multi-day",
+                ariaLabel:
+                  "Discover extended journeys — from one day to full journeys across Portugal",
+              },
+              {
+                eyebrow: "Special occasions",
+                title: "For moments that matter",
+                line: "Proposals, celebrations, corporate and private groups.",
+                to: "/proposals" as const,
+                cta: "Plan a moment",
+                ariaLabel:
+                  "Plan a moment — proposals, celebrations, corporate and private groups",
+              },
+            ].map((b) => (
+              <Link
+                key={b.title}
+                to={b.to}
+                aria-label={b.ariaLabel}
+                className="reveal-stagger group flex flex-col p-8 md:p-10 bg-[color:var(--card)] border border-[color:var(--border)] hover:border-[color:var(--teal)]/35 hover:-translate-y-0.5 hover:shadow-[0_24px_55px_-28px_rgba(41,91,97,0.22)] transition-all duration-500"
+              >
+                <span className="text-[10.5px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
+                  {b.eyebrow}
+                </span>
+                <h3 className="serif text-[1.75rem] md:text-[2rem] mt-3 text-[color:var(--charcoal)] leading-[1.12] transition-colors duration-300 group-hover:text-[color:var(--teal)]">
+                  {b.title}
+                </h3>
+                <p className="mt-4 text-[15.5px] md:text-[16px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
+                  {b.line}
+                </p>
+                <span className="mt-7 inline-flex items-center gap-2 text-[13.5px] tracking-[0.005em] font-medium text-[color:var(--teal)]">
+                  {b.cta}
+                  <ArrowRight
+                    size={13}
+                    className="transition-transform duration-300 ease-out group-hover:translate-x-1"
+                  />
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* 6 — MULTI-DAY JOURNEYS */}
       <section className="bg-[color:var(--sand)] py-24 md:py-40">
         <div className="container-x">
