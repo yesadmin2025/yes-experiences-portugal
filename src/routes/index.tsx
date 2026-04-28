@@ -1381,6 +1381,7 @@ function HomePage() {
           Create Your Story <ArrowRight size={14} />
         </Link>
       </div>
+      <ContrastAudit />
     </SiteLayout>
   );
 }
