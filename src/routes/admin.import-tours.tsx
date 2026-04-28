@@ -613,3 +613,61 @@ function Tag({ children }: { children: React.ReactNode }) {
     </span>
   );
 }
+
+type Tone = "good" | "warn" | "muted" | "accent";
+
+const TONE_CARD: Record<Tone, string> = {
+  good: "border-[color:var(--teal)]/40 bg-[color:var(--teal)]/5 text-[color:var(--teal)]",
+  warn: "border-[color:var(--gold)]/60 bg-[color:var(--gold)]/10 text-[color:var(--charcoal)]",
+  muted: "border-[color:var(--border)] bg-[color:var(--card)] text-[color:var(--charcoal-soft)]",
+  accent: "border-[color:var(--gold)]/60 bg-[color:var(--gold)]/15 text-[color:var(--charcoal)]",
+};
+
+function StatCard({
+  label,
+  value,
+  tone,
+  icon,
+}: {
+  label: string;
+  value: string;
+  tone: Tone;
+  icon: React.ReactNode;
+}) {
+  return (
+    <div className={`border p-3 ${TONE_CARD[tone]}`}>
+      <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.22em] opacity-80">
+        {icon}
+        {label}
+      </div>
+      <div className="serif text-2xl mt-1 text-[color:var(--charcoal)]">{value}</div>
+    </div>
+  );
+}
+
+const TONE_PILL: Record<Tone, string> = {
+  good: "border-[color:var(--teal)]/50 bg-[color:var(--teal)]/10 text-[color:var(--teal)]",
+  warn: "border-[color:var(--gold)]/60 bg-[color:var(--gold)]/15 text-[color:var(--charcoal)]",
+  muted: "border-[color:var(--border)] text-[color:var(--charcoal-soft)]",
+  accent: "border-[color:var(--gold)]/70 bg-[color:var(--gold)]/25 text-[color:var(--charcoal)]",
+};
+
+function Pill({
+  children,
+  tone,
+  icon,
+}: {
+  children: React.ReactNode;
+  tone: Tone;
+  icon: React.ReactNode;
+}) {
+  return (
+    <span
+      className={`inline-flex items-center gap-1 text-[10px] uppercase tracking-[0.18em] px-2 py-0.5 border ${TONE_PILL[tone]}`}
+    >
+      {icon}
+      {children}
+    </span>
+  );
+}
+
