@@ -210,6 +210,9 @@ const seeds: { id: string; kind: string; label: string; sub: string; patch: Part
 function BuilderPage() {
   const [s, setS] = useState<BuilderState>(emptyState);
   const [mobileView, setMobileView] = useState<"build" | "map">("build");
+  // Hovered/long-pressed highlight chip — drives a temporary route extension
+  // and pin pulse on the map. Cleared on leave / release.
+  const [previewHighlight, setPreviewHighlight] = useState<string | null>(null);
 
   // Has the user begun? Drives the intro/active split.
   const started =
