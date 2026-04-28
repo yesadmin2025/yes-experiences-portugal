@@ -1404,11 +1404,6 @@ function PremiumMap({
             </g>
           )}
 
-          {/* Stops — numbered pins with soft shadow + label chip */}
-          {stops.map((p, i) => {
-            const c = dayColor(p.day);
-            const n = i + 1;
-            return (
           {/* Stops — clustered when overlapping at low zoom; numbered pins otherwise */}
           {clusters.map((cluster, ci) => {
             if (cluster.items.length > 1) {
