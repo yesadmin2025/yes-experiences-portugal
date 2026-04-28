@@ -662,7 +662,7 @@ function NameStep({ value, onChange, onNext }: { value: string; onChange: (v: st
   return (
     <div>
       <StepHeader
-        title={<>Every great story <span className="italic text-[color:var(--teal)]">has a name</span>.</> as unknown as string}
+        title={<>Every great story <span className="italic text-[color:var(--teal)]">has a name</span>.</>}
         sub="Yours, a friend's, the person you're surprising. Skip if you'd rather stay anonymous."
       />
       <input
@@ -707,7 +707,7 @@ function RegionStep({ value, onPick }: { value: string | null; onPick: (v: strin
   return (
     <div>
       <StepHeader
-        title={<>Where does your story <span className="italic text-[color:var(--teal)]">begin?</span></> as unknown as string}
+        title={<>Where does your story <span className="italic text-[color:var(--teal)]">begin?</span></>}
         sub="Choose the place that already lives in your imagination."
       />
       <div className="mt-5 grid grid-cols-2 gap-2.5">
@@ -756,7 +756,7 @@ function GroupStep({ value, onPick }: { value: string | null; onPick: (v: string
   return (
     <div>
       <StepHeader
-        title={<>Who's <span className="italic text-[color:var(--teal)]">with you?</span></> as unknown as string}
+        title={<>Who's <span className="italic text-[color:var(--teal)]">with you?</span></>}
         sub="Every story is shaped by the people in it."
       />
       <div className="mt-5 grid grid-cols-2 gap-2.5">
@@ -782,7 +782,7 @@ function GuestsStep({ value, onPick }: { value: string | null; onPick: (v: strin
   return (
     <div>
       <StepHeader
-        title={<>How <span className="italic text-[color:var(--teal)]">intimate</span> should it feel?</> as unknown as string}
+        title={<>How <span className="italic text-[color:var(--teal)]">intimate</span> should it feel?</>}
         sub="A whispered table for two, or a long banquet under the stars."
       />
       <div className="mt-5 grid grid-cols-2 gap-2.5">
@@ -823,7 +823,7 @@ function DurationStep({ value, onPick }: { value: string | null; onPick: (v: str
   return (
     <div>
       <StepHeader
-        title={<>How long is <span className="italic text-[color:var(--teal)]">your chapter?</span></> as unknown as string}
+        title={<>How long is <span className="italic text-[color:var(--teal)]">your chapter?</span></>}
         sub="Time is the most beautiful ingredient. Choose generously."
       />
       <div className="mt-5 space-y-2.5">
@@ -887,7 +887,7 @@ function StyleStep({ values, onToggle }: { values: string[]; onToggle: (id: stri
   return (
     <div>
       <StepHeader
-        title={<>What makes you <span className="italic text-[color:var(--teal)]">come alive?</span></> as unknown as string}
+        title={<>What makes you <span className="italic text-[color:var(--teal)]">come alive?</span></>}
         sub="Pick as many as you like — your story softly adapts to each."
       />
       <div className="mt-5 grid grid-cols-2 gap-2.5">
@@ -927,7 +927,7 @@ function HighlightsStep({ values, onToggle }: { values: string[]; onToggle: (id:
   return (
     <div>
       <StepHeader
-        title={<>Add the <span className="italic text-[color:var(--teal)]">small magic</span>.</> as unknown as string}
+        title={<>Add the <span className="italic text-[color:var(--teal)]">small magic</span>.</>}
         sub="The little moments — a tasting, a viewpoint, a workshop — that make a day truly yours."
       />
       <div className="mt-5 grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -956,7 +956,7 @@ function PaceStep({ value, onPick }: { value: string | null; onPick: (v: string)
   return (
     <div>
       <StepHeader
-        title={<>What <span className="italic text-[color:var(--teal)]">rhythm</span> do you want?</> as unknown as string}
+        title={<>What <span className="italic text-[color:var(--teal)]">rhythm</span> do you want?</>}
         sub="There are no wrong answers — only the pace that feels like you."
       />
       <div className="mt-5 space-y-2.5">
@@ -1003,7 +1003,7 @@ function EnhancementsStep({ values, onToggle }: { values: string[]; onToggle: (i
   return (
     <div>
       <StepHeader
-        title={<>Add a little <span className="italic text-[color:var(--teal)]">magic.</span></> as unknown as string}
+        title={<>Add a little <span className="italic text-[color:var(--teal)]">magic.</span></>}
         sub="Optional touches that turn a beautiful day into an unforgettable one."
       />
       <div className="mt-5 grid grid-cols-2 gap-2.5">
@@ -1035,7 +1035,7 @@ function TierStep({ value, onPick }: { value: string | null; onPick: (v: string)
   return (
     <div>
       <StepHeader
-        title={<>Choose the <span className="italic text-[color:var(--teal)]">level of care.</span></> as unknown as string}
+        title={<>Choose the <span className="italic text-[color:var(--teal)]">level of care.</span></>}
         sub="From signature beauty to fully bespoke — your story, dressed your way."
       />
       <div className="mt-5 space-y-3">
