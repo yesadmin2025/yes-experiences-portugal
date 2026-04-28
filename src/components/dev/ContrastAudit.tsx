@@ -100,6 +100,7 @@ type Finding = {
   fg: string;
   bg: string;
   text: string;
+  inFocus?: boolean;
 };
 
 function audit(root: Element): Finding[] {
