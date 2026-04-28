@@ -1089,6 +1089,40 @@ function buildDna(s: BuilderState) {
   return { bars, tags };
 }
 
+/* Map a DNA bar value (0-5) back into the underlying state so the story/timeline update live. */
+function applyDnaBar(p: BuilderState, label: string, value: number): BuilderState {
+  const withStyle = (styles: string[], id: string, on: boolean) =>
+    on ? (styles.includes(id) ? styles : [...styles, id]) : styles.filter((x) => x !== id);
+  const withHl = (h: string[], id: string, on: boolean) =>
+    on ? (h.includes(id) ? h : [...h, id]) : h.filter((x) => x !== id);
+
+  if (label === "Wine") {
+    return {
+      ...p,
+      styles: withStyle(p.styles, "wine", value >= 1),
+      highlights: withHl(p.highlights, "tasting", value >= 3),
+    };
+  }
+  if (label === "Nature") {
+    return {
+      ...p,
+      styles: withStyle(withStyle(p.styles, "nature", value >= 1), "coastal", value >= 3),
+    };
+  }
+  if (label === "Culture") {
+    return {
+      ...p,
+      styles: withStyle(p.styles, "heritage", value >= 1),
+      highlights: withHl(p.highlights, "tiles", value >= 3),
+    };
+  }
+  if (label === "Relax") {
+    const pace = value >= 4 ? "slow" : value >= 2 ? "balanced" : value >= 1 ? "rich" : null;
+    return { ...p, pace };
+  }
+  return p;
+}
+
 /* Investment + booking — Bible §12 */
 function InvestmentPanel({ s, days, investment }: { s: BuilderState; days: number; investment: number | null }) {
   return (
