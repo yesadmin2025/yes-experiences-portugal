@@ -498,6 +498,7 @@ describe("Typography regression — token rules from styles.css", () => {
     it(`token ${sel}`, () => {
       const rules = extractTokenRules(css, sel);
       expect(rules, `No rules found for ${sel}`).not.toBe("");
+      captured.tokenRules[sel] = rules;
       expect(rules).toMatchSnapshot();
     });
   }
