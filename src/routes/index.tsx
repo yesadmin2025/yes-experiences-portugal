@@ -910,7 +910,7 @@ function HomePage() {
           decision grid. Communicates: instant creation + instant
           confirmation + real-time local guidance. */}
       <section
-        className="bg-[color:var(--teal)] text-[color:var(--ivory)] section-y-lg relative overflow-hidden"
+        className="bg-[color:var(--teal)] text-[color:var(--ivory)] section-y-lg relative overflow-hidden py-24 md:py-36"
         aria-labelledby="studio-title"
       >
         <div className="absolute -top-32 -right-32 w-[28rem] h-[28rem] rounded-full border border-[color:var(--gold)]/15 pointer-events-none" />
@@ -928,21 +928,21 @@ function HomePage() {
               </span>
               <h2
                 id="studio-title"
-                className="t-display mt-6"
+                className="serif mt-7 text-[2.6rem] sm:text-[3.4rem] md:text-[4.4rem] lg:text-[5rem] leading-[0.98] tracking-[-0.018em]"
               >
                 Create it, <span className="italic text-[color:var(--gold-soft)]">live.</span>
               </h2>
-              <p className="mt-7 text-[17px] md:text-[19px] lg:text-[20px] text-[color:var(--ivory)] leading-[1.55] max-w-xl font-light">
-                Build your journey in real time and confirm instantly.
+              <p className="mt-8 text-[19px] md:text-[22px] lg:text-[24px] text-[color:var(--ivory)] leading-[1.5] max-w-xl font-light">
+                Build your journey in real time — and confirm instantly.
               </p>
-              <p className="mt-4 text-[14.5px] md:text-[15.5px] italic font-light text-[color:var(--gold-soft)] leading-[1.7] max-w-xl">
-                A local guide is always available if you want help.
+              <p className="mt-5 text-[15px] md:text-[16px] italic font-light text-[color:var(--gold-soft)] leading-[1.7] max-w-xl">
+                A local guide is available anytime if you want help.
               </p>
               <Link
                 to="/builder"
-                className="inline-flex items-center gap-2 mt-10 px-10 py-[18px] text-[15.5px] tracking-[0.005em] font-medium bg-[color:var(--gold)] text-[color:var(--charcoal-deep)] hover:bg-[color:var(--gold-soft)] hover:-translate-y-0.5 shadow-[0_14px_36px_-12px_rgba(201,169,106,0.6)] transition-all duration-500"
+                className="inline-flex items-center gap-2.5 mt-12 px-12 py-[20px] text-[16px] tracking-[0.005em] font-semibold bg-[color:var(--gold)] text-[color:var(--charcoal-deep)] hover:bg-[color:var(--gold-soft)] hover:-translate-y-0.5 shadow-[0_18px_44px_-14px_rgba(201,169,106,0.7)] transition-all duration-500"
               >
-                Open Studio <ArrowRight size={15} />
+                Open Studio <ArrowRight size={17} />
               </Link>
             </div>
 
