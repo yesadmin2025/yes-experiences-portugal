@@ -430,37 +430,16 @@ function BuilderPage() {
             {/* RIGHT — live preview */}
             <aside className={`lg:col-span-6 xl:col-span-7 ${mobileTab === "preview" ? "" : "hidden lg:block"}`}>
               <div className="lg:sticky lg:top-[120px] space-y-4">
-                {/* View mode toggle */}
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] uppercase tracking-[0.22em] text-[color:var(--gold)]">
                     Live preview
                   </span>
-                  <div className="inline-flex p-1 bg-[color:var(--sand)] border border-[color:var(--border)] rounded-full">
-                    {([
-                      { id: "story", label: "Story", icon: BookOpen },
-                      { id: "timeline", label: "Timeline", icon: Clock },
-                      { id: "map", label: "Map", icon: MapIcon },
-                    ] as const).map(({ id, label, icon: Icon }) => (
-                      <button
-                        key={id}
-                        onClick={() => setView(id)}
-                        className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] uppercase tracking-[0.18em] transition-all ${
-                          view === id ? "bg-[color:var(--teal)] text-[color:var(--ivory)]" : "text-[color:var(--charcoal-soft)]"
-                        }`}
-                      >
-                        <Icon size={12} /> {label}
-                      </button>
-                    ))}
-                  </div>
+                  <span className="text-[10px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)] italic">
+                    Story · map · timeline — together
+                  </span>
                 </div>
 
-                {view === "story" && <StoryView s={s} title={experienceTitle} />}
-                {view === "timeline" && <TimelineView s={s} />}
-                {view === "map" && (
-                  <Suspense fallback={<MapFallback />}>
-                    <RealLeafletMap region={s.region} />
-                  </Suspense>
-                )}
+                <LiveCanvas s={s} title={experienceTitle} />
 
                 <DnaPanel s={s} setS={setS} />
                 <InvestmentPanel s={s} days={days} investment={investment} />
