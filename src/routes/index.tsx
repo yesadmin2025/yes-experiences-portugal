@@ -12,6 +12,13 @@ import editCoastal from "@/assets/edit-coastal-road.jpg";
 import editWinery from "@/assets/edit-winery.jpg";
 import editMarket from "@/assets/edit-market.jpg";
 import editViewpoint from "@/assets/edit-viewpoint.jpg";
+import catProposals from "@/assets/cat-proposals.jpg";
+import catCorporate from "@/assets/cat-corporate.jpg";
+import catPrivate from "@/assets/cat-private.jpg";
+import expRomantic from "@/assets/exp-romantic.jpg";
+import expGastronomy from "@/assets/exp-gastronomy.jpg";
+import expWine from "@/assets/exp-wine.jpg";
+import expNature from "@/assets/exp-nature.jpg";
 import {
   ArrowRight,
   Star,
@@ -29,6 +36,7 @@ import { HeroMetaProbe } from "@/components/HeroMetaProbe";
 import { HeroCopyDiff } from "@/components/HeroCopyDiff";
 import { HeroVerifyOverlay } from "@/components/HeroVerifyOverlay";
 import { DecisionStepper } from "@/components/DecisionStepper";
+import { SignatureCarousel } from "@/components/SignatureCarousel";
 import { ContrastAudit } from "@/components/dev/ContrastAudit";
 
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
@@ -40,6 +48,9 @@ const FEATURED_TOUR_IDS = [
   "arrabida-wine-allinclusive",
   "sintra-cascais",
   "troia-comporta",
+  "arrabida-boat",
+  "azeitao-cheese",
+  "fatima-nazare-obidos",
 ] as const;
 
 export const Route = createFileRoute("/")({
