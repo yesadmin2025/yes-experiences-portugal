@@ -1,4 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { zodValidator, fallback } from "@tanstack/zod-adapter";
+import { z } from "zod";
 import { useEffect, useMemo, useState } from "react";
 import { SiteLayout } from "@/components/SiteLayout";
 import { supabase } from "@/integrations/supabase/client";
@@ -14,7 +16,15 @@ import { signatureTours } from "@/data/signatureTours";
 import { toast } from "sonner";
 import { Loader2, RefreshCw, Check, AlertTriangle, Sliders, Trash2, Plus, Image as ImageIcon, ImageOff, Link2, Link2Off } from "lucide-react";
 
+const FILTER_VALUES = ["all", "with-image", "missing-image", "matched", "unmatched"] as const;
+type FilterValue = (typeof FILTER_VALUES)[number];
+
+const searchSchema = z.object({
+  filter: fallback(z.enum(FILTER_VALUES), "all").default("all"),
+});
+
 export const Route = createFileRoute("/admin/import-tours")({
+  validateSearch: zodValidator(searchSchema),
   head: () => ({
     meta: [{ title: "Import Tours — Studio Admin" }],
   }),
@@ -55,6 +65,7 @@ const SIGNATURE_BY_URL = new Map(
 
 function AdminImportPage() {
   const navigate = useNavigate();
+  const { filter } = Route.useSearch();
   const [session, setSession] = useState<Session | null>(null);
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
   const [tours, setTours] = useState<ImportedRow[]>([]);
@@ -256,6 +267,26 @@ function AdminImportPage() {
       signatureTotal: signatureTours.length,
     };
   }, [tours]);
+
+  /**
+   * Subset of imported tours after applying the active filter pill. The pills
+   * surface the same buckets that drive the coverage stats, so users can drill
+   * into "missing image" or "unmatched" rows directly without scanning.
+   */
+  const filteredTours = useMemo(() => {
+    return tours.filter((t) => {
+      const hasImage = !!t.image_url;
+      const matched = SIGNATURE_BY_URL.has(normalizeUrl(t.source_url));
+      switch (filter) {
+        case "with-image": return hasImage;
+        case "missing-image": return !hasImage;
+        case "matched": return matched;
+        case "unmatched": return !matched;
+        case "all":
+        default: return true;
+      }
+    });
+  }, [tours, filter]);
 
   if (!session) return null; // redirecting
 
@@ -494,7 +525,10 @@ function AdminImportPage() {
           </div>
 
           <h2 className="serif text-2xl mt-12">
-            Imported tours <span className="text-sm text-[color:var(--charcoal-soft)]">({tours.length})</span>
+            Imported tours{" "}
+            <span className="text-sm text-[color:var(--charcoal-soft)]">
+              ({filter === "all" ? tours.length : `${filteredTours.length} of ${tours.length}`})
+            </span>
           </h2>
 
           {tours.length > 0 && (
@@ -526,13 +560,41 @@ function AdminImportPage() {
             </div>
           )}
 
+          {tours.length > 0 && (
+            <div className="mt-5 flex flex-wrap gap-2">
+              <FilterPill value="all" current={filter} count={stats.total} icon={null}>
+                All
+              </FilterPill>
+              <FilterPill value="with-image" current={filter} count={stats.withImage} icon={<ImageIcon size={11} />}>
+                With image
+              </FilterPill>
+              <FilterPill value="missing-image" current={filter} count={stats.missingImage} icon={<ImageOff size={11} />}>
+                Missing image
+              </FilterPill>
+              <FilterPill value="matched" current={filter} count={stats.matched} icon={<Link2 size={11} />}>
+                Matched signature
+              </FilterPill>
+              <FilterPill value="unmatched" current={filter} count={stats.total - stats.matched} icon={<Link2Off size={11} />}>
+                Unmatched
+              </FilterPill>
+            </div>
+          )}
+
           {tours.length === 0 ? (
             <p className="mt-4 text-sm text-[color:var(--charcoal-soft)]">
               Nothing imported yet. Click <strong>Run import now</strong> to fetch.
             </p>
+          ) : filteredTours.length === 0 ? (
+            <p className="mt-6 text-sm text-[color:var(--charcoal-soft)]">
+              No tours match this filter.{" "}
+              <Link from="/admin/import-tours" to="." search={{ filter: "all" }} className="underline">
+                Show all
+              </Link>
+              .
+            </p>
           ) : (
             <ul className="mt-6 space-y-4">
-              {tours.map((t) => {
+              {filteredTours.map((t) => {
                 const matched = SIGNATURE_BY_URL.has(normalizeUrl(t.source_url));
                 const hasImage = !!t.image_url;
                 return (
@@ -671,3 +733,43 @@ function Pill({
   );
 }
 
+
+/**
+ * Single filter chip in the imported-tours list. Selection is mirrored to the
+ * URL via TanStack Router search params so filters survive refresh + can be
+ * shared with teammates.
+ */
+function FilterPill({
+  value,
+  current,
+  count,
+  icon,
+  children,
+}: {
+  value: FilterValue;
+  current: FilterValue;
+  count: number;
+  icon: React.ReactNode | null;
+  children: React.ReactNode;
+}) {
+  const active = value === current;
+  return (
+    <Link
+      from="/admin/import-tours"
+      to="."
+      search={{ filter: value }}
+      replace
+      aria-pressed={active}
+      className={[
+        "inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] uppercase tracking-[0.2em] border transition-colors",
+        active
+          ? "border-[color:var(--charcoal)] bg-[color:var(--charcoal)] text-[color:var(--ivory)]"
+          : "border-[color:var(--border)] text-[color:var(--charcoal-soft)] hover:text-[color:var(--charcoal)] hover:border-[color:var(--gold)]",
+      ].join(" ")}
+    >
+      {icon}
+      {children}
+      <span className={active ? "opacity-80" : "opacity-60"}>· {count}</span>
+    </Link>
+  );
+}
