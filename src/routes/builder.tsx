@@ -1,12 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
 import { signatureTours } from "@/data/signatureTours";
-import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 const RealLeafletMap = lazy(() =>
   import("@/components/RealLeafletMap").then((m) => ({ default: m.RealLeafletMap })),
 );
 import {
   ArrowRight,
+  ArrowLeft,
   Check,
   MapPin,
   Sparkles,
@@ -23,11 +24,11 @@ import {
   Gem,
   Users,
   Map as MapIcon,
-  Pencil,
   MessageCircle,
-  Plus,
-  Minus,
-  RotateCcw,
+  BookOpen,
+  Clock,
+  Save,
+  Award,
 } from "lucide-react";
 
 export const Route = createFileRoute("/builder")({
@@ -36,17 +37,17 @@ export const Route = createFileRoute("/builder")({
   }),
   head: () => ({
     meta: [
-      { title: "Experience Studio — YES experiences Portugal" },
+      { title: "YES Experience Studio — Design Your Portugal Experience" },
       {
         name: "description",
         content:
-          "Shape a private Portugal journey in real time — see route, stops, duration and price update instantly. Confirm whenever you're ready.",
+          "Design your private Portugal experience step by step. See your story, route, timeline and investment evolve in real time.",
       },
-      { property: "og:title", content: "The Experience Studio" },
+      { property: "og:title", content: "YES Experience Studio" },
       {
         property: "og:description",
         content:
-          "A live experience builder. Real-time route, stops and price. Instant confirmation. A local guide one tap away.",
+          "A premium experience configurator. Build a one-day or multi-day private journey, designed with your local guide.",
       },
     ],
   }),
@@ -54,7 +55,7 @@ export const Route = createFileRoute("/builder")({
 });
 
 /* ============================================================
-   Data — kept from the previous builder; lightly extended
+   Step data — mapped to Bible §4.2 (welcome → reveal)
    ============================================================ */
 
 const groupTypes = [
@@ -81,6 +82,13 @@ const durationOpts = [
   { id: "week", label: "5–7 Days", sub: "Full story", days: 5, hours: 45 },
 ];
 
+const regionOpts = [
+  { id: "lisbon", name: "Lisbon & Coast" },
+  { id: "porto", name: "Porto & Douro" },
+  { id: "alentejo", name: "Alentejo" },
+  { id: "algarve", name: "Algarve" },
+];
+
 const styleOpts = [
   { id: "wine", name: "Wine & Vineyards", icon: Wine },
   { id: "gastronomy", name: "Gastronomy", icon: UtensilsCrossed },
@@ -89,18 +97,16 @@ const styleOpts = [
   { id: "coastal", name: "Coastal & Sea", icon: Waves },
 ];
 
-/* Highlights are real ingredients of YES experiences tours — used as
-   "Signature moments" chips. Each one maps to an actual on-tour activity. */
 const highlightOpts = [
-  { id: "livramento", name: "Livramento Market tasting", short: "Livramento" },
-  { id: "boat", name: "Arrábida boat tour", short: "Boat tour" },
+  { id: "livramento", name: "Livramento Market tasting", short: "Livramento Market" },
+  { id: "boat", name: "Arrábida boat tour", short: "Arrábida boat" },
   { id: "jeep", name: "4×4 Jeep off-the-beaten-path", short: "4×4 Jeep" },
   { id: "tiles", name: "Hand-painted tiles workshop", short: "Tiles workshop" },
   { id: "cheese", name: "Azeitão cheese workshop", short: "Cheese workshop" },
   { id: "tasting", name: "Private winery tasting", short: "Wine tasting" },
   { id: "portinho", name: "Lunch at Portinho da Arrábida", short: "Portinho lunch" },
   { id: "sesimbra", name: "Sesimbra fishing village", short: "Sesimbra" },
-  { id: "viewpoint", name: "Arrábida secret viewpoint", short: "Viewpoint" },
+  { id: "viewpoint", name: "Arrábida secret viewpoint", short: "Secret viewpoint" },
   { id: "dinosaur", name: "Cabo Espichel dinosaur footprints", short: "Dinosaur prints" },
   { id: "ginjinha", name: "Óbidos Ginjinha tasting", short: "Ginjinha" },
 ];
@@ -124,66 +130,6 @@ const tierOpts = [
   { id: "atelier", name: "Atelier", priceFrom: 3400, line: "Higher-touch — premium properties, deeper access.", icon: Gem },
   { id: "couture", name: "Couture", priceFrom: 6200, line: "Fully bespoke — anything is possible.", icon: Heart },
 ];
-
-/* Region map points use the same coordinate system as the SVG silhouette
-   below (viewBox 0 0 100 130). Keep these in sync if the silhouette changes. */
-const regionMap: Record<string, { x: number; y: number; name: string }> = {
-  lisbon: { x: 28, y: 78, name: "Lisbon & Coast" },
-  porto: { x: 34, y: 26, name: "Porto & Douro" },
-  alentejo: { x: 48, y: 88, name: "Alentejo" },
-  algarve: { x: 46, y: 110, name: "Algarve" },
-};
-const regionOpts = [
-  { id: "lisbon", name: "Lisbon & Coast" },
-  { id: "porto", name: "Porto & Douro" },
-  { id: "alentejo", name: "Alentejo" },
-  { id: "algarve", name: "Algarve" },
-];
-
-/* Curated nearby stops per region — gives the live route real character
-   instead of evenly-spaced dots around the centre. Coordinates again
-   live in the silhouette's viewBox. */
-const regionStops: Record<string, { x: number; y: number; label: string; tag: string }[]> = {
-  // From Lisbon — the real YES experiences playground: south of the Tagus
-  // through Azeitão, Setúbal, Arrábida and Sesimbra, plus Sintra & Cascais.
-  lisbon: [
-    { x: 28, y: 76, label: "Cristo Rei", tag: "Viewpoint" },
-    { x: 30, y: 80, label: "Azeitão", tag: "Cheese & wine" },
-    { x: 33, y: 82, label: "Setúbal · Livramento", tag: "Market" },
-    { x: 36, y: 82, label: "Arrábida Natural Park", tag: "Nature" },
-    { x: 35, y: 84, label: "Portinho da Arrábida", tag: "Coast" },
-    { x: 32, y: 86, label: "Sesimbra", tag: "Fishing village" },
-    { x: 29, y: 86, label: "Cabo Espichel", tag: "Dinosaur prints" },
-    { x: 22, y: 76, label: "Sintra", tag: "Heritage" },
-    { x: 20, y: 78, label: "Cascais", tag: "Coast" },
-  ],
-  porto: [
-    { x: 38, y: 22, label: "Porto", tag: "City" },
-    { x: 46, y: 24, label: "Douro Valley", tag: "Wine" },
-    { x: 52, y: 28, label: "Pinhão", tag: "River" },
-    { x: 36, y: 18, label: "Braga", tag: "Heritage" },
-    { x: 40, y: 20, label: "Guimarães", tag: "Heritage" },
-  ],
-  alentejo: [
-    { x: 42, y: 96, label: "Comporta", tag: "Coast" },
-    { x: 54, y: 84, label: "Évora", tag: "Heritage" },
-    { x: 56, y: 82, label: "Alentejo wineries", tag: "Wine" },
-    { x: 60, y: 92, label: "Monsaraz", tag: "Quiet" },
-    { x: 50, y: 70, label: "Tomar", tag: "Templar" },
-    { x: 46, y: 64, label: "Coimbra", tag: "University" },
-    { x: 38, y: 60, label: "Fátima", tag: "Sanctuary" },
-    { x: 32, y: 58, label: "Nazaré", tag: "Coast" },
-    { x: 28, y: 64, label: "Óbidos", tag: "Ginjinha" },
-  ],
-  algarve: [
-    { x: 38, y: 112, label: "Lagos", tag: "Coast" },
-    { x: 40, y: 114, label: "Benagil Caves", tag: "Boat ride" },
-    { x: 36, y: 116, label: "Vicentine Coast", tag: "Wild coast" },
-    { x: 42, y: 108, label: "Monchique", tag: "Mountain" },
-    { x: 50, y: 116, label: "Ria Formosa", tag: "Nature" },
-    { x: 54, y: 110, label: "Tavira", tag: "Quiet" },
-  ],
-};
 
 /* ============================================================
    State
@@ -215,60 +161,59 @@ const emptyState: BuilderState = {
   tier: null,
 };
 
-/* Suggested entry points — modeled on the actual YES experiences best-sellers
-   so the builder pre-fills duration, styles, pace and tier in a way that
-   matches each tour's real timing and the type of client it suits. */
-const seeds: { id: string; kind: string; label: string; sub: string; patch: Partial<BuilderState> }[] = [
-  // PLACES — broad regional intents
-  { id: "arrabida", kind: "Place", label: "Arrábida & Sesimbra", sub: "Coast, boat, hidden coves · 8–9h",
-    patch: { region: "lisbon", duration: "fullday", styles: ["coastal", "nature"],
-      highlights: ["boat", "portinho", "sesimbra", "viewpoint"], pace: "balanced", tier: "signature" } },
-  { id: "azeitao", kind: "Place", label: "Azeitão & Setúbal", sub: "Cheese, wine, Sesimbra · 8–9h",
-    patch: { region: "lisbon", duration: "fullday", styles: ["wine", "gastronomy"],
-      highlights: ["cheese", "tasting", "livramento", "sesimbra"], pace: "slow", tier: "signature" } },
-  { id: "sintra", kind: "Place", label: "Sintra & Cascais", sub: "Hidden gems + tasting · 8–9h",
-    patch: { region: "lisbon", duration: "fullday", styles: ["heritage", "coastal"],
-      highlights: ["tasting", "viewpoint"], pace: "balanced", tier: "signature" } },
-  { id: "douro", kind: "Place", label: "Douro Valley", sub: "Vineyards, river, slow · full day",
-    patch: { region: "porto", duration: "fullday", styles: ["wine", "gastronomy"],
-      highlights: ["tasting"], pace: "slow", tier: "signature" } },
-  { id: "evora", kind: "Place", label: "Évora & Alentejo", sub: "History & wines · 9–11h",
-    patch: { region: "alentejo", duration: "fullday", styles: ["heritage", "wine"],
-      highlights: ["tasting"], pace: "balanced", tier: "signature" } },
-  { id: "algarve", kind: "Place", label: "Algarve · Benagil", sub: "Caves & wild coast · 2 days",
-    patch: { region: "algarve", duration: "twoday", styles: ["coastal", "nature"],
-      highlights: ["boat", "viewpoint"], pace: "balanced", tier: "atelier" } },
+/* Step model — maps directly to Bible §4.2 */
+type StepId =
+  | "welcome" | "name" | "region" | "group" | "guests" | "duration"
+  | "style" | "highlights" | "pace" | "enhancements" | "tier" | "reveal";
 
-  // MOMENTS — client-type led
-  { id: "anniversary", kind: "Moment", label: "An anniversary", sub: "Couple · slow, intimate, viewpoint",
-    patch: { region: "lisbon", groupType: "couple", guests: "1-2", duration: "fullday",
-      styles: ["gastronomy", "wine"], highlights: ["tasting", "portinho", "viewpoint"],
-      pace: "slow", tier: "atelier" } },
-  { id: "celebration", kind: "Moment", label: "A celebration", sub: "Friends · long lunch + tastings",
-    patch: { region: "lisbon", groupType: "friends", guests: "7-15", duration: "fullday",
-      styles: ["gastronomy", "wine"], highlights: ["livramento", "tasting", "portinho"],
-      pace: "balanced", tier: "atelier" } },
-  { id: "family-jeep", kind: "Moment", label: "A family adventure", sub: "Family · 4×4, beach picnic · 7–8h",
-    patch: { region: "lisbon", groupType: "family", guests: "3-6", duration: "fullday",
-      styles: ["nature", "coastal"], highlights: ["jeep", "dinosaur", "viewpoint"],
-      pace: "balanced", tier: "signature" } },
-
-  // IDEAS — themed days
-  { id: "wine-day", kind: "Idea", label: "A wine day", sub: "Cellars, market, long lunch · 8–9h",
-    patch: { region: "lisbon", duration: "fullday", styles: ["wine", "gastronomy"],
-      highlights: ["tasting", "livramento", "portinho"], pace: "balanced", tier: "signature" } },
-  { id: "tiles-day", kind: "Idea", label: "Tiles & wine workshop", sub: "Hands-on · 7–8h",
-    patch: { region: "lisbon", duration: "fullday", styles: ["heritage", "wine"],
-      highlights: ["tiles", "tasting", "sesimbra"], pace: "slow", tier: "signature" } },
-  { id: "off-beaten", kind: "Idea", label: "Off the beaten path", sub: "4×4 + dinosaur prints · 6–7h",
-    patch: { region: "lisbon", duration: "fullday", styles: ["nature"],
-      highlights: ["jeep", "dinosaur", "viewpoint"], pace: "balanced", tier: "signature" } },
-  { id: "faith-route", kind: "Idea", label: "Fátima · Nazaré · Óbidos", sub: "With Ginjinha tasting · 8–9h",
-    patch: { region: "alentejo", duration: "fullday", styles: ["heritage"],
-      highlights: ["ginjinha", "viewpoint"], pace: "balanced", tier: "signature" } },
-  { id: "weekend", kind: "Idea", label: "A weekend away", sub: "Three days, no rush",
-    patch: { duration: "threeday", styles: ["nature", "gastronomy"], pace: "slow", tier: "atelier" } },
+const STEPS: { id: StepId; label: string }[] = [
+  { id: "welcome", label: "Welcome" },
+  { id: "name", label: "Name" },
+  { id: "region", label: "Region" },
+  { id: "group", label: "Group" },
+  { id: "guests", label: "Guests" },
+  { id: "duration", label: "Duration" },
+  { id: "style", label: "Style" },
+  { id: "highlights", label: "Highlights" },
+  { id: "pace", label: "Pace" },
+  { id: "enhancements", label: "Enhancements" },
+  { id: "tier", label: "Tier" },
+  { id: "reveal", label: "Reveal" },
 ];
+
+/* YES microcopy bank — Bible §8 */
+const YES_LINES: Record<string, string[]> = {
+  welcome: [
+    "YES — let's design your Portugal story.",
+    "YES — your journey starts here.",
+    "YES — let's build something unforgettable.",
+  ],
+  early: [
+    "YES — great choice.",
+    "YES — your journey is taking shape.",
+    "YES — this is becoming something special.",
+  ],
+  mid: [
+    "YES — your Portugal story is coming together.",
+    "YES — you're halfway to your perfect experience.",
+    "YES — your journey is evolving beautifully.",
+  ],
+  late: [
+    "YES — your signature experience is almost ready.",
+    "YES — just a few final touches.",
+    "YES — you're close to finishing your journey.",
+  ],
+  done: [
+    "YES — you just created something unique.",
+    "YES — your Portugal story is ready.",
+    "YES — your signature experience is complete.",
+  ],
+};
+
+function pickYes(stage: keyof typeof YES_LINES, seed: number) {
+  const arr = YES_LINES[stage];
+  return arr[seed % arr.length];
+}
 
 /* ============================================================
    Page
@@ -277,41 +222,26 @@ const seeds: { id: string; kind: string; label: string; sub: string; patch: Part
 function BuilderPage() {
   const search = Route.useSearch();
   const [s, setS] = useState<BuilderState>(emptyState);
-  const [mobileView, setMobileView] = useState<"build" | "map">("build");
-  // Hovered/long-pressed highlight chip — drives a temporary route extension
-  // and pin pulse on the map. Cleared on leave / release.
-  const [previewHighlight, setPreviewHighlight] = useState<string | null>(null);
+  const [stepIdx, setStepIdx] = useState(0);
+  const [view, setView] = useState<"story" | "timeline" | "map">("story");
+  const [mobileTab, setMobileTab] = useState<"build" | "preview">("build");
 
-  // Deep-link seed: /builder?tour=<id> opens the matching Signature tour
-  // pre-filled, ready for the user to tailor or confirm as-is.
+  // Deep-link seed: /builder?tour=<id>
   useEffect(() => {
     if (!search.tour) return;
     const tour = signatureTours.find((t) => t.id === search.tour);
     if (!tour) return;
-    setS((p) => ({ ...p, ...tour.seed, name: p.name || tour.title }));
+    setS((p) => ({ ...p, ...tour.seed, name: p.name || "" }));
+    setStepIdx(2); // jump past welcome+name
   }, [search.tour]);
-
-  // Has the user begun? Drives the intro/active split.
-  const started =
-    s.region !== null ||
-    s.groupType !== null ||
-    s.duration !== null ||
-    s.styles.length > 0 ||
-    s.highlights.length > 0 ||
-    s.pace !== null ||
-    s.tier !== null ||
-    s.name.length > 0;
 
   const update = <K extends keyof BuilderState>(k: K, v: BuilderState[K]) =>
     setS((p) => ({ ...p, [k]: v }));
   const toggle = (k: "styles" | "highlights" | "enhancements", id: string) =>
     setS((p) => ({ ...p, [k]: p[k].includes(id) ? p[k].filter((x) => x !== id) : [...p[k], id] }));
-  const seed = (patch: Partial<BuilderState>) => setS((p) => ({ ...p, ...patch }));
 
   const days = durationOpts.find((d) => d.id === s.duration)?.days ?? 1;
-  const isMultiDay = days >= 2;
 
-  /* Live price — same formula, surfaced live the moment a tier exists. */
   const investment = useMemo(() => {
     const tier = tierOpts.find((t) => t.id === s.tier);
     if (!tier) return null;
@@ -327,1536 +257,849 @@ function BuilderPage() {
     return Math.round((tier.priceFrom * guestMult * dayMult * enhanceMult) / 50) * 50;
   }, [s, days]);
 
-  // Minimum to confirm: a region + something more (style or pace).
-  const canConfirm = !!s.region && (s.styles.length > 0 || !!s.pace);
+  // Progress = filled steps / total content steps (skip welcome + reveal)
+  const progress = useMemo(() => {
+    const filled = [
+      !!s.region, !!s.groupType, !!s.guests, !!s.duration,
+      s.styles.length > 0, s.highlights.length > 0,
+      !!s.pace, !!s.tier,
+    ].filter(Boolean).length;
+    return Math.round((filled / 8) * 100);
+  }, [s]);
+
+  const stage: keyof typeof YES_LINES =
+    progress === 0 ? "welcome"
+    : progress < 35 ? "early"
+    : progress < 70 ? "mid"
+    : progress < 100 ? "late"
+    : "done";
+
+  const currentStep = STEPS[stepIdx];
+  const goNext = () => {
+    setStepIdx((i) => Math.min(STEPS.length - 1, i + 1));
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      setMobileTab("build");
+    }
+  };
+  const goBack = () => setStepIdx((i) => Math.max(0, i - 1));
+  const goTo = (i: number) => setStepIdx(i);
+
+  const experienceTitle = s.name ? `${s.name}'s Portugal Experience` : "Your Portugal Experience";
 
   return (
     <SiteLayout>
-      {/* Intro header — tone-setting, never goes away on desktop. */}
-      <section className="pt-32 pb-8 bg-[color:var(--sand)]">
-        <div className="container-x text-center">
-          <span className="eyebrow">The Experience Studio</span>
-          <h1 className="serif text-4xl md:text-6xl mt-5 leading-tight">
-            Start <span className="italic text-[color:var(--teal)]">your way</span>
-          </h1>
-          <p className="mt-5 text-[color:var(--charcoal-soft)] max-w-xl mx-auto">
-            Begin with a place, a moment or an idea — shape it in real time.
-          </p>
-          <p className="mt-3 text-[13px] text-[color:var(--charcoal-soft)] max-w-xl mx-auto italic">
-            A local guide is available anytime if you want help.
-          </p>
+      {/* Studio header */}
+      <section className="pt-28 pb-6 bg-[color:var(--sand)]">
+        <div className="container-x">
+          <div className="text-center">
+            <span className="eyebrow">YES Experience Studio</span>
+            <h1 className="serif text-3xl md:text-5xl mt-4 leading-tight text-[color:var(--charcoal)]">
+              Design <span className="italic text-[color:var(--teal)]">your way</span>
+            </h1>
+            <p className="mt-3 text-[13px] md:text-sm text-[color:var(--charcoal-soft)] italic">
+              Designed with your local guide. Signed by you.
+            </p>
+          </div>
+
+          {/* Progress bar */}
+          <div className="mt-6 max-w-2xl mx-auto">
+            <div className="flex items-center justify-between text-[10px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)] mb-2">
+              <span>Step {stepIdx + 1} · {currentStep.label}</span>
+              <span>{progress}% complete</span>
+            </div>
+            <div className="h-1 bg-[color:var(--border)] rounded-full overflow-hidden">
+              <div
+                className="h-full bg-[color:var(--teal)] transition-all duration-500"
+                style={{ width: `${Math.max(8, ((stepIdx) / (STEPS.length - 1)) * 100)}%` }}
+              />
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Mobile toggle — thumb-friendly, sticky just under the header. */}
+      {/* Mobile tabs: Build / Preview */}
       <div className="lg:hidden sticky top-[72px] z-30 bg-[color:var(--ivory)]/95 backdrop-blur border-b border-[color:var(--border)]">
         <div className="container-x py-3 flex justify-center">
-          <div
-            role="tablist"
-            aria-label="Switch view"
-            className="inline-flex p-1 bg-[color:var(--sand)] border border-[color:var(--border)] rounded-full"
-          >
-            <button
-              role="tab"
-              aria-selected={mobileView === "build"}
-              onClick={() => setMobileView("build")}
-              className={`flex items-center gap-2 px-4 py-2 rounded-full text-[11px] uppercase tracking-[0.18em] transition-all ${
-                mobileView === "build"
-                  ? "bg-[color:var(--teal)] text-[color:var(--ivory)]"
-                  : "text-[color:var(--charcoal-soft)]"
-              }`}
-            >
-              <Pencil size={13} /> Build
-            </button>
-            <button
-              role="tab"
-              aria-selected={mobileView === "map"}
-              onClick={() => setMobileView("map")}
-              className={`flex items-center gap-2 px-4 py-2 rounded-full text-[11px] uppercase tracking-[0.18em] transition-all ${
-                mobileView === "map"
-                  ? "bg-[color:var(--teal)] text-[color:var(--ivory)]"
-                  : "text-[color:var(--charcoal-soft)]"
-              }`}
-            >
-              <MapIcon size={13} /> Map
-            </button>
+          <div role="tablist" className="inline-flex p-1 bg-[color:var(--sand)] border border-[color:var(--border)] rounded-full">
+            {(["build", "preview"] as const).map((t) => (
+              <button
+                key={t}
+                role="tab"
+                aria-selected={mobileTab === t}
+                onClick={() => setMobileTab(t)}
+                className={`px-5 py-2 rounded-full text-[11px] uppercase tracking-[0.18em] transition-all ${
+                  mobileTab === t ? "bg-[color:var(--teal)] text-[color:var(--ivory)]" : "text-[color:var(--charcoal-soft)]"
+                }`}
+              >
+                {t === "build" ? "Build" : "Preview"}
+              </button>
+            ))}
           </div>
         </div>
       </div>
 
-      <section className="py-8 md:py-14">
+      <section className="py-6 md:py-12">
         <div className="container-x">
           <div className="grid lg:grid-cols-12 gap-8 lg:gap-10">
-            {/* LEFT — builder */}
-            <div className={`lg:col-span-7 xl:col-span-7 ${mobileView === "build" ? "" : "hidden lg:block"}`}>
-              {!started ? (
-                <IntroSeeds onPick={seed} />
-              ) : (
-                <ActiveBuilder
-                  s={s}
-                  update={update}
-                  toggle={toggle}
-                  reset={() => setS(emptyState)}
-                  previewHighlight={previewHighlight}
-                  onPreviewHighlight={setPreviewHighlight}
-                />
-              )}
+            {/* LEFT — controls */}
+            <div className={`lg:col-span-6 xl:col-span-5 ${mobileTab === "build" ? "" : "hidden lg:block"}`}>
+              <StepPanel
+                step={currentStep.id}
+                stepIdx={stepIdx}
+                totalSteps={STEPS.length}
+                yesLine={pickYes(stage, stepIdx)}
+                s={s}
+                update={update}
+                toggle={toggle}
+                onNext={goNext}
+                onBack={goBack}
+                onJump={goTo}
+                investment={investment}
+                experienceTitle={experienceTitle}
+              />
             </div>
 
-            {/* RIGHT — live map + summary */}
-            <aside className={`lg:col-span-5 xl:col-span-5 ${mobileView === "map" ? "" : "hidden lg:block"}`}>
-              <div className="lg:sticky lg:top-[120px] space-y-5">
-                <SwipeToClearPreview
-                  active={!!previewHighlight}
-                  onClear={() => setPreviewHighlight(null)}
-                >
-                  <Suspense fallback={<div className="aspect-[4/5] bg-[color:var(--card)] border border-[color:var(--border)] grid place-items-center text-xs text-[color:var(--charcoal-soft)] uppercase tracking-[0.2em]">Loading map…</div>}>
+            {/* RIGHT — live preview */}
+            <aside className={`lg:col-span-6 xl:col-span-7 ${mobileTab === "preview" ? "" : "hidden lg:block"}`}>
+              <div className="lg:sticky lg:top-[120px] space-y-4">
+                {/* View mode toggle */}
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] uppercase tracking-[0.22em] text-[color:var(--gold)]">
+                    Live preview
+                  </span>
+                  <div className="inline-flex p-1 bg-[color:var(--sand)] border border-[color:var(--border)] rounded-full">
+                    {([
+                      { id: "story", label: "Story", icon: BookOpen },
+                      { id: "timeline", label: "Timeline", icon: Clock },
+                      { id: "map", label: "Map", icon: MapIcon },
+                    ] as const).map(({ id, label, icon: Icon }) => (
+                      <button
+                        key={id}
+                        onClick={() => setView(id)}
+                        className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] uppercase tracking-[0.18em] transition-all ${
+                          view === id ? "bg-[color:var(--teal)] text-[color:var(--ivory)]" : "text-[color:var(--charcoal-soft)]"
+                        }`}
+                      >
+                        <Icon size={12} /> {label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {view === "story" && <StoryView s={s} title={experienceTitle} />}
+                {view === "timeline" && <TimelineView s={s} />}
+                {view === "map" && (
+                  <Suspense fallback={<MapFallback />}>
                     <RealLeafletMap region={s.region} />
                   </Suspense>
-                </SwipeToClearPreview>
-                <LiveSummary
-                  s={s}
-                  days={days}
-                  investment={investment}
-                  canConfirm={canConfirm}
-                />
-                <ChatNudge />
+                )}
+
+                <DnaPanel s={s} />
+                <InvestmentPanel s={s} days={days} investment={investment} />
+                <DesignerNudge />
               </div>
             </aside>
           </div>
         </div>
       </section>
-
-      {/* Mobile sticky confirm — always reachable with one thumb. */}
-      {canConfirm && (
-        <div
-          className="lg:hidden fixed bottom-0 inset-x-0 z-40 border-t border-[color:var(--border)] bg-[color:var(--ivory)]/95 backdrop-blur px-4 py-3"
-          style={{ paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom, 0px))" }}
-        >
-          <div className="flex items-center gap-3">
-            <div className="flex-1 min-w-0">
-              <p className="text-[10px] uppercase tracking-[0.22em] text-[color:var(--gold)]">Ready to confirm anytime</p>
-              <p className="text-sm text-[color:var(--charcoal)] truncate">
-                {investment ? `from €${investment.toLocaleString()}` : "Choose a tier to see price"}
-              </p>
-            </div>
-            <Link
-              to="/contact"
-              className="inline-flex items-center gap-2 bg-[color:var(--teal)] text-[color:var(--ivory)] px-5 py-3 text-[11px] uppercase tracking-[0.18em] whitespace-nowrap"
-            >
-              Confirm <ArrowRight size={13} />
-            </Link>
-          </div>
-        </div>
-      )}
     </SiteLayout>
   );
 }
 
 /* ============================================================
-   Intro — "Start your way"
+   Step panel — switches between the 12 step screens
    ============================================================ */
 
-function IntroSeeds({ onPick }: { onPick: (patch: Partial<BuilderState>) => void }) {
-  const groups = ["Place", "Moment", "Idea"] as const;
+function StepPanel(props: {
+  step: StepId;
+  stepIdx: number;
+  totalSteps: number;
+  yesLine: string;
+  s: BuilderState;
+  update: <K extends keyof BuilderState>(k: K, v: BuilderState[K]) => void;
+  toggle: (k: "styles" | "highlights" | "enhancements", id: string) => void;
+  onNext: () => void;
+  onBack: () => void;
+  onJump: (i: number) => void;
+  investment: number | null;
+  experienceTitle: string;
+}) {
+  const { step, stepIdx, totalSteps, yesLine, s, update, toggle, onNext, onBack, onJump, investment, experienceTitle } = props;
+
   return (
-    <div>
-      <span className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
-        Pick anything to begin
-      </span>
-      <h2 className="serif text-3xl md:text-4xl mt-3 leading-tight text-[color:var(--charcoal)]">
-        What feels right today?
-      </h2>
-      <p className="mt-3 text-[color:var(--charcoal-soft)] max-w-lg">
-        Tap a place, a moment or an idea — your journey appears instantly on the map. Adjust everything as you go.
+    <div className="bg-[color:var(--card)] border border-[color:var(--border)] p-5 md:p-7 rounded-sm">
+      {/* YES line */}
+      <p className="text-[11px] uppercase tracking-[0.24em] text-[color:var(--gold)]">
+        {yesLine}
       </p>
 
-      <div className="mt-8 space-y-6">
-        {groups.map((g) => (
-          <div key={g}>
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 mb-3 bg-[color:var(--sand)] border border-[color:var(--border)] rounded-full text-[10px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)]">
-              <span className="h-1 w-1 rounded-full bg-[color:var(--gold)]" />
-              {g}
-            </span>
-            <div className="flex flex-wrap gap-2">
-              {seeds.filter((x) => x.kind === g).map((seed) => (
-                <button
-                  key={seed.id}
-                  onClick={() => onPick(seed.patch)}
-                  className="group inline-flex flex-col items-start gap-0.5 px-4 py-2.5 rounded-full border border-[color:var(--border)] bg-[color:var(--card)] text-left transition-all active:scale-[0.97] hover:border-[color:var(--teal)] hover:bg-[color:var(--teal)]/5 hover:-translate-y-0.5"
-                >
-                  <span className="serif text-[15px] leading-tight text-[color:var(--charcoal)] group-hover:text-[color:var(--teal)] transition-colors">
-                    {seed.label}
-                  </span>
-                  <span className="text-[11px] leading-tight text-[color:var(--charcoal-soft)]">
-                    {seed.sub}
-                  </span>
-                </button>
+      <div className="mt-4 min-h-[280px]">
+        {step === "welcome" && <WelcomeStep onStart={onNext} />}
+        {step === "name" && <NameStep value={s.name} onChange={(v) => update("name", v)} onNext={onNext} />}
+        {step === "region" && <RegionStep value={s.region} onPick={(v) => { update("region", v); }} />}
+        {step === "group" && <GroupStep value={s.groupType} onPick={(v) => update("groupType", v)} />}
+        {step === "guests" && <GuestsStep value={s.guests} onPick={(v) => update("guests", v)} />}
+        {step === "duration" && <DurationStep value={s.duration} onPick={(v) => update("duration", v)} />}
+        {step === "style" && <StyleStep values={s.styles} onToggle={(id) => toggle("styles", id)} />}
+        {step === "highlights" && <HighlightsStep values={s.highlights} onToggle={(id) => toggle("highlights", id)} />}
+        {step === "pace" && <PaceStep value={s.pace} onPick={(v) => update("pace", v)} />}
+        {step === "enhancements" && <EnhancementsStep values={s.enhancements} onToggle={(id) => toggle("enhancements", id)} />}
+        {step === "tier" && <TierStep value={s.tier} onPick={(v) => update("tier", v)} />}
+        {step === "reveal" && <RevealStep s={s} title={experienceTitle} investment={investment} />}
+      </div>
+
+      {/* Footer nav */}
+      {step !== "welcome" && step !== "reveal" && (
+        <div className="mt-6 flex items-center justify-between gap-3 pt-5 border-t border-[color:var(--border)]">
+          <button
+            onClick={onBack}
+            disabled={stepIdx === 0}
+            className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-[0.18em] text-[color:var(--charcoal-soft)] disabled:opacity-30"
+          >
+            <ArrowLeft size={13} /> Back
+          </button>
+          <button
+            onClick={onNext}
+            className="inline-flex items-center gap-2 bg-[color:var(--teal)] text-[color:var(--ivory)] px-6 py-3 text-[11px] uppercase tracking-[0.18em] hover:bg-[color:var(--teal-2)] transition-colors"
+          >
+            Continue <ArrowRight size={13} />
+          </button>
+        </div>
+      )}
+
+      {/* Step dots */}
+      <div className="mt-5 flex items-center justify-center gap-1.5">
+        {Array.from({ length: totalSteps }).map((_, i) => (
+          <button
+            key={i}
+            onClick={() => onJump(i)}
+            aria-label={`Go to step ${i + 1}`}
+            className={`h-1.5 rounded-full transition-all ${
+              i === stepIdx ? "w-6 bg-[color:var(--teal)]" : i < stepIdx ? "w-1.5 bg-[color:var(--gold)]" : "w-1.5 bg-[color:var(--border)]"
+            }`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================
+   Individual steps
+   ============================================================ */
+
+function StepHeader({ eyebrow, title, sub }: { eyebrow: string; title: string; sub?: string }) {
+  return (
+    <div>
+      <span className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--charcoal-soft)]">{eyebrow}</span>
+      <h2 className="serif text-2xl md:text-3xl mt-2 leading-tight text-[color:var(--charcoal)]">{title}</h2>
+      {sub && <p className="mt-2 text-[13px] text-[color:var(--charcoal-soft)]">{sub}</p>}
+    </div>
+  );
+}
+
+function WelcomeStep({ onStart }: { onStart: () => void }) {
+  return (
+    <div className="text-center py-4">
+      <h2 className="serif text-3xl md:text-4xl leading-tight text-[color:var(--charcoal)]">
+        Design your <span className="italic text-[color:var(--teal)]">Portugal experience</span>
+      </h2>
+      <p className="mt-4 text-[14px] text-[color:var(--charcoal-soft)] max-w-md mx-auto">
+        A few simple choices. Watch your story take shape, live. Book directly when you're ready, or refine it with a local designer.
+      </p>
+      <button
+        onClick={onStart}
+        className="mt-7 inline-flex items-center gap-2 bg-[color:var(--teal)] text-[color:var(--ivory)] px-7 py-3.5 text-[11px] uppercase tracking-[0.22em] hover:bg-[color:var(--teal-2)] transition-colors"
+      >
+        Begin <ArrowRight size={14} />
+      </button>
+      <p className="mt-5 text-[11px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)]">
+        Private experiences only · Designed by local experts
+      </p>
+    </div>
+  );
+}
+
+function NameStep({ value, onChange, onNext }: { value: string; onChange: (v: string) => void; onNext: () => void }) {
+  return (
+    <div>
+      <StepHeader
+        eyebrow="Step 2 · Optional"
+        title="What should we call your experience?"
+        sub="Only used to personalize your story. Skip if you prefer."
+      />
+      <input
+        type="text"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        onKeyDown={(e) => e.key === "Enter" && onNext()}
+        placeholder="e.g. Maria, John, Carlos…"
+        className="mt-5 w-full bg-transparent border-b border-[color:var(--border)] focus:border-[color:var(--teal)] outline-none py-3 serif text-2xl text-[color:var(--charcoal)] placeholder:text-[color:var(--charcoal-soft)]/50 transition-colors"
+      />
+      {value && (
+        <p className="mt-3 text-[13px] text-[color:var(--charcoal-soft)] italic">
+          Your story will be titled <span className="text-[color:var(--teal)]">{value}'s Portugal Experience</span>.
+        </p>
+      )}
+    </div>
+  );
+}
+
+function RegionStep({ value, onPick }: { value: string | null; onPick: (v: string) => void }) {
+  return (
+    <div>
+      <StepHeader eyebrow="Step 3" title="Where in Portugal?" sub="Pick the region your story begins in." />
+      <div className="mt-5 grid grid-cols-2 gap-2.5">
+        {regionOpts.map((r) => {
+          const sel = value === r.id;
+          return (
+            <button
+              key={r.id}
+              onClick={() => onPick(r.id)}
+              className={`p-4 rounded-sm border text-left transition-all ${
+                sel ? "border-[color:var(--teal)] bg-[color:var(--teal)]/5" : "border-[color:var(--border)] hover:border-[color:var(--teal)]/40"
+              }`}
+            >
+              <div className="flex items-start justify-between gap-2">
+                <span className="serif text-[15px] text-[color:var(--charcoal)]">{r.name}</span>
+                {sel && <Check size={14} className="text-[color:var(--teal)] mt-1" />}
+              </div>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function ChoiceGrid<T extends { id: string }>(props: {
+  items: T[];
+  isSelected: (it: T) => boolean;
+  onClick: (it: T) => void;
+  render: (it: T, sel: boolean) => React.ReactNode;
+  cols?: string;
+}) {
+  const { items, isSelected, onClick, render, cols = "grid-cols-2" } = props;
+  return (
+    <div className={`mt-5 grid ${cols} gap-2.5`}>
+      {items.map((it) => {
+        const sel = isSelected(it);
+        return (
+          <button
+            key={it.id}
+            onClick={() => onClick(it)}
+            className={`p-4 rounded-sm border text-left transition-all ${
+              sel ? "border-[color:var(--teal)] bg-[color:var(--teal)]/5" : "border-[color:var(--border)] hover:border-[color:var(--teal)]/40"
+            }`}
+          >
+            {render(it, sel)}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function GroupStep({ value, onPick }: { value: string | null; onPick: (v: string) => void }) {
+  return (
+    <div>
+      <StepHeader eyebrow="Step 4" title="Who's coming?" />
+      <ChoiceGrid
+        items={groupTypes}
+        isSelected={(g) => value === g.id}
+        onClick={(g) => onPick(g.id)}
+        render={(g, sel) => (
+          <div className="flex items-center gap-3">
+            <g.icon size={18} className={sel ? "text-[color:var(--teal)]" : "text-[color:var(--charcoal-soft)]"} />
+            <span className="serif text-[15px] text-[color:var(--charcoal)]">{g.name}</span>
+          </div>
+        )}
+      />
+    </div>
+  );
+}
+
+function GuestsStep({ value, onPick }: { value: string | null; onPick: (v: string) => void }) {
+  return (
+    <div>
+      <StepHeader eyebrow="Step 5" title="How many of you?" />
+      <ChoiceGrid
+        items={guestSizes}
+        isSelected={(g) => value === g.id}
+        onClick={(g) => onPick(g.id)}
+        render={(g) => (
+          <div>
+            <span className="serif text-xl text-[color:var(--charcoal)] block">{g.label}</span>
+            <span className="text-[11px] uppercase tracking-[0.18em] text-[color:var(--charcoal-soft)]">{g.sub}</span>
+          </div>
+        )}
+      />
+    </div>
+  );
+}
+
+function DurationStep({ value, onPick }: { value: string | null; onPick: (v: string) => void }) {
+  return (
+    <div>
+      <StepHeader eyebrow="Step 6" title="How long is your story?" sub="One day, or several." />
+      <ChoiceGrid
+        items={durationOpts}
+        cols="grid-cols-1"
+        isSelected={(d) => value === d.id}
+        onClick={(d) => onPick(d.id)}
+        render={(d, sel) => (
+          <div className="flex items-center justify-between">
+            <div>
+              <span className="serif text-[16px] text-[color:var(--charcoal)] block">{d.label}</span>
+              <span className="text-[11px] uppercase tracking-[0.18em] text-[color:var(--charcoal-soft)]">{d.sub}</span>
+            </div>
+            {sel && <Check size={16} className="text-[color:var(--teal)]" />}
+          </div>
+        )}
+      />
+    </div>
+  );
+}
+
+function StyleStep({ values, onToggle }: { values: string[]; onToggle: (id: string) => void }) {
+  return (
+    <div>
+      <StepHeader eyebrow="Step 7" title="Choose your style" sub="Pick one or more — your story adapts." />
+      <ChoiceGrid
+        items={styleOpts}
+        isSelected={(s) => values.includes(s.id)}
+        onClick={(s) => onToggle(s.id)}
+        render={(s, sel) => (
+          <div className="flex items-center gap-3">
+            <s.icon size={18} className={sel ? "text-[color:var(--teal)]" : "text-[color:var(--charcoal-soft)]"} />
+            <span className="serif text-[14px] text-[color:var(--charcoal)]">{s.name}</span>
+          </div>
+        )}
+      />
+    </div>
+  );
+}
+
+function HighlightsStep({ values, onToggle }: { values: string[]; onToggle: (id: string) => void }) {
+  return (
+    <div>
+      <StepHeader eyebrow="Step 8" title="Add signature moments" sub="The little touches that make it yours." />
+      <div className="mt-5 flex flex-wrap gap-2">
+        {highlightOpts.map((h) => {
+          const sel = values.includes(h.id);
+          return (
+            <button
+              key={h.id}
+              onClick={() => onToggle(h.id)}
+              className={`px-3.5 py-2 rounded-full border text-[12px] transition-all ${
+                sel
+                  ? "border-[color:var(--teal)] bg-[color:var(--teal)] text-[color:var(--ivory)]"
+                  : "border-[color:var(--border)] text-[color:var(--charcoal)] hover:border-[color:var(--teal)]/40"
+              }`}
+            >
+              {sel && <Check size={11} className="inline mr-1.5" />}
+              {h.short}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function PaceStep({ value, onPick }: { value: string | null; onPick: (v: string) => void }) {
+  return (
+    <div>
+      <StepHeader eyebrow="Step 9" title="What's your pace?" />
+      <ChoiceGrid
+        items={paceOpts}
+        cols="grid-cols-1"
+        isSelected={(p) => value === p.id}
+        onClick={(p) => onPick(p.id)}
+        render={(p, sel) => (
+          <div className="flex items-start gap-3">
+            <p.icon size={18} className={`mt-0.5 ${sel ? "text-[color:var(--teal)]" : "text-[color:var(--charcoal-soft)]"}`} />
+            <div>
+              <span className="serif text-[15px] text-[color:var(--charcoal)] block">{p.name}</span>
+              <span className="text-[12px] text-[color:var(--charcoal-soft)] italic">{p.line}</span>
+            </div>
+          </div>
+        )}
+      />
+    </div>
+  );
+}
+
+function EnhancementsStep({ values, onToggle }: { values: string[]; onToggle: (id: string) => void }) {
+  return (
+    <div>
+      <StepHeader eyebrow="Step 10 · Optional" title="Special touches" sub="Add as many as you like — or none at all." />
+      <ChoiceGrid
+        items={enhancementOpts}
+        isSelected={(e) => values.includes(e.id)}
+        onClick={(e) => onToggle(e.id)}
+        render={(e, sel) => (
+          <div className="flex items-center gap-3">
+            <e.icon size={18} className={sel ? "text-[color:var(--teal)]" : "text-[color:var(--charcoal-soft)]"} />
+            <span className="serif text-[13px] text-[color:var(--charcoal)] leading-tight">{e.name}</span>
+          </div>
+        )}
+      />
+    </div>
+  );
+}
+
+function TierStep({ value, onPick }: { value: string | null; onPick: (v: string) => void }) {
+  return (
+    <div>
+      <StepHeader eyebrow="Step 11" title="Choose your tier" />
+      <ChoiceGrid
+        items={tierOpts}
+        cols="grid-cols-1"
+        isSelected={(t) => value === t.id}
+        onClick={(t) => onPick(t.id)}
+        render={(t, sel) => (
+          <div>
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2.5">
+                <t.icon size={16} className={sel ? "text-[color:var(--teal)]" : "text-[color:var(--gold)]"} />
+                <span className="serif text-[16px] text-[color:var(--charcoal)]">{t.name}</span>
+              </div>
+              <span className="text-[11px] uppercase tracking-[0.18em] text-[color:var(--charcoal-soft)]">
+                from €{t.priceFrom.toLocaleString()}
+              </span>
+            </div>
+            <p className="mt-1.5 text-[12px] text-[color:var(--charcoal-soft)] italic">{t.line}</p>
+          </div>
+        )}
+      />
+    </div>
+  );
+}
+
+/* ============================================================
+   Reveal — Bible §10 final completion moment
+   ============================================================ */
+
+function RevealStep({ s, title, investment }: { s: BuilderState; title: string; investment: number | null }) {
+  return (
+    <div>
+      <p className="text-[11px] uppercase tracking-[0.24em] text-[color:var(--gold)]">
+        YES — your Portugal story is ready.
+      </p>
+      <h2 className="serif text-2xl md:text-3xl mt-3 leading-tight text-[color:var(--charcoal)]">
+        You just created your <span className="italic text-[color:var(--teal)]">Signature Portugal Experience</span>.
+      </h2>
+      <p className="mt-3 text-[13px] text-[color:var(--charcoal-soft)] italic">
+        Designed with your local guide. Signed by you.
+      </p>
+
+      {/* Branded experience card */}
+      <div className="mt-6 p-6 bg-gradient-to-br from-[color:var(--sand)] to-[color:var(--card)] border border-[color:var(--gold)]/40 rounded-sm relative overflow-hidden">
+        <div className="absolute top-3 right-3 inline-flex items-center gap-1 px-2 py-1 bg-[color:var(--teal)] text-[color:var(--ivory)] text-[9px] uppercase tracking-[0.22em]">
+          <Award size={10} /> YES Approved
+        </div>
+
+        <span className="text-[10px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
+          Your Signature Portugal Experience
+        </span>
+        <h3 className="serif text-2xl mt-2 text-[color:var(--charcoal)] leading-tight">{title}</h3>
+
+        <div className="mt-4 space-y-1.5 text-[12px] text-[color:var(--charcoal-soft)]">
+          {s.region && <p>· {regionOpts.find((r) => r.id === s.region)?.name}</p>}
+          {s.duration && <p>· {durationOpts.find((d) => d.id === s.duration)?.label}</p>}
+          {s.styles.length > 0 && <p>· {s.styles.map((id) => styleOpts.find((x) => x.id === id)?.name).join(" · ")}</p>}
+          {s.highlights.length > 0 && (
+            <p>· {s.highlights.length} signature moment{s.highlights.length > 1 ? "s" : ""}</p>
+          )}
+        </div>
+
+        <div className="mt-5 pt-5 border-t border-[color:var(--gold)]/30 flex items-end justify-between">
+          <div>
+            <p className="text-[10px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)]">Experience Investment</p>
+            <p className="serif text-2xl text-[color:var(--charcoal)]">
+              {investment ? `from €${investment.toLocaleString()}` : "—"}
+            </p>
+          </div>
+          <p className="serif italic text-[12px] text-[color:var(--charcoal-soft)] text-right">
+            {s.name || "YES Signature Experience"}
+          </p>
+        </div>
+      </div>
+
+      <p className="mt-5 text-[13px] text-[color:var(--charcoal-soft)]">
+        Your experience is ready. Your local guide is ready. You can reserve now, save for later, or refine it with your designer.
+      </p>
+
+      {/* CTA trio */}
+      <div className="mt-6 space-y-2.5">
+        <Link
+          to="/contact"
+          className="w-full inline-flex items-center justify-center gap-2 bg-[color:var(--teal)] text-[color:var(--ivory)] px-6 py-4 text-[11px] uppercase tracking-[0.22em] hover:bg-[color:var(--teal-2)] transition-colors"
+        >
+          Secure Your Experience <ArrowRight size={13} />
+        </Link>
+        <button className="w-full inline-flex items-center justify-center gap-2 bg-[color:var(--card)] border border-[color:var(--border)] text-[color:var(--charcoal)] px-6 py-3.5 text-[11px] uppercase tracking-[0.22em] hover:border-[color:var(--teal)]/40 transition-colors">
+          <Save size={13} /> Save My Experience
+        </button>
+        <Link
+          to="/contact"
+          className="w-full inline-flex items-center justify-center gap-2 text-[color:var(--charcoal-soft)] px-6 py-2 text-[11px] uppercase tracking-[0.22em] hover:text-[color:var(--teal)] transition-colors"
+        >
+          <MessageCircle size={13} /> Refine with a Local Designer
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================
+   Right panel — Story / Timeline / Map / DNA / Investment
+   ============================================================ */
+
+function MapFallback() {
+  return (
+    <div className="aspect-[4/5] bg-[color:var(--card)] border border-[color:var(--border)] grid place-items-center text-xs text-[color:var(--charcoal-soft)] uppercase tracking-[0.2em]">
+      Loading map…
+    </div>
+  );
+}
+
+/* Live editorial story — Bible §6 */
+function StoryView({ s, title }: { s: BuilderState; title: string }) {
+  const fragments = useMemo(() => buildStoryFragments(s), [s]);
+  const heroImg = useMemo(() => pickHeroImage(s), [s]);
+
+  return (
+    <div className="bg-[color:var(--card)] border border-[color:var(--border)] overflow-hidden rounded-sm">
+      <div
+        className="aspect-[16/10] bg-cover bg-center transition-all duration-700"
+        style={{ backgroundImage: `linear-gradient(180deg, transparent 40%, rgba(31,31,31,0.7) 100%), url(${heroImg})` }}
+      >
+        <div className="h-full flex flex-col justify-end p-5">
+          <span className="text-[10px] uppercase tracking-[0.24em] text-[color:var(--gold-soft)]">
+            Your story so far
+          </span>
+          <h3 className="serif text-2xl text-white mt-1 leading-tight">{title}</h3>
+        </div>
+      </div>
+      <div className="p-5 md:p-6 space-y-3">
+        {fragments.length === 0 ? (
+          <p className="text-[14px] text-[color:var(--charcoal-soft)] italic leading-relaxed">
+            Your local guide is waiting. Make a choice and watch your Portugal story take shape.
+          </p>
+        ) : (
+          fragments.map((f, i) => (
+            <p key={i} className="text-[14px] text-[color:var(--charcoal)] leading-relaxed">
+              {f}
+            </p>
+          ))
+        )}
+      </div>
+    </div>
+  );
+}
+
+function buildStoryFragments(s: BuilderState): string[] {
+  const out: string[] = [];
+  const who = s.name ? s.name : "you";
+  if (s.region) {
+    const r = regionOpts.find((x) => x.id === s.region)?.name;
+    out.push(`Your day begins in ${r}, where ${who === "you" ? "your" : who + "'s"} local guide is already shaping the rhythm of the experience.`);
+  }
+  if (s.styles.includes("wine")) {
+    out.push("Your local guide introduces you to a family winery where tradition and landscape come together.");
+  }
+  if (s.highlights.includes("livramento")) {
+    out.push("Your local friend begins your day in an authentic local market full of flavors, color, and energy.");
+  }
+  if (s.styles.includes("coastal") || s.highlights.includes("boat")) {
+    out.push("Between stops, your route opens into breathtaking coastal landscapes and hidden roads only locals truly know.");
+  }
+  if (s.highlights.includes("portinho") || s.styles.includes("gastronomy")) {
+    out.push("Midday slows down beautifully with a relaxed local lunch, chosen to fit the pace and mood of your experience.");
+  }
+  if (s.pace === "slow") {
+    out.push("The day unfolds slowly — long meals, longer conversations, and time enough to feel like you belong here.");
+  }
+  if (s.tier === "couture") {
+    out.push("Every detail is shaped around you — this is Portugal at its most personal, its most refined.");
+  }
+  return out;
+}
+
+function pickHeroImage(s: BuilderState): string {
+  const base = "https://images.unsplash.com/";
+  if (s.highlights.includes("boat") || s.styles.includes("coastal")) {
+    return `${base}photo-1518509562904-e7ef99cddc85?w=1200&q=80&auto=format&fit=crop`;
+  }
+  if (s.styles.includes("wine") || s.highlights.includes("tasting")) {
+    return `${base}photo-1506377247377-2a5b3b417ebb?w=1200&q=80&auto=format&fit=crop`;
+  }
+  if (s.styles.includes("gastronomy") || s.highlights.includes("portinho")) {
+    return `${base}photo-1414235077428-338989a2e8c0?w=1200&q=80&auto=format&fit=crop`;
+  }
+  if (s.styles.includes("nature")) {
+    return `${base}photo-1502780402662-acc01917cf6f?w=1200&q=80&auto=format&fit=crop`;
+  }
+  if (s.styles.includes("heritage")) {
+    return `${base}photo-1555881400-74d7acaacd8b?w=1200&q=80&auto=format&fit=crop`;
+  }
+  return `${base}photo-1539635278303-d4002c07eae3?w=1200&q=80&auto=format&fit=crop`;
+}
+
+/* Timeline view — Bible §7.3 */
+function TimelineView({ s }: { s: BuilderState }) {
+  const blocks = useMemo(() => buildTimeline(s), [s]);
+  return (
+    <div className="bg-[color:var(--card)] border border-[color:var(--border)] p-5 md:p-6 rounded-sm">
+      <span className="text-[10px] uppercase tracking-[0.24em] text-[color:var(--gold)]">
+        Your day, hour by hour
+      </span>
+      {blocks.length === 0 ? (
+        <p className="mt-4 text-[14px] text-[color:var(--charcoal-soft)] italic">
+          As you make choices, your timeline will appear here.
+        </p>
+      ) : (
+        <ol className="mt-5 space-y-4">
+          {blocks.map((b, i) => (
+            <li key={i} className="flex gap-4">
+              <div className="flex flex-col items-center">
+                <div className="h-8 w-8 rounded-full bg-[color:var(--teal)]/10 border border-[color:var(--teal)]/30 grid place-items-center">
+                  <b.icon size={14} className="text-[color:var(--teal)]" />
+                </div>
+                {i < blocks.length - 1 && <div className="w-px flex-1 bg-[color:var(--border)] mt-1" />}
+              </div>
+              <div className="flex-1 pb-2">
+                <p className="text-[10px] uppercase tracking-[0.22em] text-[color:var(--gold)]">{b.when}</p>
+                <p className="serif text-[15px] text-[color:var(--charcoal)] mt-0.5">{b.label}</p>
+                <p className="text-[12px] text-[color:var(--charcoal-soft)] italic mt-1">{b.line}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      )}
+    </div>
+  );
+}
+
+function buildTimeline(s: BuilderState) {
+  const blocks: { when: string; label: string; line: string; icon: typeof Sun }[] = [];
+  if (s.highlights.includes("livramento") || s.styles.includes("gastronomy")) {
+    blocks.push({ when: "Morning", label: "Local market discovery", line: "Flavors, color, and the morning energy of a real Portuguese market.", icon: UtensilsCrossed });
+  } else if (s.region) {
+    blocks.push({ when: "Morning", label: "Pickup with your local guide", line: "Your day starts gently — coffee, introductions, and the road ahead.", icon: Sun });
+  }
+  if (s.styles.includes("wine") || s.highlights.includes("tasting")) {
+    blocks.push({ when: "Midday", label: "Boutique winery tasting", line: "A small family producer — landscape, tradition, and a quiet table.", icon: Wine });
+  }
+  if (s.highlights.includes("boat") || s.styles.includes("coastal")) {
+    blocks.push({ when: "Afternoon", label: "Coastal boat or scenic drive", line: "Hidden coves and roads only locals know.", icon: Waves });
+  } else if (s.highlights.includes("jeep")) {
+    blocks.push({ when: "Afternoon", label: "Off-the-beaten-path", line: "4×4 across landscapes most travelers never see.", icon: Mountain });
+  }
+  if (s.highlights.includes("portinho") || s.styles.includes("gastronomy")) {
+    blocks.push({ when: "Late afternoon", label: "Long, slow lunch", line: "A traditional table with the right view, the right wine.", icon: UtensilsCrossed });
+  }
+  if (s.pace === "slow") {
+    blocks.push({ when: "Evening", label: "Sunset moment", line: "The day closes the way it should — quietly, beautifully.", icon: Moon });
+  }
+  return blocks;
+}
+
+/* DNA panel — Bible §14 */
+function DnaPanel({ s }: { s: BuilderState }) {
+  const dna = useMemo(() => buildDna(s), [s]);
+  if (dna.bars.every((b) => b.value === 0) && dna.tags.length === 0) return null;
+
+  return (
+    <div className="bg-[color:var(--card)] border border-[color:var(--border)] p-5 rounded-sm">
+      <span className="text-[10px] uppercase tracking-[0.24em] text-[color:var(--gold)]">Experience DNA</span>
+      <div className="mt-3 space-y-2">
+        {dna.bars.map((b) => (
+          <div key={b.label} className="flex items-center gap-3">
+            <span className="serif text-[12px] text-[color:var(--charcoal)] w-20">{b.label}</span>
+            <div className="flex-1 flex gap-1">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <div
+                  key={i}
+                  className={`h-1.5 flex-1 rounded-full ${
+                    i < b.value ? "bg-[color:var(--teal)]" : "bg-[color:var(--border)]"
+                  }`}
+                />
               ))}
             </div>
           </div>
         ))}
       </div>
-
-      <p className="mt-10 text-[12px] text-[color:var(--charcoal-soft)] italic">
-        Or start from a blank canvas — open the blocks below and shape your journey from scratch.
-      </p>
-      <button
-        onClick={() => onPick({ region: "lisbon" })}
-        className="mt-3 inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] text-[color:var(--teal)] hover:text-[color:var(--gold)] transition-colors"
-      >
-        Open the builder <ArrowRight size={13} />
-      </button>
-    </div>
-  );
-}
-
-/* ============================================================
-   Active builder — all blocks visible & editable, no steps
-   ============================================================ */
-
-function ActiveBuilder({
-  s,
-  update,
-  toggle,
-  reset,
-  previewHighlight,
-  onPreviewHighlight,
-}: {
-  s: BuilderState;
-  update: <K extends keyof BuilderState>(k: K, v: BuilderState[K]) => void;
-  toggle: (k: "styles" | "highlights" | "enhancements", id: string) => void;
-  reset: () => void;
-  previewHighlight: string | null;
-  onPreviewHighlight: (id: string | null) => void;
-}) {
-  return (
-    <div className="space-y-8">
-      <div className="flex items-center justify-between">
-        <span className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
-          Shape your journey
-        </span>
-        <button
-          onClick={reset}
-          className="text-[10px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)] hover:text-[color:var(--charcoal)] transition-colors"
-        >
-          Start over
-        </button>
-      </div>
-
-      <Block title="Where in Portugal" hint="Tap to switch — the map flies there.">
-        <Pills
-          options={regionOpts.map((r) => ({ id: r.id, label: r.name }))}
-          selected={s.region ? [s.region] : []}
-          onSelect={(id) => update("region", id)}
-        />
-      </Block>
-
-      <Block title="Who's traveling" hint="Sets the energy of the day.">
-        <Pills
-          options={groupTypes.map((g) => ({ id: g.id, label: g.name }))}
-          selected={s.groupType ? [s.groupType] : []}
-          onSelect={(id) => update("groupType", id)}
-        />
-      </Block>
-
-      <Block title="How many of you" hint="Always entirely private.">
-        <Pills
-          options={guestSizes.map((g) => ({ id: g.id, label: g.label, sub: g.sub }))}
-          selected={s.guests ? [s.guests] : []}
-          onSelect={(id) => update("guests", id)}
-        />
-      </Block>
-
-      <Block title="How long do you have">
-        <Pills
-          options={durationOpts.map((d) => ({ id: d.id, label: d.label, sub: d.sub }))}
-          selected={s.duration ? [s.duration] : []}
-          onSelect={(id) => update("duration", id)}
-        />
-      </Block>
-
-      <Block title="What inspires you" hint="Pick one or several — add what feels right.">
-        <IconCards
-          options={styleOpts}
-          selected={s.styles}
-          onSelect={(id) => toggle("styles", id)}
-        />
-      </Block>
-
-      <Block
-        title="Signature moments"
-        hint="Hover or hold to preview on the map."
-      >
-        <PreviewablePills
-          options={highlightOpts.map((h) => ({ id: h.id, label: h.name }))}
-          selected={s.highlights}
-          onSelect={(id) => toggle("highlights", id)}
-          previewId={previewHighlight}
-          onPreview={onPreviewHighlight}
-        />
-      </Block>
-
-      <Block title="Pace">
-        <IconCards
-          options={paceOpts}
-          selected={s.pace ? [s.pace] : []}
-          onSelect={(id) => update("pace", id)}
-          subline
-        />
-      </Block>
-
-      <Block title="A refined touch" hint="Optional — for moments worth elevating.">
-        <IconCards
-          options={enhancementOpts}
-          selected={s.enhancements}
-          onSelect={(id) => toggle("enhancements", id)}
-        />
-      </Block>
-
-      <Block title="Level of refinement" hint="Each tier is fully private.">
-        <div className="space-y-3">
-          {tierOpts.map((t) => {
-            const active = s.tier === t.id;
-            const Icon = t.icon;
-            return (
-              <button
-                key={t.id}
-                onClick={() => update("tier", t.id)}
-                className={`w-full text-left p-5 border transition-all flex gap-4 items-start ${
-                  active
-                    ? "border-[color:var(--teal)] bg-[color:var(--teal)]/5"
-                    : "border-[color:var(--border)] hover:border-[color:var(--gold)]"
-                }`}
-              >
-                <Icon size={22} className={active ? "text-[color:var(--teal)]" : "text-[color:var(--gold)]"} />
-                <div className="flex-1">
-                  <div className="flex items-baseline justify-between gap-3">
-                    <h3 className="serif text-xl text-[color:var(--charcoal)]">{t.name}</h3>
-                    <span className="text-[10px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)]">
-                      from €{t.priceFrom.toLocaleString()}
-                    </span>
-                  </div>
-                  <p className="mt-1.5 text-sm text-[color:var(--charcoal-soft)] leading-relaxed">{t.line}</p>
-                </div>
-              </button>
-            );
-          })}
-        </div>
-      </Block>
-
-      <Block title="Name your story" hint="Optional — helps us remember it.">
-        <input
-          type="text"
-          value={s.name}
-          onChange={(e) => update("name", e.target.value)}
-          placeholder="The Anniversary Trip · A Quiet Douro Weekend"
-          className="w-full bg-transparent border-b border-[color:var(--charcoal)]/25 focus:border-[color:var(--teal)] outline-none py-3 serif text-xl placeholder:text-[color:var(--charcoal-soft)]/60 transition-colors"
-        />
-      </Block>
-
-      <p className="pt-2 text-[12px] text-[color:var(--charcoal-soft)] italic leading-relaxed">
-        Make it yours — every change updates the map and price instantly. Confirm whenever you're ready.
-      </p>
-    </div>
-  );
-}
-
-/* ---------- Reusable building blocks ---------- */
-
-function Block({
-  title,
-  hint,
-  children,
-}: {
-  title: string;
-  hint?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="border-t border-[color:var(--border)] pt-6">
-      <div className="flex items-baseline justify-between gap-4 mb-4">
-        <h3 className="serif text-lg md:text-xl text-[color:var(--charcoal)]">{title}</h3>
-        {hint && (
-          <p className="text-[11px] text-[color:var(--charcoal-soft)] italic hidden sm:block">{hint}</p>
-        )}
-      </div>
-      {children}
-    </div>
-  );
-}
-
-function Pills({
-  options,
-  selected,
-  onSelect,
-  multi = false,
-}: {
-  options: { id: string; label: string; sub?: string }[];
-  selected: string[];
-  onSelect: (id: string) => void;
-  multi?: boolean;
-}) {
-  return (
-    <div className="flex flex-wrap gap-2">
-      {options.map((o) => {
-        const active = selected.includes(o.id);
-        return (
-          <button
-            key={o.id}
-            onClick={() => onSelect(o.id)}
-            className={`group inline-flex items-center gap-2 px-4 py-2.5 border text-sm transition-all ${
-              active
-                ? "border-[color:var(--teal)] bg-[color:var(--teal)] text-[color:var(--ivory)]"
-                : "border-[color:var(--border)] bg-[color:var(--card)] text-[color:var(--charcoal)] hover:border-[color:var(--gold)]"
-            }`}
-            aria-pressed={active}
-          >
-            {active && <Check size={13} strokeWidth={3} />}
-            <span>{o.label}</span>
-            {o.sub && (
-              <span
-                className={`text-[10px] uppercase tracking-[0.18em] ${
-                  active ? "text-[color:var(--ivory)]/75" : "text-[color:var(--charcoal-soft)]"
-                }`}
-              >
-                · {o.sub}
-              </span>
-            )}
-          </button>
-        );
-      })}
-      {multi && selected.length > 0 && (
-        <span className="self-center text-[10px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)] ml-1">
-          {selected.length} chosen
-        </span>
-      )}
-    </div>
-  );
-}
-
-/** Wraps the live map and clears the active preview when the user
- *  swipes horizontally on touch. Mouse/pen interactions are ignored
- *  so desktop hover preview behavior is unchanged. */
-function SwipeToClearPreview({
-  active,
-  onClear,
-  children,
-}: {
-  active: boolean;
-  onClear: () => void;
-  children: React.ReactNode;
-}) {
-  const start = useRef<{ x: number; y: number } | null>(null);
-  const SWIPE_MIN_X = 48;
-  const SWIPE_MAX_Y = 40;
-
-  return (
-    <div
-      onPointerDown={(e) => {
-        if (e.pointerType === "mouse") return;
-        start.current = { x: e.clientX, y: e.clientY };
-      }}
-      onPointerUp={(e) => {
-        if (e.pointerType === "mouse" || !start.current) return;
-        const dx = e.clientX - start.current.x;
-        const dy = Math.abs(e.clientY - start.current.y);
-        start.current = null;
-        if (active && Math.abs(dx) >= SWIPE_MIN_X && dy <= SWIPE_MAX_Y) {
-          onClear();
-        }
-      }}
-      onPointerCancel={() => { start.current = null; }}
-      className="touch-pan-y"
-    >
-      {children}
-    </div>
-  );
-}
-
-/** Pill list with hover/long-press preview.
- *  - Desktop: pointerenter / pointerleave preview.
- *  - Touch: holding for 300 ms previews without selecting; lift cancels.
- *  - Tap (short) selects/toggles as normal. */
-function PreviewablePills({
-  options,
-  selected,
-  onSelect,
-  previewId,
-  onPreview,
-}: {
-  options: { id: string; label: string }[];
-  selected: string[];
-  onSelect: (id: string) => void;
-  previewId: string | null;
-  onPreview: (id: string | null) => void;
-}) {
-  const pressTimer = useRef<number | null>(null);
-  const longPressed = useRef(false);
-
-  const startLongPress = (id: string) => {
-    longPressed.current = false;
-    if (pressTimer.current) window.clearTimeout(pressTimer.current);
-    pressTimer.current = window.setTimeout(() => {
-      longPressed.current = true;
-      onPreview(id);
-    }, 300);
-  };
-  const cancelLongPress = () => {
-    if (pressTimer.current) {
-      window.clearTimeout(pressTimer.current);
-      pressTimer.current = null;
-    }
-  };
-
-  return (
-    <div className="flex flex-wrap gap-2">
-      {options.map((o) => {
-        const active = selected.includes(o.id);
-        const previewing = previewId === o.id;
-        return (
-          <button
-            key={o.id}
-            // Pointer events cover mouse + touch + pen.
-            onPointerEnter={(e) => { if (e.pointerType === "mouse") onPreview(o.id); }}
-            onPointerLeave={(e) => {
-              if (e.pointerType === "mouse") onPreview(null);
-              cancelLongPress();
-            }}
-            onPointerDown={(e) => { if (e.pointerType !== "mouse") startLongPress(o.id); }}
-            onPointerUp={() => {
-              cancelLongPress();
-              onPreview(null);
-            }}
-            onPointerCancel={() => { cancelLongPress(); onPreview(null); }}
-            onFocus={(e) => {
-              // Only treat as keyboard focus, not focus from a pointer click.
-              if (e.currentTarget.matches(":focus-visible")) onPreview(o.id);
-            }}
-            onBlur={() => { if (previewing) onPreview(null); }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                // Preserve native click selection: prevent the synthesized click
-                // (which would also fire onSelect) and call onSelect once here.
-                e.preventDefault();
-                onSelect(o.id);
-              } else if (e.key === "Escape" && previewing) {
-                onPreview(null);
-                e.currentTarget.blur();
-              }
-            }}
-            onClick={() => {
-              // Suppress click if we long-pressed (would feel like a misfire).
-              if (longPressed.current) { longPressed.current = false; return; }
-              onSelect(o.id);
-            }}
-            className={`group relative inline-flex items-center gap-2 px-4 py-2.5 border text-sm transition-all touch-manipulation select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--background)] ${
-              active
-                ? "border-[color:var(--teal)] bg-[color:var(--teal)] text-[color:var(--ivory)]"
-                : previewing
-                  ? "border-[color:var(--gold)] bg-[color:var(--gold)]/10 text-[color:var(--charcoal)] -translate-y-0.5 shadow-[0_10px_24px_-14px_rgba(201,169,106,0.6)]"
-                  : "border-[color:var(--border)] bg-[color:var(--card)] text-[color:var(--charcoal)] hover:border-[color:var(--gold)]"
-            }`}
-            aria-pressed={active}
-          >
-            {active && <Check size={13} strokeWidth={3} />}
-            <span>{o.label}</span>
-            {previewing && !active && (
-              <span className="ml-1 text-[10px] uppercase tracking-[0.18em] text-[color:var(--gold)]">
-                preview
-              </span>
-            )}
-          </button>
-        );
-      })}
-      {selected.length > 0 && (
-        <span className="self-center text-[10px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)] ml-1">
-          {selected.length} chosen
-        </span>
-      )}
-    </div>
-  );
-}
-
-function IconCards({
-  options,
-  selected,
-  onSelect,
-  subline = false,
-}: {
-  options: {
-    id: string;
-    name: string;
-    icon: React.ComponentType<{ size?: number; className?: string }>;
-    line?: string;
-  }[];
-  selected: string[];
-  onSelect: (id: string) => void;
-  subline?: boolean;
-}) {
-  return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-      {options.map((o) => {
-        const active = selected.includes(o.id);
-        const Icon = o.icon;
-        return (
-          <button
-            key={o.id}
-            onClick={() => onSelect(o.id)}
-            className={`relative text-left p-4 border transition-all ${
-              active
-                ? "border-[color:var(--teal)] bg-[color:var(--teal)]/5"
-                : "border-[color:var(--border)] hover:border-[color:var(--gold)] bg-[color:var(--card)]"
-            }`}
-            aria-pressed={active}
-          >
-            <Icon size={20} className={active ? "text-[color:var(--teal)]" : "text-[color:var(--gold)]"} />
-            <p className="mt-2 text-sm text-[color:var(--charcoal)] leading-tight">{o.name}</p>
-            {subline && o.line && (
-              <p className="mt-1 text-[11px] text-[color:var(--charcoal-soft)] leading-snug">{o.line}</p>
-            )}
-            {active && (
-              <span className="absolute top-2 right-2 h-4 w-4 rounded-full bg-[color:var(--teal)] flex items-center justify-center">
-                <Check size={9} className="text-[color:var(--ivory)]" strokeWidth={3} />
-              </span>
-            )}
-          </button>
-        );
-      })}
-    </div>
-  );
-}
-
-/* ============================================================
-   Premium map — animated, brand-styled, smoothly zooms to region
-   ============================================================ */
-
-const FULL_VIEW: ViewBox = { x: 0, y: 0, w: 100, h: 130 };
-
-interface ViewBox { x: number; y: number; w: number; h: number }
-
-function regionViewBox(region: string | null): ViewBox {
-  if (!region) return FULL_VIEW;
-  const c = regionMap[region];
-  // Zoom: 60×80 window centered on region (≈40% area), clamped to silhouette.
-  const w = 60, h = 78;
-  let x = c.x - w / 2;
-  let y = c.y - h / 2;
-  x = Math.max(-5, Math.min(x, FULL_VIEW.w - w + 5));
-  y = Math.max(-5, Math.min(y, FULL_VIEW.h - h + 5));
-  return { x, y, w, h };
-}
-
-const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
-
-/** Smoothly tween the SVG viewBox attribute over `duration` ms.
- *  CSS `transition` does NOT animate SVG presentation attributes like
- *  viewBox, so we drive it manually with requestAnimationFrame. */
-function useAnimatedViewBox(target: ViewBox, duration = 750): string {
-  const [vb, setVb] = useState<ViewBox>(target);
-  const fromRef = useRef<ViewBox>(target);
-  const startRef = useRef<number>(0);
-  const rafRef = useRef<number | null>(null);
-
-  useEffect(() => {
-    // Skip if no change
-    const cur = fromRef.current;
-    if (cur.x === target.x && cur.y === target.y && cur.w === target.w && cur.h === target.h) return;
-
-    const from = { ...vb };
-    fromRef.current = target;
-    startRef.current = performance.now();
-
-    const step = (now: number) => {
-      const t = Math.min(1, (now - startRef.current) / duration);
-      const e = easeInOutCubic(t);
-      setVb({
-        x: from.x + (target.x - from.x) * e,
-        y: from.y + (target.y - from.y) * e,
-        w: from.w + (target.w - from.w) * e,
-        h: from.h + (target.h - from.h) * e,
-      });
-      if (t < 1) rafRef.current = requestAnimationFrame(step);
-    };
-
-    if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    rafRef.current = requestAnimationFrame(step);
-    return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [target.x, target.y, target.w, target.h, duration]);
-
-  return `${vb.x.toFixed(3)} ${vb.y.toFixed(3)} ${vb.w.toFixed(3)} ${vb.h.toFixed(3)}`;
-}
-
-/** Animated route stroke that re-draws on every change.
- *  Measures the actual path length with getTotalLength() so the dash
- *  always matches — no clipping, no gap at the end. */
-function AnimatedRoute({ d, duration = 850 }: { d: string; duration?: number }) {
-  const ref = useRef<SVGPathElement | null>(null);
-  const [length, setLength] = useState(0);
-  const [offset, setOffset] = useState(0);
-  const rafRef = useRef<number | null>(null);
-
-  useEffect(() => {
-    if (!ref.current || !d) return;
-    // Measure the new path
-    const len = ref.current.getTotalLength();
-    setLength(len);
-    setOffset(len);
-
-    const start = performance.now();
-    const step = (now: number) => {
-      const t = Math.min(1, (now - start) / duration);
-      const e = easeInOutCubic(t);
-      setOffset(len * (1 - e));
-      if (t < 1) rafRef.current = requestAnimationFrame(step);
-    };
-    if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    rafRef.current = requestAnimationFrame(step);
-    return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    };
-  }, [d, duration]);
-
-  if (!d) return null;
-  return (
-    <g>
-      {/* Soft glow underlay — full stroke, doesn't animate the dash */}
-      <path d={d} fill="none" stroke="var(--teal)" strokeWidth="1.4" opacity="0.18" />
-      {/* Main stroke — animates from length → 0 */}
-      <path
-        ref={ref}
-        d={d}
-        fill="none"
-        stroke="var(--teal)"
-        strokeWidth="0.55"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeDasharray={length || 1}
-        strokeDashoffset={offset}
-      />
-    </g>
-  );
-}
-
-function PremiumMap({
-  region,
-  highlights,
-  days,
-  isMultiDay,
-  previewHighlight,
-}: {
-  region: string | null;
-  highlights: string[];
-  days: number;
-  isMultiDay: boolean;
-  previewHighlight?: string | null;
-}) {
-  // Curated stops for the chosen region, scaled by day count.
-  const stops = useMemo(() => {
-    if (!region) return [];
-    const base = regionStops[region] ?? [];
-    const desired = Math.max(2, Math.min(isMultiDay ? days * 2 : Math.max(2, highlights.length || 2), base.length));
-    return base.slice(0, desired).map((p, i) => ({ ...p, day: isMultiDay ? Math.floor(i / 2) + 1 : 1 }));
-  }, [region, highlights.length, days, isMultiDay]);
-
-  // Ghost stop driven by hover/long-press preview. Uses the next available
-  // curated point for the region — only shown if not already a real stop.
-  const ghostStop = useMemo(() => {
-    if (!region || !previewHighlight) return null;
-    if (highlights.includes(previewHighlight)) return null;
-    const base = regionStops[region] ?? [];
-    const next = base[stops.length] ?? base[base.length - 1];
-    if (!next) return null;
-    return { ...next, day: isMultiDay ? Math.floor(stops.length / 2) + 1 : 1 };
-  }, [region, previewHighlight, highlights, stops.length, isMultiDay]);
-
-  const center = region ? regionMap[region] : null;
-  const allPoints = center
-    ? [center, ...stops, ...(ghostStop ? [ghostStop] : [])]
-    : [];
-
-  const pathD = useMemo(() => {
-    if (allPoints.length < 2) return "";
-    return allPoints
-      .map((p, i) => `${i === 0 ? "M" : "L"} ${p.x.toFixed(2)} ${p.y.toFixed(2)}`)
-      .join(" ");
-  }, [allPoints]);
-
-  // Zoom: 1 = base region framing. Per-region memory so switching regions
-  // restores the user's last zoom level for that region.
-  const ZOOM_MIN = 0.5;
-  const ZOOM_MAX = 4;
-  const ZOOM_STEP = 1.4;
-  const [zoomByRegion, setZoomByRegion] = useState<Record<string, number>>({});
-  const regionKey = region ?? "__none__";
-  const zoom = zoomByRegion[regionKey] ?? 1;
-  const setZoom = (updater: number | ((z: number) => number)) => {
-    setZoomByRegion((prev) => {
-      const current = prev[regionKey] ?? 1;
-      const next = typeof updater === "function" ? (updater as (z: number) => number)(current) : updater;
-      return { ...prev, [regionKey]: next };
-    });
-  };
-
-  const targetVb = useMemo(() => {
-    const base = regionViewBox(region);
-    const w = base.w / zoom;
-    const h = base.h / zoom;
-    const cx = base.x + base.w / 2;
-    const cy = base.y + base.h / 2;
-    return { x: cx - w / 2, y: cy - h / 2, w, h };
-  }, [region, zoom]);
-  const animatedViewBox = useAnimatedViewBox(targetVb, 450);
-
-  const zoomIn = () => setZoom((z) => Math.min(ZOOM_MAX, +(z * ZOOM_STEP).toFixed(3)));
-  const zoomOut = () => setZoom((z) => Math.max(ZOOM_MIN, +(z / ZOOM_STEP).toFixed(3)));
-  const zoomReset = () => setZoom(1);
-
-
-  const dayColor = (d: number) =>
-    d === 1 ? "var(--teal)" : d === 2 ? "var(--teal-2)" : d === 3 ? "var(--gold)" : "var(--charcoal-soft)";
-
-  // Cluster overlapping stops at lower zoom levels. Threshold is in SVG units
-  // and shrinks as zoom increases, so clusters break apart when zooming in.
-  type Stop = (typeof stops)[number];
-  type Cluster = { x: number; y: number; items: (Stop & { index: number })[] };
-  const clusters = useMemo<Cluster[]>(() => {
-    if (stops.length === 0) return [];
-    const threshold = 5 / zoom; // SVG units; ~5 at zoom=1, ~1.25 at zoom=4
-    const out: Cluster[] = [];
-    stops.forEach((p, idx) => {
-      const item = { ...p, index: idx };
-      const found = out.find((c) => Math.hypot(c.x - p.x, c.y - p.y) <= threshold);
-      if (found) {
-        found.items.push(item);
-        // Recompute centroid
-        found.x = found.items.reduce((s, it) => s + it.x, 0) / found.items.length;
-        found.y = found.items.reduce((s, it) => s + it.y, 0) / found.items.length;
-      } else {
-        out.push({ x: p.x, y: p.y, items: [item] });
-      }
-    });
-    return out;
-  }, [stops, zoom]);
-
-  return (
-    <div className="bg-[color:var(--card)] border border-[color:var(--border)] overflow-hidden">
-      <div className="flex items-baseline justify-between px-5 pt-5">
-        <span className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)] inline-flex items-center gap-2">
-          <MapIcon size={12} /> Live Map
-        </span>
-        <span className="text-[10px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)]">
-          {region ? regionMap[region].name : "Pick a region to begin"}
-        </span>
-      </div>
-
-      <div className="relative aspect-[4/5] mt-3 mx-5 mb-5 overflow-hidden rounded-sm">
-        {/* Zoom controls — top-right, tap-friendly on mobile */}
-        <div className="absolute top-2 right-2 z-10 flex flex-col gap-1.5">
-          <button
-            type="button"
-            onClick={zoomIn}
-            disabled={zoom >= ZOOM_MAX}
-            aria-label="Zoom in"
-            className="h-9 w-9 inline-flex items-center justify-center bg-[color:var(--ivory)]/95 border border-[color:var(--border)] text-[color:var(--charcoal)] shadow-sm rounded-sm active:scale-95 transition disabled:opacity-40 disabled:cursor-not-allowed"
-          >
-            <Plus size={16} />
-          </button>
-          <button
-            type="button"
-            onClick={zoomOut}
-            disabled={zoom <= ZOOM_MIN}
-            aria-label="Zoom out"
-            className="h-9 w-9 inline-flex items-center justify-center bg-[color:var(--ivory)]/95 border border-[color:var(--border)] text-[color:var(--charcoal)] shadow-sm rounded-sm active:scale-95 transition disabled:opacity-40 disabled:cursor-not-allowed"
-          >
-            <Minus size={16} />
-          </button>
-          <button
-            type="button"
-            onClick={zoomReset}
-            disabled={zoom === 1}
-            aria-label="Reset zoom"
-            className="h-9 w-9 inline-flex items-center justify-center bg-[color:var(--ivory)]/95 border border-[color:var(--border)] text-[color:var(--charcoal-soft)] shadow-sm rounded-sm active:scale-95 transition disabled:opacity-40 disabled:cursor-not-allowed"
-          >
-            <RotateCcw size={14} />
-          </button>
-        </div>
-        {/* Zoom level chip — bottom-right */}
-        <div className="absolute bottom-2 right-2 z-10 text-[9px] uppercase tracking-[0.2em] text-[color:var(--charcoal-soft)] bg-[color:var(--ivory)]/85 px-2 py-1 rounded-sm border border-[color:var(--border)] pointer-events-none">
-          {Math.round(zoom * 100)}%
-        </div>
-        <svg
-          viewBox={animatedViewBox}
-          className="w-full h-full"
-          preserveAspectRatio="xMidYMid meet"
-          aria-label="Journey map"
-        >
-          <defs>
-            {/* Ocean — deep Atlantic blue fading toward the shelf */}
-            <linearGradient id="ocean" x1="0" y1="0" x2="1" y2="0.6">
-              <stop offset="0%" stopColor="#3b6e85" />
-              <stop offset="45%" stopColor="#5b8ea3" />
-              <stop offset="80%" stopColor="#9cc1cf" />
-              <stop offset="100%" stopColor="#c7dee5" />
-            </linearGradient>
-            {/* Land — warm Iberian relief: coastal plains → uplands */}
-            <linearGradient id="land" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#eadfb8" />
-              <stop offset="40%" stopColor="#d8c98f" />
-              <stop offset="75%" stopColor="#b89d62" />
-              <stop offset="100%" stopColor="#8f7a48" />
-            </linearGradient>
-            {/* Spain — drier, more muted so Portugal pops */}
-            <linearGradient id="spain" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#e2d5a8" />
-              <stop offset="55%" stopColor="#c9b683" />
-              <stop offset="100%" stopColor="#9c8754" />
-            </linearGradient>
-            {/* Mountain shading — applied as overlay over land */}
-            <radialGradient id="mountain" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#5e4a24" stopOpacity="0.55" />
-              <stop offset="60%" stopColor="#7a5f30" stopOpacity="0.18" />
-              <stop offset="100%" stopColor="#7a5f30" stopOpacity="0" />
-            </radialGradient>
-            {/* Forested patches — subtle green cast */}
-            <radialGradient id="forest" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#4d6b3c" stopOpacity="0.32" />
-              <stop offset="100%" stopColor="#4d6b3c" stopOpacity="0" />
-            </radialGradient>
-            {/* Coastal sand glow at the land/sea boundary */}
-            <radialGradient id="coastGlow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#f5e9c5" stopOpacity="0.9" />
-              <stop offset="100%" stopColor="#f5e9c5" stopOpacity="0" />
-            </radialGradient>
-            <radialGradient id="centerGlow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="var(--teal)" stopOpacity="0.28" />
-              <stop offset="100%" stopColor="var(--teal)" stopOpacity="0" />
-            </radialGradient>
-            <filter id="markerShadow" x="-50%" y="-50%" width="200%" height="200%">
-              <feDropShadow dx="0" dy="0.4" stdDeviation="0.5" floodOpacity="0.4" />
-            </filter>
-            <filter id="landShadow" x="-10%" y="-10%" width="120%" height="120%">
-              <feDropShadow dx="0.5" dy="0.9" stdDeviation="1.1" floodOpacity="0.28" />
-            </filter>
-            {/* Hill-shading: inner glow to fake terrain relief on land */}
-            <filter id="reliefShade" x="-10%" y="-10%" width="120%" height="120%">
-              <feGaussianBlur in="SourceAlpha" stdDeviation="0.9" result="blur" />
-              <feSpecularLighting in="blur" surfaceScale="3" specularConstant="0.7" specularExponent="18" lightingColor="#fff8e0" result="spec">
-                <feDistantLight azimuth="315" elevation="55" />
-              </feSpecularLighting>
-              <feComposite in="spec" in2="SourceAlpha" operator="in" result="specOut" />
-              <feComposite in="SourceGraphic" in2="specOut" operator="arithmetic" k1="0" k2="1" k3="0.55" k4="0" />
-            </filter>
-            {/* Paper grain — very subtle */}
-            <pattern id="hatch" width="2" height="2" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-              <line x1="0" y1="0" x2="0" y2="2" stroke="#000" strokeWidth="0.08" opacity="0.05" />
-            </pattern>
-            {/* Wave pattern for ocean texture */}
-            <pattern id="waves" width="6" height="3" patternUnits="userSpaceOnUse">
-              <path d="M 0 1.5 Q 1.5 0 3 1.5 T 6 1.5" fill="none" stroke="#ffffff" strokeWidth="0.08" opacity="0.35" />
-            </pattern>
-          </defs>
-
-          {/* Ocean base + wave texture */}
-          <rect x="-20" y="-20" width="140" height="170" fill="url(#ocean)" />
-          <rect x="-20" y="-20" width="140" height="170" fill="url(#waves)" />
-
-          {/* Bathymetry — soft contour lines parallel to the Atlantic shelf */}
-          <g fill="none" stroke="#ffffff" strokeWidth="0.18" opacity="0.4">
-            <path d="M 14 4 C 12 30 10 60 11 90 C 12 110 15 120 18 128" />
-            <path d="M 10 4 C 7 32 5 64 6 96 C 7 114 10 124 13 130" />
-            <path d="M 5 4 C 2 34 0 66 1 100 C 2 118 5 128 8 132" />
-          </g>
-          {/* Continental shelf shadow against Portuguese coast */}
-          <path d="M 20 8 C 18 30 17 60 19 88 C 21 108 24 118 28 122 L 28 130 L 14 130 L 14 4 Z" fill="url(#coastGlow)" opacity="0.5" />
-
-
-          {/* Spain landmass — sits behind Portugal to give context */}
-          <path
-            d="
-              M 42 4
-              L 100 4
-              L 100 120
-              L 56 120
-              C 54 117 53 113 53 109
-              L 53.5 102
-              C 54 96 53.5 90 52.8 84
-              L 51.5 76
-              L 50 68
-              C 49 62 48.4 56 48.6 50
-              L 49.2 42
-              C 49.2 36 48.6 30 47.4 24
-              L 45.6 16
-              C 44.6 12 43.6 8 42 4 Z
-            "
-            fill="url(#spain)"
-            stroke="#b8a878"
-            strokeWidth="0.25"
-            opacity="0.95"
-          />
-          <path
-            d="
-              M 42 4 L 100 4 L 100 120 L 56 120
-              C 54 117 53 113 53 109 L 53.5 102
-              C 54 96 53.5 90 52.8 84 L 51.5 76 L 50 68
-              C 49 62 48.4 56 48.6 50 L 49.2 42
-              C 49.2 36 48.6 30 47.4 24 L 45.6 16
-              C 44.6 12 43.6 8 42 4 Z
-            "
-            fill="url(#hatch)"
-          />
-
-          {/* Portugal silhouette — refined: Minho in the north, Douro estuary
-              at Porto, Tagus estuary at Lisbon, Sado at Setúbal, Algarve south
-              coast running east to the Guadiana. Same viewBox so all
-              regionMap/regionStops markers stay aligned. */}
-          <path
-            d="
-              M 36 5
-              C 38.6 5 40.4 5.6 41.4 7.2
-              L 41.8 10
-              C 41.4 12 40.8 14 41.2 16
-              L 41.8 20
-              L 42.4 24
-              C 42.6 26 42.4 27 41.6 26.8
-              L 39.6 26.4
-              L 38.4 26
-              C 37.6 25.6 37.4 25 38 24.4
-              L 38.6 23.6
-              C 38.2 23.4 37.6 23.6 37.2 24
-              L 36.4 24.6
-              L 36 25.4
-              L 36.6 26.4
-              C 37.6 27.2 38.8 27.6 40.2 27.8
-              L 42.6 28
-              C 43 30 43.6 32 44.4 34
-              C 45.4 37 46.4 40 47 43
-              C 47.6 46 47.8 49 48.2 52
-              L 49 56
-              L 50.2 60
-              L 51.4 64
-              L 52.6 68
-              L 53.8 72
-              C 54.4 75 54.8 78 54.8 80
-              L 53.6 80
-              L 51.6 79.4
-              C 50 79 48.4 79.6 47.6 80.6
-              L 47 81.6
-              C 46.6 82 46.6 82.4 47 82.6
-              L 49 83
-              L 51.8 83.4
-              L 54.4 83
-              L 54.2 86
-              L 53.4 89
-              C 52.6 92 51.8 95 50.8 98
-              L 49.8 102
-              L 49 104
-              C 48.6 104.4 48.6 105 49 105.4
-              L 51 106
-              L 53.6 106.2
-              L 56 106
-              L 58 106
-              C 58.4 107 58 108.2 57 109
-              L 54 110
-              L 50 110.6
-              L 46 111
-              L 42 111.2
-              L 38 111.4
-              L 34 111.6
-              L 30 111.6
-              C 27 111.4 24 110.6 22.2 109.2
-              L 21 107.6
-              L 21.4 105.6
-              C 22 102.6 22.4 99.6 22.4 96.6
-              L 22 92.6
-              L 21.4 88.6
-              L 20.8 84.6
-              C 20.6 81.6 20.6 78.6 20.8 75.6
-              L 21.2 71.6
-              L 21.4 67.6
-              C 21.4 64.6 21.2 61.6 20.8 58.6
-              L 20.4 54.6
-              L 20.4 50.6
-              C 20.6 47.6 21 44.6 21.6 41.6
-              L 22.4 37.6
-              C 22.8 34.6 22.8 31.6 22.4 28.6
-              L 21.8 24.6
-              L 21.6 20.6
-              C 22 17.6 22.6 14.6 23.6 11.6
-              L 25 8.6
-              C 26.4 6.6 28.4 5.2 30.8 4.4
-              C 32.4 3.8 34.2 3.6 36 5 Z
-            "
-            fill="url(#land)"
-            stroke="#9a8657"
-            strokeWidth="0.45"
-            filter="url(#landShadow)"
-          />
-          {/* Land hatch overlay — subtle tonal richness */}
-          <path
-            d="M 22 6 L 54 6 L 56 110 L 22 110 Z"
-            fill="url(#hatch)"
-            opacity="0.45"
-            style={{ pointerEvents: "none" }}
-          />
-
-          {/* Mountain ranges — Peneda-Gerês (NW), Estrela (centre),
-              Montejunto-Sintra (W), São Mamede (Alentejo), Monchique (S) */}
-          <g style={{ pointerEvents: "none" }}>
-            <ellipse cx="38" cy="14" rx="6" ry="3.5" fill="url(#mountain)" />
-            <ellipse cx="42" cy="46" rx="8" ry="4" fill="url(#mountain)" />
-            <ellipse cx="50" cy="66" rx="6" ry="3" fill="url(#mountain)" />
-            <ellipse cx="42" cy="108" rx="5" ry="2.4" fill="url(#mountain)" />
-            <ellipse cx="22" cy="76" rx="3" ry="1.6" fill="url(#mountain)" />
-          </g>
-
-          {/* Forested regions — north Minho, Serra da Estrela slopes, Algarve hills */}
-          <g style={{ pointerEvents: "none" }}>
-            <ellipse cx="34" cy="18" rx="7" ry="4" fill="url(#forest)" />
-            <ellipse cx="40" cy="50" rx="8" ry="5" fill="url(#forest)" />
-            <ellipse cx="46" cy="92" rx="6" ry="3.5" fill="url(#forest)" />
-            <ellipse cx="44" cy="110" rx="5" ry="2" fill="url(#forest)" />
-          </g>
-
-          {/* Tiny mountain glyphs to suggest peaks (very subtle) */}
-          <g fill="none" stroke="#6b5326" strokeWidth="0.18" opacity="0.55" strokeLinecap="round" strokeLinejoin="round" style={{ pointerEvents: "none" }}>
-            <path d="M 36 13 l 1 -1.5 l 1 1.5 M 39 13 l 1 -1.5 l 1 1.5" />
-            <path d="M 40 46 l 1.2 -1.8 l 1.2 1.8 M 43 46 l 1.2 -1.8 l 1.2 1.8 M 46 46 l 1 -1.5 l 1 1.5" />
-            <path d="M 48 66 l 1 -1.5 l 1 1.5 M 51 66 l 1 -1.5 l 1 1.5" />
-            <path d="M 41 108 l 1 -1.4 l 1 1.4 M 43.5 108 l 1 -1.4 l 1 1.4" />
-          </g>
-
-          {/* Major rivers — Minho, Douro, Mondego, Tagus, Sado, Guadiana */}
-          <g fill="none" stroke="#5b8ea3" strokeWidth="0.38" opacity="0.9" strokeLinecap="round" strokeLinejoin="round">
-            {/* Minho: northern border */}
-            <path d="M 53 8 C 48 9 42 10 38 11 L 34 12" />
-            {/* Douro: from inland Spain meandering west to Porto estuary */}
-            <path d="M 53 24 C 48 22 45 25 42 23 C 39 21 36 24 34 23" />
-            {/* Mondego: into Coimbra/Figueira */}
-            <path d="M 50 56 C 46 56 42 58 38 60 L 33 62" />
-            {/* Tagus: from Spain SE-NW into Lisbon estuary */}
-            <path d="M 53 74 C 48 73 44 77 40 76 C 36 75 32 79 28 78 L 26 78.5" />
-            {/* Sado: into Setúbal */}
-            <path d="M 44 84 C 40 84 36 84 33 83" />
-            {/* Guadiana: south border with Spain, drops to Algarve coast */}
-            <path d="M 56 90 C 56 96 56 102 56 108 L 56 111" />
-          </g>
-          {/* River highlights — thin white centerline for sparkle */}
-          <g fill="none" stroke="#dff1f6" strokeWidth="0.12" opacity="0.7" strokeLinecap="round">
-            <path d="M 53 24 C 48 22 45 25 42 23 C 39 21 36 24 34 23" />
-            <path d="M 53 74 C 48 73 44 77 40 76 C 36 75 32 79 28 78" />
-          </g>
-
-          {/* Lakes / reservoirs — Alqueva (largest in Europe), Castelo de Bode */}
-          <g fill="#5b8ea3" stroke="#dff1f6" strokeWidth="0.1" opacity="0.85">
-            <path d="M 51 92 q 1.5 -1 3 0 q 0.5 1.5 -0.5 2.4 q -1.8 0.6 -2.8 -0.4 q -0.7 -1 0.3 -2 z" />
-            <ellipse cx="44" cy="62" rx="0.9" ry="0.5" />
-          </g>
-
-          {/* Major cities as small dots with serif labels */}
-          <g style={{ pointerEvents: "none" }}>
-            {[
-              { x: 38, y: 22, n: "Porto" },
-              { x: 28, y: 78, n: "Lisboa" },
-              { x: 46, y: 64, n: "Coimbra" },
-              { x: 36, y: 18, n: "Braga" },
-              { x: 54, y: 84, n: "Évora" },
-              { x: 48, y: 110, n: "Faro" },
-            ].map((c) => (
-              <g key={c.n}>
-                <circle cx={c.x} cy={c.y} r="0.55" fill="#3a2f12" opacity="0.65" />
-                <circle cx={c.x} cy={c.y} r="0.25" fill="#fff" opacity="0.9" />
-                <text
-                  x={c.x + 0.9}
-                  y={c.y + 0.6}
-                  fontSize="1.7"
-                  fill="#3a2f12"
-                  opacity="0.55"
-                  fontFamily="ui-serif, Georgia, serif"
-                  fontStyle="italic"
-                >
-                  {c.n}
-                </text>
-              </g>
-            ))}
-          </g>
-
-          {/* Madeira & Azores hint */}
-          <g opacity="0.8">
-            <ellipse cx="6" cy="108" rx="2.2" ry="1" fill="url(#land)" stroke="#7a6633" strokeWidth="0.22" />
-            <ellipse cx="3" cy="86" rx="1.5" ry="0.7" fill="url(#land)" stroke="#7a6633" strokeWidth="0.2" />
-            <ellipse cx="5.2" cy="84" rx="1" ry="0.5" fill="url(#land)" stroke="#7a6633" strokeWidth="0.2" />
-            <text x="6" y="112.6" fontSize="1.4" fill="#3a2f12" opacity="0.55" textAnchor="middle" fontFamily="ui-serif, Georgia, serif" fontStyle="italic">Madeira</text>
-            <text x="3.8" y="90" fontSize="1.4" fill="#3a2f12" opacity="0.55" textAnchor="middle" fontFamily="ui-serif, Georgia, serif" fontStyle="italic">Açores</text>
-          </g>
-
-          {/* Compass rose — top-right, decorative */}
-          <g transform="translate(94 10)" opacity="0.6">
-            <circle r="3" fill="var(--ivory)" opacity="0.4" />
-            <circle r="3" fill="none" stroke="#3f4a50" strokeWidth="0.2" />
-            <path d="M 0 -3 L 0.5 0 L 0 3 L -0.5 0 Z" fill="#3f4a50" />
-            <path d="M -3 0 L 0 0.5 L 3 0 L 0 -0.5 Z" fill="#3f4a50" opacity="0.5" />
-            <text x="0" y="-3.6" fontSize="1.6" textAnchor="middle" fill="#3f4a50" fontFamily="ui-serif, Georgia, serif" fontWeight="700">N</text>
-          </g>
-
-          {/* Scale bar */}
-          <g transform="translate(72 122)" opacity="0.6" style={{ pointerEvents: "none" }}>
-            <rect x="0" y="0" width="6" height="0.6" fill="#3a2f12" />
-            <rect x="6" y="0" width="6" height="0.6" fill="none" stroke="#3a2f12" strokeWidth="0.15" />
-            <text x="0" y="-0.6" fontSize="1.3" fill="#3a2f12" fontFamily="ui-serif, Georgia, serif">0</text>
-            <text x="12" y="-0.6" fontSize="1.3" fill="#3a2f12" fontFamily="ui-serif, Georgia, serif" textAnchor="end" dx="0">100 km</text>
-          </g>
-
-          {/* Region labels — faint, like a real atlas */}
-          <g fontFamily="ui-serif, Georgia, serif" style={{ pointerEvents: "none" }}>
-            <text x="72" y="50" fontSize="3.6" fontStyle="italic" letterSpacing="0.4" fill="#7a6a3e" opacity="0.6">ESPAÑA</text>
-            <text x="8" y="60" fontSize="2.6" fontStyle="italic" letterSpacing="0.6" fill="#2c5560" opacity="0.65">ATLÂNTICO</text>
-            <text x="8" y="64" fontSize="1.6" fontStyle="italic" letterSpacing="0.5" fill="#2c5560" opacity="0.5">Oceano</text>
-            <text x="30" y="14" fontSize="1.5" fontStyle="italic" fill="#5a4a1e" opacity="0.6" letterSpacing="0.3">MINHO</text>
-            <text x="32" y="50" fontSize="1.5" fontStyle="italic" fill="#5a4a1e" opacity="0.6" letterSpacing="0.3">BEIRAS</text>
-            <text x="36" y="92" fontSize="1.6" fontStyle="italic" fill="#5a4a1e" opacity="0.6" letterSpacing="0.4">ALENTEJO</text>
-            <text x="36" y="118" fontSize="1.5" fontStyle="italic" fill="#5a4a1e" opacity="0.6" letterSpacing="0.4">ALGARVE</text>
-          </g>
-
-
-          {/* Region glow */}
-          {center && (
-            <circle cx={center.x} cy={center.y} r="14" fill="url(#centerGlow)"
-              style={{ transition: "cx 600ms cubic-bezier(0.65,0,0.35,1), cy 600ms cubic-bezier(0.65,0,0.35,1)" }}
-            />
-          )}
-
-          {/* Animated route */}
-          <AnimatedRoute d={pathD} />
-
-          {/* Centre marker (region) */}
-          {center && (
-            <g style={{ transition: "all 600ms cubic-bezier(0.65,0,0.35,1)" }}>
-              <circle cx={center.x} cy={center.y} r="2.6" fill="var(--gold)" stroke="var(--ivory)" strokeWidth="0.5" filter="url(#markerShadow)" />
-              <circle cx={center.x} cy={center.y} r="2.6" fill="none" stroke="var(--gold)" strokeWidth="0.4" opacity="0.5">
-                <animate attributeName="r" values="2.6;5.5;2.6" dur="2.6s" repeatCount="indefinite" />
-                <animate attributeName="opacity" values="0.5;0;0.5" dur="2.6s" repeatCount="indefinite" />
-              </circle>
-            </g>
-          )}
-
-          {/* Stops — clustered when overlapping at low zoom; numbered pins otherwise */}
-          {clusters.map((cluster, ci) => {
-            if (cluster.items.length > 1) {
-              // Render a cluster bubble
-              const count = cluster.items.length;
-              const r = Math.min(3.6, 1.6 + Math.log2(count) * 0.7);
-              const days = Array.from(new Set(cluster.items.map((it) => it.day)));
-              const c = days.length === 1 ? dayColor(days[0]) : "var(--gold)";
-              return (
-                <g
-                  key={`cluster-${ci}`}
-                  style={{
-                    transition: "all 500ms cubic-bezier(0.65,0,0.35,1)",
-                    animation: `ys-pop 400ms cubic-bezier(0.34,1.56,0.64,1) ${ci * 60}ms backwards`,
-                  }}
-                  onClick={zoomIn}
-                  cursor="pointer"
-                >
-                  <ellipse cx={cluster.x} cy={cluster.y + r + 0.3} rx={r * 0.9} ry="0.4" fill="#000" opacity="0.18" />
-                  <circle cx={cluster.x} cy={cluster.y} r={r + 0.6} fill="var(--ivory)" opacity="0.5" />
-                  <circle
-                    cx={cluster.x}
-                    cy={cluster.y}
-                    r={r}
-                    fill={c}
-                    stroke="var(--ivory)"
-                    strokeWidth="0.5"
-                    filter="url(#markerShadow)"
-                  />
-                  <text
-                    x={cluster.x}
-                    y={cluster.y + r * 0.4}
-                    fontSize={r * 1.1}
-                    textAnchor="middle"
-                    fill="var(--ivory)"
-                    fontFamily="ui-sans-serif, system-ui"
-                    fontWeight="700"
-                  >
-                    {count}
-                  </text>
-                </g>
-              );
-            }
-
-            const it = cluster.items[0];
-            const p = it;
-            const i = it.index;
-            const c = dayColor(p.day);
-            const n = i + 1;
-            return (
-              <g key={`${p.label}-${i}`} style={{ transition: "all 500ms cubic-bezier(0.65,0,0.35,1)" }}>
-                <ellipse cx={p.x} cy={p.y + 1.4} rx="1.6" ry="0.4" fill="#000" opacity="0.18" />
-                <path
-                  d={`M ${p.x} ${p.y - 4} C ${p.x + 2.4} ${p.y - 4} ${p.x + 2.4} ${p.y - 0.8} ${p.x} ${p.y + 1.2} C ${p.x - 2.4} ${p.y - 0.8} ${p.x - 2.4} ${p.y - 4} ${p.x} ${p.y - 4} Z`}
-                  fill={c}
-                  stroke="var(--ivory)"
-                  strokeWidth="0.4"
-                  filter="url(#markerShadow)"
-                  style={{
-                    transformOrigin: `${p.x}px ${p.y}px`,
-                    animation: `ys-pop 400ms cubic-bezier(0.34,1.56,0.64,1) ${i * 80}ms backwards`,
-                  }}
-                />
-                <circle cx={p.x} cy={p.y - 2.2} r="1.05" fill="var(--ivory)" />
-                <text
-                  x={p.x}
-                  y={p.y - 1.65}
-                  fontSize="1.5"
-                  textAnchor="middle"
-                  fill={c}
-                  fontFamily="ui-sans-serif, system-ui"
-                  fontWeight="700"
-                >
-                  {n}
-                </text>
-                <g style={{ animation: `ys-fade 500ms ease-out ${i * 80 + 200}ms backwards` }}>
-                  <rect
-                    x={p.x + 2.6}
-                    y={p.y - 3.6}
-                    width={p.label.length * 1.35 + 2}
-                    height="3"
-                    rx="0.5"
-                    fill="var(--ivory)"
-                    stroke={c}
-                    strokeWidth="0.2"
-                    opacity="0.97"
-                  />
-                  <text
-                    x={p.x + 3.6}
-                    y={p.y - 1.5}
-                    fontSize="2"
-                    fill="var(--charcoal)"
-                    fontFamily="ui-sans-serif, system-ui"
-                    style={{ letterSpacing: "0.05em" }}
-                  >
-                    {p.label}
-                  </text>
-                </g>
-              </g>
-            );
-          })}
-
-          {/* Ghost stop */}
-          {ghostStop && (
-            <g style={{ animation: "ys-pop 320ms cubic-bezier(0.34,1.56,0.64,1) backwards" }}>
-              <circle cx={ghostStop.x} cy={ghostStop.y - 1.4} r="3" fill="var(--gold)" opacity="0.18">
-                <animate attributeName="r" values="3;5;3" dur="1.4s" repeatCount="indefinite" />
-                <animate attributeName="opacity" values="0.32;0;0.32" dur="1.4s" repeatCount="indefinite" />
-              </circle>
-              <path
-                d={`M ${ghostStop.x} ${ghostStop.y - 4} C ${ghostStop.x + 2.4} ${ghostStop.y - 4} ${ghostStop.x + 2.4} ${ghostStop.y - 0.8} ${ghostStop.x} ${ghostStop.y + 1.2} C ${ghostStop.x - 2.4} ${ghostStop.y - 0.8} ${ghostStop.x - 2.4} ${ghostStop.y - 4} ${ghostStop.x} ${ghostStop.y - 4} Z`}
-                fill="var(--ivory)"
-                stroke="var(--gold)"
-                strokeWidth="0.45"
-                strokeDasharray="0.8 0.6"
-                filter="url(#markerShadow)"
-              />
-              <circle cx={ghostStop.x} cy={ghostStop.y - 2.2} r="0.6" fill="var(--gold)" />
-              <g style={{ animation: "ys-fade 280ms ease-out 120ms backwards" }}>
-                <rect
-                  x={ghostStop.x + 2.6}
-                  y={ghostStop.y - 3.6}
-                  width={ghostStop.label.length * 1.35 + 4.5}
-                  height="3"
-                  rx="0.5"
-                  fill="var(--gold)"
-                  opacity="0.95"
-                />
-                <text
-                  x={ghostStop.x + 3.6}
-                  y={ghostStop.y - 1.5}
-                  fontSize="2"
-                  fill="var(--charcoal-deep)"
-                  fontFamily="ui-sans-serif, system-ui"
-                  style={{ letterSpacing: "0.05em" }}
-                >
-                  {ghostStop.label} ·
-                </text>
-                <text
-                  x={ghostStop.x + 3.6 + ghostStop.label.length * 1.35 + 0.4}
-                  y={ghostStop.y - 1.5}
-                  fontSize="1.4"
-                  fill="var(--ivory)"
-                  fontFamily="ui-sans-serif, system-ui"
-                  style={{ letterSpacing: "0.18em", textTransform: "uppercase" }}
-                >
-                  preview
-                </text>
-              </g>
-            </g>
-          )}
-        </svg>
-
-        {!region && (
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <p className="text-[11px] uppercase tracking-[0.28em] text-[color:var(--charcoal-soft)] bg-[color:var(--ivory)]/85 px-3 py-1.5 rounded-sm">
-              Choose a region — the map flies there
-            </p>
-          </div>
-        )}
-
-        {/* Local CSS animations — scoped via unique keyframe names */}
-        <style>{`
-          @keyframes ys-draw { to { stroke-dashoffset: 0; } }
-          @keyframes ys-pop { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-          @keyframes ys-fade { from { opacity: 0; } to { opacity: 1; } }
-        `}</style>
-      </div>
-
-      {/* Day legend */}
-      {isMultiDay && stops.length > 0 && (
-        <div className="px-5 pb-5 -mt-2 flex flex-wrap gap-3">
-          {Array.from({ length: days }).map((_, i) => (
-            <div key={i} className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-[color:var(--charcoal-soft)]">
-              <span className="h-2 w-2 rounded-full" style={{ background: dayColor(i + 1) }} />
-              Day {i + 1}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
-/* ============================================================
-   Live summary panel
-   ============================================================ */
-
-function LiveSummary({
-  s,
-  days,
-  investment,
-  canConfirm,
-}: {
-  s: BuilderState;
-  days: number;
-  investment: number | null;
-  canConfirm: boolean;
-}) {
-  const region = s.region ? regionMap[s.region].name : null;
-  const stops = s.region ? (regionStops[s.region] ?? []).slice(0, Math.max(2, s.highlights.length || 2)) : [];
-  const dur = durationOpts.find((d) => d.id === s.duration);
-  const tier = tierOpts.find((t) => t.id === s.tier);
-  const [pulse, setPulse] = useState(false);
-
-  // Tiny price pulse whenever the investment changes — instant feedback.
-  useEffect(() => {
-    if (investment === null) return;
-    setPulse(true);
-    const t = window.setTimeout(() => setPulse(false), 450);
-    return () => window.clearTimeout(t);
-  }, [investment]);
-
-  return (
-    <div className="bg-[color:var(--card)] border border-[color:var(--border)] p-5">
-      <div className="flex items-baseline justify-between">
-        <span className="text-[10px] uppercase tracking-[0.3em] text-[color:var(--gold)]">Your journey</span>
-        <span className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-[0.22em] text-[color:var(--teal)]">
-          <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--teal)] animate-pulse" />
-          Updating live
-        </span>
-      </div>
-
-      {s.name && (
-        <p className="serif italic text-xl text-[color:var(--teal)] mt-3 leading-tight">"{s.name}"</p>
-      )}
-
-      <dl className="mt-4 grid grid-cols-2 gap-3 text-sm">
-        <SummaryRow label="Route" value={region ?? "—"} />
-        <SummaryRow label="Stops" value={stops.length ? `${stops.length} curated` : "—"} />
-        <SummaryRow label="Duration" value={dur ? dur.label : "—"} />
-        <SummaryRow label="Pace" value={s.pace ? (paceOpts.find((p) => p.id === s.pace)?.name ?? "—") : "—"} />
-        <SummaryRow label="Group" value={s.guests ? guestSizes.find((g) => g.id === s.guests)?.label + " guests" : "—"} />
-        <SummaryRow label="Tier" value={tier?.name ?? "—"} />
-      </dl>
-
-      {stops.length > 0 && (
+      {dna.tags.length > 0 && (
         <div className="mt-4 flex flex-wrap gap-1.5">
-          {stops.map((p) => (
-            <span key={p.label} className="inline-flex items-center gap-1 text-[11px] px-2 py-1 bg-[color:var(--sand)] border border-[color:var(--border)] text-[color:var(--charcoal)]">
-              <MapPin size={10} className="text-[color:var(--teal)]" />
-              {p.label}
+          {dna.tags.map((t) => (
+            <span key={t} className="px-2.5 py-1 text-[10px] uppercase tracking-[0.18em] bg-[color:var(--sand)] text-[color:var(--charcoal)] rounded-full">
+              {t}
             </span>
           ))}
         </div>
       )}
+    </div>
+  );
+}
 
-      {/* Price */}
-      <div className="mt-5 pt-4 border-t border-[color:var(--border)] flex items-end justify-between gap-3">
+function buildDna(s: BuilderState) {
+  const bars = [
+    { label: "Wine", value: (s.styles.includes("wine") ? 3 : 0) + (s.highlights.includes("tasting") ? 2 : 0) },
+    { label: "Nature", value: (s.styles.includes("nature") ? 3 : 0) + (s.styles.includes("coastal") ? 2 : 0) },
+    { label: "Culture", value: (s.styles.includes("heritage") ? 3 : 0) + (s.highlights.includes("tiles") ? 2 : 0) },
+    { label: "Relax", value: s.pace === "slow" ? 5 : s.pace === "balanced" ? 3 : 1 },
+  ].map((b) => ({ ...b, value: Math.min(5, b.value) }));
+
+  const tags: string[] = [];
+  if (s.styles.includes("wine")) tags.push("Wine Lover");
+  if (s.styles.includes("coastal") || s.highlights.includes("boat")) tags.push("Scenic Explorer");
+  if (s.highlights.includes("jeep") || s.highlights.includes("dinosaur")) tags.push("Hidden Gem Seeker");
+  if (s.pace === "slow") tags.push("Relaxed Traveler");
+  if (s.tier === "couture") tags.push("Bespoke");
+
+  return { bars, tags };
+}
+
+/* Investment + booking — Bible §12 */
+function InvestmentPanel({ s, days, investment }: { s: BuilderState; days: number; investment: number | null }) {
+  return (
+    <div className="bg-[color:var(--card)] border border-[color:var(--border)] p-5 rounded-sm">
+      <span className="text-[10px] uppercase tracking-[0.24em] text-[color:var(--gold)]">Experience Investment</span>
+      <div className="mt-2 flex items-baseline justify-between gap-3">
+        <p className="serif text-3xl text-[color:var(--charcoal)]">
+          {investment ? `from €${investment.toLocaleString()}` : "—"}
+        </p>
+        <p className="text-[11px] uppercase tracking-[0.18em] text-[color:var(--charcoal-soft)]">
+          {days >= 1 ? `${Math.max(1, days)} day${days > 1 ? "s" : ""}` : "Half day"}
+          {s.guests && ` · ${guestSizes.find((g) => g.id === s.guests)?.label}`}
+        </p>
+      </div>
+      <p className="mt-2 text-[12px] text-[color:var(--charcoal-soft)] italic">
+        Private experience, local guide and curated stops included. Final value confirmed at booking.
+      </p>
+    </div>
+  );
+}
+
+function DesignerNudge() {
+  return (
+    <Link
+      to="/contact"
+      className="block bg-[color:var(--sand)] border border-[color:var(--border)] p-4 rounded-sm hover:border-[color:var(--teal)]/40 transition-colors"
+    >
+      <div className="flex items-start gap-3">
+        <MessageCircle size={16} className="text-[color:var(--teal)] mt-0.5" />
         <div>
-          <p className="text-[10px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)]">Investment</p>
-          <p
-            className={`serif text-3xl text-[color:var(--charcoal)] mt-1 transition-transform duration-300 ${pulse ? "scale-[1.04]" : "scale-100"}`}
-          >
-            {investment ? `from €${investment.toLocaleString()}` : "—"}
-          </p>
-          <p className="text-[11px] text-[color:var(--charcoal-soft)] mt-1">
-            {tier ? `${tier.name} · ${days || 1} day${days > 1 ? "s" : ""} · fully private` : "Choose a tier to estimate"}
+          <p className="serif text-[14px] text-[color:var(--charcoal)]">Want a hand?</p>
+          <p className="text-[12px] text-[color:var(--charcoal-soft)] italic mt-0.5">
+            A local designer can refine your story with you — anytime.
           </p>
         </div>
       </div>
-
-      {/* Confirm */}
-      <div className="mt-5">
-        <p className="text-[10px] uppercase tracking-[0.22em] text-[color:var(--gold)] mb-2">
-          {canConfirm ? "Ready to confirm anytime" : "Add a region to begin"}
-        </p>
-        <Link
-          to="/contact"
-          aria-disabled={!canConfirm}
-          tabIndex={canConfirm ? 0 : -1}
-          onClick={(e) => { if (!canConfirm) e.preventDefault(); }}
-          className={`group w-full inline-flex items-center justify-between gap-2 px-5 py-4 text-[12px] uppercase tracking-[0.18em] border transition-all ${
-            canConfirm
-              ? "bg-[color:var(--teal)] text-[color:var(--ivory)] border-[color:var(--gold)]/70 hover:bg-[color:var(--teal-2)] hover:border-[color:var(--gold)] hover:shadow-[0_18px_38px_-14px_rgba(201,169,106,0.55)]"
-              : "bg-[color:var(--sand)] text-[color:var(--charcoal-soft)] border-[color:var(--border)] cursor-not-allowed"
-          }`}
-        >
-          <span>{canConfirm ? "Your journey is ready · Confirm instantly" : "Choose a region first"}</span>
-          {canConfirm && <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />}
-        </Link>
-        <p className="mt-3 text-[11px] text-[color:var(--charcoal-soft)] italic leading-relaxed">
-          Instant confirmation. No waiting. No back-and-forth emails.
-        </p>
-      </div>
-    </div>
-  );
-}
-
-function SummaryRow({ label, value }: { label: string; value: string }) {
-  return (
-    <div>
-      <dt className="text-[10px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)]">{label}</dt>
-      <dd className="text-[color:var(--charcoal)] mt-0.5 truncate">{value}</dd>
-    </div>
-  );
-}
-
-/* ============================================================
-   Inline chat nudge — sits next to the summary, complements the FAB
-   ============================================================ */
-
-function ChatNudge() {
-  return (
-    <div className="border border-dashed border-[color:var(--gold)]/50 bg-[color:var(--ivory)] p-4 flex items-start gap-3">
-      <span className="mt-0.5 inline-flex h-8 w-8 items-center justify-center rounded-full bg-[color:var(--teal)] text-[color:var(--ivory)]">
-        <MessageCircle size={14} />
-      </span>
-      <div className="flex-1">
-        <p className="text-sm text-[color:var(--charcoal)] leading-snug">
-          Need help? <span className="text-[color:var(--teal)]">Chat with a local guide in real time.</span>
-        </p>
-        <p className="text-[11px] text-[color:var(--charcoal-soft)] mt-0.5">Opens instantly — no forms, no wait.</p>
-      </div>
-    </div>
+    </Link>
   );
 }
