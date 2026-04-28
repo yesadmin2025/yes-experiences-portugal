@@ -500,12 +500,16 @@ function ActiveBuilder({
         />
       </Block>
 
-      <Block title="Signature moments" hint="The kind only locals know to suggest.">
-        <Pills
+      <Block
+        title="Signature moments"
+        hint="Hover or hold to preview on the map."
+      >
+        <PreviewablePills
           options={highlightOpts.map((h) => ({ id: h.id, label: h.name }))}
           selected={s.highlights}
           onSelect={(id) => toggle("highlights", id)}
-          multi
+          previewId={previewHighlight}
+          onPreview={onPreviewHighlight}
         />
       </Block>
 
