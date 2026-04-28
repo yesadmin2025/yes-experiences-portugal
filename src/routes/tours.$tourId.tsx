@@ -79,6 +79,8 @@ function TourDetailPage() {
               <img
                 {...resolveImg(tour, "hero")}
                 alt={tour.title}
+                fetchPriority="high"
+                decoding="async"
                 style={{ objectPosition: tour.focal ?? "50% 50%" }}
                 className="w-full h-full object-cover"
               />
