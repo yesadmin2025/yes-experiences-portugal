@@ -371,7 +371,7 @@ function HomePage() {
           <img
             src={heroImg}
             alt="Hidden coastal road in Portugal at golden hour"
-            className="absolute inset-0 w-full h-full object-cover object-center animate-[heroZoom_32s_ease-out_2.7s_both]"
+            className="absolute inset-0 w-full h-full object-cover object-center animate-[heroZoom_32s_ease-out_2.7s_both,heroDrift_28s_ease-in-out_34.7s_infinite]"
             width={1920}
             height={1080}
           />
