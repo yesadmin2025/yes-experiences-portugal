@@ -395,7 +395,7 @@ function BuilderPage() {
                   </Suspense>
                 )}
 
-                <DnaPanel s={s} />
+                <DnaPanel s={s} setS={setS} />
                 <InvestmentPanel s={s} days={days} investment={investment} />
                 <DesignerNudge />
               </div>
