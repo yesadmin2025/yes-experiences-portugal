@@ -136,18 +136,31 @@ export function RealLeafletMap({ region }: { region: string | null }) {
   // Initialise the map once
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
-    const map = L.map(containerRef.current, {
+    const el = containerRef.current;
+    // Default centre on Portugal so we never call fitBounds on a 0×0 element
+    const map = L.map(el, {
       zoomControl: true,
       attributionControl: true,
       scrollWheelZoom: false,
+      center: [39.5, -8.0],
+      zoom: 6,
     });
-    map.fitBounds(PORTUGAL_BOUNDS);
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
       maxZoom: 18,
     }).addTo(map);
     mapRef.current = map;
+    // Wait for the container to be measurable, then fit Portugal
+    const ro = new ResizeObserver(() => {
+      if (el.clientWidth > 0 && el.clientHeight > 0) {
+        map.invalidateSize();
+        map.fitBounds(PORTUGAL_BOUNDS, { animate: false });
+        ro.disconnect();
+      }
+    });
+    ro.observe(el);
     return () => {
+      ro.disconnect();
       map.remove();
       mapRef.current = null;
       clusterRef.current = null;
