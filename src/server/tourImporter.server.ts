@@ -9,7 +9,9 @@
  */
 
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
-import { snapStop, REGION_CENTROIDS } from "@/data/stopCoords";
+import { REGION_CENTROIDS } from "@/data/stopCoords";
+import { applyRules } from "@/server/applyMappingRules.server";
+import { DEFAULT_MAPPING_RULES, safeParseRules, type MappingRules } from "@/data/defaultMappingRules";
 
 const CATALOG_URL = "https://yesexperiences.pt/our-experiences/";
 const AI_MODEL = "google/gemini-3-flash-preview";
@@ -285,10 +287,22 @@ function durationHoursDisplay(scraped: string, durationId: string): string {
   return DURATION_LABELS[durationId]?.hoursFallback ?? "";
 }
 
+async function loadActiveRules(): Promise<MappingRules> {
+  const { data, error } = await supabaseAdmin
+    .from("import_mapping_rules")
+    .select("rules")
+    .eq("is_active", true)
+    .maybeSingle();
+  if (error || !data) return DEFAULT_MAPPING_RULES;
+  return safeParseRules(data.rules);
+}
+
 export async function importAllTours(opts: { ranBy: string | null }): Promise<ImportResult> {
   const errors: string[] = [];
   const tours: ImportedTour[] = [];
   let failed = 0;
+
+  const activeRules = await loadActiveRules();
 
   let scraped: ScrapedTour[];
   try {
@@ -321,24 +335,39 @@ export async function importAllTours(opts: { ranBy: string | null }): Promise<Im
     try {
       const ai = await mapWithAI(t);
 
-      const stops = ai.stops.map((label, i) => {
-        const c = snapStop(label, ai.region, i);
-        return { label: c.label, tag: c.tag, x: c.x, y: c.y };
-      });
+      const applied = applyRules(
+        activeRules,
+        { title: t.title, durationText: t.durationText, url: t.url, priceFrom: t.priceFrom },
+        { region: ai.region, duration: ai.duration, highlights: ai.highlights, stops: ai.stops },
+      );
+
+      const stops = applied.stops.map((c) => ({
+        label: c.label,
+        tag: c.tag,
+        x: c.x,
+        y: c.y,
+      }));
+
+      // Prefer the rule-derived durationHours if it parses as something usable;
+      // otherwise fall back to the curated display string.
+      const durationHours =
+        applied.durationHours && applied.durationHours.trim().length > 0
+          ? durationHoursDisplay(applied.durationHours, applied.duration)
+          : durationHoursDisplay(t.durationText, applied.duration);
 
       const row: ImportedTour = {
         id: t.id,
         title: t.title,
         source_url: t.url,
-        region: ai.region,
-        region_label: REGION_CENTROIDS[ai.region]?.label ?? ai.region,
-        duration: ai.duration,
-        duration_label: DURATION_LABELS[ai.duration]?.label ?? ai.duration,
-        duration_hours: durationHoursDisplay(t.durationText, ai.duration),
+        region: applied.region,
+        region_label: REGION_CENTROIDS[applied.region]?.label ?? applied.region,
+        duration: applied.duration,
+        duration_label: DURATION_LABELS[applied.duration]?.label ?? applied.duration,
+        duration_hours: durationHours,
         price_from: t.priceFrom,
         theme: ai.theme,
         styles: ai.styles,
-        highlights: ai.highlights,
+        highlights: applied.signatureMoments.length ? applied.signatureMoments : ai.highlights,
         pace: ai.pace,
         tier: ai.tier,
         fits_best: ai.fitsBest,

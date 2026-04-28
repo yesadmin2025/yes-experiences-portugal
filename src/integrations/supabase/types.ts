@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      import_mapping_rules: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean
+          name: string
+          notes: string | null
+          rules: Json
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name: string
+          notes?: string | null
+          rules?: Json
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          notes?: string | null
+          rules?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
       import_runs: {
         Row: {
           created_at: string
