@@ -79,12 +79,20 @@ const styleOpts = [
   { id: "coastal", name: "Coastal & Sea", icon: Waves },
 ];
 
+/* Highlights are real ingredients of YES experiences tours — used as
+   "Signature moments" chips. Each one maps to an actual on-tour activity. */
 const highlightOpts = [
-  { id: "market", name: "Local market at dawn", short: "Market" },
-  { id: "viewpoint", name: "Secret viewpoint", short: "Viewpoint" },
-  { id: "tasting", name: "Private tasting", short: "Tasting" },
-  { id: "longlunch", name: "Long lunch with locals", short: "Long lunch" },
-  { id: "atelier", name: "Artisan atelier visit", short: "Atelier" },
+  { id: "livramento", name: "Livramento Market tasting", short: "Livramento" },
+  { id: "boat", name: "Arrábida boat tour", short: "Boat tour" },
+  { id: "jeep", name: "4×4 Jeep off-the-beaten-path", short: "4×4 Jeep" },
+  { id: "tiles", name: "Hand-painted tiles workshop", short: "Tiles workshop" },
+  { id: "cheese", name: "Azeitão cheese workshop", short: "Cheese workshop" },
+  { id: "tasting", name: "Private winery tasting", short: "Wine tasting" },
+  { id: "portinho", name: "Lunch at Portinho da Arrábida", short: "Portinho lunch" },
+  { id: "sesimbra", name: "Sesimbra fishing village", short: "Sesimbra" },
+  { id: "viewpoint", name: "Arrábida secret viewpoint", short: "Viewpoint" },
+  { id: "dinosaur", name: "Cabo Espichel dinosaur footprints", short: "Dinosaur prints" },
+  { id: "ginjinha", name: "Óbidos Ginjinha tasting", short: "Ginjinha" },
 ];
 
 const paceOpts = [
@@ -126,29 +134,44 @@ const regionOpts = [
    instead of evenly-spaced dots around the centre. Coordinates again
    live in the silhouette's viewBox. */
 const regionStops: Record<string, { x: number; y: number; label: string; tag: string }[]> = {
+  // From Lisbon — the real YES experiences playground: south of the Tagus
+  // through Azeitão, Setúbal, Arrábida and Sesimbra, plus Sintra & Cascais.
   lisbon: [
+    { x: 28, y: 76, label: "Cristo Rei", tag: "Viewpoint" },
+    { x: 30, y: 80, label: "Azeitão", tag: "Cheese & wine" },
+    { x: 33, y: 82, label: "Setúbal · Livramento", tag: "Market" },
+    { x: 36, y: 82, label: "Arrábida Natural Park", tag: "Nature" },
+    { x: 35, y: 84, label: "Portinho da Arrábida", tag: "Coast" },
+    { x: 32, y: 86, label: "Sesimbra", tag: "Fishing village" },
+    { x: 29, y: 86, label: "Cabo Espichel", tag: "Dinosaur prints" },
     { x: 22, y: 76, label: "Sintra", tag: "Heritage" },
-    { x: 32, y: 82, label: "Setúbal", tag: "Coast" },
-    { x: 26, y: 70, label: "Mafra", tag: "Quiet" },
-    { x: 36, y: 74, label: "Arrábida", tag: "Nature" },
+    { x: 20, y: 78, label: "Cascais", tag: "Coast" },
   ],
   porto: [
+    { x: 38, y: 22, label: "Porto", tag: "City" },
     { x: 46, y: 24, label: "Douro Valley", tag: "Wine" },
-    { x: 38, y: 20, label: "Guimarães", tag: "Heritage" },
     { x: 52, y: 28, label: "Pinhão", tag: "River" },
-    { x: 30, y: 30, label: "Aveiro", tag: "Coast" },
+    { x: 36, y: 18, label: "Braga", tag: "Heritage" },
+    { x: 40, y: 20, label: "Guimarães", tag: "Heritage" },
   ],
   alentejo: [
-    { x: 54, y: 84, label: "Évora", tag: "Heritage" },
-    { x: 60, y: 92, label: "Monsaraz", tag: "Quiet" },
     { x: 42, y: 96, label: "Comporta", tag: "Coast" },
-    { x: 56, y: 78, label: "Estremoz", tag: "Wine" },
+    { x: 54, y: 84, label: "Évora", tag: "Heritage" },
+    { x: 56, y: 82, label: "Alentejo wineries", tag: "Wine" },
+    { x: 60, y: 92, label: "Monsaraz", tag: "Quiet" },
+    { x: 50, y: 70, label: "Tomar", tag: "Templar" },
+    { x: 46, y: 64, label: "Coimbra", tag: "University" },
+    { x: 38, y: 60, label: "Fátima", tag: "Sanctuary" },
+    { x: 32, y: 58, label: "Nazaré", tag: "Coast" },
+    { x: 28, y: 64, label: "Óbidos", tag: "Ginjinha" },
   ],
   algarve: [
     { x: 38, y: 112, label: "Lagos", tag: "Coast" },
-    { x: 54, y: 110, label: "Tavira", tag: "Quiet" },
-    { x: 50, y: 116, label: "Ria Formosa", tag: "Nature" },
+    { x: 40, y: 114, label: "Benagil Caves", tag: "Boat ride" },
+    { x: 36, y: 116, label: "Vicentine Coast", tag: "Wild coast" },
     { x: 42, y: 108, label: "Monchique", tag: "Mountain" },
+    { x: 50, y: 116, label: "Ria Formosa", tag: "Nature" },
+    { x: 54, y: 110, label: "Tavira", tag: "Quiet" },
   ],
 };
 
@@ -182,25 +205,59 @@ const emptyState: BuilderState = {
   tier: null,
 };
 
-/* Suggested entry points — each pre-fills the journey so users feel
-   "already inside the experience" the moment they pick one. */
+/* Suggested entry points — modeled on the actual YES experiences best-sellers
+   so the builder pre-fills duration, styles, pace and tier in a way that
+   matches each tour's real timing and the type of client it suits. */
 const seeds: { id: string; kind: string; label: string; sub: string; patch: Partial<BuilderState> }[] = [
-  { id: "douro", kind: "Place",  label: "Douro Valley", sub: "Wine, river, slow",
-    patch: { region: "porto", styles: ["wine", "gastronomy"], pace: "slow" } },
-  { id: "alentejo", kind: "Place", label: "Alentejo", sub: "Quiet plains, long lunches",
-    patch: { region: "alentejo", styles: ["gastronomy", "heritage"], pace: "slow" } },
-  { id: "lisbon", kind: "Place", label: "Lisbon & Coast", sub: "City + sea in one day",
-    patch: { region: "lisbon", styles: ["heritage", "coastal"], pace: "balanced" } },
-  { id: "anniversary", kind: "Moment", label: "An anniversary", sub: "Two of us, something to remember",
-    patch: { groupType: "couple", guests: "1-2", styles: ["gastronomy"], highlights: ["viewpoint"], pace: "slow", tier: "atelier" } },
-  { id: "celebration", kind: "Moment", label: "A celebration", sub: "Friends, a long table, music",
-    patch: { groupType: "friends", guests: "7-15", styles: ["gastronomy"], highlights: ["longlunch"], pace: "balanced", tier: "atelier" } },
+  // PLACES — broad regional intents
+  { id: "arrabida", kind: "Place", label: "Arrábida & Sesimbra", sub: "Coast, boat, hidden coves · 8–9h",
+    patch: { region: "lisbon", duration: "fullday", styles: ["coastal", "nature"],
+      highlights: ["boat", "portinho", "sesimbra", "viewpoint"], pace: "balanced", tier: "signature" } },
+  { id: "azeitao", kind: "Place", label: "Azeitão & Setúbal", sub: "Cheese, wine, Sesimbra · 8–9h",
+    patch: { region: "lisbon", duration: "fullday", styles: ["wine", "gastronomy"],
+      highlights: ["cheese", "tasting", "livramento", "sesimbra"], pace: "slow", tier: "signature" } },
+  { id: "sintra", kind: "Place", label: "Sintra & Cascais", sub: "Hidden gems + tasting · 8–9h",
+    patch: { region: "lisbon", duration: "fullday", styles: ["heritage", "coastal"],
+      highlights: ["tasting", "viewpoint"], pace: "balanced", tier: "signature" } },
+  { id: "douro", kind: "Place", label: "Douro Valley", sub: "Vineyards, river, slow · full day",
+    patch: { region: "porto", duration: "fullday", styles: ["wine", "gastronomy"],
+      highlights: ["tasting"], pace: "slow", tier: "signature" } },
+  { id: "evora", kind: "Place", label: "Évora & Alentejo", sub: "History & wines · 9–11h",
+    patch: { region: "alentejo", duration: "fullday", styles: ["heritage", "wine"],
+      highlights: ["tasting"], pace: "balanced", tier: "signature" } },
+  { id: "algarve", kind: "Place", label: "Algarve · Benagil", sub: "Caves & wild coast · 2 days",
+    patch: { region: "algarve", duration: "twoday", styles: ["coastal", "nature"],
+      highlights: ["boat", "viewpoint"], pace: "balanced", tier: "atelier" } },
+
+  // MOMENTS — client-type led
+  { id: "anniversary", kind: "Moment", label: "An anniversary", sub: "Couple · slow, intimate, viewpoint",
+    patch: { region: "lisbon", groupType: "couple", guests: "1-2", duration: "fullday",
+      styles: ["gastronomy", "wine"], highlights: ["tasting", "portinho", "viewpoint"],
+      pace: "slow", tier: "atelier" } },
+  { id: "celebration", kind: "Moment", label: "A celebration", sub: "Friends · long lunch + tastings",
+    patch: { region: "lisbon", groupType: "friends", guests: "7-15", duration: "fullday",
+      styles: ["gastronomy", "wine"], highlights: ["livramento", "tasting", "portinho"],
+      pace: "balanced", tier: "atelier" } },
+  { id: "family-jeep", kind: "Moment", label: "A family adventure", sub: "Family · 4×4, beach picnic · 7–8h",
+    patch: { region: "lisbon", groupType: "family", guests: "3-6", duration: "fullday",
+      styles: ["nature", "coastal"], highlights: ["jeep", "dinosaur", "viewpoint"],
+      pace: "balanced", tier: "signature" } },
+
+  // IDEAS — themed days
+  { id: "wine-day", kind: "Idea", label: "A wine day", sub: "Cellars, market, long lunch · 8–9h",
+    patch: { region: "lisbon", duration: "fullday", styles: ["wine", "gastronomy"],
+      highlights: ["tasting", "livramento", "portinho"], pace: "balanced", tier: "signature" } },
+  { id: "tiles-day", kind: "Idea", label: "Tiles & wine workshop", sub: "Hands-on · 7–8h",
+    patch: { region: "lisbon", duration: "fullday", styles: ["heritage", "wine"],
+      highlights: ["tiles", "tasting", "sesimbra"], pace: "slow", tier: "signature" } },
+  { id: "off-beaten", kind: "Idea", label: "Off the beaten path", sub: "4×4 + dinosaur prints · 6–7h",
+    patch: { region: "lisbon", duration: "fullday", styles: ["nature"],
+      highlights: ["jeep", "dinosaur", "viewpoint"], pace: "balanced", tier: "signature" } },
+  { id: "faith-route", kind: "Idea", label: "Fátima · Nazaré · Óbidos", sub: "With Ginjinha tasting · 8–9h",
+    patch: { region: "alentejo", duration: "fullday", styles: ["heritage"],
+      highlights: ["ginjinha", "viewpoint"], pace: "balanced", tier: "signature" } },
   { id: "weekend", kind: "Idea", label: "A weekend away", sub: "Three days, no rush",
-    patch: { duration: "threeday", styles: ["nature", "gastronomy"], pace: "slow" } },
-  { id: "wine-day", kind: "Idea", label: "A wine day", sub: "Cellars, family table, vineyards",
-    patch: { duration: "fullday", styles: ["wine", "gastronomy"], highlights: ["tasting", "longlunch"], pace: "balanced" } },
-  { id: "hidden-coast", kind: "Idea", label: "Hidden coast", sub: "Quiet roads, ending at the sea",
-    patch: { duration: "fullday", styles: ["coastal", "nature"], highlights: ["viewpoint"], pace: "slow" } },
+    patch: { duration: "threeday", styles: ["nature", "gastronomy"], pace: "slow", tier: "atelier" } },
 ];
 
 /* ============================================================
