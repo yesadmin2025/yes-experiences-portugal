@@ -775,9 +775,8 @@ function HomePage() {
             </p>
           </div>
 
-          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10 list-none p-0 max-w-6xl mx-auto">
+          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-12 list-none p-0 max-w-6xl mx-auto">
             {startPaths.map((p) => {
-              const Icon = p.icon;
               return (
                 <li
                   key={p.title}
@@ -791,9 +790,11 @@ function HomePage() {
                     data-expected-to={p.expectedTo}
                     data-actual-to={p.to}
                     data-route-ok={p.to === p.expectedTo ? "true" : "false"}
-                    className="decision-scene group relative flex flex-col justify-end h-full min-h-[28rem] md:min-h-[32rem] p-8 md:p-9 overflow-hidden rounded-[2px] bg-[color:var(--charcoal-deep)]"
+                    className="decision-scene group relative flex flex-col justify-end h-full min-h-[30rem] md:min-h-[34rem] p-8 md:p-10 overflow-hidden rounded-[2px] bg-[color:var(--charcoal-deep)] shadow-[0_18px_44px_-22px_rgba(0,0,0,0.55)] transition-all duration-[250ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] hover:-translate-y-1 hover:shadow-[0_32px_64px_-22px_rgba(0,0,0,0.7)] focus-visible:-translate-y-1 focus-visible:shadow-[0_32px_64px_-22px_rgba(0,0,0,0.7)] active:-translate-y-0.5"
                   >
-                    {/* Full immersive scene — the image IS the card. */}
+                    {/* Full immersive scene — the image IS the card.
+                        Zooms 1.03 on hover/focus/touch for a cinematic
+                        "step-into-it" cue. */}
                     {p.bg && (
                       <img
                         src={p.bg}
@@ -801,7 +802,7 @@ function HomePage() {
                         aria-hidden="true"
                         loading="lazy"
                         data-card-image
-                        className="absolute inset-0 w-full h-full object-cover opacity-95 transition-transform duration-[450ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
+                        className="absolute inset-0 w-full h-full object-cover opacity-95 transition-transform duration-[700ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:scale-[1.03] group-focus-visible:scale-[1.03] group-active:scale-[1.025]"
                       />
                     )}
                     {/* Per-image readability gradient. Each photo was sampled
@@ -815,45 +816,31 @@ function HomePage() {
                       className={
                         "absolute inset-0 " +
                         (p.slug === "signature"
-                          // Bright top (sky) + bright lower band (table) →
-                          // strong bottom scrim AND a top scrim for the eyebrow.
-                          ? "bg-[linear-gradient(to_top,rgba(0,0,0,0.94)_0%,rgba(0,0,0,0.86)_22%,rgba(0,0,0,0.55)_55%,rgba(0,0,0,0.35)_80%,rgba(0,0,0,0.45)_100%)]"
+                          ? "bg-[linear-gradient(to_top,rgba(0,0,0,0.94)_0%,rgba(0,0,0,0.86)_22%,rgba(0,0,0,0.55)_55%,rgba(0,0,0,0.30)_80%,rgba(0,0,0,0.40)_100%)]"
                           : p.slug === "tailor"
-                          // Already very dark throughout → light, even overlay
-                          // that only lifts contrast in the text band.
-                          ? "bg-[linear-gradient(to_top,rgba(0,0,0,0.80)_0%,rgba(0,0,0,0.62)_28%,rgba(0,0,0,0.32)_60%,rgba(0,0,0,0.18)_100%)]"
+                          ? "bg-[linear-gradient(to_top,rgba(0,0,0,0.80)_0%,rgba(0,0,0,0.62)_28%,rgba(0,0,0,0.32)_60%,rgba(0,0,0,0.15)_100%)]"
                           : p.slug === "studio"
-                          // Mid-bright top, darker bottom → moderate bottom
-                          // scrim with a soft top wash for the icon/eyebrow.
-                          ? "bg-[linear-gradient(to_top,rgba(0,0,0,0.88)_0%,rgba(0,0,0,0.72)_25%,rgba(0,0,0,0.42)_58%,rgba(0,0,0,0.22)_85%,rgba(0,0,0,0.32)_100%)]"
-                          // moment — very bright top (sky), dark bottom →
-                          // strong top scrim, lighter bottom (image already dark).
-                          : "bg-[linear-gradient(to_top,rgba(0,0,0,0.78)_0%,rgba(0,0,0,0.62)_22%,rgba(0,0,0,0.42)_55%,rgba(0,0,0,0.40)_80%,rgba(0,0,0,0.55)_100%)]")
+                          ? "bg-[linear-gradient(to_top,rgba(0,0,0,0.88)_0%,rgba(0,0,0,0.72)_25%,rgba(0,0,0,0.42)_58%,rgba(0,0,0,0.18)_85%,rgba(0,0,0,0.28)_100%)]"
+                          : "bg-[linear-gradient(to_top,rgba(0,0,0,0.78)_0%,rgba(0,0,0,0.62)_22%,rgba(0,0,0,0.42)_55%,rgba(0,0,0,0.35)_80%,rgba(0,0,0,0.50)_100%)]")
                       }
                     />
-                    {/* Radial vignette — kept uniform for depth consistency. */}
+                    {/* Cinematic radial vignette — slightly stronger so the
+                        scene feels framed, not flat. */}
                     <div
                       aria-hidden="true"
-                      className="absolute inset-0 opacity-45 mix-blend-multiply [background:radial-gradient(120%_80%_at_50%_0%,transparent_50%,rgba(0,0,0,0.6)_100%)]"
+                      className="absolute inset-0 opacity-55 mix-blend-multiply [background:radial-gradient(130%_85%_at_50%_-10%,transparent_45%,rgba(0,0,0,0.7)_100%)]"
                     />
-                    {/* Gold hairline rail — refined accent at top. */}
-                    <span
-                      aria-hidden="true"
-                      className="absolute top-0 left-0 right-0 z-[1] h-px bg-[color:var(--gold)]/65"
-                    />
-                    {/* Icon chip — floats top-left as a quiet seal. */}
-                    <span className="absolute top-7 left-8 md:top-8 md:left-9 z-[1] inline-flex items-center justify-center w-11 h-11 border border-[color:var(--gold)]/55 text-[color:var(--gold)] backdrop-blur-[2px] bg-black/25 transition-colors duration-300 group-hover:bg-black/35 group-active:bg-black/45 group-focus-visible:bg-black/45">
-                      <Icon size={18} strokeWidth={1.5} />
-                    </span>
 
-                    {/* Content anchored to bottom — the scene speaks first. */}
-                    <span className="relative z-[1] text-[10.5px] uppercase tracking-[0.32em] text-[color:var(--gold)]">
+                    {/* Content anchored to bottom — the scene speaks first.
+                        No icon chip, no gold rail — just photography, a quiet
+                        eyebrow, the title, the invitation. */}
+                    <span className="relative z-[1] text-[10.5px] uppercase tracking-[0.34em] text-[color:var(--gold-soft)]">
                       {p.eyebrow}
                     </span>
-                    <h3 className="relative z-[1] serif mt-4 text-[1.95rem] md:text-[2.15rem] leading-[1.05] tracking-[-0.012em] text-white drop-shadow-[0_2px_18px_rgba(0,0,0,0.45)]">
+                    <h3 className="relative z-[1] serif mt-4 text-[2rem] md:text-[2.2rem] leading-[1.05] tracking-[-0.012em] text-white drop-shadow-[0_2px_18px_rgba(0,0,0,0.5)]">
                       {p.title}
                     </h3>
-                    <p className="relative z-[1] mt-4 text-[14.5px] leading-[1.7] font-light text-white/85 drop-shadow-[0_1px_8px_rgba(0,0,0,0.5)]">
+                    <p className="relative z-[1] mt-5 text-[14.5px] md:text-[15px] leading-[1.7] font-light text-white/90 drop-shadow-[0_1px_8px_rgba(0,0,0,0.55)] max-w-[34ch]">
                       {p.line}
                     </p>
                     {/* Doorway CTA — underline animates from a 28px gold tick
@@ -861,7 +848,7 @@ function HomePage() {
                         hold (active). Label fades to gold on activation; arrow
                         steps forward. The whole <Link> remains the tap target
                         (full card), so accessibility is preserved. */}
-                    <span className="cta-doorway relative z-[1] mt-7 inline-flex items-center gap-2.5 text-[13px] uppercase tracking-[0.22em] font-medium text-white transition-colors duration-300 group-hover:text-[color:var(--gold)] group-focus-visible:text-[color:var(--gold)] group-active:text-[color:var(--gold)]">
+                    <span className="cta-doorway relative z-[1] mt-8 inline-flex items-center gap-2.5 text-[12.5px] uppercase tracking-[0.26em] font-medium text-white transition-colors duration-300 group-hover:text-[color:var(--gold)] group-focus-visible:text-[color:var(--gold)] group-active:text-[color:var(--gold)]">
                       <span className="cta-doorway__label relative pb-1.5">
                         {p.cta}
                       </span>
