@@ -1725,10 +1725,18 @@ function buildTimeline(s: BuilderState): Chapter[] {
   }
 
   // Stable sort: equal weights keep insertion order
-  return chapters
+  const sorted = chapters
     .map((c, i) => ({ c, i }))
     .sort((a, b) => a.c.weight - b.c.weight || a.i - b.i)
     .map(({ c }) => c);
+
+  // Assign auto coords to chapters that have a real "place" but no hand-tuned coord.
+  // PRELUDE / EPILOGUE chapters stay ambient (no pin on the map).
+  return sorted.map((c) => {
+    if (c.coord) return c;
+    if (c.slot === "PRELUDE" || c.slot === "EPILOGUE") return c;
+    return { ...c, coord: autoCoord(c.label) };
+  });
 }
 
 function capitalize(s: string) {
