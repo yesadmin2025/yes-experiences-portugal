@@ -779,7 +779,7 @@ function HomePage() {
               // Four distinct visual treatments — each card reads as a
               // different "product" at a glance, while keeping the same
               // grid layout and content structure.
-              const styles = {
+              const styleByAccent = {
                 // 1 · Signature (Ready) — calm ivory with a teal hairline
                 // rail, square teal-stroked icon tile, teal CTA.
                 ivory: {
@@ -846,7 +846,8 @@ function HomePage() {
                   rail: "h-[2px] bg-gradient-to-r from-[color:var(--teal)]/0 via-[color:var(--teal)]/55 to-[color:var(--gold)]/55",
                   ribbon: null,
                 },
-              }[p.accent];
+              };
+              const styles = styleByAccent[p.accent] ?? styleByAccent.ivory;
 
               return (
                 <li
