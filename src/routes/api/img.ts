@@ -16,14 +16,62 @@
  */
 import { createFileRoute } from "@tanstack/react-router";
 
-const ALLOWED_HOSTS = new Set(["yesexperiences.pt", "www.yesexperiences.pt"]);
-const ALLOWED_EXT = /\.(avif|webp|jpe?g|png)$/i;
+export const ALLOWED_HOSTS = new Set(["yesexperiences.pt", "www.yesexperiences.pt"]);
+export const ALLOWED_EXT = /\.(avif|webp|jpe?g|png)$/i;
 // 30 days at the edge, 7 days in the browser. Imported tour images are
 // content-addressed by WordPress filename so safe to cache for a long time.
 const CACHE_HEADERS = {
   "Cache-Control": "public, max-age=604800, immutable",
   "CDN-Cache-Control": "public, max-age=2592000",
 } as const;
+
+// Allowed buckets for `?w=` and `?q=`. Keeping the set tiny prevents callers
+// from polluting the edge cache with arbitrary keys (e.g. ?w=401 vs ?w=402).
+const W_BUCKETS = [240, 320, 480, 640, 800, 1024, 1200, 1600, 1920] as const;
+const Q_BUCKETS = [60, 75, 85] as const;
+
+/**
+ * Pick the chosen Accept variant — `avif`, `webp` or `jpeg` — from the request's
+ * `Accept` header. This is folded into the cache key so AVIF/WebP/JPEG
+ * responses for the same URL never collide in the edge or browser cache.
+ */
+export function pickAcceptVariant(accept: string | null | undefined): "avif" | "webp" | "jpeg" {
+  const a = (accept ?? "").toLowerCase();
+  if (a.includes("image/avif")) return "avif";
+  if (a.includes("image/webp")) return "webp";
+  return "jpeg";
+}
+
+function quantize<T extends number>(value: number, buckets: readonly T[]): T {
+  for (const b of buckets) if (value <= b) return b;
+  return buckets[buckets.length - 1]!;
+}
+
+/**
+ * Builds a stable, normalised cache key for a proxy request.
+ *
+ * - Lower-cases the upstream URL host so case-only differences don't split.
+ * - Quantises `w` and `q` to a fixed bucket set.
+ * - Includes the negotiated Accept variant so different formats for the same
+ *   source URL produce distinct keys (defence-in-depth alongside `Vary`).
+ */
+export function buildCacheKey(input: {
+  upstream: URL;
+  width?: number | null;
+  quality?: number | null;
+  accept?: string | null;
+}): string {
+  const u = new URL(input.upstream.toString());
+  u.hostname = u.hostname.toLowerCase();
+  const w = input.width && Number.isFinite(input.width)
+    ? quantize(Math.round(input.width), W_BUCKETS)
+    : 0;
+  const q = input.quality && Number.isFinite(input.quality)
+    ? quantize(Math.round(input.quality), Q_BUCKETS)
+    : 0;
+  const v = pickAcceptVariant(input.accept);
+  return `img|${u.toString()}|w=${w}|q=${q}|v=${v}`;
+}
 
 function badRequest(msg: string): Response {
   return new Response(msg, { status: 400, headers: { "Cache-Control": "no-store" } });
