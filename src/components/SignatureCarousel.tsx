@@ -179,6 +179,8 @@ export function SignatureCarousel({ items }: Props) {
                 }`}
               />
             </button>
+          );
+        })}
       </div>
     </div>
   );
