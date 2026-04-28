@@ -164,10 +164,29 @@ type Props = {
   label?: string;
 };
 
+const STORAGE_KEY_PREFIX = "contrast-audit-panel:open:";
+
 export function ContrastAuditPanel({ rootSelector, label = "Contrast Audit" }: Props) {
+  const storageKey = `${STORAGE_KEY_PREFIX}${label}`;
   const [findings, setFindings] = useState<Finding[]>([]);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    try {
+      return window.localStorage.getItem(storageKey) === "1";
+    } catch {
+      return false;
+    }
+  });
   const [tick, setTick] = useState(0);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      window.localStorage.setItem(storageKey, open ? "1" : "0");
+    } catch {
+      // ignore quota / privacy-mode errors
+    }
+  }, [open, storageKey]);
 
   useEffect(() => {
     if (!import.meta.env.DEV) return;
