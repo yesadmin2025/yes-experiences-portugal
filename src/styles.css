@@ -426,6 +426,117 @@
   }
 
   /* ─────────────────────────────────────────────────────────────
+     SHARED TYPOGRAPHY SCALE — homepage + content pages.
+     One source of truth so every section stays in proportion.
+
+       .t-display   Hero-only display headline       (mobile→desktop)
+       .t-h1        Anchor section headline (Builder, hero-of-section)
+       .t-h2        Standard section headline        (most sections)
+       .t-h3        Card / sub-section headline
+       .t-eyebrow   Small all-caps label above headline
+       .t-lead      Section intro paragraph (16/17px)
+       .t-body      Default paragraph (15/16px)
+       .t-meta      Small caption / micro-label
+
+     Headings inherit serif + tracking from base h1–h6. Body classes
+     pin the sans family + readable line-height. Use mt-* for vertical
+     spacing — the scale never bakes in margins.
+     ───────────────────────────────────────────────────────────── */
+  .t-display {
+    font-family: var(--font-serif);
+    font-size: 2.75rem;
+    line-height: 1.04;
+    letter-spacing: -0.022em;
+  }
+  @media (min-width: 768px) {
+    .t-display {
+      font-size: 4rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .t-display {
+      font-size: 4.75rem;
+      line-height: 0.98;
+    }
+  }
+  .t-h1 {
+    font-family: var(--font-serif);
+    font-size: 2.5rem;
+    line-height: 1.06;
+    letter-spacing: -0.018em;
+  }
+  @media (min-width: 768px) {
+    .t-h1 {
+      font-size: 3.25rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .t-h1 {
+      font-size: 3.75rem;
+    }
+  }
+  .t-h2 {
+    font-family: var(--font-serif);
+    font-size: 2.25rem;
+    line-height: 1.08;
+    letter-spacing: -0.016em;
+  }
+  @media (min-width: 768px) {
+    .t-h2 {
+      font-size: 3rem;
+    }
+  }
+  .t-h3 {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    line-height: 1.2;
+    letter-spacing: -0.012em;
+  }
+  @media (min-width: 768px) {
+    .t-h3 {
+      font-size: 1.625rem;
+    }
+  }
+  .t-eyebrow {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    line-height: 1;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--charcoal-soft);
+  }
+  .t-lead {
+    font-family: var(--font-sans);
+    font-size: 15.5px;
+    line-height: 1.7;
+    font-weight: 350;
+    color: var(--charcoal);
+  }
+  @media (min-width: 768px) {
+    .t-lead {
+      font-size: 17px;
+    }
+  }
+  .t-body {
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.7;
+    font-weight: 380;
+    color: var(--charcoal);
+  }
+  @media (min-width: 768px) {
+    .t-body {
+      font-size: 16px;
+    }
+  }
+  .t-meta {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--charcoal-soft);
+  }
+
+  /* ─────────────────────────────────────────────────────────────
      CTA SYSTEM — premium, tactile, layered.
      Each button is a small composition:
        • base fill (solid or translucent)
