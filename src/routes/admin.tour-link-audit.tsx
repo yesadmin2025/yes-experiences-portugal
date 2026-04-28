@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { auditTourLinks } from "@/server/tourLinkAudit.functions";
 import type { TourLinkAuditReport } from "@/server/tourLinkAudit.server";
 import { checkRouteFile, type RouteFileCheckResult } from "@/server/routeFileCheck.functions";
@@ -411,6 +411,8 @@ function CrawlerErrorPanel() {
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const resultsRef = useRef<HTMLDivElement | null>(null);
+  const wasLoadingRef = useRef(false);
   const [strategy, setStrategy] = useState<CrawlerErrorStrategy>(() => {
     if (typeof window === "undefined") return "root-cause";
     const saved = window.localStorage.getItem(STRATEGY_STORAGE_KEY);
@@ -483,6 +485,18 @@ function CrawlerErrorPanel() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [strategy]);
 
+  // After a re-scan completes (loading transitions true -> false), auto-scroll
+  // the results section into view.
+  useEffect(() => {
+    if (wasLoadingRef.current && !loading && (info || err)) {
+      // Wait one frame so the results node is actually in the DOM.
+      requestAnimationFrame(() => {
+        resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    }
+    wasLoadingRef.current = loading;
+  }, [loading, info, err]);
+
   const fileHref = info?.file
     ? `vscode://file/${info.file}${info.line ? `:${info.line}${info.column ? `:${info.column}` : ""}` : ""}`
     : null;
@@ -543,59 +557,61 @@ function CrawlerErrorPanel() {
           </div>
         )}
 
-        {err && (
-          <p className="text-xs text-red-800">
-            <strong>Couldn't read log:</strong> {err}
-          </p>
-        )}
+        <div ref={resultsRef} className="scroll-mt-4">
+          {err && (
+            <p className="text-xs text-red-800">
+              <strong>Couldn't read log:</strong> {err}
+            </p>
+          )}
 
-        {info && !info.found && (
-          <p className="text-xs text-emerald-900">
-            No crawler/build errors found in the recent dev-server log. ✓
-          </p>
-        )}
+          {info && !info.found && (
+            <p className="text-xs text-emerald-900">
+              No crawler/build errors found in the recent dev-server log. ✓
+            </p>
+          )}
 
-        {info && info.found && (
-          <div className="space-y-3">
-            <div className="text-xs font-medium text-red-900 break-words">
-              {info.message}
-            </div>
+          {info && info.found && (
+            <div className="space-y-3">
+              <div className="text-xs font-medium text-red-900 break-words">
+                {info.message}
+              </div>
 
-            <div className="flex flex-wrap items-center gap-2 text-xs">
-              {info.file ? (
-                <a
-                  href={fileHref!}
-                  className="inline-flex items-center gap-1.5 border border-[color:var(--border)] hover:border-[color:var(--gold)] bg-white px-2.5 py-1 font-mono"
-                >
-                  <ExternalLink size={11} />
-                  {info.file}
-                  {info.line ? `:${info.line}` : ""}
-                  {info.column ? `:${info.column}` : ""}
-                </a>
-              ) : (
-                <span className="text-[color:var(--charcoal-soft)]">
-                  No file:line found in error block
-                </span>
+              <div className="flex flex-wrap items-center gap-2 text-xs">
+                {info.file ? (
+                  <a
+                    href={fileHref!}
+                    className="inline-flex items-center gap-1.5 border border-[color:var(--border)] hover:border-[color:var(--gold)] bg-white px-2.5 py-1 font-mono"
+                  >
+                    <ExternalLink size={11} />
+                    {info.file}
+                    {info.line ? `:${info.line}` : ""}
+                    {info.column ? `:${info.column}` : ""}
+                  </a>
+                ) : (
+                  <span className="text-[color:var(--charcoal-soft)]">
+                    No file:line found in error block
+                  </span>
+                )}
+                {info.source && (
+                  <span className="text-[10px] uppercase tracking-[0.2em] text-[color:var(--charcoal-soft)]">
+                    matched: {info.source}
+                  </span>
+                )}
+              </div>
+
+              {info.raw && (
+                <details className="text-xs">
+                  <summary className="cursor-pointer text-[color:var(--charcoal-soft)] hover:text-[color:var(--charcoal)]">
+                    Show raw error block
+                  </summary>
+                  <pre className="mt-2 bg-white/70 p-2 overflow-x-auto whitespace-pre-wrap break-all text-[11px] max-h-60">
+                    {info.raw}
+                  </pre>
+                </details>
               )}
-              {info.source && (
-                <span className="text-[10px] uppercase tracking-[0.2em] text-[color:var(--charcoal-soft)]">
-                  matched: {info.source}
-                </span>
-              )}
             </div>
-
-            {info.raw && (
-              <details className="text-xs">
-                <summary className="cursor-pointer text-[color:var(--charcoal-soft)] hover:text-[color:var(--charcoal)]">
-                  Show raw error block
-                </summary>
-                <pre className="mt-2 bg-white/70 p-2 overflow-x-auto whitespace-pre-wrap break-all text-[11px] max-h-60">
-                  {info.raw}
-                </pre>
-              </details>
-            )}
-          </div>
-        )}
+          )}
+        </div>
 
         <div className="mt-3 flex flex-wrap items-center gap-2">
           <label className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-[0.2em] text-[color:var(--charcoal-soft)]">
