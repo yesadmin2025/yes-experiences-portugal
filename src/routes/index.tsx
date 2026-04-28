@@ -927,10 +927,10 @@ function HomePage() {
                 Create it, <span className="italic text-[color:var(--gold-soft)]">live.</span>
               </h2>
               <p className="mt-8 text-[19px] md:text-[22px] lg:text-[24px] text-[color:var(--ivory)] leading-[1.5] max-w-xl font-light">
-                Build your journey in real time — and confirm instantly.
+                Start with a place, a moment, or an idea. Shape it in real time and confirm instantly.
               </p>
               <p className="mt-5 text-[15px] md:text-[16px] italic font-light text-[color:var(--gold-soft)] leading-[1.7] max-w-xl">
-                A local guide is available anytime if you want help.
+                A local is available in real time if you want help.
               </p>
               <Link
                 to="/builder"
