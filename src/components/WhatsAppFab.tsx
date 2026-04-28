@@ -70,10 +70,11 @@ export function WhatsAppFab() {
         className={
           "relative inline-flex h-14 w-14 items-center justify-center rounded-full " +
           "bg-[color:var(--teal)] text-[color:var(--ivory)] " +
+          // Soft teal-shadow at rest — no competing gold ring. Gold only
+          // blooms on hover/focus to reward intent without shouting at idle.
           "shadow-[0_10px_30px_-12px_rgba(41,91,97,0.55)] " +
-          "ring-1 ring-[color:var(--gold)]/40 " +
           "transition-all duration-500 hover:-translate-y-0.5 hover:bg-[color:var(--teal-2)] " +
-          "hover:shadow-[0_18px_38px_-14px_rgba(201,169,106,0.55)] hover:ring-[color:var(--gold)]/80 " +
+          "hover:shadow-[0_18px_38px_-14px_rgba(201,169,106,0.45),0_0_0_1px_color-mix(in_oklab,var(--gold)_45%,transparent)] " +
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] " +
           (mounted ? "opacity-100 scale-100" : "opacity-0 scale-90")
         }
