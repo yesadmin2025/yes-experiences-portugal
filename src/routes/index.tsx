@@ -982,17 +982,18 @@ function HomePage() {
       <section className="py-24 md:py-40 bg-[color:var(--sand)]" aria-labelledby="signatures-title">
         <div className="container-x">
           <div className="reveal text-center max-w-2xl mx-auto mb-14 md:mb-20">
-            <span className="eyebrow">Signature Experiences</span>
+            <span className="eyebrow">Signature Journeys</span>
             <h2
               id="signatures-title"
               className="serif text-[2.25rem] md:text-5xl mt-5 leading-[1.08]"
             >
-              Confirm them as they are. <br />
-              <span className="italic">Or shape them your way.</span>
+              Signature <span className="italic">Journeys.</span>
             </h2>
             <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
-              Three private plans crafted by our locals — confirm as they are, or reshape every
-              detail. Either way, it's yours in seconds.
+              Curated routes designed to be enjoyed as they are.
+            </p>
+            <p className="mt-3 text-[13.5px] md:text-[14px] italic font-light text-[color:var(--charcoal-soft)]/85">
+              You can adjust selected elements to match your rhythm.
             </p>
           </div>
 
