@@ -1430,7 +1430,7 @@ function HomePage() {
                   to="/experiences"
                   className="btn-solid btn-solid--outline"
                 >
-                  Explore Signature Experiences
+                  Explore Signature Journeys
                 </Link>
               </div>
               <p className="mt-6 text-[13.5px] italic font-light text-[color:var(--charcoal-soft)]">
@@ -1442,6 +1442,27 @@ function HomePage() {
                   A local designer can shape it with you.
                 </Link>
               </p>
+
+              {/* Brand line — closing signature, brand voice. */}
+              <div
+                className="mt-12 inline-flex items-center gap-5 md:gap-6 text-[color:var(--charcoal)]"
+                aria-label="Whatever you have in mind, we say YES"
+              >
+                <span className="h-px w-10 md:w-14 bg-gradient-to-r from-transparent to-[color:var(--gold)] shrink-0 opacity-80" />
+                <span
+                  aria-hidden="true"
+                  className="flex flex-col items-center text-[10.5px] md:text-[11px] uppercase tracking-[0.32em] leading-[1.35] text-center"
+                >
+                  <span style={{ fontWeight: 500 }}>Whatever you have in mind,</span>
+                  <span
+                    className="text-[color:var(--gold)] tracking-[0.36em] text-[12px] md:text-[12.5px]"
+                    style={{ fontWeight: 600 }}
+                  >
+                    We say YES.
+                  </span>
+                </span>
+                <span className="h-px w-10 md:w-14 bg-gradient-to-l from-transparent to-[color:var(--gold)] shrink-0 opacity-80" />
+              </div>
             </div>
           </div>
         </div>
