@@ -106,26 +106,37 @@ const signatures = FEATURED_TOUR_IDS
     pace: t.pace,
   }));
 
+// Local Stories — every entry maps to a real moment from a real Signature
+// tour, with the exact photo Viator shot at that stop. Lines are pulled
+// from the tour's own narrative, not invented around the imagery.
 const editorial = [
   {
-    title: "Hidden Coastal Roads",
-    line: "The drive from Sintra to Cabo da Roca that no guidebook quite gets right.",
-    img: editCoastal,
+    title: "Cellars in Azeitão",
+    line: "Three small family wineries in Arrábida — guided tastings poured by the people who pressed the grapes.",
+    img: imgArrabidaWineWinery,
+    to: "/tours/$tourId" as const,
+    tourId: "arrabida-wine-allinclusive",
   },
   {
-    title: "Family Wineries",
-    line: "Three generations, one cellar door, a glass poured by the winemaker himself.",
-    img: editWinery,
+    title: "Hidden Coves of Arrábida",
+    line: "A boat slips into the natural park's turquoise coves — swim, snorkel, or simply drift with the boats.",
+    img: imgArrabidaBoatCoves,
+    to: "/tours/$tourId" as const,
+    tourId: "arrabida-boat",
   },
   {
-    title: "Local Markets at Dawn",
-    line: "Where breakfast is a pastel de nata and the day's plan is written on a napkin.",
-    img: editMarket,
+    title: "Sintra's Royal Estates",
+    line: "Pena, Quinta da Regaleira, the misted gardens — the Sintra you read about, walked at a private pace.",
+    img: imgSintraEstates,
+    to: "/tours/$tourId" as const,
+    tourId: "sintra-cascais",
   },
   {
-    title: "Secret Viewpoints",
-    line: "A bend in the road. A stone wall. The whole valley below — and nobody else.",
-    img: editViewpoint,
+    title: "Where the Land Ends",
+    line: "Cabo da Roca — the western edge of continental Europe, then a long lunch by the water in Cascais.",
+    img: imgSintraCabo,
+    to: "/tours/$tourId" as const,
+    tourId: "sintra-cascais",
   },
 ];
 
