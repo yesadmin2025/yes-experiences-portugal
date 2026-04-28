@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { auditTourLinks } from "@/server/tourLinkAudit.functions";
 import type { TourLinkAuditReport } from "@/server/tourLinkAudit.server";
 import { SiteLayout } from "@/components/SiteLayout";
-import { AlertTriangle, Check, RefreshCw, FileSearch, Link2Off } from "lucide-react";
+import { AlertTriangle, Check, RefreshCw, FileSearch, Link2Off, HelpCircle, FileCode2 } from "lucide-react";
 
 export const Route = createFileRoute("/admin/tour-link-audit")({
   beforeLoad: () => {
