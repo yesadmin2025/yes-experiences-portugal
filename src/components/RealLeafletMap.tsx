@@ -30,10 +30,10 @@ const REGION_CENTERS: Record<string, { lat: number; lng: number; zoom: number }>
   algarve: { lat: 37.10, lng: -8.20, zoom: 9 },
 };
 
-const PORTUGAL_FIT: [[number, number], [number, number]] = [
-  [36.9, -9.6], // SW
-  [42.2, -6.2], // NE
-];
+const PORTUGAL_BOUNDS = L.latLngBounds(
+  L.latLng(36.9, -9.6),
+  L.latLng(42.2, -6.2),
+);
 
 type Marker = StopLatLng & { tours: { id: string; title: string }[] };
 
