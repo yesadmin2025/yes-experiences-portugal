@@ -610,25 +610,35 @@ function WelcomeStep({ onStart }: { onStart: () => void }) {
         className="relative aspect-[4/5] md:aspect-[16/10] bg-cover bg-center"
         style={{ backgroundImage: `url(${WELCOME_IMG})` }}
       >
-        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/30 to-black/80" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/30 to-black/85" />
         <div className="relative h-full flex flex-col justify-end p-6 md:p-10 text-center">
           <p className="text-[10px] uppercase tracking-[0.32em] text-[color:var(--gold-soft)]">
-            Your story begins
+            Real-time journey builder
           </p>
           <h2 className="serif text-3xl md:text-5xl mt-3 leading-[1.1] text-white">
-            What if Portugal <span className="italic">was already waiting</span> for you?
+            Start with <span className="italic">anything</span>
           </h2>
           <p className="mt-4 text-[14px] md:text-[15px] text-white/85 italic max-w-md mx-auto leading-relaxed">
-            Not a form. A few honest questions, a few beautiful choices — and a story that becomes yours, page by page.
+            A place, a moment, a region, or an idea — shape it into a real Portugal journey.
           </p>
-          <button
-            onClick={onStart}
-            className="mt-7 mx-auto inline-flex items-center gap-2 bg-[color:var(--ivory)] text-[color:var(--charcoal)] px-7 py-3.5 text-[11px] uppercase tracking-[0.22em] hover:bg-white transition-colors"
-          >
-            Begin my story <ArrowRight size={14} />
-          </button>
-          <p className="mt-5 text-[10px] uppercase tracking-[0.28em] text-white/60">
-            Private only · Designed by locals
+          <div className="mt-7 flex flex-col sm:flex-row gap-2.5 sm:gap-3 justify-center items-stretch sm:items-center max-w-sm mx-auto w-full">
+            <button
+              onClick={onStart}
+              className="inline-flex items-center justify-center gap-2 bg-[color:var(--ivory)] text-[color:var(--charcoal)] px-7 py-3.5 text-[11px] uppercase tracking-[0.22em] hover:bg-white transition-colors"
+            >
+              Start Building <ArrowRight size={14} />
+            </button>
+            <a
+              href="https://wa.me/351000000000?text=Hi%21%20I%27d%20love%20a%20local%27s%20help%20shaping%20my%20journey%20in%20Portugal."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 border border-white/40 text-white px-7 py-3.5 text-[11px] uppercase tracking-[0.22em] hover:bg-white/10 transition-colors"
+            >
+              <MessageCircle size={13} /> Chat with a local
+            </a>
+          </div>
+          <p className="mt-5 text-[10px] uppercase tracking-[0.28em] text-white/70">
+            Instant confirmation when your journey is ready
           </p>
         </div>
       </div>
