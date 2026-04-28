@@ -419,8 +419,13 @@ function CrawlerErrorPanel() {
     const saved = window.localStorage.getItem(STRATEGY_STORAGE_KEY);
     return saved === "last-error" || saved === "root-cause" ? saved : "root-cause";
   });
+  const [autoScroll, setAutoScroll] = useState<boolean>(() => {
+    if (typeof window === "undefined") return true;
+    const saved = window.localStorage.getItem(AUTOSCROLL_STORAGE_KEY);
+    return saved === null ? true : saved === "true";
+  });
 
-  // Persist strategy across reloads.
+  // Persist strategy + auto-scroll preference across reloads.
   useEffect(() => {
     if (typeof window === "undefined") return;
     try {
@@ -429,6 +434,15 @@ function CrawlerErrorPanel() {
       /* storage unavailable */
     }
   }, [strategy]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      window.localStorage.setItem(AUTOSCROLL_STORAGE_KEY, String(autoScroll));
+    } catch {
+      /* storage unavailable */
+    }
+  }, [autoScroll]);
 
   const [scanStep, setScanStep] = useState(0);
   const [scanStartedAt, setScanStartedAt] = useState<number | null>(null);
