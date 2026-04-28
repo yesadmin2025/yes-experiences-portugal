@@ -1116,6 +1116,40 @@ function PremiumMap({
       </div>
 
       <div className="relative aspect-[4/5] mt-3 mx-5 mb-5 overflow-hidden rounded-sm">
+        {/* Zoom controls — top-right, tap-friendly on mobile */}
+        <div className="absolute top-2 right-2 z-10 flex flex-col gap-1.5">
+          <button
+            type="button"
+            onClick={zoomIn}
+            disabled={zoom >= ZOOM_MAX}
+            aria-label="Zoom in"
+            className="h-9 w-9 inline-flex items-center justify-center bg-[color:var(--ivory)]/95 border border-[color:var(--border)] text-[color:var(--charcoal)] shadow-sm rounded-sm active:scale-95 transition disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            <Plus size={16} />
+          </button>
+          <button
+            type="button"
+            onClick={zoomOut}
+            disabled={zoom <= ZOOM_MIN}
+            aria-label="Zoom out"
+            className="h-9 w-9 inline-flex items-center justify-center bg-[color:var(--ivory)]/95 border border-[color:var(--border)] text-[color:var(--charcoal)] shadow-sm rounded-sm active:scale-95 transition disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            <Minus size={16} />
+          </button>
+          <button
+            type="button"
+            onClick={zoomReset}
+            disabled={zoom === 1}
+            aria-label="Reset zoom"
+            className="h-9 w-9 inline-flex items-center justify-center bg-[color:var(--ivory)]/95 border border-[color:var(--border)] text-[color:var(--charcoal-soft)] shadow-sm rounded-sm active:scale-95 transition disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            <RotateCcw size={14} />
+          </button>
+        </div>
+        {/* Zoom level chip — bottom-right */}
+        <div className="absolute bottom-2 right-2 z-10 text-[9px] uppercase tracking-[0.2em] text-[color:var(--charcoal-soft)] bg-[color:var(--ivory)]/85 px-2 py-1 rounded-sm border border-[color:var(--border)] pointer-events-none">
+          {Math.round(zoom * 100)}%
+        </div>
         <svg
           viewBox={animatedViewBox}
           className="w-full h-full"
