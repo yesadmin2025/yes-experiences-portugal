@@ -777,6 +777,19 @@ function HomePage() {
 
           <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-12 list-none p-0 max-w-6xl mx-auto">
             {startPaths.map((p) => {
+              // Tap-to-focus: on touch devices `:active` only lasts while the
+              // finger is pressed, which feels like a "click" rather than
+              // "entering" the scene. We hold the focused state for ~480ms
+              // after pointerdown so the zoom + lift have time to read as
+              // a deliberate doorway moment before navigation occurs.
+              const handleTouchEnter = (e: React.PointerEvent<HTMLAnchorElement>) => {
+                if (e.pointerType !== "touch") return;
+                const el = e.currentTarget;
+                el.dataset.tapped = "true";
+                window.setTimeout(() => {
+                  el.dataset.tapped = "false";
+                }, 480);
+              };
               return (
                 <li
                   key={p.title}
@@ -790,7 +803,8 @@ function HomePage() {
                     data-expected-to={p.expectedTo}
                     data-actual-to={p.to}
                     data-route-ok={p.to === p.expectedTo ? "true" : "false"}
-                    className="decision-scene group relative flex flex-col justify-end h-full min-h-[30rem] md:min-h-[34rem] p-8 md:p-10 overflow-hidden rounded-[2px] bg-[color:var(--charcoal-deep)] shadow-[0_18px_44px_-22px_rgba(0,0,0,0.55)] transition-all duration-[250ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] hover:-translate-y-1 hover:shadow-[0_32px_64px_-22px_rgba(0,0,0,0.7)] focus-visible:-translate-y-1 focus-visible:shadow-[0_32px_64px_-22px_rgba(0,0,0,0.7)] active:-translate-y-0.5"
+                    onPointerDown={handleTouchEnter}
+                    className="decision-scene group relative flex flex-col justify-end h-full min-h-[30rem] md:min-h-[34rem] p-8 md:p-10 overflow-hidden rounded-[2px] bg-[color:var(--charcoal-deep)] shadow-[0_18px_44px_-22px_rgba(0,0,0,0.55)] transition-all duration-[250ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] hover:-translate-y-1 hover:shadow-[0_32px_64px_-22px_rgba(0,0,0,0.7)] focus-visible:-translate-y-1 focus-visible:shadow-[0_32px_64px_-22px_rgba(0,0,0,0.7)] active:-translate-y-0.5 data-[tapped=true]:-translate-y-1 data-[tapped=true]:shadow-[0_32px_64px_-22px_rgba(0,0,0,0.7)]"
                   >
                     {/* Full immersive scene — the image IS the card.
                         Zooms 1.03 on hover/focus/touch for a cinematic
@@ -802,7 +816,7 @@ function HomePage() {
                         aria-hidden="true"
                         loading="lazy"
                         data-card-image
-                        className="absolute inset-0 w-full h-full object-cover opacity-95 transition-transform duration-[700ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:scale-[1.03] group-focus-visible:scale-[1.03] group-active:scale-[1.025]"
+                        className="absolute inset-0 w-full h-full object-cover opacity-95 transition-transform duration-[700ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:scale-[1.03] group-focus-visible:scale-[1.03] group-active:scale-[1.03] group-data-[tapped=true]:scale-[1.03]"
                       />
                     )}
                     {/* Per-image readability gradient. Each photo was sampled
