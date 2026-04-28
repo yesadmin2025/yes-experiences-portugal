@@ -56,9 +56,9 @@ const CARDS = [
     slug: "tailor",
     file: "src/assets/decision-tailor.jpg",
     gradient: [
-      { pos: 0.00, alpha: 0.72 },
-      { pos: 0.28, alpha: 0.55 },
-      { pos: 0.60, alpha: 0.30 },
+      { pos: 0.00, alpha: 0.80 },
+      { pos: 0.28, alpha: 0.62 },
+      { pos: 0.60, alpha: 0.32 },
       { pos: 1.00, alpha: 0.18 },
     ],
   },
