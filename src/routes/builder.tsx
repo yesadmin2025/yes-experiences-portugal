@@ -656,6 +656,45 @@ function Pills({
   );
 }
 
+/** Wraps the live map and clears the active preview when the user
+ *  swipes horizontally on touch. Mouse/pen interactions are ignored
+ *  so desktop hover preview behavior is unchanged. */
+function SwipeToClearPreview({
+  active,
+  onClear,
+  children,
+}: {
+  active: boolean;
+  onClear: () => void;
+  children: React.ReactNode;
+}) {
+  const start = useRef<{ x: number; y: number } | null>(null);
+  const SWIPE_MIN_X = 48;
+  const SWIPE_MAX_Y = 40;
+
+  return (
+    <div
+      onPointerDown={(e) => {
+        if (e.pointerType === "mouse") return;
+        start.current = { x: e.clientX, y: e.clientY };
+      }}
+      onPointerUp={(e) => {
+        if (e.pointerType === "mouse" || !start.current) return;
+        const dx = e.clientX - start.current.x;
+        const dy = Math.abs(e.clientY - start.current.y);
+        start.current = null;
+        if (active && Math.abs(dx) >= SWIPE_MIN_X && dy <= SWIPE_MAX_Y) {
+          onClear();
+        }
+      }}
+      onPointerCancel={() => { start.current = null; }}
+      className="touch-pan-y"
+    >
+      {children}
+    </div>
+  );
+}
+
 /** Pill list with hover/long-press preview.
  *  - Desktop: pointerenter / pointerleave preview.
  *  - Touch: holding for 300 ms previews without selecting; lift cancels.
