@@ -1285,6 +1285,61 @@
   }
 }
 
+/* ─────────────────────────────────────────────────────────────
+   EDITORIAL CARD — unified premium hover for every card on the
+   homepage (decision cards, beyond-a-day cards, occasions cards,
+   editorial tiles). Implements the brief's "cards must feel alive"
+   contract with a single class:
+     • card lifts to scale 1.02 + soft shadow
+     • inner image (data-card-image) zooms to 1.05
+     • text remains stable (no transform on text)
+     • 240ms smooth easing, both directions
+   Pair with `group` + a child `<img data-card-image>` to wire up
+   the photographic zoom. Falls back gracefully on touch (no hover).
+   ───────────────────────────────────────────────────────────── */
+.editorial-card {
+  position: relative;
+  transition:
+    transform 240ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    box-shadow 240ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    border-color 240ms ease;
+  will-change: transform, box-shadow;
+  box-shadow: 0 1px 2px -1px rgba(46, 46, 46, 0.06);
+}
+.editorial-card:hover {
+  transform: translate3d(0, -2px, 0) scale(1.02);
+  box-shadow: 0 22px 50px -24px rgba(46, 46, 46, 0.22);
+}
+.editorial-card [data-card-image] {
+  transition: transform 600ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  will-change: transform;
+}
+.editorial-card:hover [data-card-image] {
+  transform: scale(1.05);
+}
+
+@media (hover: none) {
+  .editorial-card:hover {
+    transform: none;
+    box-shadow: 0 1px 2px -1px rgba(46, 46, 46, 0.06);
+  }
+  .editorial-card:hover [data-card-image] {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .editorial-card,
+  .editorial-card:hover {
+    transform: none !important;
+    transition: box-shadow 200ms ease, border-color 200ms ease !important;
+  }
+  .editorial-card [data-card-image],
+  .editorial-card:hover [data-card-image] {
+    transform: none !important;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   [class*="animate-[heroFade"],
   [class*="animate-[heroZoom"],
