@@ -30,9 +30,29 @@ type Props = {
   steps: DecisionStep[];
 };
 
+/** Runtime guard: keep only well-formed step entries. */
+function sanitizeSteps(steps: unknown): DecisionStep[] {
+  if (!Array.isArray(steps)) return [];
+  const seen = new Set<string>();
+  const out: DecisionStep[] = [];
+  for (const s of steps) {
+    if (!s || typeof s !== "object") continue;
+    const id = (s as Record<string, unknown>).id;
+    const label = (s as Record<string, unknown>).label;
+    if (typeof id !== "string" || !id) continue;
+    if (typeof label !== "string" || !label) continue;
+    if (seen.has(id)) continue;
+    seen.add(id);
+    out.push({ id, label });
+  }
+  return out;
+}
+
 export function DecisionStepper({ sectionId, steps }: Props) {
+  const safeSteps = sanitizeSteps(steps);
   const [visible, setVisible] = useState(false);
-  const [activeId, setActiveId] = useState<string | null>(steps[0]?.id ?? null);
+  const [activeId, setActiveId] = useState<string | null>(safeSteps[0]?.id ?? null);
+  const [hasError, setHasError] = useState(false);
   const ratiosRef = useRef<Map<string, number>>(new Map());
 
   // Track section visibility — show stepper only while section is on screen.
