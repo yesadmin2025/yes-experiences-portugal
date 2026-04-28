@@ -2,8 +2,9 @@ import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { auditTourLinks } from "@/server/tourLinkAudit.functions";
 import type { TourLinkAuditReport } from "@/server/tourLinkAudit.server";
+import { checkRouteFile, type RouteFileCheckResult } from "@/server/routeFileCheck.functions";
 import { SiteLayout } from "@/components/SiteLayout";
-import { AlertTriangle, Check, RefreshCw, FileSearch, Link2Off, HelpCircle, FileCode2 } from "lucide-react";
+import { AlertTriangle, Check, RefreshCw, FileSearch, Link2Off, HelpCircle, FileCode2, Zap, Copy, ExternalLink } from "lucide-react";
 
 export const Route = createFileRoute("/admin/tour-link-audit")({
   beforeLoad: () => {
