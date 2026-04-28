@@ -15,12 +15,17 @@ import { useEffect, useState } from "react";
  */
 
 // Single source of truth — swap once when the production number is known.
-const WHATSAPP_NUMBER = "351000000000"; // intl format, no '+' / spaces
+export const WHATSAPP_NUMBER = "351000000000"; // intl format, no '+' / spaces
 const WHATSAPP_MESSAGE = "Hi! I'd love a local's help shaping my journey in Portugal.";
 
-function whatsappHref() {
+/**
+ * Builds a wa.me URL with an optional pre-filled message. Exported so other
+ * surfaces (tour detail page, tailor form, multi-day request CTA) can reuse
+ * it instead of hand-rolling their own.
+ */
+export function whatsappHref(message?: string): string {
   const url = new URL(`https://wa.me/${WHATSAPP_NUMBER}`);
-  url.searchParams.set("text", WHATSAPP_MESSAGE);
+  url.searchParams.set("text", message ?? WHATSAPP_MESSAGE);
   return url.toString();
 }
 
