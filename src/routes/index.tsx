@@ -784,7 +784,7 @@ function HomePage() {
       >
         <div className="container-x">
           <div className="reveal text-center max-w-2xl mx-auto mb-12 md:mb-16">
-            <span className="eyebrow">Four ways in</span>
+            <span className="eyebrow">Where to begin</span>
             <h2
               id="start-paths-title"
               className="serif text-[2.25rem] md:text-5xl mt-5 leading-[1.08]"
@@ -792,10 +792,10 @@ function HomePage() {
               Choose how <span className="italic">you want to start.</span>
             </h2>
             <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.7] font-light">
-              Every path confirms instantly. No forms, no waiting.
+              Five ways in. Every one confirms instantly — no forms, no waiting.
             </p>
             <p className="mt-3 text-[13.5px] italic font-light text-[color:var(--charcoal-soft)]">
-              A local is always available to guide you, if you want it.{" "}
+              A local guide is always available, in real time, if you want help.{" "}
               <Link
                 to="/contact"
                 className="underline decoration-[color:var(--gold)]/60 underline-offset-4 hover:text-[color:var(--teal)] transition-colors"
