@@ -463,6 +463,12 @@ function CrawlerErrorPanel() {
   ];
 
   const capture = async (s: CrawlerErrorStrategy = strategy) => {
+    // Snapshot scroll position so we can detect manual scroll during the scan.
+    if (typeof window !== "undefined") {
+      scanStartScrollRef.current = window.scrollY;
+      userMovedDuringScanRef.current = false;
+    }
+    setSkippedAutoScroll(false);
     setLoading(true);
     setErr(null);
     setScanStep(0);
