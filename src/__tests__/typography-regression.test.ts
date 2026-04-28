@@ -88,10 +88,31 @@ beforeAll(async () => {
  * it's obvious which token, headline class, or breakpoint changed.
  * ──────────────────────────────────────────────────────────────── */
 
+/**
+ * Trace info attached to every measurement so a drift entry can be
+ * tracked back to the EXACT element in the source code.
+ *
+ *   selector — best-guess CSS selector (tag + tokenized class fragment)
+ *   index    — 0-based occurrence among siblings of the same selector
+ *              within the same source file (so duplicates are unique)
+ *   file     — source path the element was extracted from
+ *   line     — 1-based line number of the match in that file
+ */
+type Trace = {
+  selector: string;
+  index: number;
+  file: string;
+  line: number;
+};
+
+type HeadlineRecord = { value: string; trace: Trace };
+type SectionHit = { tag: string; cls: string; trace: Trace };
+type TokenRecord = { value: string; source: "src/styles.css" };
+
 type Captured = {
-  headlines: Record<string, string>;
-  sectionSweeps: Record<string, Array<{ tag: string; cls: string }>>;
-  tokenRules: Record<string, string>;
+  headlines: Record<string, HeadlineRecord>;
+  sectionSweeps: Record<string, SectionHit[]>;
+  tokenRules: Record<string, TokenRecord>;
 };
 
 const captured: Captured = {
@@ -99,6 +120,30 @@ const captured: Captured = {
   sectionSweeps: {},
   tokenRules: {},
 };
+
+/** Compute 1-based line number of a character offset within a string. */
+function lineOf(src: string, offset: number): number {
+  let line = 1;
+  for (let i = 0; i < offset && i < src.length; i++) {
+    if (src.charCodeAt(i) === 10) line++;
+  }
+  return line;
+}
+
+/**
+ * Build a stable selector hint from a tag + class string. Picks the
+ * first typography token (t-h2, hero-h1, …) as the discriminator,
+ * falling back to the first class token. Keeps selectors short and
+ * obvious in the diff report.
+ */
+function selectorFor(tag: string, cls: string): string {
+  const tokens = cls.split(/\s+/).filter(Boolean);
+  const typo = tokens.find((t) =>
+    /^(hero-h1|t-display|t-h1|t-h2|t-h3|t-eyebrow|t-lead)$/.test(t),
+  );
+  const pick = typo ?? tokens[0] ?? "";
+  return pick ? `${tag}.${pick}` : tag;
+}
 
 const ARTIFACT_DIR = path.join(ROOT, "test-output", "typography");
 const CURRENT_PATH = path.join(ARTIFACT_DIR, "current.json");
