@@ -1038,7 +1038,10 @@ function HomePage() {
                   </li>
                 ))}
               </ul>
-              <p className="mt-6 text-[13.5px] italic font-light text-[color:var(--charcoal-soft)] leading-[1.7] max-w-md">
+              <p className="mt-6 text-[13.5px] italic font-light text-[color:var(--gold-soft)] leading-[1.7] max-w-md">
+                A moment designed around your rhythm.
+              </p>
+              <p className="mt-2 text-[13px] italic font-light text-[color:var(--charcoal-soft)] leading-[1.7] max-w-md">
                 Tailoring stays inside the chosen tour. To design something entirely your own, open the Studio.
               </p>
               <Link
@@ -1064,105 +1067,83 @@ function HomePage() {
         </div>
       </section>
 
-      {/* 5b — BEYOND DAY TOURS
-          A short, dedicated section that signals to the visitor that this is
-          NOT just day tours: extended journeys + special-moment plans. Two
-          equal-weight blocks, premium and minimal — each links to its
-          dedicated section/route below. */}
+      {/* 5b — EDITORIAL TRANSITION
+          A single full-bleed cinematic frame with a sensory micro-line.
+          Acts as a quiet "breath" between the Tailor block and the
+          Multi-Day journey — pure photography, no card chrome. */}
       <section
-        className="section-y-sm bg-[color:var(--ivory)] border-y border-[color:var(--border)]"
-        aria-labelledby="beyond-title"
+        className="relative h-[58vh] md:h-[70vh] overflow-hidden"
+        aria-label="A road that opens to the sea"
       >
-        <div className="container-x">
-          <div className="reveal text-center max-w-xl mx-auto mb-10 md:mb-14">
-            <span className="eyebrow">Beyond a single day</span>
-            <h2
-              id="beyond-title"
-              className="sr-only"
-            >
-              Beyond a single day
-            </h2>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-5 md:gap-7 max-w-5xl mx-auto">
-            {[
-              {
-                eyebrow: "Extended journeys",
-                title: "Beyond a day",
-                line: "From private days to full journeys across Portugal.",
-                to: "/multi-day" as const,
-                cta: "Discover multi-day",
-                ariaLabel:
-                  "Beyond a day — from private days to full journeys across Portugal",
-                bg: multiDayImg,
-              },
-              {
-                eyebrow: "Special occasions",
-                title: "For moments that matter",
-                line: "Proposals, celebrations, corporate and private groups.",
-                to: "/proposals" as const,
-                cta: "Plan a moment",
-                ariaLabel:
-                  "For moments that matter — proposals, celebrations, corporate and private groups",
-                bg: imgSintraCabo,
-              },
-            ].map((b) => (
-              <Link
-                key={b.title}
-                to={b.to}
-                aria-label={b.ariaLabel}
-                className="reveal-stagger editorial-card group relative flex flex-col p-8 md:p-10 min-h-[18rem] md:min-h-[22rem] bg-[color:var(--charcoal-deep)] border border-[color:var(--border)] hover:border-[color:var(--gold)]/45 overflow-hidden"
-              >
-                <img
-                  src={b.bg}
-                  alt=""
-                  aria-hidden="true"
-                  loading="lazy"
-                  data-card-image
-                  className="absolute inset-0 w-full h-full object-cover opacity-55"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/95 via-[color:var(--charcoal-deep)]/65 to-[color:var(--charcoal-deep)]/30" />
-                <span className="relative z-[1] text-[10.5px] uppercase tracking-[0.3em] text-[color:var(--gold-soft)]">
-                  {b.eyebrow}
-                </span>
-                <h3 className="relative z-[1] serif mt-3 text-[1.7rem] md:text-[2rem] leading-[1.1] tracking-[-0.005em] text-[color:var(--ivory)] transition-colors duration-300 group-hover:text-[color:var(--gold-soft)]">
-                  {b.title}
-                </h3>
-                <p className="relative z-[1] mt-4 text-[15px] md:text-[16px] text-[color:var(--ivory)]/85 leading-[1.7] font-light">
-                  {b.line}
-                </p>
-                <span className="relative z-[1] mt-auto pt-7 inline-flex items-center gap-2 text-[13.5px] tracking-[0.005em] font-medium text-[color:var(--gold-soft)] group-hover:text-[color:var(--gold)] transition-colors">
-                  {b.cta}
-                  <ArrowRight
-                    size={13}
-                    className="transition-transform duration-300 ease-out group-hover:translate-x-1"
-                  />
-                </span>
-              </Link>
-            ))}
+        <img
+          src={imgSintraCabo}
+          alt=""
+          aria-hidden="true"
+          loading="lazy"
+          data-card-image
+          className="absolute inset-0 w-full h-full object-cover scale-[1.04] motion-safe:animate-[heroZoom_38s_ease-out_infinite_alternate]"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/85 via-[color:var(--charcoal-deep)]/30 to-[color:var(--charcoal-deep)]/55" />
+        <div className="absolute inset-0 bg-[radial-gradient(120%_80%_at_50%_60%,transparent_45%,rgba(0,0,0,0.55)_100%)]" />
+        <div className="container-x relative h-full flex items-end pb-12 md:pb-20">
+          <div className="reveal max-w-xl text-[color:var(--ivory)]">
+            <span className="block h-px w-10 bg-[color:var(--gold)] mb-5 opacity-90" />
+            <p className="serif text-[1.6rem] md:text-[2.4rem] leading-[1.15] tracking-[-0.005em] italic font-light drop-shadow-[0_2px_18px_rgba(0,0,0,0.5)]">
+              A road that opens to the sea.
+            </p>
+            <p className="mt-3 text-[12px] md:text-[12.5px] uppercase tracking-[0.32em] text-[color:var(--gold-soft)]">
+              Cabo da Roca · Sintra
+            </p>
           </div>
         </div>
       </section>
 
-      {/* 6 — MULTI-DAY JOURNEYS */}
-      <section className="bg-[color:var(--sand)] section-y">
-        <div className="container-x">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-            <div className="reveal lg:order-2">
-              <span className="eyebrow">Multi-Day Journeys</span>
-              <h2 className="t-h2 mt-5">
+      {/* 6 — MULTI-DAY JOURNEYS
+          Reframed as a cinematic dark scene: a single hero photograph
+          carries the section, copy is overlaid in the lower-left, with
+          a small secondary photo collage in the bottom-right to hint
+          at the rhythm of a multi-day journey (movement → arrival). */}
+      <section
+        className="relative bg-[color:var(--charcoal-deep)] overflow-hidden section-y-lg"
+        aria-labelledby="multiday-title"
+      >
+        <img
+          src={multiDayImg}
+          alt=""
+          aria-hidden="true"
+          loading="lazy"
+          data-card-image
+          className="absolute inset-0 w-full h-full object-cover opacity-70 motion-safe:animate-[heroZoom_42s_ease-out_infinite_alternate]"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-[color:var(--charcoal-deep)]/90 via-[color:var(--charcoal-deep)]/60 to-[color:var(--charcoal-deep)]/30" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/85 via-transparent to-[color:var(--charcoal-deep)]/40" />
+
+        <div className="container-x relative">
+          <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-end max-w-6xl mx-auto">
+            <div className="reveal lg:col-span-7 text-[color:var(--ivory)]">
+              <span className="inline-flex items-center gap-3 text-[11px] uppercase tracking-[0.32em] text-[color:var(--gold)]">
+                <span className="block h-px w-7 bg-[color:var(--gold)]/80" />
+                Multi-Day Journeys
+              </span>
+              <h2
+                id="multiday-title"
+                className="serif mt-7 text-[2.4rem] sm:text-[3.2rem] md:text-[4rem] lg:text-[4.6rem] leading-[1] tracking-[-0.018em] drop-shadow-[0_2px_18px_rgba(0,0,0,0.45)]"
+              >
                 A few days, <br />
-                <span className="italic">one continuous story.</span>
+                <span className="italic text-[color:var(--gold-soft)]">one continuous story.</span>
               </h2>
-              <p className="mt-6 text-[16px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.75] max-w-lg font-light">
-                Linger longer. Travel slower. Wake in a vineyard, lunch in a fishing village, fall
-                asleep above the Douro — connected by quiet roads and people who know them by name.
+              <p className="mt-7 text-[16px] md:text-[18px] text-[color:var(--ivory)]/90 leading-[1.75] max-w-xl font-light">
+                Wake in a vineyard, lunch in a fishing village, fall asleep above the Douro —
+                connected by quiet roads and people who know them by name.
               </p>
-              <div className="mt-8 flex flex-wrap gap-3">
+              <p className="mt-5 text-[13.5px] md:text-[14px] italic font-light text-[color:var(--gold-soft)] leading-[1.7] max-w-md">
+                A village most travelers pass by — until you don't.
+              </p>
+              <div className="mt-8 flex flex-wrap gap-2.5">
                 {["Coast & Vineyards", "Lisbon to Douro", "Alentejo Slow"].map((tag) => (
                   <span
                     key={tag}
-                    className="text-[11.5px] uppercase tracking-[0.2em] px-4 py-2 border border-[color:var(--charcoal)]/20 text-[color:var(--charcoal)]"
+                    className="text-[11px] uppercase tracking-[0.22em] px-3.5 py-2 border border-[color:var(--gold)]/30 text-[color:var(--ivory)]/85"
                   >
                     {tag}
                   </span>
@@ -1170,33 +1151,46 @@ function HomePage() {
               </div>
               <Link
                 to="/multi-day"
-                className="btn-solid btn-solid--teal mt-9"
+                className="btn-solid btn-solid--gold mt-10"
               >
                 Discover Multi-Day Journeys
                 <ArrowRight size={15} />
               </Link>
             </div>
-            <div className="reveal lg:order-1 relative">
-              <div className="editorial-card overflow-hidden border border-[color:var(--border)]">
-                <img
-                  src={multiDayImg}
-                  alt="Aerial view of Douro Valley vineyards"
-                  loading="lazy"
-                  data-card-image
-                  className="w-full aspect-[5/4] object-cover"
-                />
+
+            <div className="reveal lg:col-span-5 hidden md:block">
+              <div className="grid grid-cols-2 gap-3">
+                <div className="editorial-card relative overflow-hidden aspect-[3/4] border border-[color:var(--gold)]/20 translate-y-6">
+                  <img
+                    src={imgArrabidaWineViewpoint}
+                    alt="Coastal viewpoint, Arrábida"
+                    loading="lazy"
+                    data-card-image
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                </div>
+                <div className="editorial-card relative overflow-hidden aspect-[3/4] border border-[color:var(--gold)]/20 -translate-y-3">
+                  <img
+                    src={imgTroiaBeach}
+                    alt="Long beach, Comporta"
+                    loading="lazy"
+                    data-card-image
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                </div>
               </div>
-              <div className="absolute -bottom-5 -left-5 hidden md:block w-28 h-28 border border-[color:var(--gold)]/60" />
             </div>
           </div>
         </div>
       </section>
 
       {/* 7 — CELEBRATIONS & CORPORATE
-          Surfaces the "moments that matter" path: proposals, celebrations
-          and corporate. Three soft entry points that all lead to dedicated
-          routes, with the same "start from idea, tailor a signature, or
-          design from scratch" framing as the rest of the site. */}
+          Asymmetric editorial layout — breaks the rhythm of repeating
+          three-up grids. Proposals takes the large emotional frame
+          (left, full image), Celebrations and Corporate stack on the
+          right (smaller, text-led on real photography). */}
       <section
         className="section-y bg-[color:var(--ivory)] border-y border-[color:var(--border)]"
         aria-labelledby="occasions-title"
@@ -1210,42 +1204,75 @@ function HomePage() {
             >
               For moments <span className="italic">that matter.</span>
             </h2>
-            <p className="mt-5 text-[12.5px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
-              Proposals · Celebrations · Corporate · Groups
-            </p>
             <p className="t-lead mt-5">
-              From intimate plans to larger groups — all designed your way and confirmed instantly.
+              From intimate plans to larger groups — designed your way and confirmed instantly.
             </p>
           </div>
 
-          <ul className="grid sm:grid-cols-3 gap-5 md:gap-6 list-none p-0 max-w-5xl mx-auto">
-            {[
-              {
-                eyebrow: "Proposals",
-                title: "A moment they'll never forget",
-                line: "A hidden viewpoint, a private dinner, a perfectly timed pause — quietly extraordinary.",
-                to: "/proposals" as const,
-                bg: imgSintraCabo,
-              },
-              {
-                eyebrow: "Celebrations",
-                title: "Birthdays, anniversaries, milestones",
-                line: "Gather the people who matter, in places that feel made for the occasion.",
-                to: "/proposals" as const,
-                bg: imgArrabidaWineLunch,
-              },
-              {
-                eyebrow: "Corporate",
-                title: "Teams, incentives, retreats",
-                line: "Refined private programs that feel nothing like a hotel ballroom.",
-                to: "/corporate" as const,
-                bg: imgArrabidaBoatCoves,
-              },
-            ].map((o) => (
-              <li key={o.eyebrow} className="reveal-stagger h-full">
+          <div className="grid lg:grid-cols-12 gap-5 md:gap-6 max-w-6xl mx-auto">
+            {/* Proposals — large emotional frame */}
+            <Link
+              to="/proposals"
+              aria-label="Proposals — a moment they'll never forget"
+              className="reveal-stagger editorial-card group relative lg:col-span-7 flex flex-col justify-end p-8 md:p-12 min-h-[28rem] md:min-h-[34rem] bg-[color:var(--charcoal-deep)] border border-[color:var(--border)] hover:border-[color:var(--gold)]/50 overflow-hidden"
+            >
+              <img
+                src={imgSintraCabo}
+                alt=""
+                aria-hidden="true"
+                loading="lazy"
+                data-card-image
+                className="absolute inset-0 w-full h-full object-cover opacity-90 transition-transform duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:scale-[1.04]"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/95 via-[color:var(--charcoal-deep)]/55 to-[color:var(--charcoal-deep)]/15" />
+              <div className="absolute inset-0 bg-[radial-gradient(120%_80%_at_30%_100%,transparent_45%,rgba(0,0,0,0.55)_100%)]" />
+
+              <span className="relative z-[1] inline-flex items-center gap-3 text-[10.5px] uppercase tracking-[0.34em] text-[color:var(--gold)]">
+                <span className="block h-px w-6 bg-[color:var(--gold)]/80" />
+                Proposals
+              </span>
+              <h3 className="relative z-[1] serif mt-5 text-[2rem] md:text-[2.6rem] lg:text-[3rem] leading-[1.05] tracking-[-0.012em] text-[color:var(--ivory)] drop-shadow-[0_2px_18px_rgba(0,0,0,0.5)] max-w-[18ch]">
+                A moment they'll <span className="italic text-[color:var(--gold-soft)]">never forget.</span>
+              </h3>
+              <p className="relative z-[1] mt-5 text-[14.5px] md:text-[16px] text-[color:var(--ivory)]/90 leading-[1.7] font-light max-w-[40ch]">
+                A hidden viewpoint, a private dinner, a perfectly timed pause — quietly extraordinary.
+              </p>
+              <p className="relative z-[1] mt-3 text-[12.5px] italic font-light text-[color:var(--gold-soft)] leading-[1.6]">
+                A table where time slows down.
+              </p>
+              <span className="relative z-[1] mt-7 inline-flex items-center gap-2.5 text-[12px] uppercase tracking-[0.28em] font-medium text-[color:var(--ivory)] group-hover:text-[color:var(--gold)] transition-colors">
+                Plan a moment
+                <ArrowRight size={14} className="text-[color:var(--gold)] transition-transform duration-300 ease-out group-hover:translate-x-1.5" />
+              </span>
+            </Link>
+
+            {/* Right column — Celebrations + Corporate stacked */}
+            <div className="lg:col-span-5 grid grid-cols-1 gap-5 md:gap-6">
+              {[
+                {
+                  eyebrow: "Celebrations",
+                  title: "Birthdays, anniversaries, milestones",
+                  line: "Gather the people who matter, in places made for the occasion.",
+                  micro: "A toast that lingers in the room.",
+                  to: "/proposals" as const,
+                  bg: imgArrabidaWineLunch,
+                  cta: "Design a celebration",
+                },
+                {
+                  eyebrow: "Corporate & Groups",
+                  title: "Teams, incentives, retreats",
+                  line: "Refined private programs that feel nothing like a hotel ballroom.",
+                  micro: "Logistics handled. Local knowledge included.",
+                  to: "/corporate" as const,
+                  bg: imgArrabidaBoatCoves,
+                  cta: "Plan for a group",
+                },
+              ].map((o) => (
                 <Link
+                  key={o.eyebrow}
                   to={o.to}
-                  className="editorial-card group relative flex flex-col h-full min-h-[20rem] p-7 md:p-8 bg-[color:var(--charcoal-deep)] border border-[color:var(--border)] hover:border-[color:var(--gold)]/45 overflow-hidden"
+                  aria-label={`${o.eyebrow} — ${o.title}`}
+                  className="reveal-stagger editorial-card group relative flex flex-col justify-end p-7 md:p-8 min-h-[16rem] md:min-h-[16.5rem] bg-[color:var(--charcoal-deep)] border border-[color:var(--border)] hover:border-[color:var(--gold)]/45 overflow-hidden"
                 >
                   <img
                     src={o.bg}
@@ -1253,25 +1280,30 @@ function HomePage() {
                     aria-hidden="true"
                     loading="lazy"
                     data-card-image
-                    className="absolute inset-0 w-full h-full object-cover opacity-50"
+                    className="absolute inset-0 w-full h-full object-cover opacity-75 transition-transform duration-[700ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:scale-[1.03]"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/95 via-[color:var(--charcoal-deep)]/65 to-[color:var(--charcoal-deep)]/35" />
-                  <span className="relative z-[1] text-[10.5px] uppercase tracking-[0.3em] text-[color:var(--gold-soft)]">
+                  <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/92 via-[color:var(--charcoal-deep)]/55 to-[color:var(--charcoal-deep)]/15" />
+
+                  <span className="relative z-[1] text-[10px] uppercase tracking-[0.32em] text-[color:var(--gold)]">
                     {o.eyebrow}
                   </span>
-                  <h3 className="relative z-[1] serif mt-3 text-[1.4rem] md:text-[1.55rem] leading-[1.15] tracking-[-0.005em] text-[color:var(--ivory)]">
+                  <h3 className="relative z-[1] serif mt-3 text-[1.35rem] md:text-[1.5rem] leading-[1.15] tracking-[-0.005em] text-[color:var(--ivory)] drop-shadow-[0_2px_12px_rgba(0,0,0,0.5)]">
                     {o.title}
                   </h3>
-                  <p className="relative z-[1] mt-3 text-[14.5px] text-[color:var(--ivory)]/85 leading-[1.7] font-light flex-1">
+                  <p className="relative z-[1] mt-2.5 text-[13.5px] text-[color:var(--ivory)]/85 leading-[1.65] font-light">
                     {o.line}
                   </p>
-                  <span className="relative z-[1] mt-7 inline-flex items-center gap-2 text-[14px] tracking-[0.005em] font-medium text-[color:var(--gold-soft)] group-hover:text-[color:var(--gold)] group-hover:translate-x-1 transition-all">
-                    Design &amp; confirm instantly <ArrowRight size={13} />
+                  <p className="relative z-[1] mt-2 text-[12px] italic font-light text-[color:var(--gold-soft)] leading-[1.55]">
+                    {o.micro}
+                  </p>
+                  <span className="relative z-[1] mt-4 inline-flex items-center gap-2 text-[11.5px] uppercase tracking-[0.26em] font-medium text-[color:var(--ivory)] group-hover:text-[color:var(--gold)] transition-colors">
+                    {o.cta}
+                    <ArrowRight size={12} className="text-[color:var(--gold)] transition-transform duration-300 ease-out group-hover:translate-x-1" />
                   </span>
                 </Link>
-              </li>
-            ))}
-          </ul>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
@@ -1334,16 +1366,33 @@ function HomePage() {
       </section>
 
       {/* 8 — SOCIAL PROOF
-          Headline anchors the volume of reviews. Three handcrafted quote
-          cards stand in for the Trustpilot widget until a business profile
-          is connected — each carries the platform name in the figcaption to
-          read as a real platform review. */}
-      <section className="section-y bg-[color:var(--sand)]" aria-labelledby="reviews-title">
-        <div className="container-x">
-          <div className="reveal text-center max-w-2xl mx-auto mb-14 md:mb-16">
-            <span className="eyebrow">Voices</span>
-            <h2 id="reviews-title" className="t-h2 mt-5">
-              700+ <span className="italic">5-star reviews</span>
+          Editorial dark surface with a soft tour photo wash, three quote
+          cards on warm ivory paper. Each card pairs the quote with a real
+          tour photo (avatar) so the reviews land as real people who
+          travelled real moments — not floating testimonials. */}
+      <section
+        className="relative section-y bg-[color:var(--charcoal-deep)] overflow-hidden"
+        aria-labelledby="reviews-title"
+      >
+        <img
+          src={imgArrabidaWineLunch}
+          alt=""
+          aria-hidden="true"
+          loading="lazy"
+          className="absolute inset-0 w-full h-full object-cover opacity-[0.18]"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[color:var(--charcoal-deep)]/85 via-[color:var(--charcoal-deep)]/95 to-[color:var(--charcoal-deep)]" />
+
+        <div className="container-x relative">
+          <div className="reveal text-center max-w-2xl mx-auto mb-12 md:mb-16">
+            <span className="text-[10.5px] uppercase tracking-[0.32em] text-[color:var(--gold)]">
+              Voices
+            </span>
+            <h2
+              id="reviews-title"
+              className="serif mt-5 text-[2.2rem] md:text-[3.2rem] leading-[1.05] tracking-[-0.012em] text-[color:var(--ivory)]"
+            >
+              700+ <span className="italic text-[color:var(--gold-soft)]">5-star reviews</span>
             </h2>
             <p
               className="mt-5 flex items-center justify-center gap-1.5 text-[color:var(--gold)]"
@@ -1353,39 +1402,54 @@ function HomePage() {
               {[...Array(5)].map((_, i) => (
                 <Star key={i} size={15} fill="currentColor" strokeWidth={0} aria-hidden="true" />
               ))}
-              <span className="ml-2 text-[13px] tracking-[0.18em] uppercase text-[color:var(--charcoal-soft)]">
+              <span className="ml-2 text-[12px] tracking-[0.18em] uppercase text-[color:var(--ivory)]/70">
                 Across Google · TripAdvisor · Trustpilot
               </span>
             </p>
+            <p className="mt-5 text-[13.5px] md:text-[14px] italic font-light text-[color:var(--ivory)]/75 leading-[1.7]">
+              Real travellers. Real moments. Real Portugal.
+            </p>
           </div>
-          <div className="grid md:grid-cols-3 gap-6 md:gap-7">
-            {reviews.map((r, i) => (
-              <figure key={i} className="group reveal-stagger h-full">
-                <div className="editorial-card bg-[color:var(--card)] border border-[color:var(--border)] hover:border-[color:var(--gold)]/45 p-7 md:p-9 h-full flex flex-col">
-                  <div className="flex gap-0.5 text-[color:var(--gold)] mb-5">
-                    {[...Array(5)].map((_, idx) => (
-                      <Star key={idx} size={13} fill="currentColor" />
-                    ))}
-                  </div>
-                  <blockquote className="serif italic text-[17px] md:text-[20px] leading-[1.6] text-[color:var(--charcoal)] flex-1">
-                    "{r.quote}"
-                  </blockquote>
-                  <figcaption className="mt-6 pt-5 border-t border-[color:var(--border)] flex items-center justify-between gap-3">
-                    <div>
-                      <p className="text-[14px] font-medium text-[color:var(--charcoal)]">
-                        {r.name}
-                      </p>
-                      <p className="text-[12.5px] text-[color:var(--charcoal-soft)] mt-0.5">
-                        {r.location}
-                      </p>
+
+          <div className="grid md:grid-cols-3 gap-5 md:gap-6">
+            {reviews.map((r, i) => {
+              // Pair each quote with a real moment photo as the "avatar".
+              const moments = [imgArrabidaWineLunch, imgSintraEstates, imgTroiaBeach];
+              const moment = moments[i % moments.length];
+              return (
+                <figure key={i} className="group reveal-stagger h-full">
+                  <div className="editorial-card relative bg-[color:var(--ivory)] border border-[color:var(--gold)]/15 hover:border-[color:var(--gold)]/45 p-7 md:p-9 h-full flex flex-col shadow-[0_18px_40px_-22px_rgba(0,0,0,0.55)] transition-shadow duration-300 hover:shadow-[0_28px_56px_-24px_rgba(0,0,0,0.7)]">
+                    <div className="flex gap-0.5 text-[color:var(--gold)] mb-5">
+                      {[...Array(5)].map((_, idx) => (
+                        <Star key={idx} size={13} fill="currentColor" />
+                      ))}
                     </div>
-                    <span className="text-[10.5px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)] shrink-0">
-                      via {r.platform}
-                    </span>
-                  </figcaption>
-                </div>
-              </figure>
-            ))}
+                    <blockquote className="serif italic text-[17px] md:text-[19.5px] leading-[1.6] text-[color:var(--charcoal)] flex-1">
+                      "{r.quote}"
+                    </blockquote>
+                    <figcaption className="mt-6 pt-5 border-t border-[color:var(--border)] flex items-center gap-4">
+                      <span className="block w-11 h-11 rounded-full overflow-hidden border border-[color:var(--gold)]/30 shrink-0">
+                        <img
+                          src={moment}
+                          alt=""
+                          aria-hidden="true"
+                          loading="lazy"
+                          className="w-full h-full object-cover"
+                        />
+                      </span>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[14px] font-medium text-[color:var(--charcoal)]">
+                          {r.name}
+                        </p>
+                        <p className="text-[12px] text-[color:var(--charcoal-soft)] mt-0.5 truncate">
+                          {r.location} · via {r.platform}
+                        </p>
+                      </div>
+                    </figcaption>
+                  </div>
+                </figure>
+              );
+            })}
           </div>
         </div>
       </section>
