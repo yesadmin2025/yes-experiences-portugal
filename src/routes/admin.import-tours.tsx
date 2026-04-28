@@ -268,6 +268,26 @@ function AdminImportPage() {
     };
   }, [tours]);
 
+  /**
+   * Subset of imported tours after applying the active filter pill. The pills
+   * surface the same buckets that drive the coverage stats, so users can drill
+   * into "missing image" or "unmatched" rows directly without scanning.
+   */
+  const filteredTours = useMemo(() => {
+    return tours.filter((t) => {
+      const hasImage = !!t.image_url;
+      const matched = SIGNATURE_BY_URL.has(normalizeUrl(t.source_url));
+      switch (filter) {
+        case "with-image": return hasImage;
+        case "missing-image": return !hasImage;
+        case "matched": return matched;
+        case "unmatched": return !matched;
+        case "all":
+        default: return true;
+      }
+    });
+  }, [tours, filter]);
+
   if (!session) return null; // redirecting
 
   if (isAdmin === false) {
