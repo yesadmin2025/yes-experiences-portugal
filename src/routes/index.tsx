@@ -80,26 +80,16 @@ export const Route = createFileRoute("/")({
   component: HomePage,
 });
 
-const signatures = [
-  {
-    title: "A Day in Hidden Douro",
-    img: expWine,
-    line: "Family wineries, schist terraces, a long lunch above the river — far from the bus routes.",
-    pace: ["Morning vineyard walk", "Long table lunch", "Sunset tasting"],
-  },
-  {
-    title: "Wild Atlantic Coast",
-    img: expCoastal,
-    line: "Coastal roads only locals drive, a fishermen's lunch, a hidden cove with no one else in sight.",
-    pace: ["Cliff walk", "Seafood by the harbor", "Hidden cove"],
-  },
-  {
-    title: "Lisbon Through Locals",
-    img: expStreet,
-    line: "The Lisbon postcards never see — quiet neighborhoods, ateliers and family-run tascas.",
-    pace: ["Morning market", "Artisan visit", "Family tavern lunch"],
-  },
-];
+const signatures = FEATURED_TOUR_IDS
+  .filter((id) => isValidTourId(id))
+  .map((id) => signatureTours.find((t) => t.id === id)!)
+  .map((t) => ({
+    id: t.id,
+    title: t.title,
+    img: t.img,
+    line: t.blurb,
+    pace: t.pace,
+  }));
 
 const editorial = [
   {
