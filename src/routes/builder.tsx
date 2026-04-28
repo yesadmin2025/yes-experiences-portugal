@@ -24,7 +24,7 @@ import {
   Users,
   Map as MapIcon,
   MessageCircle,
-  Map as MapIconUnused2,
+  
   Save,
   Award,
   Share2,
