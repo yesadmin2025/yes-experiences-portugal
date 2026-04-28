@@ -617,14 +617,20 @@ function StepPanel(props: {
    Individual steps
    ============================================================ */
 
-function StepHeader({ title, sub }: { title: React.ReactNode; sub?: React.ReactNode }) {
+export function StepHeader({ title, sub }: { title: React.ReactNode; sub?: React.ReactNode }) {
   return (
-    <div className="animate-fade-in">
-      <h2 className="serif text-[26px] md:text-[34px] leading-[1.15] text-[color:var(--charcoal)]">
+    <div className="animate-fade-in" data-builder-landmark="step-header">
+      <h2
+        data-builder-landmark="step-title"
+        className="serif text-[26px] md:text-[34px] leading-[1.15] text-[color:var(--charcoal)]"
+      >
         {title}
       </h2>
       {sub && (
-        <p className="mt-2.5 text-[13px] md:text-[14px] text-[color:var(--charcoal-soft)] italic leading-relaxed">
+        <p
+          data-builder-landmark="step-sub"
+          className="mt-2.5 text-[13px] md:text-[14px] text-[color:var(--charcoal-soft)] italic leading-relaxed"
+        >
           {sub}
         </p>
       )}
