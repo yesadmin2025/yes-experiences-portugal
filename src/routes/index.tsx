@@ -143,7 +143,7 @@ const startPaths = [
     accent: "ivory" as const,
     slug: "signature",
     stepLabel: "Signature",
-    bg: editViewpoint,
+    bg: decisionSignature,
   },
   {
     icon: Wand2,
@@ -158,7 +158,7 @@ const startPaths = [
     accent: "sand" as const,
     slug: "tailor",
     stepLabel: "Tailor",
-    bg: editWinery,
+    bg: decisionTailor,
   },
   {
     icon: Sparkles,
@@ -173,7 +173,7 @@ const startPaths = [
     accent: "teal" as const,
     slug: "studio",
     stepLabel: "Studio",
-    bg: editCoastal,
+    bg: decisionStudio,
   },
   {
     icon: Gift,
@@ -188,7 +188,7 @@ const startPaths = [
     accent: "charcoal" as const,
     slug: "moment",
     stepLabel: "Moment",
-    bg: catProposals,
+    bg: decisionMoment,
   },
 ];
 
