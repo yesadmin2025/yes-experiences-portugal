@@ -1095,25 +1095,52 @@ function HomePage() {
         </div>
       </section>
 
-      {/* 6 — MULTI-DAY JOURNEYS */}
-      <section className="bg-[color:var(--sand)] section-y">
-        <div className="container-x">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-            <div className="reveal lg:order-2">
-              <span className="eyebrow">Multi-Day Journeys</span>
-              <h2 className="t-h2 mt-5">
+      {/* 6 — MULTI-DAY JOURNEYS
+          Reframed as a cinematic dark scene: a single hero photograph
+          carries the section, copy is overlaid in the lower-left, with
+          a small secondary photo collage in the bottom-right to hint
+          at the rhythm of a multi-day journey (movement → arrival). */}
+      <section
+        className="relative bg-[color:var(--charcoal-deep)] overflow-hidden section-y-lg"
+        aria-labelledby="multiday-title"
+      >
+        <img
+          src={multiDayImg}
+          alt=""
+          aria-hidden="true"
+          loading="lazy"
+          data-card-image
+          className="absolute inset-0 w-full h-full object-cover opacity-70 motion-safe:animate-[heroZoom_42s_ease-out_infinite_alternate]"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-[color:var(--charcoal-deep)]/90 via-[color:var(--charcoal-deep)]/60 to-[color:var(--charcoal-deep)]/30" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/85 via-transparent to-[color:var(--charcoal-deep)]/40" />
+
+        <div className="container-x relative">
+          <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-end max-w-6xl mx-auto">
+            <div className="reveal lg:col-span-7 text-[color:var(--ivory)]">
+              <span className="inline-flex items-center gap-3 text-[11px] uppercase tracking-[0.32em] text-[color:var(--gold)]">
+                <span className="block h-px w-7 bg-[color:var(--gold)]/80" />
+                Multi-Day Journeys
+              </span>
+              <h2
+                id="multiday-title"
+                className="serif mt-7 text-[2.4rem] sm:text-[3.2rem] md:text-[4rem] lg:text-[4.6rem] leading-[1] tracking-[-0.018em] drop-shadow-[0_2px_18px_rgba(0,0,0,0.45)]"
+              >
                 A few days, <br />
-                <span className="italic">one continuous story.</span>
+                <span className="italic text-[color:var(--gold-soft)]">one continuous story.</span>
               </h2>
-              <p className="mt-6 text-[16px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.75] max-w-lg font-light">
-                Linger longer. Travel slower. Wake in a vineyard, lunch in a fishing village, fall
-                asleep above the Douro — connected by quiet roads and people who know them by name.
+              <p className="mt-7 text-[16px] md:text-[18px] text-[color:var(--ivory)]/90 leading-[1.75] max-w-xl font-light">
+                Wake in a vineyard, lunch in a fishing village, fall asleep above the Douro —
+                connected by quiet roads and people who know them by name.
               </p>
-              <div className="mt-8 flex flex-wrap gap-3">
+              <p className="mt-5 text-[13.5px] md:text-[14px] italic font-light text-[color:var(--gold-soft)] leading-[1.7] max-w-md">
+                A village most travelers pass by — until you don't.
+              </p>
+              <div className="mt-8 flex flex-wrap gap-2.5">
                 {["Coast & Vineyards", "Lisbon to Douro", "Alentejo Slow"].map((tag) => (
                   <span
                     key={tag}
-                    className="text-[11.5px] uppercase tracking-[0.2em] px-4 py-2 border border-[color:var(--charcoal)]/20 text-[color:var(--charcoal)]"
+                    className="text-[11px] uppercase tracking-[0.22em] px-3.5 py-2 border border-[color:var(--gold)]/30 text-[color:var(--ivory)]/85"
                   >
                     {tag}
                   </span>
@@ -1121,23 +1148,36 @@ function HomePage() {
               </div>
               <Link
                 to="/multi-day"
-                className="btn-solid btn-solid--teal mt-9"
+                className="btn-solid btn-solid--gold mt-10"
               >
                 Discover Multi-Day Journeys
                 <ArrowRight size={15} />
               </Link>
             </div>
-            <div className="reveal lg:order-1 relative">
-              <div className="editorial-card overflow-hidden border border-[color:var(--border)]">
-                <img
-                  src={multiDayImg}
-                  alt="Aerial view of Douro Valley vineyards"
-                  loading="lazy"
-                  data-card-image
-                  className="w-full aspect-[5/4] object-cover"
-                />
+
+            <div className="reveal lg:col-span-5 hidden md:block">
+              <div className="grid grid-cols-2 gap-3">
+                <div className="editorial-card relative overflow-hidden aspect-[3/4] border border-[color:var(--gold)]/20 translate-y-6">
+                  <img
+                    src={imgArrabidaWineViewpoint}
+                    alt="Coastal viewpoint, Arrábida"
+                    loading="lazy"
+                    data-card-image
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                </div>
+                <div className="editorial-card relative overflow-hidden aspect-[3/4] border border-[color:var(--gold)]/20 -translate-y-3">
+                  <img
+                    src={imgTroiaBeach}
+                    alt="Long beach, Comporta"
+                    loading="lazy"
+                    data-card-image
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                </div>
               </div>
-              <div className="absolute -bottom-5 -left-5 hidden md:block w-28 h-28 border border-[color:var(--gold)]/60" />
             </div>
           </div>
         </div>
