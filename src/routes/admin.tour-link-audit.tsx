@@ -405,6 +405,7 @@ function RouteTreeTroubleshooting() {
 const ROUTE_FILE = "src/routes/admin.tour-link-audit.tsx";
 const EXPECTED_PATH = "/admin/tour-link-audit";
 const STRATEGY_STORAGE_KEY = "crawlerError.strategy";
+const AUTOSCROLL_STORAGE_KEY = "crawlerError.autoScroll";
 
 function CrawlerErrorPanel() {
   const [info, setInfo] = useState<CrawlerErrorInfo | null>(null);
@@ -418,8 +419,13 @@ function CrawlerErrorPanel() {
     const saved = window.localStorage.getItem(STRATEGY_STORAGE_KEY);
     return saved === "last-error" || saved === "root-cause" ? saved : "root-cause";
   });
+  const [autoScroll, setAutoScroll] = useState<boolean>(() => {
+    if (typeof window === "undefined") return true;
+    const saved = window.localStorage.getItem(AUTOSCROLL_STORAGE_KEY);
+    return saved === null ? true : saved === "true";
+  });
 
-  // Persist strategy across reloads.
+  // Persist strategy + auto-scroll preference across reloads.
   useEffect(() => {
     if (typeof window === "undefined") return;
     try {
@@ -428,6 +434,15 @@ function CrawlerErrorPanel() {
       /* storage unavailable */
     }
   }, [strategy]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      window.localStorage.setItem(AUTOSCROLL_STORAGE_KEY, String(autoScroll));
+    } catch {
+      /* storage unavailable */
+    }
+  }, [autoScroll]);
 
   const [scanStep, setScanStep] = useState(0);
   const [scanStartedAt, setScanStartedAt] = useState<number | null>(null);
@@ -486,16 +501,15 @@ function CrawlerErrorPanel() {
   }, [strategy]);
 
   // After a re-scan completes (loading transitions true -> false), auto-scroll
-  // the results section into view.
+  // the results section into view — only when the toggle is enabled.
   useEffect(() => {
-    if (wasLoadingRef.current && !loading && (info || err)) {
-      // Wait one frame so the results node is actually in the DOM.
+    if (autoScroll && wasLoadingRef.current && !loading && (info || err)) {
       requestAnimationFrame(() => {
         resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
       });
     }
     wasLoadingRef.current = loading;
-  }, [loading, info, err]);
+  }, [loading, info, err, autoScroll]);
 
   const fileHref = info?.file
     ? `vscode://file/${info.file}${info.line ? `:${info.line}${info.column ? `:${info.column}` : ""}` : ""}`
@@ -650,6 +664,15 @@ function CrawlerErrorPanel() {
             <RefreshCw size={11} className={loading ? "animate-spin" : ""} />
             {loading ? "Capturing…" : "Capture latest error"}
           </button>
+          <label className="inline-flex items-center gap-1.5 border border-[color:var(--border)] bg-white px-2.5 py-1 text-xs cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={autoScroll}
+              onChange={(e) => setAutoScroll(e.target.checked)}
+              className="h-3 w-3 accent-[color:var(--gold)]"
+            />
+            Auto-scroll to results
+          </label>
           {info?.raw && (
             <button
               type="button"
