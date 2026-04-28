@@ -188,9 +188,9 @@ const startPaths = [
   },
   {
     icon: Sparkles,
-    eyebrow: "Instant · From scratch",
+    eyebrow: "The core experience · Live",
     title: "Build Your Own (Studio)",
-    line: "Create everything in real time and confirm instantly.",
+    line: "Create your journey in real time — with instant confirmation.",
     cta: "Open Studio",
     to: "/builder",
     destination: "Studio",
@@ -800,7 +800,7 @@ function HomePage() {
             </p>
           </div>
 
-          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6 list-none p-0 max-w-6xl mx-auto">
+          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5 md:gap-6 list-none p-0 max-w-6xl mx-auto">
             {startPaths.map((p) => {
               const Icon = p.icon;
               // Four distinct visual treatments — each card reads as a
@@ -844,7 +844,7 @@ function HomePage() {
                   line: "text-[color:var(--ivory)]/85",
                   cta: "text-[color:var(--gold-soft)]",
                   rail: "h-[3px] bg-[color:var(--gold)]",
-                  ribbon: "Most flexible",
+                  ribbon: "Core experience",
                 },
                 // 4 · Celebrations — deep charcoal, dotted gold rail,
                 // rounded gold-soft icon tile, ivory CTA.
@@ -862,7 +862,10 @@ function HomePage() {
               }[p.accent];
 
               return (
-                <li key={p.title} className="reveal-stagger h-full">
+                <li
+                  key={p.title}
+                  className={`reveal-stagger h-full ${p.accent === "teal" ? "sm:col-span-2 lg:col-span-2 lg:row-span-1" : ""}`}
+                >
                   <Link
                     to={p.to}
                     aria-label={p.ariaLabel}
@@ -989,6 +992,110 @@ function HomePage() {
         </div>
       </section>
 
+      {/* 4 — BUILDER (CORE PRODUCT)
+          The main innovation, given dedicated space immediately after the
+          decision grid. Communicates: instant creation + instant
+          confirmation + real-time local guidance. */}
+      <section
+        className="bg-[color:var(--teal)] text-[color:var(--ivory)] py-24 md:py-36 relative overflow-hidden"
+        aria-labelledby="studio-title"
+      >
+        <div className="absolute -top-32 -right-32 w-[28rem] h-[28rem] rounded-full border border-[color:var(--gold)]/15 pointer-events-none" />
+        <div className="absolute -bottom-40 -left-32 w-[24rem] h-[24rem] rounded-full border border-[color:var(--gold)]/10 pointer-events-none" />
+        {/* Subtle live "pulse" dot — signals real-time, alive */}
+        <div className="container-x relative">
+          <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center max-w-6xl mx-auto">
+            <div className="reveal lg:col-span-7">
+              <span className="inline-flex items-center gap-2.5 text-[10.5px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
+                <span className="relative inline-flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full rounded-full bg-[color:var(--gold)] opacity-60 animate-ping" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[color:var(--gold)]" />
+                </span>
+                The Studio · Live now
+              </span>
+              <h2
+                id="studio-title"
+                className="serif text-[2.4rem] md:text-5xl lg:text-[3.4rem] mt-5 leading-[1.05]"
+              >
+                Create it, <span className="italic text-[color:var(--gold-soft)]">live.</span>
+              </h2>
+              <p className="mt-6 text-[16px] md:text-[17.5px] text-[color:var(--ivory)]/90 leading-[1.75] max-w-xl font-light">
+                Start with anything — a place, a moment, or an idea. Shape it your way, in real
+                time, and confirm instantly.
+              </p>
+              <p className="mt-4 text-[14.5px] md:text-[15px] italic font-light text-[color:var(--gold-soft)] leading-[1.7] max-w-xl">
+                A local is always available to guide you if you want it.
+              </p>
+              <ul className="mt-8 space-y-3 text-[14.5px] text-[color:var(--ivory)]/85 max-w-md">
+                <li className="flex items-start gap-3">
+                  <span
+                    className="mt-2 h-px w-5 bg-[color:var(--gold)] shrink-0"
+                    aria-hidden="true"
+                  />
+                  <span>Shape it as you go — see it take form in real time.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span
+                    className="mt-2 h-px w-5 bg-[color:var(--gold)] shrink-0"
+                    aria-hidden="true"
+                  />
+                  <span>Add what feels right — a place, a person, a pause.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span
+                    className="mt-2 h-px w-5 bg-[color:var(--gold)] shrink-0"
+                    aria-hidden="true"
+                  />
+                  <span>Your journey is ready. Confirm instantly — no waiting, no requests.</span>
+                </li>
+              </ul>
+              <Link
+                to="/builder"
+                className="inline-flex items-center gap-2 mt-10 px-9 py-[16px] text-[15px] tracking-[0.005em] font-medium bg-[color:var(--gold)] text-[color:var(--charcoal-deep)] hover:bg-[color:var(--gold-soft)] hover:-translate-y-0.5 shadow-[0_10px_30px_-12px_rgba(201,169,106,0.55)] transition-all duration-500"
+              >
+                Open Studio <ArrowRight size={15} />
+              </Link>
+              <p className="mt-5 text-[13px] italic font-light text-[color:var(--ivory)]/80 max-w-md">
+                Need help?{" "}
+                <Link
+                  to="/contact"
+                  className="underline decoration-[color:var(--gold)]/60 underline-offset-4 hover:text-[color:var(--gold-soft)] transition-colors"
+                >
+                  A local guide is available in real time
+                </Link>{" "}
+                to answer your questions or shape it with you.
+              </p>
+            </div>
+
+            <div className="reveal lg:col-span-5">
+              <div className="relative">
+                <div className="border border-[color:var(--gold)]/30 p-8 md:p-10 bg-[color:var(--teal-2)]/40 backdrop-blur-sm">
+                  <p className="text-[10.5px] uppercase tracking-[0.32em] text-[color:var(--gold)]">
+                    A studio session, in 4 moves
+                  </p>
+                  <ol className="mt-6 space-y-5 list-none p-0 text-[15px] text-[color:var(--ivory)] font-light">
+                    {[
+                      "Start your way — a place, a theme, a feeling",
+                      "Shape it as you go — pace, stops, moments",
+                      "Adjust in real time — until it feels right",
+                      "Your journey is ready. Confirm instantly.",
+                    ].map((step, i) => (
+                      <li key={step} className="flex items-baseline gap-4">
+                        <span className="text-[11px] uppercase tracking-[0.3em] text-[color:var(--gold)] font-medium w-6 shrink-0">
+                          0{i + 1}
+                        </span>
+                        <span>{step}</span>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+                <div className="absolute -top-4 -right-4 hidden md:block w-20 h-20 border border-[color:var(--gold)]/40" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* 5 — SIGNATURE EXPERIENCES (confirm or tailor)
           Three signature starting points. Each can be booked as-is OR
           tailored — that dual nature is communicated in the section
@@ -1054,102 +1161,6 @@ function HomePage() {
             >
               Explore all signatures <ArrowRight size={14} />
             </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* 6 — BUILD YOUR OWN (Studio)
-          Dedicated, visually distinct block for the from-scratch path.
-          Teal background anchors it as a separate product. */}
-      <section
-        className="bg-[color:var(--teal)] text-[color:var(--ivory)] py-24 md:py-36 relative overflow-hidden"
-        aria-labelledby="studio-title"
-      >
-        <div className="absolute -top-32 -right-32 w-[28rem] h-[28rem] rounded-full border border-[color:var(--gold)]/15 pointer-events-none" />
-        <div className="absolute -bottom-40 -left-32 w-[24rem] h-[24rem] rounded-full border border-[color:var(--gold)]/10 pointer-events-none" />
-        <div className="container-x relative">
-          <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center max-w-6xl mx-auto">
-            <div className="reveal lg:col-span-7">
-              <span className="inline-flex items-center gap-2 text-[10.5px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
-                <Sparkles size={13} /> The Studio
-              </span>
-              <h2
-                id="studio-title"
-                className="serif text-[2.4rem] md:text-5xl lg:text-[3.4rem] mt-5 leading-[1.05]"
-              >
-                Build it from scratch. <br />
-                <span className="italic text-[color:var(--gold-soft)]">In real time.</span>
-              </h2>
-              <p className="mt-6 text-[16px] md:text-[17.5px] text-[color:var(--ivory)]/90 leading-[1.75] max-w-xl font-light">
-                Open the Studio and design your private experience step by step — choose your
-                places, your pace, your moments. Adjust as you go. Confirm the second it feels
-                right.
-              </p>
-              <ul className="mt-8 space-y-3 text-[14.5px] text-[color:var(--ivory)]/85 max-w-md">
-                <li className="flex items-start gap-3">
-                  <span
-                    className="mt-2 h-px w-5 bg-[color:var(--gold)] shrink-0"
-                    aria-hidden="true"
-                  />
-                  <span>Real-time creation — see it take shape as you build.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span
-                    className="mt-2 h-px w-5 bg-[color:var(--gold)] shrink-0"
-                    aria-hidden="true"
-                  />
-                  <span>Local knowledge guiding every choice you make.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span
-                    className="mt-2 h-px w-5 bg-[color:var(--gold)] shrink-0"
-                    aria-hidden="true"
-                  />
-                  <span>Instant confirmation — no forms, no waiting, no requests.</span>
-                </li>
-              </ul>
-              <Link
-                to="/builder"
-                className="inline-flex items-center gap-2 mt-10 px-9 py-[16px] text-[15px] tracking-[0.005em] font-medium bg-[color:var(--gold)] text-[color:var(--charcoal-deep)] hover:bg-[color:var(--gold-soft)] transition-colors"
-              >
-                Open the Studio <ArrowRight size={15} />
-              </Link>
-              <p className="mt-5 text-[13px] italic font-light text-[color:var(--ivory)]/75 max-w-md">
-                Prefer guidance?{" "}
-                <Link
-                  to="/contact"
-                  className="underline decoration-[color:var(--gold)]/60 underline-offset-4 hover:text-[color:var(--gold-soft)] transition-colors"
-                >
-                  A local designer can shape it with you.
-                </Link>
-              </p>
-            </div>
-
-            <div className="reveal lg:col-span-5">
-              <div className="relative">
-                <div className="border border-[color:var(--gold)]/30 p-8 md:p-10 bg-[color:var(--teal-2)]/40 backdrop-blur-sm">
-                  <p className="text-[10.5px] uppercase tracking-[0.32em] text-[color:var(--gold)]">
-                    A studio session, in 4 moves
-                  </p>
-                  <ol className="mt-6 space-y-5 list-none p-0 text-[15px] text-[color:var(--ivory)] font-light">
-                    {[
-                      "Choose a region or theme",
-                      "Add experiences, stops, pace",
-                      "Refine timing and moments",
-                      "Confirm — instantly",
-                    ].map((step, i) => (
-                      <li key={step} className="flex items-baseline gap-4">
-                        <span className="text-[11px] uppercase tracking-[0.3em] text-[color:var(--gold)] font-medium w-6 shrink-0">
-                          0{i + 1}
-                        </span>
-                        <span>{step}</span>
-                      </li>
-                    ))}
-                  </ol>
-                </div>
-                <div className="absolute -top-4 -right-4 hidden md:block w-20 h-20 border border-[color:var(--gold)]/40" />
-              </div>
-            </div>
           </div>
         </div>
       </section>

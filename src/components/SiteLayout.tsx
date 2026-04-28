@@ -2,6 +2,7 @@ import { ReactNode, useEffect } from "react";
 import { Navbar } from "./Navbar";
 import { Footer } from "./Footer";
 import { FloatingActions } from "./FloatingActions";
+import { WhatsAppFab } from "./WhatsAppFab";
 import { MobileStickyCTA } from "./MobileStickyCTA";
 import { PostHeroAnnouncer } from "./PostHeroAnnouncer";
 
@@ -71,6 +72,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
       <main className="flex-1">{children}</main>
       <Footer />
       <FloatingActions />
+      <WhatsAppFab />
       <MobileStickyCTA />
       {/* Single polite SR announcer — fires once per tab when the user
           first scrolls past the hero, giving screen-reader users parity
