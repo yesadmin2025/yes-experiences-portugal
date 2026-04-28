@@ -407,7 +407,7 @@ function HomePage() {
                 subheadline, CTAs and microcopy (single hero content grid).
                 Locked to one line on mobile via whitespace-nowrap +
                 a smaller base size + tighter tracking. */}
-            <span className="inline-flex items-center gap-2.5 sm:gap-3.5 whitespace-nowrap text-[10px] sm:text-[12px] md:text-[13px] uppercase tracking-[0.16em] sm:tracking-[0.26em] md:tracking-[0.3em] text-[color:var(--gold-soft)] opacity-0 animate-[heroFade_1.1s_ease-out_0.3s_forwards]">
+            <span className="inline-flex items-center gap-2.5 sm:gap-3.5 whitespace-nowrap text-[10.5px] sm:text-[12px] md:text-[13px] uppercase tracking-[0.18em] sm:tracking-[0.26em] md:tracking-[0.3em] text-[color:var(--gold)] opacity-0 animate-[heroFade_1.1s_ease-out_0.3s_forwards]">
               <span aria-hidden="true" className="text-[color:var(--gold)]">
                 ✦
               </span>
@@ -425,14 +425,14 @@ function HomePage() {
                 the hero column. */}
             <h1
               data-hero-field="headlineLine1 headlineLine2"
-              className="hero-h1 serif mt-8 md:mt-10 text-[2.05rem] sm:text-5xl md:text-7xl lg:text-[5.4rem] leading-[1.02] md:leading-[0.96] tracking-[-0.012em] text-[color:var(--ivory)] text-left opacity-0 animate-[heroFade_1.4s_ease-out_0.6s_forwards]"
+              className="hero-h1 serif mt-7 md:mt-10 text-[2.05rem] sm:text-5xl md:text-7xl lg:text-[5.4rem] leading-[1.08] sm:leading-[1.04] md:leading-[0.96] tracking-[-0.012em] text-[color:var(--ivory)] text-left opacity-0 animate-[heroFade_1.4s_ease-out_0.6s_forwards] [text-shadow:0_2px_18px_rgba(0,0,0,0.35)]"
             >
               <span data-hero-field="headlineLine1" className="block">
                 {HERO_COPY.headlineLine1}
               </span>
               <span
                 data-hero-field="headlineLine2"
-                className="block italic font-medium text-[color:var(--gold-soft)] mt-1 md:mt-1 text-[2.2rem] sm:text-[3.4rem] md:text-[5rem] lg:text-[5.7rem] tracking-[-0.018em]"
+                className="block italic font-medium text-[color:var(--gold-soft)] mt-1.5 md:mt-1 text-[2.2rem] sm:text-[3.4rem] md:text-[5rem] lg:text-[5.7rem] tracking-[-0.018em] leading-[1.05] md:leading-[0.96]"
               >
                 {HERO_COPY.headlineLine2}
               </span>
@@ -442,7 +442,7 @@ function HomePage() {
                 Mobile vertical rhythm: 40px from headline. */}
             <p
               data-hero-field="subheadline"
-              className="mt-10 md:mt-10 text-[18px] md:text-[22px] text-[color:var(--ivory)]/90 max-w-lg leading-[1.7] md:leading-[1.75] font-light text-left opacity-0 animate-[heroFade_1.4s_ease-out_0.95s_forwards]"
+              className="mt-8 md:mt-10 text-[17px] md:text-[22px] text-[color:var(--ivory)]/95 max-w-md md:max-w-lg leading-[1.6] md:leading-[1.75] font-light text-left opacity-0 animate-[heroFade_1.4s_ease-out_0.95s_forwards] [text-shadow:0_1px_8px_rgba(0,0,0,0.3)]"
             >
               {HERO_COPY.subheadline}
             </p>
@@ -498,11 +498,11 @@ function HomePage() {
             <div className="hero-rhythm-cta-to-microcopy max-w-sm sm:max-w-xl mx-auto sm:mx-0 opacity-0 animate-[heroFade_1.4s_ease-out_1.5s_forwards]">
               <p
                 data-hero-field="microcopy"
-                className="text-[14px] md:text-[14.5px] text-[color:var(--ivory)] leading-[1.75] md:leading-[1.7] font-normal tracking-[0.005em] text-center sm:text-left"
+                className="text-[14px] md:text-[14.5px] text-[color:var(--ivory)] leading-[1.65] md:leading-[1.7] font-normal tracking-[0.005em] text-center sm:text-left"
               >
                 {HERO_COPY.microcopy}
               </p>
-              <p className="mt-3 text-[12.5px] md:text-[13px] text-[color:var(--ivory)]/75 italic font-light leading-[1.7] text-center sm:text-left">
+              <p className="mt-3 text-[13px] md:text-[13px] text-[color:var(--ivory)]/85 italic font-light leading-[1.65] text-center sm:text-left">
                 Prefer guidance?{" "}
                 <Link
                   to="/contact"

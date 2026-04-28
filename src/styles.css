@@ -337,12 +337,12 @@
      ───────────────────────────────────────────────────────────── */
   .hero-h1 {
     letter-spacing: -0.012em;
-    line-height: 1.22;
+    line-height: 1.08;
   }
   @media (min-width: 640px) {
     .hero-h1 {
       letter-spacing: -0.014em;
-      line-height: 1.18;
+      line-height: 1.04;
     }
   }
   @media (min-width: 768px) {
