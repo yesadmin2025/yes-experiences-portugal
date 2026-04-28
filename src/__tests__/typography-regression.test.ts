@@ -88,10 +88,31 @@ beforeAll(async () => {
  * it's obvious which token, headline class, or breakpoint changed.
  * ──────────────────────────────────────────────────────────────── */
 
+/**
+ * Trace info attached to every measurement so a drift entry can be
+ * tracked back to the EXACT element in the source code.
+ *
+ *   selector — best-guess CSS selector (tag + tokenized class fragment)
+ *   index    — 0-based occurrence among siblings of the same selector
+ *              within the same source file (so duplicates are unique)
+ *   file     — source path the element was extracted from
+ *   line     — 1-based line number of the match in that file
+ */
+type Trace = {
+  selector: string;
+  index: number;
+  file: string;
+  line: number;
+};
+
+type HeadlineRecord = { value: string; trace: Trace };
+type SectionHit = { tag: string; cls: string; trace: Trace };
+type TokenRecord = { value: string; source: "src/styles.css" };
+
 type Captured = {
-  headlines: Record<string, string>;
-  sectionSweeps: Record<string, Array<{ tag: string; cls: string }>>;
-  tokenRules: Record<string, string>;
+  headlines: Record<string, HeadlineRecord>;
+  sectionSweeps: Record<string, SectionHit[]>;
+  tokenRules: Record<string, TokenRecord>;
 };
 
 const captured: Captured = {
@@ -99,6 +120,30 @@ const captured: Captured = {
   sectionSweeps: {},
   tokenRules: {},
 };
+
+/** Compute 1-based line number of a character offset within a string. */
+function lineOf(src: string, offset: number): number {
+  let line = 1;
+  for (let i = 0; i < offset && i < src.length; i++) {
+    if (src.charCodeAt(i) === 10) line++;
+  }
+  return line;
+}
+
+/**
+ * Build a stable selector hint from a tag + class string. Picks the
+ * first typography token (t-h2, hero-h1, …) as the discriminator,
+ * falling back to the first class token. Keeps selectors short and
+ * obvious in the diff report.
+ */
+function selectorFor(tag: string, cls: string): string {
+  const tokens = cls.split(/\s+/).filter(Boolean);
+  const typo = tokens.find((t) =>
+    /^(hero-h1|t-display|t-h1|t-h2|t-h3|t-eyebrow|t-lead)$/.test(t),
+  );
+  const pick = typo ?? tokens[0] ?? "";
+  return pick ? `${tag}.${pick}` : tag;
+}
 
 const ARTIFACT_DIR = path.join(ROOT, "test-output", "typography");
 const CURRENT_PATH = path.join(ARTIFACT_DIR, "current.json");
@@ -171,6 +216,7 @@ type DriftEntry = {
   category: "headline" | "sectionSweep" | "tokenRule";
   key: string; // page::role | page | selector
   breakpoints?: string[]; // for tokenRule
+  trace?: Trace | Trace[]; // selector + index + file:line traceability
   prev: string | null;
   next: string | null;
 };
@@ -184,9 +230,18 @@ function computeDrift(prev: Captured | null, next: Captured): DriftEntry[] {
     ...Object.keys(next.headlines),
   ]);
   for (const key of allHeadlineKeys) {
-    const p = prev.headlines[key] ?? null;
-    const n = next.headlines[key] ?? null;
-    if (p !== n) drift.push({ category: "headline", key, prev: p, next: n });
+    const p = prev.headlines[key]?.value ?? null;
+    const n = next.headlines[key]?.value ?? null;
+    if (p !== n) {
+      drift.push({
+        category: "headline",
+        key,
+        // Always trace to the CURRENT location when present, else the previous.
+        trace: next.headlines[key]?.trace ?? prev.headlines[key]?.trace,
+        prev: p,
+        next: n,
+      });
+    }
   }
 
   const allSweepKeys = new Set([
@@ -196,7 +251,16 @@ function computeDrift(prev: Captured | null, next: Captured): DriftEntry[] {
   for (const key of allSweepKeys) {
     const p = JSON.stringify(prev.sectionSweeps[key] ?? null, null, 2);
     const n = JSON.stringify(next.sectionSweeps[key] ?? null, null, 2);
-    if (p !== n) drift.push({ category: "sectionSweep", key, prev: p, next: n });
+    if (p !== n) {
+      drift.push({
+        category: "sectionSweep",
+        key,
+        // Trace = ordered list of every hit's location on the current page.
+        trace: (next.sectionSweeps[key] ?? []).map((h) => h.trace),
+        prev: p,
+        next: n,
+      });
+    }
   }
 
   const allTokenKeys = new Set([
@@ -204,8 +268,8 @@ function computeDrift(prev: Captured | null, next: Captured): DriftEntry[] {
     ...Object.keys(next.tokenRules),
   ]);
   for (const key of allTokenKeys) {
-    const p = prev.tokenRules[key] ?? "";
-    const n = next.tokenRules[key] ?? "";
+    const p = prev.tokenRules[key]?.value ?? "";
+    const n = next.tokenRules[key]?.value ?? "";
     if (p !== n) {
       drift.push({
         category: "tokenRule",
@@ -236,9 +300,16 @@ function renderDiffHtml(drift: DriftEntry[]): string {
                 .map((b) => `<code>${escapeHtml(b)}</code>`)
                 .join(", ")}</div>`
             : "";
+        const renderTrace = (t: Trace) =>
+          `<code>${escapeHtml(t.selector)}[${t.index}]</code> · <code>${escapeHtml(t.file)}:${t.line}</code>`;
+        const traceHtml = !d.trace
+          ? ""
+          : Array.isArray(d.trace)
+            ? `<div class="trace">${d.trace.map(renderTrace).join("<br/>")}</div>`
+            : `<div class="trace">${renderTrace(d.trace)}</div>`;
         return `
           <article>
-            <header><h3>${escapeHtml(d.key)}</h3>${bp}</header>
+            <header><h3>${escapeHtml(d.key)}</h3>${bp}${traceHtml}</header>
             ${inlineDiff(d.prev ?? "(missing)", d.next ?? "(missing)")}
           </article>`;
       })
@@ -259,6 +330,8 @@ function renderDiffHtml(drift: DriftEntry[]): string {
   article header h3 { font-size: 13px; margin: 0 0 4px; color: #c4a25a; font-weight: 600; }
   .bp { font-size: 11px; color: #8a8a8a; margin-bottom: 8px; }
   .bp code { background: #1f1f24; padding: 1px 6px; border-radius: 4px; }
+  .trace { font-size: 11px; color: #8a8a8a; margin-bottom: 8px; }
+  .trace code { background: #1f1f24; padding: 1px 6px; border-radius: 4px; color: #c4a25a; }
   .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .prev, .next { background: #08080a; border-radius: 6px; padding: 10px 12px; font: 12px/1.55 ui-monospace, monospace; word-break: break-all; white-space: pre-wrap; }
   .prev { border-left: 3px solid #6b2b2b; }
@@ -441,7 +514,35 @@ describe("Typography regression — headline class strings", () => {
       expect(match, `Could not locate ${h.role} in ${h.file}`).toBeTruthy();
       // Normalize whitespace so a re-format doesn't trip the snapshot
       const cls = match![1].split(/\s+/).filter(Boolean).join(" ");
-      captured.headlines[`${h.page} :: ${h.role}`] = cls;
+
+      // Trace info: pull tag from the matched substring, derive selector,
+      // count how many earlier identical (tag+selector) hits already
+      // appeared in this file → 0-based occurrence index.
+      const matchedSlice = match![0];
+      const tagMatch = matchedSlice.match(/^<\s*([a-zA-Z][a-zA-Z0-9]*)/);
+      const tag = tagMatch ? tagMatch[1] : "unknown";
+      const selector = selectorFor(tag, cls);
+      const offset = match!.index ?? src.indexOf(matchedSlice);
+      const before = src.slice(0, offset);
+      const occurrenceRe = new RegExp(
+        `<${tag}\\b[^>]*\\sclassName="[^"]*\\b${selector
+          .split(".")
+          .slice(1)
+          .join(".")
+          .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`,
+        "g",
+      );
+      const index = (before.match(occurrenceRe) ?? []).length;
+
+      captured.headlines[`${h.page} :: ${h.role}`] = {
+        value: cls,
+        trace: {
+          selector,
+          index,
+          file: h.file,
+          line: lineOf(src, offset),
+        },
+      };
       expect(cls).toMatchSnapshot();
     });
   }
@@ -474,13 +575,28 @@ describe("Typography regression — section headlines (token sweep)", () => {
   for (const { page, file } of SECTION_PAGES) {
     it(`[${page}] all tokenized section headlines`, () => {
       const src = read(file);
-      const hits: Array<{ tag: string; cls: string }> = [];
+      const hits: SectionHit[] = [];
+      // Track per-selector occurrence index so duplicates (e.g. three
+      // <h2 class="t-h2 …">) get a unique index 0, 1, 2.
+      const occurrence = new Map<string, number>();
       let m: RegExpExecArray | null;
       TOKEN_CLASS_RE.lastIndex = 0;
       while ((m = TOKEN_CLASS_RE.exec(src))) {
         const tag = m[1];
         const cls = m[2].split(/\s+/).filter(Boolean).join(" ");
-        hits.push({ tag, cls });
+        const selector = selectorFor(tag, cls);
+        const index = occurrence.get(selector) ?? 0;
+        occurrence.set(selector, index + 1);
+        hits.push({
+          tag,
+          cls,
+          trace: {
+            selector,
+            index,
+            file,
+            line: lineOf(src, m.index),
+          },
+        });
       }
       expect(
         hits.length,
@@ -498,7 +614,7 @@ describe("Typography regression — token rules from styles.css", () => {
     it(`token ${sel}`, () => {
       const rules = extractTokenRules(css, sel);
       expect(rules, `No rules found for ${sel}`).not.toBe("");
-      captured.tokenRules[sel] = rules;
+      captured.tokenRules[sel] = { value: rules, source: "src/styles.css" };
       expect(rules).toMatchSnapshot();
     });
   }

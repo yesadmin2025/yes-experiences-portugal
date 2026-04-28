@@ -1,0 +1,91 @@
+name: Typography Regression
+
+# Runs the static typography regression suite (computed-style tokens,
+# headline class strings, section-headline sweep) on every pull request.
+# On every run we upload the diff artifacts so reviewers can open
+# diff.html to see exactly which token / headline / breakpoint drifted,
+# and we print a direct artifact URL in the test summary.
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: typography-regression-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  typography-regression:
+    name: Typography regression (vitest + diff artifact)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      # The suite always populates test-output/typography/ even when it
+      # passes (current.json + previous.json + empty diff.json + a "no
+      # drift" diff.html). Failures still produce the same artifacts —
+      # the diff.html is the single source of truth for what changed.
+      - name: Run typography regression tests
+        id: vitest
+        run: bunx vitest run src/__tests__/typography-regression.test.ts
+
+      - name: Upload typography diff artifact
+        id: upload
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: typography-diff
+          path: test-output/typography/
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Print artifact URL in step summary
+        if: always()
+        env:
+          ARTIFACT_URL: ${{ steps.upload.outputs.artifact-url }}
+          STATUS: ${{ steps.vitest.outcome }}
+        run: |
+          {
+            echo "## Typography Regression"
+            echo ""
+            echo "**Status:** \`$STATUS\`"
+            echo ""
+            if [ -f test-output/typography/diff.json ]; then
+              COUNT=$(node -e "console.log(JSON.parse(require('fs').readFileSync('test-output/typography/diff.json','utf8')).length)")
+              echo "**Drift entries since last run:** $COUNT"
+              echo ""
+              if [ "$COUNT" -gt 0 ]; then
+                echo "<details><summary>Drift summary (click to expand)</summary>"
+                echo ""
+                echo '```json'
+                head -c 4000 test-output/typography/diff.json
+                echo ""
+                echo '```'
+                echo "</details>"
+                echo ""
+              fi
+            fi
+            if [ -n "$ARTIFACT_URL" ]; then
+              echo "**📊 Open the visual diff report:** [typography-diff artifact]($ARTIFACT_URL)"
+              echo ""
+              echo "Download the artifact and open \`diff.html\` to see a side-by-side, word-level diff of every drifted headline and token, grouped by page and breakpoint, with the exact \`selector[index]\` and \`file:line\` of the source element."
+            else
+              echo "_Artifact URL not available (artifact upload may have been skipped)._"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
