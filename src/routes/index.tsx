@@ -910,7 +910,7 @@ function HomePage() {
           decision grid. Communicates: instant creation + instant
           confirmation + real-time local guidance. */}
       <section
-        className="bg-[color:var(--teal)] text-[color:var(--ivory)] py-24 md:py-36 relative overflow-hidden"
+        className="bg-[color:var(--teal)] text-[color:var(--ivory)] py-32 md:py-44 lg:py-52 relative overflow-hidden"
         aria-labelledby="studio-title"
       >
         <div className="absolute -top-32 -right-32 w-[28rem] h-[28rem] rounded-full border border-[color:var(--gold)]/15 pointer-events-none" />
@@ -919,7 +919,7 @@ function HomePage() {
         <div className="container-x relative">
           <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center max-w-6xl mx-auto">
             <div className="reveal lg:col-span-7">
-              <span className="inline-flex items-center gap-2.5 text-[10.5px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
+              <span className="inline-flex items-center gap-2.5 text-[11px] uppercase tracking-[0.32em] text-[color:var(--gold)]">
                 <span className="relative inline-flex h-2 w-2">
                   <span className="absolute inline-flex h-full w-full rounded-full bg-[color:var(--gold)] opacity-60 animate-ping" />
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-[color:var(--gold)]" />
@@ -928,56 +928,22 @@ function HomePage() {
               </span>
               <h2
                 id="studio-title"
-                className="serif text-[2.4rem] md:text-5xl lg:text-[3.4rem] mt-5 leading-[1.05]"
+                className="serif text-[2.75rem] sm:text-[3.25rem] md:text-[4rem] lg:text-[4.75rem] mt-6 leading-[0.98] tracking-[-0.01em]"
               >
                 Create it, <span className="italic text-[color:var(--gold-soft)]">live.</span>
               </h2>
-              <p className="mt-6 text-[16px] md:text-[17.5px] text-[color:var(--ivory)]/90 leading-[1.75] max-w-xl font-light">
-                Start with anything — a place, a moment, or an idea. Shape it your way, in real
-                time, and confirm instantly.
+              <p className="mt-7 text-[17px] md:text-[19px] lg:text-[20px] text-[color:var(--ivory)] leading-[1.55] max-w-xl font-light">
+                Build your journey in real time and confirm instantly.
               </p>
-              <p className="mt-4 text-[14.5px] md:text-[15px] italic font-light text-[color:var(--gold-soft)] leading-[1.7] max-w-xl">
-                A local is always available to guide you if you want it.
+              <p className="mt-4 text-[14.5px] md:text-[15.5px] italic font-light text-[color:var(--gold-soft)] leading-[1.7] max-w-xl">
+                A local guide is always available if you want help.
               </p>
-              <ul className="mt-8 space-y-3 text-[14.5px] text-[color:var(--ivory)]/85 max-w-md">
-                <li className="flex items-start gap-3">
-                  <span
-                    className="mt-2 h-px w-5 bg-[color:var(--gold)] shrink-0"
-                    aria-hidden="true"
-                  />
-                  <span>Shape it as you go — see it take form in real time.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span
-                    className="mt-2 h-px w-5 bg-[color:var(--gold)] shrink-0"
-                    aria-hidden="true"
-                  />
-                  <span>Add what feels right — a place, a person, a pause.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span
-                    className="mt-2 h-px w-5 bg-[color:var(--gold)] shrink-0"
-                    aria-hidden="true"
-                  />
-                  <span>Your journey is ready. Confirm instantly — no waiting, no requests.</span>
-                </li>
-              </ul>
               <Link
                 to="/builder"
-                className="inline-flex items-center gap-2 mt-10 px-9 py-[16px] text-[15px] tracking-[0.005em] font-medium bg-[color:var(--gold)] text-[color:var(--charcoal-deep)] hover:bg-[color:var(--gold-soft)] hover:-translate-y-0.5 shadow-[0_10px_30px_-12px_rgba(201,169,106,0.55)] transition-all duration-500"
+                className="inline-flex items-center gap-2 mt-10 px-10 py-[18px] text-[15.5px] tracking-[0.005em] font-medium bg-[color:var(--gold)] text-[color:var(--charcoal-deep)] hover:bg-[color:var(--gold-soft)] hover:-translate-y-0.5 shadow-[0_14px_36px_-12px_rgba(201,169,106,0.6)] transition-all duration-500"
               >
                 Open Studio <ArrowRight size={15} />
               </Link>
-              <p className="mt-5 text-[13px] italic font-light text-[color:var(--ivory)]/80 max-w-md">
-                Need help?{" "}
-                <Link
-                  to="/contact"
-                  className="underline decoration-[color:var(--gold)]/60 underline-offset-4 hover:text-[color:var(--gold-soft)] transition-colors"
-                >
-                  A local guide is available in real time
-                </Link>{" "}
-                to answer your questions or shape it with you.
-              </p>
             </div>
 
             <div className="reveal lg:col-span-5">
