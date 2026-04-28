@@ -3,10 +3,7 @@ import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { z } from "zod";
 import { SiteLayout } from "@/components/SiteLayout";
 import { signatureTours } from "@/data/signatureTours";
-import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
-const RealLeafletMap = lazy(() =>
-  import("@/components/RealLeafletMap").then((m) => ({ default: m.RealLeafletMap })),
-);
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowRight,
   ArrowLeft,
