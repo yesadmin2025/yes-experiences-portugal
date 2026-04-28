@@ -1363,16 +1363,33 @@ function HomePage() {
       </section>
 
       {/* 8 — SOCIAL PROOF
-          Headline anchors the volume of reviews. Three handcrafted quote
-          cards stand in for the Trustpilot widget until a business profile
-          is connected — each carries the platform name in the figcaption to
-          read as a real platform review. */}
-      <section className="section-y bg-[color:var(--sand)]" aria-labelledby="reviews-title">
-        <div className="container-x">
-          <div className="reveal text-center max-w-2xl mx-auto mb-14 md:mb-16">
-            <span className="eyebrow">Voices</span>
-            <h2 id="reviews-title" className="t-h2 mt-5">
-              700+ <span className="italic">5-star reviews</span>
+          Editorial dark surface with a soft tour photo wash, three quote
+          cards on warm ivory paper. Each card pairs the quote with a real
+          tour photo (avatar) so the reviews land as real people who
+          travelled real moments — not floating testimonials. */}
+      <section
+        className="relative section-y bg-[color:var(--charcoal-deep)] overflow-hidden"
+        aria-labelledby="reviews-title"
+      >
+        <img
+          src={imgArrabidaWineLunch}
+          alt=""
+          aria-hidden="true"
+          loading="lazy"
+          className="absolute inset-0 w-full h-full object-cover opacity-[0.18]"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[color:var(--charcoal-deep)]/85 via-[color:var(--charcoal-deep)]/95 to-[color:var(--charcoal-deep)]" />
+
+        <div className="container-x relative">
+          <div className="reveal text-center max-w-2xl mx-auto mb-12 md:mb-16">
+            <span className="text-[10.5px] uppercase tracking-[0.32em] text-[color:var(--gold)]">
+              Voices
+            </span>
+            <h2
+              id="reviews-title"
+              className="serif mt-5 text-[2.2rem] md:text-[3.2rem] leading-[1.05] tracking-[-0.012em] text-[color:var(--ivory)]"
+            >
+              700+ <span className="italic text-[color:var(--gold-soft)]">5-star reviews</span>
             </h2>
             <p
               className="mt-5 flex items-center justify-center gap-1.5 text-[color:var(--gold)]"
@@ -1382,39 +1399,54 @@ function HomePage() {
               {[...Array(5)].map((_, i) => (
                 <Star key={i} size={15} fill="currentColor" strokeWidth={0} aria-hidden="true" />
               ))}
-              <span className="ml-2 text-[13px] tracking-[0.18em] uppercase text-[color:var(--charcoal-soft)]">
+              <span className="ml-2 text-[12px] tracking-[0.18em] uppercase text-[color:var(--ivory)]/70">
                 Across Google · TripAdvisor · Trustpilot
               </span>
             </p>
+            <p className="mt-5 text-[13.5px] md:text-[14px] italic font-light text-[color:var(--ivory)]/75 leading-[1.7]">
+              Real travellers. Real moments. Real Portugal.
+            </p>
           </div>
-          <div className="grid md:grid-cols-3 gap-6 md:gap-7">
-            {reviews.map((r, i) => (
-              <figure key={i} className="group reveal-stagger h-full">
-                <div className="editorial-card bg-[color:var(--card)] border border-[color:var(--border)] hover:border-[color:var(--gold)]/45 p-7 md:p-9 h-full flex flex-col">
-                  <div className="flex gap-0.5 text-[color:var(--gold)] mb-5">
-                    {[...Array(5)].map((_, idx) => (
-                      <Star key={idx} size={13} fill="currentColor" />
-                    ))}
-                  </div>
-                  <blockquote className="serif italic text-[17px] md:text-[20px] leading-[1.6] text-[color:var(--charcoal)] flex-1">
-                    "{r.quote}"
-                  </blockquote>
-                  <figcaption className="mt-6 pt-5 border-t border-[color:var(--border)] flex items-center justify-between gap-3">
-                    <div>
-                      <p className="text-[14px] font-medium text-[color:var(--charcoal)]">
-                        {r.name}
-                      </p>
-                      <p className="text-[12.5px] text-[color:var(--charcoal-soft)] mt-0.5">
-                        {r.location}
-                      </p>
+
+          <div className="grid md:grid-cols-3 gap-5 md:gap-6">
+            {reviews.map((r, i) => {
+              // Pair each quote with a real moment photo as the "avatar".
+              const moments = [imgArrabidaWineLunch, imgSintraEstates, imgTroiaBeach];
+              const moment = moments[i % moments.length];
+              return (
+                <figure key={i} className="group reveal-stagger h-full">
+                  <div className="editorial-card relative bg-[color:var(--ivory)] border border-[color:var(--gold)]/15 hover:border-[color:var(--gold)]/45 p-7 md:p-9 h-full flex flex-col shadow-[0_18px_40px_-22px_rgba(0,0,0,0.55)] transition-shadow duration-300 hover:shadow-[0_28px_56px_-24px_rgba(0,0,0,0.7)]">
+                    <div className="flex gap-0.5 text-[color:var(--gold)] mb-5">
+                      {[...Array(5)].map((_, idx) => (
+                        <Star key={idx} size={13} fill="currentColor" />
+                      ))}
                     </div>
-                    <span className="text-[10.5px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)] shrink-0">
-                      via {r.platform}
-                    </span>
-                  </figcaption>
-                </div>
-              </figure>
-            ))}
+                    <blockquote className="serif italic text-[17px] md:text-[19.5px] leading-[1.6] text-[color:var(--charcoal)] flex-1">
+                      "{r.quote}"
+                    </blockquote>
+                    <figcaption className="mt-6 pt-5 border-t border-[color:var(--border)] flex items-center gap-4">
+                      <span className="block w-11 h-11 rounded-full overflow-hidden border border-[color:var(--gold)]/30 shrink-0">
+                        <img
+                          src={moment}
+                          alt=""
+                          aria-hidden="true"
+                          loading="lazy"
+                          className="w-full h-full object-cover"
+                        />
+                      </span>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[14px] font-medium text-[color:var(--charcoal)]">
+                          {r.name}
+                        </p>
+                        <p className="text-[12px] text-[color:var(--charcoal-soft)] mt-0.5 truncate">
+                          {r.location} · via {r.platform}
+                        </p>
+                      </div>
+                    </figcaption>
+                  </div>
+                </figure>
+              );
+            })}
           </div>
         </div>
       </section>
