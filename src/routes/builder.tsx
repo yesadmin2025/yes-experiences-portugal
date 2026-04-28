@@ -1255,14 +1255,19 @@ function PremiumMap({
             </pattern>
           </defs>
 
-          {/* Ocean base */}
+          {/* Ocean base + wave texture */}
           <rect x="-20" y="-20" width="140" height="170" fill="url(#ocean)" />
+          <rect x="-20" y="-20" width="140" height="170" fill="url(#waves)" />
 
-          {/* Bathymetry — soft contour lines parallel to the coast */}
-          <g fill="none" stroke="#ffffff" strokeWidth="0.18" opacity="0.35">
-            <path d="M 12 4 C 10 30 8 60 9 90 C 10 110 13 120 16 128" />
-            <path d="M 8 4 C 5 32 3 64 4 96 C 5 114 8 124 11 130" />
+          {/* Bathymetry — soft contour lines parallel to the Atlantic shelf */}
+          <g fill="none" stroke="#ffffff" strokeWidth="0.18" opacity="0.4">
+            <path d="M 14 4 C 12 30 10 60 11 90 C 12 110 15 120 18 128" />
+            <path d="M 10 4 C 7 32 5 64 6 96 C 7 114 10 124 13 130" />
+            <path d="M 5 4 C 2 34 0 66 1 100 C 2 118 5 128 8 132" />
           </g>
+          {/* Continental shelf shadow against Portuguese coast */}
+          <path d="M 20 8 C 18 30 17 60 19 88 C 21 108 24 118 28 122 L 28 130 L 14 130 L 14 4 Z" fill="url(#coastGlow)" opacity="0.5" />
+
 
           {/* Spain landmass — sits behind Portugal to give context */}
           <path
