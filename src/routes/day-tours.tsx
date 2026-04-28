@@ -97,6 +97,7 @@ function DayToursPage() {
               </div>
             </article>
           ))}
+          </div>
         </div>
       </section>
     </SiteLayout>
