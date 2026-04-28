@@ -1093,13 +1093,13 @@ function RevealStep({ s, title, investment }: { s: BuilderState; title: string; 
   return (
     <div>
       <p className="text-[11px] uppercase tracking-[0.24em] text-[color:var(--gold)]">
-        YES — your Portugal story is ready.
+        YES — your journey is ready
       </p>
       <h2 className="serif text-2xl md:text-3xl mt-3 leading-tight text-[color:var(--charcoal)]">
-        You just created your <span className="italic text-[color:var(--teal)]">Signature Portugal Experience</span>.
+        Your <span className="italic text-[color:var(--teal)]">Portugal journey</span> is ready.
       </h2>
       <p className="mt-3 text-[13px] text-[color:var(--charcoal-soft)] italic">
-        Designed with your local guide. Signed by you.
+        Real route. Real timing. Designed with your local guide.
       </p>
 
       {/* Branded experience card */}
@@ -1109,35 +1109,32 @@ function RevealStep({ s, title, investment }: { s: BuilderState; title: string; 
         </div>
 
         <span className="text-[10px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
-          Your Signature Portugal Experience
+          Your Portugal Journey
         </span>
         <h3 className="serif text-2xl mt-2 text-[color:var(--charcoal)] leading-tight">{title}</h3>
 
         <div className="mt-4 space-y-1.5 text-[12px] text-[color:var(--charcoal-soft)]">
-          {s.region && <p>· {regionOpts.find((r) => r.id === s.region)?.name}</p>}
-          {s.duration && <p>· {durationOpts.find((d) => d.id === s.duration)?.label}</p>}
-          {s.styles.length > 0 && <p>· {s.styles.map((id) => styleOpts.find((x) => x.id === id)?.name).join(" · ")}</p>}
+          {s.region && <p>· Route — {regionOpts.find((r) => r.id === s.region)?.name}</p>}
+          {s.duration && <p>· Timing — {durationOpts.find((d) => d.id === s.duration)?.label}</p>}
+          {s.guests && <p>· Group — {guestSizes.find((g) => g.id === s.guests)?.label} guests</p>}
+          {s.styles.length > 0 && <p>· Style — {s.styles.map((id) => styleOpts.find((x) => x.id === id)?.name).join(" · ")}</p>}
           {s.highlights.length > 0 && (
-            <p>· {s.highlights.length} signature moment{s.highlights.length > 1 ? "s" : ""}</p>
+            <p>· {s.highlights.length} stop{s.highlights.length > 1 ? "s" : ""} included · private guide · transfers</p>
           )}
         </div>
 
         <div className="mt-5 pt-5 border-t border-[color:var(--gold)]/30 flex items-end justify-between">
           <div>
-            <p className="text-[10px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)]">Experience Investment</p>
+            <p className="text-[10px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)]">Total</p>
             <p className="serif text-2xl text-[color:var(--charcoal)]">
               {investment ? `from €${investment.toLocaleString()}` : "—"}
             </p>
           </div>
           <p className="serif italic text-[12px] text-[color:var(--charcoal-soft)] text-right">
-            {s.name || "YES Signature Experience"}
+            {s.name || "Your Portugal Journey"}
           </p>
         </div>
       </div>
-
-      <p className="mt-5 text-[13px] text-[color:var(--charcoal-soft)]">
-        Your experience is ready. Confirm instantly — your local guide is reserved in real time, directly on this site.
-      </p>
 
       {/* CTA trio */}
       <div className="mt-6 space-y-2.5">
@@ -1145,18 +1142,28 @@ function RevealStep({ s, title, investment }: { s: BuilderState; title: string; 
           to="/contact"
           className="w-full inline-flex items-center justify-center gap-2 bg-[color:var(--teal)] text-[color:var(--ivory)] px-6 py-4 text-[11px] uppercase tracking-[0.22em] hover:bg-[color:var(--teal-2)] transition-colors"
         >
-          Reserve Instantly <ArrowRight size={13} />
+          Confirm Instantly <ArrowRight size={13} />
         </Link>
-        <button className="w-full inline-flex items-center justify-center gap-2 bg-[color:var(--card)] border border-[color:var(--border)] text-[color:var(--charcoal)] px-6 py-3.5 text-[11px] uppercase tracking-[0.22em] hover:border-[color:var(--teal)]/40 transition-colors">
-          <Save size={13} /> Save My Experience
+        <p className="text-center text-[11px] text-[color:var(--charcoal-soft)] italic -mt-0.5">
+          Secure booking directly on our website through our integrated booking system.
+        </p>
+        <button
+          onClick={() => {
+            if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+          className="w-full inline-flex items-center justify-center gap-2 bg-[color:var(--card)] border border-[color:var(--border)] text-[color:var(--charcoal)] px-6 py-3.5 text-[11px] uppercase tracking-[0.22em] hover:border-[color:var(--teal)]/40 transition-colors"
+        >
+          Adjust Journey
         </button>
         <ShareLinkButton />
-        <Link
-          to="/contact"
+        <a
+          href="https://wa.me/351000000000?text=Hi%21%20I%27d%20love%20a%20local%27s%20help%20shaping%20my%20journey%20in%20Portugal."
+          target="_blank"
+          rel="noopener noreferrer"
           className="w-full inline-flex items-center justify-center gap-2 text-[color:var(--charcoal-soft)] px-6 py-2 text-[11px] uppercase tracking-[0.22em] hover:text-[color:var(--teal)] transition-colors"
         >
-          <MessageCircle size={13} /> Refine with a Local Designer
-        </Link>
+          <MessageCircle size={13} /> Chat with a local
+        </a>
       </div>
     </div>
   );
