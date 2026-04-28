@@ -1,4 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { zodValidator, fallback } from "@tanstack/zod-adapter";
+import { z } from "zod";
 import { useEffect, useMemo, useState } from "react";
 import { SiteLayout } from "@/components/SiteLayout";
 import { supabase } from "@/integrations/supabase/client";
@@ -14,7 +16,15 @@ import { signatureTours } from "@/data/signatureTours";
 import { toast } from "sonner";
 import { Loader2, RefreshCw, Check, AlertTriangle, Sliders, Trash2, Plus, Image as ImageIcon, ImageOff, Link2, Link2Off } from "lucide-react";
 
+const FILTER_VALUES = ["all", "with-image", "missing-image", "matched", "unmatched"] as const;
+type FilterValue = (typeof FILTER_VALUES)[number];
+
+const searchSchema = z.object({
+  filter: fallback(z.enum(FILTER_VALUES), "all").default("all"),
+});
+
 export const Route = createFileRoute("/admin/import-tours")({
+  validateSearch: zodValidator(searchSchema),
   head: () => ({
     meta: [{ title: "Import Tours — Studio Admin" }],
   }),
