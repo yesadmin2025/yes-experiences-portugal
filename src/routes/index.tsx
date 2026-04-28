@@ -809,7 +809,7 @@ function HomePage() {
                           : p.slug === "tailor"
                           // Already very dark throughout → light, even overlay
                           // that only lifts contrast in the text band.
-                          ? "bg-[linear-gradient(to_top,rgba(0,0,0,0.72)_0%,rgba(0,0,0,0.55)_28%,rgba(0,0,0,0.30)_60%,rgba(0,0,0,0.18)_100%)]"
+                          ? "bg-[linear-gradient(to_top,rgba(0,0,0,0.80)_0%,rgba(0,0,0,0.62)_28%,rgba(0,0,0,0.32)_60%,rgba(0,0,0,0.18)_100%)]"
                           : p.slug === "studio"
                           // Mid-bright top, darker bottom → moderate bottom
                           // scrim with a soft top wash for the icon/eyebrow.
