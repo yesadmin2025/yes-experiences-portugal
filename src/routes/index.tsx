@@ -758,82 +758,9 @@ function HomePage() {
             </p>
           </div>
 
-          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-7 md:gap-9 list-none p-0 max-w-6xl mx-auto">
+          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-7 md:gap-10 list-none p-0 max-w-6xl mx-auto">
             {startPaths.map((p) => {
               const Icon = p.icon;
-              // Four distinct visual treatments — each card reads as a
-              // different "product" at a glance, while keeping the same
-              // grid layout and content structure.
-              const styleByAccent = {
-                // 1 · Signature (Ready) — calm ivory with a teal hairline
-                // rail, square teal-stroked icon tile, teal CTA.
-                ivory: {
-                  card: "bg-[color:var(--card)] border border-[color:var(--border)] text-[color:var(--charcoal)] hover:border-[color:var(--teal)]/40 hover:shadow-[0_24px_50px_-24px_rgba(41,91,97,0.18)]",
-                  iconWrap:
-                    "rounded-none border border-[color:var(--teal)]/40 text-[color:var(--teal)] bg-[color:var(--ivory)]",
-                  eyebrow: "text-[color:var(--teal)]",
-                  title: "text-[color:var(--charcoal)]",
-                  line: "text-[color:var(--charcoal-soft)]",
-                  cta: "text-[color:var(--teal)]",
-                  rail: "h-px bg-[color:var(--teal)]/55",
-                  ribbon: null as string | null,
-                },
-                // 2 · Tailor — sand background, soft-gold gradient rail,
-                // rounded gold-stroked icon tile, gold CTA.
-                sand: {
-                  card: "bg-[color:var(--sand)] border border-[color:var(--gold)]/25 text-[color:var(--charcoal)] hover:border-[color:var(--gold)]/60 hover:shadow-[0_24px_50px_-24px_rgba(178,140,71,0.22)]",
-                  iconWrap:
-                    "rounded-md border border-[color:var(--gold)]/70 text-[color:var(--gold)] bg-[color:var(--ivory)]",
-                  eyebrow: "text-[color:var(--gold)]",
-                  title: "text-[color:var(--charcoal)]",
-                  line: "text-[color:var(--charcoal-soft)]",
-                  cta: "text-[color:var(--gold)]",
-                  rail: "h-[2px] bg-gradient-to-r from-[color:var(--gold)]/0 via-[color:var(--gold)]/70 to-[color:var(--gold)]/0",
-                  ribbon: null,
-                },
-                // 3 · Studio — teal flagship card, full bright-gold band
-                // rail, double-bordered circular icon, gold-soft CTA.
-                teal: {
-                  card: "bg-[color:var(--teal)] text-[color:var(--ivory)] hover:bg-[color:var(--teal-2)] shadow-[0_18px_40px_-20px_rgba(41,91,97,0.55)]",
-                  iconWrap:
-                    "rounded-full border-2 border-[color:var(--gold)] text-[color:var(--gold)] bg-[color:var(--teal-2)]/60 ring-1 ring-[color:var(--gold)]/30 ring-offset-2 ring-offset-[color:var(--teal)]",
-                  eyebrow: "text-[color:var(--gold)]",
-                  title: "text-[color:var(--ivory)]",
-                  line: "text-[color:var(--ivory)]/85",
-                  cta: "text-[color:var(--gold-soft)]",
-                  rail: "h-[3px] bg-[color:var(--gold)]",
-                  ribbon: null,
-                },
-                // 4 · Celebrations — deep charcoal, dotted gold rail,
-                // rounded gold-soft icon tile, ivory CTA.
-                charcoal: {
-                  card: "bg-[color:var(--charcoal-deep)] text-[color:var(--ivory)] hover:bg-[color:var(--charcoal)] border border-[color:var(--gold)]/20",
-                  iconWrap:
-                    "rounded-lg border border-dashed border-[color:var(--gold)]/70 text-[color:var(--gold-soft)] bg-[color:var(--charcoal)]/60",
-                  eyebrow: "text-[color:var(--gold-soft)]",
-                  title: "text-[color:var(--ivory)]",
-                  line: "text-[color:var(--ivory)]/80",
-                  cta: "text-[color:var(--ivory)]",
-                  rail: "h-px bg-[image:repeating-linear-gradient(90deg,var(--gold)_0_6px,transparent_6px_12px)]",
-                  ribbon: null,
-                },
-                // 5 · Multi-day — soft ivory with a teal-to-gold rail
-                // and squared icon tile. Distinct from card 1 by rail
-                // and icon shape.
-                "ivory-2": {
-                  card: "bg-[color:var(--card)] border border-[color:var(--border)] text-[color:var(--charcoal)] hover:border-[color:var(--gold)]/45 hover:shadow-[0_24px_50px_-24px_rgba(178,140,71,0.18)]",
-                  iconWrap:
-                    "rounded-none border border-[color:var(--charcoal)]/20 text-[color:var(--charcoal)] bg-[color:var(--ivory)]",
-                  eyebrow: "text-[color:var(--charcoal-soft)]",
-                  title: "text-[color:var(--charcoal)]",
-                  line: "text-[color:var(--charcoal-soft)]",
-                  cta: "text-[color:var(--teal)]",
-                  rail: "h-[2px] bg-gradient-to-r from-[color:var(--teal)]/0 via-[color:var(--teal)]/55 to-[color:var(--gold)]/55",
-                  ribbon: null,
-                },
-              };
-              const styles = styleByAccent[p.accent] ?? styleByAccent.ivory;
-
               return (
                 <li
                   key={p.title}
@@ -847,13 +774,12 @@ function HomePage() {
                     data-expected-to={p.expectedTo}
                     data-actual-to={p.to}
                     data-route-ok={p.to === p.expectedTo ? "true" : "false"}
-                    className={`group relative flex flex-col h-full min-h-[22rem] md:min-h-[26rem] p-7 md:p-8 transition-all duration-500 overflow-hidden hover:-translate-y-1 hover:scale-[1.015] ${styles.card}`}
+                    className="editorial-card group relative flex flex-col h-full min-h-[22rem] md:min-h-[26rem] p-8 md:p-9 overflow-hidden bg-[color:var(--card)] border border-[color:var(--border)] hover:border-[color:var(--gold)]/45"
                   >
-                    {/* Photographic background — soft, slow zoom on hover.
-                        Sits BEHIND the per-accent surface tint via a
-                        gradient overlay tuned to the accent so each card
-                        keeps its identity (ivory / sand / teal / charcoal)
-                        while gaining real photography. */}
+                    {/* Photographic background — calm, low-opacity wash that
+                        becomes a quiet visual cue without competing with the
+                        text. The .editorial-card hover drives the 1.05 zoom
+                        on [data-card-image] uniformly across all cards. */}
                     {p.bg && (
                       <>
                         <img
@@ -861,59 +787,36 @@ function HomePage() {
                           alt=""
                           aria-hidden="true"
                           loading="lazy"
-                          className="absolute inset-0 w-full h-full object-cover opacity-[0.32] group-hover:opacity-[0.42] transition-all duration-[1400ms] ease-out scale-[1.02] group-hover:scale-[1.08]"
+                          data-card-image
+                          className="absolute inset-0 w-full h-full object-cover opacity-[0.22]"
                         />
+                        {/* Single, neutral readability wash — keeps text on
+                            a calm ivory surface across all 4 cards. */}
                         <div
                           aria-hidden="true"
-                          className={`absolute inset-0 ${
-                            p.accent === "teal"
-                              ? "bg-gradient-to-br from-[color:var(--teal)]/92 via-[color:var(--teal)]/82 to-[color:var(--teal-2)]/88"
-                              : p.accent === "charcoal"
-                                ? "bg-gradient-to-br from-[color:var(--charcoal-deep)]/92 via-[color:var(--charcoal-deep)]/85 to-[color:var(--charcoal)]/90"
-                                : p.accent === "sand"
-                                  ? "bg-gradient-to-br from-[color:var(--sand)]/93 via-[color:var(--sand)]/85 to-[color:var(--ivory)]/82"
-                                  : "bg-gradient-to-br from-[color:var(--card)]/94 via-[color:var(--card)]/86 to-[color:var(--ivory)]/82"
-                          }`}
+                          className="absolute inset-0 bg-gradient-to-b from-[color:var(--card)]/92 via-[color:var(--card)]/86 to-[color:var(--card)]/94"
                         />
                       </>
                     )}
-                    {/* Top rail — distinct accent pattern per card
-                        (solid teal · soft-gold gradient · thick gold ·
-                        dotted gold) so each path is identifiable at a
-                        glance even before reading the title. */}
+                    {/* Gold hairline rail — single, consistent accent across
+                        all four cards. Editorial separator, not a color block. */}
                     <span
                       aria-hidden="true"
-                      className={`absolute top-0 left-0 right-0 z-[1] ${styles.rail}`}
+                      className="absolute top-0 left-0 right-0 z-[1] h-px bg-[color:var(--gold)]/55"
                     />
-                    {styles.ribbon && (
-                      <span
-                        aria-hidden="true"
-                        className="absolute top-4 right-4 z-[2] text-[9.5px] uppercase tracking-[0.26em] px-2.5 py-1 bg-[color:var(--gold)] text-[color:var(--charcoal-deep)] font-semibold"
-                      >
-                        {styles.ribbon}
-                      </span>
-                    )}
-                    <span
-                      className={`relative z-[1] inline-flex items-center justify-center w-11 h-11 mb-6 border backdrop-blur-[2px] ${styles.iconWrap}`}
-                    >
+                    <span className="relative z-[1] inline-flex items-center justify-center w-11 h-11 mb-7 border border-[color:var(--gold)]/40 text-[color:var(--teal)] bg-[color:var(--ivory)]">
                       <Icon size={18} strokeWidth={1.5} />
                     </span>
-                    <span className={`relative z-[1] text-[10.5px] uppercase tracking-[0.3em] ${styles.eyebrow}`}>
+                    <span className="relative z-[1] text-[10.5px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
                       {p.eyebrow}
                     </span>
-                    <h3
-                      className={`relative z-[1] serif mt-3 text-[1.5rem] md:text-[1.7rem] leading-[1.15] tracking-[-0.005em] ${styles.title}`}
-                    >
+                    <h3 className="relative z-[1] serif mt-3 text-[1.5rem] md:text-[1.65rem] leading-[1.15] tracking-[-0.008em] text-[color:var(--charcoal)]">
                       {p.title}
                     </h3>
-                    <p
-                      className={`relative z-[1] mt-3 text-[14.5px] leading-[1.65] font-light flex-1 ${styles.line}`}
-                    >
+                    <p className="relative z-[1] mt-3 text-[14.5px] leading-[1.65] text-[color:var(--charcoal-soft)] flex-1">
                       {p.line}
                     </p>
-                    <span
-                      className={`relative z-[1] mt-7 inline-flex items-center gap-2 text-[14px] tracking-[0.005em] font-medium group-hover:translate-x-1 transition-transform duration-300 ${styles.cta}`}
-                    >
+                    <span className="relative z-[1] mt-8 inline-flex items-center gap-2 text-[13.5px] tracking-[0.005em] font-medium text-[color:var(--teal)] group-hover:translate-x-1 transition-transform duration-300">
                       {p.cta} <ArrowRight size={14} />
                     </span>
                   </Link>
