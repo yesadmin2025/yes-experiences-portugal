@@ -758,7 +758,7 @@ function HomePage() {
             </p>
           </div>
 
-          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-7 md:gap-10 list-none p-0 max-w-6xl mx-auto">
+          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10 list-none p-0 max-w-6xl mx-auto">
             {startPaths.map((p) => {
               const Icon = p.icon;
               return (
@@ -774,50 +774,55 @@ function HomePage() {
                     data-expected-to={p.expectedTo}
                     data-actual-to={p.to}
                     data-route-ok={p.to === p.expectedTo ? "true" : "false"}
-                    className="editorial-card group relative flex flex-col h-full min-h-[22rem] md:min-h-[26rem] p-8 md:p-9 overflow-hidden bg-[color:var(--card)] border border-[color:var(--border)] hover:border-[color:var(--gold)]/45"
+                    className="decision-scene group relative flex flex-col justify-end h-full min-h-[28rem] md:min-h-[32rem] p-8 md:p-9 overflow-hidden rounded-[2px] bg-[color:var(--charcoal-deep)]"
                   >
-                    {/* Photographic background — calm, low-opacity wash that
-                        becomes a quiet visual cue without competing with the
-                        text. The .editorial-card hover drives the 1.05 zoom
-                        on [data-card-image] uniformly across all cards. */}
+                    {/* Full immersive scene — the image IS the card. */}
                     {p.bg && (
-                      <>
-                        <img
-                          src={p.bg}
-                          alt=""
-                          aria-hidden="true"
-                          loading="lazy"
-                          data-card-image
-                          className="absolute inset-0 w-full h-full object-cover opacity-[0.22]"
-                        />
-                        {/* Single, neutral readability wash — keeps text on
-                            a calm ivory surface across all 4 cards. */}
-                        <div
-                          aria-hidden="true"
-                          className="absolute inset-0 bg-gradient-to-b from-[color:var(--card)]/92 via-[color:var(--card)]/86 to-[color:var(--card)]/94"
-                        />
-                      </>
+                      <img
+                        src={p.bg}
+                        alt=""
+                        aria-hidden="true"
+                        loading="lazy"
+                        data-card-image
+                        className="absolute inset-0 w-full h-full object-cover opacity-95 transition-transform duration-[450ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
+                      />
                     )}
-                    {/* Gold hairline rail — single, consistent accent across
-                        all four cards. Editorial separator, not a color block. */}
+                    {/* Cinematic readability gradient — dark from bottom,
+                        clear scene at top. Three stops for depth. */}
+                    <div
+                      aria-hidden="true"
+                      className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/15"
+                    />
+                    {/* Subtle film grain via radial vignette for depth. */}
+                    <div
+                      aria-hidden="true"
+                      className="absolute inset-0 opacity-40 mix-blend-multiply [background:radial-gradient(120%_80%_at_50%_0%,transparent_55%,rgba(0,0,0,0.55)_100%)]"
+                    />
+                    {/* Gold hairline rail — refined accent at top. */}
                     <span
                       aria-hidden="true"
-                      className="absolute top-0 left-0 right-0 z-[1] h-px bg-[color:var(--gold)]/55"
+                      className="absolute top-0 left-0 right-0 z-[1] h-px bg-[color:var(--gold)]/65"
                     />
-                    <span className="relative z-[1] inline-flex items-center justify-center w-11 h-11 mb-7 border border-[color:var(--gold)]/40 text-[color:var(--teal)] bg-[color:var(--ivory)]">
+                    {/* Icon chip — floats top-left as a quiet seal. */}
+                    <span className="absolute top-7 left-8 md:top-8 md:left-9 z-[1] inline-flex items-center justify-center w-11 h-11 border border-[color:var(--gold)]/55 text-[color:var(--gold)] backdrop-blur-[2px] bg-black/20">
                       <Icon size={18} strokeWidth={1.5} />
                     </span>
-                    <span className="relative z-[1] text-[10.5px] uppercase tracking-[0.3em] text-[color:var(--gold)]">
+
+                    {/* Content anchored to bottom — the scene speaks first. */}
+                    <span className="relative z-[1] text-[10.5px] uppercase tracking-[0.32em] text-[color:var(--gold)]">
                       {p.eyebrow}
                     </span>
-                    <h3 className="relative z-[1] serif mt-3 text-[1.5rem] md:text-[1.65rem] leading-[1.15] tracking-[-0.008em] text-[color:var(--charcoal)]">
+                    <h3 className="relative z-[1] serif mt-4 text-[1.95rem] md:text-[2.15rem] leading-[1.05] tracking-[-0.012em] text-white">
                       {p.title}
                     </h3>
-                    <p className="relative z-[1] mt-3 text-[14.5px] leading-[1.65] text-[color:var(--charcoal-soft)] flex-1">
+                    <p className="relative z-[1] mt-4 text-[14.5px] leading-[1.7] font-light text-white/82">
                       {p.line}
                     </p>
-                    <span className="relative z-[1] mt-8 inline-flex items-center gap-2 text-[13.5px] tracking-[0.005em] font-medium text-[color:var(--teal)] group-hover:translate-x-1 transition-transform duration-300">
-                      {p.cta} <ArrowRight size={14} />
+                    <span className="relative z-[1] mt-7 inline-flex items-center gap-2.5 text-[13px] uppercase tracking-[0.22em] font-medium text-white">
+                      <span className="relative pb-1.5 after:content-[''] after:absolute after:left-0 after:bottom-0 after:h-px after:w-7 after:bg-[color:var(--gold)] after:transition-[width] after:duration-[300ms] after:ease-out group-hover:after:w-full">
+                        {p.cta}
+                      </span>
+                      <ArrowRight size={14} className="text-[color:var(--gold)] transition-transform duration-300 group-hover:translate-x-1.5" />
                     </span>
                   </Link>
                 </li>
