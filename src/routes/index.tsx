@@ -792,16 +792,17 @@ function HomePage() {
                         className="absolute inset-0 w-full h-full object-cover opacity-95 transition-transform duration-[450ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
                       />
                     )}
-                    {/* Cinematic readability gradient — dark from bottom,
-                        clear scene at top. Three stops for depth. */}
+                    {/* Cinematic readability gradient — calibrated to keep
+                        text consistently legible across all four lifestyle
+                        photos (including the brighter golden-hour scenes). */}
                     <div
                       aria-hidden="true"
-                      className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/15"
+                      className="absolute inset-0 bg-gradient-to-t from-black/90 from-[18%] via-black/55 via-[55%] to-black/15"
                     />
                     {/* Subtle film grain via radial vignette for depth. */}
                     <div
                       aria-hidden="true"
-                      className="absolute inset-0 opacity-40 mix-blend-multiply [background:radial-gradient(120%_80%_at_50%_0%,transparent_55%,rgba(0,0,0,0.55)_100%)]"
+                      className="absolute inset-0 opacity-45 mix-blend-multiply [background:radial-gradient(120%_80%_at_50%_0%,transparent_50%,rgba(0,0,0,0.6)_100%)]"
                     />
                     {/* Gold hairline rail — refined accent at top. */}
                     <span
@@ -809,7 +810,7 @@ function HomePage() {
                       className="absolute top-0 left-0 right-0 z-[1] h-px bg-[color:var(--gold)]/65"
                     />
                     {/* Icon chip — floats top-left as a quiet seal. */}
-                    <span className="absolute top-7 left-8 md:top-8 md:left-9 z-[1] inline-flex items-center justify-center w-11 h-11 border border-[color:var(--gold)]/55 text-[color:var(--gold)] backdrop-blur-[2px] bg-black/20">
+                    <span className="absolute top-7 left-8 md:top-8 md:left-9 z-[1] inline-flex items-center justify-center w-11 h-11 border border-[color:var(--gold)]/55 text-[color:var(--gold)] backdrop-blur-[2px] bg-black/25 transition-colors duration-300 group-hover:bg-black/35 group-active:bg-black/45 group-focus-visible:bg-black/45">
                       <Icon size={18} strokeWidth={1.5} />
                     </span>
 
@@ -817,17 +818,25 @@ function HomePage() {
                     <span className="relative z-[1] text-[10.5px] uppercase tracking-[0.32em] text-[color:var(--gold)]">
                       {p.eyebrow}
                     </span>
-                    <h3 className="relative z-[1] serif mt-4 text-[1.95rem] md:text-[2.15rem] leading-[1.05] tracking-[-0.012em] text-white">
+                    <h3 className="relative z-[1] serif mt-4 text-[1.95rem] md:text-[2.15rem] leading-[1.05] tracking-[-0.012em] text-white drop-shadow-[0_2px_18px_rgba(0,0,0,0.45)]">
                       {p.title}
                     </h3>
-                    <p className="relative z-[1] mt-4 text-[14.5px] leading-[1.7] font-light text-white/82">
+                    <p className="relative z-[1] mt-4 text-[14.5px] leading-[1.7] font-light text-white/85 drop-shadow-[0_1px_8px_rgba(0,0,0,0.5)]">
                       {p.line}
                     </p>
-                    <span className="relative z-[1] mt-7 inline-flex items-center gap-2.5 text-[13px] uppercase tracking-[0.22em] font-medium text-white">
-                      <span className="relative pb-1.5 after:content-[''] after:absolute after:left-0 after:bottom-0 after:h-px after:w-7 after:bg-[color:var(--gold)] after:transition-[width] after:duration-[300ms] after:ease-out group-hover:after:w-full">
+                    {/* Doorway CTA — underline animates from a 28px gold tick
+                        to the full label width on hover, focus, AND touch
+                        hold (active). Label fades to gold on activation; arrow
+                        steps forward. The whole <Link> remains the tap target
+                        (full card), so accessibility is preserved. */}
+                    <span className="cta-doorway relative z-[1] mt-7 inline-flex items-center gap-2.5 text-[13px] uppercase tracking-[0.22em] font-medium text-white transition-colors duration-300 group-hover:text-[color:var(--gold)] group-focus-visible:text-[color:var(--gold)] group-active:text-[color:var(--gold)]">
+                      <span className="cta-doorway__label relative pb-1.5">
                         {p.cta}
                       </span>
-                      <ArrowRight size={14} className="text-[color:var(--gold)] transition-transform duration-300 group-hover:translate-x-1.5" />
+                      <ArrowRight
+                        size={14}
+                        className="text-[color:var(--gold)] transition-transform duration-300 ease-out group-hover:translate-x-1.5 group-focus-visible:translate-x-1.5 group-active:translate-x-2"
+                      />
                     </span>
                   </Link>
                 </li>
