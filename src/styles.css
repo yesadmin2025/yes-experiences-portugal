@@ -56,7 +56,7 @@
 :root {
   --radius: 0.5rem;
 
-  /* Brand */
+  /* Brand — locked palette, used site-wide. */
   --teal: #295b61;
   --teal-2: #2a7c82;
   --gold: #c9a96a;
@@ -64,7 +64,9 @@
   --ivory: #faf8f3;
   --sand: #f4efe7;
   --charcoal: #2e2e2e;
-  --charcoal-soft: #5a5a5a;
+  /* Secondary text — was #5a5a5a, deepened to #555 so secondary copy on
+     mobile clears 7:1 contrast on ivory and never reads as washed grey. */
+  --charcoal-soft: #555555;
   --charcoal-deep: #1f1f1f;
 
   /* Semantic */
@@ -222,7 +224,10 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
-    font-weight: 380;
+    /* Body weight raised from 380 → 410 — kills the "weak grey text" feel
+       on mobile while staying premium. Headings still ride lighter for
+       editorial contrast. */
+    font-weight: 410;
     font-feature-settings: "ss01", "cv11", "kern", "calt";
     letter-spacing: 0.005em;
     -webkit-font-smoothing: antialiased;
@@ -231,6 +236,13 @@
   }
   p {
     color: var(--charcoal);
+  }
+  /* Secondary copy default — when an explicit text-[color:var(--charcoal-soft)]
+     is used, ensure the weight stays substantive on mobile (was inheriting
+     410 from body but Tailwind utilities sometimes drop it back to 400 in
+     leaf nodes — this guarantees parity site-wide). */
+  .text-\\[color\\:var\\(--charcoal-soft\\)\\] {
+    font-weight: 410;
   }
   /* ─────────────────────────────────────────────────────────────
      TYPOGRAPHIC HIERARCHY — couture, restrained, premium.
