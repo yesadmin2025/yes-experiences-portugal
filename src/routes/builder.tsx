@@ -1551,7 +1551,7 @@ function pickInterlude(
   if (next.slot === "GOLDEN_HOUR") {
     return `The light starts to lean. Everything Portuguese — stone, water, wine — turns honey-coloured for the next hour.`;
   }
-  if (next.slot === "EVENING" || next.slot === "NIGHT") {
+  if (next.slot === "EVENING" || next.slot === "SUNSET") {
     return tier === "couture"
       ? `Day folds quietly into evening. The next chapter has been hand-set, lit, and waiting for ${v.you}.`
       : `The day folds itself into evening, and a different kind of Portugal begins.`;
