@@ -5,7 +5,8 @@ import {
   signatureTours,
   findTour,
   isValidTourId,
-  STOP_THEME_IMG,
+  stopImage,
+  stopFocal,
   type SignatureTour,
 } from "@/data/signatureTours";
 import { SimpleTailorForm } from "@/components/SimpleTailorForm";
