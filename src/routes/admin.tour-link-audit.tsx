@@ -404,13 +404,28 @@ function RouteTreeTroubleshooting() {
 
 const ROUTE_FILE = "src/routes/admin.tour-link-audit.tsx";
 const EXPECTED_PATH = "/admin/tour-link-audit";
+const STRATEGY_STORAGE_KEY = "crawlerError.strategy";
 
 function CrawlerErrorPanel() {
   const [info, setInfo] = useState<CrawlerErrorInfo | null>(null);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
-  const [strategy, setStrategy] = useState<CrawlerErrorStrategy>("root-cause");
+  const [strategy, setStrategy] = useState<CrawlerErrorStrategy>(() => {
+    if (typeof window === "undefined") return "root-cause";
+    const saved = window.localStorage.getItem(STRATEGY_STORAGE_KEY);
+    return saved === "last-error" || saved === "root-cause" ? saved : "root-cause";
+  });
+
+  // Persist strategy across reloads.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      window.localStorage.setItem(STRATEGY_STORAGE_KEY, strategy);
+    } catch {
+      /* storage unavailable */
+    }
+  }, [strategy]);
 
   const capture = async (s: CrawlerErrorStrategy = strategy) => {
     setLoading(true);
