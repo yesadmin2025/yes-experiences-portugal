@@ -33,7 +33,6 @@ import {
   Award,
 } from "lucide-react";
 
-export const Route = createFileRoute("/builder")({
 const builderSearchSchema = z.object({
   tour: fallback(z.string().optional(), undefined),
   // Persisted builder state (all optional so empty URL = empty builder)
