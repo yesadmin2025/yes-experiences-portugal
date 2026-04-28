@@ -611,6 +611,22 @@ function CrawlerErrorPanel() {
           </label>
           <button
             type="button"
+            onClick={() => {
+              if (strategy === "root-cause") {
+                void capture("root-cause");
+              } else {
+                setStrategy("root-cause");
+              }
+            }}
+            disabled={loading}
+            title="Reset to default strategy and re-scan"
+            className="inline-flex items-center gap-1.5 border border-[color:var(--border)] hover:border-[color:var(--gold)] bg-white px-2.5 py-1 text-xs disabled:opacity-50"
+          >
+            <RotateCcw size={11} />
+            Reset to default
+          </button>
+          <button
+            type="button"
             onClick={() => void capture()}
             disabled={loading}
             className="inline-flex items-center gap-1.5 border border-[color:var(--border)] hover:border-[color:var(--gold)] bg-white px-2.5 py-1 text-xs disabled:opacity-50"
