@@ -1,7 +1,9 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { zodValidator, fallback } from "@tanstack/zod-adapter";
+import { z } from "zod";
 import { SiteLayout } from "@/components/SiteLayout";
 import { signatureTours } from "@/data/signatureTours";
-import { lazy, Suspense, useEffect, useMemo, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 const RealLeafletMap = lazy(() =>
   import("@/components/RealLeafletMap").then((m) => ({ default: m.RealLeafletMap })),
 );
@@ -29,12 +31,28 @@ import {
   Clock,
   Save,
   Award,
+  Share2,
+  Check as CheckIcon,
 } from "lucide-react";
 
+const builderSearchSchema = z.object({
+  tour: fallback(z.string().optional(), undefined),
+  // Persisted builder state (all optional so empty URL = empty builder)
+  n: fallback(z.string().optional(), undefined),         // name
+  r: fallback(z.string().optional(), undefined),         // region
+  g: fallback(z.string().optional(), undefined),         // groupType
+  gs: fallback(z.string().optional(), undefined),        // guests
+  d: fallback(z.string().optional(), undefined),         // duration
+  st: fallback(z.array(z.string()), []).default([]),     // styles
+  hl: fallback(z.array(z.string()), []).default([]),     // highlights
+  p: fallback(z.string().optional(), undefined),         // pace
+  en: fallback(z.array(z.string()), []).default([]),     // enhancements
+  t: fallback(z.string().optional(), undefined),         // tier
+  step: fallback(z.number().int().min(0).max(11), 0).default(0),
+});
+
 export const Route = createFileRoute("/builder")({
-  validateSearch: (search: Record<string, unknown>): { tour?: string } => ({
-    tour: typeof search.tour === "string" ? search.tour : undefined,
-  }),
+  validateSearch: zodValidator(builderSearchSchema),
   head: () => ({
     meta: [
       { title: "YES Experience Studio — Design Your Portugal Experience" },
@@ -219,21 +237,70 @@ function pickYes(stage: keyof typeof YES_LINES, seed: number) {
    Page
    ============================================================ */
 
+type BuilderSearch = z.infer<typeof builderSearchSchema>;
+
+function stateFromSearch(search: BuilderSearch): BuilderState {
+  return {
+    name: search.n ?? "",
+    region: search.r ?? null,
+    groupType: search.g ?? null,
+    guests: search.gs ?? null,
+    duration: search.d ?? null,
+    styles: search.st ?? [],
+    highlights: search.hl ?? [],
+    pace: search.p ?? null,
+    enhancements: search.en ?? [],
+    tier: search.t ?? null,
+  };
+}
+
+function searchFromState(s: BuilderState, stepIdx: number) {
+  return {
+    n: s.name || undefined,
+    r: s.region ?? undefined,
+    g: s.groupType ?? undefined,
+    gs: s.guests ?? undefined,
+    d: s.duration ?? undefined,
+    st: s.styles.length ? s.styles : undefined,
+    hl: s.highlights.length ? s.highlights : undefined,
+    p: s.pace ?? undefined,
+    en: s.enhancements.length ? s.enhancements : undefined,
+    t: s.tier ?? undefined,
+    step: stepIdx || undefined,
+  };
+}
+
 function BuilderPage() {
   const search = Route.useSearch();
-  const [s, setS] = useState<BuilderState>(emptyState);
-  const [stepIdx, setStepIdx] = useState(0);
+  const navigate = useNavigate({ from: "/builder" });
+  // Initialize from URL so deep links restore state on first render
+  const [s, setS] = useState<BuilderState>(() => stateFromSearch(search));
+  const [stepIdx, setStepIdx] = useState<number>(() => search.step ?? 0);
   const [view, setView] = useState<"story" | "timeline" | "map">("story");
   const [mobileTab, setMobileTab] = useState<"build" | "preview">("build");
+  const hydratedTourRef = useRef<string | null>(null);
 
-  // Deep-link seed: /builder?tour=<id>
+  // Deep-link seed: /builder?tour=<id> — only when no persisted state present
   useEffect(() => {
-    if (!search.tour) return;
+    if (!search.tour || hydratedTourRef.current === search.tour) return;
     const tour = signatureTours.find((t) => t.id === search.tour);
     if (!tour) return;
+    hydratedTourRef.current = search.tour;
+    const hasPersisted = !!(search.r || search.st?.length || search.hl?.length || search.t);
+    if (hasPersisted) return;
     setS((p) => ({ ...p, ...tour.seed, name: p.name || "" }));
-    setStepIdx(2); // jump past welcome+name
-  }, [search.tour]);
+    setStepIdx(2);
+  }, [search.tour, search.r, search.st, search.hl, search.t]);
+
+  // Sync state → URL (debounced via microtask, replace history)
+  useEffect(() => {
+    const next = searchFromState(s, stepIdx);
+    navigate({
+      search: (prev) => ({ ...prev, ...next, tour: prev.tour }),
+      replace: true,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [s, stepIdx]);
 
   const update = <K extends keyof BuilderState>(k: K, v: BuilderState[K]) =>
     setS((p) => ({ ...p, [k]: v }));
@@ -843,6 +910,7 @@ function RevealStep({ s, title, investment }: { s: BuilderState; title: string; 
         <button className="w-full inline-flex items-center justify-center gap-2 bg-[color:var(--card)] border border-[color:var(--border)] text-[color:var(--charcoal)] px-6 py-3.5 text-[11px] uppercase tracking-[0.22em] hover:border-[color:var(--teal)]/40 transition-colors">
           <Save size={13} /> Save My Experience
         </button>
+        <ShareLinkButton />
         <Link
           to="/contact"
           className="w-full inline-flex items-center justify-center gap-2 text-[color:var(--charcoal-soft)] px-6 py-2 text-[11px] uppercase tracking-[0.22em] hover:text-[color:var(--teal)] transition-colors"
@@ -1160,5 +1228,33 @@ function DesignerNudge() {
         </div>
       </div>
     </Link>
+  );
+}
+
+function ShareLinkButton() {
+  const [copied, setCopied] = useState(false);
+  const onClick = async () => {
+    if (typeof window === "undefined") return;
+    const url = window.location.href;
+    try {
+      if (navigator.share) {
+        await navigator.share({ url, title: "My Portugal Experience" });
+        return;
+      }
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // user cancelled share — no-op
+    }
+  };
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="w-full inline-flex items-center justify-center gap-2 bg-[color:var(--card)] border border-[color:var(--border)] text-[color:var(--charcoal)] px-6 py-3.5 text-[11px] uppercase tracking-[0.22em] hover:border-[color:var(--teal)]/40 transition-colors"
+    >
+      {copied ? <><CheckIcon size={13} /> Link Copied</> : <><Share2 size={13} /> Copy Share Link</>}
+    </button>
   );
 }
