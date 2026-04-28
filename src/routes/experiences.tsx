@@ -29,7 +29,7 @@ function ExperiencesPage() {
   const { resolveImg } = useImportedTourImages();
   return (
     <SiteLayout>
-      <section className="pt-32 pb-[var(--section-y-sm)] bg-[color:var(--sand)] text-center">
+      <section data-audit="experiences-hero" className="pt-32 pb-[var(--section-y-sm)] bg-[color:var(--sand)] text-center">
         <div className="container-x">
           <span className="eyebrow">Signature Collection</span>
           <h1 className="serif text-4xl md:text-6xl mt-5 leading-tight">
@@ -108,7 +108,7 @@ function ExperiencesPage() {
 
 function CtaStrip() {
   return (
-    <section className="section-y-sm pt-0">
+    <section data-audit="experiences-cta" className="section-y-sm pt-0">
       <div className="container-x">
         <div className="bg-[color:var(--teal)] text-[color:var(--ivory)] p-12 md:p-16 flex flex-col md:flex-row items-center justify-between gap-6">
           <div>

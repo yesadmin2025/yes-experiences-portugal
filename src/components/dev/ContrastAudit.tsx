@@ -145,18 +145,25 @@ const FLAG_ATTR = "data-contrast-fail";
  * completeness, but won't paint the page with noise.
  *
  * Currently focused on:
- *   - the homepage hero       → <section> wrapping the hero (first section)
- *   - the decision cards      → #decision-flow
- *   - the Builder anchor card → [aria-labelledby="studio-title"]
- *   - the final CTA section   → the CTA panel containing "Create Your Story"
- *   - any CTA button labels   → .cta-primary / .cta-secondary-light /
- *                               .hero-cta-button
+ *   Homepage:
+ *     - hero <section> (first section)
+ *     - decision cards (#decision-flow)
+ *     - Builder anchor card ([aria-labelledby="studio-title"])
+ *     - final CTA section
+ *   /experiences:
+ *     - hero ([data-audit="experiences-hero"])
+ *     - CTA strip ([data-audit="experiences-cta"])
+ *   Global:
+ *     - any CTA button labels (.cta-primary / .cta-secondary-light /
+ *       .hero-cta-button)
  */
 const FOCUS_SELECTORS = [
   "header",
   "section:first-of-type", // hero
   "#decision-flow",
   '[aria-labelledby="studio-title"]',
+  '[data-audit="experiences-hero"]',
+  '[data-audit="experiences-cta"]',
   ".cta-primary",
   ".cta-secondary-light",
   ".hero-cta-button",
