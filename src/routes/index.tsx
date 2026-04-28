@@ -745,6 +745,7 @@ function HomePage() {
           visually distinct teal card to anchor the "build from scratch"
           path as the most differentiated option. */}
       <section
+        id="decision-flow"
         className="py-24 md:py-32 bg-[color:var(--ivory)] border-b border-[color:var(--border)]"
         aria-labelledby="start-paths-title"
       >
