@@ -147,6 +147,60 @@ const tierOpts = [
 ];
 
 /* ============================================================
+   Multi-day journey style seeds (from /multi-day cards)
+   ============================================================ */
+
+type JourneySeed = Partial<Pick<BuilderState, "region" | "duration" | "styles" | "highlights" | "pace" | "groupType">>;
+
+const JOURNEY_SEEDS: Record<string, JourneySeed> = {
+  "wine-coast": {
+    region: "lisbon",
+    duration: "threeday",
+    styles: ["wine", "coastal", "gastronomy"],
+    highlights: ["tasting", "boat", "portinho"],
+    pace: "balanced",
+  },
+  hidden: {
+    region: "lisbon",
+    duration: "threeday",
+    styles: ["nature", "heritage"],
+    highlights: ["jeep", "viewpoint", "sesimbra"],
+    pace: "slow",
+  },
+  family: {
+    region: "lisbon",
+    duration: "threeday",
+    styles: ["coastal", "nature"],
+    highlights: ["boat", "sesimbra", "portinho"],
+    pace: "balanced",
+    groupType: "family",
+  },
+  romantic: {
+    region: "lisbon",
+    duration: "threeday",
+    styles: ["wine", "coastal", "gastronomy"],
+    highlights: ["tasting", "portinho", "viewpoint"],
+    pace: "slow",
+    groupType: "couple",
+  },
+  "culture-food": {
+    region: "alentejo",
+    duration: "threeday",
+    styles: ["heritage", "gastronomy"],
+    highlights: ["livramento", "tiles", "cheese"],
+    pace: "balanced",
+  },
+  corporate: {
+    region: "lisbon",
+    duration: "threeday",
+    styles: ["wine", "gastronomy", "coastal"],
+    highlights: ["tasting", "boat", "portinho"],
+    pace: "balanced",
+    groupType: "private-group",
+  },
+};
+
+/* ============================================================
    State
    ============================================================ */
 
