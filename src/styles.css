@@ -1338,6 +1338,57 @@
   .editorial-card:hover [data-card-image] {
     transform: none !important;
   }
+
+/* ─────────────────────────────────────────────────────────────
+   .decision-scene — cinematic full-bleed decision card
+   Same interaction grammar as .editorial-card (1.03 lift, image
+   zoom, smooth easing) but tuned darker + deeper for immersive
+   photographic surfaces. Image moves slightly on hover; shadow
+   becomes atmospheric rather than UI-flat.
+   ───────────────────────────────────────────────────────────── */
+.decision-scene {
+  transition:
+    transform 280ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    box-shadow 280ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  will-change: transform, box-shadow;
+  box-shadow:
+    0 1px 2px -1px rgba(20, 20, 20, 0.18),
+    0 18px 36px -22px rgba(20, 20, 20, 0.35);
+}
+.decision-scene:hover {
+  transform: translate3d(0, -3px, 0) scale(1.03);
+  box-shadow:
+    0 6px 14px -6px rgba(20, 20, 20, 0.32),
+    0 38px 70px -28px rgba(20, 20, 20, 0.55);
+}
+.decision-scene [data-card-image] {
+  transform-origin: 50% 55%;
+}
+.decision-scene:hover [data-card-image] {
+  transform: scale(1.06) translateY(-4px);
+}
+@media (hover: none) {
+  .decision-scene:hover {
+    transform: none;
+  }
+  .decision-scene:active {
+    transform: scale(1.01);
+    transition-duration: 180ms;
+  }
+  .decision-scene:hover [data-card-image] {
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .decision-scene,
+  .decision-scene:hover {
+    transform: none !important;
+    transition: box-shadow 200ms ease !important;
+  }
+  .decision-scene [data-card-image],
+  .decision-scene:hover [data-card-image] {
+    transform: none !important;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
