@@ -167,7 +167,7 @@ function TourDetailPage() {
 
           <Block icon={<Heart size={14} />} title="Ideal for">
             <ul className="space-y-2.5 text-sm leading-relaxed">
-              {tour.idealFor.map((h) => (
+              {(tour.idealFor ?? []).map((h) => (
                 <li key={h} className="flex gap-2.5">
                   <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[color:var(--teal)] flex-shrink-0" />
                   <span>{h}</span>
