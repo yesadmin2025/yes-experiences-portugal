@@ -382,21 +382,26 @@ function IntroSeeds({ onPick }: { onPick: (patch: Partial<BuilderState>) => void
         Tap a place, a moment or an idea — your journey appears instantly on the map. Adjust everything as you go.
       </p>
 
-      <div className="mt-10 space-y-8">
+      <div className="mt-8 space-y-6">
         {groups.map((g) => (
           <div key={g}>
-            <p className="text-[10px] uppercase tracking-[0.28em] text-[color:var(--charcoal-soft)] mb-3">{g}</p>
-            <div className="grid sm:grid-cols-2 gap-3">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 mb-3 bg-[color:var(--sand)] border border-[color:var(--border)] rounded-full text-[10px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)]">
+              <span className="h-1 w-1 rounded-full bg-[color:var(--gold)]" />
+              {g}
+            </span>
+            <div className="flex flex-wrap gap-2">
               {seeds.filter((x) => x.kind === g).map((seed) => (
                 <button
                   key={seed.id}
                   onClick={() => onPick(seed.patch)}
-                  className="group text-left p-5 border border-[color:var(--border)] hover:border-[color:var(--teal)] bg-[color:var(--card)] transition-all hover:-translate-y-0.5 hover:shadow-[0_18px_38px_-22px_rgba(41,91,97,0.35)]"
+                  className="group inline-flex flex-col items-start gap-0.5 px-4 py-2.5 rounded-full border border-[color:var(--border)] bg-[color:var(--card)] text-left transition-all active:scale-[0.97] hover:border-[color:var(--teal)] hover:bg-[color:var(--teal)]/5 hover:-translate-y-0.5"
                 >
-                  <h3 className="serif text-xl text-[color:var(--charcoal)] group-hover:text-[color:var(--teal)] transition-colors">
+                  <span className="serif text-[15px] leading-tight text-[color:var(--charcoal)] group-hover:text-[color:var(--teal)] transition-colors">
                     {seed.label}
-                  </h3>
-                  <p className="mt-1 text-sm text-[color:var(--charcoal-soft)]">{seed.sub}</p>
+                  </span>
+                  <span className="text-[11px] leading-tight text-[color:var(--charcoal-soft)]">
+                    {seed.sub}
+                  </span>
                 </button>
               ))}
             </div>
