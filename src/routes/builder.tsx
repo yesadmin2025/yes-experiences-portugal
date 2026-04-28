@@ -1352,7 +1352,9 @@ function LiveCanvas({ s, title }: { s: BuilderState; title: string }) {
             return (
               <li
                 key={i}
-                ref={(el) => (itemRefs.current[i] = el)}
+                ref={(el) => {
+                  itemRefs.current[i] = el;
+                }}
                 className="animate-fade-in"
                 onMouseEnter={() => isPlaced && setActiveIdx(i)}
                 onMouseLeave={() => isPlaced && setActiveIdx((cur) => (cur === i ? null : cur))}
