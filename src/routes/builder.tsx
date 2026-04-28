@@ -1085,7 +1085,7 @@ function PremiumMap({
   const ZOOM_MIN = 0.5;
   const ZOOM_MAX = 4;
   const ZOOM_STEP = 1.4;
-  useEffect(() => { setZoom(1); }, [region]);
+  // Persist zoom across region changes — user explicitly asked to keep it.
 
   const targetVb = useMemo(() => {
     const base = regionViewBox(region);
