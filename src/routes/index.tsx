@@ -862,7 +862,10 @@ function HomePage() {
               }[p.accent];
 
               return (
-                <li key={p.title} className="reveal-stagger h-full">
+                <li
+                  key={p.title}
+                  className={`reveal-stagger h-full ${p.accent === "teal" ? "sm:col-span-2 lg:col-span-2 lg:row-span-1" : ""}`}
+                >
                   <Link
                     to={p.to}
                     aria-label={p.ariaLabel}
