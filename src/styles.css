@@ -314,6 +314,10 @@
     padding-top: var(--section-y-sm);
     padding-bottom: var(--section-y-sm);
   }
+  .section-y-app {
+    padding-top: var(--section-y-app);
+    padding-bottom: var(--section-y-app);
+  }
 
   /* ─────────────────────────────────────────────────────────────
      HERO H1 — display rhythm tuned per breakpoint.
