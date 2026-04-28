@@ -758,7 +758,7 @@ function HomePage() {
             </p>
           </div>
 
-          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5 md:gap-6 list-none p-0 max-w-6xl mx-auto">
+          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6 list-none p-0 max-w-6xl mx-auto">
             {startPaths.map((p) => {
               const Icon = p.icon;
               // Four distinct visual treatments — each card reads as a
