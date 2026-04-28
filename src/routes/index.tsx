@@ -522,27 +522,32 @@ function HomePage() {
                 brand directive requires. mb-2 (was mb-4) trims the
                 empty void beneath the signature on mobile so the hero
                 feels visually anchored. */}
-            <div className="hero-rhythm-microcopy-to-signature mb-2 md:mb-2 flex justify-center opacity-0 animate-[heroFade_1.4s_ease-out_1.75s_forwards]">
+            <div className="hero-rhythm-microcopy-to-signature mb-2 md:mb-2 mt-8 md:mt-10 flex justify-center opacity-0 animate-[heroFade_1.4s_ease-out_1.75s_forwards]">
               <div
                 data-hero-field="brandLine"
-                className="inline-flex items-center gap-5 md:gap-6 text-[color:var(--gold-soft)]"
+                className="inline-flex items-center gap-6 md:gap-7 text-[color:var(--gold-soft)]"
               >
-                <span className="h-px w-10 md:w-14 bg-gradient-to-r from-transparent to-[color:var(--gold)] shrink-0 opacity-80" />
+                <span className="h-px w-12 md:w-16 bg-gradient-to-r from-transparent to-[color:var(--gold)] shrink-0 opacity-90" />
                 {/* Hidden full string for SEO / regression parity */}
                 <span className="sr-only">{HERO_COPY.brandLine}</span>
                 <span
                   aria-hidden="true"
-                  className="hero-rhythm-signature-line-gap flex flex-col items-center text-[10.5px] md:text-[11px] uppercase tracking-[0.32em] leading-[1.2] text-center"
+                  className="flex flex-col items-center gap-2 md:gap-2.5 text-[10.5px] md:text-[11px] uppercase tracking-[0.32em] leading-[1.2] text-center"
                 >
-                  <span style={{ fontWeight: 450 }}>Whatever you have in mind,</span>
                   <span
-                    className="text-[color:var(--gold)] tracking-[0.36em] text-[12px] md:text-[12.5px]"
+                    className="text-[color:var(--ivory)]/85"
+                    style={{ fontWeight: 450 }}
+                  >
+                    Whatever you have in mind,
+                  </span>
+                  <span
+                    className="text-[color:var(--gold)] tracking-[0.4em] text-[12.5px] md:text-[13px]"
                     style={{ fontWeight: 600 }}
                   >
                     We say YES.
                   </span>
                 </span>
-                <span className="h-px w-10 md:w-14 bg-gradient-to-l from-transparent to-[color:var(--gold)] shrink-0 opacity-80" />
+                <span className="h-px w-12 md:w-16 bg-gradient-to-l from-transparent to-[color:var(--gold)] shrink-0 opacity-90" />
               </div>
             </div>
 
