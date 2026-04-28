@@ -840,7 +840,7 @@ function HomePage() {
                       {p.eyebrow}
                     </span>
                     <h3
-                      className={`serif text-[1.4rem] md:text-[1.5rem] mt-3 leading-[1.15] ${styles.title}`}
+                      className={`t-h3 mt-3 ${styles.title}`}
                     >
                       {p.title}
                     </h3>
@@ -1241,7 +1241,7 @@ function HomePage() {
                   <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal)]/88 via-[color:var(--charcoal)]/25 to-transparent" />
                   <div className="absolute left-4 right-4 bottom-4 md:left-5 md:right-5 md:bottom-5">
                     <span className="block h-px w-7 md:w-8 bg-[color:var(--gold)] mb-2.5 md:mb-3 opacity-90" />
-                    <h3 className="serif text-[1.1rem] md:text-[1.5rem] leading-[1.15] text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
+                    <h3 className="t-h3 text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
                       {e.title}
                     </h3>
                   </div>
