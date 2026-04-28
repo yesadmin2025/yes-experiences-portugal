@@ -10,8 +10,9 @@ import {
   deleteMappingRules,
 } from "@/server/mappingRules.functions";
 import { DEFAULT_MAPPING_RULES } from "@/data/defaultMappingRules";
+import { signatureTours } from "@/data/signatureTours";
 import { toast } from "sonner";
-import { Loader2, RefreshCw, Check, AlertTriangle, Sliders, Trash2, Plus } from "lucide-react";
+import { Loader2, RefreshCw, Check, AlertTriangle, Sliders, Trash2, Plus, Image as ImageIcon, ImageOff, Link2, Link2Off } from "lucide-react";
 
 export const Route = createFileRoute("/admin/import-tours")({
   head: () => ({
@@ -38,7 +39,19 @@ type ImportedRow = {
   blurb: string;
   stops: { label: string; tag: string; x: number; y: number }[];
   imported_at: string;
+  image_url: string | null;
+  source_url: string;
 };
+
+const SELECT_COLS =
+  "id,title,region_label,duration_label,duration_hours,price_from,theme,styles,highlights,pace,tier,fits_best,blurb,stops,imported_at,image_url,source_url";
+
+function normalizeUrl(u: string): string {
+  return u.replace(/\/+$/, "").toLowerCase();
+}
+const SIGNATURE_BY_URL = new Map(
+  signatureTours.map((t) => [normalizeUrl(t.bookingUrl), t]),
+);
 
 function AdminImportPage() {
   const navigate = useNavigate();
