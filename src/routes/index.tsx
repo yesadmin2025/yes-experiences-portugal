@@ -407,7 +407,7 @@ function HomePage() {
                 subheadline, CTAs and microcopy (single hero content grid).
                 Locked to one line on mobile via whitespace-nowrap +
                 a smaller base size + tighter tracking. */}
-            <span className="inline-flex items-center gap-2.5 sm:gap-3.5 whitespace-nowrap text-[10px] sm:text-[12px] md:text-[13px] uppercase tracking-[0.16em] sm:tracking-[0.26em] md:tracking-[0.3em] text-[color:var(--gold-soft)] opacity-0 animate-[heroFade_1.1s_ease-out_0.3s_forwards]">
+            <span className="inline-flex items-center gap-2.5 sm:gap-3.5 whitespace-nowrap text-[10.5px] sm:text-[12px] md:text-[13px] uppercase tracking-[0.18em] sm:tracking-[0.26em] md:tracking-[0.3em] text-[color:var(--gold)] opacity-0 animate-[heroFade_1.1s_ease-out_0.3s_forwards]">
               <span aria-hidden="true" className="text-[color:var(--gold)]">
                 ✦
               </span>
