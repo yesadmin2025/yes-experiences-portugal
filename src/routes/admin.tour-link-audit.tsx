@@ -405,6 +405,149 @@ function RouteTreeTroubleshooting() {
 const ROUTE_FILE = "src/routes/admin.tour-link-audit.tsx";
 const EXPECTED_PATH = "/admin/tour-link-audit";
 
+function CrawlerErrorPanel() {
+  const [info, setInfo] = useState<CrawlerErrorInfo | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  const capture = async () => {
+    setLoading(true);
+    setErr(null);
+    try {
+      const data = await getLastCrawlerError();
+      setInfo(data);
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : String(e));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    void capture();
+  }, []);
+
+  const fileHref = info?.file
+    ? `vscode://file/${info.file}${info.line ? `:${info.line}${info.column ? `:${info.column}` : ""}` : ""}`
+    : null;
+
+  const copyRaw = async () => {
+    if (!info?.raw) return;
+    try {
+      await navigator.clipboard.writeText(info.raw);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      /* noop */
+    }
+  };
+
+  const tone = !info
+    ? "border-[color:var(--border)] bg-[color:var(--sand)]/40"
+    : info.found
+      ? "border-red-300 bg-red-50"
+      : "border-emerald-300 bg-emerald-50";
+
+  return (
+    <div className="mt-6">
+      <h3 className="text-xs uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)] flex items-center gap-2">
+        <Bug size={12} /> Last crawler / build error
+      </h3>
+
+      <div className={`mt-3 border p-4 text-sm ${tone}`}>
+        {loading && !info && (
+          <p className="text-xs text-[color:var(--charcoal-soft)]">
+            Reading dev-server log…
+          </p>
+        )}
+
+        {err && (
+          <p className="text-xs text-red-800">
+            <strong>Couldn't read log:</strong> {err}
+          </p>
+        )}
+
+        {info && !info.found && (
+          <p className="text-xs text-emerald-900">
+            No crawler/build errors found in the recent dev-server log. ✓
+          </p>
+        )}
+
+        {info && info.found && (
+          <div className="space-y-3">
+            <div className="text-xs font-medium text-red-900 break-words">
+              {info.message}
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2 text-xs">
+              {info.file ? (
+                <a
+                  href={fileHref!}
+                  className="inline-flex items-center gap-1.5 border border-[color:var(--border)] hover:border-[color:var(--gold)] bg-white px-2.5 py-1 font-mono"
+                >
+                  <ExternalLink size={11} />
+                  {info.file}
+                  {info.line ? `:${info.line}` : ""}
+                  {info.column ? `:${info.column}` : ""}
+                </a>
+              ) : (
+                <span className="text-[color:var(--charcoal-soft)]">
+                  No file:line found in error block
+                </span>
+              )}
+              {info.source && (
+                <span className="text-[10px] uppercase tracking-[0.2em] text-[color:var(--charcoal-soft)]">
+                  matched: {info.source}
+                </span>
+              )}
+            </div>
+
+            {info.raw && (
+              <details className="text-xs">
+                <summary className="cursor-pointer text-[color:var(--charcoal-soft)] hover:text-[color:var(--charcoal)]">
+                  Show raw error block
+                </summary>
+                <pre className="mt-2 bg-white/70 p-2 overflow-x-auto whitespace-pre-wrap break-all text-[11px] max-h-60">
+                  {info.raw}
+                </pre>
+              </details>
+            )}
+          </div>
+        )}
+
+        <div className="mt-3 flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={capture}
+            disabled={loading}
+            className="inline-flex items-center gap-1.5 border border-[color:var(--border)] hover:border-[color:var(--gold)] bg-white px-2.5 py-1 text-xs disabled:opacity-50"
+          >
+            <RefreshCw size={11} className={loading ? "animate-spin" : ""} />
+            {loading ? "Capturing…" : "Capture latest error"}
+          </button>
+          {info?.raw && (
+            <button
+              type="button"
+              onClick={copyRaw}
+              className="inline-flex items-center gap-1.5 border border-[color:var(--border)] hover:border-[color:var(--gold)] bg-white px-2.5 py-1 text-xs"
+            >
+              <Copy size={11} />
+              {copied ? "Copied ✓" : "Copy error block"}
+            </button>
+          )}
+          {info?.capturedAt && (
+            <span className="text-[10px] text-[color:var(--charcoal-soft)]">
+              Captured {new Date(info.capturedAt).toLocaleTimeString()}
+            </span>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
 function SuggestedActions() {
   const [check, setCheck] = useState<RouteFileCheckResult | null>(null);
   const [checking, setChecking] = useState(false);
