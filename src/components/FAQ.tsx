@@ -104,7 +104,7 @@ export function FAQ() {
             <span>Still have a question?</span>
             <Link
               to="/contact"
-              className="inline-flex items-center gap-1.5 text-[color:var(--teal)] hover:text-[color:var(--teal-2)] transition-colors duration-300"
+              className="inline-flex items-center gap-1.5 text-[color:var(--teal)] hover:text-[color:var(--charcoal)] transition-colors duration-300"
             >
               Speak with our team
               <ArrowRight size={14} />

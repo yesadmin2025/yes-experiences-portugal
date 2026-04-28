@@ -888,11 +888,11 @@ function HomePage() {
                     alt=""
                     aria-hidden="true"
                     loading="lazy"
-                    className="w-full h-full object-cover opacity-40 scale-[1.04] transition-transform duration-[2200ms] ease-out hover:scale-[1.1]"
+                    className="w-full h-full object-cover opacity-40 scale-[1.04]"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-br from-[color:var(--teal)]/85 via-[color:var(--teal)]/70 to-[color:var(--teal-2)]/80" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-[color:var(--teal)]/88 via-[color:var(--teal)]/72 to-[color:var(--charcoal-deep)]/82" />
                 </div>
-                <div className="relative border border-[color:var(--gold)]/30 p-8 md:p-10 bg-[color:var(--teal-2)]/55 backdrop-blur-md">
+                <div className="relative border border-[color:var(--gold)]/30 p-8 md:p-10 bg-[color:var(--teal)]/65 backdrop-blur-md">
                   <p className="text-[10.5px] uppercase tracking-[0.32em] text-[color:var(--gold)]">
                     A studio session, in 4 moves
                   </p>
@@ -1068,13 +1068,14 @@ function HomePage() {
                 <ArrowRight size={15} />
               </Link>
             </div>
-            <div className="reveal lg:order-1 relative group">
-              <div className="overflow-hidden">
+            <div className="reveal lg:order-1 relative">
+              <div className="editorial-card overflow-hidden border border-[color:var(--border)]">
                 <img
                   src={multiDayImg}
                   alt="Aerial view of Douro Valley vineyards"
                   loading="lazy"
-                  className="w-full aspect-[5/4] object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-105"
+                  data-card-image
+                  className="w-full aspect-[5/4] object-cover"
                 />
               </div>
               <div className="absolute -bottom-5 -left-5 hidden md:block w-28 h-28 border border-[color:var(--gold)]/60" />
@@ -1209,7 +1210,7 @@ function HomePage() {
           <div className="reveal mt-12 md:mt-16 text-center">
             <Link
               to="/local-stories"
-              className="inline-flex items-center gap-2 text-[14px] tracking-[0.005em] text-[color:var(--teal)] hover:text-[color:var(--teal-2)] transition-colors font-medium"
+              className="inline-flex items-center gap-2 text-[14px] tracking-[0.005em] text-[color:var(--teal)] hover:text-[color:var(--charcoal)] transition-colors font-medium"
             >
               Read all local stories <ArrowRight size={14} />
             </Link>
@@ -1245,7 +1246,7 @@ function HomePage() {
           <div className="grid md:grid-cols-3 gap-6 md:gap-7">
             {reviews.map((r, i) => (
               <figure key={i} className="group reveal-stagger h-full">
-                <div className="lift-layer-sm bg-[color:var(--card)] border border-[color:var(--border)] group-hover:border-[color:var(--teal)]/25 group-hover:shadow-[0_24px_50px_-24px_rgba(41,91,97,0.2)] p-7 md:p-9 h-full flex flex-col">
+                <div className="editorial-card bg-[color:var(--card)] border border-[color:var(--border)] hover:border-[color:var(--gold)]/45 p-7 md:p-9 h-full flex flex-col">
                   <div className="flex gap-0.5 text-[color:var(--gold)] mb-5">
                     {[...Array(5)].map((_, idx) => (
                       <Star key={idx} size={13} fill="currentColor" />
