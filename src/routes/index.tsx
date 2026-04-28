@@ -705,11 +705,11 @@ function HomePage() {
             <span className="eyebrow">Where to begin</span>
             <h2
               id="start-paths-title"
-              className="serif text-[2.25rem] md:text-5xl mt-5 leading-[1.08]"
+              className="t-h2 mt-5"
             >
               Choose how <span className="italic">you want to start.</span>
             </h2>
-            <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] leading-[1.7] font-light">
+            <p className="t-lead mt-5">
               Four ways in. Every one confirms instantly — no forms, no waiting.
             </p>
             <p className="mt-3 text-[13.5px] italic font-light text-[color:var(--charcoal-soft)]">
@@ -951,11 +951,11 @@ function HomePage() {
             <span className="eyebrow">Signature Journeys</span>
             <h2
               id="signatures-title"
-              className="serif text-[2.25rem] md:text-5xl mt-5 leading-[1.08]"
+              className="t-h2 mt-5"
             >
               Signature <span className="italic">Journeys.</span>
             </h2>
-            <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] leading-[1.7] font-light">
+            <p className="t-lead mt-5">
               Curated routes designed to be enjoyed as they are.
             </p>
             <p className="mt-3 text-[13.5px] md:text-[14px] italic font-light text-[color:var(--charcoal-soft)]">
@@ -1101,7 +1101,7 @@ function HomePage() {
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             <div className="reveal lg:order-2">
               <span className="eyebrow">Multi-Day Journeys</span>
-              <h2 className="serif text-[2.25rem] md:text-5xl mt-5 leading-[1.08]">
+              <h2 className="t-h2 mt-5">
                 A few days, <br />
                 <span className="italic">one continuous story.</span>
               </h2>
@@ -1156,14 +1156,14 @@ function HomePage() {
             <span className="eyebrow">Celebrations &amp; Groups</span>
             <h2
               id="occasions-title"
-              className="serif text-[2.25rem] md:text-5xl mt-5 leading-[1.08]"
+              className="t-h2 mt-5"
             >
               For moments <span className="italic">that matter.</span>
             </h2>
             <p className="mt-5 text-[12.5px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
               Proposals · Celebrations · Corporate · Groups
             </p>
-            <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] leading-[1.7] font-light">
+            <p className="t-lead mt-5">
               From intimate plans to larger groups — all designed your way and confirmed instantly.
             </p>
           </div>
@@ -1221,10 +1221,10 @@ function HomePage() {
         <div className="container-x">
           <div className="reveal text-center max-w-2xl mx-auto mb-14 md:mb-20">
             <span className="eyebrow">Local Stories &amp; Hidden Gems</span>
-            <h2 className="serif text-[2.25rem] md:text-5xl lg:text-[3.4rem] mt-5 leading-[1.08]">
+            <h2 className="t-h2 mt-5">
               The Portugal <span className="italic">we travel ourselves</span>
             </h2>
-            <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] leading-[1.7] max-w-xl mx-auto font-light">
+            <p className="t-lead mt-5 max-w-xl mx-auto">
               Notes from the road — the places we keep returning to, away from the crowds.
             </p>
           </div>
@@ -1272,7 +1272,7 @@ function HomePage() {
         <div className="container-x">
           <div className="reveal text-center max-w-2xl mx-auto mb-14 md:mb-16">
             <span className="eyebrow">Voices</span>
-            <h2 id="reviews-title" className="serif text-[2.25rem] md:text-5xl mt-5 leading-[1.08]">
+            <h2 id="reviews-title" className="t-h2 mt-5">
               700+ <span className="italic">5-star reviews</span>
             </h2>
             <p
@@ -1331,7 +1331,7 @@ function HomePage() {
             <div className="absolute -top-12 right-1/4 w-40 h-40 rounded-full border border-[color:var(--gold)]/10" />
             <div className="relative max-w-2xl">
               <span className="eyebrow">Begin</span>
-              <h2 className="serif text-4xl md:text-5xl mt-6">
+              <h2 className="t-h2 mt-6">
                 Write your story. <br />
                 <span className="italic text-[color:var(--teal)]">Confirm it instantly.</span>
               </h2>
