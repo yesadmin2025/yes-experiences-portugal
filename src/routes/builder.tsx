@@ -1395,11 +1395,13 @@ type Chapter = {
   line: string;
   icon: typeof Sun;
   tags?: string[];
+  /** Normalized 0–100 coordinates inside the inline canvas map. Undefined = ambient (no pin). */
+  coord?: { x: number; y: number };
 };
 
 function chapter(
   slot: SlotKey,
-  data: { label: string; line: string; icon: typeof Sun; tags?: string[]; offset?: number },
+  data: { label: string; line: string; icon: typeof Sun; tags?: string[]; offset?: number; coord?: { x: number; y: number } },
 ): Chapter {
   return {
     slot,
@@ -1409,7 +1411,17 @@ function chapter(
     line: data.line,
     icon: data.icon,
     tags: data.tags,
+    coord: data.coord,
   };
+}
+
+/** Deterministic pseudo-coord for chapters that don't ship a hand-tuned position. */
+function autoCoord(seed: string): { x: number; y: number } {
+  let h = 0;
+  for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) | 0;
+  const x = 18 + (Math.abs(h) % 64);          // 18–82
+  const y = 22 + (Math.abs(h >> 5) % 56);     // 22–78
+  return { x, y };
 }
 
 function groupVoice(s: BuilderState) {
