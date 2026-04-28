@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
-import { ArrowRight, Clock, MapPin, ExternalLink } from "lucide-react";
+import { ArrowRight, Clock, MapPin } from "lucide-react";
 import { signatureTours } from "@/data/signatureTours";
 import { useImportedTourImages } from "@/hooks/use-imported-tour-images";
 import { ImageQualityToggle } from "@/components/ImageQualityToggle";
