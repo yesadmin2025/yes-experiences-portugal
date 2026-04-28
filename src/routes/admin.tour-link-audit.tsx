@@ -557,59 +557,61 @@ function CrawlerErrorPanel() {
           </div>
         )}
 
-        {err && (
-          <p className="text-xs text-red-800">
-            <strong>Couldn't read log:</strong> {err}
-          </p>
-        )}
+        <div ref={resultsRef} className="scroll-mt-4">
+          {err && (
+            <p className="text-xs text-red-800">
+              <strong>Couldn't read log:</strong> {err}
+            </p>
+          )}
 
-        {info && !info.found && (
-          <p className="text-xs text-emerald-900">
-            No crawler/build errors found in the recent dev-server log. ✓
-          </p>
-        )}
+          {info && !info.found && (
+            <p className="text-xs text-emerald-900">
+              No crawler/build errors found in the recent dev-server log. ✓
+            </p>
+          )}
 
-        {info && info.found && (
-          <div className="space-y-3">
-            <div className="text-xs font-medium text-red-900 break-words">
-              {info.message}
-            </div>
+          {info && info.found && (
+            <div className="space-y-3">
+              <div className="text-xs font-medium text-red-900 break-words">
+                {info.message}
+              </div>
 
-            <div className="flex flex-wrap items-center gap-2 text-xs">
-              {info.file ? (
-                <a
-                  href={fileHref!}
-                  className="inline-flex items-center gap-1.5 border border-[color:var(--border)] hover:border-[color:var(--gold)] bg-white px-2.5 py-1 font-mono"
-                >
-                  <ExternalLink size={11} />
-                  {info.file}
-                  {info.line ? `:${info.line}` : ""}
-                  {info.column ? `:${info.column}` : ""}
-                </a>
-              ) : (
-                <span className="text-[color:var(--charcoal-soft)]">
-                  No file:line found in error block
-                </span>
+              <div className="flex flex-wrap items-center gap-2 text-xs">
+                {info.file ? (
+                  <a
+                    href={fileHref!}
+                    className="inline-flex items-center gap-1.5 border border-[color:var(--border)] hover:border-[color:var(--gold)] bg-white px-2.5 py-1 font-mono"
+                  >
+                    <ExternalLink size={11} />
+                    {info.file}
+                    {info.line ? `:${info.line}` : ""}
+                    {info.column ? `:${info.column}` : ""}
+                  </a>
+                ) : (
+                  <span className="text-[color:var(--charcoal-soft)]">
+                    No file:line found in error block
+                  </span>
+                )}
+                {info.source && (
+                  <span className="text-[10px] uppercase tracking-[0.2em] text-[color:var(--charcoal-soft)]">
+                    matched: {info.source}
+                  </span>
+                )}
+              </div>
+
+              {info.raw && (
+                <details className="text-xs">
+                  <summary className="cursor-pointer text-[color:var(--charcoal-soft)] hover:text-[color:var(--charcoal)]">
+                    Show raw error block
+                  </summary>
+                  <pre className="mt-2 bg-white/70 p-2 overflow-x-auto whitespace-pre-wrap break-all text-[11px] max-h-60">
+                    {info.raw}
+                  </pre>
+                </details>
               )}
-              {info.source && (
-                <span className="text-[10px] uppercase tracking-[0.2em] text-[color:var(--charcoal-soft)]">
-                  matched: {info.source}
-                </span>
-              )}
             </div>
-
-            {info.raw && (
-              <details className="text-xs">
-                <summary className="cursor-pointer text-[color:var(--charcoal-soft)] hover:text-[color:var(--charcoal)]">
-                  Show raw error block
-                </summary>
-                <pre className="mt-2 bg-white/70 p-2 overflow-x-auto whitespace-pre-wrap break-all text-[11px] max-h-60">
-                  {info.raw}
-                </pre>
-              </details>
-            )}
-          </div>
-        )}
+          )}
+        </div>
 
         <div className="mt-3 flex flex-wrap items-center gap-2">
           <label className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-[0.2em] text-[color:var(--charcoal-soft)]">
