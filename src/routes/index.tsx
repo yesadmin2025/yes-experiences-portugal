@@ -1049,12 +1049,12 @@ function HomePage() {
             {[
               {
                 eyebrow: "Extended journeys",
-                title: "For more than a day",
-                line: "From one day to full journeys across Portugal.",
+                title: "Beyond a day",
+                line: "From private days to full journeys across Portugal.",
                 to: "/multi-day" as const,
                 cta: "Discover multi-day",
                 ariaLabel:
-                  "Discover extended journeys — from one day to full journeys across Portugal",
+                  "Beyond a day — from private days to full journeys across Portugal",
                 bg: multiDayImg,
               },
               {
@@ -1064,7 +1064,7 @@ function HomePage() {
                 to: "/proposals" as const,
                 cta: "Plan a moment",
                 ariaLabel:
-                  "Plan a moment — proposals, celebrations, corporate and private groups",
+                  "For moments that matter — proposals, celebrations, corporate and private groups",
                 bg: catProposals,
               },
             ].map((b) => (
