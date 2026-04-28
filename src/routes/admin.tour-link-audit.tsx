@@ -411,6 +411,8 @@ function CrawlerErrorPanel() {
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const resultsRef = useRef<HTMLDivElement | null>(null);
+  const wasLoadingRef = useRef(false);
   const [strategy, setStrategy] = useState<CrawlerErrorStrategy>(() => {
     if (typeof window === "undefined") return "root-cause";
     const saved = window.localStorage.getItem(STRATEGY_STORAGE_KEY);
