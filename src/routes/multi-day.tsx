@@ -196,7 +196,7 @@ function MultiDayPage() {
             <br className="hidden sm:block" />{" "}
             <span className="italic text-[color:var(--gold-soft)]">Across Portugal</span>
           </h1>
-          <p className="mt-5 max-w-xl mx-auto text-[14px] md:text-[15px] text-white/85 italic leading-relaxed">
+          <p className="mt-5 max-w-md md:max-w-xl mx-auto text-[15px] md:text-[16px] text-white/95 italic leading-[1.65] md:leading-relaxed [text-shadow:0_1px_8px_rgba(0,0,0,0.35)]">
             Shape each day around your rhythm, with local knowledge guiding the route.
           </p>
           <div className="mt-7 flex flex-col sm:flex-row gap-2.5 justify-center items-stretch sm:items-center max-w-md mx-auto">
