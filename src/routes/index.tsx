@@ -24,6 +24,7 @@ import {
   Zap,
   BookOpen,
   Gift,
+  CalendarDays,
 } from "lucide-react";
 import { PlatformBadge } from "@/components/PlatformBadge";
 import { HeroMetaProbe } from "@/components/HeroMetaProbe";
