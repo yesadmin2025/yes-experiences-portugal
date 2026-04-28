@@ -268,11 +268,21 @@ const seeds: { id: string; kind: string; label: string; sub: string; patch: Part
    ============================================================ */
 
 function BuilderPage() {
+  const search = Route.useSearch();
   const [s, setS] = useState<BuilderState>(emptyState);
   const [mobileView, setMobileView] = useState<"build" | "map">("build");
   // Hovered/long-pressed highlight chip — drives a temporary route extension
   // and pin pulse on the map. Cleared on leave / release.
   const [previewHighlight, setPreviewHighlight] = useState<string | null>(null);
+
+  // Deep-link seed: /builder?tour=<id> opens the matching Signature tour
+  // pre-filled, ready for the user to tailor or confirm as-is.
+  useEffect(() => {
+    if (!search.tour) return;
+    const tour = signatureTours.find((t) => t.id === search.tour);
+    if (!tour) return;
+    setS((p) => ({ ...p, ...tour.seed, name: p.name || tour.title }));
+  }, [search.tour]);
 
   // Has the user begun? Drives the intro/active split.
   const started =
