@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-28T13:00:19.676Z",
+  "generatedAt": "2026-04-28T15:47:14.570Z",
   "filesScanned": 81,
   "approvedPalette": {
     "teal": "#295B61",
@@ -566,7 +566,7 @@
     },
     {
       "file": "src/routes/builder.tsx",
-      "line": 1108,
+      "line": 1162,
       "col": 44,
       "raw": "#cfe3e6",
       "normalized": "#cfe3e6",
@@ -575,7 +575,7 @@
     },
     {
       "file": "src/routes/builder.tsx",
-      "line": 1109,
+      "line": 1163,
       "col": 45,
       "raw": "#9fc4cc",
       "normalized": "#9fc4cc",
@@ -584,7 +584,7 @@
     },
     {
       "file": "src/routes/builder.tsx",
-      "line": 1110,
+      "line": 1164,
       "col": 46,
       "raw": "#6ea3ad",
       "normalized": "#6ea3ad",
@@ -593,7 +593,7 @@
     },
     {
       "file": "src/routes/builder.tsx",
-      "line": 1114,
+      "line": 1168,
       "col": 44,
       "raw": "#f3ead6",
       "normalized": "#f3ead6",
@@ -602,7 +602,7 @@
     },
     {
       "file": "src/routes/builder.tsx",
-      "line": 1115,
+      "line": 1169,
       "col": 45,
       "raw": "#e8dcb8",
       "normalized": "#e8dcb8",
@@ -611,7 +611,7 @@
     },
     {
       "file": "src/routes/builder.tsx",
-      "line": 1116,
+      "line": 1170,
       "col": 46,
       "raw": "#d6c596",
       "normalized": "#d6c596",
@@ -620,7 +620,7 @@
     },
     {
       "file": "src/routes/builder.tsx",
-      "line": 1120,
+      "line": 1174,
       "col": 44,
       "raw": "#ece4d0",
       "normalized": "#ece4d0",
@@ -629,7 +629,7 @@
     },
     {
       "file": "src/routes/builder.tsx",
-      "line": 1121,
+      "line": 1175,
       "col": 46,
       "raw": "#d4c8a8",
       "normalized": "#d4c8a8",
@@ -638,7 +638,7 @@
     },
     {
       "file": "src/routes/builder.tsx",
-      "line": 1135,
+      "line": 1189,
       "col": 57,
       "raw": "#000",
       "normalized": "#000000",
@@ -647,7 +647,7 @@
     },
     {
       "file": "src/routes/builder.tsx",
-      "line": 1143,
+      "line": 1197,
       "col": 34,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -656,7 +656,7 @@
     },
     {
       "file": "src/routes/builder.tsx",
-      "line": 1167,
+      "line": 1221,
       "col": 21,
       "raw": "#b8a878",
       "normalized": "#b8a878",
@@ -665,7 +665,7 @@
     },
     {
       "file": "src/routes/builder.tsx",
-      "line": 1265,
+      "line": 1319,
       "col": 21,
       "raw": "#9a8657",
       "normalized": "#9a8657",
@@ -674,7 +674,7 @@
     },
     {
       "file": "src/routes/builder.tsx",
-      "line": 1278,
+      "line": 1332,
       "col": 34,
       "raw": "#7ca7b8",
       "normalized": "#7ca7b8",
@@ -683,7 +683,7 @@
     },
     {
       "file": "src/routes/builder.tsx",
-      "line": 1291,
+      "line": 1345,
       "col": 80,
       "raw": "#9a8657",
       "normalized": "#9a8657",
@@ -692,7 +692,7 @@
     },
     {
       "file": "src/routes/builder.tsx",
-      "line": 1292,
+      "line": 1346,
       "col": 81,
       "raw": "#9a8657",
       "normalized": "#9a8657",
@@ -701,7 +701,7 @@
     },
     {
       "file": "src/routes/builder.tsx",
-      "line": 1293,
+      "line": 1347,
       "col": 81,
       "raw": "#9a8657",
       "normalized": "#9a8657",
@@ -710,7 +710,7 @@
     },
     {
       "file": "src/routes/builder.tsx",
-      "line": 1298,
+      "line": 1352,
       "col": 47,
       "raw": "#5a6a72",
       "normalized": "#5a6a72",
@@ -719,7 +719,7 @@
     },
     {
       "file": "src/routes/builder.tsx",
-      "line": 1299,
+      "line": 1353,
       "col": 61,
       "raw": "#5a6a72",
       "normalized": "#5a6a72",
@@ -728,7 +728,7 @@
     },
     {
       "file": "src/routes/builder.tsx",
-      "line": 1300,
+      "line": 1354,
       "col": 75,
       "raw": "#3f4a50",
       "normalized": "#3f4a50",
@@ -737,7 +737,7 @@
     },
     {
       "file": "src/routes/builder.tsx",
-      "line": 1304,
+      "line": 1358,
       "col": 20,
       "raw": "#7a6a3e",
       "normalized": "#7a6a3e",
@@ -746,7 +746,7 @@
     },
     {
       "file": "src/routes/builder.tsx",
-      "line": 1306,
+      "line": 1360,
       "col": 92,
       "raw": "#456973",
       "normalized": "#456973",
@@ -755,7 +755,7 @@
     },
     {
       "file": "src/routes/builder.tsx",
-      "line": 1337,
+      "line": 1391,
       "col": 74,
       "raw": "#000",
       "normalized": "#000000",

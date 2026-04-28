@@ -1104,6 +1104,29 @@ function PremiumMap({
   const dayColor = (d: number) =>
     d === 1 ? "var(--teal)" : d === 2 ? "var(--teal-2)" : d === 3 ? "var(--gold)" : "var(--charcoal-soft)";
 
+  // Cluster overlapping stops at lower zoom levels. Threshold is in SVG units
+  // and shrinks as zoom increases, so clusters break apart when zooming in.
+  type Stop = (typeof stops)[number];
+  type Cluster = { x: number; y: number; items: (Stop & { index: number })[] };
+  const clusters = useMemo<Cluster[]>(() => {
+    if (stops.length === 0) return [];
+    const threshold = 5 / zoom; // SVG units; ~5 at zoom=1, ~1.25 at zoom=4
+    const out: Cluster[] = [];
+    stops.forEach((p, idx) => {
+      const item = { ...p, index: idx };
+      const found = out.find((c) => Math.hypot(c.x - p.x, c.y - p.y) <= threshold);
+      if (found) {
+        found.items.push(item);
+        // Recompute centroid
+        found.x = found.items.reduce((s, it) => s + it.x, 0) / found.items.length;
+        found.y = found.items.reduce((s, it) => s + it.y, 0) / found.items.length;
+      } else {
+        out.push({ x: p.x, y: p.y, items: [item] });
+      }
+    });
+    return out;
+  }, [stops, zoom]);
+
   return (
     <div className="bg-[color:var(--card)] border border-[color:var(--border)] overflow-hidden">
       <div className="flex items-baseline justify-between px-5 pt-5">
@@ -1381,15 +1404,58 @@ function PremiumMap({
             </g>
           )}
 
-          {/* Stops — numbered pins with soft shadow + label chip */}
-          {stops.map((p, i) => {
+          {/* Stops — clustered when overlapping at low zoom; numbered pins otherwise */}
+          {clusters.map((cluster, ci) => {
+            if (cluster.items.length > 1) {
+              // Render a cluster bubble
+              const count = cluster.items.length;
+              const r = Math.min(3.6, 1.6 + Math.log2(count) * 0.7);
+              const days = Array.from(new Set(cluster.items.map((it) => it.day)));
+              const c = days.length === 1 ? dayColor(days[0]) : "var(--gold)";
+              return (
+                <g
+                  key={`cluster-${ci}`}
+                  style={{
+                    transition: "all 500ms cubic-bezier(0.65,0,0.35,1)",
+                    animation: `ys-pop 400ms cubic-bezier(0.34,1.56,0.64,1) ${ci * 60}ms backwards`,
+                  }}
+                  onClick={zoomIn}
+                  cursor="pointer"
+                >
+                  <ellipse cx={cluster.x} cy={cluster.y + r + 0.3} rx={r * 0.9} ry="0.4" fill="#000" opacity="0.18" />
+                  <circle cx={cluster.x} cy={cluster.y} r={r + 0.6} fill="var(--ivory)" opacity="0.5" />
+                  <circle
+                    cx={cluster.x}
+                    cy={cluster.y}
+                    r={r}
+                    fill={c}
+                    stroke="var(--ivory)"
+                    strokeWidth="0.5"
+                    filter="url(#markerShadow)"
+                  />
+                  <text
+                    x={cluster.x}
+                    y={cluster.y + r * 0.4}
+                    fontSize={r * 1.1}
+                    textAnchor="middle"
+                    fill="var(--ivory)"
+                    fontFamily="ui-sans-serif, system-ui"
+                    fontWeight="700"
+                  >
+                    {count}
+                  </text>
+                </g>
+              );
+            }
+
+            const it = cluster.items[0];
+            const p = it;
+            const i = it.index;
             const c = dayColor(p.day);
             const n = i + 1;
             return (
               <g key={`${p.label}-${i}`} style={{ transition: "all 500ms cubic-bezier(0.65,0,0.35,1)" }}>
-                {/* Pin shadow ellipse on the ground */}
                 <ellipse cx={p.x} cy={p.y + 1.4} rx="1.6" ry="0.4" fill="#000" opacity="0.18" />
-                {/* Teardrop pin */}
                 <path
                   d={`M ${p.x} ${p.y - 4} C ${p.x + 2.4} ${p.y - 4} ${p.x + 2.4} ${p.y - 0.8} ${p.x} ${p.y + 1.2} C ${p.x - 2.4} ${p.y - 0.8} ${p.x - 2.4} ${p.y - 4} ${p.x} ${p.y - 4} Z`}
                   fill={c}
@@ -1413,7 +1479,6 @@ function PremiumMap({
                 >
                   {n}
                 </text>
-                {/* Label */}
                 <g style={{ animation: `ys-fade 500ms ease-out ${i * 80 + 200}ms backwards` }}>
                   <rect
                     x={p.x + 2.6}
