@@ -932,7 +932,7 @@ function HomePage() {
                 Create it, <span className="italic text-[color:var(--gold-soft)]">live.</span>
               </h2>
               <p className="mt-8 text-[19px] md:text-[22px] lg:text-[24px] text-[color:var(--ivory)] leading-[1.5] max-w-xl font-light">
-                Start with a place, a moment, or an idea. Shape it in real time and confirm instantly.
+                Start with a place, a moment, or an idea. Shape it in real time — a local confirms it personally.
               </p>
               <p className="mt-5 text-[15px] md:text-[16px] italic font-light text-[color:var(--gold-soft)] leading-[1.7] max-w-xl">
                 A local is available in real time if you want help.
