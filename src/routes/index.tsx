@@ -228,6 +228,27 @@ export const Route = createFileRoute("/")({
  * 10. Final CTA — Talk to a local
  * ════════════════════════════════════════════════════════════ */
 function HomePage() {
+  // Scroll to a hash target (#why-yes, #builder, #proposals, etc.) when the
+  // homepage mounts with a hash, including cross-route arrivals where the
+  // target may not exist on first paint. Polls briefly then bails.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const hash = window.location.hash?.slice(1);
+    if (!hash) return;
+    let tries = 0;
+    const tick = () => {
+      const el = document.getElementById(hash);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+        return;
+      }
+      if (++tries < 20) window.setTimeout(tick, 80);
+    };
+    // Slight delay so the route has painted first.
+    const t = window.setTimeout(tick, 60);
+    return () => window.clearTimeout(t);
+  }, []);
+
   return (
     <SiteLayout>
       {/* 1 — HERO
