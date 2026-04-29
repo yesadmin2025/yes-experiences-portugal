@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-04-29T00:12:28.368Z",
-  "filesScanned": 99,
+  "generatedAt": "2026-04-29T00:43:29.104Z",
+  "filesScanned": 100,
   "approvedPalette": {
     "teal": "#295B61",
     "teal-2": "#2A7C82",
@@ -18,12 +18,210 @@
     "#cccccc"
   ],
   "counts": {
-    "total": 131,
+    "total": 155,
     "approved": 26,
     "allowlisted": 20,
-    "mismatch": 85
+    "mismatch": 109
   },
   "findings": [
+    {
+      "file": "src/__tests__/helpers/writeBuilderPassReport.ts",
+      "line": 161,
+      "col": 133,
+      "raw": "#0f172a",
+      "normalized": "#0f172a",
+      "snippet": "body { font: 13px/1.4 -apple-system, BlinkMacSystemFont, \"Segoe UI\", system-ui, sans-serif; margin: 0; padding: 24px; background: #0f172a; color: #e2e8f0; }",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/__tests__/helpers/writeBuilderPassReport.ts",
+      "line": 161,
+      "col": 149,
+      "raw": "#e2e8f0",
+      "normalized": "#e2e8f0",
+      "snippet": "body { font: 13px/1.4 -apple-system, BlinkMacSystemFont, \"Segoe UI\", system-ui, sans-serif; margin: 0; padding: 24px; background: #0f172a; color: #e2e8f0; }",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/__tests__/helpers/writeBuilderPassReport.ts",
+      "line": 163,
+      "col": 21,
+      "raw": "#94a3b8",
+      "normalized": "#94a3b8",
+      "snippet": ".summary { color: #94a3b8; margin-bottom: 24px; }",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/__tests__/helpers/writeBuilderPassReport.ts",
+      "line": 164,
+      "col": 34,
+      "raw": "#f87171",
+      "normalized": "#f87171",
+      "snippet": ".summary strong.drift { color: #f87171; }",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/__tests__/helpers/writeBuilderPassReport.ts",
+      "line": 165,
+      "col": 31,
+      "raw": "#4ade80",
+      "normalized": "#4ade80",
+      "snippet": ".summary strong.ok { color: #4ade80; }",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/__tests__/helpers/writeBuilderPassReport.ts",
+      "line": 166,
+      "col": 23,
+      "raw": "#1e293b",
+      "normalized": "#1e293b",
+      "snippet": ".pass { background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 16px 20px; margin-bottom: 20px; }",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/__tests__/helpers/writeBuilderPassReport.ts",
+      "line": 166,
+      "col": 50,
+      "raw": "#334155",
+      "normalized": "#334155",
+      "snippet": ".pass { background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 16px 20px; margin-bottom: 20px; }",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/__tests__/helpers/writeBuilderPassReport.ts",
+      "line": 167,
+      "col": 34,
+      "raw": "#475569",
+      "normalized": "#475569",
+      "snippet": ".pass.baseline { border-color: #475569; }",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/__tests__/helpers/writeBuilderPassReport.ts",
+      "line": 169,
+      "col": 88,
+      "raw": "#475569",
+      "normalized": "#475569",
+      "snippet": ".pass .badge { display: inline-block; font-size: 10px; padding: 2px 6px; background: #475569; color: #f1f5f9; border-radius: 4px; vertical-align: middle; margin",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/__tests__/helpers/writeBuilderPassReport.ts",
+      "line": 169,
+      "col": 104,
+      "raw": "#f1f5f9",
+      "normalized": "#f1f5f9",
+      "snippet": ".pass .badge { display: inline-block; font-size: 10px; padding: 2px 6px; background: #475569; color: #f1f5f9; border-radius: 4px; vertical-align: middle; margin",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/__tests__/helpers/writeBuilderPassReport.ts",
+      "line": 170,
+      "col": 41,
+      "raw": "#94a3b8",
+      "normalized": "#94a3b8",
+      "snippet": ".pass .desc { margin: 0 0 8px; color: #94a3b8; font-size: 12px; }",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/__tests__/helpers/writeBuilderPassReport.ts",
+      "line": 172,
+      "col": 26,
+      "raw": "#4ade80",
+      "normalized": "#4ade80",
+      "snippet": ".pass .gap.ok { color: #4ade80; }",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/__tests__/helpers/writeBuilderPassReport.ts",
+      "line": 173,
+      "col": 29,
+      "raw": "#f87171",
+      "normalized": "#f87171",
+      "snippet": ".pass .gap.drift { color: #f87171; }",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/__tests__/helpers/writeBuilderPassReport.ts",
+      "line": 174,
+      "col": 30,
+      "raw": "#fbbf24",
+      "normalized": "#fbbf24",
+      "snippet": ".pass .gap .delta { color: #fbbf24; font-weight: normal; margin-left: 6px; }",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/__tests__/helpers/writeBuilderPassReport.ts",
+      "line": 175,
+      "col": 79,
+      "raw": "#cbd5e1",
+      "normalized": "#cbd5e1",
+      "snippet": "h3 { margin: 12px 0 6px; font-size: 12px; text-transform: uppercase; color: #cbd5e1; letter-spacing: 0.05em; }",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/__tests__/helpers/writeBuilderPassReport.ts",
+      "line": 178,
+      "col": 55,
+      "raw": "#334155",
+      "normalized": "#334155",
+      "snippet": "th, td { padding: 6px 8px; border-bottom: 1px solid #334155; text-align: left; vertical-align: top; }",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/__tests__/helpers/writeBuilderPassReport.ts",
+      "line": 179,
+      "col": 15,
+      "raw": "#94a3b8",
+      "normalized": "#94a3b8",
+      "snippet": "th { color: #94a3b8; font-weight: 600; background: #0f172a; position: sticky; top: 0; }",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/__tests__/helpers/writeBuilderPassReport.ts",
+      "line": 179,
+      "col": 54,
+      "raw": "#0f172a",
+      "normalized": "#0f172a",
+      "snippet": "th { color: #94a3b8; font-weight: 600; background: #0f172a; position: sticky; top: 0; }",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/__tests__/helpers/writeBuilderPassReport.ts",
+      "line": 180,
+      "col": 19,
+      "raw": "#38bdf8",
+      "normalized": "#38bdf8",
+      "snippet": "td.sel { color: #38bdf8; font-family: ui-monospace, \"SF Mono\", Menlo, monospace; white-space: nowrap; }",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/__tests__/helpers/writeBuilderPassReport.ts",
+      "line": 182,
+      "col": 18,
+      "raw": "#cbd5e1",
+      "normalized": "#cbd5e1",
+      "snippet": "td.ok { color: #cbd5e1; }",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/__tests__/helpers/writeBuilderPassReport.ts",
+      "line": 183,
+      "col": 60,
+      "raw": "#fecaca",
+      "normalized": "#fecaca",
+      "snippet": "td.drift { background: rgba(248, 113, 113, 0.18); color: #fecaca; font-weight: 600; }",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/__tests__/helpers/writeBuilderPassReport.ts",
+      "line": 184,
+      "col": 20,
+      "raw": "#64748b",
+      "normalized": "#64748b",
+      "snippet": "p.muted { color: #64748b; font-size: 12px; }",
+      "status": "mismatch"
+    },
     {
       "file": "src/__tests__/typography-regression.test.ts",
       "line": 323,
@@ -855,15 +1053,33 @@
     {
       "file": "src/lib/brand-tokens.ts",
       "line": 33,
-      "col": 21,
+      "col": 20,
       "raw": "#5A5A5A",
       "normalized": "#5a5a5a",
-      "snippet": "\"charcoal-soft\": \"#5A5A5A\",",
+      "snippet": "// Deepened from #5A5A5A → #555555 (see styles.css note) so secondary",
       "status": "mismatch"
     },
     {
       "file": "src/lib/brand-tokens.ts",
-      "line": 34,
+      "line": 33,
+      "col": 30,
+      "raw": "#555555",
+      "normalized": "#555555",
+      "snippet": "// Deepened from #5A5A5A → #555555 (see styles.css note) so secondary",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/lib/brand-tokens.ts",
+      "line": 35,
+      "col": 21,
+      "raw": "#555555",
+      "normalized": "#555555",
+      "snippet": "\"charcoal-soft\": \"#555555\",",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/lib/brand-tokens.ts",
+      "line": 36,
       "col": 21,
       "raw": "#1F1F1F",
       "normalized": "#1f1f1f",
@@ -1036,81 +1252,81 @@
       "file": "src/styles.css",
       "line": 60,
       "col": 11,
-      "raw": "#295b61",
+      "raw": "#295B61",
       "normalized": "#295b61",
-      "snippet": "--teal: #295b61;",
+      "snippet": "--teal: #295B61;",
       "status": "approved"
     },
     {
       "file": "src/styles.css",
       "line": 61,
       "col": 13,
-      "raw": "#2a7c82",
+      "raw": "#2A7C82",
       "normalized": "#2a7c82",
-      "snippet": "--teal-2: #2a7c82;",
+      "snippet": "--teal-2: #2A7C82;",
       "status": "approved"
     },
     {
       "file": "src/styles.css",
       "line": 62,
       "col": 11,
-      "raw": "#c9a96a",
+      "raw": "#C9A96A",
       "normalized": "#c9a96a",
-      "snippet": "--gold: #c9a96a;",
+      "snippet": "--gold: #C9A96A;",
       "status": "approved"
     },
     {
       "file": "src/styles.css",
       "line": 63,
       "col": 16,
-      "raw": "#e1cfa6",
+      "raw": "#E1CFA6",
       "normalized": "#e1cfa6",
-      "snippet": "--gold-soft: #e1cfa6;",
+      "snippet": "--gold-soft: #E1CFA6;",
       "status": "approved"
     },
     {
       "file": "src/styles.css",
       "line": 64,
       "col": 12,
-      "raw": "#faf8f3",
+      "raw": "#FAF8F3",
       "normalized": "#faf8f3",
-      "snippet": "--ivory: #faf8f3;",
+      "snippet": "--ivory: #FAF8F3;",
       "status": "approved"
     },
     {
       "file": "src/styles.css",
       "line": 65,
       "col": 11,
-      "raw": "#f4efe7",
+      "raw": "#F4EFE7",
       "normalized": "#f4efe7",
-      "snippet": "--sand: #f4efe7;",
+      "snippet": "--sand: #F4EFE7;",
       "status": "approved"
     },
     {
       "file": "src/styles.css",
       "line": 66,
       "col": 15,
-      "raw": "#2e2e2e",
+      "raw": "#2E2E2E",
       "normalized": "#2e2e2e",
-      "snippet": "--charcoal: #2e2e2e;",
+      "snippet": "--charcoal: #2E2E2E;",
       "status": "approved"
     },
     {
       "file": "src/styles.css",
       "line": 67,
       "col": 27,
-      "raw": "#5a5a5a",
+      "raw": "#5A5A5A",
       "normalized": "#5a5a5a",
-      "snippet": "/* Secondary text — was #5a5a5a, deepened to #555 so secondary copy on",
+      "snippet": "/* Secondary text — was #5A5A5A, deepened to #555555 so secondary copy on",
       "status": "mismatch"
     },
     {
       "file": "src/styles.css",
       "line": 67,
       "col": 48,
-      "raw": "#555",
+      "raw": "#555555",
       "normalized": "#555555",
-      "snippet": "/* Secondary text — was #5a5a5a, deepened to #555 so secondary copy on",
+      "snippet": "/* Secondary text — was #5A5A5A, deepened to #555555 so secondary copy on",
       "status": "mismatch"
     },
     {
@@ -1126,9 +1342,9 @@
       "file": "src/styles.css",
       "line": 70,
       "col": 20,
-      "raw": "#1f1f1f",
+      "raw": "#1F1F1F",
       "normalized": "#1f1f1f",
-      "snippet": "--charcoal-deep: #1f1f1f;",
+      "snippet": "--charcoal-deep: #1F1F1F;",
       "status": "allowlisted"
     },
     {
