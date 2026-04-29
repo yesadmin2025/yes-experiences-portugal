@@ -351,4 +351,150 @@ describe("Builder canvas — typography & spacing landmarks", () => {
     expect(switched.gap).toBe(initial.gap);
     expect(withDetail.gap).toBe(initial.gap);
   });
+
+  it("Back-and-forth selection (A → B → B+detail → A) preserves header + first-card landmarks", async () => {
+    /**
+     * Simulates a user toggling between two options:
+     *   1. Pass A0 — select the FIRST card (Option A).
+     *   2. Pass B  — switch selection to the SECOND card (Option B).
+     *   3. Pass B' — keep B selected and add a detail line to it.
+     *   4. Pass A1 — return selection to the FIRST card.
+     *
+     * Across all four passes:
+     *   - StepHeader landmarks must remain byte-identical.
+     *   - The FIRST MomentCard's typography landmarks (className contract
+     *     minus selection-only ring classes, plus computed inline styles
+     *     on moment-card / moment-name) must remain byte-identical.
+     *   - The header → first-card vertical gap must be invariant.
+     *
+     * The first card flips selected → unselected → unselected → selected
+     * across these passes, so we strip ring-* classes from the moment-card
+     * landmark className before comparing (selection ring is the only
+     * sanctioned visual diff; everything else must hold).
+     */
+    type Pass = {
+      header: LandmarkSnapshot[];
+      firstCard: LandmarkSnapshot[];
+      gap: number;
+    };
+
+    const OPTIONS: Array<{ name: string; image: string }> = [
+      { name: "Quinta do Crasto", image: SAMPLE_IMG },
+      { name: "Niepoort cellars", image: SAMPLE_IMG },
+    ];
+
+    const renderStep = (
+      selectedIndex: number | null,
+      lineForSelected?: string,
+    ) =>
+      measureWithSettle<Pass>(
+        React.createElement(
+          "div",
+          null,
+          React.createElement(StepHeader, {
+            title: "Pick a winery",
+            sub: "We'll tailor the visit around your pace.",
+          }),
+          React.createElement(
+            "div",
+            { style: { marginTop: "20px" } },
+            ...OPTIONS.map((opt, i) =>
+              React.createElement(MomentCard, {
+                key: opt.name,
+                image: opt.image,
+                name: opt.name,
+                selected: selectedIndex === i,
+                line:
+                  selectedIndex === i && lineForSelected
+                    ? lineForSelected
+                    : undefined,
+                onClick: () => {},
+              }),
+            ),
+          ),
+        ),
+        (root) => {
+          const headerEl = root.querySelector<HTMLElement>(
+            '[data-builder-landmark="step-header"]',
+          )!;
+          const firstCardEl = root.querySelectorAll<HTMLElement>(
+            '[data-builder-landmark="moment-card"]',
+          )[0]!;
+
+          const header = snapshotLandmarks(
+            headerEl.parentElement as HTMLElement,
+          ).filter((l) => l.selector.startsWith("step-"));
+          const firstCard = snapshotLandmarks(
+            firstCardEl.parentElement as HTMLElement,
+          ).filter((_, idx, arr) => {
+            const seenSecondCard = arr
+              .slice(0, idx)
+              .filter((l) => l.selector === "moment-card").length;
+            return seenSecondCard === 0;
+          });
+
+          const h = headerEl.getBoundingClientRect();
+          const c = firstCardEl.getBoundingClientRect();
+          return {
+            header,
+            firstCard,
+            gap: Math.round(c.top - h.bottom),
+          };
+        },
+        { width: 393 },
+      );
+
+    // Strip ring-* classes from the moment-card landmark — selection
+    // ring is the only allowed visual diff between selected/unselected.
+    const stripRing = (pass: Pass): Pass => ({
+      ...pass,
+      firstCard: pass.firstCard.map((l) =>
+        l.selector !== "moment-card"
+          ? l
+          : {
+              ...l,
+              className: l.className
+                .split(" ")
+                .filter(
+                  (c) =>
+                    !c.startsWith("ring-") &&
+                    !c.startsWith("hover:ring-") &&
+                    c !== "ring-2" &&
+                    c !== "ring-1",
+                )
+                .sort()
+                .join(" "),
+            },
+      ),
+    });
+
+    const a0 = stripRing(await renderStep(0)); // Option A selected
+    const b = stripRing(await renderStep(1)); // Switch to Option B
+    const bDetail = stripRing(
+      await renderStep(1, "Vintage cellars overlooking the Douro"),
+    ); // B + detail line
+    const a1 = stripRing(await renderStep(0)); // Back to Option A
+
+    // Header landmarks: byte-identical across all four passes.
+    expect(b.header).toEqual(a0.header);
+    expect(bDetail.header).toEqual(a0.header);
+    expect(a1.header).toEqual(a0.header);
+
+    // First card landmarks (ring-stripped): byte-identical across all
+    // four passes — toggling selection elsewhere or returning to the
+    // original choice cannot drift the first card's typography contract.
+    expect(b.firstCard).toEqual(a0.firstCard);
+    expect(bDetail.firstCard).toEqual(a0.firstCard);
+    expect(a1.firstCard).toEqual(a0.firstCard);
+
+    // Vertical rhythm: header→first-card gap is invariant across the
+    // entire back-and-forth flow.
+    expect(b.gap).toBe(a0.gap);
+    expect(bDetail.gap).toBe(a0.gap);
+    expect(a1.gap).toBe(a0.gap);
+
+    // Returning to the original selection must produce a state
+    // indistinguishable from the original (after ring-strip).
+    expect(a1).toEqual(a0);
+  });
 });
