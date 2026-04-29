@@ -145,28 +145,31 @@ const multiDay = [
 const groupsAndCelebrations = [
   {
     eyebrow: "Proposals",
-    title: "A private setting. A real moment. No template.",
-    line: (<>Quiet planning by a local team — every detail confirmed before the day, in <span className="kw">private</span>.</>),
+    title: "A private moment, shaped with care.",
+    line: (<>From the setting to the timing, we help shape the moment around your story, with <span className="kw">local knowledge</span> and discreet support.</>),
+    pull: "Designed for the moment, not the template.",
     detail: "Discreet · location of your choosing",
-    cta: "Plan a moment",
+    cta: "Plan a Proposal",
     to: "/proposals",
     img: imgArrabidaWineLunch,
   },
   {
     eyebrow: "Celebrations",
-    title: "For birthdays, anniversaries and days worth remembering.",
-    line: (<>Small gatherings hosted with care — your people, your pace, in a place that fits the <span className="kw">occasion</span>.</>),
+    title: "For days worth remembering.",
+    line: (<>Birthdays, anniversaries, honeymoons or family moments — shaped around <span className="kw">your rhythm</span>, your people and the way you want to feel Portugal.</>),
+    pull: "Your people, your pace, your Portugal.",
     detail: "Up to 14 guests · private host",
-    cta: "Plan a celebration",
+    cta: "Plan a Celebration",
     to: "/proposals",
     img: imgFatimaNazare,
   },
   {
-    eyebrow: "Corporate",
-    title: "Private group days with local knowledge and seamless logistics.",
-    line: (<>Small-group experiences for incentive trips and team retreats — handled end to end by a local team.</>),
+    eyebrow: "Corporate & Groups",
+    title: "Private group days, without the generic formula.",
+    line: (<>For teams, incentives and private groups, we combine local experiences, timing, transport and logistics into a day that feels <span className="kw">effortless</span>.</>),
+    pull: "End to end, handled by a local team.",
     detail: "Up to 30 pax · invoice & DMC support",
-    cta: "Speak to corporate",
+    cta: "Plan a Group Experience",
     to: "/corporate",
     img: imgFatimaNazare,
   },
@@ -466,12 +469,12 @@ function HomePage() {
             <span className="eyebrow">Why YES</span>
             <h2
               id="why-yes-title"
-              className="t-h2 mt-5 text-balance"
+              className="serif mt-5 text-[2.1rem] md:text-[3.2rem] leading-[1.05] tracking-[-0.012em] text-[color:var(--charcoal)] font-medium text-balance"
             >
               Portugal isn't experienced the{" "}
               <span className="italic">same way</span> by everyone.
             </h2>
-            <p className="mt-6 text-[14.5px] md:text-[15.5px] text-[color:var(--charcoal-soft)] font-light leading-[1.65] max-w-xl mx-auto">
+            <p className="mt-6 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] font-light leading-[1.7] max-w-xl mx-auto">
               For some, it's wine. For others, the coast, history, food, or a moment that matters. Because no two people experience Portugal the same way, we chose to do things differently — not just in how we guide you, but in how you choose and create your experience from the very beginning.
             </p>
           </div>
@@ -558,7 +561,7 @@ function HomePage() {
                 <h3 className="serif mt-3 text-[1.55rem] md:text-[1.85rem] leading-[1.18] text-[color:var(--charcoal)]">
                   {b.title}
                 </h3>
-                <p className="mt-3.5 text-[14.5px] md:text-[15px] text-[color:var(--charcoal-soft)] font-light leading-[1.6]">
+                <p className="mt-3.5 text-[15px] md:text-[15.5px] text-[color:var(--charcoal)] font-light leading-[1.65]">
                   {b.body}
                 </p>
                 {/* One bold highlighted phrase per card */}
@@ -590,10 +593,10 @@ function HomePage() {
         <div className="container-x">
           <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
             <span className="eyebrow">Where to begin</span>
-            <h2 id="start-paths-title" className="t-h2 mt-5">
+            <h2 id="start-paths-title" className="serif mt-5 text-[2.1rem] md:text-[3.2rem] leading-[1.05] tracking-[-0.012em] text-[color:var(--charcoal)] font-medium">
               Four ways to <span className="italic">start.</span>
             </h2>
-            <p className="mt-5 text-[14.5px] md:text-[15.5px] text-[color:var(--charcoal-soft)] font-light leading-[1.6] max-w-md mx-auto">
+            <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] font-light leading-[1.65] max-w-md mx-auto">
               Pick the path that matches how you like to plan.
             </p>
           </div>
@@ -637,7 +640,7 @@ function HomePage() {
                       <h3 className="serif text-[1.45rem] md:text-[1.6rem] leading-[1.15] text-[color:var(--charcoal)]">
                         {p.title}
                       </h3>
-                      <p className="text-[14px] md:text-[14.5px] leading-[1.6] text-[color:var(--charcoal-soft)] font-light">
+                      <p className="text-[14.5px] md:text-[15.5px] leading-[1.65] text-[color:var(--charcoal)] font-light">
                         {p.line}
                       </p>
                       <span className="mt-auto inline-flex items-center gap-2 pt-3 text-[12px] uppercase tracking-[0.22em] font-medium text-[color:var(--teal)]">
@@ -668,10 +671,10 @@ function HomePage() {
         <div className="container-x">
           <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
             <span className="eyebrow">Signature experiences</span>
-            <h2 id="signatures-title" className="t-h2 mt-5">
+            <h2 id="signatures-title" className="serif mt-5 text-[2.1rem] md:text-[3.2rem] leading-[1.05] tracking-[-0.012em] text-[color:var(--charcoal)] font-medium">
               Days <span className="italic">already designed.</span>
             </h2>
-            <p className="mt-5 text-[14.5px] md:text-[15.5px] text-[color:var(--charcoal-soft)] font-light leading-[1.6] max-w-md mx-auto">
+            <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] font-light leading-[1.65] max-w-md mx-auto">
               Confirm a Signature as it ships, or tailor a few details inside.
             </p>
           </div>
@@ -802,7 +805,7 @@ function HomePage() {
               <h2 id="studio-title" className="serif mt-5 text-[2rem] md:text-[2.8rem] leading-[1.05] tracking-[-0.012em] text-[color:var(--charcoal)]">
                 Build a day that <span className="italic">actually fits.</span>
               </h2>
-              <p className="mt-5 text-[14.5px] md:text-[15.5px] text-[color:var(--charcoal-soft)] font-light leading-[1.7] max-w-md">
+              <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] font-light leading-[1.7] max-w-md">
                 Pick stops on a real map. The Studio composes the route as you choose &mdash; feasibility, timing and an estimate breakdown, all updated in <span className="kw">real time</span>, with <span className="kw">local guidance</span> one message away.
               </p>
               <ul className="mt-6 space-y-2.5 text-[13.5px] text-[color:var(--charcoal)] font-light leading-[1.6]">
@@ -884,10 +887,10 @@ function HomePage() {
         <div className="container-x">
           <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
             <span className="eyebrow">Multi-day</span>
-            <h2 id="multiday-title" className="t-h2 mt-5">
+            <h2 id="multiday-title" className="serif mt-5 text-[2.1rem] md:text-[3.2rem] leading-[1.05] tracking-[-0.012em] text-[color:var(--charcoal)] font-medium">
               Routes <span className="italic">across</span> Portugal.
             </h2>
-            <p className="mt-5 text-[14.5px] md:text-[15.5px] text-[color:var(--charcoal-soft)] font-light leading-[1.6] max-w-md mx-auto">
+            <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] font-light leading-[1.65] max-w-md mx-auto">
               Two to seven days, real driving times, real overnight stops — designed in conversation with a local team.
             </p>
           </div>
@@ -944,59 +947,94 @@ function HomePage() {
         aria-labelledby="groups-title"
       >
         <div className="container-x">
-          <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
+          <div className="text-center max-w-2xl mx-auto mb-14 md:mb-20">
             <span className="eyebrow">Groups & celebrations</span>
-            <h2 id="groups-title" className="t-h2 mt-5">
+            <h2 id="groups-title" className="serif mt-5 text-[2.1rem] md:text-[3.2rem] leading-[1.05] tracking-[-0.012em] text-[color:var(--charcoal)]">
               When the <span className="italic">occasion</span> is bigger.
             </h2>
-            <p className="mt-5 text-[14.5px] md:text-[15.5px] text-[color:var(--charcoal-soft)] font-light leading-[1.6] max-w-md mx-auto">
+            <p className="mt-5 text-[15px] md:text-[16.5px] text-[color:var(--charcoal)] font-light leading-[1.6] max-w-md mx-auto">
               Proposals, private celebrations and corporate groups — quietly planned by a local team.
             </p>
           </div>
 
-          <ul className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 list-none p-0 max-w-5xl mx-auto">
-            {groupsAndCelebrations.map((m) => (
-              <li key={m.eyebrow} className="reveal-stagger">
-                <Link
-                  to={m.to}
-                  className="group relative flex flex-col h-full overflow-hidden rounded-[2px] border border-[color:var(--border)] bg-[color:var(--ivory)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-[color:var(--charcoal)]/25 hover:shadow-[0_10px_24px_-12px_rgba(46,46,46,0.2)] focus-visible:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2"
+          {/* Three premium feature blocks — alternating image/text on
+              tablet+, stacked image-then-text on mobile. Each block:
+              animated category label, soft gold divider, bold serif
+              headline, body with one highlighted phrase, italic pull
+              line, gold detail line, CTA with arrow nudge. */}
+          <div className="max-w-6xl mx-auto flex flex-col gap-16 md:gap-24">
+            {groupsAndCelebrations.map((m, i) => {
+              const reverse = i % 2 === 1;
+              return (
+                <article
+                  key={m.eyebrow}
+                  className="reveal-stagger group grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center"
                 >
-                  <div className="relative aspect-[4/3] overflow-hidden bg-[color:var(--card)]">
-                    <img
-                      src={m.img}
-                      alt=""
-                      aria-hidden="true"
-                      loading="lazy"
-                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-[600ms] ease-out group-hover:scale-[1.03]"
-                    />
-                    <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/45 to-transparent" />
-                    <span className="absolute left-4 top-4 inline-flex items-center gap-2 rounded-full bg-[color:var(--ivory)]/95 px-3 py-1 text-[10px] uppercase tracking-[0.28em] font-semibold text-[color:var(--charcoal)] shadow-[0_2px_6px_rgba(0,0,0,0.15)]">
-                      <CalendarDays size={11} aria-hidden="true" />
+                  {/* Image side */}
+                  <Link
+                    to={m.to}
+                    aria-label={m.cta}
+                    className={
+                      "relative block md:col-span-7 overflow-hidden rounded-[2px] border border-[color:var(--border)] bg-[color:var(--card)] transition-transform duration-300 ease-out group-hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 " +
+                      (reverse ? "md:order-2" : "md:order-1")
+                    }
+                  >
+                    <div className="relative aspect-[4/3] md:aspect-[5/4] overflow-hidden">
+                      <img
+                        src={m.img}
+                        alt=""
+                        aria-hidden="true"
+                        loading="lazy"
+                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-[700ms] ease-out group-hover:scale-[1.03]"
+                      />
+                      <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/40 via-[color:var(--charcoal-deep)]/10 to-transparent" />
+                      {/* Subtle animated category label */}
+                      <span className="absolute left-4 top-4 inline-flex items-center gap-2 rounded-full bg-[color:var(--ivory)]/95 px-3.5 py-1.5 text-[10px] uppercase tracking-[0.28em] font-semibold text-[color:var(--charcoal)] shadow-[0_2px_6px_rgba(0,0,0,0.18)] transition-transform duration-300 ease-out group-hover:-translate-y-0.5">
+                        <CalendarDays size={11} aria-hidden="true" />
+                        {m.eyebrow}
+                      </span>
+                    </div>
+                  </Link>
+
+                  {/* Text side */}
+                  <div
+                    className={
+                      "md:col-span-5 flex flex-col " +
+                      (reverse ? "md:order-1" : "md:order-2")
+                    }
+                  >
+                    {/* Soft gold divider — animates from left on reveal */}
+                    <span aria-hidden="true" className="gold-rule mb-5 max-w-[3.5rem]" />
+                    <span className="text-[10.5px] uppercase tracking-[0.32em] font-semibold text-[color:var(--charcoal-soft)]">
                       {m.eyebrow}
                     </span>
-                  </div>
-                  <div className="p-6 md:p-7 flex flex-col gap-3 flex-1">
-                    <h3 className="serif text-[1.3rem] md:text-[1.5rem] leading-[1.18] text-[color:var(--charcoal)]">
+                    <h3 className="serif mt-3 text-[1.7rem] md:text-[2.15rem] leading-[1.12] tracking-[-0.008em] text-[color:var(--charcoal)] font-medium">
                       {m.title}
                     </h3>
-                    <p className="text-[13.5px] leading-[1.6] text-[color:var(--charcoal-soft)] font-light">
+                    <p className="mt-4 text-[15px] md:text-[16px] leading-[1.7] text-[color:var(--charcoal)] font-light">
                       {m.line}
                     </p>
-                    <p className="text-[10.5px] uppercase tracking-[0.24em] text-[color:var(--gold)]">
+                    <p className="mt-4 serif italic text-[15.5px] md:text-[16.5px] leading-[1.4] text-[color:var(--charcoal)] border-l-2 border-[color:var(--gold)] pl-3.5">
+                      {m.pull}
+                    </p>
+                    <p className="mt-5 text-[10.5px] uppercase tracking-[0.24em] font-medium text-[color:var(--gold)]">
                       {m.detail}
                     </p>
-                    <span className="mt-auto inline-flex items-center gap-1.5 pt-3 text-[11.5px] uppercase tracking-[0.22em] font-medium text-[color:var(--teal)]">
+                    <Link
+                      to={m.to}
+                      className="mt-6 inline-flex items-center gap-2 self-start bg-[color:var(--teal)] text-[color:var(--ivory)] px-6 py-3 text-[12px] uppercase tracking-[0.22em] font-medium hover:bg-[color:var(--teal-2)] transition-colors shadow-[0_4px_14px_-6px_rgba(41,91,97,0.55)]"
+                    >
                       {m.cta}
                       <ArrowRight
-                        size={12}
+                        size={14}
                         className="transition-transform duration-200 group-hover:translate-x-0.5"
                       />
-                    </span>
+                    </Link>
                   </div>
-                </Link>
-              </li>
-            ))}
-          </ul>
+                </article>
+              );
+            })}
+          </div>
         </div>
       </section>
 
