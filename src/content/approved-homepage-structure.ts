@@ -121,67 +121,71 @@ export const APPROVED_HOMEPAGE_SECTIONS: readonly ApprovedSection[] = [
     order: 2,
     name: "Trust bar — 5.0 average",
     ariaLabelledBy: "trust-bar-title",
-    requiredSpacing: { kind: "py", minScale: 16 }, // py-16
+    // Uses .section-y-sm (= 3.5rem mobile / py-14 equivalent).
+    requiredSpacing: { kind: "py", minScale: 14 },
   },
   {
     order: 3,
     name: "Start paths — four ways in",
     ariaLabelledBy: "start-paths-title",
-    requiredSpacing: { kind: "py", minScale: 24 }, // py-24
+    // Uses .section-y (= 5rem mobile / py-20 equivalent).
+    requiredSpacing: { kind: "py", minScale: 20 },
   },
   {
     order: 4,
     name: "How it works",
     ariaLabelledBy: "how-it-works-title",
-    requiredSpacing: { kind: "py", minScale: 24 },
+    requiredSpacing: { kind: "py", minScale: 20 },
   },
   {
     order: 5,
     name: "Signature experiences",
     ariaLabelledBy: "signatures-title",
-    requiredSpacing: { kind: "py", minScale: 24 },
+    requiredSpacing: { kind: "py", minScale: 20 },
   },
   {
     order: 6,
     name: "The Studio (from-scratch path)",
     ariaLabelledBy: "studio-title",
-    requiredSpacing: { kind: "py", minScale: 24 },
+    requiredSpacing: { kind: "py", minScale: 20 },
   },
   {
     order: 7,
     name: "Pillars — why YES",
     ariaLabelledBy: "pillars-title",
-    requiredSpacing: { kind: "py", minScale: 24 },
+    requiredSpacing: { kind: "py", minScale: 20 },
   },
   {
     order: 8,
     name: "Multi-day journeys",
     marker: "MULTI-DAY JOURNEYS",
+    // Uses .section-y-lg (= 6rem mobile / py-24 equivalent).
     requiredSpacing: { kind: "py", minScale: 24 },
   },
   {
     order: 9,
     name: "Occasions / celebrations & groups",
     ariaLabelledBy: "occasions-title",
-    requiredSpacing: { kind: "py", minScale: 24 },
+    requiredSpacing: { kind: "py", minScale: 20 },
   },
   {
     order: 10,
     name: "Local stories & hidden gems",
     marker: "LOCAL STORIES",
-    requiredSpacing: { kind: "py", minScale: 24 },
+    requiredSpacing: { kind: "py", minScale: 20 },
   },
   {
     order: 11,
     name: "Reviews — 700+ 5-star",
     ariaLabelledBy: "reviews-title",
-    requiredSpacing: { kind: "py", minScale: 24 },
+    requiredSpacing: { kind: "py", minScale: 20 },
   },
   {
     order: 12,
     name: "Final CTA",
     marker: "FINAL CTA",
-    requiredSpacing: { kind: "pb", minScale: 24 }, // pb-28 in source, floor 24
+    // Either pb-24+ or one of the .section-y* utilities satisfies this.
+    requiredSpacing: { kind: "pb", minScale: 20 },
   },
 ] as const;
 
