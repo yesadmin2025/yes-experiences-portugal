@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-29T05:04:35.273Z",
+  "generatedAt": "2026-04-29T05:13:34.649Z",
   "filesScanned": 104,
   "approvedPalette": {
     "teal": "#295B61",
@@ -18,10 +18,10 @@
     "#cccccc"
   ],
   "counts": {
-    "total": 177,
+    "total": 175,
     "approved": 41,
     "allowlisted": 27,
-    "mismatch": 109
+    "mismatch": 107
   },
   "findings": [
     {
@@ -1211,24 +1211,6 @@
       "normalized": "#cccccc",
       "snippet": "\"#ccc\", // recharts internal selectors only",
       "status": "allowlisted"
-    },
-    {
-      "file": "src/routes/index.tsx",
-      "line": 267,
-      "col": 25,
-      "raw": "#2e7d32",
-      "normalized": "#2e7d32",
-      "snippet": "`color:${allOk ? \"#2e7d32\" : \"#c62828\"};font-weight:600`,",
-      "status": "mismatch"
-    },
-    {
-      "file": "src/routes/index.tsx",
-      "line": 267,
-      "col": 37,
-      "raw": "#c62828",
-      "normalized": "#c62828",
-      "snippet": "`color:${allOk ? \"#2e7d32\" : \"#c62828\"};font-weight:600`,",
-      "status": "mismatch"
     },
     {
       "file": "src/routes/multi-day.tsx",
