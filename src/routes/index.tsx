@@ -785,7 +785,7 @@ function HomePage() {
         <FAQ />
       </section>
 
-      {/* 8 — FINAL CTA — Talk to a local
+      {/* 9 — FINAL CTA — Talk to a local
           Distinct from the hero CTAs (Explore Signatures / Build) — this
           is the human escape hatch. No duplicate CTA band; one purpose,
           one button. */}
