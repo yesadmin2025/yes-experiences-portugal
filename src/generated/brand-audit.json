@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-29T04:51:34.281Z",
+  "generatedAt": "2026-04-29T04:57:47.158Z",
   "filesScanned": 104,
   "approvedPalette": {
     "teal": "#295B61",
@@ -1214,7 +1214,7 @@
     },
     {
       "file": "src/routes/index.tsx",
-      "line": 265,
+      "line": 267,
       "col": 25,
       "raw": "#2e7d32",
       "normalized": "#2e7d32",
@@ -1223,7 +1223,7 @@
     },
     {
       "file": "src/routes/index.tsx",
-      "line": 265,
+      "line": 267,
       "col": 37,
       "raw": "#c62828",
       "normalized": "#c62828",
