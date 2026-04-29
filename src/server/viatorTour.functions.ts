@@ -130,3 +130,109 @@ export type FetchedViatorArrabida = {
   url: string;
   extraction: ViatorExtraction;
 };
+
+/* -------------------------------------------------------------------------- */
+/*  Bulk import — generic for any Signature tour by id                        */
+/* -------------------------------------------------------------------------- */
+
+import { signatureTours } from "@/data/signatureTours";
+
+/**
+ * Region slug used by /tours/$tourId reader. Keep it simple: every Signature
+ * tour today is in Lisbon district. Override per-id when we expand north.
+ */
+const REGION_BY_ID: Record<string, { region: string; region_label: string }> = {
+  "fatima-nazare-obidos": { region: "centro", region_label: "Centro · Fátima · Nazaré" },
+  "tomar-coimbra": { region: "centro", region_label: "Centro · Tomar · Coimbra" },
+  "evora-alentejo": { region: "alentejo", region_label: "Alentejo · Évora" },
+};
+
+function regionFor(id: string, fallback: string): { region: string; region_label: string } {
+  return REGION_BY_ID[id] ?? { region: "lisbon", region_label: fallback };
+}
+
+const BulkItemSchema = z.object({
+  id: z.string().min(1),
+  url: z.string().url().refine(
+    (u) => /^https?:\/\/(www\.)?viator\.com\//i.test(u),
+    { message: "Must be a viator.com URL" },
+  ),
+});
+
+export const bulkImportViatorTours = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator(z.object({ items: z.array(BulkItemSchema).min(1).max(20) }))
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context.supabase, context.userId);
+
+    const results: {
+      id: string;
+      url: string;
+      ok: boolean;
+      stopsSaved?: number;
+      error?: string;
+    }[] = [];
+
+    for (const item of data.items) {
+      const seed = signatureTours.find((t) => t.id === item.id);
+      if (!seed) {
+        results.push({ id: item.id, url: item.url, ok: false, error: "Unknown tour id" });
+        continue;
+      }
+      try {
+        const extraction = await extractViatorTour(item.url);
+        const stops = extraction.itinerary.map((step) => ({
+          label: step.label,
+          tag: step.optional ? "optional" : "stop",
+          x: 0,
+          y: 0,
+        }));
+        const { region, region_label } = regionFor(item.id, seed.region);
+        const row = {
+          id: item.id,
+          title: extraction.title || seed.title,
+          source_url: item.url,
+          region,
+          region_label,
+          duration: seed.duration ?? "fullday",
+          duration_label: seed.duration === "halfday" ? "Half Day" : "Full Day",
+          duration_hours: extraction.durationText || seed.durationHours,
+          price_from: seed.priceFrom ?? 0,
+          theme: seed.theme,
+          styles: (seed.seed?.styles ?? []) as string[],
+          highlights: extraction.itinerary
+            .filter((s) => !s.optional)
+            .slice(0, 5)
+            .map((s) => s.label),
+          pace: (seed.seed?.pace ?? "balanced") as string,
+          tier: (seed.seed?.tier ?? "signature") as string,
+          fits_best: seed.fitsBest,
+          pace_cues: extraction.itinerary.slice(0, 3).map((s) => s.label),
+          blurb: extraction.blurb || seed.blurb,
+          image_url: null as string | null,
+          stops,
+          ai_model: "google/gemini-3-flash-preview",
+        };
+        const { error } = await supabaseAdmin
+          .from("imported_tours")
+          .upsert(row, { onConflict: "id" });
+        if (error) throw new Error(error.message);
+        results.push({ id: item.id, url: item.url, ok: true, stopsSaved: stops.length });
+      } catch (e) {
+        results.push({
+          id: item.id,
+          url: item.url,
+          ok: false,
+          error: e instanceof Error ? e.message : "Unknown error",
+        });
+      }
+    }
+
+    return {
+      total: results.length,
+      succeeded: results.filter((r) => r.ok).length,
+      failed: results.filter((r) => !r.ok).length,
+      results,
+    };
+  });
+
