@@ -41,7 +41,7 @@
   --color-charcoal-soft: var(--charcoal-soft);
   --color-charcoal-deep: var(--charcoal-deep);
 
-  --font-serif: "Cormorant Garamond", Georgia, serif;
+  --font-serif: "Newsreader", "Cormorant Garamond", Georgia, serif;
   --font-sans: "Inter", system-ui, sans-serif;
   --font-script: "Kaushan Script", cursive;
 
@@ -68,6 +68,59 @@
      mobile clears 7:1 contrast on ivory and never reads as washed grey. */
   --charcoal-soft: #555555;
   --charcoal-deep: #1F1F1F;
+
+  /* ─────────────────────────────────────────────────────────────
+     EDITORIAL PALETTE v2 — additive, non-breaking.
+     Warm-neutral system to live alongside the legacy --teal/--gold
+     tokens. Existing components keep working; new components and
+     refactored sections opt in via these vars. Rule: site lives 80%
+     in warm neutrals, 15% in ink, 5% in coloured accents. Gold is
+     micro-detail only, never a primary CTA fill.
+     ───────────────────────────────────────────────────────────── */
+  --ink: #141518;
+  --ink-soft: #5F6670;
+  --ivory-warm: #F7F3EE;
+  --stone: #E7DDD0;
+  --stone-line: #D8CEC2;
+  --surface-warm: #FFFFFF;
+  --surface-muted: #F1EADF;
+
+  --accent-wine: #6E3B2E;
+  --accent-sea: #295A73;
+  --accent-olive: #5B6B52;
+  --accent-gold: #B28B57;
+
+  /* Editorial radii — coexist with the legacy --radius scale. */
+  --radius-soft: 10px;
+  --radius-card: 16px;
+  --radius-pill: 24px;
+
+  /* Fixed spacing scale — 4 / 8 / 12 / 16 / 24 / 32 / 48 / 72 / 96. */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 72px;
+  --space-9: 96px;
+
+  /* Section rhythm aligned with the new scale. */
+  --section-gap-mobile: 48px;
+  --section-gap-desktop: 96px;
+
+  /* Editorial shadows — softer, warmer than the legacy teal-tinted set. */
+  --shadow-soft: 0 8px 24px rgba(20, 21, 24, 0.08);
+  --shadow-hover: 0 16px 36px rgba(20, 21, 24, 0.12);
+
+  /* Motion language — short, functional, reusable. */
+  --transition-fast: 180ms ease;
+  --transition-base: 220ms ease;
+  --transition-slow: 320ms ease;
+  --motion-lift: -2px;
+  --motion-image-zoom: 1.03;
+
 
   /* Semantic */
   --background: var(--ivory);
