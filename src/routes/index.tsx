@@ -735,7 +735,7 @@ function HomePage() {
             <p className="serif text-[1.5rem] md:text-[1.9rem] text-[color:var(--charcoal)] leading-[1.2]">
               700+ <span className="italic">five-star reviews</span>
             </p>
-            <p className="max-w-md text-[14px] md:text-[15px] text-[color:var(--charcoal-soft)] leading-[1.6] font-light">
+            <p className="max-w-md text-[14.5px] md:text-[15.5px] text-[color:var(--charcoal)] leading-[1.65] font-light">
               <span className="kw">Private</span> <span className="kw">local</span> guides who actually live here — every day designed and confirmed by a small team in Portugal.
             </p>
             <ul
