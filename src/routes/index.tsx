@@ -3,9 +3,10 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { SiteLayout } from "@/components/SiteLayout";
 import { FAQ } from "@/components/FAQ";
-import { useHeroParallax } from "@/hooks/use-hero-parallax";
-import { useCtaScrollScale } from "@/hooks/use-cta-scroll-scale";
-import { CtaScrollDebugOverlay, useCtaScrollDebugToggle } from "@/components/CtaScrollDebugOverlay";
+// Patch 2A: removed useHeroParallax / useCtaScrollScale / CtaScrollDebugOverlay
+// per brand guardrails (no parallax, no scroll-driven scaling, no debug
+// overlays in production). Hero now sits perfectly still; CTAs hold a
+// fixed scale; debug tooling is gone from the rendered tree.
 import heroImg from "@/assets/hero-coast.jpg";
 import multiDayImg from "@/assets/multi-day.jpg";
 
@@ -37,13 +38,14 @@ import {
   CalendarDays,
 } from "lucide-react";
 import { PlatformBadge } from "@/components/PlatformBadge";
-import { HeroMetaProbe } from "@/components/HeroMetaProbe";
-import { HeroCopyDiff } from "@/components/HeroCopyDiff";
-import { HeroVerifyOverlay } from "@/components/HeroVerifyOverlay";
+// Patch 2A: removed visible debug probes (HeroMetaProbe, HeroCopyDiff,
+// HeroVerifyOverlay, ContrastAudit, RouteValidationStrip) from the
+// rendered tree. The hidden data-* probes (hero-copy-version, JSON
+// snapshot) are kept — they are visually-hidden and lock specs depend on
+// them.
 import { DecisionStepper } from "@/components/DecisionStepper";
 import { SignatureCarousel } from "@/components/SignatureCarousel";
 import { LiveMapPreview } from "@/components/LiveMapPreview";
-import { ContrastAudit } from "@/components/dev/ContrastAudit";
 
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
 import { signatureTours, isValidTourId } from "@/data/signatureTours";
@@ -322,82 +324,45 @@ function RouteValidationStrip() {
 }
 
 function HomePage() {
-  // Pointer-driven parallax — writes --hero-px / --hero-py (-1 → 1) to the
-  // section. Image and vignette read those vars via inline calc() to shift
-  // gently without triggering layout. No-op on touch & reduced-motion.
-  const heroRef = useHeroParallax<HTMLElement>();
-  // Hero CTA scroll-driven scale.
-  // Defaults: 0.96 → 1.015 across the first 280px of scroll, smoothstep
-  // easing, hard-clamped. Override at runtime WITHOUT editing the hook
-  // by setting any of these on the magnet group's style or on a parent
-  // CSS scope: --cta-scroll-from, --cta-scroll-to, --cta-scroll-distance.
-  // The hook re-reads them every rAF tick, so devtools edits show up live.
-  const ctaGroupRef = useCtaScrollScale<HTMLDivElement>({
-    from: 0.96,
-    to: 1.015,
-    distance: 280,
-  });
-  // QA overlay — toggle with Shift+D, or load with ?debug-cta. Renders
-  // nothing in production unless explicitly enabled.
-  const ctaDebug = useCtaScrollDebugToggle();
+  // Patch 2A: hero parallax + CTA scroll-scale removed.
+  // The hero image, vignette and CTA pair now hold their resting state
+  // permanently — calmer, brand-on, accessibility-on. The structural
+  // hooks (heroRef, ctaGroupRef) are kept as plain refs so layout-anchor
+  // queries that target them keep resolving without churn.
 
   return (
     <SiteLayout>
-      {ctaDebug && <CtaScrollDebugOverlay targetRef={ctaGroupRef} />}
       {/* 1 — HERO
           Cinematic image, slow zoom, layered overlays for AA-compliant
           contrast on the headline and microcopy. A subtle pointer parallax
           shifts the image (≤8px) and the vignette focal point (±4%) for
           depth behind the CTAs without altering layout or contrast. */}
       <section
-        ref={heroRef}
         className="relative min-h-[80vh] md:min-h-[94vh] flex items-end overflow-hidden"
       >
-        {/* Hero image — held perfectly still (scale 1.08) for the full text
-            fade-in cascade (~2.7s) via animation-delay + fill-mode: both, so
-            the overlay stack composites against a stationary image during
-            the legibility-critical window. After the cascade completes, the
-            slow 32s zoom resumes its cinematic drift. The parallax transform
-            is composited via a wrapper so it stacks cleanly with the zoom
-            animation on the <img> itself (two transform owners, no fight). */}
-        <div
-          className="absolute inset-0 will-change-transform"
-          style={{
-            transform:
-              "translate3d(calc(var(--hero-px, 0) * -8px), calc(var(--hero-py, 0) * -6px), 0)",
-            transition: "transform 220ms cubic-bezier(0.22, 0.61, 0.36, 1)",
-          }}
-        >
-          <img
-            src={heroImg}
-            alt="Hidden coastal road in Portugal at golden hour"
-            className="absolute inset-0 w-full h-full object-cover object-center animate-[heroZoom_32s_ease-out_2.7s_both,heroDrift_28s_ease-in-out_34.7s_infinite]"
-            width={1920}
-            height={1080}
-          />
-        </div>
+        {/* Hero image — held perfectly still per Patch 2A. No zoom, no
+            drift, no parallax wrapper. The composited overlays are now
+            stationary too, so contrast behind text is identical at every
+            moment the user looks at the page. */}
+        <img
+          src={heroImg}
+          alt="Hidden coastal road in Portugal at golden hour"
+          className="absolute inset-0 w-full h-full object-cover object-center"
+          width={1920}
+          height={1080}
+        />
         {/* Layered editorial wash — premium warmth without losing legibility.
-            Overlays carry NO transitions and NO animations (except the
-            vignette focal shift, which is a pure radial-gradient stop change
-            that does NOT affect overall darkness). Their opacity, blend
-            modes and gradient stops are otherwise locked from first paint,
-            so the composited contrast behind text is identical at t=0 and
-            at t=fade-end. Order matters: the brand soft-light tint sits
-            FIRST (closest to the image) so subsequent darkening overlays
-            aren't blended away. Then a base vertical wash, a left-anchored
-            column behind the headline, and a barely-there corner vignette. */}
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,color-mix(in_oklab,var(--teal)_18%,transparent)_0%,transparent_50%,color-mix(in_oklab,var(--gold)_10%,transparent)_100%)] mix-blend-soft-light pointer-events-none" />
+            Patch 2A: removed mix-blend-soft-light tint (gold/teal soft-light
+            blend was washing the image). Stack reduced to two clean dark
+            gradients + a static vignette. */}
         <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/85 via-[color:var(--charcoal-deep)]/45 to-[color:var(--charcoal-deep)]/40 md:from-[color:var(--charcoal-deep)]/80 md:via-[color:var(--charcoal-deep)]/35 md:to-[color:var(--charcoal-deep)]/30 pointer-events-none" />
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(15,15,15,0.65)_0%,rgba(15,15,15,0.4)_35%,transparent_70%)] md:bg-[linear-gradient(90deg,rgba(15,15,15,0.6)_0%,rgba(15,15,15,0.32)_40%,transparent_72%)] pointer-events-none" />
-        {/* Vignette with parallax-shifted focal point — the ellipse anchor
-            slides ±4% in X and ±3% in Y so the "spotlight" subtly follows
-            the cursor. Darkness stops (transparent_55% → rgba_0.3 at 100%)
-            are unchanged, so total luminance behind text is preserved. */}
+        {/* Static vignette — focal point fixed at 30% / 72%. */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
             backgroundImage:
-              "radial-gradient(ellipse at calc(30% + var(--hero-px, 0) * 4%) calc(72% + var(--hero-py, 0) * 3%), transparent 55%, rgba(0,0,0,0.3) 100%)",
+              "radial-gradient(ellipse at 30% 72%, transparent 55%, rgba(0,0,0,0.3) 100%)",
           }}
         />
 
@@ -461,13 +426,12 @@ function HomePage() {
                 16px between primary and secondary CTAs (gap-4) so they
                 feel like a deliberate pair, not stacked-tight. */}
             <div
-              ref={ctaGroupRef}
               className="cta-magnet-group mt-12 md:mt-12 flex flex-col sm:flex-row gap-4 sm:gap-4 w-full max-w-sm sm:max-w-xl opacity-0 animate-[heroFade_1.4s_ease-out_1.25s_forwards]"
             >
               <Link
                 to="/builder"
                 data-hero-field="primaryCta"
-                className="hero-cta-button cta-primary cta-attention cta-breathe group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-start text-left"
+                className="hero-cta-button cta-primary group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-start text-left"
               >
                 <span className="block">{HERO_COPY.primaryCta}</span>
                 <ArrowRight
@@ -477,9 +441,8 @@ function HomePage() {
               </Link>
               <Link
                 to="/experiences"
-                data-cta-stagger
                 data-hero-field="secondaryCta"
-                className="hero-cta-button cta-secondary-dark cta-attention cta-breathe group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-start text-left"
+                className="hero-cta-button cta-secondary-dark group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-start text-left"
               >
                 <span className="block">{HERO_COPY.secondaryCta}</span>
                 <ArrowRight
@@ -522,18 +485,25 @@ function HomePage() {
                 brand directive requires. mb-2 (was mb-4) trims the
                 empty void beneath the signature on mobile so the hero
                 feels visually anchored. */}
+            {/* Patch 2A — brandLine deduplication.
+                Previously the signature was rendered TWICE in the DOM:
+                once as an .sr-only full-string copy, then again as a
+                visible split (line 1 ivory + line 2 gold) wrapped in
+                aria-hidden. Screen readers heard "Whatever you have in
+                mind, We say YES." once via .sr-only AND visually-similar
+                noise from the visible block. Worse, our HERO_COPY probes
+                + any text-grep audit reported the string twice.
+                Fix: keep the visible split (it IS the editorial signature)
+                and drop both the sr-only duplicate AND the aria-hidden on
+                the visible block. SRs now read each half once, in order. */}
             <div className="hero-rhythm-microcopy-to-signature mb-2 md:mb-2 mt-8 md:mt-10 flex justify-center opacity-0 animate-[heroFade_1.4s_ease-out_1.75s_forwards]">
               <div
                 data-hero-field="brandLine"
+                aria-label={HERO_COPY.brandLine}
                 className="inline-flex items-center gap-6 md:gap-7 text-[color:var(--gold-soft)]"
               >
-                <span className="h-px w-12 md:w-16 bg-gradient-to-r from-transparent to-[color:var(--gold)] shrink-0 opacity-90" />
-                {/* Hidden full string for SEO / regression parity */}
-                <span className="sr-only">{HERO_COPY.brandLine}</span>
-                <span
-                  aria-hidden="true"
-                  className="flex flex-col items-center gap-2 md:gap-2.5 text-[10.5px] md:text-[11px] uppercase tracking-[0.32em] leading-[1.2] text-center"
-                >
+                <span aria-hidden="true" className="h-px w-12 md:w-16 bg-gradient-to-r from-transparent to-[color:var(--gold)] shrink-0 opacity-90" />
+                <span className="flex flex-col items-center gap-2 md:gap-2.5 text-[10.5px] md:text-[11px] uppercase tracking-[0.32em] leading-[1.2] text-center">
                   <span
                     className="text-[color:var(--ivory)]/85"
                     style={{ fontWeight: 450 }}
@@ -547,7 +517,7 @@ function HomePage() {
                     We say YES.
                   </span>
                 </span>
-                <span className="h-px w-12 md:w-16 bg-gradient-to-l from-transparent to-[color:var(--gold)] shrink-0 opacity-90" />
+                <span aria-hidden="true" className="h-px w-12 md:w-16 bg-gradient-to-l from-transparent to-[color:var(--gold)] shrink-0 opacity-90" />
               </div>
             </div>
 
@@ -639,21 +609,10 @@ function HomePage() {
               />
             </div>
 
-            {/* Live <head> mirror — exposes the actual title + meta tags
-                that TanStack Router injected for this route. Stays in
-                sync via a MutationObserver on document.head. */}
-            <HeroMetaProbe />
-
-            {/* Hidden diff helper — on mount, compares HERO_COPY to a
-                localStorage baseline and logs changed fields. Manual
-                controls live on `window.__heroCopy`. Renders nothing. */}
-            <HeroCopyDiff />
-
-            {/* Visual verify overlay — only renders when the URL has
-                `?verify=hero`. Highlights every [data-hero-field] node
-                against HERO_COPY_SPEC with green/amber/red badges and a
-                summary legend. No layout impact when disabled. */}
-            <HeroVerifyOverlay />
+            {/* Patch 2A: HeroMetaProbe / HeroCopyDiff / HeroVerifyOverlay
+                removed from the rendered tree. The hidden data-* probes
+                above (data-hero-copy-version, data-hero-copy-json) cover
+                lock-spec verification without injecting any visible UI. */}
           </div>
         </div>
       </section>
@@ -854,11 +813,12 @@ function HomePage() {
                           : "bg-[linear-gradient(to_top,rgba(0,0,0,0.78)_0%,rgba(0,0,0,0.62)_22%,rgba(0,0,0,0.42)_55%,rgba(0,0,0,0.35)_80%,rgba(0,0,0,0.50)_100%)]")
                       }
                     />
-                    {/* Cinematic radial vignette — slightly stronger so the
-                        scene feels framed, not flat. */}
+                    {/* Static radial vignette — Patch 2A removed the
+                        mix-blend-multiply blend; opacity bumped from 55%
+                        to a fixed 65% so the scene still feels framed. */}
                     <div
                       aria-hidden="true"
-                      className="absolute inset-0 opacity-55 mix-blend-multiply [background:radial-gradient(130%_85%_at_50%_-10%,transparent_45%,rgba(0,0,0,0.7)_100%)]"
+                      className="absolute inset-0 opacity-65 [background:radial-gradient(130%_85%_at_50%_-10%,transparent_45%,rgba(0,0,0,0.7)_100%)]"
                     />
 
                     {/* Content anchored to bottom — the scene speaks first.
@@ -892,8 +852,8 @@ function HomePage() {
               );
             })}
           </ul>
-
-          <RouteValidationStrip />
+          {/* Patch 2A: RouteValidationStrip (dev-only debug strip) removed
+              from the rendered tree. */}
         </div>
         <DecisionStepper
           sectionId="decision-flow"
@@ -912,17 +872,16 @@ function HomePage() {
         className="bg-[color:var(--teal)] text-[color:var(--ivory)] section-y-lg relative overflow-hidden py-24 md:py-36"
         aria-labelledby="studio-title"
       >
-        <div className="absolute -top-32 -right-32 w-[28rem] h-[28rem] rounded-full border border-[color:var(--gold)]/15 pointer-events-none" />
-        <div className="absolute -bottom-40 -left-32 w-[24rem] h-[24rem] rounded-full border border-[color:var(--gold)]/10 pointer-events-none" />
-        {/* Subtle live "pulse" dot — signals real-time, alive */}
+        {/* Patch 2A: removed the two decorative gold-ring blobs (the
+            -top-32/-right-32 and -bottom-40/-left-32 floating circles).
+            They added visual noise without semantic value. */}
         <div className="container-x relative">
           <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center max-w-6xl mx-auto">
             <div className="reveal lg:col-span-7">
               <span className="inline-flex items-center gap-2.5 text-[11px] uppercase tracking-[0.32em] text-[color:var(--gold)]">
-                <span className="relative inline-flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full rounded-full bg-[color:var(--gold)] opacity-60 animate-ping" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[color:var(--gold)]" />
-                </span>
+                {/* Patch 2A: animate-ping removed (forbidden flashing
+                    motion). A static gold dot still signals "live". */}
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-[color:var(--gold)]" />
                 The Studio · Live now
               </span>
               <h2
@@ -1092,7 +1051,7 @@ function HomePage() {
           aria-hidden="true"
           loading="lazy"
           data-card-image
-          className="absolute inset-0 w-full h-full object-cover scale-[1.04] motion-safe:animate-[heroZoom_38s_ease-out_infinite_alternate]"
+          className="absolute inset-0 w-full h-full object-cover scale-[1.04]"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/85 via-[color:var(--charcoal-deep)]/30 to-[color:var(--charcoal-deep)]/55" />
         <div className="absolute inset-0 bg-[radial-gradient(120%_80%_at_50%_60%,transparent_45%,rgba(0,0,0,0.55)_100%)]" />
@@ -1124,7 +1083,7 @@ function HomePage() {
           aria-hidden="true"
           loading="lazy"
           data-card-image
-          className="absolute inset-0 w-full h-full object-cover opacity-70 motion-safe:animate-[heroZoom_42s_ease-out_infinite_alternate]"
+          className="absolute inset-0 w-full h-full object-cover opacity-70"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-[color:var(--charcoal-deep)]/90 via-[color:var(--charcoal-deep)]/60 to-[color:var(--charcoal-deep)]/30" />
         <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/85 via-transparent to-[color:var(--charcoal-deep)]/40" />
@@ -1545,8 +1504,8 @@ function HomePage() {
 
       {/* Mobile sticky CTA — handled globally by <MobileStickyCTA /> in
           SiteLayout. The previous in-page duplicate has been removed so
-          users no longer see two stacked sticky bars on mobile. */}
-      <ContrastAudit />
+          users no longer see two stacked sticky bars on mobile.
+          Patch 2A: ContrastAudit dev overlay removed from render tree. */}
     </SiteLayout>
   );
 }
@@ -1615,10 +1574,8 @@ function BuilderPreviewGallery() {
       <div className="container-x">
         <div className="reveal text-center max-w-2xl mx-auto mb-12 md:mb-16">
           <span className="eyebrow inline-flex items-center gap-2">
-            <span className="relative inline-flex h-1.5 w-1.5">
-              <span className="absolute inline-flex h-full w-full rounded-full bg-[color:var(--gold)] opacity-60 animate-ping" />
-              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[color:var(--gold)]" />
-            </span>
+            {/* Patch 2A: animate-ping removed; static dot only. */}
+            <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[color:var(--gold)]" />
             From the Studio
           </span>
           <h2 id="builds-title" className="t-h2 mt-5">
