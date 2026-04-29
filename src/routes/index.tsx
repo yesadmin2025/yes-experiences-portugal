@@ -958,7 +958,7 @@ function HomePage() {
                   "Start your way",
                   "Shape it as you go",
                   "Adjust in real time",
-                  "Confirm instantly",
+                  "Confirmed by a local",
                 ].map((step, i) => (
                   <li key={step} className="flex items-baseline gap-2.5">
                     <span className="text-[10px] uppercase tracking-[0.28em] text-[color:var(--gold)] font-medium shrink-0">
