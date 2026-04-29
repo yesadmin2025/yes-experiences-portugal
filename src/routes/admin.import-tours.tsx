@@ -182,11 +182,33 @@ function AdminImportPage() {
   const [viatorSaving, setViatorSaving] = useState(false);
   const [viatorError, setViatorError] = useState<string | null>(null);
 
+  // Live URL match preview for the Arrábida P3 panel.
+  const arrabidaSeed = signatureTours.find((t) => t.id === "arrabida-wine-allinclusive");
+  const viatorUrlCheck: UrlMatchResult | null = useMemo(() => {
+    if (!viatorUrl.trim() || !arrabidaSeed) return null;
+    return checkViatorUrlMatchesTour(viatorUrl, arrabidaSeed.id, arrabidaSeed.title);
+  }, [viatorUrl, arrabidaSeed]);
+  const [viatorOverride, setViatorOverride] = useState(false);
+
   const onFetchViator = async () => {
     setViatorError(null);
     setViatorPreview(null);
     if (!viatorUrl.trim()) {
       setViatorError("Paste a Viator tour URL first.");
+      return;
+    }
+    if (viatorUrlCheck && viatorUrlCheck.kind === "invalid") {
+      setViatorError(viatorUrlCheck.reason);
+      return;
+    }
+    if (
+      viatorUrlCheck &&
+      (viatorUrlCheck.kind === "mismatch" || viatorUrlCheck.kind === "weak") &&
+      !viatorOverride
+    ) {
+      setViatorError(
+        "This URL doesn't look like the Arrábida P3 tour. Tick 'Fetch anyway' to override.",
+      );
       return;
     }
     setViatorFetching(true);
@@ -202,6 +224,7 @@ function AdminImportPage() {
       setViatorFetching(false);
     }
   };
+
 
   const onSaveViator = async () => {
     if (!viatorPreview) return;
