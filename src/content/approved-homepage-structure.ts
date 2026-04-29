@@ -105,8 +105,20 @@ export interface ApprovedSection {
 }
 
 /**
- * The approved structure. Order, names, and spacing floors lifted
- * from the current `src/routes/index.tsx` and frozen as the contract.
+ * The approved structure (Patch 2B — 8 sections).
+ *
+ * Brief: "Refactor the homepage into a calm, premium decision page" —
+ * 1. Hero  2. Trust strip  3. Start here  4. Signature preview
+ * 5. Studio preview  6. Moments / Groups  7. FAQ  8. Final CTA.
+ *
+ * Removed from the previous 13-section layout:
+ *   - Editorial transition photo (decorative full-bleed band)
+ *   - Local stories section (moved to /local-stories route)
+ *   - Reviews carousel as its own section (collapsed into trust strip)
+ *   - Recent builds tail block (moved to /experiences)
+ *   - Tailor as standalone section (now a secondary card in Start here)
+ *   - Multi-day, Celebrations and Corporate as separate sections
+ *     (merged into single Moments / Groups section)
  *
  * To change a row: bump the spec, then update the source.
  *
@@ -124,75 +136,45 @@ export const APPROVED_HOMEPAGE_SECTIONS: readonly ApprovedSection[] = [
   },
   {
     order: 2,
-    name: "Trust bar — 5.0 average",
+    name: "Trust strip — reviews + private guide line",
     ariaLabelledBy: "trust-bar-title",
     requiredSpacing: { kind: "py", minScale: 14 },
   },
   {
     order: 3,
-    name: "Start paths — four ways in",
+    name: "Start here — primary + secondary paths",
     ariaLabelledBy: "start-paths-title",
     requiredSpacing: { kind: "py", minScale: 20 },
   },
   {
     order: 4,
-    name: "Studio (builder, core product)",
-    ariaLabelledBy: "studio-title",
-    requiredSpacing: { kind: "py", minScale: 24 },
-  },
-  {
-    order: 5,
-    name: "Signature experiences",
+    name: "Signature experiences preview",
     ariaLabelledBy: "signatures-title",
     requiredSpacing: { kind: "py", minScale: 20 },
   },
   {
-    order: 6,
-    name: "Tailor (small adjustments inside a Signature)",
-    ariaLabelledBy: "tailor-title",
-    requiredSpacing: { kind: "py", minScale: 14 },
-  },
-  {
-    order: 7,
-    name: "Editorial transition (full-bleed photography breath)",
-    marker: "EDITORIAL TRANSITION",
-    requiredSpacing: { kind: "min-h-vh", minVh: 58 },
-  },
-  {
-    order: 8,
-    name: "Multi-day journeys",
-    ariaLabelledBy: "multiday-title",
+    order: 5,
+    name: "Experience Studio preview (map + summary)",
+    ariaLabelledBy: "studio-title",
     requiredSpacing: { kind: "py", minScale: 24 },
   },
   {
-    order: 9,
-    name: "Occasions / celebrations & corporate",
-    ariaLabelledBy: "occasions-title",
+    order: 6,
+    name: "Moments / Groups — multi-day + celebrations + corporate",
+    ariaLabelledBy: "moments-title",
     requiredSpacing: { kind: "py", minScale: 20 },
   },
   {
-    order: 10,
-    name: "Local stories & hidden gems",
-    marker: "LOCAL STORIES",
+    order: 7,
+    name: "FAQ — visible helpful answers",
+    ariaLabelledBy: "faq-title",
     requiredSpacing: { kind: "py", minScale: 20 },
   },
   {
-    order: 11,
-    name: "Reviews — 700+ 5-star",
-    ariaLabelledBy: "reviews-title",
-    requiredSpacing: { kind: "py", minScale: 20 },
-  },
-  {
-    order: 12,
-    name: "Final CTA",
+    order: 8,
+    name: "Final CTA — talk to a local",
     marker: "FINAL CTA",
     requiredSpacing: { kind: "pb", minScale: 20 },
-  },
-  {
-    order: 13,
-    name: "Recent builds (logged-in tail block)",
-    ariaLabelledBy: "builds-title",
-    requiredSpacing: { kind: "py", minScale: 20 },
   },
 ] as const;
 
