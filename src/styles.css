@@ -2137,3 +2137,138 @@
   }
 }
 
+
+/* ───────────────────────────────────────────────────────────────────
+   HOME-ENERGY motion layer (homepage only)
+   Scoped under .home-energy so site-wide guardrails stay intact on
+   every other route. The whole layer is disabled when the user
+   prefers reduced motion. Tokens stay the same — only motion changes.
+   ─────────────────────────────────────────────────────────────── */
+
+@layer utilities {
+  /* Parallax — driven by --parallax-y written from JS via rAF on scroll.
+     translate3d for compositor; will-change keeps the GPU layer warm. */
+  .home-energy .he-parallax {
+    transform: translate3d(0, var(--parallax-y, 0px), 0);
+    will-change: transform;
+    transition: none;
+  }
+  /* Subtle headline drift — counter-direction so it feels like depth. */
+  .home-energy .he-parallax-counter {
+    transform: translate3d(0, calc(var(--parallax-y, 0px) * -0.35), 0);
+    will-change: transform;
+  }
+
+  /* Sheen sweep on primary CTAs — short, gold, ≤700ms, only on hover.
+     Uses a clipped pseudo so it never bleeds outside the button. */
+  .home-energy .he-sheen {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .home-energy .he-sheen::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      105deg,
+      transparent 25%,
+      rgba(250, 248, 243, 0.55) 50%,
+      transparent 75%
+    );
+    transform: translateX(-120%);
+    transition: transform 650ms cubic-bezier(0.22, 0.61, 0.36, 1);
+    z-index: 1;
+  }
+  .home-energy .he-sheen:hover::after,
+  .home-energy .he-sheen:focus-visible::after {
+    transform: translateX(120%);
+  }
+  /* Keep the button label above the sheen pseudo. */
+  .home-energy .he-sheen > * {
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Soft gold glow on hover — premium, not neon. Bumped softly. */
+  .home-energy .he-glow {
+    transition:
+      transform 320ms cubic-bezier(0.22, 0.61, 0.36, 1),
+      box-shadow 360ms cubic-bezier(0.22, 0.61, 0.36, 1),
+      background-color 280ms ease;
+  }
+  .home-energy .he-glow:hover,
+  .home-energy .he-glow:focus-visible {
+    transform: translateY(-2px);
+    box-shadow:
+      0 14px 36px -16px rgba(41, 91, 97, 0.55),
+      0 0 0 1px rgba(201, 169, 106, 0.35);
+  }
+
+  /* Card lift with a touch more travel + scale. Still calm, still ≤350ms. */
+  .home-energy .he-card-lift {
+    transition:
+      transform 360ms cubic-bezier(0.22, 0.61, 0.36, 1),
+      box-shadow 360ms cubic-bezier(0.22, 0.61, 0.36, 1),
+      border-color 280ms ease;
+  }
+  .home-energy .he-card-lift:hover,
+  .home-energy .he-card-lift:focus-within {
+    transform: translateY(-3px) scale(1.005);
+    box-shadow: 0 18px 40px -22px rgba(46, 46, 46, 0.28);
+  }
+
+  /* Sequenced reveal — image then text. Used on the Proposals/
+     Celebrations/Corporate articles. The article gets .he-seq, its
+     children pick up nth-child delays automatically.
+     Children animate from 14px down + 0 opacity over ~420ms. */
+  .home-energy .he-seq > * {
+    opacity: 0;
+    transform: translateY(14px);
+    transition:
+      opacity 420ms cubic-bezier(0.22, 0.61, 0.36, 1),
+      transform 420ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+  .home-energy .he-seq.is-visible > *:nth-child(1) { transition-delay:   0ms; }
+  .home-energy .he-seq.is-visible > *:nth-child(2) { transition-delay: 180ms; }
+  .home-energy .he-seq.is-visible > *:nth-child(3) { transition-delay: 320ms; }
+  .home-energy .he-seq.is-visible > * {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Image gentle scale on scroll — lighter than hover zoom, runs once
+     when the parent reveals. Pairs with existing reveal-stagger. */
+  .home-energy .he-image-rise img {
+    transform: scale(1.04);
+    transition: transform 1100ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+  .home-energy .he-image-rise.is-visible img,
+  .home-energy .is-visible .he-image-rise img {
+    transform: scale(1);
+  }
+
+  /* Map "live" route emphasis — slightly stronger pulse on the gold dot
+     when scoped to home-energy (Builder section). */
+  .home-energy .live-dot::after {
+    animation-duration: 1700ms;
+  }
+
+  /* Disable everything for users who prefer reduced motion. */
+  @media (prefers-reduced-motion: reduce) {
+    .home-energy .he-parallax,
+    .home-energy .he-parallax-counter {
+      transform: none !important;
+    }
+    .home-energy .he-sheen::after { display: none; }
+    .home-energy .he-glow,
+    .home-energy .he-card-lift,
+    .home-energy .he-seq > *,
+    .home-energy .he-image-rise img {
+      transition: none !important;
+      transform: none !important;
+      opacity: 1 !important;
+    }
+  }
+}
