@@ -125,17 +125,20 @@ const startPaths: StartPath[] = [
  * Moments / Groups preview — Multi-day, Celebrations, Corporate
  * collapsed into a single 3-card band.
  * ────────────────────────────────────────────────────────────── */
-const moments = [
+const multiDay = [
   {
     eyebrow: "Multi-day",
     title: "Routes across Portugal",
-    line: "Two to seven days, real driving times, real overnight stops.",
-    cta: "Browse multi-day",
+    line: "Two to seven days, real driving times, real overnight stops — designed in conversation with a local team.",
+    cta: "Browse multi-day routes",
     to: "/multi-day",
     img: imgTroiaBeach,
   },
+];
+
+const groupsAndCelebrations = [
   {
-    eyebrow: "Celebrations",
+    eyebrow: "Proposals",
     title: "Proposals & private days",
     line: "Quiet planning by a local team — every detail confirmed before the day.",
     cta: "Plan a moment",
@@ -143,8 +146,16 @@ const moments = [
     img: imgArrabidaWineLunch,
   },
   {
+    eyebrow: "Celebrations",
+    title: "Celebrations & private groups",
+    line: "Birthdays, anniversaries and small gatherings, hosted with care.",
+    cta: "Plan a celebration",
+    to: "/proposals",
+    img: imgFatimaNazare,
+  },
+  {
     eyebrow: "Corporate",
-    title: "Teams & private groups",
+    title: "Teams & incentive trips",
     line: "Small-group experiences for incentive trips and team retreats.",
     cta: "Speak to corporate",
     to: "/corporate",
