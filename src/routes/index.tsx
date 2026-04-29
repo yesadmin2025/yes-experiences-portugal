@@ -798,7 +798,8 @@ function HomePage() {
           decorative blobs, no glow. Emphasizes route realism, timing,
           and human support. */}
       <section
-        className="section-y-lg bg-[color:var(--sand)] border-b border-[color:var(--border)]"
+        id="builder"
+        className="section-y-lg bg-[color:var(--sand)] border-b border-[color:var(--border)] scroll-mt-24 md:scroll-mt-28"
         aria-labelledby="studio-title"
       >
         <div className="container-x">
