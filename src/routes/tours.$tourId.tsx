@@ -757,7 +757,7 @@ function FinalCta({ tour }: { tour: SignatureTour }) {
           {tour.title.split("—")[0].trim()}
         </h2>
         <p className="serif italic font-light mt-4 text-lg md:text-xl text-[color:var(--ivory)]/85">
-          Confirm in real time. The day is yours.
+          Send your request — a local confirms within hours.
         </p>
 
         <div className="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
