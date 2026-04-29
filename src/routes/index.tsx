@@ -228,120 +228,250 @@ export const Route = createFileRoute("/")({
  * 10. Final CTA — Talk to a local
  * ════════════════════════════════════════════════════════════ */
 function HomePage() {
-  // Scroll to a hash target (#why-yes, #builder, #proposals, etc.) when the
-  // homepage mounts with a hash, including cross-route arrivals where the
-  // target may not exist on first paint. Polls briefly then bails.
-  // A small alias map makes hash navigation forgiving: singular forms,
-  // common typos and synonyms resolve to the canonical section id.
+  // ── Hash navigation ────────────────────────────────────────────────
+  // Two cooperating effects:
+  //   1. Deep-link handler: on mount (and on subsequent hashchange via
+  //      in-page anchor clicks), resolves aliases, smooth-scrolls to the
+  //      target, and sets a shared lock so the observer below doesn't
+  //      overwrite the hash mid-animation.
+  //   2. Hash sync observer: as the user scrolls, replaces the URL hash
+  //      with whichever tracked section is "most under" the anchor line —
+  //      a fixed line ~14% down the viewport (just below the navbar).
+  //      We use a distance-to-anchor-line metric instead of raw
+  //      intersectionRatio so short sections (e.g. trust bar) don't beat
+  //      tall ones (e.g. Builder) just because they're 100% visible.
+  //
+  // The lock is a module-scoped `useRef` shared between effects via a
+  // closure variable in component scope.
+
+  const TRACKED_IDS = [
+    "why-yes",
+    "builder",
+    "proposals",
+    "celebrations",
+    "corporate",
+    "reviews",
+    "faq",
+  ] as const;
+
+  const HASH_ALIASES: Record<string, string> = {
+    proposal: "proposals",
+    celebration: "celebrations",
+    corporate: "corporate",
+    groups: "corporate",
+    group: "corporate",
+    review: "reviews",
+    "why-yes": "why-yes",
+    whyyes: "why-yes",
+    why: "why-yes",
+    studio: "builder",
+    build: "builder",
+  };
+
+  // Shared "don't sync the hash right now" lock. Held while a programmatic
+  // smooth-scroll is in flight. Stored on window so both effects see the
+  // same value without prop-drilling a ref.
+  // Using a numeric timestamp (ms since epoch) — observer reads
+  // performance.now() and skips while the lock is in the future.
+  const getLockKey = () => "__yesHashSyncLockUntil";
+
+  // Effect 1 — deep-link handling (runs on mount + on hashchange events
+  // triggered by clicks on in-page anchors that point to a tracked id).
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const raw = window.location.hash?.slice(1);
-    if (!raw) return;
-    const HASH_ALIASES: Record<string, string> = {
-      proposal: "proposals",
-      celebration: "celebrations",
-      corporate: "corporate",
-      groups: "corporate",
-      group: "corporate",
-      review: "reviews",
-      "why-yes": "why-yes",
-      whyyes: "why-yes",
-      why: "why-yes",
-      studio: "builder",
-      build: "builder",
+
+    const resolveTarget = (raw: string): HTMLElement | null => {
+      if (!raw) return null;
+      const key = raw.toLowerCase();
+      const aliased = HASH_ALIASES[key] ?? key;
+      return (
+        document.getElementById(aliased) ?? document.getElementById(key)
+      );
     };
-    const key = raw.toLowerCase();
-    const target = HASH_ALIASES[key] ?? key;
-    let tries = 0;
-    const tick = () => {
-      const el =
-        document.getElementById(target) ?? document.getElementById(key);
-      if (el) {
-        el.scrollIntoView({ behavior: "smooth", block: "start" });
-        return;
-      }
-      if (++tries < 20) window.setTimeout(tick, 80);
+
+    let cancelled = false;
+    let timer = 0;
+
+    const scrollToHash = (rawHash: string, smooth: boolean) => {
+      // Lock for ~1100ms — long enough for browsers' native smooth scroll
+      // (~600–900ms on long pages) plus a safety buffer.
+      (window as unknown as Record<string, number>)[getLockKey()] =
+        performance.now() + 1100;
+
+      let tries = 0;
+      const tick = () => {
+        if (cancelled) return;
+        const el = resolveTarget(rawHash);
+        if (el) {
+          el.scrollIntoView({
+            behavior: smooth ? "smooth" : "auto",
+            block: "start",
+          });
+          // Re-arm the lock once we actually scroll, since route
+          // hydration may have just happened (clock effectively reset).
+          (window as unknown as Record<string, number>)[getLockKey()] =
+            performance.now() + 1100;
+          // Normalise the URL to the canonical id (e.g. #proposal → #proposals)
+          const canonical =
+            HASH_ALIASES[rawHash.toLowerCase()] ?? rawHash.toLowerCase();
+          if (canonical && `#${canonical}` !== window.location.hash) {
+            window.history.replaceState(
+              window.history.state,
+              "",
+              window.location.pathname +
+                window.location.search +
+                `#${canonical}`,
+            );
+          }
+          return;
+        }
+        // Section not in DOM yet (images loading, lazy chunk). Poll up to
+        // ~1.6s — enough for hero image + above-the-fold paint.
+        if (++tries < 20) {
+          timer = window.setTimeout(tick, 80);
+        }
+      };
+      // Wait one frame so layout settles, then start trying.
+      timer = window.setTimeout(tick, 60);
     };
-    // Slight delay so the route has painted first.
-    const t = window.setTimeout(tick, 60);
-    return () => window.clearTimeout(t);
+
+    const initial = window.location.hash?.slice(1);
+    if (initial) scrollToHash(initial, true);
+
+    const onHashChange = () => {
+      const h = window.location.hash?.slice(1);
+      if (h) scrollToHash(h, true);
+    };
+    window.addEventListener("hashchange", onHashChange);
+
+    return () => {
+      cancelled = true;
+      window.removeEventListener("hashchange", onHashChange);
+      if (timer) window.clearTimeout(timer);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Sync the URL hash with whichever tracked section is currently the most
-  // visible in the viewport. Uses history.replaceState so we never push a
-  // new entry (back button stays clean) and never trigger router
-  // navigation, which would break smooth scrolling. Suppresses updates
-  // briefly after a programmatic scroll so the hash we just set isn't
-  // overwritten mid-animation.
+  // Effect 2 — hash sync as the user scrolls. Per-section observer with
+  // a thin "anchor band" near the top of the viewport. The chosen
+  // section is whichever one currently *contains* the anchor line; if
+  // none does (between sections), the section closest above wins.
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (typeof IntersectionObserver === "undefined") return;
 
-    const TRACKED = [
-      "why-yes",
-      "builder",
-      "proposals",
-      "celebrations",
-      "corporate",
-      "reviews",
-      "faq",
-    ];
-    const targets = TRACKED.map((id) => document.getElementById(id)).filter(
-      (el): el is HTMLElement => !!el,
-    );
+    const targets = TRACKED_IDS.map((id) =>
+      document.getElementById(id),
+    ).filter((el): el is HTMLElement => !!el);
     if (!targets.length) return;
 
-    const ratios = new Map<string, number>();
-    let suppressUntil = 0;
-
-    const onHashChange = () => {
-      suppressUntil = performance.now() + 900;
+    // Anchor line: just below the fixed navbar. Tuned per breakpoint so
+    // it always sits a comfortable distance under the chrome on phones,
+    // tablets and desktop — matching the scroll-mt offsets on sections.
+    const anchorOffsetPx = () => {
+      const w = window.innerWidth;
+      if (w < 768) return 96; // mobile navbar ~64px + breathing room
+      if (w < 1280) return 112; // tablet
+      return 128; // desktop
     };
-    window.addEventListener("hashchange", onHashChange);
-    if (window.location.hash) suppressUntil = performance.now() + 900;
 
     let raf = 0;
-    const schedule = () => {
-      if (raf) return;
-      raf = window.requestAnimationFrame(() => {
-        raf = 0;
-        if (performance.now() < suppressUntil) return;
-        let bestId = "";
-        let bestRatio = 0;
-        ratios.forEach((ratio, id) => {
-          if (ratio > bestRatio) {
-            bestRatio = ratio;
-            bestId = id;
-          }
-        });
-        const next = bestRatio > 0.25 && bestId ? `#${bestId}` : "";
-        if (next !== window.location.hash) {
-          const url =
-            window.location.pathname + window.location.search + next;
-          window.history.replaceState(window.history.state, "", url);
+    let lastWritten = window.location.hash;
+
+    const compute = () => {
+      raf = 0;
+      const lockUntil =
+        ((window as unknown as Record<string, number>)[getLockKey()] ?? 0);
+      if (performance.now() < lockUntil) return;
+
+      const anchor = anchorOffsetPx();
+      const viewportH = window.innerHeight;
+
+      // Find the section whose [top, bottom) range contains the anchor
+      // line. Fallback: the closest section above the anchor.
+      let chosenId = "";
+      let bestAboveDistance = Infinity;
+
+      for (const el of targets) {
+        const rect = el.getBoundingClientRect();
+        // Skip sections that are completely off-screen below.
+        if (rect.top > viewportH) continue;
+        // Section currently under the anchor line — winner.
+        if (rect.top <= anchor && rect.bottom > anchor) {
+          chosenId = el.id;
+          break;
         }
-      });
+        // Otherwise track the section whose top is closest to (but above)
+        // the anchor line, so we keep a sensible hash between sections.
+        if (rect.top <= anchor) {
+          const d = anchor - rect.top;
+          if (d < bestAboveDistance) {
+            bestAboveDistance = d;
+            chosenId = el.id;
+          }
+        }
+      }
+
+      // Don't write a hash before the first tracked section comes into
+      // view (keeps the URL clean while the user is still on the hero).
+      const firstRect = targets[0].getBoundingClientRect();
+      if (firstRect.top > anchor) {
+        if (window.location.hash) {
+          window.history.replaceState(
+            window.history.state,
+            "",
+            window.location.pathname + window.location.search,
+          );
+          lastWritten = "";
+        }
+        return;
+      }
+
+      const next = chosenId ? `#${chosenId}` : "";
+      if (next !== lastWritten && next !== window.location.hash) {
+        window.history.replaceState(
+          window.history.state,
+          "",
+          window.location.pathname + window.location.search + next,
+        );
+        lastWritten = next;
+      } else if (next !== lastWritten) {
+        lastWritten = next;
+      }
     };
 
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          ratios.set(e.target.id, e.isIntersecting ? e.intersectionRatio : 0);
-        }
-        schedule();
-      },
-      {
-        threshold: [0, 0.25, 0.5, 0.75, 1],
-        rootMargin: "-96px 0px -40% 0px",
-      },
-    );
+    const schedule = () => {
+      if (raf) return;
+      raf = window.requestAnimationFrame(compute);
+    };
+
+    // Triggers: scroll, resize, and any IO callback (covers lazy content
+    // shifting layout). IO uses many thresholds across the anchor band so
+    // we get callbacks at the right moments without needing a scroll
+    // listener at all on capable browsers — but we add a passive scroll
+    // listener too for buttery responsiveness during fast scrolls.
+    const io = new IntersectionObserver(schedule, {
+      threshold: [0, 0.05, 0.15, 0.3, 0.5, 0.75, 1],
+      // Negative top margin = anchor band starts ~96–128px down.
+      // Negative bottom margin = ignore sections that are still mostly
+      // in the lower third of the viewport (gives the section above
+      // priority until the new one truly takes over).
+      rootMargin: "-96px 0px -55% 0px",
+    });
     targets.forEach((el) => io.observe(el));
+
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    // First pass after mount.
+    schedule();
 
     return () => {
       io.disconnect();
-      window.removeEventListener("hashchange", onHashChange);
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
       if (raf) window.cancelAnimationFrame(raf);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
