@@ -466,6 +466,7 @@ function HomePage() {
       >
         <div className="container-x">
           <div className="max-w-2xl mx-auto text-center mb-12 md:mb-16">
+            <span aria-hidden="true" className="gold-rule mx-auto mb-6 block max-w-[3rem]" />
             <span className="eyebrow">Why YES</span>
             <h2
               id="why-yes-title"
