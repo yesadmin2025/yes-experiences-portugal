@@ -122,50 +122,33 @@
   --motion-image-zoom: 1.03;
 
 
-  /* Semantic — repointed to Editorial Palette v2 (Patch 1).
-     Legacy --teal/--gold/--ivory/--sand/--charcoal* are kept defined
-     above so any direct reference still resolves, but they are now
-     aliased to the new editorial tokens so the whole site shifts to
-     the warm-neutral system in one move.
+  /* Semantic — restored to brand board v1 (2026-04-25).
+     The 8 canonical tokens above (--teal/--teal-2/--gold/--gold-soft/
+     --ivory/--sand/--charcoal/--charcoal-soft) are the single source
+     of truth; semantic vars below map directly onto them.
 
-     Mapping:
-       teal  → accent-sea    (muted coastal blue, accent-only use)
-       gold  → accent-gold   (micro-detail only, never primary CTA)
-       ivory → ivory-warm    (warm editorial cream)
-       sand  → surface-muted (subtle warm secondary surface)
-       charcoal → ink        (editorial near-black) */
-  --teal: var(--accent-sea);
-  --teal-2: var(--accent-sea);
-  --gold: var(--accent-gold);
-  --gold-soft: color-mix(in oklab, var(--accent-gold) 55%, var(--ivory-warm));
-  --ivory: var(--ivory-warm);
-  --sand: var(--surface-muted);
-  --charcoal: var(--ink);
-  --charcoal-soft: var(--ink-soft);
-  --charcoal-deep: var(--ink);
-
-  --background: var(--ivory-warm);
-  --foreground: var(--ink);
-  --card: var(--surface-warm);
-  --card-foreground: var(--ink);
-  --popover: var(--surface-warm);
-  --popover-foreground: var(--ink);
-  /* Primary fill = ink (editorial CTA), not a coloured accent. */
-  --primary: var(--ink);
-  --primary-foreground: var(--ivory-warm);
-  --secondary: var(--surface-muted);
-  --secondary-foreground: var(--ink);
-  --muted: var(--surface-muted);
-  --muted-foreground: var(--ink-soft);
-  /* Accent = gold for micro-detail; never used as primary CTA fill. */
-  --accent: var(--accent-gold);
-  --accent-foreground: var(--ink);
+     The Editorial Palette v2 tokens (--ink/--ivory-warm/--accent-*) stay
+     defined for opt-in editorial micro-details only (e.g. .btn-editorial-*,
+     .surface-card), but they DO NOT replace the brand colours. */
+  --background: var(--ivory);
+  --foreground: var(--charcoal);
+  --card: #ffffff;
+  --card-foreground: var(--charcoal);
+  --popover: #ffffff;
+  --popover-foreground: var(--charcoal);
+  --primary: var(--teal);
+  --primary-foreground: var(--ivory);
+  --secondary: var(--sand);
+  --secondary-foreground: var(--charcoal);
+  --muted: var(--sand);
+  --muted-foreground: var(--charcoal-soft);
+  --accent: var(--gold);
+  --accent-foreground: var(--charcoal);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: #ffffff;
-  --border: var(--stone-line);
-  --input: var(--stone-line);
-  /* Focus ring = muted sea (the only allowed focus accent). */
-  --ring: var(--accent-sea);
+  --border: rgba(46, 46, 46, 0.12);
+  --input: rgba(46, 46, 46, 0.18);
+  --ring: var(--teal);
 
   /* Shared vertical rhythm — used by .section-y / -lg / -sm / -app */
   --section-y: 5rem;
