@@ -203,7 +203,7 @@ function TourHero({
               href="#tailor"
               className="flex-1 inline-flex items-center justify-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] px-6 py-4 text-sm tracking-wide transition-all min-h-[52px]"
             >
-              <Sparkles size={14} /> Request to book
+              <Sparkles size={14} /> Reserve instantly
             </a>
             <Link
               to="/tours/$tourId/tailor"
@@ -224,8 +224,8 @@ function TourHero({
  * ════════════════════════════════════════════════════════════ */
 function TrustStrip() {
   const items = [
-    { icon: <Shield size={14} />, label: "Personal confirmation" },
-    { icon: <Check size={14} />, label: "Reviewed by a local" },
+    { icon: <Shield size={14} />, label: "Instant confirmation" },
+    { icon: <Check size={14} />, label: "No forms. No waiting." },
     { icon: <Star size={14} />, label: "Trusted local guide" },
   ];
   return (
@@ -757,7 +757,7 @@ function FinalCta({ tour }: { tour: SignatureTour }) {
           {tour.title.split("—")[0].trim()}
         </h2>
         <p className="serif italic font-light mt-4 text-lg md:text-xl text-[color:var(--ivory)]/85">
-          Send your request — a local confirms within hours.
+          Confirm in real time. The day is yours.
         </p>
 
         <div className="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
@@ -765,7 +765,7 @@ function FinalCta({ tour }: { tour: SignatureTour }) {
             href="#tailor"
             className="inline-flex items-center justify-center gap-2 bg-[color:var(--gold)] hover:bg-[color:var(--gold-soft)] text-[color:var(--charcoal)] px-7 py-4 text-sm tracking-wide transition-all min-h-[52px]"
           >
-            <Sparkles size={14} /> Request to book
+            <Sparkles size={14} /> Reserve instantly
           </a>
           <Link
             to="/tours/$tourId/tailor"
@@ -777,7 +777,7 @@ function FinalCta({ tour }: { tour: SignatureTour }) {
         </div>
 
         <p className="mt-5 text-[11px] uppercase tracking-[0.24em] text-[color:var(--ivory)]/65">
-          Personal confirmation · Reviewed by a local
+          Instant confirmation · Secured on this site
         </p>
       </div>
     </section>

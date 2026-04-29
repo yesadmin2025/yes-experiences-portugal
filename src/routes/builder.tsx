@@ -56,7 +56,7 @@ export const Route = createFileRoute("/builder")({
       {
         name: "description",
         content:
-          "Start your way. We'll guide you as you build — shaping your private Portugal experience within what works best on the ground. Confirmed personally by a local.",
+          "Start your way. We'll guide you as you build — shaping your private Portugal experience within what works best on the ground. Reserve instantly when ready.",
       },
       { property: "og:title", content: "YES Experience Studio" },
       {
@@ -447,7 +447,7 @@ function BuilderPage() {
               A place, a moment, a region, or an idea — shape it into a real Portugal journey, in real time.
             </p>
             <p className="mt-2 text-[10px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
-              Confirmed personally by a local within hours
+              Instant confirmation when your journey is ready
             </p>
           </div>
 
@@ -739,7 +739,7 @@ function WelcomeStep({ onStart }: { onStart: () => void }) {
             </a>
           </div>
           <p className="mt-5 text-[10px] uppercase tracking-[0.28em] text-white/70">
-            Confirmed personally by a local within hours
+            Instant confirmation when your journey is ready
           </p>
         </div>
       </div>
@@ -1243,10 +1243,10 @@ function RevealStep({ s, title, investment }: { s: BuilderState; title: string; 
           to="/contact"
           className="w-full inline-flex items-center justify-center gap-2 bg-[color:var(--teal)] text-[color:var(--ivory)] px-6 py-4 text-[11px] uppercase tracking-[0.22em] hover:bg-[color:var(--teal-2)] transition-colors"
         >
-          Request to book <ArrowRight size={13} />
+          Confirm Instantly <ArrowRight size={13} />
         </Link>
         <p className="text-center text-[11px] text-[color:var(--charcoal-soft)] italic -mt-0.5">
-          A local reviews and confirms your journey personally — usually within hours.
+          Secure booking directly on our website through our integrated booking system.
         </p>
         <button
           onClick={() => {
@@ -2230,7 +2230,7 @@ function InvestmentPanel({ s, days, investment }: { s: BuilderState; days: numbe
         </p>
       </div>
       <p className="mt-2 text-[12px] text-[color:var(--charcoal-soft)] italic">
-        Private guide, real route, curated stops included. Sent to a local who confirms personally — usually within hours.
+        Private guide, real route, curated stops included. Confirm instantly through our integrated booking system — no forms, no waiting.
       </p>
     </div>
   );

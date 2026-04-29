@@ -6,7 +6,7 @@
  * spec verbatim AND that every published page renders these exact strings.
  *
  * Goals encoded in this spec:
- *  - Honest booking tone (each path has its own truth — see booking-truth-model)
+ *  - Instant booking tone (no forms, no waiting, no email requests)
  *  - Guided by a real local person
  *  - Intimate, premium, human voice
  *  - Covers any occasion (days, journeys, proposals, celebrations, groups)
@@ -20,7 +20,7 @@ export const HERO_COPY_SPEC = {
     "Designed by you, at your rhythm — for a day, a journey, or a celebration — guided by a local who knows where the real moments happen.",
   primaryCta: "Create Your Story",
   secondaryCta: "Explore Signature Experiences",
-  microcopy: "Designed by locals. Confirmed personally.",
+  microcopy: "Instant confirmation. No forms. No waiting.",
 } as const;
 
 export type HeroSpecKey = keyof typeof HERO_COPY_SPEC;

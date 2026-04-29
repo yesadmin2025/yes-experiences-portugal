@@ -216,7 +216,7 @@ function MultiDayPage() {
             </a>
           </div>
           <p className="mt-5 text-[10px] uppercase tracking-[0.28em] text-white/65">
-            Real routes · realistic pace · personal confirmation
+            Real routes · realistic pace · instant confirmation
           </p>
         </div>
       </section>
@@ -344,7 +344,7 @@ function MultiDayPage() {
                   "Realistic regional day blocks",
                   "Live map with your route drawn day by day",
                   "Storytelling timeline that updates as you build",
-                  "Personal confirmation by a local within hours",
+                  "Instant confirmation — no forms, no waiting",
                 ].map((t) => (
                   <li key={t} className="flex items-start gap-2">
                     <Sparkles size={13} className="text-[color:var(--gold)] mt-1 shrink-0" />
@@ -536,7 +536,7 @@ function MultiDayPage() {
               <MessageCircle size={16} /> Confirm with a local
             </a>
             <p className="mt-2 text-[11px] text-[color:var(--charcoal-soft)] text-center">
-              A local reviews and confirms your journey personally — usually within hours.
+              Secure booking directly on our website through our integrated booking system.
             </p>
           </div>
         </div>
@@ -560,7 +560,7 @@ function MultiDayPage() {
             Build Your Multi-Day Journey <ArrowRight size={13} />
           </Link>
           <p className="mt-4 text-[10px] uppercase tracking-[0.28em] text-white/55">
-            Designed by locals · confirmed personally
+            Instant confirmation · designed by locals
           </p>
         </div>
       </section>

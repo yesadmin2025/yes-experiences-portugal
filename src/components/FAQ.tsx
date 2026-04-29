@@ -9,8 +9,8 @@ import { whatsappHref } from "@/components/WhatsAppFab";
 
 const FAQS: { q: string; a: string }[] = [
   {
-    q: "How does booking work?",
-    a: "Send your request through the website. A local reviews your dates and confirms personally — usually within a few hours. Online checkout is coming soon.",
+    q: "Can I confirm instantly?",
+    a: "Yes. Experiences can be confirmed directly on the website. No forms, no waiting.",
   },
   {
     q: "What is the difference between Signature, Tailored and Builder?",
@@ -45,8 +45,8 @@ const FAQS: { q: string; a: string }[] = [
     a: "Selected details inside that specific tour — pace, timing and the options available within it.",
   },
   {
-    q: "What happens after I send my request?",
-    a: "A local reviews availability and confirms your booking personally — usually within hours. You then receive confirmation and full details by email.",
+    q: "What happens after I confirm?",
+    a: "You receive confirmation and full details through our integrated booking system.",
   },
 ];
 
