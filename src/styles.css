@@ -76,19 +76,24 @@
      refactored sections opt in via these vars. Rule: site lives 80%
      in warm neutrals, 15% in ink, 5% in coloured accents. Gold is
      micro-detail only, never a primary CTA fill.
-     ───────────────────────────────────────────────────────────── */
-  --ink: #141518;
-  --ink-soft: #5F6670;
-  --ivory-warm: #F7F3EE;
-  --stone: #E7DDD0;
-  --stone-line: #D8CEC2;
-  --surface-warm: #FFFFFF;
-  --surface-muted: #F1EADF;
+     ─────────────────────────────────────────────────────────────
+     HARD ALIAS: every Editorial v2 token now resolves to one of
+     the 8 brand-board tokens. No raw hex here. Any stray usage
+     (.btn-editorial-*, .surface-card, .ink-text, .accent-*, etc.)
+     therefore renders in brand teal/gold/ivory/sand/charcoal only.
+     Do NOT reintroduce raw hex values in this block. */
+  --ink: var(--charcoal);
+  --ink-soft: var(--charcoal-soft);
+  --ivory-warm: var(--ivory);
+  --stone: var(--sand);
+  --stone-line: var(--sand);
+  --surface-warm: var(--ivory);
+  --surface-muted: var(--sand);
 
-  --accent-wine: #6E3B2E;
-  --accent-sea: #295A73;
-  --accent-olive: #5B6B52;
-  --accent-gold: #B28B57;
+  --accent-wine: var(--teal);
+  --accent-sea: var(--teal);
+  --accent-olive: var(--teal-2);
+  --accent-gold: var(--gold);
 
   /* Editorial radii — coexist with the legacy --radius scale. */
   --radius-soft: 10px;
