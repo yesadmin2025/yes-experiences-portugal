@@ -11,10 +11,14 @@ import {
   saveMappingRules,
   deleteMappingRules,
 } from "@/server/mappingRules.functions";
+import {
+  fetchViatorArrabida,
+  saveViatorArrabida,
+} from "@/server/viatorTour.functions";
 import { DEFAULT_MAPPING_RULES } from "@/data/defaultMappingRules";
 import { signatureTours } from "@/data/signatureTours";
 import { toast } from "sonner";
-import { Loader2, RefreshCw, Check, AlertTriangle, Sliders, Trash2, Plus, Image as ImageIcon, ImageOff, Link2, Link2Off } from "lucide-react";
+import { Loader2, RefreshCw, Check, AlertTriangle, Sliders, Trash2, Plus, Image as ImageIcon, ImageOff, Link2, Link2Off, Download, Save } from "lucide-react";
 
 const FILTER_VALUES = ["all", "with-image", "missing-image", "matched", "unmatched"] as const;
 type FilterValue = (typeof FILTER_VALUES)[number];
