@@ -306,14 +306,15 @@ function HomePage() {
       raf = window.requestAnimationFrame(() => {
         raf = 0;
         if (performance.now() < suppressUntil) return;
-        type Best = { id: string; ratio: number };
-        let best: Best | null = null;
+        let bestId = "";
+        let bestRatio = 0;
         ratios.forEach((ratio, id) => {
-          const current: Best | null = best;
-          if (!current || ratio > current.ratio) best = { id, ratio };
+          if (ratio > bestRatio) {
+            bestRatio = ratio;
+            bestId = id;
+          }
         });
-        const winner: Best | null = best;
-        const next = winner && winner.ratio > 0.25 ? `#${winner.id}` : "";
+        const next = bestRatio > 0.25 && bestId ? `#${bestId}` : "";
         if (next !== window.location.hash) {
           const url =
             window.location.pathname + window.location.search + next;
