@@ -41,7 +41,7 @@
   --color-charcoal-soft: var(--charcoal-soft);
   --color-charcoal-deep: var(--charcoal-deep);
 
-  --font-serif: "Cormorant Garamond", Georgia, serif;
+  --font-serif: "Newsreader", "Cormorant Garamond", Georgia, serif;
   --font-sans: "Inter", system-ui, sans-serif;
   --font-script: "Kaushan Script", cursive;
 
@@ -68,6 +68,59 @@
      mobile clears 7:1 contrast on ivory and never reads as washed grey. */
   --charcoal-soft: #555555;
   --charcoal-deep: #1F1F1F;
+
+  /* ─────────────────────────────────────────────────────────────
+     EDITORIAL PALETTE v2 — additive, non-breaking.
+     Warm-neutral system to live alongside the legacy --teal/--gold
+     tokens. Existing components keep working; new components and
+     refactored sections opt in via these vars. Rule: site lives 80%
+     in warm neutrals, 15% in ink, 5% in coloured accents. Gold is
+     micro-detail only, never a primary CTA fill.
+     ───────────────────────────────────────────────────────────── */
+  --ink: #141518;
+  --ink-soft: #5F6670;
+  --ivory-warm: #F7F3EE;
+  --stone: #E7DDD0;
+  --stone-line: #D8CEC2;
+  --surface-warm: #FFFFFF;
+  --surface-muted: #F1EADF;
+
+  --accent-wine: #6E3B2E;
+  --accent-sea: #295A73;
+  --accent-olive: #5B6B52;
+  --accent-gold: #B28B57;
+
+  /* Editorial radii — coexist with the legacy --radius scale. */
+  --radius-soft: 10px;
+  --radius-card: 16px;
+  --radius-pill: 24px;
+
+  /* Fixed spacing scale — 4 / 8 / 12 / 16 / 24 / 32 / 48 / 72 / 96. */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 72px;
+  --space-9: 96px;
+
+  /* Section rhythm aligned with the new scale. */
+  --section-gap-mobile: 48px;
+  --section-gap-desktop: 96px;
+
+  /* Editorial shadows — softer, warmer than the legacy teal-tinted set. */
+  --shadow-soft: 0 8px 24px rgba(20, 21, 24, 0.08);
+  --shadow-hover: 0 16px 36px rgba(20, 21, 24, 0.12);
+
+  /* Motion language — short, functional, reusable. */
+  --transition-fast: 180ms ease;
+  --transition-base: 220ms ease;
+  --transition-slow: 320ms ease;
+  --motion-lift: -2px;
+  --motion-image-zoom: 1.03;
+
 
   /* Semantic */
   --background: var(--ivory);
@@ -1875,4 +1928,154 @@
   .logo-mark--gold-on-charcoal {
     filter: none;
   }
+
+  /* ─────────────────────────────────────────────────────────────
+     EDITORIAL DESIGN SYSTEM v2 — opt-in utility set.
+     Use these on new components and during refactors. They sit
+     alongside the legacy .btn-* / .card-* classes; nothing existing
+     is overridden.
+     ───────────────────────────────────────────────────────────── */
+  .surface-warm {
+    background-color: var(--ivory-warm);
+    color: var(--ink);
+  }
+  .surface-card {
+    background-color: var(--surface-warm);
+    color: var(--ink);
+    border: 1px solid rgba(20, 21, 24, 0.06);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-soft);
+    transition: box-shadow var(--transition-base), transform var(--transition-base);
+  }
+  .surface-card:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(var(--motion-lift));
+  }
+  .surface-muted {
+    background-color: var(--surface-muted);
+    color: var(--ink);
+  }
+  .surface-stone {
+    background-color: var(--stone);
+    color: var(--ink);
+  }
+  .ink-text { color: var(--ink); }
+  .ink-soft { color: var(--ink-soft); }
+
+  /* Editorial button family — Ink primary, Stone-bordered secondary,
+     text-link tertiary. Always use these in pairs of two max per hero. */
+  .btn-editorial {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 22px;
+    border-radius: var(--radius-card);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    line-height: 1.2;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition:
+      background-color var(--transition-base),
+      color var(--transition-base),
+      border-color var(--transition-base),
+      transform var(--transition-fast),
+      box-shadow var(--transition-base);
+  }
+  .btn-editorial:hover {
+    transform: translateY(var(--motion-lift));
+  }
+  .btn-editorial:focus-visible {
+    outline: 2px solid var(--accent-sea);
+    outline-offset: 3px;
+  }
+  .btn-editorial-primary {
+    background-color: var(--ink);
+    color: var(--ivory-warm);
+  }
+  .btn-editorial-primary:hover {
+    background-color: #000;
+    box-shadow: var(--shadow-hover);
+  }
+  .btn-editorial-secondary {
+    background-color: transparent;
+    color: var(--ink);
+    border-color: var(--stone-line);
+  }
+  .btn-editorial-secondary:hover {
+    border-color: var(--ink);
+    background-color: var(--surface-muted);
+  }
+  .btn-editorial-tertiary {
+    padding: 8px 0;
+    background: transparent;
+    color: var(--ink);
+    border: 0;
+    border-bottom: 1px solid currentColor;
+    border-radius: 0;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+  .btn-editorial-tertiary:hover {
+    color: var(--accent-sea);
+  }
+
+  /* Image overlays — only when text sits on top, never full darken. */
+  .image-overlay-editorial {
+    background: linear-gradient(
+      180deg,
+      rgba(20, 21, 24, 0.08) 0%,
+      rgba(20, 21, 24, 0.42) 100%
+    );
+  }
+  .image-overlay-editorial--soft {
+    background: linear-gradient(
+      180deg,
+      rgba(20, 21, 24, 0) 40%,
+      rgba(20, 21, 24, 0.32) 100%
+    );
+  }
+
+  /* Hover image zoom helper — clamp to brand-allowed 1.02–1.04. */
+  .img-hover-zoom { overflow: hidden; }
+  .img-hover-zoom > img,
+  .img-hover-zoom > picture > img {
+    transition: transform var(--transition-slow);
+  }
+  .img-hover-zoom:hover > img,
+  .img-hover-zoom:hover > picture > img {
+    transform: scale(var(--motion-image-zoom));
+  }
+
+  /* Section rhythm tied to the new spacing scale. Use on <section>
+     wrappers when refactoring; legacy .section-y stays untouched. */
+  .section-editorial {
+    padding-top: var(--section-gap-mobile);
+    padding-bottom: var(--section-gap-mobile);
+  }
+  @media (min-width: 768px) {
+    .section-editorial {
+      padding-top: var(--section-gap-desktop);
+      padding-bottom: var(--section-gap-desktop);
+    }
+  }
+
+  /* Editorial focus ring — Sea accent on any element. */
+  .focus-ring-editorial:focus-visible {
+    outline: 2px solid var(--accent-sea);
+    outline-offset: 3px;
+  }
+
+  /* Editorial accent helpers — for badges, tags, active states. */
+  .accent-wine  { color: var(--accent-wine); }
+  .accent-sea   { color: var(--accent-sea); }
+  .accent-olive { color: var(--accent-olive); }
+  .accent-gold  { color: var(--accent-gold); }
+  .bg-accent-wine  { background-color: var(--accent-wine);  color: var(--ivory-warm); }
+  .bg-accent-sea   { background-color: var(--accent-sea);   color: var(--ivory-warm); }
+  .bg-accent-olive { background-color: var(--accent-olive); color: var(--ivory-warm); }
 }
+
