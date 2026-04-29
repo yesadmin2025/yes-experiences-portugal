@@ -1327,7 +1327,7 @@ function HomePage() {
                     </p>
                     <Link
                       to={m.to}
-                      className="he-glow he-sheen mt-6 inline-flex items-center gap-2 self-start bg-[color:var(--teal)] text-[color:var(--ivory)] px-6 py-3 text-[12px] uppercase tracking-[0.22em] font-medium hover:bg-[color:var(--teal-2)] shadow-[0_4px_14px_-6px_rgba(41,91,97,0.55)]"
+                      className="he-glow he-sheen mt-6 inline-flex items-center gap-2 self-start bg-[color:var(--teal)] text-[color:var(--ivory)] px-7 py-3.5 min-h-[44px] text-[13px] uppercase tracking-[0.18em] font-semibold hover:bg-[color:var(--teal-2)] shadow-[0_6px_18px_-8px_rgba(41,91,97,0.6)]"
                     >
                       {m.cta}
                       <ArrowRight
