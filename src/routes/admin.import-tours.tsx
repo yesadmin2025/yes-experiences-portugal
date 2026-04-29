@@ -18,6 +18,7 @@ import {
 } from "@/server/viatorTour.functions";
 import { DEFAULT_MAPPING_RULES } from "@/data/defaultMappingRules";
 import { signatureTours } from "@/data/signatureTours";
+import { checkViatorUrlMatchesTour, type UrlMatchResult } from "@/lib/viatorUrlMatch";
 import { toast } from "sonner";
 import { Loader2, RefreshCw, Check, AlertTriangle, Sliders, Trash2, Plus, Image as ImageIcon, ImageOff, Link2, Link2Off, Download, Save } from "lucide-react";
 
@@ -128,14 +129,39 @@ function AdminImportPage() {
     return { items, errors };
   };
 
-  const onBulkImport = async () => {
+  const [bulkOverride, setBulkOverride] = useState(false);
+
+  // Live mismatch check for every parsed line — runs locally on each keystroke.
+  const bulkChecks = useMemo(() => {
     const { items, errors } = parseBulk(bulkText);
+    const checks = items.map((it) => {
+      const seed = signatureTours.find((t) => t.id === it.id);
+      const check = seed
+        ? checkViatorUrlMatchesTour(it.url, seed.id, seed.title)
+        : ({ kind: "invalid", reason: "Unknown tour id" } as UrlMatchResult);
+      return { ...it, knownId: !!seed, check };
+    });
+    const mismatches = checks.filter(
+      (c) => c.check.kind === "mismatch" || c.check.kind === "invalid" || !c.knownId,
+    );
+    const weak = checks.filter((c) => c.check.kind === "weak");
+    return { items, errors, checks, mismatches, weak };
+  }, [bulkText]);
+
+  const onBulkImport = async () => {
+    const { items, errors, mismatches } = bulkChecks;
     if (errors.length) {
       toast.error(errors[0]);
       return;
     }
     if (!items.length) {
       toast.error("Paste at least one id | url line.");
+      return;
+    }
+    if (mismatches.length > 0 && !bulkOverride) {
+      toast.error(
+        `${mismatches.length} URL${mismatches.length === 1 ? "" : "s"} don't match the tour id. Tick 'Import anyway' to override.`,
+      );
       return;
     }
     setBulkRunning(true);
@@ -156,6 +182,7 @@ function AdminImportPage() {
       setBulkRunning(false);
     }
   };
+
 
   // ----- Arrábida P3 Viator source panel -----
   type ViatorItineraryStep = {
@@ -181,11 +208,33 @@ function AdminImportPage() {
   const [viatorSaving, setViatorSaving] = useState(false);
   const [viatorError, setViatorError] = useState<string | null>(null);
 
+  // Live URL match preview for the Arrábida P3 panel.
+  const arrabidaSeed = signatureTours.find((t) => t.id === "arrabida-wine-allinclusive");
+  const viatorUrlCheck: UrlMatchResult | null = useMemo(() => {
+    if (!viatorUrl.trim() || !arrabidaSeed) return null;
+    return checkViatorUrlMatchesTour(viatorUrl, arrabidaSeed.id, arrabidaSeed.title);
+  }, [viatorUrl, arrabidaSeed]);
+  const [viatorOverride, setViatorOverride] = useState(false);
+
   const onFetchViator = async () => {
     setViatorError(null);
     setViatorPreview(null);
     if (!viatorUrl.trim()) {
       setViatorError("Paste a Viator tour URL first.");
+      return;
+    }
+    if (viatorUrlCheck && viatorUrlCheck.kind === "invalid") {
+      setViatorError(viatorUrlCheck.reason);
+      return;
+    }
+    if (
+      viatorUrlCheck &&
+      (viatorUrlCheck.kind === "mismatch" || viatorUrlCheck.kind === "weak") &&
+      !viatorOverride
+    ) {
+      setViatorError(
+        "This URL doesn't look like the Arrábida P3 tour. Tick 'Fetch anyway' to override.",
+      );
       return;
     }
     setViatorFetching(true);
@@ -201,6 +250,7 @@ function AdminImportPage() {
       setViatorFetching(false);
     }
   };
+
 
   const onSaveViator = async () => {
     if (!viatorPreview) return;
@@ -569,6 +619,60 @@ function AdminImportPage() {
               </button>
             </div>
 
+            {viatorUrlCheck && viatorUrlCheck.kind !== "ok" && (
+              <div
+                className={`mt-3 p-3 border text-xs flex items-start gap-2 ${
+                  viatorUrlCheck.kind === "weak"
+                    ? "border-[color:var(--gold)]/60 bg-[color:var(--gold)]/10 text-[color:var(--charcoal)]"
+                    : "border-red-400/60 bg-red-50 text-red-700"
+                }`}
+              >
+                <AlertTriangle size={14} className="mt-0.5 shrink-0" />
+                <div className="space-y-1">
+                  {viatorUrlCheck.kind === "invalid" && (
+                    <span>{viatorUrlCheck.reason}</span>
+                  )}
+                  {viatorUrlCheck.kind === "mismatch" && (
+                    <>
+                      <div>
+                        This URL doesn't look like the Arrábida P3 tour. Expected
+                        keywords:{" "}
+                        <span className="font-mono">
+                          {viatorUrlCheck.expected.slice(0, 5).join(", ")}
+                        </span>
+                        .
+                      </div>
+                      {viatorUrlCheck.productCode && (
+                        <div className="opacity-80">
+                          Detected product code: {viatorUrlCheck.productCode}
+                        </div>
+                      )}
+                    </>
+                  )}
+                  {viatorUrlCheck.kind === "weak" && (
+                    <div>
+                      Only one keyword matched (
+                      <span className="font-mono">
+                        {viatorUrlCheck.matchedKeywords.join(", ")}
+                      </span>
+                      ). Double-check this is the right Viator product.
+                    </div>
+                  )}
+                  {(viatorUrlCheck.kind === "mismatch" ||
+                    viatorUrlCheck.kind === "weak") && (
+                    <label className="inline-flex items-center gap-1.5 mt-1 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={viatorOverride}
+                        onChange={(e) => setViatorOverride(e.target.checked)}
+                      />
+                      <span>Fetch anyway</span>
+                    </label>
+                  )}
+                </div>
+              </div>
+            )}
+
             {viatorError && (
               <div className="mt-3 p-3 border border-red-400/60 bg-red-50 text-xs text-red-700 flex items-start gap-2">
                 <AlertTriangle size={14} className="mt-0.5 shrink-0" />
@@ -710,12 +814,59 @@ function AdminImportPage() {
               className="mt-4 w-full font-mono text-xs border border-[color:var(--border)] bg-[color:var(--ivory)] px-3 py-2.5 focus:outline-none focus:border-[color:var(--teal)]"
             />
 
+            {(bulkChecks.mismatches.length > 0 || bulkChecks.weak.length > 0) && (
+              <div className="mt-3 border border-[color:var(--gold)]/60 bg-[color:var(--gold)]/10 p-3 text-xs space-y-2">
+                <div className="flex items-center gap-2 font-medium">
+                  <AlertTriangle size={14} className="text-[color:var(--gold)]" />
+                  URL ↔ tour-id check
+                </div>
+                <ul className="space-y-1">
+                  {bulkChecks.checks
+                    .filter((c) => c.check.kind !== "ok")
+                    .map((c) => (
+                      <li key={c.id + c.url} className="flex items-start gap-2">
+                        <span
+                          className={
+                            c.check.kind === "weak"
+                              ? "text-[color:var(--gold)]"
+                              : "text-red-600"
+                          }
+                        >
+                          {c.check.kind === "weak" ? "?" : "✕"}
+                        </span>
+                        <span className="font-mono">{c.id}</span>
+                        <span className="text-[color:var(--charcoal-soft)]">
+                          {c.check.kind === "invalid"
+                            ? c.check.reason
+                            : c.check.kind === "mismatch"
+                              ? `URL doesn't match — expected: ${c.check.expected.slice(0, 4).join(", ")}`
+                              : c.check.kind === "weak"
+                                ? `weak match (${c.check.matchedKeywords.join(", ")})`
+                                : ""}
+                        </span>
+                      </li>
+                    ))}
+                </ul>
+                {bulkChecks.mismatches.length > 0 && (
+                  <label className="inline-flex items-center gap-1.5 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={bulkOverride}
+                      onChange={(e) => setBulkOverride(e.target.checked)}
+                    />
+                    <span>Import anyway (skip URL check)</span>
+                  </label>
+                )}
+              </div>
+            )}
+
             <div className="mt-3 flex flex-col sm:flex-row gap-2">
               <button
                 onClick={onBulkImport}
                 disabled={bulkRunning}
                 className="inline-flex items-center justify-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] disabled:opacity-60 text-[color:var(--ivory)] px-5 py-2.5 text-sm tracking-wide transition-all"
               >
+
                 {bulkRunning ? (
                   <Loader2 size={14} className="animate-spin" />
                 ) : (
@@ -764,13 +915,13 @@ function AdminImportPage() {
             )}
           </div>
 
-
           <div className="mt-12 border border-[color:var(--border)] bg-[color:var(--card)] p-5">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="flex items-center gap-2">
                 <Sliders size={16} className="text-[color:var(--teal)]" />
                 <h2 className="serif text-2xl">Mapping rules</h2>
               </div>
+
               <button
                 onClick={startNewRule}
                 className="inline-flex items-center gap-1.5 border border-[color:var(--border)] hover:border-[color:var(--gold)] px-3 py-1.5 text-xs"
