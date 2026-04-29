@@ -25,6 +25,9 @@ import {
   CalendarDays,
   MapPin,
   MessageCircle,
+  Compass,
+  Feather,
+  LifeBuoy,
 } from "lucide-react";
 import { PlatformBadge } from "@/components/PlatformBadge";
 import { LiveMapPreview } from "@/components/LiveMapPreview";
