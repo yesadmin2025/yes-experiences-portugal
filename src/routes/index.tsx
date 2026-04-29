@@ -145,24 +145,27 @@ const multiDay = [
 const groupsAndCelebrations = [
   {
     eyebrow: "Proposals",
-    title: "Proposals & private days",
-    line: "Quiet planning by a local team — every detail confirmed before the day.",
+    title: "A private setting. A real moment. No template.",
+    line: (<>Quiet planning by a local team — every detail confirmed before the day, in <span className="kw">private</span>.</>),
+    detail: "Discreet · location of your choosing",
     cta: "Plan a moment",
     to: "/proposals",
     img: imgArrabidaWineLunch,
   },
   {
     eyebrow: "Celebrations",
-    title: "Celebrations & private groups",
-    line: "Birthdays, anniversaries and small gatherings, hosted with care.",
+    title: "For birthdays, anniversaries and days worth remembering.",
+    line: (<>Small gatherings hosted with care — your people, your pace, in a place that fits the <span className="kw">occasion</span>.</>),
+    detail: "Up to 14 guests · private host",
     cta: "Plan a celebration",
     to: "/proposals",
     img: imgFatimaNazare,
   },
   {
     eyebrow: "Corporate",
-    title: "Teams & incentive trips",
-    line: "Small-group experiences for incentive trips and team retreats.",
+    title: "Private group days with local knowledge and seamless logistics.",
+    line: (<>Small-group experiences for incentive trips and team retreats — handled end to end by a local team.</>),
+    detail: "Up to 30 pax · invoice & DMC support",
     cta: "Speak to corporate",
     to: "/corporate",
     img: imgFatimaNazare,
@@ -432,7 +435,7 @@ function HomePage() {
               700+ <span className="italic">five-star reviews</span>
             </p>
             <p className="max-w-md text-[14px] md:text-[15px] text-[color:var(--charcoal-soft)] leading-[1.6] font-light">
-              Private local guides who actually live here — every day designed and confirmed by a small team in Portugal.
+              <span className="kw">Private</span> <span className="kw">local</span> guides who actually live here — every day designed and confirmed by a small team in Portugal.
             </p>
             <ul
               className="mt-2 flex flex-wrap items-center justify-center gap-x-9 gap-y-4 md:gap-x-12 list-none p-0 h-7 md:h-8"
@@ -485,35 +488,40 @@ function HomePage() {
                 num: "01",
                 label: "Personal",
                 title: (<>You shape the <span className="italic">story.</span></>),
-                body: "Portugal becomes what you want it to be — a private day, a proposal, a celebration, a corporate experience or a full journey. You choose what you want to feel, how you move, and who you share it with.",
+                body: (<>Portugal becomes what you want it to be — a <span className="kw">private</span> day, a proposal, a celebration, a corporate experience or a full journey. You choose what you want to feel, how you move, and who you share it with.</>),
+                pull: "Designed around you, not a template.",
               },
               {
                 Icon: MapPin,
                 num: "02",
                 label: "Place",
                 title: (<>Portugal is the <span className="italic">stage.</span></>),
-                body: "From iconic places to hidden gems, every moment is set in the right place, at the right time — whether it's something simple or something you'll never forget.",
+                body: (<>From iconic places to <span className="kw">hidden gems</span>, every moment is set in the right place, at the right time — whether it's something simple or something you'll never forget.</>),
+                pull: "The right place, at the right hour.",
               },
               {
                 Icon: Compass,
                 num: "03",
                 label: "Local",
                 title: (<>Local, from the <span className="italic">very beginning.</span></>),
-                body: "Everything is guided by real local knowledge — with proximity, care and the kind of insight that only comes from living it.",
+                body: (<>Everything is guided by real <span className="kw">local</span> knowledge — with proximity, care and the kind of insight that only comes from living it.</>),
+                pull: "Locals on the ground, not call-centres.",
               },
               {
                 Icon: Sparkles,
                 num: "04",
                 label: "How you choose",
                 title: (<>A different way to <span className="italic">choose.</span></>),
-                body: "Start from a Signature, tailor selected details, or build your experience from scratch in the Studio — shaping it step by step, in real time.",
+                body: (<>Start from a Signature, tailor selected details, or build your experience from scratch in the Studio — shaping it step by step, in <span className="kw">real time</span>.</>),
+                pull: "Choose, tailor, or build — your call.",
               },
               {
                 Icon: LifeBuoy,
                 num: "05",
                 label: "Supported",
                 title: (<>Simple, clear, <span className="italic">supported.</span></>),
-                body: "Even if this feels new, it's designed to be easy. You decide at your own pace, with local guidance whenever you want it.",
+                body: (<>Even if this feels new, it's designed to be easy. You decide at <span className="kw">your rhythm</span>, with <span className="kw">local guidance</span> whenever you want it.</>),
+                pull: "A local is one message away.",
                 wide: true,
               },
             ].map((b) => (
@@ -524,18 +532,22 @@ function HomePage() {
                   (b.wide ? "md:col-span-2" : "")
                 }
               >
+                {/* Animated gold rule — draws in on reveal */}
+                <span aria-hidden="true" className="gold-rule absolute left-0 top-0" />
                 {/* Gold sweep underline on hover (desktop) */}
                 <span
                   aria-hidden="true"
-                  className="pointer-events-none absolute left-0 top-0 h-px w-full origin-left scale-x-0 bg-[color:var(--gold)] transition-transform duration-500 ease-out group-hover:scale-x-100"
+                  className="pointer-events-none absolute left-0 bottom-0 h-px w-full origin-left scale-x-0 bg-[color:var(--gold)]/60 transition-transform duration-500 ease-out group-hover:scale-x-100"
                 />
                 <div className="flex items-start justify-between gap-4">
-                  <b.Icon
-                    size={22}
-                    strokeWidth={1.5}
-                    aria-hidden="true"
-                    className="text-[color:var(--teal)] transition-transform duration-300 ease-out group-hover:translate-x-0.5"
-                  />
+                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--gold)]/35 bg-[color:var(--ivory)] transition-colors duration-300 group-hover:border-[color:var(--gold)]/70">
+                    <b.Icon
+                      size={18}
+                      strokeWidth={1.5}
+                      aria-hidden="true"
+                      className="text-[color:var(--teal)] transition-transform duration-300 ease-out group-hover:translate-x-0.5"
+                    />
+                  </span>
                   <span className="serif text-[13px] tracking-[0.18em] text-[color:var(--gold)]">
                     {b.num}
                   </span>
@@ -543,11 +555,15 @@ function HomePage() {
                 <span className="mt-5 text-[10.5px] uppercase tracking-[0.32em] text-[color:var(--charcoal-soft)]">
                   {b.label}
                 </span>
-                <h3 className="serif mt-3 text-[1.5rem] md:text-[1.7rem] leading-[1.2] text-[color:var(--charcoal)]">
+                <h3 className="serif mt-3 text-[1.55rem] md:text-[1.85rem] leading-[1.18] text-[color:var(--charcoal)]">
                   {b.title}
                 </h3>
                 <p className="mt-3.5 text-[14.5px] md:text-[15px] text-[color:var(--charcoal-soft)] font-light leading-[1.6]">
                   {b.body}
+                </p>
+                {/* One bold highlighted phrase per card */}
+                <p className="mt-5 serif italic text-[15px] md:text-[16px] leading-[1.4] text-[color:var(--charcoal)] border-l-2 border-[color:var(--gold)] pl-3">
+                  {b.pull}
                 </p>
               </li>
             ))}
@@ -779,37 +795,37 @@ function HomePage() {
         <div className="container-x">
           <div className="grid lg:grid-cols-12 gap-10 lg:gap-14 items-center max-w-6xl mx-auto">
             <div className="lg:col-span-5">
-              <span className="eyebrow inline-flex items-center gap-2">
-                <MapPin size={12} aria-hidden="true" />
-                Experience Studio
+              <span className="eyebrow inline-flex items-center gap-3">
+                <span className="live-dot" aria-hidden="true" />
+                <span>Created in <span className="kw">real time</span></span>
               </span>
-              <h2 id="studio-title" className="t-h2 mt-5">
+              <h2 id="studio-title" className="serif mt-5 text-[2rem] md:text-[2.8rem] leading-[1.05] tracking-[-0.012em] text-[color:var(--charcoal)]">
                 Build a day that <span className="italic">actually fits.</span>
               </h2>
               <p className="mt-5 text-[14.5px] md:text-[15.5px] text-[color:var(--charcoal-soft)] font-light leading-[1.7] max-w-md">
-                Pick stops on a real map. The Studio shows route feasibility, estimated duration, and an estimate breakdown — so you see what works before you commit.
+                Pick stops on a real map. The Studio composes the route as you choose &mdash; feasibility, timing and an estimate breakdown, all updated in <span className="kw">real time</span>, with <span className="kw">local guidance</span> one message away.
               </p>
               <ul className="mt-6 space-y-2.5 text-[13.5px] text-[color:var(--charcoal)] font-light leading-[1.6]">
                 <li className="flex gap-2">
-                  <span aria-hidden="true" className="text-[color:var(--gold)]">·</span>
-                  Real stops only — no invented venues
+                  <span aria-hidden="true" className="text-[color:var(--gold)]">&middot;</span>
+                  Real stops only &mdash; no invented venues
                 </li>
                 <li className="flex gap-2">
-                  <span aria-hidden="true" className="text-[color:var(--gold)]">·</span>
+                  <span aria-hidden="true" className="text-[color:var(--gold)]">&middot;</span>
                   Honest driving times and pace
                 </li>
                 <li className="flex gap-2">
-                  <span aria-hidden="true" className="text-[color:var(--gold)]">·</span>
-                  A local designer reviews every build
+                  <span aria-hidden="true" className="text-[color:var(--gold)]">&middot;</span>
+                  A <span className="kw">local</span> designer reviews every build
                 </li>
               </ul>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
                   to="/builder"
-                  className="inline-flex items-center gap-2 bg-[color:var(--teal)] text-[color:var(--ivory)] px-6 py-3 text-[12px] uppercase tracking-[0.22em] hover:bg-[color:var(--teal-2)] transition-colors"
+                  className="group inline-flex items-center gap-2 bg-[color:var(--teal)] text-[color:var(--ivory)] px-6 py-3 text-[12px] uppercase tracking-[0.22em] hover:bg-[color:var(--teal-2)] transition-colors shadow-[0_4px_14px_-6px_rgba(41,91,97,0.55)]"
                 >
                   Open the studio
-                  <ArrowRight size={14} />
+                  <ArrowRight size={14} className="transition-transform duration-200 group-hover:translate-x-0.5" />
                 </Link>
                 <Link
                   to="/contact"
@@ -818,10 +834,38 @@ function HomePage() {
                   Talk to a designer
                 </Link>
               </div>
+              <p className="mt-5 inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.24em] text-[color:var(--teal)]">
+                <MessageCircle size={12} aria-hidden="true" />
+                Local guidance available while you build
+              </p>
             </div>
             <div className="lg:col-span-7">
               <div className="relative aspect-[4/3] md:aspect-[16/11] overflow-hidden rounded-[2px] border border-[color:var(--border)] bg-[color:var(--ivory)] shadow-[0_8px_24px_-12px_rgba(46,46,46,0.18)]">
                 <LiveMapPreview />
+                <div className="hidden md:flex absolute bottom-4 right-4 flex-col gap-1.5 rounded-[4px] border border-[color:var(--gold)]/30 bg-[color:var(--ivory)]/95 backdrop-blur-sm px-4 py-3 shadow-[0_6px_18px_-8px_rgba(0,0,0,0.35)] max-w-[14rem]">
+                  <span className="inline-flex items-center gap-2 text-[9.5px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
+                    <span className="live-dot" aria-hidden="true" />
+                    Live draft
+                  </span>
+                  <span className="serif text-[15px] leading-[1.2] text-[color:var(--charcoal)]">
+                    4 stops &middot; ~7h &middot; Lisbon &rarr; Algarve
+                  </span>
+                  <span className="text-[10.5px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)]">
+                    Reviewed by a local
+                  </span>
+                </div>
+              </div>
+              <div className="md:hidden mt-4 flex flex-col gap-1.5 rounded-[4px] border border-[color:var(--gold)]/30 bg-[color:var(--ivory)] px-4 py-3 shadow-[0_4px_12px_-8px_rgba(0,0,0,0.25)]">
+                <span className="inline-flex items-center gap-2 text-[9.5px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
+                  <span className="live-dot" aria-hidden="true" />
+                  Live draft
+                </span>
+                <span className="serif text-[15px] leading-[1.2] text-[color:var(--charcoal)]">
+                  4 stops &middot; ~7h &middot; Lisbon &rarr; Algarve
+                </span>
+                <span className="text-[10.5px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)]">
+                  Reviewed by a local
+                </span>
               </div>
             </div>
           </div>
@@ -912,7 +956,7 @@ function HomePage() {
 
           <ul className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 list-none p-0 max-w-5xl mx-auto">
             {groupsAndCelebrations.map((m) => (
-              <li key={m.title}>
+              <li key={m.eyebrow} className="reveal-stagger">
                 <Link
                   to={m.to}
                   className="group relative flex flex-col h-full overflow-hidden rounded-[2px] border border-[color:var(--border)] bg-[color:var(--ivory)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-[color:var(--charcoal)]/25 hover:shadow-[0_10px_24px_-12px_rgba(46,46,46,0.2)] focus-visible:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2"
@@ -923,22 +967,25 @@ function HomePage() {
                       alt=""
                       aria-hidden="true"
                       loading="lazy"
-                      className="absolute inset-0 w-full h-full object-cover"
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-[600ms] ease-out group-hover:scale-[1.03]"
                     />
-                    <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/40 to-transparent" />
-                  </div>
-                  <div className="p-5 md:p-6 flex flex-col gap-2.5">
-                    <span className="inline-flex items-center gap-2 text-[10.5px] uppercase tracking-[0.28em] text-[color:var(--charcoal-soft)]">
-                      <CalendarDays size={12} aria-hidden="true" />
+                    <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/45 to-transparent" />
+                    <span className="absolute left-4 top-4 inline-flex items-center gap-2 rounded-full bg-[color:var(--ivory)]/95 px-3 py-1 text-[10px] uppercase tracking-[0.28em] font-semibold text-[color:var(--charcoal)] shadow-[0_2px_6px_rgba(0,0,0,0.15)]">
+                      <CalendarDays size={11} aria-hidden="true" />
                       {m.eyebrow}
                     </span>
-                    <h3 className="serif text-[1.25rem] md:text-[1.4rem] leading-[1.2] text-[color:var(--charcoal)]">
+                  </div>
+                  <div className="p-6 md:p-7 flex flex-col gap-3 flex-1">
+                    <h3 className="serif text-[1.3rem] md:text-[1.5rem] leading-[1.18] text-[color:var(--charcoal)]">
                       {m.title}
                     </h3>
-                    <p className="text-[13.5px] leading-[1.55] text-[color:var(--charcoal-soft)] font-light">
+                    <p className="text-[13.5px] leading-[1.6] text-[color:var(--charcoal-soft)] font-light">
                       {m.line}
                     </p>
-                    <span className="mt-2 inline-flex items-center gap-1.5 text-[11.5px] uppercase tracking-[0.22em] font-medium text-[color:var(--teal)]">
+                    <p className="text-[10.5px] uppercase tracking-[0.24em] text-[color:var(--gold)]">
+                      {m.detail}
+                    </p>
+                    <span className="mt-auto inline-flex items-center gap-1.5 pt-3 text-[11.5px] uppercase tracking-[0.22em] font-medium text-[color:var(--teal)]">
                       {m.cta}
                       <ArrowRight
                         size={12}

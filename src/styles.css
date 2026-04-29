@@ -2062,5 +2062,69 @@
   .bg-accent-wine  { background-color: var(--accent-wine);  color: var(--ivory-warm); }
   .bg-accent-sea   { background-color: var(--accent-sea);   color: var(--ivory-warm); }
   .bg-accent-olive { background-color: var(--accent-olive); color: var(--ivory-warm); }
+
+  /* Strategic keyword emphasis — applied to single nouns/short phrases
+     ("private", "local", "real time", "your rhythm", etc.). Inherits
+     parent color so it works on light + dark surfaces; medium weight,
+     gentle gold underline that animates in on parent reveal. */
+  .kw {
+    font-weight: 500;
+    color: inherit;
+    background-image: linear-gradient(to right, var(--gold) 0%, var(--gold) 100%);
+    background-repeat: no-repeat;
+    background-size: 100% 1px;
+    background-position: 0 100%;
+    padding-bottom: 1px;
+  }
+  .kw-strong {
+    font-weight: 600;
+    color: var(--charcoal);
+  }
+
+  /* Animated gold rule — thin divider that draws from left to right
+     when its parent enters the viewport via .reveal/.reveal-stagger.
+     Pure CSS, ≤220ms, respects reduced-motion via the global rules. */
+  .gold-rule {
+    display: block;
+    height: 1px;
+    width: 100%;
+    background-color: var(--gold);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 600ms cubic-bezier(0.22, 0.61, 0.36, 1) 120ms;
+  }
+  .reveal.is-visible .gold-rule,
+  .reveal-stagger.is-visible .gold-rule,
+  .is-visible > .gold-rule {
+    transform: scaleX(1);
+  }
+
+  /* "Live" pulse dot — paired with eyebrow text in the Builder section.
+     Single soft pulse, kept subtle so it doesn't read as a notification. */
+  .live-dot {
+    position: relative;
+    display: inline-block;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 9999px;
+    background: var(--gold);
+  }
+  .live-dot::after {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    border-radius: 9999px;
+    background: var(--gold);
+    opacity: 0.35;
+    animation: live-dot-pulse 2200ms cubic-bezier(0.22, 0.61, 0.36, 1) infinite;
+  }
+  @keyframes live-dot-pulse {
+    0%   { transform: scale(0.6); opacity: 0.45; }
+    70%  { transform: scale(1.8); opacity: 0; }
+    100% { transform: scale(1.8); opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .live-dot::after { animation: none; }
+  }
 }
 
