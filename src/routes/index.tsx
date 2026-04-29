@@ -420,7 +420,8 @@ function HomePage() {
           repeated review block. This is the SINGLE review surface on the
           page (per "no repeated review sections" guardrail). */}
       <section
-        className="bg-[color:var(--ivory)] border-b border-[color:var(--border)] section-y-sm"
+        id="reviews"
+        className="bg-[color:var(--ivory)] border-b border-[color:var(--border)] section-y-sm scroll-mt-24 md:scroll-mt-28"
         aria-labelledby="trust-bar-title"
       >
         <h2 id="trust-bar-title" className="sr-only">
