@@ -651,29 +651,90 @@ function HomePage() {
         </div>
       </section>
 
-      {/* 6 — MOMENTS / GROUPS
-          Multi-day + Celebrations + Corporate collapsed into one calm
-          band of 3 cards. Each links to its own dedicated page. No
-          dark editorial dramatics — same card system as the rest of
-          the page so the homepage doesn't feel like a stack of
+      {/* 6 — MULTI-DAY TOURS
+          Multi-day routes get their own breathing room: one wide,
+          editorial card per route family. Same card system as the rest
+          of the page so the homepage doesn't feel like a stack of
           unrelated blocks. */}
       <section
         className="section-y bg-[color:var(--ivory)] border-b border-[color:var(--border)]"
-        aria-labelledby="moments-title"
+        aria-labelledby="multiday-title"
       >
         <div className="container-x">
           <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
-            <span className="eyebrow">Moments & groups</span>
-            <h2 id="moments-title" className="t-h2 mt-5">
+            <span className="eyebrow">Multi-day</span>
+            <h2 id="multiday-title" className="t-h2 mt-5">
+              Routes <span className="italic">across</span> Portugal.
+            </h2>
+            <p className="mt-5 text-[14.5px] md:text-[15.5px] text-[color:var(--charcoal-soft)] font-light leading-[1.6] max-w-md mx-auto">
+              Two to seven days, real driving times, real overnight stops — designed in conversation with a local team.
+            </p>
+          </div>
+
+          <ul className="grid grid-cols-1 list-none p-0 max-w-3xl mx-auto">
+            {multiDay.map((m) => (
+              <li key={m.title}>
+                <Link
+                  to={m.to}
+                  className="group relative flex flex-col md:flex-row h-full overflow-hidden rounded-[2px] border border-[color:var(--border)] bg-[color:var(--ivory)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-[color:var(--charcoal)]/25 hover:shadow-[0_10px_24px_-12px_rgba(46,46,46,0.2)] focus-visible:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2"
+                >
+                  <div className="relative aspect-[4/3] md:aspect-auto md:w-1/2 overflow-hidden bg-[color:var(--card)]">
+                    <img
+                      src={m.img}
+                      alt=""
+                      aria-hidden="true"
+                      loading="lazy"
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                    <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/40 to-transparent" />
+                  </div>
+                  <div className="p-5 md:p-8 flex flex-col gap-2.5 md:w-1/2 md:justify-center">
+                    <span className="inline-flex items-center gap-2 text-[10.5px] uppercase tracking-[0.28em] text-[color:var(--charcoal-soft)]">
+                      <CalendarDays size={12} aria-hidden="true" />
+                      {m.eyebrow}
+                    </span>
+                    <h3 className="serif text-[1.25rem] md:text-[1.55rem] leading-[1.2] text-[color:var(--charcoal)]">
+                      {m.title}
+                    </h3>
+                    <p className="text-[13.5px] leading-[1.55] text-[color:var(--charcoal-soft)] font-light">
+                      {m.line}
+                    </p>
+                    <span className="mt-2 inline-flex items-center gap-1.5 text-[11.5px] uppercase tracking-[0.22em] font-medium text-[color:var(--teal)]">
+                      {m.cta}
+                      <ArrowRight
+                        size={12}
+                        className="transition-transform duration-200 group-hover:translate-x-0.5"
+                      />
+                    </span>
+                  </div>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* 7 — GROUPS & CELEBRATIONS
+          Proposals + Celebrations + Corporate together in one calm
+          band of 3 cards — distinct from multi-day so each occasion
+          type has clear hierarchy. */}
+      <section
+        className="section-y bg-[color:var(--sand)] border-b border-[color:var(--border)]"
+        aria-labelledby="groups-title"
+      >
+        <div className="container-x">
+          <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
+            <span className="eyebrow">Groups & celebrations</span>
+            <h2 id="groups-title" className="t-h2 mt-5">
               When the <span className="italic">occasion</span> is bigger.
             </h2>
             <p className="mt-5 text-[14.5px] md:text-[15.5px] text-[color:var(--charcoal-soft)] font-light leading-[1.6] max-w-md mx-auto">
-              Multi-day routes, private celebrations and corporate groups — designed in conversation with a local team.
+              Proposals, private celebrations and corporate groups — quietly planned by a local team.
             </p>
           </div>
 
           <ul className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 list-none p-0 max-w-5xl mx-auto">
-            {moments.map((m) => (
+            {groupsAndCelebrations.map((m) => (
               <li key={m.title}>
                 <Link
                   to={m.to}
