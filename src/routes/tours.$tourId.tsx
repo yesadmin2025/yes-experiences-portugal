@@ -203,7 +203,7 @@ function TourHero({
               href="#tailor"
               className="flex-1 inline-flex items-center justify-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] px-6 py-4 text-sm tracking-wide transition-all min-h-[52px]"
             >
-              <Sparkles size={14} /> Reserve instantly
+              <Sparkles size={14} /> Request to book
             </a>
             <Link
               to="/tours/$tourId/tailor"
