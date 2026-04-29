@@ -1133,7 +1133,7 @@ function HomePage() {
                 </Link>
                 <Link
                   to="/contact"
-                  className="inline-flex items-center gap-2 text-[12px] uppercase tracking-[0.22em] text-[color:var(--charcoal)] border-b border-[color:var(--charcoal)]/30 pb-1 hover:border-[color:var(--charcoal)] transition-colors"
+                  className="inline-flex items-center gap-2 min-h-[44px] text-[13px] uppercase tracking-[0.18em] font-semibold text-[color:var(--charcoal)] border-b-2 border-[color:var(--charcoal)]/40 pb-1 hover:border-[color:var(--charcoal)] transition-colors"
                 >
                   Talk to a designer
                 </Link>
