@@ -1103,7 +1103,7 @@ function HomePage() {
                 <span className="live-dot" aria-hidden="true" />
                 <span>Created in <span className="kw">real time</span></span>
               </span>
-              <h2 id="studio-title" className="serif mt-5 text-[2rem] md:text-[2.8rem] leading-[1.05] tracking-[-0.012em] text-[color:var(--charcoal)]">
+              <h2 id="studio-title" className="serif mt-5 text-[2.2rem] md:text-[3.1rem] leading-[1.04] tracking-[-0.014em] text-[color:var(--charcoal)] font-medium">
                 Build a day that <span className="italic">actually fits.</span>
               </h2>
               <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] font-light leading-[1.7] max-w-md">
