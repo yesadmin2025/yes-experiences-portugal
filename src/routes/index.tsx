@@ -435,7 +435,7 @@ function HomePage() {
               700+ <span className="italic">five-star reviews</span>
             </p>
             <p className="max-w-md text-[14px] md:text-[15px] text-[color:var(--charcoal-soft)] leading-[1.6] font-light">
-              Private local guides who actually live here — every day designed and confirmed by a small team in Portugal.
+              <span className="kw">Private</span> <span className="kw">local</span> guides who actually live here — every day designed and confirmed by a small team in Portugal.
             </p>
             <ul
               className="mt-2 flex flex-wrap items-center justify-center gap-x-9 gap-y-4 md:gap-x-12 list-none p-0 h-7 md:h-8"
