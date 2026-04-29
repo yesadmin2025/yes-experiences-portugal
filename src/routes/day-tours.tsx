@@ -12,7 +12,7 @@ export const Route = createFileRoute("/day-tours")({
       {
         name: "description",
         content:
-          "Private day experiences across Portugal — Arrábida, Setúbal, Sintra, Évora, Douro and more. Reserve instantly, with real-time confirmation.",
+          "Private day experiences across Portugal — Arrábida, Setúbal, Sintra, Évora, Douro and more. Designed and confirmed personally by a local.",
       },
     ],
   }),
