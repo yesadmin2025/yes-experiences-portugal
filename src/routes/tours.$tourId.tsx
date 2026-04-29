@@ -777,7 +777,7 @@ function FinalCta({ tour }: { tour: SignatureTour }) {
         </div>
 
         <p className="mt-5 text-[11px] uppercase tracking-[0.24em] text-[color:var(--ivory)]/65">
-          Instant confirmation · Secured on this site
+          Personal confirmation · Reviewed by a local
         </p>
       </div>
     </section>
