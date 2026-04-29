@@ -1251,7 +1251,7 @@ function HomePage() {
         <div className="container-x">
           <div className="text-center max-w-2xl mx-auto mb-14 md:mb-20">
             <span className="eyebrow">Groups & celebrations</span>
-            <h2 id="groups-title" className="serif mt-5 text-[2.1rem] md:text-[3.2rem] leading-[1.05] tracking-[-0.012em] text-[color:var(--charcoal)]">
+            <h2 id="groups-title" className="serif mt-5 text-[2.35rem] md:text-[3.6rem] leading-[1.02] tracking-[-0.014em] text-[color:var(--charcoal)] font-medium">
               When the <span className="italic">occasion</span> is bigger.
             </h2>
             <p className="mt-5 text-[15px] md:text-[16.5px] text-[color:var(--charcoal)] font-light leading-[1.6] max-w-md mx-auto">
