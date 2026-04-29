@@ -536,7 +536,7 @@ function MultiDayPage() {
               <MessageCircle size={16} /> Confirm with a local
             </a>
             <p className="mt-2 text-[11px] text-[color:var(--charcoal-soft)] text-center">
-              Secure booking directly on our website through our integrated booking system.
+              A local reviews and confirms your journey personally — usually within hours.
             </p>
           </div>
         </div>
