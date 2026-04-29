@@ -14,6 +14,69 @@ export type Database = {
   }
   public: {
     Tables: {
+      bookings: {
+        Row: {
+          amount_total: number
+          booking_type: Database["public"]["Enums"]["booking_type"]
+          created_at: string
+          currency: string
+          customer_email: string
+          customer_name: string | null
+          customer_phone: string | null
+          guests: number
+          id: string
+          metadata: Json
+          notes: string | null
+          preferred_date: string | null
+          source_journey_id: string | null
+          source_tour_id: string | null
+          status: Database["public"]["Enums"]["booking_status"]
+          stripe_payment_intent_id: string | null
+          stripe_session_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          amount_total: number
+          booking_type: Database["public"]["Enums"]["booking_type"]
+          created_at?: string
+          currency?: string
+          customer_email: string
+          customer_name?: string | null
+          customer_phone?: string | null
+          guests?: number
+          id?: string
+          metadata?: Json
+          notes?: string | null
+          preferred_date?: string | null
+          source_journey_id?: string | null
+          source_tour_id?: string | null
+          status?: Database["public"]["Enums"]["booking_status"]
+          stripe_payment_intent_id?: string | null
+          stripe_session_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          amount_total?: number
+          booking_type?: Database["public"]["Enums"]["booking_type"]
+          created_at?: string
+          currency?: string
+          customer_email?: string
+          customer_name?: string | null
+          customer_phone?: string | null
+          guests?: number
+          id?: string
+          metadata?: Json
+          notes?: string | null
+          preferred_date?: string | null
+          source_journey_id?: string | null
+          source_tour_id?: string | null
+          status?: Database["public"]["Enums"]["booking_status"]
+          stripe_payment_intent_id?: string | null
+          stripe_session_id?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       import_mapping_rules: {
         Row: {
           created_at: string
@@ -185,6 +248,8 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
+      booking_status: "pending" | "paid" | "cancelled" | "refunded" | "failed"
+      booking_type: "tailored" | "builder" | "multi-day" | "signature"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -313,6 +378,8 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "moderator", "user"],
+      booking_status: ["pending", "paid", "cancelled", "refunded", "failed"],
+      booking_type: ["tailored", "builder", "multi-day", "signature"],
     },
   },
 } as const
