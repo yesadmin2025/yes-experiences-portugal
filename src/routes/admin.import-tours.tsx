@@ -815,9 +815,12 @@ function AdminImportPage() {
           </div>
 
           <div className="mt-12 border border-[color:var(--border)] bg-[color:var(--card)] p-5">
-
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex items-center gap-2">
+                <Sliders size={16} className="text-[color:var(--teal)]" />
                 <h2 className="serif text-2xl">Mapping rules</h2>
               </div>
+
               <button
                 onClick={startNewRule}
                 className="inline-flex items-center gap-1.5 border border-[color:var(--border)] hover:border-[color:var(--gold)] px-3 py-1.5 text-xs"
