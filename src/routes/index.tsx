@@ -55,6 +55,9 @@ const signatures = FEATURED_TOUR_IDS
     img: t.img,
     line: t.blurb,
     pace: t.pace,
+    region: t.region,
+    priceFrom: t.priceFrom,
+    durationHours: t.durationHours,
   }));
 
 /* ──────────────────────────────────────────────────────────────────
