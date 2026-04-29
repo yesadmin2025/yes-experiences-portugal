@@ -583,7 +583,7 @@ function HomePage() {
               <Link
                 to="/experiences"
                 data-hero-field="primaryCta"
-                className="hero-cta-button cta-primary group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-start text-left"
+                className="hero-cta-button cta-primary he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-start text-left"
               >
                 <span className="block">Explore Signature Experiences</span>
                 <ArrowRight
