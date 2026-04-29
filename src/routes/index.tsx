@@ -943,7 +943,7 @@ function HomePage() {
                       <p className="text-[14.5px] md:text-[15.5px] leading-[1.65] text-[color:var(--charcoal)] font-light">
                         {p.line}
                       </p>
-                      <span className="mt-auto inline-flex items-center gap-2 pt-3 text-[12px] uppercase tracking-[0.22em] font-medium text-[color:var(--teal)]">
+                      <span className="mt-auto inline-flex items-center gap-2 pt-3 text-[12.5px] uppercase tracking-[0.18em] font-semibold text-[color:var(--teal)]">
                         {p.cta}
                         <ArrowRight
                           size={14}
@@ -1054,7 +1054,7 @@ function HomePage() {
                           <span className="text-[11px] uppercase tracking-[0.22em] text-white/80">
                             {t.durationHours} · Private
                           </span>
-                          <span className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-[0.22em] font-medium text-white">
+                          <span className="inline-flex items-center gap-1.5 text-[12px] uppercase tracking-[0.18em] font-semibold text-white">
                             View
                             <ArrowRight
                               size={12}
@@ -1078,7 +1078,7 @@ function HomePage() {
           <div className="mt-12 md:mt-14 text-center">
             <Link
               to="/experiences"
-              className="inline-flex items-center gap-2 text-[12px] uppercase tracking-[0.24em] font-medium text-[color:var(--charcoal)] border-b border-[color:var(--charcoal)]/30 pb-1 hover:border-[color:var(--charcoal)] transition-colors"
+              className="inline-flex items-center gap-2 min-h-[44px] text-[13px] uppercase tracking-[0.18em] font-semibold text-[color:var(--charcoal)] border-b-2 border-[color:var(--charcoal)]/40 pb-1 hover:border-[color:var(--charcoal)] transition-colors"
             >
               See every Signature
               <ArrowRight size={14} />
@@ -1126,14 +1126,14 @@ function HomePage() {
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
                   to="/builder"
-                  className="he-glow he-sheen group inline-flex items-center gap-2 bg-[color:var(--teal)] text-[color:var(--ivory)] px-6 py-3 text-[12px] uppercase tracking-[0.22em] hover:bg-[color:var(--teal-2)] shadow-[0_4px_14px_-6px_rgba(41,91,97,0.55)]"
+                  className="he-glow he-sheen group inline-flex items-center gap-2 bg-[color:var(--teal)] text-[color:var(--ivory)] px-7 py-3.5 min-h-[44px] text-[13px] uppercase tracking-[0.18em] font-semibold hover:bg-[color:var(--teal-2)] shadow-[0_6px_18px_-8px_rgba(41,91,97,0.6)]"
                 >
                   Open the studio
                   <ArrowRight size={14} className="transition-transform duration-200 group-hover:translate-x-0.5" />
                 </Link>
                 <Link
                   to="/contact"
-                  className="inline-flex items-center gap-2 text-[12px] uppercase tracking-[0.22em] text-[color:var(--charcoal)] border-b border-[color:var(--charcoal)]/30 pb-1 hover:border-[color:var(--charcoal)] transition-colors"
+                  className="inline-flex items-center gap-2 min-h-[44px] text-[13px] uppercase tracking-[0.18em] font-semibold text-[color:var(--charcoal)] border-b-2 border-[color:var(--charcoal)]/40 pb-1 hover:border-[color:var(--charcoal)] transition-colors"
                 >
                   Talk to a designer
                 </Link>
@@ -1225,7 +1225,7 @@ function HomePage() {
                     <p className="text-[14px] leading-[1.6] text-[color:var(--charcoal)] font-light">
                       {m.line}
                     </p>
-                    <span className="mt-2 inline-flex items-center gap-1.5 text-[11.5px] uppercase tracking-[0.22em] font-medium text-[color:var(--teal)]">
+                    <span className="mt-2 inline-flex items-center gap-1.5 text-[12px] uppercase tracking-[0.18em] font-semibold text-[color:var(--teal)]">
                       {m.cta}
                       <ArrowRight
                         size={12}
@@ -1327,7 +1327,7 @@ function HomePage() {
                     </p>
                     <Link
                       to={m.to}
-                      className="he-glow he-sheen mt-6 inline-flex items-center gap-2 self-start bg-[color:var(--teal)] text-[color:var(--ivory)] px-6 py-3 text-[12px] uppercase tracking-[0.22em] font-medium hover:bg-[color:var(--teal-2)] shadow-[0_4px_14px_-6px_rgba(41,91,97,0.55)]"
+                      className="he-glow he-sheen mt-6 inline-flex items-center gap-2 self-start bg-[color:var(--teal)] text-[color:var(--ivory)] px-7 py-3.5 min-h-[44px] text-[13px] uppercase tracking-[0.18em] font-semibold hover:bg-[color:var(--teal-2)] shadow-[0_6px_18px_-8px_rgba(41,91,97,0.6)]"
                     >
                       {m.cta}
                       <ArrowRight
@@ -1376,7 +1376,7 @@ function HomePage() {
             <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
               <Link
                 to="/contact"
-                className="he-glow he-sheen group inline-flex items-center justify-center gap-2 bg-[color:var(--gold)] text-[color:var(--charcoal)] px-7 py-3.5 text-[12px] uppercase tracking-[0.22em] font-medium hover:bg-[color:var(--gold-soft)] shadow-[0_6px_18px_-8px_rgba(201,169,106,0.55)]"
+                className="he-glow he-sheen group inline-flex items-center justify-center gap-2 bg-[color:var(--gold)] text-[color:var(--charcoal)] px-7 py-3.5 min-h-[44px] text-[13px] uppercase tracking-[0.18em] font-semibold hover:bg-[color:var(--gold-soft)] shadow-[0_6px_18px_-8px_rgba(201,169,106,0.55)]"
               >
                 Speak to a local designer
                 <ArrowRight size={14} className="transition-transform duration-200 group-hover:translate-x-0.5" />
