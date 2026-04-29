@@ -33,7 +33,7 @@ function DayToursPage() {
           </h1>
           <p className="mt-5 max-w-xl mx-auto text-[color:var(--charcoal-soft)]">
             Private guides, refined pace, and the parts of Portugal you'll remember most.
-            Reserve instantly — or adjust a few details within the experience to match your rhythm.
+            Request to book — or adjust a few details within the experience to match your rhythm. A local confirms personally within hours.
           </p>
         </div>
       </section>
