@@ -1054,7 +1054,7 @@ function HomePage() {
                           <span className="text-[11px] uppercase tracking-[0.22em] text-white/80">
                             {t.durationHours} · Private
                           </span>
-                          <span className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-[0.22em] font-medium text-white">
+                          <span className="inline-flex items-center gap-1.5 text-[12px] uppercase tracking-[0.18em] font-semibold text-white">
                             View
                             <ArrowRight
                               size={12}
