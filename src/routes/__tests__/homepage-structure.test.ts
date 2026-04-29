@@ -222,14 +222,17 @@ describe("Approved homepage structure (source lock)", () => {
       const rule = spec.requiredSpacing;
       if (rule === null) continue;
       if (rule.kind === "min-h-vh") {
-        it(`#${spec.order} "${spec.name}" uses at least min-h-[${rule.minVh}vh] at mobile`, () => {
+        it(`#${spec.order} "${spec.name}" uses at least min-h-[${rule.minVh}vh] (or h-[${rule.minVh}vh]) at mobile`, () => {
           expect(match).not.toBeNull();
-          // Hero pattern is `min-h-[80vh] md:min-h-[94vh]` — match the
-          // first (mobile) value and check the vh number.
-          const m = match!.className.match(/(?<!:)min-h-\[(\d+)vh\]/);
+          // Hero pattern is `min-h-[80vh] md:min-h-[94vh]`. Editorial
+          // transition uses `h-[58vh] md:h-[70vh]`. Accept either —
+          // both pin a meaningful mobile vertical floor.
+          const m =
+            match!.className.match(/(?<!:)min-h-\[(\d+)vh\]/) ??
+            match!.className.match(/(?<!:)h-\[(\d+)vh\]/);
           expect(
             m,
-            `Section "${spec.name}" must declare a mobile min-h-[Nvh] of at least ${rule.minVh}vh.`,
+            `Section "${spec.name}" must declare a mobile min-h-[Nvh] (or h-[Nvh]) of at least ${rule.minVh}vh.`,
           ).not.toBeNull();
           expect(Number(m![1])).toBeGreaterThanOrEqual(rule.minVh);
         });
