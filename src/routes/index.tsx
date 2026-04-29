@@ -947,59 +947,94 @@ function HomePage() {
         aria-labelledby="groups-title"
       >
         <div className="container-x">
-          <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
+          <div className="text-center max-w-2xl mx-auto mb-14 md:mb-20">
             <span className="eyebrow">Groups & celebrations</span>
-            <h2 id="groups-title" className="t-h2 mt-5">
+            <h2 id="groups-title" className="serif mt-5 text-[2.1rem] md:text-[3.2rem] leading-[1.05] tracking-[-0.012em] text-[color:var(--charcoal)]">
               When the <span className="italic">occasion</span> is bigger.
             </h2>
-            <p className="mt-5 text-[14.5px] md:text-[15.5px] text-[color:var(--charcoal-soft)] font-light leading-[1.6] max-w-md mx-auto">
+            <p className="mt-5 text-[15px] md:text-[16.5px] text-[color:var(--charcoal)] font-light leading-[1.6] max-w-md mx-auto">
               Proposals, private celebrations and corporate groups — quietly planned by a local team.
             </p>
           </div>
 
-          <ul className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 list-none p-0 max-w-5xl mx-auto">
-            {groupsAndCelebrations.map((m) => (
-              <li key={m.eyebrow} className="reveal-stagger">
-                <Link
-                  to={m.to}
-                  className="group relative flex flex-col h-full overflow-hidden rounded-[2px] border border-[color:var(--border)] bg-[color:var(--ivory)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-[color:var(--charcoal)]/25 hover:shadow-[0_10px_24px_-12px_rgba(46,46,46,0.2)] focus-visible:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2"
+          {/* Three premium feature blocks — alternating image/text on
+              tablet+, stacked image-then-text on mobile. Each block:
+              animated category label, soft gold divider, bold serif
+              headline, body with one highlighted phrase, italic pull
+              line, gold detail line, CTA with arrow nudge. */}
+          <div className="max-w-6xl mx-auto flex flex-col gap-16 md:gap-24">
+            {groupsAndCelebrations.map((m, i) => {
+              const reverse = i % 2 === 1;
+              return (
+                <article
+                  key={m.eyebrow}
+                  className="reveal-stagger group grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center"
                 >
-                  <div className="relative aspect-[4/3] overflow-hidden bg-[color:var(--card)]">
-                    <img
-                      src={m.img}
-                      alt=""
-                      aria-hidden="true"
-                      loading="lazy"
-                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-[600ms] ease-out group-hover:scale-[1.03]"
-                    />
-                    <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/45 to-transparent" />
-                    <span className="absolute left-4 top-4 inline-flex items-center gap-2 rounded-full bg-[color:var(--ivory)]/95 px-3 py-1 text-[10px] uppercase tracking-[0.28em] font-semibold text-[color:var(--charcoal)] shadow-[0_2px_6px_rgba(0,0,0,0.15)]">
-                      <CalendarDays size={11} aria-hidden="true" />
+                  {/* Image side */}
+                  <Link
+                    to={m.to}
+                    aria-label={m.cta}
+                    className={
+                      "relative block md:col-span-7 overflow-hidden rounded-[2px] border border-[color:var(--border)] bg-[color:var(--card)] transition-transform duration-300 ease-out group-hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 " +
+                      (reverse ? "md:order-2" : "md:order-1")
+                    }
+                  >
+                    <div className="relative aspect-[4/3] md:aspect-[5/4] overflow-hidden">
+                      <img
+                        src={m.img}
+                        alt=""
+                        aria-hidden="true"
+                        loading="lazy"
+                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-[700ms] ease-out group-hover:scale-[1.03]"
+                      />
+                      <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/40 via-[color:var(--charcoal-deep)]/10 to-transparent" />
+                      {/* Subtle animated category label */}
+                      <span className="absolute left-4 top-4 inline-flex items-center gap-2 rounded-full bg-[color:var(--ivory)]/95 px-3.5 py-1.5 text-[10px] uppercase tracking-[0.28em] font-semibold text-[color:var(--charcoal)] shadow-[0_2px_6px_rgba(0,0,0,0.18)] transition-transform duration-300 ease-out group-hover:-translate-y-0.5">
+                        <CalendarDays size={11} aria-hidden="true" />
+                        {m.eyebrow}
+                      </span>
+                    </div>
+                  </Link>
+
+                  {/* Text side */}
+                  <div
+                    className={
+                      "md:col-span-5 flex flex-col " +
+                      (reverse ? "md:order-1" : "md:order-2")
+                    }
+                  >
+                    {/* Soft gold divider — animates from left on reveal */}
+                    <span aria-hidden="true" className="gold-rule mb-5 max-w-[3.5rem]" />
+                    <span className="text-[10.5px] uppercase tracking-[0.32em] font-semibold text-[color:var(--charcoal-soft)]">
                       {m.eyebrow}
                     </span>
-                  </div>
-                  <div className="p-6 md:p-7 flex flex-col gap-3 flex-1">
-                    <h3 className="serif text-[1.3rem] md:text-[1.5rem] leading-[1.18] text-[color:var(--charcoal)]">
+                    <h3 className="serif mt-3 text-[1.7rem] md:text-[2.15rem] leading-[1.12] tracking-[-0.008em] text-[color:var(--charcoal)] font-medium">
                       {m.title}
                     </h3>
-                    <p className="text-[13.5px] leading-[1.6] text-[color:var(--charcoal-soft)] font-light">
+                    <p className="mt-4 text-[15px] md:text-[16px] leading-[1.7] text-[color:var(--charcoal)] font-light">
                       {m.line}
                     </p>
-                    <p className="text-[10.5px] uppercase tracking-[0.24em] text-[color:var(--gold)]">
+                    <p className="mt-4 serif italic text-[15.5px] md:text-[16.5px] leading-[1.4] text-[color:var(--charcoal)] border-l-2 border-[color:var(--gold)] pl-3.5">
+                      {m.pull}
+                    </p>
+                    <p className="mt-5 text-[10.5px] uppercase tracking-[0.24em] font-medium text-[color:var(--gold)]">
                       {m.detail}
                     </p>
-                    <span className="mt-auto inline-flex items-center gap-1.5 pt-3 text-[11.5px] uppercase tracking-[0.22em] font-medium text-[color:var(--teal)]">
+                    <Link
+                      to={m.to}
+                      className="mt-6 inline-flex items-center gap-2 self-start bg-[color:var(--teal)] text-[color:var(--ivory)] px-6 py-3 text-[12px] uppercase tracking-[0.22em] font-medium hover:bg-[color:var(--teal-2)] transition-colors shadow-[0_4px_14px_-6px_rgba(41,91,97,0.55)]"
+                    >
                       {m.cta}
                       <ArrowRight
-                        size={12}
+                        size={14}
                         className="transition-transform duration-200 group-hover:translate-x-0.5"
                       />
-                    </span>
+                    </Link>
                   </div>
-                </Link>
-              </li>
-            ))}
-          </ul>
+                </article>
+              );
+            })}
+          </div>
         </div>
       </section>
 
