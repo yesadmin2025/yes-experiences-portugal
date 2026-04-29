@@ -859,12 +859,13 @@ function HomePage() {
                   </span>
                 </div>
               </div>
-              <div className="md:hidden mt-4 flex flex-col gap-1.5 rounded-[4px] border border-[color:var(--gold)]/30 bg-[color:var(--ivory)] px-4 py-3 shadow-[0_4px_12px_-8px_rgba(0,0,0,0.25)]">
-                <span className="inline-flex items-center gap-2 text-[9.5px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
+              <div className="reveal md:hidden mt-4 flex flex-col gap-1.5 rounded-[4px] border border-[color:var(--gold)]/35 bg-[color:var(--ivory)] px-4 py-3.5 shadow-[0_6px_16px_-8px_rgba(0,0,0,0.28)]">
+                <span aria-hidden="true" className="gold-rule mb-1 max-w-[2.5rem]" />
+                <span className="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.28em] font-semibold text-[color:var(--gold)]">
                   <span className="live-dot" aria-hidden="true" />
                   Live draft
                 </span>
-                <span className="serif text-[15px] leading-[1.2] text-[color:var(--charcoal)]">
+                <span className="serif text-[15.5px] leading-[1.2] text-[color:var(--charcoal)]">
                   4 stops &middot; ~7h &middot; Lisbon &rarr; Algarve
                 </span>
                 <span className="text-[10.5px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)]">
