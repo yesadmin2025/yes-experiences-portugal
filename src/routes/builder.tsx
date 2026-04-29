@@ -56,7 +56,7 @@ export const Route = createFileRoute("/builder")({
       {
         name: "description",
         content:
-          "Start your way. We'll guide you as you build — shaping your private Portugal experience within what works best on the ground. Reserve instantly when ready.",
+          "Start your way. We'll guide you as you build — shaping your private Portugal experience within what works best on the ground. Confirmed personally by a local.",
       },
       { property: "og:title", content: "YES Experience Studio" },
       {
