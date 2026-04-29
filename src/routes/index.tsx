@@ -477,143 +477,97 @@ function HomePage() {
             </p>
           </div>
 
-          {/* Editorial blocks — asymmetric, not a rigid grid.
-              Block 1 spans full width; 2 + 3 share a row; 4 spans full
-              width with image-left; 5 is a quiet closing band. */}
-          <div className="max-w-6xl mx-auto flex flex-col gap-14 md:gap-20">
-            {/* Block 1 — You shape the story (full-width, image-right) */}
-            <article className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center">
-              <div className="md:col-span-5 md:order-2">
-                <div className="relative aspect-[4/5] overflow-hidden rounded-[2px] bg-[color:var(--card)]">
-                  <img
-                    src={imgSintraEstates}
-                    alt="A guest walking through a private estate in Sintra at golden hour"
-                    loading="lazy"
-                    className="absolute inset-0 w-full h-full object-cover"
-                  />
-                </div>
-              </div>
-              <div className="md:col-span-7 md:order-1">
-                <span className="text-[10.5px] uppercase tracking-[0.32em] text-[color:var(--gold)]">
-                  01 — Personal
+          {/* Editorial icon grid — 5 blocks, 2 columns desktop / 1 column
+              mobile. No images, no cards, no shadows. Small teal icons,
+              uppercase eyebrow label, serif headline, light body. The
+              fifth block sits centered on its own row. */}
+          <ul className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-14 md:gap-y-20 list-none p-0">
+            {[
+              {
+                Icon: Feather,
+                label: "Personal",
+                title: (
+                  <>
+                    You shape the <span className="italic">story.</span>
+                  </>
+                ),
+                body: "Portugal becomes what you want it to be — a private day, a proposal, a celebration, a corporate experience or a full journey. You choose what you want to feel, how you move, and who you share it with.",
+              },
+              {
+                Icon: MapPin,
+                label: "Place",
+                title: (
+                  <>
+                    Portugal is the <span className="italic">stage.</span>
+                  </>
+                ),
+                body: "From iconic places to hidden gems, every moment is set in the right place, at the right time — whether it's something simple or something you'll never forget.",
+              },
+              {
+                Icon: Compass,
+                label: "Local",
+                title: (
+                  <>
+                    Local, from the <span className="italic">very beginning.</span>
+                  </>
+                ),
+                body: "Everything is guided by real local knowledge — with proximity, care and the kind of insight that only comes from living it.",
+              },
+              {
+                Icon: Sparkles,
+                label: "How",
+                title: (
+                  <>
+                    A different way to choose <span className="italic">and book.</span>
+                  </>
+                ),
+                body: "Start from a Signature, tailor selected details, or build your experience from scratch in the Studio — shaping it step by step, in real time.",
+              },
+            ].map((b) => (
+              <li key={b.label} className="flex flex-col">
+                <b.Icon
+                  size={22}
+                  strokeWidth={1.5}
+                  aria-hidden="true"
+                  className="text-[color:var(--teal)]"
+                />
+                <span className="mt-5 text-[10.5px] uppercase tracking-[0.32em] text-[color:var(--gold)]">
+                  {b.label}
                 </span>
-                <h3 className="serif mt-4 text-[1.7rem] md:text-[2.2rem] leading-[1.15] text-[color:var(--charcoal)]">
-                  You shape the <span className="italic">story.</span>
+                <h3 className="serif mt-3 text-[1.5rem] md:text-[1.7rem] leading-[1.2] text-[color:var(--charcoal)]">
+                  {b.title}
                 </h3>
-                <p className="mt-5 text-[15px] md:text-[16px] text-[color:var(--charcoal-soft)] font-light leading-[1.75]">
-                  Portugal becomes what you want it to be — a private day, a
-                  proposal, a celebration, a corporate experience or a full
-                  journey. You choose what you want to feel, how you move, and
-                  who you share it with.
+                <p className="mt-4 text-[15px] md:text-[15.5px] text-[color:var(--charcoal-soft)] font-light leading-[1.8]">
+                  {b.body}
                 </p>
-              </div>
-            </article>
+              </li>
+            ))}
 
-            {/* Blocks 2 + 3 — paired editorial cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-14">
-              <article>
-                <div className="relative aspect-[3/2] overflow-hidden rounded-[2px] bg-[color:var(--card)] mb-6">
-                  <img
-                    src={imgArrabidaBoatCoves}
-                    alt="A hidden cove on the Arrábida coast — quiet, blue, unmarked on most maps"
-                    loading="lazy"
-                    className="absolute inset-0 w-full h-full object-cover"
-                  />
-                </div>
-                <span className="text-[10.5px] uppercase tracking-[0.32em] text-[color:var(--gold)]">
-                  02 — Place
-                </span>
-                <h3 className="serif mt-4 text-[1.45rem] md:text-[1.7rem] leading-[1.2] text-[color:var(--charcoal)]">
-                  Portugal is the <span className="italic">stage.</span>
-                </h3>
-                <p className="mt-4 text-[14.5px] md:text-[15.5px] text-[color:var(--charcoal-soft)] font-light leading-[1.7]">
-                  From iconic places to hidden gems, every moment is set in the
-                  right place, at the right time — whether it's something
-                  simple or something you'll never forget.
-                </p>
-              </article>
-
-              <article>
-                <div className="relative aspect-[3/2] overflow-hidden rounded-[2px] bg-[color:var(--card)] mb-6">
-                  <img
-                    src={imgArrabidaWineLunch}
-                    alt="A shared lunch with a local host in Arrábida"
-                    loading="lazy"
-                    className="absolute inset-0 w-full h-full object-cover"
-                  />
-                </div>
-                <span className="text-[10.5px] uppercase tracking-[0.32em] text-[color:var(--gold)]">
-                  03 — Local
-                </span>
-                <h3 className="serif mt-4 text-[1.45rem] md:text-[1.7rem] leading-[1.2] text-[color:var(--charcoal)]">
-                  Local, from the <span className="italic">very beginning.</span>
-                </h3>
-                <p className="mt-4 text-[14.5px] md:text-[15.5px] text-[color:var(--charcoal-soft)] font-light leading-[1.7]">
-                  Everything is guided by real local knowledge — with
-                  proximity, care and the kind of insight that only comes from
-                  living it.
-                </p>
-              </article>
-            </div>
-
-            {/* Block 4 — A different way to choose and book (full-width, image-left) */}
-            <article className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center">
-              <div className="md:col-span-5">
-                <div className="relative aspect-[4/5] overflow-hidden rounded-[2px] bg-[color:var(--card)]">
-                  <img
-                    src={imgArrabidaWineHero}
-                    alt="A private day in Arrábida — designed by a local team and confirmed before it begins"
-                    loading="lazy"
-                    className="absolute inset-0 w-full h-full object-cover"
-                  />
-                </div>
-              </div>
-              <div className="md:col-span-7">
-                <span className="text-[10.5px] uppercase tracking-[0.32em] text-[color:var(--gold)]">
-                  04 — How you choose
-                </span>
-                <h3 className="serif mt-4 text-[1.7rem] md:text-[2.2rem] leading-[1.15] text-[color:var(--charcoal)]">
-                  A different way to choose{" "}
-                  <span className="italic">and book.</span>
-                </h3>
-                <p className="mt-5 text-[15px] md:text-[16px] text-[color:var(--charcoal-soft)] font-light leading-[1.75]">
-                  Start from a Signature, tailor selected details, or build
-                  your experience from scratch in the Studio — shaping it step
-                  by step, in real time.
-                </p>
-                <div className="mt-7 flex flex-wrap gap-x-6 gap-y-3 text-[12px] uppercase tracking-[0.24em] text-[color:var(--charcoal-soft)]">
-                  <span className="inline-flex items-center gap-2">
-                    <BookOpen size={12} aria-hidden="true" /> Signature
-                  </span>
-                  <span className="inline-flex items-center gap-2">
-                    <Wand2 size={12} aria-hidden="true" /> Tailored
-                  </span>
-                  <span className="inline-flex items-center gap-2">
-                    <Sparkles size={12} aria-hidden="true" /> Studio
-                  </span>
-                </div>
-              </div>
-            </article>
-
-            {/* Block 5 — Simple, clear, supported (closing band, no image) */}
-            <article className="border-t border-[color:var(--border)] pt-12 md:pt-16 max-w-3xl mx-auto text-center">
-              <span className="text-[10.5px] uppercase tracking-[0.32em] text-[color:var(--gold)]">
-                05 — Simple & supported
+            {/* Block 5 — Support, centered on its own row */}
+            <li className="flex flex-col md:col-span-2 md:items-center md:text-center md:max-w-2xl md:mx-auto md:pt-6 md:border-t md:border-[color:var(--gold)]/25">
+              <LifeBuoy
+                size={22}
+                strokeWidth={1.5}
+                aria-hidden="true"
+                className="text-[color:var(--teal)] md:mt-8"
+              />
+              <span className="mt-5 text-[10.5px] uppercase tracking-[0.32em] text-[color:var(--gold)]">
+                Support
               </span>
-              <h3 className="serif mt-4 text-[1.7rem] md:text-[2.1rem] leading-[1.15] text-[color:var(--charcoal)]">
+              <h3 className="serif mt-3 text-[1.5rem] md:text-[1.7rem] leading-[1.2] text-[color:var(--charcoal)]">
                 Simple, clear, <span className="italic">supported.</span>
               </h3>
-              <p className="mt-5 text-[15px] md:text-[16px] text-[color:var(--charcoal-soft)] font-light leading-[1.75]">
+              <p className="mt-4 text-[15px] md:text-[15.5px] text-[color:var(--charcoal-soft)] font-light leading-[1.8]">
                 Even if this feels new, it's designed to be easy. You decide at
                 your own pace, with instant confirmation and local guidance
                 whenever you want it.
               </p>
-              <p className="mt-8 inline-flex items-center gap-2 text-[12px] uppercase tracking-[0.24em] text-[color:var(--teal)]">
+              <p className="mt-6 inline-flex items-center gap-2 text-[12px] uppercase tracking-[0.24em] text-[color:var(--teal)]">
                 <MessageCircle size={13} aria-hidden="true" />
                 A local is one message away
               </p>
-            </article>
-          </div>
+            </li>
+          </ul>
         </div>
       </section>
 
