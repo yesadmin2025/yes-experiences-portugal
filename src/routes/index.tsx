@@ -594,7 +594,7 @@ function HomePage() {
               <Link
                 to="/builder"
                 data-hero-field="secondaryCta"
-                className="hero-cta-button cta-secondary-dark group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-start text-left"
+                className="hero-cta-button cta-secondary-dark he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-start text-left"
               >
                 <span className="block">Build your private journey</span>
                 <ArrowRight
