@@ -199,15 +199,17 @@ export const Route = createFileRoute("/")({
 });
 
 /* ════════════════════════════════════════════════════════════════
- * HOMEPAGE — 8 sections (Patch 2B refactor)
+ * HOMEPAGE — 10 sections (Patch 2C — Why YES inserted)
  * 1. Hero
  * 2. Trust strip
- * 3. Start here decision block
- * 4. Signature experiences preview
- * 5. Experience Studio preview
- * 6. Moments / Groups
- * 7. FAQ
- * 8. Final CTA — Talk to a local
+ * 3. Why YES — editorial manifesto (5 blocks)
+ * 4. Start here decision block
+ * 5. Signature experiences preview
+ * 6. Experience Studio preview
+ * 7. Multi-day tours
+ * 8. Groups & celebrations
+ * 9. FAQ
+ * 10. Final CTA — Talk to a local
  * ════════════════════════════════════════════════════════════ */
 function HomePage() {
   return (
