@@ -765,7 +765,7 @@ function FinalCta({ tour }: { tour: SignatureTour }) {
             href="#tailor"
             className="inline-flex items-center justify-center gap-2 bg-[color:var(--gold)] hover:bg-[color:var(--gold-soft)] text-[color:var(--charcoal)] px-7 py-4 text-sm tracking-wide transition-all min-h-[52px]"
           >
-            <Sparkles size={14} /> Reserve instantly
+            <Sparkles size={14} /> Request to book
           </a>
           <Link
             to="/tours/$tourId/tailor"
