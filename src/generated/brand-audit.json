@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-29T04:49:14.506Z",
+  "generatedAt": "2026-04-29T04:51:34.281Z",
   "filesScanned": 104,
   "approvedPalette": {
     "teal": "#295B61",
@@ -18,10 +18,10 @@
     "#cccccc"
   ],
   "counts": {
-    "total": 186,
-    "approved": 26,
+    "total": 177,
+    "approved": 41,
     "allowlisted": 27,
-    "mismatch": 133
+    "mismatch": 109
   },
   "findings": [
     {
@@ -1349,106 +1349,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 80,
-      "col": 10,
-      "raw": "#141518",
-      "normalized": "#141518",
-      "snippet": "--ink: #141518;",
-      "status": "mismatch"
-    },
-    {
-      "file": "src/styles.css",
-      "line": 81,
-      "col": 15,
-      "raw": "#5F6670",
-      "normalized": "#5f6670",
-      "snippet": "--ink-soft: #5F6670;",
-      "status": "mismatch"
-    },
-    {
-      "file": "src/styles.css",
-      "line": 82,
-      "col": 17,
-      "raw": "#F7F3EE",
-      "normalized": "#f7f3ee",
-      "snippet": "--ivory-warm: #F7F3EE;",
-      "status": "mismatch"
-    },
-    {
-      "file": "src/styles.css",
-      "line": 83,
-      "col": 12,
-      "raw": "#E7DDD0",
-      "normalized": "#e7ddd0",
-      "snippet": "--stone: #E7DDD0;",
-      "status": "mismatch"
-    },
-    {
-      "file": "src/styles.css",
-      "line": 84,
-      "col": 17,
-      "raw": "#D8CEC2",
-      "normalized": "#d8cec2",
-      "snippet": "--stone-line: #D8CEC2;",
-      "status": "mismatch"
-    },
-    {
-      "file": "src/styles.css",
-      "line": 85,
-      "col": 19,
-      "raw": "#FFFFFF",
-      "normalized": "#ffffff",
-      "snippet": "--surface-warm: #FFFFFF;",
-      "status": "allowlisted"
-    },
-    {
-      "file": "src/styles.css",
-      "line": 86,
-      "col": 20,
-      "raw": "#F1EADF",
-      "normalized": "#f1eadf",
-      "snippet": "--surface-muted: #F1EADF;",
-      "status": "mismatch"
-    },
-    {
-      "file": "src/styles.css",
-      "line": 88,
-      "col": 18,
-      "raw": "#6E3B2E",
-      "normalized": "#6e3b2e",
-      "snippet": "--accent-wine: #6E3B2E;",
-      "status": "mismatch"
-    },
-    {
-      "file": "src/styles.css",
-      "line": 89,
-      "col": 17,
-      "raw": "#295A73",
-      "normalized": "#295a73",
-      "snippet": "--accent-sea: #295A73;",
-      "status": "mismatch"
-    },
-    {
-      "file": "src/styles.css",
-      "line": 90,
-      "col": 19,
-      "raw": "#5B6B52",
-      "normalized": "#5b6b52",
-      "snippet": "--accent-olive: #5B6B52;",
-      "status": "mismatch"
-    },
-    {
-      "file": "src/styles.css",
-      "line": 91,
-      "col": 18,
-      "raw": "#B28B57",
-      "normalized": "#b28b57",
-      "snippet": "--accent-gold: #B28B57;",
-      "status": "mismatch"
-    },
-    {
-      "file": "src/styles.css",
-      "line": 135,
+      "line": 140,
       "col": 11,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -1457,7 +1358,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 137,
+      "line": 142,
       "col": 14,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -1466,7 +1367,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 148,
+      "line": 153,
       "col": 29,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -1475,7 +1376,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 270,
+      "line": 275,
       "col": 11,
       "raw": "#1f1f1f",
       "normalized": "#1f1f1f",
@@ -1484,7 +1385,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 302,
+      "line": 307,
       "col": 66,
       "raw": "#555",
       "normalized": "#555555",
@@ -1493,7 +1394,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 829,
+      "line": 834,
       "col": 12,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -1502,7 +1403,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 1016,
+      "line": 1021,
       "col": 12,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -1511,7 +1412,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 1269,
+      "line": 1274,
       "col": 12,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -1520,7 +1421,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 1980,
+      "line": 1985,
       "col": 23,
       "raw": "#000",
       "normalized": "#000000",
@@ -1547,66 +1448,102 @@
     },
     {
       "file": "src/tailwind.config.lov.json",
-      "line": 292,
+      "line": 293,
       "col": 22,
-      "raw": "#F7F3EE",
-      "normalized": "#f7f3ee",
-      "snippet": "\"background\": \"#F7F3EE\",",
-      "status": "mismatch"
+      "raw": "#2E2E2E",
+      "normalized": "#2e2e2e",
+      "snippet": "\"foreground\": \"#2E2E2E\",",
+      "status": "approved"
     },
     {
       "file": "src/tailwind.config.lov.json",
       "line": 294,
       "col": 16,
-      "raw": "#FFFFFF",
+      "raw": "#ffffff",
       "normalized": "#ffffff",
-      "snippet": "\"card\": \"#FFFFFF\",",
+      "snippet": "\"card\": \"#ffffff\",",
       "status": "allowlisted"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 295,
+      "col": 27,
+      "raw": "#2E2E2E",
+      "normalized": "#2e2e2e",
+      "snippet": "\"card-foreground\": \"#2E2E2E\",",
+      "status": "approved"
     },
     {
       "file": "src/tailwind.config.lov.json",
       "line": 296,
       "col": 19,
-      "raw": "#FFFFFF",
+      "raw": "#ffffff",
       "normalized": "#ffffff",
-      "snippet": "\"popover\": \"#FFFFFF\",",
+      "snippet": "\"popover\": \"#ffffff\",",
       "status": "allowlisted"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 297,
+      "col": 30,
+      "raw": "#2E2E2E",
+      "normalized": "#2e2e2e",
+      "snippet": "\"popover-foreground\": \"#2E2E2E\",",
+      "status": "approved"
     },
     {
       "file": "src/tailwind.config.lov.json",
       "line": 299,
       "col": 30,
-      "raw": "#F7F3EE",
-      "normalized": "#f7f3ee",
-      "snippet": "\"primary-foreground\": \"#F7F3EE\",",
-      "status": "mismatch"
+      "raw": "#FAF8F3",
+      "normalized": "#faf8f3",
+      "snippet": "\"primary-foreground\": \"#FAF8F3\",",
+      "status": "approved"
     },
     {
       "file": "src/tailwind.config.lov.json",
       "line": 300,
       "col": 21,
-      "raw": "#F1EADF",
-      "normalized": "#f1eadf",
-      "snippet": "\"secondary\": \"#F1EADF\",",
-      "status": "mismatch"
+      "raw": "#F4EFE7",
+      "normalized": "#f4efe7",
+      "snippet": "\"secondary\": \"#F4EFE7\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 301,
+      "col": 32,
+      "raw": "#2E2E2E",
+      "normalized": "#2e2e2e",
+      "snippet": "\"secondary-foreground\": \"#2E2E2E\",",
+      "status": "approved"
     },
     {
       "file": "src/tailwind.config.lov.json",
       "line": 302,
       "col": 17,
-      "raw": "#F1EADF",
-      "normalized": "#f1eadf",
-      "snippet": "\"muted\": \"#F1EADF\",",
-      "status": "mismatch"
+      "raw": "#F4EFE7",
+      "normalized": "#f4efe7",
+      "snippet": "\"muted\": \"#F4EFE7\",",
+      "status": "approved"
     },
     {
       "file": "src/tailwind.config.lov.json",
-      "line": 303,
-      "col": 28,
-      "raw": "#5F6670",
-      "normalized": "#5f6670",
-      "snippet": "\"muted-foreground\": \"#5F6670\",",
-      "status": "mismatch"
+      "line": 304,
+      "col": 18,
+      "raw": "#C9A96A",
+      "normalized": "#c9a96a",
+      "snippet": "\"accent\": \"#C9A96A\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 305,
+      "col": 29,
+      "raw": "#2E2E2E",
+      "normalized": "#2e2e2e",
+      "snippet": "\"accent-foreground\": \"#2E2E2E\",",
+      "status": "approved"
     },
     {
       "file": "src/tailwind.config.lov.json",
@@ -1619,84 +1556,66 @@
     },
     {
       "file": "src/tailwind.config.lov.json",
-      "line": 308,
-      "col": 18,
-      "raw": "#D8CEC2",
-      "normalized": "#d8cec2",
-      "snippet": "\"border\": \"#D8CEC2\",",
-      "status": "mismatch"
-    },
-    {
-      "file": "src/tailwind.config.lov.json",
-      "line": 309,
-      "col": 17,
-      "raw": "#D8CEC2",
-      "normalized": "#d8cec2",
-      "snippet": "\"input\": \"#D8CEC2\",",
-      "status": "mismatch"
-    },
-    {
-      "file": "src/tailwind.config.lov.json",
       "line": 311,
       "col": 16,
-      "raw": "#B28B57",
-      "normalized": "#b28b57",
-      "snippet": "\"gold\": \"#B28B57\",",
-      "status": "mismatch"
+      "raw": "#C9A96A",
+      "normalized": "#c9a96a",
+      "snippet": "\"gold\": \"#C9A96A\",",
+      "status": "approved"
     },
     {
       "file": "src/tailwind.config.lov.json",
       "line": 312,
-      "col": 41,
-      "raw": "#B28B57",
-      "normalized": "#b28b57",
-      "snippet": "\"gold-soft\": \"color-mix(in oklab, #B28B57 55%, #F7F3EE)\",",
-      "status": "mismatch"
-    },
-    {
-      "file": "src/tailwind.config.lov.json",
-      "line": 312,
-      "col": 54,
-      "raw": "#F7F3EE",
-      "normalized": "#f7f3ee",
-      "snippet": "\"gold-soft\": \"color-mix(in oklab, #B28B57 55%, #F7F3EE)\",",
-      "status": "mismatch"
+      "col": 21,
+      "raw": "#E1CFA6",
+      "normalized": "#e1cfa6",
+      "snippet": "\"gold-soft\": \"#E1CFA6\",",
+      "status": "approved"
     },
     {
       "file": "src/tailwind.config.lov.json",
       "line": 314,
       "col": 18,
-      "raw": "#295A73",
-      "normalized": "#295a73",
-      "snippet": "\"teal-2\": \"#295A73\",",
-      "status": "mismatch"
+      "raw": "#2A7C82",
+      "normalized": "#2a7c82",
+      "snippet": "\"teal-2\": \"#2A7C82\",",
+      "status": "approved"
     },
     {
       "file": "src/tailwind.config.lov.json",
       "line": 315,
       "col": 17,
-      "raw": "#F7F3EE",
-      "normalized": "#f7f3ee",
-      "snippet": "\"ivory\": \"#F7F3EE\",",
-      "status": "mismatch"
+      "raw": "#FAF8F3",
+      "normalized": "#faf8f3",
+      "snippet": "\"ivory\": \"#FAF8F3\",",
+      "status": "approved"
     },
     {
       "file": "src/tailwind.config.lov.json",
       "line": 316,
       "col": 16,
-      "raw": "#F1EADF",
-      "normalized": "#f1eadf",
-      "snippet": "\"sand\": \"#F1EADF\",",
-      "status": "mismatch"
+      "raw": "#F4EFE7",
+      "normalized": "#f4efe7",
+      "snippet": "\"sand\": \"#F4EFE7\",",
+      "status": "approved"
     },
     {
       "file": "src/tailwind.config.lov.json",
-      "line": 318,
+      "line": 317,
+      "col": 20,
+      "raw": "#2E2E2E",
+      "normalized": "#2e2e2e",
+      "snippet": "\"charcoal\": \"#2E2E2E\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 319,
       "col": 25,
-      "raw": "#5F6670",
-      "normalized": "#5f6670",
-      "snippet": "\"charcoal-soft\": \"#5F6670\",",
-      "status": "mismatch"
+      "raw": "#1F1F1F",
+      "normalized": "#1f1f1f",
+      "snippet": "\"charcoal-deep\": \"#1F1F1F\"",
+      "status": "allowlisted"
     }
   ]
 }
