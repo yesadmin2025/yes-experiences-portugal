@@ -693,7 +693,7 @@ function HomePage() {
         </div>
       </section>
 
-      {/* 4 — SIGNATURE EXPERIENCES PREVIEW
+      {/* 5 — SIGNATURE EXPERIENCES PREVIEW
           Up to 4 real Signature tours. Each card uses the tour's real
           hero image (sourced from the matching Viator page), real title
           and real blurb from `signatureTours`. No vague taglines, no
@@ -765,7 +765,7 @@ function HomePage() {
         </div>
       </section>
 
-      {/* 5 — EXPERIENCE STUDIO PREVIEW
+      {/* 6 — EXPERIENCE STUDIO PREVIEW
           One clean band: map + route + summary. No "live" claim, no
           decorative blobs, no glow. Emphasizes route realism, timing,
           and human support. */}
@@ -825,7 +825,7 @@ function HomePage() {
         </div>
       </section>
 
-      {/* 6 — MULTI-DAY TOURS
+      {/* 7 — MULTI-DAY TOURS
           Multi-day routes get their own breathing room: one wide,
           editorial card per route family. Same card system as the rest
           of the page so the homepage doesn't feel like a stack of
@@ -888,7 +888,7 @@ function HomePage() {
         </div>
       </section>
 
-      {/* 7 — GROUPS & CELEBRATIONS
+      {/* 8 — GROUPS & CELEBRATIONS
           Proposals + Celebrations + Corporate together in one calm
           band of 3 cards — distinct from multi-day so each occasion
           type has clear hierarchy. */}
@@ -950,7 +950,7 @@ function HomePage() {
         </div>
       </section>
 
-      {/* 8 — FAQ
+      {/* 9 — FAQ
           Reuses the shared FAQ component, which renders its own
           labelled landmark with visible expandable answers. The wrapper
           section below carries the spacing class the lock checks; the
@@ -959,7 +959,7 @@ function HomePage() {
         <FAQ />
       </section>
 
-      {/* 9 — FINAL CTA — Talk to a local
+      {/* 10 — FINAL CTA — Talk to a local
           Distinct from the hero CTAs (Explore Signatures / Build) — this
           is the human escape hatch. No duplicate CTA band; one purpose,
           one button. */}
