@@ -474,8 +474,55 @@ function HomePage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Effect 3 — homepage-only parallax driver. Writes `--parallax-y` to
+  // every `.he-parallax` / `.he-parallax-counter` element via rAF on
+  // scroll. Disabled for prefers-reduced-motion. Caps travel so it
+  // stays "everyday", never woozy.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const els = Array.from(
+      document.querySelectorAll<HTMLElement>(
+        ".he-parallax, .he-parallax-counter",
+      ),
+    );
+    if (!els.length) return;
+
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const vh = window.innerHeight || 1;
+      for (const el of els) {
+        const rect = el.getBoundingClientRect();
+        // Skip when fully off-screen.
+        if (rect.bottom < -200 || rect.top > vh + 200) continue;
+        // Normalised position: -1 (above viewport) → 0 (centred) → 1 (below).
+        const center = rect.top + rect.height / 2;
+        const t = (center - vh / 2) / vh; // ~ -1..1 across viewport
+        // Cap travel: ±18px on phones, ±28px on larger screens.
+        const cap = window.innerWidth < 768 ? 18 : 28;
+        const y = Math.max(-cap, Math.min(cap, t * cap * -1));
+        el.style.setProperty("--parallax-y", `${y.toFixed(2)}px`);
+      }
+    };
+    const schedule = () => {
+      if (raf) return;
+      raf = window.requestAnimationFrame(update);
+    };
+    schedule();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    return () => {
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      if (raf) window.cancelAnimationFrame(raf);
+    };
+  }, []);
+
   return (
     <SiteLayout>
+      <div className="home-energy">
       {/* 1 — HERO
           One strong real image, calm overlays, two CTAs, no parallax,
           no zoom. HERO_COPY stays byte-exact for lock parity. The brand
