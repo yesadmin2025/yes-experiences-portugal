@@ -18,6 +18,7 @@ import {
 } from "@/server/viatorTour.functions";
 import { DEFAULT_MAPPING_RULES } from "@/data/defaultMappingRules";
 import { signatureTours } from "@/data/signatureTours";
+import { checkViatorUrlMatchesTour, type UrlMatchResult } from "@/lib/viatorUrlMatch";
 import { toast } from "sonner";
 import { Loader2, RefreshCw, Check, AlertTriangle, Sliders, Trash2, Plus, Image as ImageIcon, ImageOff, Link2, Link2Off, Download, Save } from "lucide-react";
 
