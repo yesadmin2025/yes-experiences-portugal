@@ -474,8 +474,55 @@ function HomePage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Effect 3 — homepage-only parallax driver. Writes `--parallax-y` to
+  // every `.he-parallax` / `.he-parallax-counter` element via rAF on
+  // scroll. Disabled for prefers-reduced-motion. Caps travel so it
+  // stays "everyday", never woozy.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const els = Array.from(
+      document.querySelectorAll<HTMLElement>(
+        ".he-parallax, .he-parallax-counter",
+      ),
+    );
+    if (!els.length) return;
+
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const vh = window.innerHeight || 1;
+      for (const el of els) {
+        const rect = el.getBoundingClientRect();
+        // Skip when fully off-screen.
+        if (rect.bottom < -200 || rect.top > vh + 200) continue;
+        // Normalised position: -1 (above viewport) → 0 (centred) → 1 (below).
+        const center = rect.top + rect.height / 2;
+        const t = (center - vh / 2) / vh; // ~ -1..1 across viewport
+        // Cap travel: ±18px on phones, ±28px on larger screens.
+        const cap = window.innerWidth < 768 ? 18 : 28;
+        const y = Math.max(-cap, Math.min(cap, t * cap * -1));
+        el.style.setProperty("--parallax-y", `${y.toFixed(2)}px`);
+      }
+    };
+    const schedule = () => {
+      if (raf) return;
+      raf = window.requestAnimationFrame(update);
+    };
+    schedule();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    return () => {
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      if (raf) window.cancelAnimationFrame(raf);
+    };
+  }, []);
+
   return (
     <SiteLayout>
+      <div className="home-energy">
       {/* 1 — HERO
           One strong real image, calm overlays, two CTAs, no parallax,
           no zoom. HERO_COPY stays byte-exact for lock parity. The brand
@@ -487,7 +534,7 @@ function HomePage() {
         <img
           src={heroImg}
           alt="Hidden coastal road in Portugal at golden hour"
-          className="absolute inset-0 w-full h-full object-cover object-center"
+          className="he-parallax absolute inset-0 w-full h-full object-cover object-center"
           width={1920}
           height={1080}
         />
@@ -536,7 +583,7 @@ function HomePage() {
               <Link
                 to="/experiences"
                 data-hero-field="primaryCta"
-                className="hero-cta-button cta-primary group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-start text-left"
+                className="hero-cta-button cta-primary he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-start text-left"
               >
                 <span className="block">Explore Signature Experiences</span>
                 <ArrowRight
@@ -547,7 +594,7 @@ function HomePage() {
               <Link
                 to="/builder"
                 data-hero-field="secondaryCta"
-                className="hero-cta-button cta-secondary-dark group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-start text-left"
+                className="hero-cta-button cta-secondary-dark he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-start text-left"
               >
                 <span className="block">Build your private journey</span>
                 <ArrowRight
@@ -784,7 +831,7 @@ function HomePage() {
               <li
                 key={b.num}
                 className={
-                  "reveal-stagger group relative flex flex-col rounded-[6px] border border-[#E7DDD0] bg-[color:var(--ivory)] p-7 md:p-9 shadow-[0_1px_2px_rgba(46,46,46,0.04)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-[color:var(--gold)]/55 hover:shadow-[0_10px_28px_-14px_rgba(46,46,46,0.18)] active:border-[color:var(--gold)]/55 overflow-hidden " +
+                  "reveal-stagger he-card-lift group relative flex flex-col rounded-[6px] border border-[#E7DDD0] bg-[color:var(--ivory)] p-7 md:p-9 shadow-[0_1px_2px_rgba(46,46,46,0.04)] overflow-hidden " +
                   (b.wide ? "md:col-span-2" : "")
                 }
               >
@@ -1079,7 +1126,7 @@ function HomePage() {
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
                   to="/builder"
-                  className="group inline-flex items-center gap-2 bg-[color:var(--teal)] text-[color:var(--ivory)] px-6 py-3 text-[12px] uppercase tracking-[0.22em] hover:bg-[color:var(--teal-2)] transition-colors shadow-[0_4px_14px_-6px_rgba(41,91,97,0.55)]"
+                  className="he-glow he-sheen group inline-flex items-center gap-2 bg-[color:var(--teal)] text-[color:var(--ivory)] px-6 py-3 text-[12px] uppercase tracking-[0.22em] hover:bg-[color:var(--teal-2)] shadow-[0_4px_14px_-6px_rgba(41,91,97,0.55)]"
                 >
                   Open the studio
                   <ArrowRight size={14} className="transition-transform duration-200 group-hover:translate-x-0.5" />
@@ -1097,7 +1144,7 @@ function HomePage() {
               </p>
             </div>
             <div className="lg:col-span-7">
-              <div className="relative aspect-[4/3] md:aspect-[16/11] overflow-hidden rounded-[2px] border border-[color:var(--border)] bg-[color:var(--ivory)] shadow-[0_8px_24px_-12px_rgba(46,46,46,0.18)]">
+              <div className="he-parallax-counter relative aspect-[4/3] md:aspect-[16/11] overflow-hidden rounded-[2px] border border-[color:var(--border)] bg-[color:var(--ivory)] shadow-[0_8px_24px_-12px_rgba(46,46,46,0.18)]">
                 <LiveMapPreview />
                 <div className="hidden md:flex absolute bottom-4 right-4 flex-col gap-1.5 rounded-[4px] border border-[color:var(--gold)]/30 bg-[color:var(--ivory)]/95 backdrop-blur-sm px-4 py-3 shadow-[0_6px_18px_-8px_rgba(0,0,0,0.35)] max-w-[14rem]">
                   <span className="inline-flex items-center gap-2 text-[9.5px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
@@ -1224,7 +1271,7 @@ function HomePage() {
                 <article
                   key={m.eyebrow}
                   id={m.id}
-                  className="reveal-stagger group grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center scroll-mt-24 md:scroll-mt-28"
+                  className="reveal-stagger he-seq group grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center scroll-mt-24 md:scroll-mt-28"
                 >
                   {/* Image side */}
                   <Link
@@ -1235,7 +1282,7 @@ function HomePage() {
                       (reverse ? "md:order-2" : "md:order-1")
                     }
                   >
-                    <div className="relative aspect-[4/3] md:aspect-[5/4] overflow-hidden">
+                    <div className="he-image-rise relative aspect-[4/3] md:aspect-[5/4] overflow-hidden">
                       <img
                         src={m.img}
                         alt=""
@@ -1278,7 +1325,7 @@ function HomePage() {
                     </p>
                     <Link
                       to={m.to}
-                      className="mt-6 inline-flex items-center gap-2 self-start bg-[color:var(--teal)] text-[color:var(--ivory)] px-6 py-3 text-[12px] uppercase tracking-[0.22em] font-medium hover:bg-[color:var(--teal-2)] transition-colors shadow-[0_4px_14px_-6px_rgba(41,91,97,0.55)]"
+                      className="he-glow he-sheen mt-6 inline-flex items-center gap-2 self-start bg-[color:var(--teal)] text-[color:var(--ivory)] px-6 py-3 text-[12px] uppercase tracking-[0.22em] font-medium hover:bg-[color:var(--teal-2)] shadow-[0_4px_14px_-6px_rgba(41,91,97,0.55)]"
                     >
                       {m.cta}
                       <ArrowRight
@@ -1327,7 +1374,7 @@ function HomePage() {
             <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
               <Link
                 to="/contact"
-                className="group inline-flex items-center justify-center gap-2 bg-[color:var(--gold)] text-[color:var(--charcoal)] px-7 py-3.5 text-[12px] uppercase tracking-[0.22em] font-medium hover:bg-[color:var(--gold-soft)] transition-colors shadow-[0_6px_18px_-8px_rgba(201,169,106,0.55)]"
+                className="he-glow he-sheen group inline-flex items-center justify-center gap-2 bg-[color:var(--gold)] text-[color:var(--charcoal)] px-7 py-3.5 text-[12px] uppercase tracking-[0.22em] font-medium hover:bg-[color:var(--gold-soft)] shadow-[0_6px_18px_-8px_rgba(201,169,106,0.55)]"
               >
                 Speak to a local designer
                 <ArrowRight size={14} className="transition-transform duration-200 group-hover:translate-x-0.5" />
@@ -1336,6 +1383,7 @@ function HomePage() {
           </div>
         </div>
       </section>
+      </div>
     </SiteLayout>
   );
 }
