@@ -465,7 +465,8 @@ function HomePage() {
           supported reassurance. Premium, human, intelligent — not a
           features grid. Soft fade-in only, no bounce, no parallax. */}
       <section
-        className="section-y bg-[color:var(--ivory)] border-b border-[color:var(--border)]"
+        id="why-yes"
+        className="section-y bg-[color:var(--ivory)] border-b border-[color:var(--border)] scroll-mt-24 md:scroll-mt-28"
         aria-labelledby="why-yes-title"
       >
         <div className="container-x">
