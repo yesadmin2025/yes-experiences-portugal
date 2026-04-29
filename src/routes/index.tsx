@@ -267,6 +267,83 @@ function HomePage() {
     return () => window.clearTimeout(t);
   }, []);
 
+  // Sync the URL hash with whichever tracked section is currently the most
+  // visible in the viewport. Uses history.replaceState so we never push a
+  // new entry (back button stays clean) and never trigger router
+  // navigation, which would break smooth scrolling. Suppresses updates
+  // briefly after a programmatic scroll so the hash we just set isn't
+  // overwritten mid-animation.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (typeof IntersectionObserver === "undefined") return;
+
+    const TRACKED = [
+      "why-yes",
+      "builder",
+      "proposals",
+      "celebrations",
+      "corporate",
+      "reviews",
+      "faq",
+    ];
+    const targets = TRACKED.map((id) => document.getElementById(id)).filter(
+      (el): el is HTMLElement => !!el,
+    );
+    if (!targets.length) return;
+
+    const ratios = new Map<string, number>();
+    let suppressUntil = 0;
+
+    const onHashChange = () => {
+      suppressUntil = performance.now() + 900;
+    };
+    window.addEventListener("hashchange", onHashChange);
+    if (window.location.hash) suppressUntil = performance.now() + 900;
+
+    let raf = 0;
+    const schedule = () => {
+      if (raf) return;
+      raf = window.requestAnimationFrame(() => {
+        raf = 0;
+        if (performance.now() < suppressUntil) return;
+        let bestId = "";
+        let bestRatio = 0;
+        ratios.forEach((ratio, id) => {
+          if (ratio > bestRatio) {
+            bestRatio = ratio;
+            bestId = id;
+          }
+        });
+        const next = bestRatio > 0.25 && bestId ? `#${bestId}` : "";
+        if (next !== window.location.hash) {
+          const url =
+            window.location.pathname + window.location.search + next;
+          window.history.replaceState(window.history.state, "", url);
+        }
+      });
+    };
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          ratios.set(e.target.id, e.isIntersecting ? e.intersectionRatio : 0);
+        }
+        schedule();
+      },
+      {
+        threshold: [0, 0.25, 0.5, 0.75, 1],
+        rootMargin: "-96px 0px -40% 0px",
+      },
+    );
+    targets.forEach((el) => io.observe(el));
+
+    return () => {
+      io.disconnect();
+      window.removeEventListener("hashchange", onHashChange);
+      if (raf) window.cancelAnimationFrame(raf);
+    };
+  }, []);
+
   return (
     <SiteLayout>
       {/* 1 — HERO
