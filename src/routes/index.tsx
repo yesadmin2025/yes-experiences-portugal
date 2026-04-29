@@ -657,45 +657,100 @@ function HomePage() {
             </p>
           </div>
 
-          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 list-none p-0">
-            {signatures.map((t) => (
-              <li key={t.id}>
-                <Link
-                  to="/tours/$tourId"
-                  params={{ tourId: t.id }}
-                  className="group relative flex flex-col h-full overflow-hidden rounded-[2px] border border-[color:var(--border)] bg-[color:var(--ivory)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-[color:var(--charcoal)]/25 hover:shadow-[0_10px_24px_-12px_rgba(46,46,46,0.2)] focus-visible:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2"
+          {/* Mobile: full-bleed editorial cover carousel (scroll-snap, no
+              autoplay — site-wide forbidden). Each card is 84vw so the
+              next card peeks. Tablet+: keeps the calm 2/4-col grid.
+              Same card markup; layout is the only thing that changes. */}
+          <ul
+            className="
+              flex sm:grid sm:grid-cols-2 lg:grid-cols-4
+              gap-5 md:gap-7
+              list-none p-0
+              -mx-5 px-5 sm:mx-0 sm:px-0
+              overflow-x-auto sm:overflow-visible
+              snap-x snap-mandatory sm:snap-none
+              [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden
+            "
+            aria-label="Signature experiences"
+          >
+            {signatures.map((t) => {
+              const hook =
+                t.pace === "Relaxed"
+                  ? "Unhurried, all in one day"
+                  : t.pace === "Energetic"
+                    ? "Big day, real ground covered"
+                    : "Designed end to end";
+              return (
+                <li
+                  key={t.id}
+                  className="snap-center shrink-0 w-[84vw] sm:w-auto sm:shrink"
                 >
-                  <div className="relative aspect-[4/5] overflow-hidden bg-[color:var(--card)]">
-                    <img
-                      src={t.img}
-                      alt={t.title}
-                      loading="lazy"
-                      className="absolute inset-0 w-full h-full object-cover"
-                    />
-                    <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/40 via-transparent to-transparent" />
-                  </div>
-                  <div className="p-5 md:p-6 flex flex-col gap-2.5">
-                    <span className="text-[10.5px] uppercase tracking-[0.28em] text-[color:var(--charcoal-soft)]">
-                      {t.pace}
-                    </span>
-                    <h3 className="serif text-[1.25rem] md:text-[1.4rem] leading-[1.2] text-[color:var(--charcoal)]">
-                      {t.title}
-                    </h3>
-                    <p className="text-[13.5px] leading-[1.55] text-[color:var(--charcoal-soft)] font-light line-clamp-3">
-                      {t.line}
-                    </p>
-                    <span className="mt-2 inline-flex items-center gap-1.5 text-[11.5px] uppercase tracking-[0.22em] font-medium text-[color:var(--teal)]">
-                      View signature
-                      <ArrowRight
-                        size={12}
-                        className="transition-transform duration-200 group-hover:translate-x-0.5"
+                  <Link
+                    to="/tours/$tourId"
+                    params={{ tourId: t.id }}
+                    className="group relative flex flex-col h-full overflow-hidden rounded-[6px] border border-[color:var(--border)] bg-[color:var(--charcoal)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-[color:var(--charcoal)]/30 hover:shadow-[0_14px_30px_-14px_rgba(46,46,46,0.28)] focus-visible:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2"
+                  >
+                    {/* Cover image — full card, editorial 4:5 */}
+                    <div className="relative aspect-[4/5] overflow-hidden bg-[color:var(--card)]">
+                      <img
+                        src={t.img}
+                        alt={t.title}
+                        loading="lazy"
+                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-[600ms] ease-out group-hover:scale-[1.03]"
                       />
-                    </span>
-                  </div>
-                </Link>
-              </li>
-            ))}
+                      {/* Bottom-anchored gradient for text legibility (≤45%) */}
+                      <div
+                        aria-hidden="true"
+                        className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"
+                      />
+
+                      {/* Top row: region eyebrow + price badge */}
+                      <div className="absolute inset-x-0 top-0 p-4 md:p-5 flex items-start justify-between gap-3">
+                        <span className="text-[10px] uppercase tracking-[0.28em] text-white/85 drop-shadow-sm">
+                          {t.region}
+                        </span>
+                        <span className="inline-flex items-baseline gap-1 rounded-full bg-[color:var(--ivory)]/95 px-2.5 py-1 text-[color:var(--charcoal)] shadow-[0_2px_6px_rgba(0,0,0,0.18)]">
+                          <span className="text-[9.5px] uppercase tracking-[0.18em] text-[color:var(--charcoal-soft)]">
+                            From
+                          </span>
+                          <span className="serif text-[14px] leading-none">
+                            €{t.priceFrom}
+                          </span>
+                        </span>
+                      </div>
+
+                      {/* Bottom block: catchy hook + title + duration + CTA */}
+                      <div className="absolute inset-x-0 bottom-0 p-5 md:p-6 text-white">
+                        <span className="inline-block text-[10.5px] uppercase tracking-[0.24em] text-[color:var(--gold)]">
+                          {hook}
+                        </span>
+                        <h3 className="serif mt-2 text-[1.35rem] md:text-[1.45rem] leading-[1.18] text-white text-balance">
+                          {t.title}
+                        </h3>
+                        <div className="mt-3 flex items-center justify-between gap-3">
+                          <span className="text-[11px] uppercase tracking-[0.22em] text-white/80">
+                            {t.durationHours} · Private
+                          </span>
+                          <span className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-[0.22em] font-medium text-white">
+                            View
+                            <ArrowRight
+                              size={12}
+                              className="transition-transform duration-200 group-hover:translate-x-0.5"
+                            />
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
+
+          {/* Mobile-only swipe hint */}
+          <p className="sm:hidden mt-4 text-center text-[10.5px] uppercase tracking-[0.28em] text-[color:var(--charcoal-soft)]">
+            Swipe to explore
+          </p>
 
           <div className="mt-12 md:mt-14 text-center">
             <Link
