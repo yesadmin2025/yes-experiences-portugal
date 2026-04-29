@@ -85,6 +85,76 @@ function AdminImportPage() {
   const callListRules = useServerFn(listMappingRules);
   const callSaveRules = useServerFn(saveMappingRules);
   const callDeleteRules = useServerFn(deleteMappingRules);
+  const callFetchViator = useServerFn(fetchViatorArrabida);
+  const callSaveViator = useServerFn(saveViatorArrabida);
+
+  // ----- Arrábida P3 Viator source panel -----
+  type ViatorItineraryStep = {
+    order: number;
+    label: string;
+    description: string;
+    optional: boolean;
+  };
+  type ViatorPreview = {
+    title: string;
+    durationText: string;
+    pickupZone: string;
+    groupType: string;
+    blurb: string;
+    itinerary: ViatorItineraryStep[];
+    inclusions: string[];
+    exclusions: string[];
+    variesByOption: string[];
+  };
+  const [viatorUrl, setViatorUrl] = useState("");
+  const [viatorPreview, setViatorPreview] = useState<ViatorPreview | null>(null);
+  const [viatorFetching, setViatorFetching] = useState(false);
+  const [viatorSaving, setViatorSaving] = useState(false);
+  const [viatorError, setViatorError] = useState<string | null>(null);
+
+  const onFetchViator = async () => {
+    setViatorError(null);
+    setViatorPreview(null);
+    if (!viatorUrl.trim()) {
+      setViatorError("Paste a Viator tour URL first.");
+      return;
+    }
+    setViatorFetching(true);
+    try {
+      const result = await callFetchViator({ data: { url: viatorUrl.trim() } });
+      setViatorPreview(result.extraction as ViatorPreview);
+      toast.success("Fetched from Viator — review and save");
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "Fetch failed";
+      setViatorError(msg);
+      toast.error(msg);
+    } finally {
+      setViatorFetching(false);
+    }
+  };
+
+  const onSaveViator = async () => {
+    if (!viatorPreview) return;
+    setViatorSaving(true);
+    try {
+      const result = await callSaveViator({
+        data: { url: viatorUrl.trim(), extraction: viatorPreview },
+      });
+      toast.success(`Saved Arrábida P3 — ${result.stopsSaved} stops`);
+      // Refresh imported_tours listing below.
+      const { data: rows } = await supabase
+        .from("imported_tours")
+        .select(SELECT_COLS)
+        .order("imported_at", { ascending: false });
+      setTours((rows as ImportedRow[]) ?? []);
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "Save failed";
+      setViatorError(msg);
+      toast.error(msg);
+    } finally {
+      setViatorSaving(false);
+    }
+  };
 
   type RuleRow = {
     id: string;
