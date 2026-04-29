@@ -2230,7 +2230,7 @@ function InvestmentPanel({ s, days, investment }: { s: BuilderState; days: numbe
         </p>
       </div>
       <p className="mt-2 text-[12px] text-[color:var(--charcoal-soft)] italic">
-        Private guide, real route, curated stops included. Confirm instantly through our integrated booking system — no forms, no waiting.
+        Private guide, real route, curated stops included. Sent to a local who confirms personally — usually within hours.
       </p>
     </div>
   );
