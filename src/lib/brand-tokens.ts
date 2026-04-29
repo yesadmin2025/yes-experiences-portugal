@@ -30,7 +30,9 @@ export const BRAND_COLORS = {
   ivory: "#FAF8F3",
   sand: "#F4EFE7",
   charcoal: "#2E2E2E",
-  "charcoal-soft": "#5A5A5A",
+  // Deepened from #5A5A5A → #555555 (see styles.css note) so secondary
+  // copy on ivory clears 7:1 mobile contrast.
+  "charcoal-soft": "#555555",
   "charcoal-deep": "#1F1F1F",
 } as const;
 
