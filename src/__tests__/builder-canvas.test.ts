@@ -475,6 +475,28 @@ describe("Builder canvas — typography & spacing landmarks", () => {
     ); // B + detail line
     const a1 = stripRing(await renderStep(0)); // Back to Option A
 
+    // Always emit the per-pass artifact (pass or fail) so reviewers can
+    // open diff.html and pinpoint which pass drifted on which landmark.
+    const { writeBuilderPassReport } = await import(
+      "./helpers/writeBuilderPassReport"
+    );
+    const report = writeBuilderPassReport("back-and-forth", [
+      { name: "A0", description: "Option A selected (baseline)", ...a0 },
+      { name: "B", description: "Switched to Option B", ...b },
+      {
+        name: "B+detail",
+        description: "Option B selected with detail line",
+        ...bDetail,
+      },
+      { name: "A1", description: "Returned to Option A", ...a1 },
+    ]);
+    // Surface artifact paths in CI logs so the upload step is easy to
+    // correlate with the test that produced it.
+    // eslint-disable-next-line no-console
+    console.log(
+      `[builder-canvas] back-and-forth artifact: ${report.htmlPath}`,
+    );
+
     // Header landmarks: byte-identical across all four passes.
     expect(b.header).toEqual(a0.header);
     expect(bDetail.header).toEqual(a0.header);
