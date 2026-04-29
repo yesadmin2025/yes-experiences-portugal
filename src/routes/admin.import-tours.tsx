@@ -619,6 +619,60 @@ function AdminImportPage() {
               </button>
             </div>
 
+            {viatorUrlCheck && viatorUrlCheck.kind !== "ok" && (
+              <div
+                className={`mt-3 p-3 border text-xs flex items-start gap-2 ${
+                  viatorUrlCheck.kind === "weak"
+                    ? "border-[color:var(--gold)]/60 bg-[color:var(--gold)]/10 text-[color:var(--charcoal)]"
+                    : "border-red-400/60 bg-red-50 text-red-700"
+                }`}
+              >
+                <AlertTriangle size={14} className="mt-0.5 shrink-0" />
+                <div className="space-y-1">
+                  {viatorUrlCheck.kind === "invalid" && (
+                    <span>{viatorUrlCheck.reason}</span>
+                  )}
+                  {viatorUrlCheck.kind === "mismatch" && (
+                    <>
+                      <div>
+                        This URL doesn't look like the Arrábida P3 tour. Expected
+                        keywords:{" "}
+                        <span className="font-mono">
+                          {viatorUrlCheck.expected.slice(0, 5).join(", ")}
+                        </span>
+                        .
+                      </div>
+                      {viatorUrlCheck.productCode && (
+                        <div className="opacity-80">
+                          Detected product code: {viatorUrlCheck.productCode}
+                        </div>
+                      )}
+                    </>
+                  )}
+                  {viatorUrlCheck.kind === "weak" && (
+                    <div>
+                      Only one keyword matched (
+                      <span className="font-mono">
+                        {viatorUrlCheck.matchedKeywords.join(", ")}
+                      </span>
+                      ). Double-check this is the right Viator product.
+                    </div>
+                  )}
+                  {(viatorUrlCheck.kind === "mismatch" ||
+                    viatorUrlCheck.kind === "weak") && (
+                    <label className="inline-flex items-center gap-1.5 mt-1 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={viatorOverride}
+                        onChange={(e) => setViatorOverride(e.target.checked)}
+                      />
+                      <span>Fetch anyway</span>
+                    </label>
+                  )}
+                </div>
+              </div>
+            )}
+
             {viatorError && (
               <div className="mt-3 p-3 border border-red-400/60 bg-red-50 text-xs text-red-700 flex items-start gap-2">
                 <AlertTriangle size={14} className="mt-0.5 shrink-0" />
