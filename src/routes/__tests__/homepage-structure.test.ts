@@ -133,7 +133,24 @@ function resolveApprovedToSource(): {
  * a className string. Considers ONLY unprefixed (mobile) classes —
  * `md:py-32` and `lg:py-40` are deliberately ignored because the spec
  * is the mobile floor.
+ *
+ * Also accepts the project's semantic vertical-rhythm utilities defined
+ * in `src/styles.css`. Their mobile values (from `:root`) are:
+ *
+ *   .section-y     → padding: 5rem  (= py-20 in Tailwind scale)
+ *   .section-y-lg  → padding: 6rem  (= py-24)
+ *   .section-y-sm  → padding: 3.5rem (= py-14)
+ *
+ * They are treated as equivalents for both `py` and `pb` checks because
+ * they apply padding-top AND padding-bottom together — that satisfies
+ * any pb-N floor at the same scale.
  */
+const SECTION_Y_EQUIVALENTS: Record<string, number> = {
+  "section-y": 20,
+  "section-y-lg": 24,
+  "section-y-sm": 14,
+};
+
 function parseMobileSpacing(className: string, kind: "py" | "pb"): number | null {
   const tokens = className.split(/\s+/).filter(Boolean);
   let max: number | null = null;
@@ -142,6 +159,11 @@ function parseMobileSpacing(className: string, kind: "py" | "pb"): number | null
     const m = t.match(new RegExp(`^${kind}-(\\d+)$`));
     if (m) {
       const n = Number(m[1]);
+      if (max === null || n > max) max = n;
+      continue;
+    }
+    if (t in SECTION_Y_EQUIVALENTS) {
+      const n = SECTION_Y_EQUIVALENTS[t]!;
       if (max === null || n > max) max = n;
     }
   }
