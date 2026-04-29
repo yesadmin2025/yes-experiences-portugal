@@ -928,7 +928,7 @@ function HomePage() {
 
           <ul className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 list-none p-0 max-w-5xl mx-auto">
             {groupsAndCelebrations.map((m) => (
-              <li key={m.title}>
+              <li key={m.eyebrow} className="reveal-stagger">
                 <Link
                   to={m.to}
                   className="group relative flex flex-col h-full overflow-hidden rounded-[2px] border border-[color:var(--border)] bg-[color:var(--ivory)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-[color:var(--charcoal)]/25 hover:shadow-[0_10px_24px_-12px_rgba(46,46,46,0.2)] focus-visible:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2"
@@ -939,22 +939,25 @@ function HomePage() {
                       alt=""
                       aria-hidden="true"
                       loading="lazy"
-                      className="absolute inset-0 w-full h-full object-cover"
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-[600ms] ease-out group-hover:scale-[1.03]"
                     />
-                    <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/40 to-transparent" />
-                  </div>
-                  <div className="p-5 md:p-6 flex flex-col gap-2.5">
-                    <span className="inline-flex items-center gap-2 text-[10.5px] uppercase tracking-[0.28em] text-[color:var(--charcoal-soft)]">
-                      <CalendarDays size={12} aria-hidden="true" />
+                    <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/45 to-transparent" />
+                    <span className="absolute left-4 top-4 inline-flex items-center gap-2 rounded-full bg-[color:var(--ivory)]/95 px-3 py-1 text-[10px] uppercase tracking-[0.28em] font-semibold text-[color:var(--charcoal)] shadow-[0_2px_6px_rgba(0,0,0,0.15)]">
+                      <CalendarDays size={11} aria-hidden="true" />
                       {m.eyebrow}
                     </span>
-                    <h3 className="serif text-[1.25rem] md:text-[1.4rem] leading-[1.2] text-[color:var(--charcoal)]">
+                  </div>
+                  <div className="p-6 md:p-7 flex flex-col gap-3 flex-1">
+                    <h3 className="serif text-[1.3rem] md:text-[1.5rem] leading-[1.18] text-[color:var(--charcoal)]">
                       {m.title}
                     </h3>
-                    <p className="text-[13.5px] leading-[1.55] text-[color:var(--charcoal-soft)] font-light">
+                    <p className="text-[13.5px] leading-[1.6] text-[color:var(--charcoal-soft)] font-light">
                       {m.line}
                     </p>
-                    <span className="mt-2 inline-flex items-center gap-1.5 text-[11.5px] uppercase tracking-[0.22em] font-medium text-[color:var(--teal)]">
+                    <p className="text-[10.5px] uppercase tracking-[0.24em] text-[color:var(--gold)]">
+                      {m.detail}
+                    </p>
+                    <span className="mt-auto inline-flex items-center gap-1.5 pt-3 text-[11.5px] uppercase tracking-[0.22em] font-medium text-[color:var(--teal)]">
                       {m.cta}
                       <ArrowRight
                         size={12}
