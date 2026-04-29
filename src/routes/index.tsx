@@ -1367,7 +1367,7 @@ function HomePage() {
               <MessageCircle size={12} aria-hidden="true" />
               Prefer a conversation?
             </span>
-            <h2 id="final-cta-title" className="serif mt-5 text-[1.9rem] md:text-[2.6rem] leading-[1.1] tracking-[-0.012em]">
+            <h2 id="final-cta-title" className="serif mt-5 text-[2.1rem] md:text-[3rem] leading-[1.06] tracking-[-0.014em] font-medium">
               Talk to a <span className="italic text-[color:var(--gold-soft)]">local.</span>
             </h2>
             <p className="mt-5 text-[14.5px] md:text-[15.5px] leading-[1.7] font-light text-[color:var(--ivory)]/85">
