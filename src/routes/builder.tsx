@@ -375,7 +375,7 @@ function BuilderPage() {
   useEffect(() => {
     const next = searchFromState(s, stepIdx);
     navigate({
-      search: (prev: Record<string, unknown>) => ({ ...prev, ...next, tour: prev.tour, journey: prev.journey }),
+      search: (prev: Record<string, string | string[] | number | undefined>) => ({ ...prev, ...next, tour: typeof prev.tour === "string" ? prev.tour : undefined, journey: typeof prev.journey === "string" ? prev.journey : undefined }),
       replace: true,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
