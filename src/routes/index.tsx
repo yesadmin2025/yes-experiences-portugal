@@ -1271,7 +1271,7 @@ function HomePage() {
                 <article
                   key={m.eyebrow}
                   id={m.id}
-                  className="reveal-stagger group grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center scroll-mt-24 md:scroll-mt-28"
+                  className="reveal-stagger he-seq group grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center scroll-mt-24 md:scroll-mt-28"
                 >
                   {/* Image side */}
                   <Link
