@@ -9,8 +9,8 @@ import { whatsappHref } from "@/components/WhatsAppFab";
 
 const FAQS: { q: string; a: string }[] = [
   {
-    q: "Can I confirm instantly?",
-    a: "Yes. Experiences can be confirmed directly on the website. No forms, no waiting.",
+    q: "How does booking work?",
+    a: "Send your request through the website. A local reviews your dates and confirms personally — usually within a few hours. Online checkout is coming soon.",
   },
   {
     q: "What is the difference between Signature, Tailored and Builder?",
