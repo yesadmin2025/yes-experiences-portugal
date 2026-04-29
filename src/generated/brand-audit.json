@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-29T23:19:20.577Z",
+  "generatedAt": "2026-04-29T23:26:10.035Z",
   "filesScanned": 104,
   "approvedPalette": {
     "teal": "#295B61",
@@ -1214,11 +1214,11 @@
     },
     {
       "file": "src/routes/index.tsx",
-      "line": 787,
-      "col": 93,
+      "line": 834,
+      "col": 106,
       "raw": "#E7DDD0",
       "normalized": "#e7ddd0",
-      "snippet": "\"reveal-stagger group relative flex flex-col rounded-[6px] border border-[#E7DDD0] bg-[color:var(--ivory)] p-7 md:p-9 shadow-[0_1px_2px_rgba(46,46,46,0.04)] tra",
+      "snippet": "\"reveal-stagger he-card-lift group relative flex flex-col rounded-[6px] border border-[#E7DDD0] bg-[color:var(--ivory)] p-7 md:p-9 shadow-[0_1px_2px_rgba(46,46,",
       "status": "mismatch"
     },
     {
