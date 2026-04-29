@@ -561,7 +561,7 @@ function HomePage() {
                 <h3 className="serif mt-3 text-[1.55rem] md:text-[1.85rem] leading-[1.18] text-[color:var(--charcoal)]">
                   {b.title}
                 </h3>
-                <p className="mt-3.5 text-[14.5px] md:text-[15px] text-[color:var(--charcoal-soft)] font-light leading-[1.6]">
+                <p className="mt-3.5 text-[15px] md:text-[15.5px] text-[color:var(--charcoal)] font-light leading-[1.65]">
                   {b.body}
                 </p>
                 {/* One bold highlighted phrase per card */}
@@ -640,7 +640,7 @@ function HomePage() {
                       <h3 className="serif text-[1.45rem] md:text-[1.6rem] leading-[1.15] text-[color:var(--charcoal)]">
                         {p.title}
                       </h3>
-                      <p className="text-[14px] md:text-[14.5px] leading-[1.6] text-[color:var(--charcoal-soft)] font-light">
+                      <p className="text-[14.5px] md:text-[15.5px] leading-[1.65] text-[color:var(--charcoal)] font-light">
                         {p.line}
                       </p>
                       <span className="mt-auto inline-flex items-center gap-2 pt-3 text-[12px] uppercase tracking-[0.22em] font-medium text-[color:var(--teal)]">
