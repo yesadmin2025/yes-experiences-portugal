@@ -41,9 +41,9 @@ export function getStripe(): Stripe {
 
   cached = new Stripe(key, {
     // Pin the API version so future Stripe upgrades don't break us silently.
-    // Cast: the SDK's exported LatestApiVersion union excludes older pinned
-    // versions, but the Stripe API itself accepts any valid YYYY-MM-DD string.
-    apiVersion: "2024-12-18.acacia" as Stripe.StripeConfig["apiVersion"],
+    // Cast through `any` because the SDK's exported version union changes
+    // between releases — the Stripe API itself accepts any valid YYYY-MM-DD.
+    apiVersion: "2024-12-18.acacia" as unknown as Stripe.StripeConfig["apiVersion"],
     typescript: true,
     appInfo: {
       name: "Dreamscape Builder (YES Experiences Portugal)",
