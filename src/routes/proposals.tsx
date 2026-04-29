@@ -277,8 +277,8 @@ function ProposalsPage() {
               },
               {
                 n: "04",
-                k: "Confirm or chat",
-                v: "Confirm instantly through the Studio, or shape it message by message with a local.",
+                k: "Request a proposal",
+                v: "Send your wish — a local crafts the moment with you, message by message.",
               },
             ].map((s) => (
               <li
