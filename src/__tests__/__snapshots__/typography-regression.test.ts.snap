@@ -26,7 +26,7 @@ exports[`Typography regression — section headlines (token sweep) > [home] all 
     "trace": {
       "file": "src/routes/index.tsx",
       "index": 0,
-      "line": 783,
+      "line": 445,
       "selector": "h2.t-h2",
     },
   },
@@ -36,18 +36,8 @@ exports[`Typography regression — section headlines (token sweep) > [home] all 
     "trace": {
       "file": "src/routes/index.tsx",
       "index": 1,
-      "line": 990,
+      "line": 523,
       "selector": "h2.t-h2",
-    },
-  },
-  {
-    "cls": "t-lead mt-5",
-    "tag": "p",
-    "trace": {
-      "file": "src/routes/index.tsx",
-      "index": 0,
-      "line": 996,
-      "selector": "p.t-lead",
     },
   },
   {
@@ -56,7 +46,7 @@ exports[`Typography regression — section headlines (token sweep) > [home] all 
     "trace": {
       "file": "src/routes/index.tsx",
       "index": 2,
-      "line": 1031,
+      "line": 598,
       "selector": "h2.t-h2",
     },
   },
@@ -66,78 +56,8 @@ exports[`Typography regression — section headlines (token sweep) > [home] all 
     "trace": {
       "file": "src/routes/index.tsx",
       "index": 3,
-      "line": 1212,
+      "line": 656,
       "selector": "h2.t-h2",
-    },
-  },
-  {
-    "cls": "t-lead mt-5",
-    "tag": "p",
-    "trace": {
-      "file": "src/routes/index.tsx",
-      "index": 1,
-      "line": 1218,
-      "selector": "p.t-lead",
-    },
-  },
-  {
-    "cls": "t-h2 mt-5",
-    "tag": "h2",
-    "trace": {
-      "file": "src/routes/index.tsx",
-      "index": 4,
-      "line": 1329,
-      "selector": "h2.t-h2",
-    },
-  },
-  {
-    "cls": "t-lead mt-5 max-w-xl mx-auto",
-    "tag": "p",
-    "trace": {
-      "file": "src/routes/index.tsx",
-      "index": 2,
-      "line": 1332,
-      "selector": "p.t-lead",
-    },
-  },
-  {
-    "cls": "t-h3 text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]",
-    "tag": "h3",
-    "trace": {
-      "file": "src/routes/index.tsx",
-      "index": 0,
-      "line": 1356,
-      "selector": "h3.t-h3",
-    },
-  },
-  {
-    "cls": "t-h2 mt-6",
-    "tag": "h2",
-    "trace": {
-      "file": "src/routes/index.tsx",
-      "index": 5,
-      "line": 1489,
-      "selector": "h2.t-h2",
-    },
-  },
-  {
-    "cls": "t-h2 mt-5",
-    "tag": "h2",
-    "trace": {
-      "file": "src/routes/index.tsx",
-      "index": 6,
-      "line": 1624,
-      "selector": "h2.t-h2",
-    },
-  },
-  {
-    "cls": "t-lead mt-5",
-    "tag": "p",
-    "trace": {
-      "file": "src/routes/index.tsx",
-      "index": 3,
-      "line": 1627,
-      "selector": "p.t-lead",
     },
   },
 ]

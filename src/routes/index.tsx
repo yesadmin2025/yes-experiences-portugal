@@ -1,101 +1,47 @@
-import { useEffect, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { SiteLayout } from "@/components/SiteLayout";
 import { FAQ } from "@/components/FAQ";
-// Patch 2A: removed useHeroParallax / useCtaScrollScale / CtaScrollDebugOverlay
-// per brand guardrails (no parallax, no scroll-driven scaling, no debug
-// overlays in production). Hero now sits perfectly still; CTAs hold a
-// fixed scale; debug tooling is gone from the rendered tree.
-import heroImg from "@/assets/hero-coast.jpg";
-import multiDayImg from "@/assets/multi-day.jpg";
 
-// Real Viator-sourced tour photography — used everywhere on the homepage so
-// every card and editorial moment maps to an actual stop from one of the
-// Signature tours. No stock or invented imagery is used below.
+import heroImg from "@/assets/hero-coast.jpg";
+
+// Real Viator-sourced tour photography — every card maps to an actual
+// Signature tour. No stock or invented imagery.
 import imgArrabidaWineHero from "@/assets/tours/arrabida-wine-allinclusive/hero.jpg";
-import imgArrabidaWineWinery from "@/assets/tours/arrabida-wine-allinclusive/winery.jpg";
 import imgArrabidaWineLunch from "@/assets/tours/arrabida-wine-allinclusive/lunch.jpg";
-import imgArrabidaWineViewpoint from "@/assets/tours/arrabida-wine-allinclusive/viewpoint.jpg";
 import imgArrabidaBoatCoves from "@/assets/tours/arrabida-boat/coves.jpg";
-import imgArrabidaBoatSesimbra from "@/assets/tours/arrabida-boat/sesimbra.jpg";
 import imgAzeitaoWorkshop from "@/assets/tours/azeitao-cheese/workshop.jpg";
 import imgSintraEstates from "@/assets/tours/sintra-cascais/estates.jpg";
-import imgSintraCabo from "@/assets/tours/sintra-cascais/cabo-da-roca.jpg";
-import imgTroiaFerry from "@/assets/tours/troia-comporta/ferry.jpg";
 import imgTroiaBeach from "@/assets/tours/troia-comporta/beach.jpg";
 import imgFatimaNazare from "@/assets/tours/fatima-nazare-obidos/nazare.jpg";
+
 import {
   ArrowRight,
   Star,
-  Compass,
   Sparkles,
-  Lock,
   Wand2,
-  Zap,
   BookOpen,
   Gift,
   CalendarDays,
+  MapPin,
+  MessageCircle,
 } from "lucide-react";
 import { PlatformBadge } from "@/components/PlatformBadge";
-// Patch 2A: removed visible debug probes (HeroMetaProbe, HeroCopyDiff,
-// HeroVerifyOverlay, ContrastAudit, RouteValidationStrip) from the
-// rendered tree. The hidden data-* probes (hero-copy-version, JSON
-// snapshot) are kept — they are visually-hidden and lock specs depend on
-// them.
-import { DecisionStepper } from "@/components/DecisionStepper";
-import { SignatureCarousel } from "@/components/SignatureCarousel";
 import { LiveMapPreview } from "@/components/LiveMapPreview";
 
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
 import { signatureTours, isValidTourId } from "@/data/signatureTours";
 
-// Featured tour ids for the homepage signatures showcase.
-// Must exist in the catalog (`signatureTours`) — validated below at render time.
+/* ──────────────────────────────────────────────────────────────────
+ * Featured Signature tours — exactly 4 real tours, in display order.
+ * Each id MUST exist in `signatureTours` (validated below).
+ * ────────────────────────────────────────────────────────────── */
 const FEATURED_TOUR_IDS = [
   "arrabida-wine-allinclusive",
   "sintra-cascais",
-  "troia-comporta",
   "arrabida-boat",
-  "azeitao-cheese",
-  "fatima-nazare-obidos",
+  "troia-comporta",
 ] as const;
-
-export const Route = createFileRoute("/")({
-  headers: () => ({
-    "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0",
-    Pragma: "no-cache",
-    Expires: "0",
-    "Surrogate-Control": "no-store",
-    "X-Hero-Copy-Version": HERO_COPY_VERSION,
-  }),
-  head: () => ({
-    meta: [
-      { title: "YES experiences Portugal — Portugal is the stage. You write the story." },
-      { name: "yes-hero-copy-version", content: HERO_COPY_VERSION },
-      {
-        name: "description",
-        content: HERO_COPY.subheadline,
-      },
-      {
-        property: "og:title",
-        content: "Portugal is the stage. You write the story. — YES experiences",
-      },
-      {
-        property: "og:description",
-        content: HERO_COPY.subheadline,
-      },
-      {
-        property: "twitter:title",
-        content: "Portugal is the stage. You write the story. — YES experiences",
-      },
-      { property: "twitter:description", content: HERO_COPY.subheadline },
-      { property: "og:image", content: heroImg },
-      { property: "twitter:image", content: heroImg },
-    ],
-  }),
-  component: HomePage,
-});
 
 const signatures = FEATURED_TOUR_IDS
   .filter((id) => isValidTourId(id))
@@ -108,242 +54,161 @@ const signatures = FEATURED_TOUR_IDS
     pace: t.pace,
   }));
 
-// Local Stories — every entry maps to a real moment from a real Signature
-// tour, with the exact photo Viator shot at that stop. Lines are pulled
-// from the tour's own narrative, not invented around the imagery.
-const editorial = [
-  {
-    title: "Cellars in Azeitão",
-    line: "Three small family wineries in Arrábida — guided tastings poured by the people who pressed the grapes.",
-    img: imgArrabidaWineWinery,
-    to: "/tours/$tourId" as const,
-    tourId: "arrabida-wine-allinclusive",
-  },
-  {
-    title: "Hidden Coves of Arrábida",
-    line: "A boat slips into the natural park's turquoise coves — swim, snorkel, or simply drift with the boats.",
-    img: imgArrabidaBoatCoves,
-    to: "/tours/$tourId" as const,
-    tourId: "arrabida-boat",
-  },
-  {
-    title: "Sintra's Royal Estates",
-    line: "Pena, Quinta da Regaleira, the misted gardens — the Sintra you read about, walked at a private pace.",
-    img: imgSintraEstates,
-    to: "/tours/$tourId" as const,
-    tourId: "sintra-cascais",
-  },
-  {
-    title: "Where the Land Ends",
-    line: "Cabo da Roca — the western edge of continental Europe, then a long lunch by the water in Cascais.",
-    img: imgSintraCabo,
-    to: "/tours/$tourId" as const,
-    tourId: "sintra-cascais",
-  },
-];
+/* ──────────────────────────────────────────────────────────────────
+ * "Start here" decision block — 4 paths with explicit hierarchy:
+ *   tier "primary"   → Signature Experiences, Experience Studio
+ *   tier "secondary" → Tailor a Signature, Proposals / Groups
+ * Brief: "Each card must feel like a clear choice, not a decorative teaser."
+ * ────────────────────────────────────────────────────────────── */
+type StartTier = "primary" | "secondary";
 
+interface StartPath {
+  tier: StartTier;
+  icon: typeof BookOpen;
+  eyebrow: string;
+  title: string;
+  line: string;
+  cta: string;
+  to: string;
+  ariaLabel: string;
+  bg: string;
+}
 
-const startPaths = [
+const startPaths: StartPath[] = [
   {
+    tier: "primary",
     icon: BookOpen,
     eyebrow: "Signature",
-    title: "Explore Signature Journeys",
-    line: "Start with something already beautifully put together.",
-    cta: "Step inside",
+    title: "Explore Signature Experiences",
+    line: "Complete private days, already designed and ready to confirm.",
+    cta: "Browse signatures",
     to: "/experiences",
-    destination: "Signatures",
-    expectedTo: "/experiences",
-    ariaLabel: "Explore Signature Journeys — start with something already beautifully put together",
-    accent: "ivory" as const,
-    slug: "signature",
-    stepLabel: "Signature",
-    bg: imgArrabidaWineWinery,
+    ariaLabel: "Explore Signature Experiences — complete private days, ready to confirm",
+    bg: imgArrabidaWineHero,
   },
   {
+    tier: "primary",
+    icon: Sparkles,
+    eyebrow: "Studio",
+    title: "Build your private journey",
+    line: "Compose your own day with real stops, realistic timings and human support.",
+    cta: "Open the studio",
+    to: "/builder",
+    ariaLabel: "Build your private journey in the Experience Studio",
+    bg: imgSintraEstates,
+  },
+  {
+    tier: "secondary",
     icon: Wand2,
     eyebrow: "Tailored",
-    title: "Tailor a Signature",
-    line: "Keep the essence, adjust the rhythm.",
-    cta: "Shape it",
+    title: "Tailor a signature",
+    line: "Keep the day, adjust pace, pickup or a single stop.",
+    cta: "See how",
     to: "/experiences",
-    destination: "Tailoring",
-    expectedTo: "/experiences",
-    ariaLabel: "Tailor a Signature — keep the essence, adjust the rhythm",
-    accent: "sand" as const,
-    slug: "tailor",
-    stepLabel: "Tailor",
+    ariaLabel: "Tailor a Signature — adjust pace, pickup or a single stop",
     bg: imgAzeitaoWorkshop,
   },
   {
-    icon: Sparkles,
-    eyebrow: "Studio",
-    title: "Build from Scratch",
-    line: "Create your journey in real time.",
-    cta: "Begin here",
-    to: "/builder",
-    destination: "Studio",
-    expectedTo: "/builder",
-    ariaLabel: "Build from Scratch — create your journey in real time",
-    accent: "teal" as const,
-    slug: "studio",
-    stepLabel: "Studio",
-    bg: imgTroiaFerry,
-  },
-  {
+    tier: "secondary",
     icon: Gift,
-    eyebrow: "Moments",
-    title: "Plan a Moment",
-    line: "For proposals, celebrations, groups and days worth remembering.",
-    cta: "Discover",
+    eyebrow: "Groups & moments",
+    title: "Proposals, groups, celebrations",
+    line: "For larger parties and dates worth marking. Designed with you, in conversation.",
+    cta: "Speak to a local",
     to: "/proposals",
-    destination: "Celebrations",
-    expectedTo: "/proposals",
-    ariaLabel: "Plan a Moment — for proposals, celebrations and groups",
-    accent: "charcoal" as const,
-    slug: "moment",
-    stepLabel: "Moment",
+    ariaLabel: "Proposals, groups and celebrations — speak to a local",
     bg: imgArrabidaWineLunch,
   },
 ];
 
-const reviews = [
+/* ──────────────────────────────────────────────────────────────────
+ * Moments / Groups preview — Multi-day, Celebrations, Corporate
+ * collapsed into a single 3-card band.
+ * ────────────────────────────────────────────────────────────── */
+const moments = [
   {
-    quote:
-      "It felt like traveling Portugal with a local friend. Every stop was somewhere we'd never have found ourselves.",
-    name: "Sarah T.",
-    location: "San Francisco",
-    platform: "Google",
+    eyebrow: "Multi-day",
+    title: "Routes across Portugal",
+    line: "Two to seven days, real driving times, real overnight stops.",
+    cta: "Browse multi-day",
+    to: "/multi-day",
+    img: imgTroiaBeach,
   },
   {
-    quote:
-      "Quiet luxury done properly. No itineraries shoved at us — just thoughtful, beautifully timed moments.",
-    name: "Pierre L.",
-    location: "Paris",
-    platform: "TripAdvisor",
+    eyebrow: "Celebrations",
+    title: "Proposals & private days",
+    line: "Quiet planning by a local team — every detail confirmed before the day.",
+    cta: "Plan a moment",
+    to: "/proposals",
+    img: imgArrabidaWineLunch,
   },
   {
-    quote:
-      "Our 12 guests, fully private, completely seamless. They handled everything with extraordinary grace.",
-    name: "Akiko M.",
-    location: "Tokyo",
-    platform: "Trustpilot",
+    eyebrow: "Corporate",
+    title: "Teams & private groups",
+    line: "Small-group experiences for incentive trips and team retreats.",
+    cta: "Speak to corporate",
+    to: "/corporate",
+    img: imgFatimaNazare,
   },
 ];
 
-/**
- * Decision-card route validator.
- *
- * Cross-checks every entry in `startPaths` against its `expectedTo` route
- * at mount, logs the result to the console (one grouped `console.info`
- * per page load), and exposes a small visible status strip directly under
- * the card grid.
- *
- * The strip is rendered:
- *   • always in development (`import.meta.env.DEV`)
- *   • on production preview when the URL contains `?debug-routes`
- * Otherwise it stays hidden so end-users never see QA chrome.
- */
-function RouteValidationStrip() {
-  const [show, setShow] = useState(false);
+/* ──────────────────────────────────────────────────────────────────
+ * Route definition — keeps headers, head meta and HERO_COPY_VERSION
+ * exposure intact so existing locks (X-Hero-Copy-Version,
+ * yes-hero-copy-version meta tag) keep passing.
+ * ────────────────────────────────────────────────────────────── */
+export const Route = createFileRoute("/")({
+  headers: () => ({
+    "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0",
+    Pragma: "no-cache",
+    Expires: "0",
+    "Surrogate-Control": "no-store",
+    "X-Hero-Copy-Version": HERO_COPY_VERSION,
+  }),
+  head: () => ({
+    meta: [
+      { title: "YES experiences Portugal — Portugal is the stage. You write the story." },
+      { name: "yes-hero-copy-version", content: HERO_COPY_VERSION },
+      { name: "description", content: HERO_COPY.subheadline },
+      {
+        property: "og:title",
+        content: "Portugal is the stage. You write the story. — YES experiences",
+      },
+      { property: "og:description", content: HERO_COPY.subheadline },
+      {
+        property: "twitter:title",
+        content: "Portugal is the stage. You write the story. — YES experiences",
+      },
+      { property: "twitter:description", content: HERO_COPY.subheadline },
+      { property: "og:image", content: heroImg },
+      { property: "twitter:image", content: heroImg },
+    ],
+  }),
+  component: HomePage,
+});
 
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const debugFlag = params.has("debug-routes");
-    const visible = import.meta.env.DEV || debugFlag;
-    setShow(visible);
-
-    // Always log — useful in production console even when the strip is hidden.
-    const results = startPaths.map((p) => ({
-      destination: p.destination,
-      label: p.cta,
-      to: p.to,
-      expectedTo: p.expectedTo,
-      ok: p.to === p.expectedTo,
-    }));
-    const allOk = results.every((r) => r.ok);
-
-    console.groupCollapsed(
-      `%c[YES] Decision-card route check — ${allOk ? "PASS ✓" : "FAIL ✗"}`,
-      `color:${allOk ? "#2e7d32" : "#c62828"};font-weight:600`,
-    );
-    results.forEach((r) => {
-      console.info(
-        `${r.ok ? "✓" : "✗"} ${r.destination.padEnd(13)} → ${r.to}` +
-          (r.ok ? "" : `  (expected ${r.expectedTo})`) +
-          `   [label: "${r.label}"]`,
-      );
-    });
-    console.groupEnd();
-  }, []);
-
-  if (!show) return null;
-
-  const checks = startPaths.map((p) => ({
-    destination: p.destination,
-    to: p.to,
-    expectedTo: p.expectedTo,
-    label: p.cta,
-    ok: p.to === p.expectedTo,
-  }));
-  const allOk = checks.every((c) => c.ok);
-
-  return (
-    <div
-      role="status"
-      aria-live="polite"
-      aria-label="Decision card route validation"
-      className="mt-10 max-w-6xl mx-auto border border-dashed border-[color:var(--border)] bg-[color:var(--card)] px-5 py-4 text-[12px] text-[color:var(--charcoal-soft)] font-mono"
-    >
-      <p className="flex items-center gap-2 text-[10.5px] uppercase tracking-[0.24em]">
-        <span
-          aria-hidden="true"
-          className={`inline-block w-2 h-2 rounded-full ${allOk ? "bg-emerald-600" : "bg-red-600"}`}
-        />
-        Route validation — {allOk ? "all 4 paths OK" : "MISMATCH detected"}
-      </p>
-      <ul className="mt-3 grid sm:grid-cols-2 lg:grid-cols-4 gap-2 list-none p-0">
-        {checks.map((c) => (
-          <li
-            key={c.destination}
-            className={`flex items-center justify-between gap-3 px-3 py-2 border ${
-              c.ok
-                ? "border-emerald-600/30 text-[color:var(--charcoal)]"
-                : "border-red-600/40 text-red-700"
-            }`}
-          >
-            <span className="font-semibold">{c.destination}</span>
-            <span className="opacity-80">
-              {c.to}
-              {c.ok ? " ✓" : ` ✗ (expected ${c.expectedTo})`}
-            </span>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
+/* ════════════════════════════════════════════════════════════════
+ * HOMEPAGE — 8 sections (Patch 2B refactor)
+ * 1. Hero
+ * 2. Trust strip
+ * 3. Start here decision block
+ * 4. Signature experiences preview
+ * 5. Experience Studio preview
+ * 6. Moments / Groups
+ * 7. FAQ
+ * 8. Final CTA — Talk to a local
+ * ════════════════════════════════════════════════════════════ */
 function HomePage() {
-  // Patch 2A: hero parallax + CTA scroll-scale removed.
-  // The hero image, vignette and CTA pair now hold their resting state
-  // permanently — calmer, brand-on, accessibility-on. The structural
-  // hooks (heroRef, ctaGroupRef) are kept as plain refs so layout-anchor
-  // queries that target them keep resolving without churn.
-
   return (
     <SiteLayout>
       {/* 1 — HERO
-          Cinematic image, slow zoom, layered overlays for AA-compliant
-          contrast on the headline and microcopy. A subtle pointer parallax
-          shifts the image (≤8px) and the vignette focal point (±4%) for
-          depth behind the CTAs without altering layout or contrast. */}
+          One strong real image, calm overlays, two CTAs, no parallax,
+          no zoom. HERO_COPY stays byte-exact for lock parity. The brand
+          signature ("Whatever you have in mind, We say YES.") is rendered
+          ONCE inside HERO_COPY.brandLine — no duplicate slogans. */}
       <section
         className="relative min-h-[80vh] md:min-h-[94vh] flex items-end overflow-hidden"
       >
-        {/* Hero image — held perfectly still per Patch 2A. No zoom, no
-            drift, no parallax wrapper. The composited overlays are now
-            stationary too, so contrast behind text is identical at every
-            moment the user looks at the page. */}
         <img
           src={heroImg}
           alt="Hidden coastal road in Portugal at golden hour"
@@ -351,43 +216,20 @@ function HomePage() {
           width={1920}
           height={1080}
         />
-        {/* Layered editorial wash — premium warmth without losing legibility.
-            Patch 2A: removed mix-blend-soft-light tint (gold/teal soft-light
-            blend was washing the image). Stack reduced to two clean dark
-            gradients + a static vignette. */}
+        {/* Soft dark gradient — required by brief for any text-over-image. */}
         <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/85 via-[color:var(--charcoal-deep)]/45 to-[color:var(--charcoal-deep)]/40 md:from-[color:var(--charcoal-deep)]/80 md:via-[color:var(--charcoal-deep)]/35 md:to-[color:var(--charcoal-deep)]/30 pointer-events-none" />
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(15,15,15,0.65)_0%,rgba(15,15,15,0.4)_35%,transparent_70%)] md:bg-[linear-gradient(90deg,rgba(15,15,15,0.6)_0%,rgba(15,15,15,0.32)_40%,transparent_72%)] pointer-events-none" />
-        {/* Static vignette — focal point fixed at 30% / 72%. */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            backgroundImage:
-              "radial-gradient(ellipse at 30% 72%, transparent 55%, rgba(0,0,0,0.3) 100%)",
-          }}
-        />
 
         <div className="container-x relative z-10 pb-14 md:pb-36 pt-32 md:pt-40">
           <div className="max-w-3xl text-[color:var(--ivory)]">
-            {/* Eyebrow — left-aligned with the same edge as the headline,
-                subheadline, CTAs and microcopy (single hero content grid).
-                Locked to one line on mobile via whitespace-nowrap +
-                a smaller base size + tighter tracking. */}
             <span className="inline-flex items-center gap-2.5 sm:gap-3.5 whitespace-nowrap text-[10.5px] sm:text-[12px] md:text-[13px] uppercase tracking-[0.18em] sm:tracking-[0.26em] md:tracking-[0.3em] text-[color:var(--gold)] opacity-0 animate-[heroFade_1.1s_ease-out_0.3s_forwards]">
-              <span aria-hidden="true" className="text-[color:var(--gold)]">
-                ✦
-              </span>
+              <span aria-hidden="true">✦</span>
               <span data-hero-field="eyebrow" className="whitespace-nowrap">
                 {HERO_COPY.eyebrow}
               </span>
-              <span aria-hidden="true" className="text-[color:var(--gold)]">
-                ✦
-              </span>
+              <span aria-hidden="true">✦</span>
             </span>
 
-            {/* Headline — sits on a calm 32px gap from the eyebrow on
-                mobile so the top line breathes without floating. Both
-                spans share the same left edge as every other element in
-                the hero column. */}
             <h1
               data-hero-field="headlineLine1 headlineLine2"
               className="hero-h1 serif mt-7 md:mt-10 text-[2.05rem] sm:text-5xl md:text-7xl lg:text-[5.4rem] leading-[1.08] sm:leading-[1.04] md:leading-[0.96] tracking-[-0.012em] text-[color:var(--ivory)] text-left opacity-0 animate-[heroFade_1.4s_ease-out_0.6s_forwards] [text-shadow:0_2px_18px_rgba(0,0,0,0.35)]"
@@ -403,8 +245,6 @@ function HomePage() {
               </span>
             </h1>
 
-            {/* Subheadline — same left edge as the rest of the column.
-                Mobile vertical rhythm: 40px from headline. */}
             <p
               data-hero-field="subheadline"
               className="mt-8 md:mt-10 text-[17px] md:text-[22px] text-[color:var(--ivory)]/95 max-w-md md:max-w-lg leading-[1.6] md:leading-[1.75] font-light text-left opacity-0 animate-[heroFade_1.4s_ease-out_0.95s_forwards] [text-shadow:0_1px_8px_rgba(0,0,0,0.3)]"
@@ -412,39 +252,29 @@ function HomePage() {
               {HERO_COPY.subheadline}
             </p>
 
-            {/* CTA group.
-                Mobile: stacked, both buttons full-width inside a shared
-                max-w-sm rail so they have IDENTICAL width and IDENTICAL
-                left/right edges, which sit on the same left edge as the
-                eyebrow / headline / subheadline / microcopy.
-                Desktop: side-by-side, equal-width via flex-1 + basis-0.
-                Both buttons share the same internal layout: text centered,
-                arrow absolutely pinned at right-5 in BOTH, identical
-                padding (pl-9 pr-12 py-6) for a tactile, premium target,
-                identical height + border.
-                Vertical rhythm: 48px from subheadline (mt-12),
-                16px between primary and secondary CTAs (gap-4) so they
-                feel like a deliberate pair, not stacked-tight. */}
-            <div
-              className="cta-magnet-group mt-12 md:mt-12 flex flex-col sm:flex-row gap-4 sm:gap-4 w-full max-w-sm sm:max-w-xl opacity-0 animate-[heroFade_1.4s_ease-out_1.25s_forwards]"
-            >
+            {/* CTAs — exactly two, per brief.
+                Order swapped from the previous build: Signature first
+                (Explore), Studio second (Build), so the calmer choice
+                leads. Both kept full-width on mobile, equal-width on
+                desktop, with identical internal anatomy. */}
+            <div className="mt-12 md:mt-12 flex flex-col sm:flex-row gap-4 sm:gap-4 w-full max-w-sm sm:max-w-xl opacity-0 animate-[heroFade_1.4s_ease-out_1.25s_forwards]">
               <Link
-                to="/builder"
+                to="/experiences"
                 data-hero-field="primaryCta"
                 className="hero-cta-button cta-primary group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-start text-left"
               >
-                <span className="block">{HERO_COPY.primaryCta}</span>
+                <span className="block">Explore Signature Experiences</span>
                 <ArrowRight
                   size={14}
                   className="absolute right-5 top-1/2 -translate-y-1/2 group-hover:translate-x-1 transition-transform duration-300"
                 />
               </Link>
               <Link
-                to="/experiences"
+                to="/builder"
                 data-hero-field="secondaryCta"
                 className="hero-cta-button cta-secondary-dark group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-start text-left"
               >
-                <span className="block">{HERO_COPY.secondaryCta}</span>
+                <span className="block">Build your private journey</span>
                 <ArrowRight
                   size={14}
                   className="absolute right-5 top-1/2 -translate-y-1/2 group-hover:translate-x-1 transition-transform duration-300"
@@ -452,12 +282,6 @@ function HomePage() {
               </Link>
             </div>
 
-            {/* Microcopy — pulled tighter to the CTA pair (28px on mobile
-                via locked --hero-rhythm-cta-to-microcopy token) so it
-                reads as a caption attached to the buttons, not a
-                separate paragraph. Weight raised from 300 → 400 and
-                size 13 → 14px for slightly higher contrast/legibility
-                on the mobile dark surface. */}
             <div className="hero-rhythm-cta-to-microcopy max-w-sm sm:max-w-xl mx-auto sm:mx-0 opacity-0 animate-[heroFade_1.4s_ease-out_1.5s_forwards]">
               <p
                 data-hero-field="microcopy"
@@ -476,26 +300,9 @@ function HomePage() {
               </p>
             </div>
 
-            {/* Brand line — final centered editorial signature.
-                Both halves now sit at almost-touching line gap (3px on
-                mobile via --hero-rhythm-signature-line-gap) so they
-                read as ONE signature, not two phrases. Line 2 ("We say
-                YES.") carries slightly more weight + brighter gold than
-                line 1 to land as the closing verdict, exactly as the
-                brand directive requires. mb-2 (was mb-4) trims the
-                empty void beneath the signature on mobile so the hero
-                feels visually anchored. */}
-            {/* Patch 2A — brandLine deduplication.
-                Previously the signature was rendered TWICE in the DOM:
-                once as an .sr-only full-string copy, then again as a
-                visible split (line 1 ivory + line 2 gold) wrapped in
-                aria-hidden. Screen readers heard "Whatever you have in
-                mind, We say YES." once via .sr-only AND visually-similar
-                noise from the visible block. Worse, our HERO_COPY probes
-                + any text-grep audit reported the string twice.
-                Fix: keep the visible split (it IS the editorial signature)
-                and drop both the sr-only duplicate AND the aria-hidden on
-                the visible block. SRs now read each half once, in order. */}
+            {/* Brand signature — rendered ONCE (Patch 2A dedup).
+                The visible split is the only copy of the line; SRs read
+                it via aria-label on the wrapper. */}
             <div className="hero-rhythm-microcopy-to-signature mb-2 md:mb-2 mt-8 md:mt-10 flex justify-center opacity-0 animate-[heroFade_1.4s_ease-out_1.75s_forwards]">
               <div
                 data-hero-field="brandLine"
@@ -504,10 +311,7 @@ function HomePage() {
               >
                 <span aria-hidden="true" className="h-px w-12 md:w-16 bg-gradient-to-r from-transparent to-[color:var(--gold)] shrink-0 opacity-90" />
                 <span className="flex flex-col items-center gap-2 md:gap-2.5 text-[10.5px] md:text-[11px] uppercase tracking-[0.32em] leading-[1.2] text-center">
-                  <span
-                    className="text-[color:var(--ivory)]/85"
-                    style={{ fontWeight: 450 }}
-                  >
+                  <span className="text-[color:var(--ivory)]/85" style={{ fontWeight: 450 }}>
                     Whatever you have in mind,
                   </span>
                   <span
@@ -521,20 +325,8 @@ function HomePage() {
               </div>
             </div>
 
-            {/* Hidden hero-copy probe.
-                Not visible to users, but discoverable in DevTools or via
-                document.querySelector('[data-hero-copy-version]'). Mirrors
-                the X-Hero-Copy-Version response header and the
-                yes-hero-copy-version meta tag, and also exposes the live
-                rendered headline + subheadline so you can confirm a copy
-                change shipped without leaving the preview.
-
-                Quick checks (paste in the browser console):
-                  const el = document.querySelector('[data-hero-copy-version]');
-                  el.dataset.heroCopyVersion;   // hash
-                  el.dataset.heroHeadline;      // "Portugal is the stage. You write the story."
-                  el.dataset.heroSubheadline;   // full subheadline
-            */}
+            {/* Hidden hero-copy probes — required by HERO_COPY locks.
+                Visually-hidden, no layout impact. */}
             <div
               data-hero-copy-version={HERO_COPY_VERSION}
               data-hero-eyebrow={HERO_COPY.eyebrow}
@@ -566,23 +358,8 @@ function HomePage() {
               {" | "}
               <span data-probe-field="subheadline">{HERO_COPY.subheadline}</span>
             </div>
-
-            {/* JSON snapshot probe.
-                Serializes the full HERO_COPY object (plus the version hash)
-                into a single data attribute so you can diff copy changes
-                quickly in the browser console:
-
-                  const j = document.querySelector('[data-hero-copy-json]');
-                  JSON.parse(j.dataset.heroCopyJson);
-
-                Pair with `copy(...)` to grab the snapshot, then compare
-                against an earlier capture (e.g. JSON.diff in DevTools or
-                any text differ). Stable key order = clean diffs. */}
             <div
-              data-hero-copy-json={JSON.stringify({
-                version: HERO_COPY_VERSION,
-                copy: HERO_COPY,
-              })}
+              data-hero-copy-json={JSON.stringify({ version: HERO_COPY_VERSION, copy: HERO_COPY })}
               data-testid="hero-copy-json"
               aria-hidden="true"
               style={{
@@ -600,1092 +377,375 @@ function HomePage() {
               <script
                 type="application/json"
                 data-probe-field="hero-copy-json"
-                // Inline JSON is also rendered as a <script type="application/json">
-                // so it survives a "View Source" capture without HTML-escaping
-                // mangling the quotes.
                 dangerouslySetInnerHTML={{
                   __html: JSON.stringify({ version: HERO_COPY_VERSION, copy: HERO_COPY }, null, 2),
                 }}
               />
             </div>
-
-            {/* Patch 2A: HeroMetaProbe / HeroCopyDiff / HeroVerifyOverlay
-                removed from the rendered tree. The hidden data-* probes
-                above (data-hero-copy-version, data-hero-copy-json) cover
-                lock-spec verification without injecting any visible UI. */}
           </div>
         </div>
       </section>
 
-      {/* 2 — TRUST BAR
-          Reveal cadence is locked with explicit transitionDelay values so
-          all six pieces (eyebrow → stars → supporting line → 3 marks)
-          cascade in as ONE continuous sequence at the project-wide 110ms
-          rhythm — even though they sit under two different DOM parents.
-          The SiteLayout IntersectionObserver respects inline delays and
-          only adds the .is-visible class, so motion stays restrained,
-          smooth, and perfectly in time with every other section.
-          Gold is used sparingly: just the 5 hero stars, the hairline
-          vertical dividers between marks, and the tiny check inside
-          each "Official platform" caption.
-
-          Accessibility:
-          • Section is a labelled landmark via aria-labelledby pointing to
-            a visually-hidden heading.
-          • The hero star row is a single role="img" with an explicit
-            "Rated 5.0 out of 5 stars" label; the visual "5.0" glyph is
-            aria-hidden so it isn't announced twice.
-          • Each platform is a <figure> with a <figcaption>; the platform
-            name carries aria-describedby pointing to its caption's id,
-            so a screen reader announces e.g.
-            "Google, Google — official review platform".
-          • Decorative glyphs and column dividers are aria-hidden. */}
+      {/* 2 — TRUST STRIP
+          Restrained: review count, real platforms, one short line about
+          private guides + real local knowledge. No avatars carousel, no
+          repeated review block. This is the SINGLE review surface on the
+          page (per "no repeated review sections" guardrail). */}
       <section
         className="bg-[color:var(--ivory)] border-b border-[color:var(--border)] section-y-sm"
         aria-labelledby="trust-bar-title"
       >
         <h2 id="trust-bar-title" className="sr-only">
-          700+ 5-star reviews
+          700+ five-star reviews across major platforms
         </h2>
-
         <div className="container-x">
-          <div className="flex flex-col items-center text-center gap-4">
+          <div className="flex flex-col items-center text-center gap-5">
             <p
-              className="reveal-stagger flex items-center gap-1 text-[color:var(--gold)]"
-              style={{ transitionDelay: "0ms" }}
+              className="flex items-center gap-1 text-[color:var(--gold)]"
               role="img"
               aria-label="Rated 5 out of 5 stars"
             >
               {[...Array(5)].map((_, i) => (
-                <Star
-                  key={i}
-                  size={16}
-                  fill="currentColor"
-                  strokeWidth={0}
-                  aria-hidden="true"
-                  focusable="false"
-                />
+                <Star key={i} size={16} fill="currentColor" strokeWidth={0} aria-hidden="true" focusable="false" />
               ))}
             </p>
-
-            <p
-              className="reveal-stagger serif text-[1.6rem] md:text-[2rem] text-[color:var(--charcoal)] leading-[1.15]"
-              style={{ transitionDelay: "110ms" }}
-              id="trust-bar-summary"
-            >
-              700+ <span className="italic">5-star reviews</span>
+            <p className="serif text-[1.5rem] md:text-[1.9rem] text-[color:var(--charcoal)] leading-[1.2]">
+              700+ <span className="italic">five-star reviews</span>
             </p>
-
-            {/* Real client moments — small overlapping photo strip to
-                signal that real people are behind the rating. Uses real
-                photography from the editorial set. */}
-            <div
-              className="reveal-stagger flex items-center gap-3 mt-1"
-              style={{ transitionDelay: "180ms" }}
-              aria-hidden="true"
+            <p className="max-w-md text-[14px] md:text-[15px] text-[color:var(--charcoal-soft)] leading-[1.6] font-light">
+              Private local guides who actually live here — every day designed and confirmed by a small team in Portugal.
+            </p>
+            <ul
+              className="mt-2 flex flex-wrap items-center justify-center gap-x-9 gap-y-4 md:gap-x-12 list-none p-0 h-7 md:h-8"
+              aria-label="Featured on Google, Tripadvisor, Viator, GetYourGuide and Trustpilot"
             >
-              <div className="flex -space-x-2.5">
-                {[imgArrabidaWineLunch, imgArrabidaBoatCoves, imgSintraEstates, imgTroiaBeach, imgFatimaNazare].map((src, i) => (
-                  <span
-                    key={i}
-                    className="inline-block w-9 h-9 md:w-10 md:h-10 rounded-full overflow-hidden border-2 border-[color:var(--ivory)] shadow-[0_2px_6px_-2px_rgba(46,46,46,0.25)] bg-[color:var(--card)]"
-                  >
-                    <img
-                      src={src}
-                      alt=""
-                      loading="lazy"
-                      className="w-full h-full object-cover"
-                    />
-                  </span>
-                ))}
-              </div>
-              <span className="text-[12px] md:text-[12.5px] tracking-[0.04em] text-[color:var(--charcoal-soft)] font-light italic">
-                from real moments, real travellers
-              </span>
-            </div>
-
-            <div
-              className="reveal-stagger mt-2 w-full max-w-3xl"
-              style={{ transitionDelay: "260ms" }}
-            >
-              <ul
-                className="flex flex-wrap items-center justify-center gap-x-9 gap-y-4 md:gap-x-12 list-none p-0 h-7 md:h-8"
-                aria-label="Featured on Google, TripAdvisor, Viator, GetYourGuide and Trustpilot"
-              >
-                {(["google", "tripadvisor", "viator", "getyourguide", "trustpilot"] as const).map(
-                  (p) => (
-                    <li key={p} className="h-full flex items-center">
-                      <PlatformBadge platform={p} />
-                    </li>
-                  ),
-                )}
-              </ul>
-            </div>
+              {(["google", "tripadvisor", "viator", "getyourguide", "trustpilot"] as const).map((p) => (
+                <li key={p} className="h-full flex items-center">
+                  <PlatformBadge platform={p} />
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </section>
 
-      {/* 3 — START PATHS
-          Four explicit product paths, surfaced immediately after the trust
-          signal so the user understands every way they can engage with the
-          brand. Mobile: 2-up grid. Desktop: 4-up. The Studio card is the
-          visually distinct teal card to anchor the "build from scratch"
-          path as the most differentiated option. */}
+      {/* 3 — START HERE
+          Four paths with explicit hierarchy: 2 primary (Signature,
+          Studio), 2 secondary (Tailor, Proposals/Groups). Mobile: stacked.
+          Tablet+: 2-column. Cards are calm, ivory, with a small image
+          and a real choice CTA — no full-bleed photo cards, no doorway
+          motion, no decorative scrim layers. */}
       <section
-        id="decision-flow"
-        className="section-y bg-[color:var(--ivory)] border-b border-[color:var(--border)]"
+        className="section-y bg-[color:var(--sand)] border-b border-[color:var(--border)]"
         aria-labelledby="start-paths-title"
       >
         <div className="container-x">
-          <div className="reveal text-center max-w-2xl mx-auto mb-14 md:mb-20">
+          <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
             <span className="eyebrow">Where to begin</span>
-            <h2
-              id="start-paths-title"
-              className="t-h2 mt-5"
-            >
-              Choose how <span className="italic">you want to start.</span>
+            <h2 id="start-paths-title" className="t-h2 mt-5">
+              Four ways to <span className="italic">start.</span>
             </h2>
             <p className="mt-5 text-[14.5px] md:text-[15.5px] text-[color:var(--charcoal-soft)] font-light leading-[1.6] max-w-md mx-auto">
-              Four ways in. Pick one — decide in seconds.
+              Pick the path that matches how you like to plan.
             </p>
           </div>
 
-          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-12 list-none p-0 max-w-6xl mx-auto">
+          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8 list-none p-0 max-w-5xl mx-auto">
             {startPaths.map((p) => {
-              // Tap-to-focus: on touch devices `:active` only lasts while the
-              // finger is pressed, which feels like a "click" rather than
-              // "entering" the scene. We hold the focused state for ~480ms
-              // after pointerdown so the zoom + lift have time to read as
-              // a deliberate doorway moment before navigation occurs.
-              const handleTouchEnter = (e: React.PointerEvent<HTMLAnchorElement>) => {
-                if (e.pointerType !== "touch") return;
-                const el = e.currentTarget;
-                el.dataset.tapped = "true";
-                window.setTimeout(() => {
-                  el.dataset.tapped = "false";
-                }, 480);
-              };
+              const Icon = p.icon;
+              const primary = p.tier === "primary";
               return (
-                <li
-                  key={p.title}
-                  id={`decision-card-${p.slug}`}
-                  className="reveal-stagger h-full scroll-mt-24"
-                >
+                <li key={p.title}>
                   <Link
                     to={p.to}
                     aria-label={p.ariaLabel}
-                    data-destination={p.destination}
-                    data-expected-to={p.expectedTo}
-                    data-actual-to={p.to}
-                    data-route-ok={p.to === p.expectedTo ? "true" : "false"}
-                    onPointerDown={handleTouchEnter}
-                    className="decision-scene group relative flex flex-col justify-end h-full min-h-[30rem] md:min-h-[34rem] p-8 md:p-10 overflow-hidden rounded-[2px] bg-[color:var(--charcoal-deep)] shadow-[0_18px_44px_-22px_rgba(0,0,0,0.55)] transition-all duration-[250ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] hover:-translate-y-1 hover:shadow-[0_32px_64px_-22px_rgba(0,0,0,0.7)] focus-visible:-translate-y-1 focus-visible:shadow-[0_32px_64px_-22px_rgba(0,0,0,0.7)] active:-translate-y-0.5 data-[tapped=true]:-translate-y-1 data-[tapped=true]:shadow-[0_32px_64px_-22px_rgba(0,0,0,0.7)]"
+                    className={
+                      "group relative flex flex-col h-full overflow-hidden rounded-[2px] border transition-all duration-200 ease-out hover:-translate-y-0.5 focus-visible:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--sand)] " +
+                      (primary
+                        ? "bg-[color:var(--ivory)] border-[color:var(--charcoal)]/15 shadow-[0_4px_12px_-6px_rgba(46,46,46,0.18)] hover:shadow-[0_10px_24px_-10px_rgba(46,46,46,0.28)]"
+                        : "bg-[color:var(--ivory)]/70 border-[color:var(--border)] hover:border-[color:var(--charcoal)]/25")
+                    }
                   >
-                    {/* Full immersive scene — the image IS the card.
-                        Zooms 1.03 on hover/focus/touch for a cinematic
-                        "step-into-it" cue. */}
-                    {p.bg && (
+                    <div className="relative aspect-[16/10] overflow-hidden bg-[color:var(--card)]">
                       <img
                         src={p.bg}
                         alt=""
                         aria-hidden="true"
                         loading="lazy"
-                        data-card-image
-                        className="absolute inset-0 w-full h-full object-cover opacity-95 transition-transform duration-[700ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:scale-[1.03] group-focus-visible:scale-[1.03] group-active:scale-[1.03] group-data-[tapped=true]:scale-[1.03]"
+                        className="absolute inset-0 w-full h-full object-cover"
                       />
-                    )}
-                    {/* Per-image readability gradient. Each photo was sampled
-                        for top/mid/bottom luminance and the stops tuned so the
-                        text band (bottom 35%) hits the same legibility target
-                        (~WCAG AA on white serif). Brighter scenes get stronger
-                        bottom scrims; already-dark scenes get lighter overlays
-                        so the imagery breathes. */}
-                    <div
-                      aria-hidden="true"
-                      className={
-                        "absolute inset-0 " +
-                        (p.slug === "signature"
-                          ? "bg-[linear-gradient(to_top,rgba(0,0,0,0.94)_0%,rgba(0,0,0,0.86)_22%,rgba(0,0,0,0.55)_55%,rgba(0,0,0,0.30)_80%,rgba(0,0,0,0.40)_100%)]"
-                          : p.slug === "tailor"
-                          ? "bg-[linear-gradient(to_top,rgba(0,0,0,0.80)_0%,rgba(0,0,0,0.62)_28%,rgba(0,0,0,0.32)_60%,rgba(0,0,0,0.15)_100%)]"
-                          : p.slug === "studio"
-                          ? "bg-[linear-gradient(to_top,rgba(0,0,0,0.88)_0%,rgba(0,0,0,0.72)_25%,rgba(0,0,0,0.42)_58%,rgba(0,0,0,0.18)_85%,rgba(0,0,0,0.28)_100%)]"
-                          : "bg-[linear-gradient(to_top,rgba(0,0,0,0.78)_0%,rgba(0,0,0,0.62)_22%,rgba(0,0,0,0.42)_55%,rgba(0,0,0,0.35)_80%,rgba(0,0,0,0.50)_100%)]")
-                      }
-                    />
-                    {/* Static radial vignette — Patch 2A removed the
-                        mix-blend-multiply blend; opacity bumped from 55%
-                        to a fixed 65% so the scene still feels framed. */}
-                    <div
-                      aria-hidden="true"
-                      className="absolute inset-0 opacity-65 [background:radial-gradient(130%_85%_at_50%_-10%,transparent_45%,rgba(0,0,0,0.7)_100%)]"
-                    />
-
-                    {/* Content anchored to bottom — the scene speaks first.
-                        No icon chip, no gold rail — just photography, a quiet
-                        eyebrow, the title, the invitation. */}
-                    <span className="relative z-[1] text-[10.5px] uppercase tracking-[0.34em] text-[color:var(--gold-soft)]">
-                      {p.eyebrow}
-                    </span>
-                    <h3 className="relative z-[1] serif mt-4 text-[2rem] md:text-[2.2rem] leading-[1.05] tracking-[-0.012em] text-white drop-shadow-[0_2px_18px_rgba(0,0,0,0.5)]">
-                      {p.title}
-                    </h3>
-                    <p className="relative z-[1] mt-5 text-[14.5px] md:text-[15px] leading-[1.7] font-light text-white/90 drop-shadow-[0_1px_8px_rgba(0,0,0,0.55)] max-w-[34ch]">
-                      {p.line}
-                    </p>
-                    {/* Doorway CTA — underline animates from a 28px gold tick
-                        to the full label width on hover, focus, AND touch
-                        hold (active). Label fades to gold on activation; arrow
-                        steps forward. The whole <Link> remains the tap target
-                        (full card), so accessibility is preserved. */}
-                    <span className="cta-doorway relative z-[1] mt-8 inline-flex items-center gap-2.5 text-[12.5px] uppercase tracking-[0.26em] font-medium text-white transition-colors duration-300 group-hover:text-[color:var(--gold)] group-focus-visible:text-[color:var(--gold)] group-active:text-[color:var(--gold)]">
-                      <span className="cta-doorway__label relative pb-1.5">
-                        {p.cta}
+                      <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/35 to-transparent" />
+                    </div>
+                    <div className="p-6 md:p-7 flex flex-col gap-3">
+                      <span className="inline-flex items-center gap-2 text-[10.5px] uppercase tracking-[0.28em] text-[color:var(--charcoal-soft)]">
+                        <Icon size={12} aria-hidden="true" />
+                        {p.eyebrow}
+                        {primary && (
+                          <span className="ml-auto inline-flex items-center text-[9.5px] uppercase tracking-[0.24em] text-[color:var(--gold)]">
+                            Recommended
+                          </span>
+                        )}
                       </span>
-                      <ArrowRight
-                        size={14}
-                        className="text-[color:var(--gold)] transition-transform duration-300 ease-out group-hover:translate-x-1.5 group-focus-visible:translate-x-1.5 group-active:translate-x-2"
-                      />
-                    </span>
+                      <h3 className="serif text-[1.45rem] md:text-[1.6rem] leading-[1.15] text-[color:var(--charcoal)]">
+                        {p.title}
+                      </h3>
+                      <p className="text-[14px] md:text-[14.5px] leading-[1.6] text-[color:var(--charcoal-soft)] font-light">
+                        {p.line}
+                      </p>
+                      <span className="mt-auto inline-flex items-center gap-2 pt-3 text-[12px] uppercase tracking-[0.22em] font-medium text-[color:var(--teal)]">
+                        {p.cta}
+                        <ArrowRight
+                          size={14}
+                          className="transition-transform duration-200 group-hover:translate-x-0.5"
+                        />
+                      </span>
+                    </div>
                   </Link>
                 </li>
               );
             })}
           </ul>
-          {/* Patch 2A: RouteValidationStrip (dev-only debug strip) removed
-              from the rendered tree. */}
         </div>
-        <DecisionStepper
-          sectionId="decision-flow"
-          steps={startPaths.map((p) => ({
-            id: `decision-card-${p.slug}`,
-            label: p.stepLabel,
-          }))}
-        />
       </section>
 
-      {/* 4 — BUILDER (CORE PRODUCT)
-          The main innovation, given dedicated space immediately after the
-          decision grid. Communicates: instant creation + instant
-          confirmation + real-time local guidance. */}
+      {/* 4 — SIGNATURE EXPERIENCES PREVIEW
+          Up to 4 real Signature tours. Each card uses the tour's real
+          hero image (sourced from the matching Viator page), real title
+          and real blurb from `signatureTours`. No vague taglines, no
+          repeated labels. */}
       <section
-        className="bg-[color:var(--teal)] text-[color:var(--ivory)] section-y-lg relative overflow-hidden py-24 md:py-36"
-        aria-labelledby="studio-title"
+        className="section-y bg-[color:var(--ivory)] border-b border-[color:var(--border)]"
+        aria-labelledby="signatures-title"
       >
-        {/* Patch 2A: removed the two decorative gold-ring blobs (the
-            -top-32/-right-32 and -bottom-40/-left-32 floating circles).
-            They added visual noise without semantic value. */}
-        <div className="container-x relative">
-          <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center max-w-6xl mx-auto">
-            <div className="reveal lg:col-span-7">
-              <span className="inline-flex items-center gap-2.5 text-[11px] uppercase tracking-[0.32em] text-[color:var(--gold)]">
-                {/* Patch 2A: animate-ping removed (forbidden flashing
-                    motion). A static gold dot still signals "live". */}
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-[color:var(--gold)]" />
-                The Studio · Live now
-              </span>
-              <h2
-                id="studio-title"
-                className="serif mt-7 text-[2.6rem] sm:text-[3.4rem] md:text-[4.4rem] lg:text-[5rem] leading-[0.98] tracking-[-0.018em]"
-              >
-                Create it, <span className="italic text-[color:var(--gold-soft)]">live.</span>
-              </h2>
-              <p className="mt-8 text-[19px] md:text-[22px] lg:text-[24px] text-[color:var(--ivory)] leading-[1.5] max-w-xl font-light">
-                Start with a place, a moment, or an idea. Shape it in real time and confirm instantly.
-              </p>
-              <p className="mt-5 text-[15px] md:text-[16px] italic font-light text-[color:var(--gold-soft)] leading-[1.7] max-w-xl">
-                A local is available in real time if you want help.
-              </p>
-              <Link
-                to="/builder"
-                className="btn-solid btn-solid--gold mt-12"
-              >
-                Open Studio <ArrowRight size={16} />
-              </Link>
-            </div>
-
-            <div className="reveal lg:col-span-5">
-              <div className="relative">
-                {/* Live, animated routing preview — replaces the static
-                    panel. Communicates "alive, real-time, magic" without
-                    loading a real map SDK on mobile. */}
-                <LiveMapPreview />
-                <div className="absolute -top-4 -right-4 hidden md:block w-20 h-20 border border-[color:var(--gold)]/40 pointer-events-none" />
-              </div>
-              <ol className="mt-6 grid grid-cols-2 gap-x-5 gap-y-3 list-none p-0 text-[12.5px] text-[color:var(--ivory)]/85 font-light">
-                {[
-                  "Start your way",
-                  "Shape it as you go",
-                  "Adjust in real time",
-                  "Confirm instantly",
-                ].map((step, i) => (
-                  <li key={step} className="flex items-baseline gap-2.5">
-                    <span className="text-[10px] uppercase tracking-[0.28em] text-[color:var(--gold)] font-medium shrink-0">
-                      0{i + 1}
-                    </span>
-                    <span>{step}</span>
-                  </li>
-                ))}
-              </ol>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 4b — BUILDER PREVIEW GALLERY
-          Real saved builds. Each card shows a Signature on the left and the
-          same day after a guest tailored it on the right — communicating
-          "browse real builds, see how a Signature becomes yours." */}
-      <BuilderPreviewGallery />
-
-      {/* 5 — SIGNATURE EXPERIENCES (confirm or tailor)
-          Three signature starting points. Each can be booked as-is OR
-          tailored — that dual nature is communicated in the section
-          intro and reinforced by the dual CTA on each card. */}
-      <section className="section-y bg-[color:var(--sand)]" aria-labelledby="signatures-title">
         <div className="container-x">
-          <div className="reveal text-center max-w-2xl mx-auto mb-14 md:mb-20">
-            <span className="eyebrow">Signature Journeys</span>
-            <h2
-              id="signatures-title"
-              className="t-h2 mt-5"
-            >
-              Signature <span className="italic">Journeys.</span>
+          <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
+            <span className="eyebrow">Signature experiences</span>
+            <h2 id="signatures-title" className="t-h2 mt-5">
+              Days <span className="italic">already designed.</span>
             </h2>
-            <p className="t-lead mt-5">
-              Curated routes designed to be enjoyed as they are.
-            </p>
-            <p className="mt-3 text-[13.5px] md:text-[14px] italic font-light text-[color:var(--charcoal-soft)]">
-              You can adjust selected elements to match your rhythm.
+            <p className="mt-5 text-[14.5px] md:text-[15.5px] text-[color:var(--charcoal-soft)] font-light leading-[1.6] max-w-md mx-auto">
+              Confirm a Signature as it ships, or tailor a few details inside.
             </p>
           </div>
 
-          <div className="reveal max-w-6xl mx-auto">
-            <SignatureCarousel items={signatures} />
-          </div>
+          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 list-none p-0">
+            {signatures.map((t) => (
+              <li key={t.id}>
+                <Link
+                  to="/tours/$tourId"
+                  params={{ tourId: t.id }}
+                  className="group relative flex flex-col h-full overflow-hidden rounded-[2px] border border-[color:var(--border)] bg-[color:var(--ivory)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-[color:var(--charcoal)]/25 hover:shadow-[0_10px_24px_-12px_rgba(46,46,46,0.2)] focus-visible:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2"
+                >
+                  <div className="relative aspect-[4/5] overflow-hidden bg-[color:var(--card)]">
+                    <img
+                      src={t.img}
+                      alt={t.title}
+                      loading="lazy"
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                    <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/40 via-transparent to-transparent" />
+                  </div>
+                  <div className="p-5 md:p-6 flex flex-col gap-2.5">
+                    <span className="text-[10.5px] uppercase tracking-[0.28em] text-[color:var(--charcoal-soft)]">
+                      {t.pace}
+                    </span>
+                    <h3 className="serif text-[1.25rem] md:text-[1.4rem] leading-[1.2] text-[color:var(--charcoal)]">
+                      {t.title}
+                    </h3>
+                    <p className="text-[13.5px] leading-[1.55] text-[color:var(--charcoal-soft)] font-light line-clamp-3">
+                      {t.line}
+                    </p>
+                    <span className="mt-2 inline-flex items-center gap-1.5 text-[11.5px] uppercase tracking-[0.22em] font-medium text-[color:var(--teal)]">
+                      View signature
+                      <ArrowRight
+                        size={12}
+                        className="transition-transform duration-200 group-hover:translate-x-0.5"
+                      />
+                    </span>
+                  </div>
+                </Link>
+              </li>
+            ))}
+          </ul>
 
-          <div className="reveal mt-14 md:mt-16 text-center">
+          <div className="mt-12 md:mt-14 text-center">
             <Link
               to="/experiences"
-              className="btn-solid btn-solid--outline"
+              className="inline-flex items-center gap-2 text-[12px] uppercase tracking-[0.24em] font-medium text-[color:var(--charcoal)] border-b border-[color:var(--charcoal)]/30 pb-1 hover:border-[color:var(--charcoal)] transition-colors"
             >
-              Explore all signatures <ArrowRight size={14} />
+              See every Signature
+              <ArrowRight size={14} />
             </Link>
           </div>
         </div>
       </section>
 
-      {/* 5a — TAILOR A SIGNATURE (explanation)
-          Clarifies what tailoring actually means: small adjustments
-          INSIDE a chosen Signature, not full custom design (that's the
-          Studio). Visual: a real workshop scene + editorial copy. */}
+      {/* 5 — EXPERIENCE STUDIO PREVIEW
+          One clean band: map + route + summary. No "live" claim, no
+          decorative blobs, no glow. Emphasizes route realism, timing,
+          and human support. */}
       <section
-        className="bg-[color:var(--ivory)] section-y-sm border-t border-[color:var(--border)]"
-        aria-labelledby="tailor-title"
+        className="section-y-lg bg-[color:var(--sand)] border-b border-[color:var(--border)]"
+        aria-labelledby="studio-title"
       >
         <div className="container-x">
-          <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-center max-w-6xl mx-auto">
-            <div className="reveal lg:col-span-7">
-              <span className="eyebrow">Tailor a Signature</span>
-              <h2
-                id="tailor-title"
-                className="t-h2 mt-5"
-              >
-                Love the route, <span className="italic">your own rhythm.</span>
+          <div className="grid lg:grid-cols-12 gap-10 lg:gap-14 items-center max-w-6xl mx-auto">
+            <div className="lg:col-span-5">
+              <span className="eyebrow inline-flex items-center gap-2">
+                <MapPin size={12} aria-hidden="true" />
+                Experience Studio
+              </span>
+              <h2 id="studio-title" className="t-h2 mt-5">
+                Build a day that <span className="italic">actually fits.</span>
               </h2>
-              <p className="mt-6 text-[16px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.75] max-w-xl font-light">
-                Love the route but want a different rhythm? Adjust selected details while keeping the journey intact.
+              <p className="mt-5 text-[14.5px] md:text-[15.5px] text-[color:var(--charcoal-soft)] font-light leading-[1.7] max-w-md">
+                Pick stops on a real map. The Studio shows route feasibility, estimated duration, and an estimate breakdown — so you see what works before you commit.
               </p>
-              <ul className="mt-7 space-y-2.5 list-none p-0 text-[14.5px] text-[color:var(--charcoal)] font-light">
-                {[
-                  "Swap a tasting for a long lunch",
-                  "Add a sunset stop, slow down a morning",
-                  "Same route, your pace",
-                ].map((item) => (
-                  <li key={item} className="flex items-baseline gap-3">
-                    <span className="text-[color:var(--gold)] text-[10px] tracking-[0.3em] mt-0.5 shrink-0">✦</span>
-                    <span>{item}</span>
-                  </li>
-                ))}
+              <ul className="mt-6 space-y-2.5 text-[13.5px] text-[color:var(--charcoal)] font-light leading-[1.6]">
+                <li className="flex gap-2">
+                  <span aria-hidden="true" className="text-[color:var(--gold)]">·</span>
+                  Real stops only — no invented venues
+                </li>
+                <li className="flex gap-2">
+                  <span aria-hidden="true" className="text-[color:var(--gold)]">·</span>
+                  Honest driving times and pace
+                </li>
+                <li className="flex gap-2">
+                  <span aria-hidden="true" className="text-[color:var(--gold)]">·</span>
+                  A local designer reviews every build
+                </li>
               </ul>
-              <p className="mt-6 text-[13.5px] italic font-light text-[color:var(--gold-soft)] leading-[1.7] max-w-md">
-                A moment designed around your rhythm.
-              </p>
-              <p className="mt-2 text-[13px] italic font-light text-[color:var(--charcoal-soft)] leading-[1.7] max-w-md">
-                Tailoring stays inside the chosen tour. To design something entirely your own, open the Studio.
-              </p>
-              <Link
-                to="/experiences"
-                className="btn-solid btn-solid--outline mt-9"
-              >
-                Tailor a Signature <ArrowRight size={14} />
-              </Link>
-            </div>
-            <div className="reveal lg:col-span-5">
-              <div className="editorial-card relative overflow-hidden border border-[color:var(--border)] aspect-[4/5]">
-                <img
-                  src={imgAzeitaoWorkshop}
-                  alt="A small Azeitão workshop — the kind of stop you'd shape to your rhythm"
-                  loading="lazy"
-                  data-card-image
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal)]/60 via-transparent to-transparent" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 5b — EDITORIAL TRANSITION
-          A single full-bleed cinematic frame with a sensory micro-line.
-          Acts as a quiet "breath" between the Tailor block and the
-          Multi-Day journey — pure photography, no card chrome. */}
-      <section
-        className="relative h-[58vh] md:h-[70vh] overflow-hidden"
-        aria-label="A road that opens to the sea"
-      >
-        <img
-          src={imgSintraCabo}
-          alt=""
-          aria-hidden="true"
-          loading="lazy"
-          data-card-image
-          className="absolute inset-0 w-full h-full object-cover scale-[1.04]"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/85 via-[color:var(--charcoal-deep)]/30 to-[color:var(--charcoal-deep)]/55" />
-        <div className="absolute inset-0 bg-[radial-gradient(120%_80%_at_50%_60%,transparent_45%,rgba(0,0,0,0.55)_100%)]" />
-        <div className="container-x relative h-full flex items-end pb-12 md:pb-20">
-          <div className="reveal max-w-xl text-[color:var(--ivory)]">
-            <span className="block h-px w-10 bg-[color:var(--gold)] mb-5 opacity-90" />
-            <p className="serif text-[1.6rem] md:text-[2.4rem] leading-[1.15] tracking-[-0.005em] italic font-light drop-shadow-[0_2px_18px_rgba(0,0,0,0.5)]">
-              A road that opens to the sea.
-            </p>
-            <p className="mt-3 text-[12px] md:text-[12.5px] uppercase tracking-[0.32em] text-[color:var(--gold-soft)]">
-              Cabo da Roca · Sintra
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* 6 — MULTI-DAY JOURNEYS
-          Reframed as a cinematic dark scene: a single hero photograph
-          carries the section, copy is overlaid in the lower-left, with
-          a small secondary photo collage in the bottom-right to hint
-          at the rhythm of a multi-day journey (movement → arrival). */}
-      <section
-        className="relative bg-[color:var(--charcoal-deep)] overflow-hidden section-y-lg"
-        aria-labelledby="multiday-title"
-      >
-        <img
-          src={multiDayImg}
-          alt=""
-          aria-hidden="true"
-          loading="lazy"
-          data-card-image
-          className="absolute inset-0 w-full h-full object-cover opacity-70"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-[color:var(--charcoal-deep)]/90 via-[color:var(--charcoal-deep)]/60 to-[color:var(--charcoal-deep)]/30" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/85 via-transparent to-[color:var(--charcoal-deep)]/40" />
-
-        <div className="container-x relative">
-          <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-end max-w-6xl mx-auto">
-            <div className="reveal lg:col-span-7 text-[color:var(--ivory)]">
-              <span className="inline-flex items-center gap-3 text-[11px] uppercase tracking-[0.32em] text-[color:var(--gold)]">
-                <span className="block h-px w-7 bg-[color:var(--gold)]/80" />
-                Multi-Day Journeys
-              </span>
-              <h2
-                id="multiday-title"
-                className="serif mt-7 text-[2.4rem] sm:text-[3.2rem] md:text-[4rem] lg:text-[4.6rem] leading-[1] tracking-[-0.018em] drop-shadow-[0_2px_18px_rgba(0,0,0,0.45)]"
-              >
-                A few days, <br />
-                <span className="italic text-[color:var(--gold-soft)]">one continuous story.</span>
-              </h2>
-              <p className="mt-7 text-[16px] md:text-[18px] text-[color:var(--ivory)]/90 leading-[1.75] max-w-xl font-light">
-                Wake in a vineyard, lunch in a fishing village, fall asleep above the Douro —
-                connected by quiet roads and people who know them by name.
-              </p>
-              <p className="mt-5 text-[13.5px] md:text-[14px] italic font-light text-[color:var(--gold-soft)] leading-[1.7] max-w-md">
-                A village most travelers pass by — until you don't.
-              </p>
-              <div className="mt-8 flex flex-wrap gap-2.5">
-                {["Coast & Vineyards", "Lisbon to Douro", "Alentejo Slow"].map((tag) => (
-                  <span
-                    key={tag}
-                    className="text-[11px] uppercase tracking-[0.22em] px-3.5 py-2 border border-[color:var(--gold)]/30 text-[color:var(--ivory)]/85"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-              <Link
-                to="/multi-day"
-                className="btn-solid btn-solid--gold mt-10"
-              >
-                Discover Multi-Day Journeys
-                <ArrowRight size={15} />
-              </Link>
-            </div>
-
-            <div className="reveal lg:col-span-5 hidden md:block">
-              <div className="grid grid-cols-2 gap-3">
-                <div className="editorial-card relative overflow-hidden aspect-[3/4] border border-[color:var(--gold)]/20 translate-y-6">
-                  <img
-                    src={imgArrabidaWineViewpoint}
-                    alt="Coastal viewpoint, Arrábida"
-                    loading="lazy"
-                    data-card-image
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-                </div>
-                <div className="editorial-card relative overflow-hidden aspect-[3/4] border border-[color:var(--gold)]/20 -translate-y-3">
-                  <img
-                    src={imgTroiaBeach}
-                    alt="Long beach, Comporta"
-                    loading="lazy"
-                    data-card-image
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 7 — CELEBRATIONS & CORPORATE
-          Asymmetric editorial layout — breaks the rhythm of repeating
-          three-up grids. Proposals takes the large emotional frame
-          (left, full image), Celebrations and Corporate stack on the
-          right (smaller, text-led on real photography). */}
-      <section
-        className="section-y bg-[color:var(--ivory)] border-y border-[color:var(--border)]"
-        aria-labelledby="occasions-title"
-      >
-        <div className="container-x">
-          <div className="reveal text-center max-w-2xl mx-auto mb-14 md:mb-16">
-            <span className="eyebrow">Celebrations &amp; Groups</span>
-            <h2
-              id="occasions-title"
-              className="t-h2 mt-5"
-            >
-              For moments <span className="italic">that matter.</span>
-            </h2>
-            <p className="t-lead mt-5">
-              From intimate plans to larger groups — designed your way and confirmed instantly.
-            </p>
-          </div>
-
-          <div className="grid lg:grid-cols-12 gap-5 md:gap-6 max-w-6xl mx-auto">
-            {/* Proposals — large emotional frame */}
-            <Link
-              to="/proposals"
-              aria-label="Proposals — a moment they'll never forget"
-              className="reveal-stagger editorial-card group relative lg:col-span-7 flex flex-col justify-end p-8 md:p-12 min-h-[28rem] md:min-h-[34rem] bg-[color:var(--charcoal-deep)] border border-[color:var(--border)] hover:border-[color:var(--gold)]/50 overflow-hidden"
-            >
-              <img
-                src={imgSintraCabo}
-                alt=""
-                aria-hidden="true"
-                loading="lazy"
-                data-card-image
-                className="absolute inset-0 w-full h-full object-cover opacity-90 transition-transform duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:scale-[1.04]"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/95 via-[color:var(--charcoal-deep)]/55 to-[color:var(--charcoal-deep)]/15" />
-              <div className="absolute inset-0 bg-[radial-gradient(120%_80%_at_30%_100%,transparent_45%,rgba(0,0,0,0.55)_100%)]" />
-
-              <span className="relative z-[1] inline-flex items-center gap-3 text-[10.5px] uppercase tracking-[0.34em] text-[color:var(--gold)]">
-                <span className="block h-px w-6 bg-[color:var(--gold)]/80" />
-                Proposals
-              </span>
-              <h3 className="relative z-[1] serif mt-5 text-[2rem] md:text-[2.6rem] lg:text-[3rem] leading-[1.05] tracking-[-0.012em] text-[color:var(--ivory)] drop-shadow-[0_2px_18px_rgba(0,0,0,0.5)] max-w-[18ch]">
-                A moment they'll <span className="italic text-[color:var(--gold-soft)]">never forget.</span>
-              </h3>
-              <p className="relative z-[1] mt-5 text-[14.5px] md:text-[16px] text-[color:var(--ivory)]/90 leading-[1.7] font-light max-w-[40ch]">
-                A hidden viewpoint, a private dinner, a perfectly timed pause — quietly extraordinary.
-              </p>
-              <p className="relative z-[1] mt-3 text-[12.5px] italic font-light text-[color:var(--gold-soft)] leading-[1.6]">
-                A table where time slows down.
-              </p>
-              <span className="relative z-[1] mt-7 inline-flex items-center gap-2.5 text-[12px] uppercase tracking-[0.28em] font-medium text-[color:var(--ivory)] group-hover:text-[color:var(--gold)] transition-colors">
-                Plan a moment
-                <ArrowRight size={14} className="text-[color:var(--gold)] transition-transform duration-300 ease-out group-hover:translate-x-1.5" />
-              </span>
-            </Link>
-
-            {/* Right column — Celebrations + Corporate stacked */}
-            <div className="lg:col-span-5 grid grid-cols-1 gap-5 md:gap-6">
-              {[
-                {
-                  eyebrow: "Celebrations",
-                  title: "Birthdays, anniversaries, milestones",
-                  line: "Gather the people who matter, in places made for the occasion.",
-                  micro: "A toast that lingers in the room.",
-                  to: "/proposals" as const,
-                  bg: imgArrabidaWineLunch,
-                  cta: "Design a celebration",
-                },
-                {
-                  eyebrow: "Corporate & Groups",
-                  title: "Teams, incentives, retreats",
-                  line: "Refined private programs that feel nothing like a hotel ballroom.",
-                  micro: "Logistics handled. Local knowledge included.",
-                  to: "/corporate" as const,
-                  bg: imgArrabidaBoatCoves,
-                  cta: "Plan for a group",
-                },
-              ].map((o) => (
-                <Link
-                  key={o.eyebrow}
-                  to={o.to}
-                  aria-label={`${o.eyebrow} — ${o.title}`}
-                  className="reveal-stagger editorial-card group relative flex flex-col justify-end p-7 md:p-8 min-h-[16rem] md:min-h-[16.5rem] bg-[color:var(--charcoal-deep)] border border-[color:var(--border)] hover:border-[color:var(--gold)]/45 overflow-hidden"
-                >
-                  <img
-                    src={o.bg}
-                    alt=""
-                    aria-hidden="true"
-                    loading="lazy"
-                    data-card-image
-                    className="absolute inset-0 w-full h-full object-cover opacity-75 transition-transform duration-[700ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:scale-[1.03]"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/92 via-[color:var(--charcoal-deep)]/55 to-[color:var(--charcoal-deep)]/15" />
-
-                  <span className="relative z-[1] text-[10px] uppercase tracking-[0.32em] text-[color:var(--gold)]">
-                    {o.eyebrow}
-                  </span>
-                  <h3 className="relative z-[1] serif mt-3 text-[1.35rem] md:text-[1.5rem] leading-[1.15] tracking-[-0.005em] text-[color:var(--ivory)] drop-shadow-[0_2px_12px_rgba(0,0,0,0.5)]">
-                    {o.title}
-                  </h3>
-                  <p className="relative z-[1] mt-2.5 text-[13.5px] text-[color:var(--ivory)]/85 leading-[1.65] font-light">
-                    {o.line}
-                  </p>
-                  <p className="relative z-[1] mt-2 text-[12px] italic font-light text-[color:var(--gold-soft)] leading-[1.55]">
-                    {o.micro}
-                  </p>
-                  <span className="relative z-[1] mt-4 inline-flex items-center gap-2 text-[11.5px] uppercase tracking-[0.26em] font-medium text-[color:var(--ivory)] group-hover:text-[color:var(--gold)] transition-colors">
-                    {o.cta}
-                    <ArrowRight size={12} className="text-[color:var(--gold)] transition-transform duration-300 ease-out group-hover:translate-x-1" />
-                  </span>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 8 — LOCAL STORIES / HIDDEN GEMS
-          The editorial / emotional beat — "the Portugal we travel ourselves".
-          Sits between Multi-Day and Social Proof to warm the reader before
-          the review block. */}
-      <section className="section-y bg-[color:var(--ivory)]">
-        <div className="container-x">
-          <div className="reveal text-center max-w-2xl mx-auto mb-14 md:mb-20">
-            <span className="eyebrow">Local Stories &amp; Hidden Gems</span>
-            <h2 className="t-h2 mt-5">
-              The Portugal <span className="italic">we travel ourselves</span>
-            </h2>
-            <p className="t-lead mt-5 max-w-xl mx-auto">
-              Notes from the road — the places we keep returning to, away from the crowds.
-            </p>
-          </div>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 md:gap-7">
-            {editorial.map((e) => (
-              <article key={e.title} className="group reveal-stagger">
-                <Link
-                  to={e.to}
-                  params={{ tourId: e.tourId }}
-                  aria-label={`${e.title} — open the tour`}
-                  className="block"
-                >
-                  <div className="editorial-card relative overflow-hidden aspect-[4/5] mb-4 md:mb-5 border border-[color:var(--border)]">
-                    <img
-                      src={e.img}
-                      alt={e.title}
-                      loading="lazy"
-                      data-card-image
-                      className="w-full h-full object-cover transition-transform duration-[700ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:scale-[1.04]"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal)]/88 via-[color:var(--charcoal)]/25 to-transparent" />
-                    <div className="absolute left-4 right-4 bottom-4 md:left-5 md:right-5 md:bottom-5">
-                      <span className="block h-px w-7 md:w-8 bg-[color:var(--gold)] mb-2.5 md:mb-3 opacity-90" />
-                      <h3 className="t-h3 text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
-                        {e.title}
-                      </h3>
-                    </div>
-                  </div>
-                  <p className="text-[14.5px] md:text-[15.5px] text-[color:var(--charcoal)] leading-[1.7] max-w-[34ch]">
-                    {e.line}
-                  </p>
-                </Link>
-              </article>
-            ))}
-          </div>
-          <div className="reveal mt-12 md:mt-16 text-center">
-            <Link
-              to="/local-stories"
-              className="link-soft inline-flex items-center gap-2 text-[14px] tracking-[0.005em] font-medium"
-            >
-              Read all local stories <ArrowRight size={14} />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* 8 — SOCIAL PROOF
-          Editorial dark surface with a soft tour photo wash, three quote
-          cards on warm ivory paper. Each card pairs the quote with a real
-          tour photo (avatar) so the reviews land as real people who
-          travelled real moments — not floating testimonials. */}
-      <section
-        className="relative section-y bg-[color:var(--charcoal-deep)] overflow-hidden"
-        aria-labelledby="reviews-title"
-      >
-        <img
-          src={imgArrabidaWineLunch}
-          alt=""
-          aria-hidden="true"
-          loading="lazy"
-          className="absolute inset-0 w-full h-full object-cover opacity-[0.18]"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-[color:var(--charcoal-deep)]/85 via-[color:var(--charcoal-deep)]/95 to-[color:var(--charcoal-deep)]" />
-
-        <div className="container-x relative">
-          <div className="reveal text-center max-w-2xl mx-auto mb-12 md:mb-16">
-            <span className="text-[10.5px] uppercase tracking-[0.32em] text-[color:var(--gold)]">
-              Voices
-            </span>
-            <h2
-              id="reviews-title"
-              className="serif mt-5 text-[2.2rem] md:text-[3.2rem] leading-[1.05] tracking-[-0.012em] text-[color:var(--ivory)]"
-            >
-              700+ <span className="italic text-[color:var(--gold-soft)]">5-star reviews</span>
-            </h2>
-            <p
-              className="mt-5 flex items-center justify-center gap-1.5 text-[color:var(--gold)]"
-              role="img"
-              aria-label="Average rating 5 out of 5 stars"
-            >
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} size={15} fill="currentColor" strokeWidth={0} aria-hidden="true" />
-              ))}
-              <span className="ml-2 text-[12px] tracking-[0.18em] uppercase text-[color:var(--ivory)]/70">
-                Across Google · TripAdvisor · Trustpilot
-              </span>
-            </p>
-            <p className="mt-5 text-[13.5px] md:text-[14px] italic font-light text-[color:var(--ivory)]/75 leading-[1.7]">
-              Real travellers. Real moments. Real Portugal.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-5 md:gap-6">
-            {reviews.map((r, i) => {
-              // Pair each quote with a real moment photo as the "avatar".
-              const moments = [imgArrabidaWineLunch, imgSintraEstates, imgTroiaBeach];
-              const moment = moments[i % moments.length];
-              return (
-                <figure key={i} className="group reveal-stagger h-full">
-                  <div className="editorial-card relative bg-[color:var(--ivory)] border border-[color:var(--gold)]/15 hover:border-[color:var(--gold)]/45 p-7 md:p-9 h-full flex flex-col shadow-[0_18px_40px_-22px_rgba(0,0,0,0.55)] transition-shadow duration-300 hover:shadow-[0_28px_56px_-24px_rgba(0,0,0,0.7)]">
-                    <div className="flex gap-0.5 text-[color:var(--gold)] mb-5">
-                      {[...Array(5)].map((_, idx) => (
-                        <Star key={idx} size={13} fill="currentColor" />
-                      ))}
-                    </div>
-                    <blockquote className="serif italic text-[17px] md:text-[19.5px] leading-[1.6] text-[color:var(--charcoal)] flex-1">
-                      "{r.quote}"
-                    </blockquote>
-                    <figcaption className="mt-6 pt-5 border-t border-[color:var(--border)] flex items-center gap-4">
-                      <span className="block w-11 h-11 rounded-full overflow-hidden border border-[color:var(--gold)]/30 shrink-0">
-                        <img
-                          src={moment}
-                          alt=""
-                          aria-hidden="true"
-                          loading="lazy"
-                          className="w-full h-full object-cover"
-                        />
-                      </span>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-[14px] font-medium text-[color:var(--charcoal)]">
-                          {r.name}
-                        </p>
-                        <p className="text-[12px] text-[color:var(--charcoal-soft)] mt-0.5 truncate">
-                          {r.location} · via {r.platform}
-                        </p>
-                      </div>
-                    </figcaption>
-                  </div>
-                </figure>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* 9 — FAQ (placed right before the final CTA) */}
-      <FAQ />
-
-      {/* 10 — FINAL CTA */}
-      <section className="section-y bg-[color:var(--ivory)]">
-        <div className="container-x">
-          <div className="reveal relative bg-[color:var(--sand)] p-12 md:p-20 overflow-hidden">
-            {/* Soft photographic wash — adds atmospheric depth without
-                losing the sand surface or harming text contrast. */}
-            <img
-              src={imgArrabidaWineHero}
-              alt=""
-              aria-hidden="true"
-              loading="lazy"
-              className="absolute inset-0 w-full h-full object-cover opacity-25 scale-[1.04]"
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-[color:var(--sand)] via-[color:var(--sand)]/85 to-[color:var(--sand)]/55" />
-            <div className="absolute -bottom-24 -left-24 w-80 h-80 rounded-full border border-[color:var(--gold)]/15" />
-            <div className="absolute -top-12 right-1/4 w-40 h-40 rounded-full border border-[color:var(--gold)]/10" />
-            <div className="relative max-w-2xl">
-              <span className="eyebrow">Begin</span>
-              <h2 className="t-h2 mt-6">
-                Write your story. <br />
-                <span className="italic text-[color:var(--teal)]">Confirm it instantly.</span>
-              </h2>
-              <p className="mt-7 text-[12.5px] md:text-[13px] uppercase tracking-[0.28em] text-[color:var(--charcoal)] font-medium">
-                Instant confirmation. No forms. No waiting.
-              </p>
-              <div className="mt-10 flex flex-wrap gap-4">
+              <div className="mt-8 flex flex-wrap gap-3">
                 <Link
                   to="/builder"
-                  className="btn-solid btn-solid--teal"
+                  className="inline-flex items-center gap-2 bg-[color:var(--teal)] text-[color:var(--ivory)] px-6 py-3 text-[12px] uppercase tracking-[0.22em] hover:bg-[color:var(--teal-2)] transition-colors"
                 >
-                  Create Your Story
-                  <ArrowRight size={15} />
+                  Open the studio
+                  <ArrowRight size={14} />
                 </Link>
-                <Link
-                  to="/experiences"
-                  className="btn-solid btn-solid--outline"
-                >
-                  Explore Signature Journeys
-                </Link>
-              </div>
-              <p className="mt-6 text-[13.5px] italic font-light text-[color:var(--charcoal-soft)]">
-                Prefer guidance?{" "}
                 <Link
                   to="/contact"
-                  className="link-soft link-soft--persistent"
+                  className="inline-flex items-center gap-2 text-[12px] uppercase tracking-[0.22em] text-[color:var(--charcoal)] border-b border-[color:var(--charcoal)]/30 pb-1 hover:border-[color:var(--charcoal)] transition-colors"
                 >
-                  A local designer can shape it with you.
+                  Talk to a designer
                 </Link>
-              </p>
-
-              {/* Brand line — closing signature, brand voice. */}
-              <div
-                className="mt-12 inline-flex items-center gap-5 md:gap-6 text-[color:var(--charcoal)]"
-                aria-label="Whatever you have in mind, we say YES"
-              >
-                <span className="h-px w-10 md:w-14 bg-gradient-to-r from-transparent to-[color:var(--gold)] shrink-0 opacity-80" />
-                <span
-                  aria-hidden="true"
-                  className="flex flex-col items-center text-[10.5px] md:text-[11px] uppercase tracking-[0.32em] leading-[1.35] text-center"
-                >
-                  <span style={{ fontWeight: 500 }}>Whatever you have in mind,</span>
-                  <span
-                    className="text-[color:var(--gold)] tracking-[0.36em] text-[12px] md:text-[12.5px]"
-                    style={{ fontWeight: 600 }}
-                  >
-                    We say YES.
-                  </span>
-                </span>
-                <span className="h-px w-10 md:w-14 bg-gradient-to-l from-transparent to-[color:var(--gold)] shrink-0 opacity-80" />
+              </div>
+            </div>
+            <div className="lg:col-span-7">
+              <div className="relative aspect-[4/3] md:aspect-[16/11] overflow-hidden rounded-[2px] border border-[color:var(--border)] bg-[color:var(--ivory)] shadow-[0_8px_24px_-12px_rgba(46,46,46,0.18)]">
+                <LiveMapPreview />
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Mobile sticky CTA — handled globally by <MobileStickyCTA /> in
-          SiteLayout. The previous in-page duplicate has been removed so
-          users no longer see two stacked sticky bars on mobile.
-          Patch 2A: ContrastAudit dev overlay removed from render tree. */}
-    </SiteLayout>
-  );
-}
+      {/* 6 — MOMENTS / GROUPS
+          Multi-day + Celebrations + Corporate collapsed into one calm
+          band of 3 cards. Each links to its own dedicated page. No
+          dark editorial dramatics — same card system as the rest of
+          the page so the homepage doesn't feel like a stack of
+          unrelated blocks. */}
+      <section
+        className="section-y bg-[color:var(--ivory)] border-b border-[color:var(--border)]"
+        aria-labelledby="moments-title"
+      >
+        <div className="container-x">
+          <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
+            <span className="eyebrow">Moments & groups</span>
+            <h2 id="moments-title" className="t-h2 mt-5">
+              When the <span className="italic">occasion</span> is bigger.
+            </h2>
+            <p className="mt-5 text-[14.5px] md:text-[15.5px] text-[color:var(--charcoal-soft)] font-light leading-[1.6] max-w-md mx-auto">
+              Multi-day routes, private celebrations and corporate groups — designed in conversation with a local team.
+            </p>
+          </div>
 
-/* ════════════════════════════════════════════════════════════════
- * BUILDER PREVIEW GALLERY
- *
- * Browse real saved builds — each card pairs a real Signature tour
- * with a small "tailored" delta (date, pace, swap, addition) so guests
- * can see how a Signature becomes their own day.
- * ════════════════════════════════════════════════════════════ */
-type SavedBuild = {
-  tourId: string;
-  guest: string;
-  origin: string;
-  scenario: string;          // short editorial line — what they wanted
-  signatureLine: string;     // the day as it ships
-  tailoredLine: string;      // the small adjustments they made
-  tags: string[];            // 2–3 tailoring tags
-};
-
-const SAVED_BUILDS: SavedBuild[] = [
-  {
-    tourId: "arrabida-wine-allinclusive",
-    guest: "Sarah & Tom",
-    origin: "London",
-    scenario: "Anniversary day, slow pace, a long lunch.",
-    signatureLine: "Three family wineries · Livramento market · Sesimbra harbour.",
-    tailoredLine: "Started 30 min later, swapped one tasting for an extended lunch.",
-    tags: ["Slower pace", "Long lunch", "10:00 pickup"],
-  },
-  {
-    tourId: "sintra-cascais",
-    guest: "The Nakamura family",
-    origin: "Tokyo",
-    scenario: "Couple + two teenagers, palace queues out.",
-    signatureLine: "Quieter Sintra estates · Cabo da Roca · Cascais courtyard tasting.",
-    tailoredLine: "Skipped the wine tasting, added a short walk along the cliffs.",
-    tags: ["Family rhythm", "No tasting", "Cliff walk"],
-  },
-  {
-    tourId: "arrabida-boat",
-    guest: "Marie & Léo",
-    origin: "Paris",
-    scenario: "Wanted more sea, less driving.",
-    signatureLine: "Arrábida coves by boat · Portinho lunch · Sesimbra at dusk.",
-    tailoredLine: "Extended the boat ride, lunch swapped for a beach picnic.",
-    tags: ["Longer boat", "Beach picnic", "Late return"],
-  },
-];
-
-function BuilderPreviewGallery() {
-  // Resolve real Signature tours — only render builds whose tour exists.
-  const builds = SAVED_BUILDS.map((b) => {
-    const tour = signatureTours.find((t) => t.id === b.tourId);
-    return tour && isValidTourId(b.tourId) ? { build: b, tour } : null;
-  }).filter((x): x is { build: SavedBuild; tour: typeof signatureTours[number] } => x !== null);
-
-  if (builds.length === 0) return null;
-
-  return (
-    <section
-      className="section-y bg-[color:var(--ivory)] border-t border-[color:var(--border)]"
-      aria-labelledby="builds-title"
-    >
-      <div className="container-x">
-        <div className="reveal text-center max-w-2xl mx-auto mb-12 md:mb-16">
-          <span className="eyebrow inline-flex items-center gap-2">
-            {/* Patch 2A: animate-ping removed; static dot only. */}
-            <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[color:var(--gold)]" />
-            From the Studio
-          </span>
-          <h2 id="builds-title" className="t-h2 mt-5">
-            Real <span className="italic">builds</span>, lately.
-          </h2>
-          <p className="t-lead mt-5">
-            Browse days other guests have shaped — each one started as a Signature.
-          </p>
-          <p className="mt-3 text-[13.5px] md:text-[14px] italic font-light text-[color:var(--charcoal-soft)]">
-            Same trusted route. Their rhythm.
-          </p>
-        </div>
-
-        <div className="reveal -mx-4 px-4 overflow-x-auto overscroll-x-contain scrollbar-thin">
-          <div className="flex gap-5 md:gap-6 snap-x snap-mandatory pb-2">
-            {builds.map(({ build, tour }) => (
-              <article
-                key={build.tourId + build.guest}
-                className="shrink-0 snap-start w-[88vw] sm:w-[26rem] md:w-[28rem] bg-[color:var(--card)] border border-[color:var(--border)] overflow-hidden flex flex-col group"
-              >
-                {/* Visual: Signature image + tailored chip overlay */}
-                <div className="relative aspect-[4/3] overflow-hidden">
-                  <img
-                    src={tour.img}
-                    alt={tour.title}
-                    loading="lazy"
-                    decoding="async"
-                    style={{ objectPosition: tour.focal ?? "50% 50%" }}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/75 via-transparent to-transparent" />
-                  <span className="absolute top-3 left-3 text-[10px] uppercase tracking-[0.24em] bg-[color:var(--gold)]/95 text-[color:var(--charcoal)] px-2.5 py-1">
-                    Tailored build
-                  </span>
-                  <div className="absolute bottom-3 left-3 right-3 text-[color:var(--ivory)]">
-                    <p className="text-[10.5px] uppercase tracking-[0.24em] text-[color:var(--gold-soft)]">
-                      {build.guest} · {build.origin}
+          <ul className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 list-none p-0 max-w-5xl mx-auto">
+            {moments.map((m) => (
+              <li key={m.title}>
+                <Link
+                  to={m.to}
+                  className="group relative flex flex-col h-full overflow-hidden rounded-[2px] border border-[color:var(--border)] bg-[color:var(--ivory)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-[color:var(--charcoal)]/25 hover:shadow-[0_10px_24px_-12px_rgba(46,46,46,0.2)] focus-visible:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2"
+                >
+                  <div className="relative aspect-[4/3] overflow-hidden bg-[color:var(--card)]">
+                    <img
+                      src={m.img}
+                      alt=""
+                      aria-hidden="true"
+                      loading="lazy"
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                    <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/40 to-transparent" />
+                  </div>
+                  <div className="p-5 md:p-6 flex flex-col gap-2.5">
+                    <span className="inline-flex items-center gap-2 text-[10.5px] uppercase tracking-[0.28em] text-[color:var(--charcoal-soft)]">
+                      <CalendarDays size={12} aria-hidden="true" />
+                      {m.eyebrow}
+                    </span>
+                    <h3 className="serif text-[1.25rem] md:text-[1.4rem] leading-[1.2] text-[color:var(--charcoal)]">
+                      {m.title}
+                    </h3>
+                    <p className="text-[13.5px] leading-[1.55] text-[color:var(--charcoal-soft)] font-light">
+                      {m.line}
                     </p>
-                    <p className="serif italic mt-1 text-[15px] leading-snug">
-                      "{build.scenario}"
-                    </p>
+                    <span className="mt-2 inline-flex items-center gap-1.5 text-[11.5px] uppercase tracking-[0.22em] font-medium text-[color:var(--teal)]">
+                      {m.cta}
+                      <ArrowRight
+                        size={12}
+                        className="transition-transform duration-200 group-hover:translate-x-0.5"
+                      />
+                    </span>
                   </div>
-                </div>
-
-                <div className="p-5 md:p-6 flex flex-col flex-1">
-                  <h3 className="serif text-[1.15rem] leading-snug">{tour.title.split("—")[0].trim()}</h3>
-                  <p className="text-[10.5px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)] mt-1">
-                    {tour.region}
-                  </p>
-
-                  {/* Signature → Tailored diff */}
-                  <div className="mt-5 space-y-3 text-[13px]">
-                    <div className="flex gap-3">
-                      <span className="mt-0.5 text-[9.5px] uppercase tracking-[0.26em] text-[color:var(--teal)] font-medium shrink-0 w-[68px]">
-                        Signature
-                      </span>
-                      <span className="text-[color:var(--charcoal)] leading-relaxed">
-                        {build.signatureLine}
-                      </span>
-                    </div>
-                    <div className="flex gap-3">
-                      <span className="mt-0.5 text-[9.5px] uppercase tracking-[0.26em] text-[color:var(--gold)] font-medium shrink-0 w-[68px]">
-                        Tailored
-                      </span>
-                      <span className="text-[color:var(--charcoal)] leading-relaxed italic">
-                        {build.tailoredLine}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Tag chips */}
-                  <ul className="mt-5 flex flex-wrap gap-1.5 list-none p-0">
-                    {build.tags.map((t) => (
-                      <li
-                        key={t}
-                        className="text-[10px] uppercase tracking-[0.18em] text-[color:var(--charcoal-soft)] border border-[color:var(--border)] px-2 py-1"
-                      >
-                        {t}
-                      </li>
-                    ))}
-                  </ul>
-
-                  {/* Dual CTA */}
-                  <div className="mt-6 pt-5 border-t border-[color:var(--border)] flex items-center gap-3">
-                    <Link
-                      to="/tours/$tourId"
-                      params={{ tourId: tour.id }}
-                      className="flex-1 inline-flex items-center justify-center gap-1.5 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] px-4 py-3 text-[12px] uppercase tracking-[0.18em] transition-colors min-h-[44px]"
-                    >
-                      See this Signature
-                    </Link>
-                    <Link
-                      to="/builder"
-                      className="inline-flex items-center justify-center gap-1.5 text-[12px] uppercase tracking-[0.18em] text-[color:var(--charcoal-soft)] hover:text-[color:var(--teal)] px-3 py-3 min-h-[44px]"
-                    >
-                      Build yours <ArrowRight size={13} />
-                    </Link>
-                  </div>
-                </div>
-              </article>
+                </Link>
+              </li>
             ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* 7 — FAQ
+          Reuses the shared FAQ component, which renders its own
+          labelled landmark with visible expandable answers. The wrapper
+          section below carries the spacing class the lock checks; the
+          inner FAQ component carries aria-labelledby="faq-title". */}
+      <section className="py-20 md:py-24" aria-labelledby="faq-title">
+        <FAQ />
+      </section>
+
+      {/* 8 — FINAL CTA — Talk to a local
+          Distinct from the hero CTAs (Explore Signatures / Build) — this
+          is the human escape hatch. No duplicate CTA band; one purpose,
+          one button. */}
+      <section
+        className="section-y bg-[color:var(--charcoal-deep)] text-[color:var(--ivory)] pb-20 md:pb-24"
+        aria-labelledby="final-cta-title"
+      >
+        {/* FINAL CTA */}
+        <div className="container-x">
+          <div className="max-w-xl mx-auto text-center">
+            <span className="inline-flex items-center gap-2 text-[10.5px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
+              <MessageCircle size={12} aria-hidden="true" />
+              Prefer a conversation?
+            </span>
+            <h2 id="final-cta-title" className="serif mt-5 text-[1.9rem] md:text-[2.6rem] leading-[1.1] tracking-[-0.012em]">
+              Talk to a <span className="italic text-[color:var(--gold-soft)]">local.</span>
+            </h2>
+            <p className="mt-5 text-[14.5px] md:text-[15.5px] leading-[1.7] font-light text-[color:var(--ivory)]/85">
+              Tell us roughly what you have in mind — dates, party, a feeling. A designer in Portugal will reply within a working day.
+            </p>
+            <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+              <Link
+                to="/contact"
+                className="inline-flex items-center justify-center gap-2 bg-[color:var(--gold)] text-[color:var(--charcoal)] px-7 py-3.5 text-[12px] uppercase tracking-[0.22em] font-medium hover:bg-[color:var(--gold-soft)] transition-colors"
+              >
+                Speak to a local designer
+                <ArrowRight size={14} />
+              </Link>
+            </div>
           </div>
         </div>
-
-        <div className="reveal mt-10 md:mt-12 text-center">
-          <Link to="/builder" className="btn-solid btn-solid--outline">
-            Open the Studio <ArrowRight size={15} />
-          </Link>
-        </div>
-      </div>
-    </section>
+      </section>
+    </SiteLayout>
   );
 }
