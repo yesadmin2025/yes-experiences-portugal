@@ -456,7 +456,7 @@ function HomePage() {
         aria-labelledby="why-yes-title"
       >
         <div className="container-x">
-          <div className="max-w-3xl mx-auto text-center mb-14 md:mb-20">
+          <div className="max-w-2xl mx-auto text-center mb-12 md:mb-16">
             <span className="eyebrow">Why YES</span>
             <h2
               id="why-yes-title"
@@ -465,109 +465,96 @@ function HomePage() {
               Portugal isn't experienced the{" "}
               <span className="italic">same way</span> by everyone.
             </h2>
-            <p className="mt-7 md:mt-8 text-[15px] md:text-[16.5px] text-[color:var(--charcoal-soft)] font-light leading-[1.75] max-w-2xl mx-auto">
-              For some, it's wine. For others, the coast, history, food, or a
-              moment that matters.
-              <br className="hidden md:block" />
-              <span className="md:inline"> </span>
-              Because no two people experience Portugal the same way, we chose
-              to do things differently — not just in how we guide you, but in
-              how you choose and create your experience from the very
-              beginning.
+            <p className="mt-6 text-[14.5px] md:text-[15.5px] text-[color:var(--charcoal-soft)] font-light leading-[1.65] max-w-xl mx-auto">
+              For some, it's wine. For others, the coast, history, food, or a moment that matters. Because no two people experience Portugal the same way, we chose to do things differently — not just in how we guide you, but in how you choose and create your experience from the very beginning.
             </p>
           </div>
 
-          {/* Editorial icon grid — 5 blocks, 2 columns desktop / 1 column
-              mobile. No images, no cards, no shadows. Small teal icons,
-              uppercase eyebrow label, serif headline, light body. The
-              fifth block sits centered on its own row. */}
-          <ul className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-14 md:gap-y-20 list-none p-0">
+          {/* Modular block grid — 5 premium editorial cards. 2-col desktop,
+              stacked mobile. Each card: number, icon, label, serif headline,
+              body. Scroll-stagger fade+rise via .reveal-stagger (cadence
+              applied by SiteLayout). Hover: lift, warmer border, gold
+              underline sweep. */}
+          <ul className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6 list-none p-0">
             {[
               {
                 Icon: Feather,
+                num: "01",
                 label: "Personal",
-                title: (
-                  <>
-                    You shape the <span className="italic">story.</span>
-                  </>
-                ),
+                title: (<>You shape the <span className="italic">story.</span></>),
                 body: "Portugal becomes what you want it to be — a private day, a proposal, a celebration, a corporate experience or a full journey. You choose what you want to feel, how you move, and who you share it with.",
               },
               {
                 Icon: MapPin,
+                num: "02",
                 label: "Place",
-                title: (
-                  <>
-                    Portugal is the <span className="italic">stage.</span>
-                  </>
-                ),
+                title: (<>Portugal is the <span className="italic">stage.</span></>),
                 body: "From iconic places to hidden gems, every moment is set in the right place, at the right time — whether it's something simple or something you'll never forget.",
               },
               {
                 Icon: Compass,
+                num: "03",
                 label: "Local",
-                title: (
-                  <>
-                    Local, from the <span className="italic">very beginning.</span>
-                  </>
-                ),
+                title: (<>Local, from the <span className="italic">very beginning.</span></>),
                 body: "Everything is guided by real local knowledge — with proximity, care and the kind of insight that only comes from living it.",
               },
               {
                 Icon: Sparkles,
-                label: "How",
-                title: (
-                  <>
-                    A different way to choose <span className="italic">and book.</span>
-                  </>
-                ),
+                num: "04",
+                label: "How you choose",
+                title: (<>A different way to <span className="italic">choose.</span></>),
                 body: "Start from a Signature, tailor selected details, or build your experience from scratch in the Studio — shaping it step by step, in real time.",
               },
+              {
+                Icon: LifeBuoy,
+                num: "05",
+                label: "Supported",
+                title: (<>Simple, clear, <span className="italic">supported.</span></>),
+                body: "Even if this feels new, it's designed to be easy. You decide at your own pace, with local guidance whenever you want it.",
+                wide: true,
+              },
             ].map((b) => (
-              <li key={b.label} className="flex flex-col">
-                <b.Icon
-                  size={22}
-                  strokeWidth={1.5}
+              <li
+                key={b.num}
+                className={
+                  "reveal-stagger group relative flex flex-col rounded-[6px] border border-[#E7DDD0] bg-[color:var(--ivory)] p-7 md:p-9 shadow-[0_1px_2px_rgba(46,46,46,0.04)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-[color:var(--gold)]/55 hover:shadow-[0_10px_28px_-14px_rgba(46,46,46,0.18)] active:border-[color:var(--gold)]/55 overflow-hidden " +
+                  (b.wide ? "md:col-span-2" : "")
+                }
+              >
+                {/* Gold sweep underline on hover (desktop) */}
+                <span
                   aria-hidden="true"
-                  className="text-[color:var(--teal)]"
+                  className="pointer-events-none absolute left-0 top-0 h-px w-full origin-left scale-x-0 bg-[color:var(--gold)] transition-transform duration-500 ease-out group-hover:scale-x-100"
                 />
-                <span className="mt-5 text-[10.5px] uppercase tracking-[0.32em] text-[color:var(--gold)]">
+                <div className="flex items-start justify-between gap-4">
+                  <b.Icon
+                    size={22}
+                    strokeWidth={1.5}
+                    aria-hidden="true"
+                    className="text-[color:var(--teal)] transition-transform duration-300 ease-out group-hover:translate-x-0.5"
+                  />
+                  <span className="serif text-[13px] tracking-[0.18em] text-[color:var(--gold)]">
+                    {b.num}
+                  </span>
+                </div>
+                <span className="mt-5 text-[10.5px] uppercase tracking-[0.32em] text-[color:var(--charcoal-soft)]">
                   {b.label}
                 </span>
                 <h3 className="serif mt-3 text-[1.5rem] md:text-[1.7rem] leading-[1.2] text-[color:var(--charcoal)]">
                   {b.title}
                 </h3>
-                <p className="mt-4 text-[15px] md:text-[15.5px] text-[color:var(--charcoal-soft)] font-light leading-[1.8]">
+                <p className="mt-3.5 text-[14.5px] md:text-[15px] text-[color:var(--charcoal-soft)] font-light leading-[1.6]">
                   {b.body}
                 </p>
               </li>
             ))}
-
-            {/* Block 5 — Support, centered on its own row */}
-            <li className="flex flex-col md:col-span-2 md:items-center md:text-center md:max-w-2xl md:mx-auto md:pt-6 md:border-t md:border-[color:var(--gold)]/25">
-              <LifeBuoy
-                size={22}
-                strokeWidth={1.5}
-                aria-hidden="true"
-                className="text-[color:var(--teal)] md:mt-8"
-              />
-              <span className="mt-5 text-[10.5px] uppercase tracking-[0.32em] text-[color:var(--gold)]">
-                Support
-              </span>
-              <h3 className="serif mt-3 text-[1.5rem] md:text-[1.7rem] leading-[1.2] text-[color:var(--charcoal)]">
-                Simple, clear, <span className="italic">supported.</span>
-              </h3>
-              <p className="mt-4 text-[15px] md:text-[15.5px] text-[color:var(--charcoal-soft)] font-light leading-[1.8]">
-                Even if this feels new, it's designed to be easy. You decide at
-                your own pace, with instant confirmation and local guidance
-                whenever you want it.
-              </p>
-              <p className="mt-6 inline-flex items-center gap-2 text-[12px] uppercase tracking-[0.24em] text-[color:var(--teal)]">
-                <MessageCircle size={13} aria-hidden="true" />
-                A local is one message away
-              </p>
-            </li>
           </ul>
+
+          {/* Closing microline */}
+          <p className="reveal mt-10 md:mt-12 text-center inline-flex w-full items-center justify-center gap-2 text-[12px] uppercase tracking-[0.28em] text-[color:var(--teal)]">
+            <MessageCircle size={13} aria-hidden="true" />
+            A local is always one message away
+          </p>
         </div>
       </section>
 
