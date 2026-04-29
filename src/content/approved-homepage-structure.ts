@@ -156,18 +156,24 @@ export const APPROVED_HOMEPAGE_SECTIONS: readonly ApprovedSection[] = [
   },
   {
     order: 6,
-    name: "Moments / Groups — multi-day + celebrations + corporate",
-    ariaLabelledBy: "moments-title",
+    name: "Multi-day tours — routes across Portugal",
+    ariaLabelledBy: "multiday-title",
     requiredSpacing: { kind: "py", minScale: 20 },
   },
   {
     order: 7,
+    name: "Groups & celebrations — proposals + celebrations + corporate",
+    ariaLabelledBy: "groups-title",
+    requiredSpacing: { kind: "py", minScale: 20 },
+  },
+  {
+    order: 8,
     name: "FAQ — visible helpful answers",
     ariaLabelledBy: "faq-title",
     requiredSpacing: { kind: "py", minScale: 20 },
   },
   {
-    order: 8,
+    order: 9,
     name: "Final CTA — talk to a local",
     marker: "FINAL CTA",
     requiredSpacing: { kind: "pb", minScale: 20 },
