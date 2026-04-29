@@ -109,6 +109,11 @@ export interface ApprovedSection {
  * from the current `src/routes/index.tsx` and frozen as the contract.
  *
  * To change a row: bump the spec, then update the source.
+ *
+ * Spacing token reference (from `src/styles.css` `:root` mobile values):
+ *   .section-y     → 5rem  → minScale 20
+ *   .section-y-lg  → 6rem  → minScale 24
+ *   .section-y-sm  → 3.5rem → minScale 14
  */
 export const APPROVED_HOMEPAGE_SECTIONS: readonly ApprovedSection[] = [
   {
@@ -121,21 +126,19 @@ export const APPROVED_HOMEPAGE_SECTIONS: readonly ApprovedSection[] = [
     order: 2,
     name: "Trust bar — 5.0 average",
     ariaLabelledBy: "trust-bar-title",
-    // Uses .section-y-sm (= 3.5rem mobile / py-14 equivalent).
     requiredSpacing: { kind: "py", minScale: 14 },
   },
   {
     order: 3,
     name: "Start paths — four ways in",
     ariaLabelledBy: "start-paths-title",
-    // Uses .section-y (= 5rem mobile / py-20 equivalent).
     requiredSpacing: { kind: "py", minScale: 20 },
   },
   {
     order: 4,
-    name: "How it works",
-    ariaLabelledBy: "how-it-works-title",
-    requiredSpacing: { kind: "py", minScale: 20 },
+    name: "Studio (builder, core product)",
+    ariaLabelledBy: "studio-title",
+    requiredSpacing: { kind: "py", minScale: 24 },
   },
   {
     order: 5,
@@ -145,26 +148,25 @@ export const APPROVED_HOMEPAGE_SECTIONS: readonly ApprovedSection[] = [
   },
   {
     order: 6,
-    name: "The Studio (from-scratch path)",
-    ariaLabelledBy: "studio-title",
-    requiredSpacing: { kind: "py", minScale: 20 },
+    name: "Tailor (small adjustments inside a Signature)",
+    ariaLabelledBy: "tailor-title",
+    requiredSpacing: { kind: "py", minScale: 14 },
   },
   {
     order: 7,
-    name: "Pillars — why YES",
-    ariaLabelledBy: "pillars-title",
-    requiredSpacing: { kind: "py", minScale: 20 },
+    name: "Editorial transition (full-bleed photography breath)",
+    marker: "EDITORIAL TRANSITION",
+    requiredSpacing: { kind: "min-h-vh", minVh: 58 },
   },
   {
     order: 8,
     name: "Multi-day journeys",
-    marker: "MULTI-DAY JOURNEYS",
-    // Uses .section-y-lg (= 6rem mobile / py-24 equivalent).
+    ariaLabelledBy: "multiday-title",
     requiredSpacing: { kind: "py", minScale: 24 },
   },
   {
     order: 9,
-    name: "Occasions / celebrations & groups",
+    name: "Occasions / celebrations & corporate",
     ariaLabelledBy: "occasions-title",
     requiredSpacing: { kind: "py", minScale: 20 },
   },
@@ -184,8 +186,13 @@ export const APPROVED_HOMEPAGE_SECTIONS: readonly ApprovedSection[] = [
     order: 12,
     name: "Final CTA",
     marker: "FINAL CTA",
-    // Either pb-24+ or one of the .section-y* utilities satisfies this.
     requiredSpacing: { kind: "pb", minScale: 20 },
+  },
+  {
+    order: 13,
+    name: "Recent builds (logged-in tail block)",
+    ariaLabelledBy: "builds-title",
+    requiredSpacing: { kind: "py", minScale: 20 },
   },
 ] as const;
 
