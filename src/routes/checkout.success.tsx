@@ -41,8 +41,8 @@ function CheckoutSuccessPage() {
         </h1>
         <p className="text-lg text-muted-foreground leading-relaxed">
           Thank you. We've received your payment and a confirmation email is on
-          its way. A local will reach out within one business day with the
-          final pickup details and any last questions.
+          its way. A local will reach out within hours with the final pickup
+          details and any last questions.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4">
           <Link

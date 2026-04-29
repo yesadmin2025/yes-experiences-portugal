@@ -1488,10 +1488,10 @@ function HomePage() {
               <span className="eyebrow">Begin</span>
               <h2 className="t-h2 mt-6">
                 Write your story. <br />
-                <span className="italic text-[color:var(--teal)]">Confirm it instantly.</span>
+                <span className="italic text-[color:var(--teal)]">Shaped with a local.</span>
               </h2>
               <p className="mt-7 text-[12.5px] md:text-[13px] uppercase tracking-[0.28em] text-[color:var(--charcoal)] font-medium">
-                Instant confirmation. No forms. No waiting.
+                Designed by locals · Confirmed end-to-end
               </p>
               <div className="mt-10 flex flex-wrap gap-4">
                 <Link
