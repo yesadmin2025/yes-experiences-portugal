@@ -1126,7 +1126,7 @@ function HomePage() {
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
                   to="/builder"
-                  className="he-glow he-sheen group inline-flex items-center gap-2 bg-[color:var(--teal)] text-[color:var(--ivory)] px-6 py-3 text-[12px] uppercase tracking-[0.22em] hover:bg-[color:var(--teal-2)] shadow-[0_4px_14px_-6px_rgba(41,91,97,0.55)]"
+                  className="he-glow he-sheen group inline-flex items-center gap-2 bg-[color:var(--teal)] text-[color:var(--ivory)] px-7 py-3.5 min-h-[44px] text-[13px] uppercase tracking-[0.18em] font-semibold hover:bg-[color:var(--teal-2)] shadow-[0_6px_18px_-8px_rgba(41,91,97,0.6)]"
                 >
                   Open the studio
                   <ArrowRight size={14} className="transition-transform duration-200 group-hover:translate-x-0.5" />
