@@ -677,10 +677,11 @@ function HomePage() {
             aria-label="Signature experiences"
           >
             {signatures.map((t) => {
+              const paceLabel = Array.isArray(t.pace) ? t.pace[0] : t.pace;
               const hook =
-                t.pace === "Relaxed"
+                paceLabel === "Relaxed"
                   ? "Unhurried, all in one day"
-                  : t.pace === "Energetic"
+                  : paceLabel === "Energetic"
                     ? "Big day, real ground covered"
                     : "Designed end to end";
               return (
