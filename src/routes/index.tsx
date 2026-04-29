@@ -1291,9 +1291,11 @@ function HomePage() {
                         className="absolute inset-0 w-full h-full object-cover transition-transform duration-[700ms] ease-out group-hover:scale-[1.03]"
                       />
                       <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/40 via-[color:var(--charcoal-deep)]/10 to-transparent" />
-                      {/* Subtle animated category label */}
+                      {/* Subtle animated category label — soft pulsing
+                          gold dot signals "live / curated", and the pill
+                          lifts gently on hover. */}
                       <span className="absolute left-4 top-4 inline-flex items-center gap-2 rounded-full bg-[color:var(--ivory)]/95 px-3.5 py-1.5 text-[10px] uppercase tracking-[0.28em] font-semibold text-[color:var(--charcoal)] shadow-[0_2px_6px_rgba(0,0,0,0.18)] transition-transform duration-300 ease-out group-hover:-translate-y-0.5">
-                        <CalendarDays size={11} aria-hidden="true" />
+                        <span aria-hidden="true" className="live-dot" />
                         {m.eyebrow}
                       </span>
                     </div>
