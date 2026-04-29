@@ -105,20 +105,16 @@ export interface ApprovedSection {
 }
 
 /**
- * The approved structure (Patch 2B — 8 sections).
+ * The approved structure (Patch 2B.1 — 9 sections).
  *
  * Brief: "Refactor the homepage into a calm, premium decision page" —
  * 1. Hero  2. Trust strip  3. Start here  4. Signature preview
- * 5. Studio preview  6. Moments / Groups  7. FAQ  8. Final CTA.
+ * 5. Studio preview  6. Multi-day tours  7. Groups & celebrations
+ * 8. FAQ  9. Final CTA.
  *
- * Removed from the previous 13-section layout:
- *   - Editorial transition photo (decorative full-bleed band)
- *   - Local stories section (moved to /local-stories route)
- *   - Reviews carousel as its own section (collapsed into trust strip)
- *   - Recent builds tail block (moved to /experiences)
- *   - Tailor as standalone section (now a secondary card in Start here)
- *   - Multi-day, Celebrations and Corporate as separate sections
- *     (merged into single Moments / Groups section)
+ * Patch 2B.1: Multi-day was split out from Moments/Groups so multi-day
+ * routes get their own breathing room; Proposals + Celebrations +
+ * Corporate sit together in a dedicated Groups & celebrations band.
  *
  * To change a row: bump the spec, then update the source.
  *
