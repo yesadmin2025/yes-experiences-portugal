@@ -45,8 +45,8 @@ const FAQS: { q: string; a: string }[] = [
     a: "Selected details inside that specific tour — pace, timing and the options available within it.",
   },
   {
-    q: "What happens after I confirm?",
-    a: "You receive confirmation and full details through our integrated booking system.",
+    q: "What happens after I send my request?",
+    a: "A local reviews availability and confirms your booking personally — usually within hours. You then receive confirmation and full details by email.",
   },
 ];
 
