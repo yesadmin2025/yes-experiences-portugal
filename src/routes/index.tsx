@@ -231,13 +231,31 @@ function HomePage() {
   // Scroll to a hash target (#why-yes, #builder, #proposals, etc.) when the
   // homepage mounts with a hash, including cross-route arrivals where the
   // target may not exist on first paint. Polls briefly then bails.
+  // A small alias map makes hash navigation forgiving: singular forms,
+  // common typos and synonyms resolve to the canonical section id.
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const hash = window.location.hash?.slice(1);
-    if (!hash) return;
+    const raw = window.location.hash?.slice(1);
+    if (!raw) return;
+    const HASH_ALIASES: Record<string, string> = {
+      proposal: "proposals",
+      celebration: "celebrations",
+      corporate: "corporate",
+      groups: "corporate",
+      group: "corporate",
+      review: "reviews",
+      "why-yes": "why-yes",
+      whyyes: "why-yes",
+      why: "why-yes",
+      studio: "builder",
+      build: "builder",
+    };
+    const key = raw.toLowerCase();
+    const target = HASH_ALIASES[key] ?? key;
     let tries = 0;
     const tick = () => {
-      const el = document.getElementById(hash);
+      const el =
+        document.getElementById(target) ?? document.getElementById(key);
       if (el) {
         el.scrollIntoView({ behavior: "smooth", block: "start" });
         return;
