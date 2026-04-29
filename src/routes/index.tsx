@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect } from "react";
 
 import { SiteLayout } from "@/components/SiteLayout";
 import { FAQ } from "@/components/FAQ";
@@ -144,6 +145,7 @@ const multiDay = [
 
 const groupsAndCelebrations = [
   {
+    id: "proposals",
     eyebrow: "Proposals",
     title: "A private moment, shaped with care.",
     line: (<>From the setting to the timing, we help shape the moment around your story, with <span className="kw">local knowledge</span> and discreet support.</>),
@@ -154,6 +156,7 @@ const groupsAndCelebrations = [
     img: imgArrabidaWineLunch,
   },
   {
+    id: "celebrations",
     eyebrow: "Celebrations",
     title: "For days worth remembering.",
     line: (<>Birthdays, anniversaries, honeymoons or family moments — shaped around <span className="kw">your rhythm</span>, your people and the way you want to feel Portugal.</>),
@@ -164,6 +167,7 @@ const groupsAndCelebrations = [
     img: imgFatimaNazare,
   },
   {
+    id: "corporate",
     eyebrow: "Corporate & Groups",
     title: "Private group days, without the generic formula.",
     line: (<>For teams, incentives and private groups, we combine local experiences, timing, transport and logistics into a day that feels <span className="kw">effortless</span>.</>),
@@ -224,6 +228,27 @@ export const Route = createFileRoute("/")({
  * 10. Final CTA — Talk to a local
  * ════════════════════════════════════════════════════════════ */
 function HomePage() {
+  // Scroll to a hash target (#why-yes, #builder, #proposals, etc.) when the
+  // homepage mounts with a hash, including cross-route arrivals where the
+  // target may not exist on first paint. Polls briefly then bails.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const hash = window.location.hash?.slice(1);
+    if (!hash) return;
+    let tries = 0;
+    const tick = () => {
+      const el = document.getElementById(hash);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+        return;
+      }
+      if (++tries < 20) window.setTimeout(tick, 80);
+    };
+    // Slight delay so the route has painted first.
+    const t = window.setTimeout(tick, 60);
+    return () => window.clearTimeout(t);
+  }, []);
+
   return (
     <SiteLayout>
       {/* 1 — HERO
@@ -417,7 +442,8 @@ function HomePage() {
           repeated review block. This is the SINGLE review surface on the
           page (per "no repeated review sections" guardrail). */}
       <section
-        className="bg-[color:var(--ivory)] border-b border-[color:var(--border)] section-y-sm"
+        id="reviews"
+        className="bg-[color:var(--ivory)] border-b border-[color:var(--border)] section-y-sm scroll-mt-24 md:scroll-mt-28"
         aria-labelledby="trust-bar-title"
       >
         <h2 id="trust-bar-title" className="sr-only">
@@ -461,7 +487,8 @@ function HomePage() {
           supported reassurance. Premium, human, intelligent — not a
           features grid. Soft fade-in only, no bounce, no parallax. */}
       <section
-        className="section-y bg-[color:var(--ivory)] border-b border-[color:var(--border)]"
+        id="why-yes"
+        className="section-y bg-[color:var(--ivory)] border-b border-[color:var(--border)] scroll-mt-24 md:scroll-mt-28"
         aria-labelledby="why-yes-title"
       >
         <div className="container-x">
@@ -793,7 +820,8 @@ function HomePage() {
           decorative blobs, no glow. Emphasizes route realism, timing,
           and human support. */}
       <section
-        className="section-y-lg bg-[color:var(--sand)] border-b border-[color:var(--border)]"
+        id="builder"
+        className="section-y-lg bg-[color:var(--sand)] border-b border-[color:var(--border)] scroll-mt-24 md:scroll-mt-28"
         aria-labelledby="studio-title"
       >
         <div className="container-x">
@@ -970,7 +998,8 @@ function HomePage() {
               return (
                 <article
                   key={m.eyebrow}
-                  className="reveal-stagger group grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center"
+                  id={m.id}
+                  className="reveal-stagger group grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center scroll-mt-24 md:scroll-mt-28"
                 >
                   {/* Image side */}
                   <Link
@@ -1045,7 +1074,7 @@ function HomePage() {
           labelled landmark with visible expandable answers. The wrapper
           section below carries the spacing class the lock checks; the
           inner FAQ component carries aria-labelledby="faq-title". */}
-      <section className="py-20 md:py-24" aria-labelledby="faq-title">
+      <section id="faq" className="py-20 md:py-24 scroll-mt-24 md:scroll-mt-28" aria-labelledby="faq-title">
         <FAQ />
       </section>
 
