@@ -2063,21 +2063,30 @@
   .bg-accent-sea   { background-color: var(--accent-sea);   color: var(--ivory-warm); }
   .bg-accent-olive { background-color: var(--accent-olive); color: var(--ivory-warm); }
 
-  /* Strategic keyword emphasis — applied to single nouns/short phrases
-     ("private", "local", "real time", "your rhythm", etc.). Inherits
-     parent color so it works on light + dark surfaces; medium weight,
-     gentle gold underline that animates in on parent reveal. */
+  /* Strategic keyword emphasis — applied ONLY to intended phrases
+     ("local knowledge", "your rhythm", "effortless", "real time", etc.).
+     Visible emphasis: semibold + italic + gentle gold underline that
+     animates in on parent reveal. Color stays at --charcoal so the
+     surrounding body copy can sit one step softer without losing the
+     keyword. Works on light surfaces (ivory/sand/white). */
   .kw {
-    font-weight: 500;
-    color: inherit;
+    font-weight: 600;
+    font-style: italic;
+    color: var(--charcoal);
     background-image: linear-gradient(to right, var(--gold) 0%, var(--gold) 100%);
     background-repeat: no-repeat;
     background-size: 100% 1px;
     background-position: 0 100%;
     padding-bottom: 1px;
   }
+  /* On dark surfaces (charcoal/teal hero, dark cards), keep the keyword
+     legible by inheriting the parent's light foreground instead of
+     forcing --charcoal. Opt-in via .on-dark on an ancestor. */
+  .on-dark .kw {
+    color: inherit;
+  }
   .kw-strong {
-    font-weight: 600;
+    font-weight: 700;
     color: var(--charcoal);
   }
 
