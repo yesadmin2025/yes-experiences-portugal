@@ -469,12 +469,12 @@ function HomePage() {
             <span className="eyebrow">Why YES</span>
             <h2
               id="why-yes-title"
-              className="t-h2 mt-5 text-balance"
+              className="serif mt-5 text-[2.1rem] md:text-[3.2rem] leading-[1.05] tracking-[-0.012em] text-[color:var(--charcoal)] font-medium text-balance"
             >
               Portugal isn't experienced the{" "}
               <span className="italic">same way</span> by everyone.
             </h2>
-            <p className="mt-6 text-[14.5px] md:text-[15.5px] text-[color:var(--charcoal-soft)] font-light leading-[1.65] max-w-xl mx-auto">
+            <p className="mt-6 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] font-light leading-[1.7] max-w-xl mx-auto">
               For some, it's wine. For others, the coast, history, food, or a moment that matters. Because no two people experience Portugal the same way, we chose to do things differently — not just in how we guide you, but in how you choose and create your experience from the very beginning.
             </p>
           </div>
@@ -593,10 +593,10 @@ function HomePage() {
         <div className="container-x">
           <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
             <span className="eyebrow">Where to begin</span>
-            <h2 id="start-paths-title" className="t-h2 mt-5">
+            <h2 id="start-paths-title" className="serif mt-5 text-[2.1rem] md:text-[3.2rem] leading-[1.05] tracking-[-0.012em] text-[color:var(--charcoal)] font-medium">
               Four ways to <span className="italic">start.</span>
             </h2>
-            <p className="mt-5 text-[14.5px] md:text-[15.5px] text-[color:var(--charcoal-soft)] font-light leading-[1.6] max-w-md mx-auto">
+            <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] font-light leading-[1.65] max-w-md mx-auto">
               Pick the path that matches how you like to plan.
             </p>
           </div>
@@ -671,10 +671,10 @@ function HomePage() {
         <div className="container-x">
           <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
             <span className="eyebrow">Signature experiences</span>
-            <h2 id="signatures-title" className="t-h2 mt-5">
+            <h2 id="signatures-title" className="serif mt-5 text-[2.1rem] md:text-[3.2rem] leading-[1.05] tracking-[-0.012em] text-[color:var(--charcoal)] font-medium">
               Days <span className="italic">already designed.</span>
             </h2>
-            <p className="mt-5 text-[14.5px] md:text-[15.5px] text-[color:var(--charcoal-soft)] font-light leading-[1.6] max-w-md mx-auto">
+            <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] font-light leading-[1.65] max-w-md mx-auto">
               Confirm a Signature as it ships, or tailor a few details inside.
             </p>
           </div>
@@ -805,7 +805,7 @@ function HomePage() {
               <h2 id="studio-title" className="serif mt-5 text-[2rem] md:text-[2.8rem] leading-[1.05] tracking-[-0.012em] text-[color:var(--charcoal)]">
                 Build a day that <span className="italic">actually fits.</span>
               </h2>
-              <p className="mt-5 text-[14.5px] md:text-[15.5px] text-[color:var(--charcoal-soft)] font-light leading-[1.7] max-w-md">
+              <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] font-light leading-[1.7] max-w-md">
                 Pick stops on a real map. The Studio composes the route as you choose &mdash; feasibility, timing and an estimate breakdown, all updated in <span className="kw">real time</span>, with <span className="kw">local guidance</span> one message away.
               </p>
               <ul className="mt-6 space-y-2.5 text-[13.5px] text-[color:var(--charcoal)] font-light leading-[1.6]">
@@ -887,10 +887,10 @@ function HomePage() {
         <div className="container-x">
           <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
             <span className="eyebrow">Multi-day</span>
-            <h2 id="multiday-title" className="t-h2 mt-5">
+            <h2 id="multiday-title" className="serif mt-5 text-[2.1rem] md:text-[3.2rem] leading-[1.05] tracking-[-0.012em] text-[color:var(--charcoal)] font-medium">
               Routes <span className="italic">across</span> Portugal.
             </h2>
-            <p className="mt-5 text-[14.5px] md:text-[15.5px] text-[color:var(--charcoal-soft)] font-light leading-[1.6] max-w-md mx-auto">
+            <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] font-light leading-[1.65] max-w-md mx-auto">
               Two to seven days, real driving times, real overnight stops — designed in conversation with a local team.
             </p>
           </div>
