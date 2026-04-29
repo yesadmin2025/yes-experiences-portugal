@@ -687,7 +687,84 @@ function AdminImportPage() {
             )}
           </div>
 
-          {/* ----- Mapping rules editor ----- */}
+          {/* ----- Bulk Viator import — all 10 Signature tours ----- */}
+          <div className="mt-12 border border-[color:var(--border)] bg-[color:var(--card)] p-5">
+            <div className="flex items-center gap-2">
+              <Download size={16} className="text-[color:var(--teal)]" />
+              <h2 className="serif text-2xl">Bulk import — paste all Viator URLs</h2>
+            </div>
+            <p className="mt-2 text-xs text-[color:var(--charcoal-soft)] max-w-2xl">
+              One line per tour, format <code>tour-id | viator-url</code>. The
+              template below is pre-filled with all {signatureTours.length} Signature
+              ids and their current bookingUrl — replace each URL with the exact
+              Viator product link, then click <strong>Import all</strong>. Each row
+              upserts <code>imported_tours</code> with the AI-extracted itinerary.
+            </p>
+
+            <textarea
+              value={bulkText}
+              onChange={(e) => setBulkText(e.target.value)}
+              disabled={bulkRunning}
+              spellCheck={false}
+              rows={Math.min(14, signatureTours.length + 2)}
+              className="mt-4 w-full font-mono text-xs border border-[color:var(--border)] bg-[color:var(--ivory)] px-3 py-2.5 focus:outline-none focus:border-[color:var(--teal)]"
+            />
+
+            <div className="mt-3 flex flex-col sm:flex-row gap-2">
+              <button
+                onClick={onBulkImport}
+                disabled={bulkRunning}
+                className="inline-flex items-center justify-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] disabled:opacity-60 text-[color:var(--ivory)] px-5 py-2.5 text-sm tracking-wide transition-all"
+              >
+                {bulkRunning ? (
+                  <Loader2 size={14} className="animate-spin" />
+                ) : (
+                  <Download size={14} />
+                )}
+                {bulkRunning ? "Importing all…" : "Import all"}
+              </button>
+              <button
+                onClick={() => setBulkText(bulkTemplate)}
+                disabled={bulkRunning}
+                className="inline-flex items-center justify-center border border-[color:var(--border)] hover:border-[color:var(--gold)] px-5 py-2.5 text-sm"
+              >
+                Reset to template
+              </button>
+            </div>
+
+            {bulkResults && (
+              <div className="mt-5 border-t border-[color:var(--border)] pt-4 space-y-2">
+                <div className="text-xs uppercase tracking-[0.18em] text-[color:var(--charcoal-soft)]">
+                  {bulkResults.succeeded} ok · {bulkResults.failed} failed ·
+                  {" "}{bulkResults.total} total
+                </div>
+                <ul className="text-xs space-y-1">
+                  {bulkResults.results.map((r) => (
+                    <li
+                      key={r.id}
+                      className={`flex items-start gap-2 border-l-2 pl-2 ${
+                        r.ok
+                          ? "border-[color:var(--teal)]/60"
+                          : "border-red-400/70"
+                      }`}
+                    >
+                      {r.ok ? (
+                        <Check size={12} className="mt-0.5 text-[color:var(--teal)]" />
+                      ) : (
+                        <AlertTriangle size={12} className="mt-0.5 text-red-600" />
+                      )}
+                      <span className="font-mono">{r.id}</span>
+                      <span className="text-[color:var(--charcoal-soft)]">
+                        {r.ok ? `${r.stopsSaved} stops saved` : r.error}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+
+
           <div className="mt-12 border border-[color:var(--border)] bg-[color:var(--card)] p-5">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="flex items-center gap-2">
