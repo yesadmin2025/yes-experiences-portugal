@@ -466,6 +466,7 @@ function HomePage() {
       >
         <div className="container-x">
           <div className="max-w-2xl mx-auto text-center mb-12 md:mb-16">
+            <span aria-hidden="true" className="gold-rule mx-auto mb-6 block max-w-[3rem]" />
             <span className="eyebrow">Why YES</span>
             <h2
               id="why-yes-title"
@@ -858,12 +859,13 @@ function HomePage() {
                   </span>
                 </div>
               </div>
-              <div className="md:hidden mt-4 flex flex-col gap-1.5 rounded-[4px] border border-[color:var(--gold)]/30 bg-[color:var(--ivory)] px-4 py-3 shadow-[0_4px_12px_-8px_rgba(0,0,0,0.25)]">
-                <span className="inline-flex items-center gap-2 text-[9.5px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
+              <div className="reveal md:hidden mt-4 flex flex-col gap-1.5 rounded-[4px] border border-[color:var(--gold)]/35 bg-[color:var(--ivory)] px-4 py-3.5 shadow-[0_6px_16px_-8px_rgba(0,0,0,0.28)]">
+                <span aria-hidden="true" className="gold-rule mb-1 max-w-[2.5rem]" />
+                <span className="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.28em] font-semibold text-[color:var(--gold)]">
                   <span className="live-dot" aria-hidden="true" />
                   Live draft
                 </span>
-                <span className="serif text-[15px] leading-[1.2] text-[color:var(--charcoal)]">
+                <span className="serif text-[15.5px] leading-[1.2] text-[color:var(--charcoal)]">
                   4 stops &middot; ~7h &middot; Lisbon &rarr; Algarve
                 </span>
                 <span className="text-[10.5px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)]">
@@ -1071,10 +1073,10 @@ function HomePage() {
             <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
               <Link
                 to="/contact"
-                className="inline-flex items-center justify-center gap-2 bg-[color:var(--gold)] text-[color:var(--charcoal)] px-7 py-3.5 text-[12px] uppercase tracking-[0.22em] font-medium hover:bg-[color:var(--gold-soft)] transition-colors"
+                className="group inline-flex items-center justify-center gap-2 bg-[color:var(--gold)] text-[color:var(--charcoal)] px-7 py-3.5 text-[12px] uppercase tracking-[0.22em] font-medium hover:bg-[color:var(--gold-soft)] transition-colors shadow-[0_6px_18px_-8px_rgba(201,169,106,0.55)]"
               >
                 Speak to a local designer
-                <ArrowRight size={14} />
+                <ArrowRight size={14} className="transition-transform duration-200 group-hover:translate-x-0.5" />
               </Link>
             </div>
           </div>
