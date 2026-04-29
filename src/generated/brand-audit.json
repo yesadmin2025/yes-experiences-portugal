@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-29T04:46:44.757Z",
+  "generatedAt": "2026-04-29T04:49:14.506Z",
   "filesScanned": 104,
   "approvedPalette": {
     "teal": "#295B61",
@@ -18,9 +18,9 @@
     "#cccccc"
   ],
   "counts": {
-    "total": 184,
+    "total": 186,
     "approved": 26,
-    "allowlisted": 25,
+    "allowlisted": 27,
     "mismatch": 133
   },
   "findings": [
@@ -1448,7 +1448,25 @@
     },
     {
       "file": "src/styles.css",
-      "line": 164,
+      "line": 135,
+      "col": 11,
+      "raw": "#ffffff",
+      "normalized": "#ffffff",
+      "snippet": "--card: #ffffff;",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/styles.css",
+      "line": 137,
+      "col": 14,
+      "raw": "#ffffff",
+      "normalized": "#ffffff",
+      "snippet": "--popover: #ffffff;",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/styles.css",
+      "line": 148,
       "col": 29,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -1457,7 +1475,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 287,
+      "line": 270,
       "col": 11,
       "raw": "#1f1f1f",
       "normalized": "#1f1f1f",
@@ -1466,7 +1484,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 319,
+      "line": 302,
       "col": 66,
       "raw": "#555",
       "normalized": "#555555",
@@ -1475,7 +1493,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 846,
+      "line": 829,
       "col": 12,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -1484,7 +1502,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 1033,
+      "line": 1016,
       "col": 12,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -1493,7 +1511,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 1286,
+      "line": 1269,
       "col": 12,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -1502,7 +1520,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 1997,
+      "line": 1980,
       "col": 23,
       "raw": "#000",
       "normalized": "#000000",
