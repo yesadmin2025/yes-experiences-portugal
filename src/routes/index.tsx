@@ -485,35 +485,40 @@ function HomePage() {
                 num: "01",
                 label: "Personal",
                 title: (<>You shape the <span className="italic">story.</span></>),
-                body: "Portugal becomes what you want it to be — a private day, a proposal, a celebration, a corporate experience or a full journey. You choose what you want to feel, how you move, and who you share it with.",
+                body: (<>Portugal becomes what you want it to be — a <span className="kw">private</span> day, a proposal, a celebration, a corporate experience or a full journey. You choose what you want to feel, how you move, and who you share it with.</>),
+                pull: "Designed around you, not a template.",
               },
               {
                 Icon: MapPin,
                 num: "02",
                 label: "Place",
                 title: (<>Portugal is the <span className="italic">stage.</span></>),
-                body: "From iconic places to hidden gems, every moment is set in the right place, at the right time — whether it's something simple or something you'll never forget.",
+                body: (<>From iconic places to <span className="kw">hidden gems</span>, every moment is set in the right place, at the right time — whether it's something simple or something you'll never forget.</>),
+                pull: "The right place, at the right hour.",
               },
               {
                 Icon: Compass,
                 num: "03",
                 label: "Local",
                 title: (<>Local, from the <span className="italic">very beginning.</span></>),
-                body: "Everything is guided by real local knowledge — with proximity, care and the kind of insight that only comes from living it.",
+                body: (<>Everything is guided by real <span className="kw">local</span> knowledge — with proximity, care and the kind of insight that only comes from living it.</>),
+                pull: "Locals on the ground, not call-centres.",
               },
               {
                 Icon: Sparkles,
                 num: "04",
                 label: "How you choose",
                 title: (<>A different way to <span className="italic">choose.</span></>),
-                body: "Start from a Signature, tailor selected details, or build your experience from scratch in the Studio — shaping it step by step, in real time.",
+                body: (<>Start from a Signature, tailor selected details, or build your experience from scratch in the Studio — shaping it step by step, in <span className="kw">real time</span>.</>),
+                pull: "Choose, tailor, or build — your call.",
               },
               {
                 Icon: LifeBuoy,
                 num: "05",
                 label: "Supported",
                 title: (<>Simple, clear, <span className="italic">supported.</span></>),
-                body: "Even if this feels new, it's designed to be easy. You decide at your own pace, with local guidance whenever you want it.",
+                body: (<>Even if this feels new, it's designed to be easy. You decide at <span className="kw">your rhythm</span>, with <span className="kw">local guidance</span> whenever you want it.</>),
+                pull: "A local is one message away.",
                 wide: true,
               },
             ].map((b) => (
@@ -524,18 +529,22 @@ function HomePage() {
                   (b.wide ? "md:col-span-2" : "")
                 }
               >
+                {/* Animated gold rule — draws in on reveal */}
+                <span aria-hidden="true" className="gold-rule absolute left-0 top-0" />
                 {/* Gold sweep underline on hover (desktop) */}
                 <span
                   aria-hidden="true"
-                  className="pointer-events-none absolute left-0 top-0 h-px w-full origin-left scale-x-0 bg-[color:var(--gold)] transition-transform duration-500 ease-out group-hover:scale-x-100"
+                  className="pointer-events-none absolute left-0 bottom-0 h-px w-full origin-left scale-x-0 bg-[color:var(--gold)]/60 transition-transform duration-500 ease-out group-hover:scale-x-100"
                 />
                 <div className="flex items-start justify-between gap-4">
-                  <b.Icon
-                    size={22}
-                    strokeWidth={1.5}
-                    aria-hidden="true"
-                    className="text-[color:var(--teal)] transition-transform duration-300 ease-out group-hover:translate-x-0.5"
-                  />
+                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--gold)]/35 bg-[color:var(--ivory)] transition-colors duration-300 group-hover:border-[color:var(--gold)]/70">
+                    <b.Icon
+                      size={18}
+                      strokeWidth={1.5}
+                      aria-hidden="true"
+                      className="text-[color:var(--teal)] transition-transform duration-300 ease-out group-hover:translate-x-0.5"
+                    />
+                  </span>
                   <span className="serif text-[13px] tracking-[0.18em] text-[color:var(--gold)]">
                     {b.num}
                   </span>
@@ -543,11 +552,15 @@ function HomePage() {
                 <span className="mt-5 text-[10.5px] uppercase tracking-[0.32em] text-[color:var(--charcoal-soft)]">
                   {b.label}
                 </span>
-                <h3 className="serif mt-3 text-[1.5rem] md:text-[1.7rem] leading-[1.2] text-[color:var(--charcoal)]">
+                <h3 className="serif mt-3 text-[1.55rem] md:text-[1.85rem] leading-[1.18] text-[color:var(--charcoal)]">
                   {b.title}
                 </h3>
                 <p className="mt-3.5 text-[14.5px] md:text-[15px] text-[color:var(--charcoal-soft)] font-light leading-[1.6]">
                   {b.body}
+                </p>
+                {/* One bold highlighted phrase per card */}
+                <p className="mt-5 serif italic text-[15px] md:text-[16px] leading-[1.4] text-[color:var(--charcoal)] border-l-2 border-[color:var(--gold)] pl-3">
+                  {b.pull}
                 </p>
               </li>
             ))}
