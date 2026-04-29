@@ -104,7 +104,7 @@ function TailorPage() {
 
   // ─── Derived live summary values ────────────────────────────
   const keptStops = useMemo(
-    () => (tour.stops ?? []).filter((s: SignatureTour["stops"][number]) => !skipped.has(s.label)),
+    () => (tour.stops ?? []).filter((s) => !skipped.has(s.label)),
     [tour.stops, skipped],
   );
 
@@ -138,7 +138,7 @@ function TailorPage() {
       `• Pace: ${pace}`,
       `• Guests: ${guests}`,
       `• Guide language: ${language.toUpperCase()}`,
-      `• Stops kept: ${keptStops.map((s: SignatureTour["stops"][number]) => s.label).join(", ") || "guide's choice"}`,
+      `• Stops kept: ${keptStops.map((s) => s.label).join(", ") || "guide's choice"}`,
       skipped.size ? `• Skipped: ${[...skipped].join(", ")}` : "",
       addons.size ? `• Add-ons: ${[...addons].join(", ")}` : "",
       lunch ? `• Lunch: ${lunchOptions.find((l) => l.id === lunch)?.label ?? lunch}` : "",
@@ -331,7 +331,7 @@ function TailorPage() {
                     The order of what stays is preserved.
                   </p>
                   <ul className="grid sm:grid-cols-2 gap-2.5 list-none p-0">
-                    {(tour.stops ?? []).map((s: SignatureTour["stops"][number], i: number) => {
+                    {(tour.stops ?? []).map((s, i) => {
                       const kept = !skipped.has(s.label);
                       return (
                         <li key={s.label + i}>
@@ -537,7 +537,7 @@ function TailorPage() {
                       Itinerary ({keptStops.length} of {(tour.stops ?? []).length})
                     </p>
                     <ol className="mt-2 space-y-1.5 list-none p-0">
-                      {keptStops.map((s: SignatureTour["stops"][number], i: number) => (
+                      {keptStops.map((s, i) => (
                         <li key={s.label + i} className="flex gap-2.5">
                           <span className="text-[10px] uppercase tracking-[0.22em] text-[color:var(--gold)] w-5 shrink-0 mt-0.5">
                             {String(i + 1).padStart(2, "0")}

@@ -25,14 +25,11 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ToursTourIdRouteImport } from './routes/tours.$tourId'
-import { Route as CheckoutSuccessRouteImport } from './routes/checkout.success'
-import { Route as CheckoutCancelledRouteImport } from './routes/checkout.cancelled'
 import { Route as ApiVerifyHeroRouteImport } from './routes/api/verify-hero'
 import { Route as ApiImgRouteImport } from './routes/api/img'
 import { Route as AdminTourLinkAuditRouteImport } from './routes/admin.tour-link-audit'
 import { Route as AdminImportToursRouteImport } from './routes/admin.import-tours'
 import { Route as ToursTourIdTailorRouteImport } from './routes/tours.$tourId.tailor'
-import { Route as ApiPublicStripeWebhookRouteImport } from './routes/api/public/stripe-webhook'
 
 const TypographyAuditRoute = TypographyAuditRouteImport.update({
   id: '/typography-audit',
@@ -114,16 +111,6 @@ const ToursTourIdRoute = ToursTourIdRouteImport.update({
   path: '/tours/$tourId',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CheckoutSuccessRoute = CheckoutSuccessRouteImport.update({
-  id: '/checkout/success',
-  path: '/checkout/success',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CheckoutCancelledRoute = CheckoutCancelledRouteImport.update({
-  id: '/checkout/cancelled',
-  path: '/checkout/cancelled',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ApiVerifyHeroRoute = ApiVerifyHeroRouteImport.update({
   id: '/api/verify-hero',
   path: '/api/verify-hero',
@@ -149,11 +136,6 @@ const ToursTourIdTailorRoute = ToursTourIdTailorRouteImport.update({
   path: '/tailor',
   getParentRoute: () => ToursTourIdRoute,
 } as any)
-const ApiPublicStripeWebhookRoute = ApiPublicStripeWebhookRouteImport.update({
-  id: '/api/public/stripe-webhook',
-  path: '/api/public/stripe-webhook',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -175,10 +157,7 @@ export interface FileRoutesByFullPath {
   '/admin/tour-link-audit': typeof AdminTourLinkAuditRoute
   '/api/img': typeof ApiImgRoute
   '/api/verify-hero': typeof ApiVerifyHeroRoute
-  '/checkout/cancelled': typeof CheckoutCancelledRoute
-  '/checkout/success': typeof CheckoutSuccessRoute
   '/tours/$tourId': typeof ToursTourIdRouteWithChildren
-  '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
   '/tours/$tourId/tailor': typeof ToursTourIdTailorRoute
 }
 export interface FileRoutesByTo {
@@ -201,10 +180,7 @@ export interface FileRoutesByTo {
   '/admin/tour-link-audit': typeof AdminTourLinkAuditRoute
   '/api/img': typeof ApiImgRoute
   '/api/verify-hero': typeof ApiVerifyHeroRoute
-  '/checkout/cancelled': typeof CheckoutCancelledRoute
-  '/checkout/success': typeof CheckoutSuccessRoute
   '/tours/$tourId': typeof ToursTourIdRouteWithChildren
-  '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
   '/tours/$tourId/tailor': typeof ToursTourIdTailorRoute
 }
 export interface FileRoutesById {
@@ -228,10 +204,7 @@ export interface FileRoutesById {
   '/admin/tour-link-audit': typeof AdminTourLinkAuditRoute
   '/api/img': typeof ApiImgRoute
   '/api/verify-hero': typeof ApiVerifyHeroRoute
-  '/checkout/cancelled': typeof CheckoutCancelledRoute
-  '/checkout/success': typeof CheckoutSuccessRoute
   '/tours/$tourId': typeof ToursTourIdRouteWithChildren
-  '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
   '/tours/$tourId/tailor': typeof ToursTourIdTailorRoute
 }
 export interface FileRouteTypes {
@@ -256,10 +229,7 @@ export interface FileRouteTypes {
     | '/admin/tour-link-audit'
     | '/api/img'
     | '/api/verify-hero'
-    | '/checkout/cancelled'
-    | '/checkout/success'
     | '/tours/$tourId'
-    | '/api/public/stripe-webhook'
     | '/tours/$tourId/tailor'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -282,10 +252,7 @@ export interface FileRouteTypes {
     | '/admin/tour-link-audit'
     | '/api/img'
     | '/api/verify-hero'
-    | '/checkout/cancelled'
-    | '/checkout/success'
     | '/tours/$tourId'
-    | '/api/public/stripe-webhook'
     | '/tours/$tourId/tailor'
   id:
     | '__root__'
@@ -308,10 +275,7 @@ export interface FileRouteTypes {
     | '/admin/tour-link-audit'
     | '/api/img'
     | '/api/verify-hero'
-    | '/checkout/cancelled'
-    | '/checkout/success'
     | '/tours/$tourId'
-    | '/api/public/stripe-webhook'
     | '/tours/$tourId/tailor'
   fileRoutesById: FileRoutesById
 }
@@ -335,10 +299,7 @@ export interface RootRouteChildren {
   AdminTourLinkAuditRoute: typeof AdminTourLinkAuditRoute
   ApiImgRoute: typeof ApiImgRoute
   ApiVerifyHeroRoute: typeof ApiVerifyHeroRoute
-  CheckoutCancelledRoute: typeof CheckoutCancelledRoute
-  CheckoutSuccessRoute: typeof CheckoutSuccessRoute
   ToursTourIdRoute: typeof ToursTourIdRouteWithChildren
-  ApiPublicStripeWebhookRoute: typeof ApiPublicStripeWebhookRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -455,20 +416,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ToursTourIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/checkout/success': {
-      id: '/checkout/success'
-      path: '/checkout/success'
-      fullPath: '/checkout/success'
-      preLoaderRoute: typeof CheckoutSuccessRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/checkout/cancelled': {
-      id: '/checkout/cancelled'
-      path: '/checkout/cancelled'
-      fullPath: '/checkout/cancelled'
-      preLoaderRoute: typeof CheckoutCancelledRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/api/verify-hero': {
       id: '/api/verify-hero'
       path: '/api/verify-hero'
@@ -503,13 +450,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/tours/$tourId/tailor'
       preLoaderRoute: typeof ToursTourIdTailorRouteImport
       parentRoute: typeof ToursTourIdRoute
-    }
-    '/api/public/stripe-webhook': {
-      id: '/api/public/stripe-webhook'
-      path: '/api/public/stripe-webhook'
-      fullPath: '/api/public/stripe-webhook'
-      preLoaderRoute: typeof ApiPublicStripeWebhookRouteImport
-      parentRoute: typeof rootRouteImport
     }
   }
 }
@@ -546,11 +486,17 @@ const rootRouteChildren: RootRouteChildren = {
   AdminTourLinkAuditRoute: AdminTourLinkAuditRoute,
   ApiImgRoute: ApiImgRoute,
   ApiVerifyHeroRoute: ApiVerifyHeroRoute,
-  CheckoutCancelledRoute: CheckoutCancelledRoute,
-  CheckoutSuccessRoute: CheckoutSuccessRoute,
   ToursTourIdRoute: ToursTourIdRouteWithChildren,
-  ApiPublicStripeWebhookRoute: ApiPublicStripeWebhookRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}
