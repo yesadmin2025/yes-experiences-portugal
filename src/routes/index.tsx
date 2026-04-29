@@ -795,37 +795,37 @@ function HomePage() {
         <div className="container-x">
           <div className="grid lg:grid-cols-12 gap-10 lg:gap-14 items-center max-w-6xl mx-auto">
             <div className="lg:col-span-5">
-              <span className="eyebrow inline-flex items-center gap-2">
-                <MapPin size={12} aria-hidden="true" />
-                Experience Studio
+              <span className="eyebrow inline-flex items-center gap-3">
+                <span className="live-dot" aria-hidden="true" />
+                <span>Created in <span className="kw">real time</span></span>
               </span>
-              <h2 id="studio-title" className="t-h2 mt-5">
+              <h2 id="studio-title" className="serif mt-5 text-[2rem] md:text-[2.8rem] leading-[1.05] tracking-[-0.012em] text-[color:var(--charcoal)]">
                 Build a day that <span className="italic">actually fits.</span>
               </h2>
               <p className="mt-5 text-[14.5px] md:text-[15.5px] text-[color:var(--charcoal-soft)] font-light leading-[1.7] max-w-md">
-                Pick stops on a real map. The Studio shows route feasibility, estimated duration, and an estimate breakdown — so you see what works before you commit.
+                Pick stops on a real map. The Studio composes the route as you choose &mdash; feasibility, timing and an estimate breakdown, all updated in <span className="kw">real time</span>, with <span className="kw">local guidance</span> one message away.
               </p>
               <ul className="mt-6 space-y-2.5 text-[13.5px] text-[color:var(--charcoal)] font-light leading-[1.6]">
                 <li className="flex gap-2">
-                  <span aria-hidden="true" className="text-[color:var(--gold)]">·</span>
-                  Real stops only — no invented venues
+                  <span aria-hidden="true" className="text-[color:var(--gold)]">&middot;</span>
+                  Real stops only &mdash; no invented venues
                 </li>
                 <li className="flex gap-2">
-                  <span aria-hidden="true" className="text-[color:var(--gold)]">·</span>
+                  <span aria-hidden="true" className="text-[color:var(--gold)]">&middot;</span>
                   Honest driving times and pace
                 </li>
                 <li className="flex gap-2">
-                  <span aria-hidden="true" className="text-[color:var(--gold)]">·</span>
-                  A local designer reviews every build
+                  <span aria-hidden="true" className="text-[color:var(--gold)]">&middot;</span>
+                  A <span className="kw">local</span> designer reviews every build
                 </li>
               </ul>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
                   to="/builder"
-                  className="inline-flex items-center gap-2 bg-[color:var(--teal)] text-[color:var(--ivory)] px-6 py-3 text-[12px] uppercase tracking-[0.22em] hover:bg-[color:var(--teal-2)] transition-colors"
+                  className="group inline-flex items-center gap-2 bg-[color:var(--teal)] text-[color:var(--ivory)] px-6 py-3 text-[12px] uppercase tracking-[0.22em] hover:bg-[color:var(--teal-2)] transition-colors shadow-[0_4px_14px_-6px_rgba(41,91,97,0.55)]"
                 >
                   Open the studio
-                  <ArrowRight size={14} />
+                  <ArrowRight size={14} className="transition-transform duration-200 group-hover:translate-x-0.5" />
                 </Link>
                 <Link
                   to="/contact"
@@ -834,10 +834,38 @@ function HomePage() {
                   Talk to a designer
                 </Link>
               </div>
+              <p className="mt-5 inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.24em] text-[color:var(--teal)]">
+                <MessageCircle size={12} aria-hidden="true" />
+                Local guidance available while you build
+              </p>
             </div>
             <div className="lg:col-span-7">
               <div className="relative aspect-[4/3] md:aspect-[16/11] overflow-hidden rounded-[2px] border border-[color:var(--border)] bg-[color:var(--ivory)] shadow-[0_8px_24px_-12px_rgba(46,46,46,0.18)]">
                 <LiveMapPreview />
+                <div className="hidden md:flex absolute bottom-4 right-4 flex-col gap-1.5 rounded-[4px] border border-[color:var(--gold)]/30 bg-[color:var(--ivory)]/95 backdrop-blur-sm px-4 py-3 shadow-[0_6px_18px_-8px_rgba(0,0,0,0.35)] max-w-[14rem]">
+                  <span className="inline-flex items-center gap-2 text-[9.5px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
+                    <span className="live-dot" aria-hidden="true" />
+                    Live draft
+                  </span>
+                  <span className="serif text-[15px] leading-[1.2] text-[color:var(--charcoal)]">
+                    4 stops &middot; ~7h &middot; Lisbon &rarr; Algarve
+                  </span>
+                  <span className="text-[10.5px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)]">
+                    Reviewed by a local
+                  </span>
+                </div>
+              </div>
+              <div className="md:hidden mt-4 flex flex-col gap-1.5 rounded-[4px] border border-[color:var(--gold)]/30 bg-[color:var(--ivory)] px-4 py-3 shadow-[0_4px_12px_-8px_rgba(0,0,0,0.25)]">
+                <span className="inline-flex items-center gap-2 text-[9.5px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
+                  <span className="live-dot" aria-hidden="true" />
+                  Live draft
+                </span>
+                <span className="serif text-[15px] leading-[1.2] text-[color:var(--charcoal)]">
+                  4 stops &middot; ~7h &middot; Lisbon &rarr; Algarve
+                </span>
+                <span className="text-[10.5px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)]">
+                  Reviewed by a local
+                </span>
               </div>
             </div>
           </div>
