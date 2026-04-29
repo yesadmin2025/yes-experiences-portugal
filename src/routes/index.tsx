@@ -1222,7 +1222,7 @@ function HomePage() {
                     <h3 className="serif text-[1.25rem] md:text-[1.55rem] leading-[1.2] text-[color:var(--charcoal)]">
                       {m.title}
                     </h3>
-                    <p className="text-[13.5px] leading-[1.55] text-[color:var(--charcoal-soft)] font-light">
+                    <p className="text-[14px] leading-[1.6] text-[color:var(--charcoal)] font-light">
                       {m.line}
                     </p>
                     <span className="mt-2 inline-flex items-center gap-1.5 text-[11.5px] uppercase tracking-[0.22em] font-medium text-[color:var(--teal)]">
