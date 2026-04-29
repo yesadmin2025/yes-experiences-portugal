@@ -687,14 +687,12 @@
   /* Idle gold-rim breathing — used by ::after on hero CTAs. Opacity
      drifts 0 → peak → 0 over a slow cycle. Peak is var-driven so it
      can be retuned without editing keyframes. */
+  /* Neutralised (Patch 1, brand guardrails — no flashy hover
+     choreography, no autoplay glow). Kept as no-op so existing
+     .cta-breathe references keep parsing until per-page refactor. */
   @keyframes ctaRimBreathe {
-    0%,
-    100% {
-      opacity: 0;
-    }
-    50% {
-      opacity: var(--cta-breathe-peak, 0.55);
-    }
+    0%, 100% { opacity: 0; }
+    50% { opacity: 0; }
   }
 
   /* One-shot attention pulse — fires ONCE shortly after the hero copy
@@ -708,23 +706,9 @@
          a separate pseudo path — see .cta-attention below.
      Total duration 1.6s, runs exactly once, then leaves no residual
      state — hover behavior is untouched after the pulse completes. */
+  /* Neutralised (Patch 1) — pulse halo no-op. */
   @keyframes ctaAttentionHalo {
-    0% {
-      opacity: 0;
-      transform: scale(0.92);
-    }
-    35% {
-      opacity: 0.85;
-      transform: scale(1.18);
-    }
-    70% {
-      opacity: 0.25;
-      transform: scale(1.06);
-    }
-    100% {
-      opacity: 0;
-      transform: scale(0.92);
-    }
+    0%, 100% { opacity: 0; transform: none; }
   }
 
   /* Opt-in utility — apply alongside .cta-primary / .cta-secondary-dark
