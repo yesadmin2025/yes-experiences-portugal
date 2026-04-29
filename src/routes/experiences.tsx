@@ -13,13 +13,13 @@ export const Route = createFileRoute("/experiences")({
       {
         name: "description",
         content:
-          "Complete private experiences across Portugal — designed to be enjoyed as they are. Confirmed end-to-end by a local guide.",
+          "Complete private experiences across Portugal — designed to be enjoyed as they are. Reserve instantly, with real-time confirmation.",
       },
       { property: "og:title", content: "Signature Experiences — YES experiences Portugal" },
       {
         property: "og:description",
         content:
-          "Complete, curated private experiences — or adjust a few details within the experience to match your rhythm.",
+          "Complete, curated private experiences. Reserve instantly — or adjust a few details within the experience to match your rhythm.",
       },
     ],
   }),
@@ -37,8 +37,8 @@ function ExperiencesPage() {
             Signature <span className="italic text-[color:var(--teal)]">Tours</span>
           </h1>
           <p className="mt-5 max-w-xl mx-auto text-[color:var(--charcoal-soft)]">
-            Complete private experiences, designed to be enjoyed as they are —
-            or adjust a few details within the experience to match your rhythm.
+            Complete private experiences, designed to be enjoyed as they are.
+            Reserve instantly — or adjust a few details within the experience to match your rhythm.
           </p>
         </div>
       </section>

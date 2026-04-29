@@ -12,7 +12,7 @@ export const Route = createFileRoute("/day-tours")({
       {
         name: "description",
         content:
-          "Private day experiences across Portugal — Arrábida, Setúbal, Sintra, Évora, Douro and more. Designed and confirmed by local guides.",
+          "Private day experiences across Portugal — Arrábida, Setúbal, Sintra, Évora, Douro and more. Reserve instantly, with real-time confirmation.",
       },
     ],
   }),
@@ -32,8 +32,8 @@ function DayToursPage() {
             Day <span className="italic text-[color:var(--teal)]">Tours</span>
           </h1>
           <p className="mt-5 max-w-xl mx-auto text-[color:var(--charcoal-soft)]">
-            Private guides, refined pace, and the parts of Portugal you'll remember most —
-            or adjust a few details within the experience to match your rhythm.
+            Private guides, refined pace, and the parts of Portugal you'll remember most.
+            Reserve instantly — or adjust a few details within the experience to match your rhythm.
           </p>
         </div>
       </section>

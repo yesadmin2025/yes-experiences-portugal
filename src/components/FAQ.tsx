@@ -9,44 +9,44 @@ import { whatsappHref } from "@/components/WhatsAppFab";
 
 const FAQS: { q: string; a: string }[] = [
   {
-    q: "Can I book online?",
-    a: "Yes for Tailored, Builder and Multi-day journeys — paid securely on this site. Signature tours are confirmed through our booking partner; the on-site reservation link goes live shortly. Corporate, proposals and celebrations are arranged with a local.",
+    q: "Can I confirm instantly?",
+    a: "Yes. Experiences can be confirmed directly on the website. No forms, no waiting.",
   },
   {
-    q: "What's the difference between Signature, Tailored and Builder?",
-    a: "Signature is a fixed, curated tour. Tailored keeps that same tour and lets you adjust selected details (pace, options, language). Builder starts from a blank canvas and shapes a private day or multi-day journey from real, available stops.",
+    q: "What is the difference between Signature, Tailored and Builder?",
+    a: "Signature is ready as it is. Tailored adjusts selected details inside that tour. Builder starts from scratch using guided, realistic options.",
   },
   {
-    q: "Are all experiences private?",
-    a: "Yes. Every YES experience is private to your group — no strangers joining, no shared vans.",
-  },
-  {
-    q: "Can I get help from a local before I book?",
-    a: "Yes. A local guide is available by WhatsApp to answer questions, validate feasibility, or co-design your journey with you.",
+    q: "Can I get help from a local?",
+    a: "Yes. Real-time guidance is available whenever you want help.",
   },
   {
     q: "Do you cover all of Portugal?",
-    a: "Yes — but routes are planned realistically. We won't squeeze the country into a day. Multi-day journeys move between regions in honest, drivable steps.",
+    a: "Yes — with routes planned realistically, around timing, geography and availability.",
   },
   {
-    q: "Can you organise proposals or celebrations?",
-    a: "Yes. Proposals, anniversaries, vow renewals, birthdays and intimate family celebrations are planned one-to-one with a local — not booked from a template.",
+    q: "Can you organize proposals or celebrations?",
+    a: "Yes. Private proposals, anniversaries, birthdays, honeymoons and intimate celebrations.",
   },
   {
     q: "Do you work with groups or corporate?",
-    a: "Yes. Private groups, incentives and corporate experiences are handled by a dedicated planner with a written proposal — typically same business day.",
+    a: "Yes. Private groups, incentives and corporate experiences — with full logistics support.",
   },
   {
-    q: "What happens after I pay or request?",
-    a: "For online payments you receive an immediate email receipt and a follow-up from a local within hours with pickup details. For Signature and human-assisted paths, a local confirms availability and details before any payment.",
+    q: "Are all experiences private?",
+    a: "Yes. We design private experiences only.",
   },
   {
-    q: "Can I change details after I confirm?",
-    a: "Yes — within reason. Pace, timing, optional stops and dietary needs can be adjusted up to 48h before. Significant route changes go through your local.",
+    q: "Can I create a multi-day journey?",
+    a: "Yes. Shape it in the Studio, or with a local in real time.",
   },
   {
-    q: "What's the cancellation policy?",
-    a: "Free cancellation up to 24h before the experience for most online bookings. Custom multi-day and group programs follow the terms in your written proposal.",
+    q: "What can I tailor in a Signature?",
+    a: "Selected details inside that specific tour — pace, timing and the options available within it.",
+  },
+  {
+    q: "What happens after I confirm?",
+    a: "You receive confirmation and full details through our integrated booking system.",
   },
 ];
 

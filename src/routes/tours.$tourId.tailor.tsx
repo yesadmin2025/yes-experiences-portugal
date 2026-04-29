@@ -608,10 +608,10 @@ function TailorPage() {
                     <Sparkles size={15} /> Confirm Tailored Journey
                   </a>
                   <p className="mt-2 text-[11px] text-[color:var(--charcoal-soft)] text-center">
-                    A local confirms your tailored details, then you pay securely online.
+                    Instant confirmation. No forms. No waiting.
                   </p>
                   <p className="mt-1 text-[10px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)]/80 text-center">
-                    Secure payment · Free cancellation up to 24h
+                    Secured directly on this site.
                   </p>
                 </div>
               </div>

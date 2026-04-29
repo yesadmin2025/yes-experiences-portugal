@@ -17,7 +17,7 @@ export const HERO_COPY = {
     "Designed by you, at your rhythm — for a day, a journey, or a celebration — guided by a local who knows where the real moments happen.",
   primaryCta: "Create Your Story",
   secondaryCta: "Explore Signature Experiences",
-  microcopy: "Designed by locals. Confirmed end-to-end.",
+  microcopy: "Instant confirmation. No forms. No waiting.",
   brandLine: "Whatever you have in mind, we say YES.",
 } as const;
 

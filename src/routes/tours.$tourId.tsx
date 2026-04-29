@@ -203,7 +203,7 @@ function TourHero({
               href="#tailor"
               className="flex-1 inline-flex items-center justify-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] px-6 py-4 text-sm tracking-wide transition-all min-h-[52px]"
             >
-              <Sparkles size={14} /> Check availability
+              <Sparkles size={14} /> Reserve instantly
             </a>
             <Link
               to="/tours/$tourId/tailor"
@@ -224,8 +224,8 @@ function TourHero({
  * ════════════════════════════════════════════════════════════ */
 function TrustStrip() {
   const items = [
-    { icon: <Shield size={14} />, label: "Confirmed end-to-end" },
-    { icon: <Check size={14} />, label: "Private to your group" },
+    { icon: <Shield size={14} />, label: "Instant confirmation" },
+    { icon: <Check size={14} />, label: "No forms. No waiting." },
     { icon: <Star size={14} />, label: "Trusted local guide" },
   ];
   return (
@@ -765,7 +765,7 @@ function FinalCta({ tour }: { tour: SignatureTour }) {
             href="#tailor"
             className="inline-flex items-center justify-center gap-2 bg-[color:var(--gold)] hover:bg-[color:var(--gold-soft)] text-[color:var(--charcoal)] px-7 py-4 text-sm tracking-wide transition-all min-h-[52px]"
           >
-            <Sparkles size={14} /> Check availability
+            <Sparkles size={14} /> Reserve instantly
           </a>
           <Link
             to="/tours/$tourId/tailor"
@@ -777,7 +777,7 @@ function FinalCta({ tour }: { tour: SignatureTour }) {
         </div>
 
         <p className="mt-5 text-[11px] uppercase tracking-[0.24em] text-[color:var(--ivory)]/65">
-          Confirmed by a local · Email reply in hours
+          Instant confirmation · Secured on this site
         </p>
       </div>
     </section>

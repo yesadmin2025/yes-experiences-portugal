@@ -27,8 +27,8 @@ function Page() {
             Begin Your <span className="italic text-[color:var(--teal)]">Portugal Story</span>
           </h1>
           <p className="mt-5 max-w-xl mx-auto text-[color:var(--charcoal-soft)]">
-            Tell us a little about who you are and what you'd love to experience.
-            A local replies the same business day — often within hours.
+            Tell us a little about who you are and what you'd love to experience. We'll respond
+            within one business day.
           </p>
         </div>
       </section>

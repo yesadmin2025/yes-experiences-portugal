@@ -228,13 +228,13 @@ export function SimpleTailorForm({ tour }: { tour: SignatureTour }) {
         rel="noopener noreferrer"
         className="mt-6 inline-flex w-full items-center justify-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] px-5 py-3.5 text-sm tracking-wide transition-all"
       >
-        <MessageCircle size={16} /> Send to a local
+        <MessageCircle size={16} /> Reserve instantly
       </a>
       <p className="mt-2 text-[11px] text-[color:var(--charcoal-soft)] text-center">
-        A local reviews your tailored details and replies within hours.
+        Confirm in real time — secured directly on this site.
       </p>
       <p className="mt-1 text-[10px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)]/80 text-center">
-        Then you pay securely online · Free cancellation 24h
+        Reservations handled securely through our integrated booking system.
       </p>
     </div>
   );
