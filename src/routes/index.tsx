@@ -831,7 +831,7 @@ function HomePage() {
               <li
                 key={b.num}
                 className={
-                  "reveal-stagger group relative flex flex-col rounded-[6px] border border-[#E7DDD0] bg-[color:var(--ivory)] p-7 md:p-9 shadow-[0_1px_2px_rgba(46,46,46,0.04)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-[color:var(--gold)]/55 hover:shadow-[0_10px_28px_-14px_rgba(46,46,46,0.18)] active:border-[color:var(--gold)]/55 overflow-hidden " +
+                  "reveal-stagger he-card-lift group relative flex flex-col rounded-[6px] border border-[#E7DDD0] bg-[color:var(--ivory)] p-7 md:p-9 shadow-[0_1px_2px_rgba(46,46,46,0.04)] overflow-hidden " +
                   (b.wide ? "md:col-span-2" : "")
                 }
               >
