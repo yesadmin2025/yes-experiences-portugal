@@ -1071,10 +1071,10 @@ function HomePage() {
             <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
               <Link
                 to="/contact"
-                className="inline-flex items-center justify-center gap-2 bg-[color:var(--gold)] text-[color:var(--charcoal)] px-7 py-3.5 text-[12px] uppercase tracking-[0.22em] font-medium hover:bg-[color:var(--gold-soft)] transition-colors"
+                className="group inline-flex items-center justify-center gap-2 bg-[color:var(--gold)] text-[color:var(--charcoal)] px-7 py-3.5 text-[12px] uppercase tracking-[0.22em] font-medium hover:bg-[color:var(--gold-soft)] transition-colors shadow-[0_6px_18px_-8px_rgba(201,169,106,0.55)]"
               >
                 Speak to a local designer
-                <ArrowRight size={14} />
+                <ArrowRight size={14} className="transition-transform duration-200 group-hover:translate-x-0.5" />
               </Link>
             </div>
           </div>
