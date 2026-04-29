@@ -144,6 +144,7 @@ const multiDay = [
 
 const groupsAndCelebrations = [
   {
+    id: "proposals",
     eyebrow: "Proposals",
     title: "A private moment, shaped with care.",
     line: (<>From the setting to the timing, we help shape the moment around your story, with <span className="kw">local knowledge</span> and discreet support.</>),
@@ -154,6 +155,7 @@ const groupsAndCelebrations = [
     img: imgArrabidaWineLunch,
   },
   {
+    id: "celebrations",
     eyebrow: "Celebrations",
     title: "For days worth remembering.",
     line: (<>Birthdays, anniversaries, honeymoons or family moments — shaped around <span className="kw">your rhythm</span>, your people and the way you want to feel Portugal.</>),
@@ -164,6 +166,7 @@ const groupsAndCelebrations = [
     img: imgFatimaNazare,
   },
   {
+    id: "corporate",
     eyebrow: "Corporate & Groups",
     title: "Private group days, without the generic formula.",
     line: (<>For teams, incentives and private groups, we combine local experiences, timing, transport and logistics into a day that feels <span className="kw">effortless</span>.</>),
