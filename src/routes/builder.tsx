@@ -739,7 +739,7 @@ function WelcomeStep({ onStart }: { onStart: () => void }) {
             </a>
           </div>
           <p className="mt-5 text-[10px] uppercase tracking-[0.28em] text-white/70">
-            Instant confirmation when your journey is ready
+            Confirmed personally by a local within hours
           </p>
         </div>
       </div>
