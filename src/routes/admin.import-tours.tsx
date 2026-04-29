@@ -11,10 +11,14 @@ import {
   saveMappingRules,
   deleteMappingRules,
 } from "@/server/mappingRules.functions";
+import {
+  fetchViatorArrabida,
+  saveViatorArrabida,
+} from "@/server/viatorTour.functions";
 import { DEFAULT_MAPPING_RULES } from "@/data/defaultMappingRules";
 import { signatureTours } from "@/data/signatureTours";
 import { toast } from "sonner";
-import { Loader2, RefreshCw, Check, AlertTriangle, Sliders, Trash2, Plus, Image as ImageIcon, ImageOff, Link2, Link2Off } from "lucide-react";
+import { Loader2, RefreshCw, Check, AlertTriangle, Sliders, Trash2, Plus, Image as ImageIcon, ImageOff, Link2, Link2Off, Download, Save } from "lucide-react";
 
 const FILTER_VALUES = ["all", "with-image", "missing-image", "matched", "unmatched"] as const;
 type FilterValue = (typeof FILTER_VALUES)[number];
@@ -81,6 +85,76 @@ function AdminImportPage() {
   const callListRules = useServerFn(listMappingRules);
   const callSaveRules = useServerFn(saveMappingRules);
   const callDeleteRules = useServerFn(deleteMappingRules);
+  const callFetchViator = useServerFn(fetchViatorArrabida);
+  const callSaveViator = useServerFn(saveViatorArrabida);
+
+  // ----- Arrábida P3 Viator source panel -----
+  type ViatorItineraryStep = {
+    order: number;
+    label: string;
+    description: string;
+    optional: boolean;
+  };
+  type ViatorPreview = {
+    title: string;
+    durationText: string;
+    pickupZone: string;
+    groupType: string;
+    blurb: string;
+    itinerary: ViatorItineraryStep[];
+    inclusions: string[];
+    exclusions: string[];
+    variesByOption: string[];
+  };
+  const [viatorUrl, setViatorUrl] = useState("");
+  const [viatorPreview, setViatorPreview] = useState<ViatorPreview | null>(null);
+  const [viatorFetching, setViatorFetching] = useState(false);
+  const [viatorSaving, setViatorSaving] = useState(false);
+  const [viatorError, setViatorError] = useState<string | null>(null);
+
+  const onFetchViator = async () => {
+    setViatorError(null);
+    setViatorPreview(null);
+    if (!viatorUrl.trim()) {
+      setViatorError("Paste a Viator tour URL first.");
+      return;
+    }
+    setViatorFetching(true);
+    try {
+      const result = await callFetchViator({ data: { url: viatorUrl.trim() } });
+      setViatorPreview(result.extraction as ViatorPreview);
+      toast.success("Fetched from Viator — review and save");
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "Fetch failed";
+      setViatorError(msg);
+      toast.error(msg);
+    } finally {
+      setViatorFetching(false);
+    }
+  };
+
+  const onSaveViator = async () => {
+    if (!viatorPreview) return;
+    setViatorSaving(true);
+    try {
+      const result = await callSaveViator({
+        data: { url: viatorUrl.trim(), extraction: viatorPreview },
+      });
+      toast.success(`Saved Arrábida P3 — ${result.stopsSaved} stops`);
+      // Refresh imported_tours listing below.
+      const { data: rows } = await supabase
+        .from("imported_tours")
+        .select(SELECT_COLS)
+        .order("imported_at", { ascending: false });
+      setTours((rows as ImportedRow[]) ?? []);
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "Save failed";
+      setViatorError(msg);
+      toast.error(msg);
+    } finally {
+      setViatorSaving(false);
+    }
+  };
 
   type RuleRow = {
     id: string;
@@ -387,6 +461,162 @@ function AdminImportPage() {
               )}
             </div>
           )}
+
+          {/* ----- Arrábida P3 — Viator source-of-truth panel ----- */}
+          <div className="mt-12 border border-[color:var(--border)] bg-[color:var(--card)] p-5">
+            <div className="flex items-center gap-2">
+              <Link2 size={16} className="text-[color:var(--teal)]" />
+              <h2 className="serif text-2xl">Arrábida P3 — Viator source</h2>
+            </div>
+            <p className="mt-2 text-xs text-[color:var(--charcoal-soft)] max-w-2xl">
+              Paste the exact Viator tour URL for the Arrábida P3 day. Lovable AI
+              extracts the real itinerary, inclusions, exclusions and optional
+              stops, and updates the <code>arrabida-wine-allinclusive</code>{" "}
+              entry in the database. Review the preview before saving — nothing
+              is written until you click <strong>Save</strong>.
+            </p>
+
+            <div className="mt-4 flex flex-col sm:flex-row gap-2">
+              <input
+                type="url"
+                inputMode="url"
+                placeholder="https://www.viator.com/tours/Lisbon/..."
+                value={viatorUrl}
+                onChange={(e) => setViatorUrl(e.target.value)}
+                disabled={viatorFetching || viatorSaving}
+                className="flex-1 border border-[color:var(--border)] px-3 py-2.5 text-sm bg-[color:var(--ivory)] focus:outline-none focus:border-[color:var(--teal)]"
+              />
+              <button
+                onClick={onFetchViator}
+                disabled={viatorFetching || viatorSaving || !viatorUrl.trim()}
+                className="inline-flex items-center justify-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] disabled:opacity-60 text-[color:var(--ivory)] px-5 py-2.5 text-sm tracking-wide transition-all"
+              >
+                {viatorFetching ? (
+                  <Loader2 size={14} className="animate-spin" />
+                ) : (
+                  <Download size={14} />
+                )}
+                {viatorFetching ? "Fetching…" : "Fetch from Viator"}
+              </button>
+            </div>
+
+            {viatorError && (
+              <div className="mt-3 p-3 border border-red-400/60 bg-red-50 text-xs text-red-700 flex items-start gap-2">
+                <AlertTriangle size={14} className="mt-0.5 shrink-0" />
+                <span>{viatorError}</span>
+              </div>
+            )}
+
+            {viatorPreview && (
+              <div className="mt-5 border-t border-[color:var(--border)] pt-5 space-y-4">
+                <div className="space-y-1">
+                  <h3 className="serif text-xl">{viatorPreview.title}</h3>
+                  <p className="text-xs text-[color:var(--charcoal-soft)]">
+                    {viatorPreview.durationText} · {viatorPreview.groupType} ·
+                    Pickup: {viatorPreview.pickupZone}
+                  </p>
+                  <p className="text-sm mt-2 text-[color:var(--charcoal)]">
+                    {viatorPreview.blurb}
+                  </p>
+                </div>
+
+                <div>
+                  <h4 className="text-[10px] uppercase tracking-[0.2em] text-[color:var(--charcoal-soft)] mb-2">
+                    Itinerary ({viatorPreview.itinerary.length} stops)
+                  </h4>
+                  <ol className="space-y-2">
+                    {viatorPreview.itinerary.map((step) => (
+                      <li
+                        key={step.order}
+                        className="flex gap-3 text-sm border-l-2 border-[color:var(--gold)]/40 pl-3"
+                      >
+                        <span className="text-[color:var(--charcoal-soft)] tabular-nums w-5 shrink-0">
+                          {step.order}.
+                        </span>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="font-medium">{step.label}</span>
+                            {step.optional && (
+                              <span className="text-[10px] uppercase tracking-[0.18em] px-1.5 py-0.5 bg-[color:var(--gold)]/15 text-[color:var(--gold)]">
+                                Optional
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-xs text-[color:var(--charcoal-soft)] mt-0.5">
+                            {step.description}
+                          </p>
+                        </div>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+                  {viatorPreview.inclusions.length > 0 && (
+                    <div>
+                      <h4 className="text-[10px] uppercase tracking-[0.2em] text-[color:var(--charcoal-soft)] mb-2">
+                        Included
+                      </h4>
+                      <ul className="space-y-1 list-disc pl-4">
+                        {viatorPreview.inclusions.map((s, i) => (
+                          <li key={i}>{s}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {viatorPreview.exclusions.length > 0 && (
+                    <div>
+                      <h4 className="text-[10px] uppercase tracking-[0.2em] text-[color:var(--charcoal-soft)] mb-2">
+                        Not included
+                      </h4>
+                      <ul className="space-y-1 list-disc pl-4">
+                        {viatorPreview.exclusions.map((s, i) => (
+                          <li key={i}>{s}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {viatorPreview.variesByOption.length > 0 && (
+                    <div>
+                      <h4 className="text-[10px] uppercase tracking-[0.2em] text-[color:var(--charcoal-soft)] mb-2">
+                        Varies by option
+                      </h4>
+                      <ul className="space-y-1 list-disc pl-4">
+                        {viatorPreview.variesByOption.map((s, i) => (
+                          <li key={i}>{s}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-2 pt-2">
+                  <button
+                    onClick={onSaveViator}
+                    disabled={viatorSaving}
+                    className="inline-flex items-center justify-center gap-2 bg-[color:var(--charcoal)] hover:bg-[color:var(--charcoal-deep)] disabled:opacity-60 text-[color:var(--ivory)] px-5 py-2.5 text-sm tracking-wide transition-all"
+                  >
+                    {viatorSaving ? (
+                      <Loader2 size={14} className="animate-spin" />
+                    ) : (
+                      <Save size={14} />
+                    )}
+                    {viatorSaving ? "Saving…" : "Save to database"}
+                  </button>
+                  <button
+                    onClick={() => {
+                      setViatorPreview(null);
+                      setViatorError(null);
+                    }}
+                    disabled={viatorSaving}
+                    className="inline-flex items-center justify-center border border-[color:var(--border)] hover:border-[color:var(--gold)] px-5 py-2.5 text-sm"
+                  >
+                    Discard preview
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
 
           {/* ----- Mapping rules editor ----- */}
           <div className="mt-12 border border-[color:var(--border)] bg-[color:var(--card)] p-5">
