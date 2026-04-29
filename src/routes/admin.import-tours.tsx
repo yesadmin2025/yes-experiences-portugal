@@ -129,14 +129,39 @@ function AdminImportPage() {
     return { items, errors };
   };
 
-  const onBulkImport = async () => {
+  const [bulkOverride, setBulkOverride] = useState(false);
+
+  // Live mismatch check for every parsed line — runs locally on each keystroke.
+  const bulkChecks = useMemo(() => {
     const { items, errors } = parseBulk(bulkText);
+    const checks = items.map((it) => {
+      const seed = signatureTours.find((t) => t.id === it.id);
+      const check = seed
+        ? checkViatorUrlMatchesTour(it.url, seed.id, seed.title)
+        : ({ kind: "invalid", reason: "Unknown tour id" } as UrlMatchResult);
+      return { ...it, knownId: !!seed, check };
+    });
+    const mismatches = checks.filter(
+      (c) => c.check.kind === "mismatch" || c.check.kind === "invalid" || !c.knownId,
+    );
+    const weak = checks.filter((c) => c.check.kind === "weak");
+    return { items, errors, checks, mismatches, weak };
+  }, [bulkText]);
+
+  const onBulkImport = async () => {
+    const { items, errors, mismatches } = bulkChecks;
     if (errors.length) {
       toast.error(errors[0]);
       return;
     }
     if (!items.length) {
       toast.error("Paste at least one id | url line.");
+      return;
+    }
+    if (mismatches.length > 0 && !bulkOverride) {
+      toast.error(
+        `${mismatches.length} URL${mismatches.length === 1 ? "" : "s"} don't match the tour id. Tick 'Import anyway' to override.`,
+      );
       return;
     }
     setBulkRunning(true);
@@ -157,6 +182,7 @@ function AdminImportPage() {
       setBulkRunning(false);
     }
   };
+
 
   // ----- Arrábida P3 Viator source panel -----
   type ViatorItineraryStep = {
