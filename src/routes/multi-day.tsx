@@ -344,7 +344,7 @@ function MultiDayPage() {
                   "Realistic regional day blocks",
                   "Live map with your route drawn day by day",
                   "Storytelling timeline that updates as you build",
-                  "Instant confirmation — no forms, no waiting",
+                  "Personal confirmation by a local within hours",
                 ].map((t) => (
                   <li key={t} className="flex items-start gap-2">
                     <Sparkles size={13} className="text-[color:var(--gold)] mt-1 shrink-0" />
