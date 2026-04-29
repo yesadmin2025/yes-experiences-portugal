@@ -447,7 +447,7 @@ function BuilderPage() {
               A place, a moment, a region, or an idea — shape it into a real Portugal journey, in real time.
             </p>
             <p className="mt-2 text-[10px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
-              Instant confirmation when your journey is ready
+              Confirmed personally by a local within hours
             </p>
           </div>
 
