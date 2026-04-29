@@ -560,7 +560,7 @@ function MultiDayPage() {
             Build Your Multi-Day Journey <ArrowRight size={13} />
           </Link>
           <p className="mt-4 text-[10px] uppercase tracking-[0.28em] text-white/55">
-            Instant confirmation · designed by locals
+            Designed by locals · confirmed personally
           </p>
         </div>
       </section>
