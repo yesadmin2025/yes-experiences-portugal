@@ -1243,10 +1243,10 @@ function RevealStep({ s, title, investment }: { s: BuilderState; title: string; 
           to="/contact"
           className="w-full inline-flex items-center justify-center gap-2 bg-[color:var(--teal)] text-[color:var(--ivory)] px-6 py-4 text-[11px] uppercase tracking-[0.22em] hover:bg-[color:var(--teal-2)] transition-colors"
         >
-          Confirm Instantly <ArrowRight size={13} />
+          Request to book <ArrowRight size={13} />
         </Link>
         <p className="text-center text-[11px] text-[color:var(--charcoal-soft)] italic -mt-0.5">
-          Secure booking directly on our website through our integrated booking system.
+          A local reviews and confirms your journey personally — usually within hours.
         </p>
         <button
           onClick={() => {
