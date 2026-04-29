@@ -14,6 +14,7 @@ import {
 import {
   fetchViatorArrabida,
   saveViatorArrabida,
+  bulkImportViatorTours,
 } from "@/server/viatorTour.functions";
 import { DEFAULT_MAPPING_RULES } from "@/data/defaultMappingRules";
 import { signatureTours } from "@/data/signatureTours";
@@ -87,6 +88,74 @@ function AdminImportPage() {
   const callDeleteRules = useServerFn(deleteMappingRules);
   const callFetchViator = useServerFn(fetchViatorArrabida);
   const callSaveViator = useServerFn(saveViatorArrabida);
+  const callBulkViator = useServerFn(bulkImportViatorTours);
+
+  // ----- Bulk import: paste id|url per line, run all at once -----
+  const bulkTemplate = signatureTours
+    .map((t) => `${t.id} | ${t.bookingUrl}`)
+    .join("\n");
+  const [bulkText, setBulkText] = useState(bulkTemplate);
+  const [bulkRunning, setBulkRunning] = useState(false);
+  const [bulkResults, setBulkResults] = useState<{
+    total: number;
+    succeeded: number;
+    failed: number;
+    results: { id: string; url: string; ok: boolean; stopsSaved?: number; error?: string }[];
+  } | null>(null);
+
+  const parseBulk = (
+    text: string,
+  ): { items: { id: string; url: string }[]; errors: string[] } => {
+    const items: { id: string; url: string }[] = [];
+    const errors: string[] = [];
+    text.split(/\r?\n/).forEach((rawLine, i) => {
+      const line = rawLine.trim();
+      if (!line || line.startsWith("#")) return;
+      // Accept "id | url", "id, url", "id url" or "id\turl".
+      const m = line.split(/\s*[|,\t]\s*|\s+/);
+      if (m.length < 2) {
+        errors.push(`Line ${i + 1}: expected "id | url"`);
+        return;
+      }
+      const id = m[0];
+      const url = m.slice(1).join(" ").trim();
+      if (!/^https?:\/\//i.test(url)) {
+        errors.push(`Line ${i + 1}: "${url}" is not a URL`);
+        return;
+      }
+      items.push({ id, url });
+    });
+    return { items, errors };
+  };
+
+  const onBulkImport = async () => {
+    const { items, errors } = parseBulk(bulkText);
+    if (errors.length) {
+      toast.error(errors[0]);
+      return;
+    }
+    if (!items.length) {
+      toast.error("Paste at least one id | url line.");
+      return;
+    }
+    setBulkRunning(true);
+    setBulkResults(null);
+    try {
+      const r = await callBulkViator({ data: { items } });
+      setBulkResults(r);
+      if (r.failed === 0) toast.success(`Imported ${r.succeeded}/${r.total} tours`);
+      else toast.warning(`${r.succeeded} ok · ${r.failed} failed`);
+      const { data: rows } = await supabase
+        .from("imported_tours")
+        .select(SELECT_COLS)
+        .order("imported_at", { ascending: false });
+      setTours((rows as ImportedRow[]) ?? []);
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Bulk import failed");
+    } finally {
+      setBulkRunning(false);
+    }
+  };
 
   // ----- Arrábida P3 Viator source panel -----
   type ViatorItineraryStep = {
