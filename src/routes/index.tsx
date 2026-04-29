@@ -932,7 +932,7 @@ function HomePage() {
                 Create it, <span className="italic text-[color:var(--gold-soft)]">live.</span>
               </h2>
               <p className="mt-8 text-[19px] md:text-[22px] lg:text-[24px] text-[color:var(--ivory)] leading-[1.5] max-w-xl font-light">
-                Start with a place, a moment, or an idea. Shape it in real time and confirm instantly.
+                Start with a place, a moment, or an idea. Shape it in real time — a local confirms it personally.
               </p>
               <p className="mt-5 text-[15px] md:text-[16px] italic font-light text-[color:var(--gold-soft)] leading-[1.7] max-w-xl">
                 A local is available in real time if you want help.
@@ -958,7 +958,7 @@ function HomePage() {
                   "Start your way",
                   "Shape it as you go",
                   "Adjust in real time",
-                  "Confirm instantly",
+                  "Confirmed by a local",
                 ].map((step, i) => (
                   <li key={step} className="flex items-baseline gap-2.5">
                     <span className="text-[10px] uppercase tracking-[0.28em] text-[color:var(--gold)] font-medium shrink-0">
@@ -1488,10 +1488,10 @@ function HomePage() {
               <span className="eyebrow">Begin</span>
               <h2 className="t-h2 mt-6">
                 Write your story. <br />
-                <span className="italic text-[color:var(--teal)]">Confirm it instantly.</span>
+                <span className="italic text-[color:var(--teal)]">Confirmed personally.</span>
               </h2>
               <p className="mt-7 text-[12.5px] md:text-[13px] uppercase tracking-[0.28em] text-[color:var(--charcoal)] font-medium">
-                Instant confirmation. No forms. No waiting.
+                Designed by locals. Confirmed personally.
               </p>
               <div className="mt-10 flex flex-wrap gap-4">
                 <Link
