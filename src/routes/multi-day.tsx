@@ -216,7 +216,7 @@ function MultiDayPage() {
             </a>
           </div>
           <p className="mt-5 text-[10px] uppercase tracking-[0.28em] text-white/65">
-            Real routes · realistic pace · instant confirmation
+            Real routes · realistic pace · personal confirmation
           </p>
         </div>
       </section>
