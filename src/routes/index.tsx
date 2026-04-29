@@ -1313,7 +1313,7 @@ function HomePage() {
                     <span className="text-[10.5px] uppercase tracking-[0.32em] font-semibold text-[color:var(--charcoal-soft)]">
                       {m.eyebrow}
                     </span>
-                    <h3 className="serif mt-3 text-[1.7rem] md:text-[2.15rem] leading-[1.12] tracking-[-0.008em] text-[color:var(--charcoal)] font-medium">
+                    <h3 className="serif mt-3 text-[1.9rem] md:text-[2.4rem] leading-[1.08] tracking-[-0.012em] text-[color:var(--charcoal)] font-medium">
                       {m.title}
                     </h3>
                     <p className="mt-4 text-[15px] md:text-[16px] leading-[1.7] text-[color:var(--charcoal)] font-light">
