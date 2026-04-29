@@ -1282,7 +1282,7 @@ function HomePage() {
                       (reverse ? "md:order-2" : "md:order-1")
                     }
                   >
-                    <div className="relative aspect-[4/3] md:aspect-[5/4] overflow-hidden">
+                    <div className="he-image-rise relative aspect-[4/3] md:aspect-[5/4] overflow-hidden">
                       <img
                         src={m.img}
                         alt=""
