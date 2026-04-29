@@ -814,12 +814,59 @@ function AdminImportPage() {
               className="mt-4 w-full font-mono text-xs border border-[color:var(--border)] bg-[color:var(--ivory)] px-3 py-2.5 focus:outline-none focus:border-[color:var(--teal)]"
             />
 
+            {(bulkChecks.mismatches.length > 0 || bulkChecks.weak.length > 0) && (
+              <div className="mt-3 border border-[color:var(--gold)]/60 bg-[color:var(--gold)]/10 p-3 text-xs space-y-2">
+                <div className="flex items-center gap-2 font-medium">
+                  <AlertTriangle size={14} className="text-[color:var(--gold)]" />
+                  URL ↔ tour-id check
+                </div>
+                <ul className="space-y-1">
+                  {bulkChecks.checks
+                    .filter((c) => c.check.kind !== "ok")
+                    .map((c) => (
+                      <li key={c.id + c.url} className="flex items-start gap-2">
+                        <span
+                          className={
+                            c.check.kind === "weak"
+                              ? "text-[color:var(--gold)]"
+                              : "text-red-600"
+                          }
+                        >
+                          {c.check.kind === "weak" ? "?" : "✕"}
+                        </span>
+                        <span className="font-mono">{c.id}</span>
+                        <span className="text-[color:var(--charcoal-soft)]">
+                          {c.check.kind === "invalid"
+                            ? c.check.reason
+                            : c.check.kind === "mismatch"
+                              ? `URL doesn't match — expected: ${c.check.expected.slice(0, 4).join(", ")}`
+                              : c.check.kind === "weak"
+                                ? `weak match (${c.check.matchedKeywords.join(", ")})`
+                                : ""}
+                        </span>
+                      </li>
+                    ))}
+                </ul>
+                {bulkChecks.mismatches.length > 0 && (
+                  <label className="inline-flex items-center gap-1.5 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={bulkOverride}
+                      onChange={(e) => setBulkOverride(e.target.checked)}
+                    />
+                    <span>Import anyway (skip URL check)</span>
+                  </label>
+                )}
+              </div>
+            )}
+
             <div className="mt-3 flex flex-col sm:flex-row gap-2">
               <button
                 onClick={onBulkImport}
                 disabled={bulkRunning}
                 className="inline-flex items-center justify-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] disabled:opacity-60 text-[color:var(--ivory)] px-5 py-2.5 text-sm tracking-wide transition-all"
               >
+
                 {bulkRunning ? (
                   <Loader2 size={14} className="animate-spin" />
                 ) : (
