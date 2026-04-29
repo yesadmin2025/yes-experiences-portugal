@@ -971,7 +971,7 @@ function HomePage() {
         <div className="container-x">
           <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
             <span className="eyebrow">Signature experiences</span>
-            <h2 id="signatures-title" className="serif mt-5 text-[2.1rem] md:text-[3.2rem] leading-[1.05] tracking-[-0.012em] text-[color:var(--charcoal)] font-medium">
+            <h2 id="signatures-title" className="serif mt-5 text-[2.35rem] md:text-[3.6rem] leading-[1.02] tracking-[-0.014em] text-[color:var(--charcoal)] font-medium">
               Days <span className="italic">already designed.</span>
             </h2>
             <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] font-light leading-[1.65] max-w-md mx-auto">
