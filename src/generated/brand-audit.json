@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-29T06:21:57.425Z",
+  "generatedAt": "2026-04-29T06:27:55.643Z",
   "filesScanned": 104,
   "approvedPalette": {
     "teal": "#295B61",
@@ -18,10 +18,10 @@
     "#cccccc"
   ],
   "counts": {
-    "total": 175,
+    "total": 176,
     "approved": 41,
     "allowlisted": 27,
-    "mismatch": 107
+    "mismatch": 108
   },
   "findings": [
     {
@@ -1211,6 +1211,15 @@
       "normalized": "#cccccc",
       "snippet": "\"#ccc\", // recharts internal selectors only",
       "status": "allowlisted"
+    },
+    {
+      "file": "src/routes/index.tsx",
+      "line": 520,
+      "col": 93,
+      "raw": "#E7DDD0",
+      "normalized": "#e7ddd0",
+      "snippet": "\"reveal-stagger group relative flex flex-col rounded-[6px] border border-[#E7DDD0] bg-[color:var(--ivory)] p-7 md:p-9 shadow-[0_1px_2px_rgba(46,46,46,0.04)] tra",
+      "status": "mismatch"
     },
     {
       "file": "src/routes/multi-day.tsx",
