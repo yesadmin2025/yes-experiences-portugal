@@ -224,8 +224,8 @@ function TourHero({
  * ════════════════════════════════════════════════════════════ */
 function TrustStrip() {
   const items = [
-    { icon: <Shield size={14} />, label: "Instant confirmation" },
-    { icon: <Check size={14} />, label: "No forms. No waiting." },
+    { icon: <Shield size={14} />, label: "Personal confirmation" },
+    { icon: <Check size={14} />, label: "Reviewed by a local" },
     { icon: <Star size={14} />, label: "Trusted local guide" },
   ];
   return (
