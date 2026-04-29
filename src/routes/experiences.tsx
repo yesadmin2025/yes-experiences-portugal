@@ -38,7 +38,7 @@ function ExperiencesPage() {
           </h1>
           <p className="mt-5 max-w-xl mx-auto text-[color:var(--charcoal-soft)]">
             Complete private experiences, designed to be enjoyed as they are.
-            Reserve instantly — or adjust a few details within the experience to match your rhythm.
+            Request to book — or adjust a few details within the experience to match your rhythm. A local confirms personally within hours.
           </p>
         </div>
       </section>
