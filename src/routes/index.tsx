@@ -769,7 +769,7 @@ function HomePage() {
             <span className="eyebrow">Why YES</span>
             <h2
               id="why-yes-title"
-              className="serif mt-5 text-[2.1rem] md:text-[3.2rem] leading-[1.05] tracking-[-0.012em] text-[color:var(--charcoal)] font-medium text-balance"
+              className="serif mt-5 text-[2.35rem] md:text-[3.6rem] leading-[1.02] tracking-[-0.014em] text-[color:var(--charcoal)] font-medium text-balance"
             >
               Portugal isn't experienced the{" "}
               <span className="italic">same way</span> by everyone.
