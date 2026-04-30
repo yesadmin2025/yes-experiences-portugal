@@ -1123,17 +1123,17 @@ function HomePage() {
                   A <span className="kw">local</span> designer reviews every build
                 </li>
               </ul>
-              <div className="mt-8 flex flex-wrap gap-3">
+              <div className="mt-8 flex flex-wrap gap-x-5 gap-y-4">
                 <Link
                   to="/builder"
-                  className="he-glow he-sheen group inline-flex items-center gap-2 bg-[color:var(--teal)] text-[color:var(--ivory)] px-7 py-3.5 min-h-[44px] text-[13px] uppercase tracking-[0.18em] font-semibold hover:bg-[color:var(--teal-2)] shadow-[0_6px_18px_-8px_rgba(41,91,97,0.6)]"
+                  className="he-glow he-sheen group inline-flex items-center gap-2.5 sm:gap-2 bg-[color:var(--teal)] text-[color:var(--ivory)] px-6 sm:px-7 py-3.5 min-h-[48px] sm:min-h-[44px] text-[12.5px] sm:text-[13px] uppercase tracking-[0.16em] sm:tracking-[0.18em] font-semibold hover:bg-[color:var(--teal-2)] shadow-[0_6px_18px_-8px_rgba(41,91,97,0.6)]"
                 >
                   Open the studio
                   <ArrowRight size={14} className="transition-transform duration-200 group-hover:translate-x-0.5" />
                 </Link>
                 <Link
                   to="/contact"
-                  className="inline-flex items-center gap-2 min-h-[44px] text-[13px] uppercase tracking-[0.18em] font-semibold text-[color:var(--charcoal)] border-b-2 border-[color:var(--charcoal)]/40 pb-1 hover:border-[color:var(--charcoal)] transition-colors"
+                  className="inline-flex items-center gap-2.5 sm:gap-2 min-h-[44px] px-1 text-[12.5px] sm:text-[13px] uppercase tracking-[0.16em] sm:tracking-[0.18em] font-semibold text-[color:var(--charcoal)] border-b-2 border-[color:var(--charcoal)]/40 pb-1 hover:border-[color:var(--charcoal)] transition-colors"
                 >
                   Talk to a designer
                 </Link>
