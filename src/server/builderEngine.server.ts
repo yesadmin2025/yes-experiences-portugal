@@ -130,15 +130,58 @@ function driveMinutesBetween(a: { lat: number; lng: number }, b: { lat: number; 
 const _kmPerDegLat = KM_PER_DEG_LAT; // kept for tooling; not exported
 
 // ---------- region picker ----------
+// New region keys (post-Phase 2): arrabida-setubal, troia-comporta,
+// sintra-cascais, evora-alentejo, centro-tomar-coimbra,
+// centro-fatima-nazare-obidos. Legacy keys kept for backwards-compat scoring.
 const INTENTION_REGION_BIAS: Record<Intention, Record<string, number>> = {
-  wine: { porto: 3, lisbon: 2, alentejo: 3, algarve: 0 },
-  gastronomy: { porto: 2, lisbon: 3, alentejo: 2, algarve: 1 },
-  nature: { algarve: 3, alentejo: 2, lisbon: 2, porto: 2 },
-  heritage: { porto: 3, lisbon: 3, alentejo: 3, algarve: 1 },
-  coast: { algarve: 3, lisbon: 3, alentejo: 1, porto: 1 },
-  hidden: { alentejo: 3, algarve: 2, porto: 1, lisbon: 1 },
-  wonder: { lisbon: 3, porto: 2, algarve: 2, alentejo: 2 },
-  wellness: { algarve: 2, alentejo: 3, lisbon: 1, porto: 1 },
+  wine: {
+    "evora-alentejo": 4,
+    "arrabida-setubal": 3,
+    "troia-comporta": 2,
+    "sintra-cascais": 1,
+  },
+  gastronomy: {
+    "arrabida-setubal": 3,
+    "troia-comporta": 3,
+    "evora-alentejo": 3,
+    "sintra-cascais": 2,
+  },
+  nature: {
+    "arrabida-setubal": 3,
+    "troia-comporta": 3,
+    "centro-fatima-nazare-obidos": 2,
+    "sintra-cascais": 2,
+  },
+  heritage: {
+    "centro-tomar-coimbra": 4,
+    "evora-alentejo": 3,
+    "sintra-cascais": 3,
+    "centro-fatima-nazare-obidos": 3,
+  },
+  coast: {
+    "troia-comporta": 4,
+    "sintra-cascais": 3,
+    "arrabida-setubal": 3,
+    "centro-fatima-nazare-obidos": 2,
+  },
+  hidden: {
+    "troia-comporta": 3,
+    "evora-alentejo": 3,
+    "arrabida-setubal": 2,
+    "centro-tomar-coimbra": 2,
+  },
+  wonder: {
+    "sintra-cascais": 4,
+    "centro-fatima-nazare-obidos": 3,
+    "centro-tomar-coimbra": 2,
+    "arrabida-setubal": 2,
+  },
+  wellness: {
+    "troia-comporta": 3,
+    "arrabida-setubal": 3,
+    "evora-alentejo": 2,
+    "sintra-cascais": 2,
+  },
 };
 
 export function pickRegion(input: BuilderInput, regions: RegionRow[]): RegionRow {
@@ -146,7 +189,6 @@ export function pickRegion(input: BuilderInput, regions: RegionRow[]): RegionRow
     const found = regions.find((r) => r.key === input.regionKey);
     if (found) return found;
   }
-  // Score regions by intention bias; tie-break by sort (already done in DB)
   const bias = INTENTION_REGION_BIAS[input.intention] ?? {};
   let best = regions[0];
   let bestScore = -1;
@@ -160,13 +202,27 @@ export function pickRegion(input: BuilderInput, regions: RegionRow[]): RegionRow
   return best;
 }
 
-// ---------- pace -> stop count ----------
+// ---------- pace -> stop count + variant bucket ----------
 export function paceToTargetStops(pace: Pace, rules: RoutingRules) {
   const min = rules.min_stops;
   const max = rules.max_stops;
   if (pace === "relaxed") return Math.max(min, Math.min(max, min + 1)); // 4
   if (pace === "full") return Math.min(max, max); // 6
   return Math.max(min, Math.min(max, min + 2)); // 5
+}
+
+/**
+ * Pace → preferred variant bucket, with fallback order so we always find
+ * *some* variant of a canonical stop even when the preferred bucket isn't
+ * seeded for it.
+ *   relaxed → deep first (long, immersive visits)
+ *   balanced → medium first (standard tour pacing)
+ *   full → short first (more stops, shorter dwells)
+ */
+export function paceToVariantPreference(pace: Pace): string[] {
+  if (pace === "relaxed") return ["deep", "extended", "medium", "short"];
+  if (pace === "full") return ["short", "medium", "deep", "extended"];
+  return ["medium", "short", "deep", "extended"];
 }
 
 // ---------- scoring ----------
@@ -182,6 +238,81 @@ function scoreStop(stop: StopRow, input: BuilderInput): number {
   if (stop.intention_tags.includes(input.intention)) s += 35;
   if (input.pace && stop.pace_tags.includes(input.pace)) s += 10;
   return s;
+}
+
+/**
+ * Pick the best variant of each canonical stop given the requested pace.
+ * Reduces a list of variants (multiple rows sharing canonical_key) down to
+ * one row per canonical_key, choosing the bucket that best matches the pace
+ * preference and falling back through the list when needed.
+ */
+export function selectVariantsForPace(stops: StopRow[], pace: Pace): StopRow[] {
+  const preference = paceToVariantPreference(pace);
+  const byCanonical = new Map<string, StopRow[]>();
+  for (const s of stops) {
+    const k = s.canonical_key ?? s.key;
+    const arr = byCanonical.get(k);
+    if (arr) arr.push(s);
+    else byCanonical.set(k, [s]);
+  }
+  const out: StopRow[] = [];
+  for (const variants of byCanonical.values()) {
+    if (variants.length === 1) {
+      out.push(variants[0]);
+      continue;
+    }
+    let picked: StopRow | undefined;
+    for (const bucket of preference) {
+      picked = variants.find((v) => v.variant_bucket === bucket);
+      if (picked) break;
+    }
+    out.push(picked ?? variants[0]);
+  }
+  return out;
+}
+
+/**
+ * Build a co-occurrence map keyed by canonical_key for O(1) adjacency
+ * scoring. Symmetric: rule (a,b,n) means both a→b and b→a get +n.
+ */
+export function buildCompatibilityIndex(
+  rules: CompatibilityRule[],
+): Map<string, Map<string, number>> {
+  const idx = new Map<string, Map<string, number>>();
+  const bump = (a: string, b: string, n: number) => {
+    let inner = idx.get(a);
+    if (!inner) {
+      inner = new Map();
+      idx.set(a, inner);
+    }
+    inner.set(b, (inner.get(b) ?? 0) + n);
+  };
+  for (const r of rules) {
+    bump(r.stop_a, r.stop_b, r.cooccurrence_count);
+    bump(r.stop_b, r.stop_a, r.cooccurrence_count);
+  }
+  return idx;
+}
+
+function canonicalOf(s: StopRow): string {
+  return s.canonical_key ?? s.key;
+}
+
+function compatibilityBoost(
+  candidate: StopRow,
+  chosen: StopRow[],
+  index: Map<string, Map<string, number>>,
+): number {
+  if (chosen.length === 0) return 0;
+  const cKey = canonicalOf(candidate);
+  const inner = index.get(cKey);
+  if (!inner) return 0;
+  let boost = 0;
+  for (const c of chosen) {
+    const n = inner.get(canonicalOf(c));
+    if (n) boost += Math.min(40, n * 12); // capped per pair
+  }
+  return boost;
 }
 
 // ---------- nearest-neighbor ordering ----------
