@@ -112,6 +112,63 @@ export const setExperienceImageActive = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+const UpdateAltSchema = z.object({
+  id: z.string().uuid(),
+  altText: z.string().min(1).max(300),
+});
+
+export const updateExperienceImageAlt = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) => UpdateAltSchema.parse(d))
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context.supabase, context.userId);
+    const { error } = await supabaseAdmin
+      .from("experience_images")
+      .update({ alt_text: data.altText })
+      .eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
+const RescrapeStopSchema = z.object({
+  stopKey: z.string().min(1).max(80),
+  viatorUrl: z
+    .string()
+    .url()
+    .refine((u) => /^https?:\/\/(www\.)?viator\.com\//i.test(u), {
+      message: "Must be a viator.com URL",
+    }),
+  moodTags: z.array(z.string().min(1).max(40)).max(12).optional(),
+  occasionTags: z.array(z.string().min(1).max(40)).max(12).optional(),
+  deactivateExisting: z.boolean().optional(),
+});
+
+/**
+ * Re-scrape Viator photos for a single stop. Optionally deactivates existing
+ * rows for that stop first so a clean set replaces the old one. Use this from
+ * the QA view to fix bad matches per stop without touching other stops.
+ */
+export const rescrapeStopImages = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) => RescrapeStopSchema.parse(d))
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context.supabase, context.userId);
+    if (data.deactivateExisting) {
+      const { error: deactErr } = await supabaseAdmin
+        .from("experience_images")
+        .update({ is_active: false })
+        .eq("related_stop_key", data.stopKey);
+      if (deactErr) throw new Error(deactErr.message);
+    }
+    const result = await scrapeViatorImagesForStop({
+      viatorUrl: data.viatorUrl,
+      stopKey: data.stopKey,
+      moodTags: data.moodTags,
+      occasionTags: data.occasionTags,
+    });
+    return result;
+  });
+
 export const listExperienceImages = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
