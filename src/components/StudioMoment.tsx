@@ -340,8 +340,27 @@ export function StudioMoment({ className }: Props) {
       {/* ─── Stop details drawer ─── */}
       <StopDetailsDrawer
         stop={openStop}
+        rawStop={
+          openStop && rawActive
+            ? rawActive.stops.find((s) => s.key === openStop.key) ?? null
+            : null
+        }
+        chosenVariantKey={
+          openStop && rawActive
+            ? swaps[rawActive.chip]?.[openStop.key]?.key ?? openStop.key
+            : null
+        }
         stopIndex={openStop && active ? active.stops.findIndex((s) => s.key === openStop.key) : -1}
         regionLabel={active?.region.label ?? ""}
+        onSwap={(chosen) => {
+          if (!openStop || !rawActive) return;
+          // If the user picked the original variant, clear the swap.
+          if (chosen === null || chosen.key === openStop.key) {
+            handleSwap(rawActive.chip, openStop.key, null);
+          } else {
+            handleSwap(rawActive.chip, openStop.key, chosen);
+          }
+        }}
         onClose={() => setOpenStopKey(null)}
       />
 
