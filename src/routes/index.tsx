@@ -1127,13 +1127,16 @@ function HomePage() {
                 Live preview
               </span>
               <h2 id="studio-title" className="serif mt-3 text-[2.5rem] md:text-[3.6rem] leading-[1.0] tracking-[-0.02em] text-[color:var(--charcoal)] font-semibold">
-                Five choices. <span className="italic">One real day</span>.
+                Create your experience <span className="italic">in Portugal</span>.
               </h2>
-              <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] leading-[1.7] max-w-md">
-                Region, duration, pace, style, group. Your day takes shape as you choose &mdash; <span className="kw">live preview</span>, honest timing, fair estimate, with <span className="kw">local guidance</span> one message away.
+              <p className="serif italic mt-3 text-[1.05rem] md:text-[1.25rem] leading-[1.3] text-[color:var(--charcoal)]/85">
+                In real time. Your way.
               </p>
-              <ol className="mt-6 grid grid-cols-5 gap-1.5 max-w-md" aria-label="The five choices">
-                {["Region", "Duration", "Pace", "Style", "Group"].map((label, i) => (
+              <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] leading-[1.7] max-w-md">
+                Three quick choices &mdash; <span className="kw">mood</span>, <span className="kw">who</span>, <span className="kw">intention</span>. We shape a real day on the map. You adjust everything.
+              </p>
+              <ol className="mt-6 grid grid-cols-3 gap-1.5 max-w-md" aria-label="Three steps">
+                {["Mood", "Who", "Intention"].map((label, i) => (
                   <li key={label} className="flex flex-col gap-1.5">
                     <span aria-hidden="true" className="block h-[3px] bg-[color:var(--gold)]" />
                     <span className="text-[10px] uppercase tracking-[0.18em] font-semibold text-[color:var(--charcoal)]/70 tabular-nums">
@@ -1142,19 +1145,22 @@ function HomePage() {
                   </li>
                 ))}
               </ol>
+              <p className="mt-4 text-[12px] leading-[1.5] text-[color:var(--charcoal)]/65 max-w-md">
+                A starting point will be created for you &mdash; you can adjust everything.
+              </p>
               <div className="mt-8 flex flex-wrap gap-x-5 gap-y-4">
                 <Link
                   to="/builder"
                   className="he-glow he-sheen he-cta-shift group inline-flex items-center gap-2.5 sm:gap-2 bg-[color:var(--teal)] text-[color:var(--ivory)] px-6 sm:px-7 py-3.5 min-h-[48px] sm:min-h-[44px] text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold hover:bg-[color:var(--teal-2)] shadow-[0_8px_22px_-10px_rgba(41,91,97,0.65)]"
                 >
-                  Start building
+                  Start your experience
                   <ArrowRight size={14} className="transition-transform duration-200 group-hover:translate-x-1" />
                 </Link>
                 <Link
-                  to="/contact"
+                  to="/experiences"
                   className="inline-flex items-center gap-2.5 sm:gap-2 min-h-[44px] px-1 text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold text-[color:var(--charcoal)] border-b-2 border-[color:var(--charcoal)]/40 pb-1 hover:border-[color:var(--charcoal)] transition-colors"
                 >
-                  Talk to a designer
+                  Start from a Signature
                 </Link>
               </div>
               <p className="mt-5 inline-flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px] xs:text-[11px] uppercase tracking-[0.16em] xs:tracking-[0.2em] sm:tracking-[0.24em] text-[color:var(--teal)]">
