@@ -132,16 +132,18 @@ export function JourneyPanel({
         ) : null}
         <ol className="mt-3 flex flex-col gap-2">
           {stops.map((s, i) => {
-            const img = stopImages?.[s.key];
+            const stopImageEntry = stopImages?.[s.key];
+            const stopImageStillLoading =
+              imagesLoading && stopImages && !(s.key in stopImages);
             return (
             <li
               key={s.key}
               className="group flex items-start gap-3 rounded-[2px] border border-[color:var(--charcoal)]/10 bg-[color:var(--ivory)] p-3 transition-colors hover:border-[color:var(--charcoal)]/25"
             >
-              {img ? (
+              {stopImageEntry ? (
                 <BuilderImage
-                  src={img.url}
-                  alt={img.alt}
+                  src={stopImageEntry.url}
+                  alt={stopImageEntry.alt}
                   ratio="1/1"
                   className="h-14 w-14 shrink-0"
                 >
@@ -149,6 +151,15 @@ export function JourneyPanel({
                     {i + 1}
                   </span>
                 </BuilderImage>
+              ) : stopImageStillLoading ? (
+                <div
+                  aria-hidden="true"
+                  className="relative h-14 w-14 shrink-0 overflow-hidden rounded-[2px] bg-[color:var(--sand)]/70 animate-pulse"
+                >
+                  <span className="absolute left-1 top-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-[color:var(--teal)] text-[10px] font-bold text-[color:var(--ivory)] tabular-nums">
+                    {i + 1}
+                  </span>
+                </div>
               ) : (
                 <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[color:var(--teal)] text-[11px] font-bold text-[color:var(--ivory)] tabular-nums">
                   {i + 1}
