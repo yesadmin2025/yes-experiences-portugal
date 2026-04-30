@@ -1,381 +1,184 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
-import {
-  ArrowRight,
-  MessageCircle,
-  Heart,
-  Wine,
-  Sun,
-  UtensilsCrossed,
-  Sparkles,
-  Users,
-  Lock,
-  MapPin,
-  Clock,
-} from "lucide-react";
-import { whatsappHref } from "@/components/WhatsAppFab";
-import heroImg from "@/assets/cat-proposals.jpg";
-import romantic from "@/assets/exp-romantic.jpg";
-import coastal from "@/assets/exp-coastal.jpg";
-import wine from "@/assets/exp-wine.jpg";
-import nature from "@/assets/exp-nature.jpg";
-import gastronomy from "@/assets/exp-gastronomy.jpg";
-import decision from "@/assets/decision-moment.jpg";
+import { ArrowRight, MessageCircle, Heart, Sparkles, Users } from "lucide-react";
+import imgArrabidaWineLunch from "@/assets/tours/arrabida-wine-allinclusive/lunch.jpg";
+import imgSintraEstates from "@/assets/tours/sintra-cascais/estates.jpg";
+import imgTroiaBeach from "@/assets/tours/troia-comporta/beach.jpg";
 
 export const Route = createFileRoute("/proposals")({
   head: () => ({
     meta: [
-      { title: "Moments Worth Saying YES To — Proposals & Celebrations in Portugal" },
+      { title: "Proposals & Celebrations in Portugal — YES experiences" },
       {
         name: "description",
         content:
-          "Proposals, anniversaries, birthdays and private celebrations in Portugal — shaped quietly with local knowledge. Discreet, intimate, beautifully timed.",
+          "Proposals, anniversaries, birthdays and private celebrations in Portugal — shaped quietly with local knowledge.",
       },
-      { property: "og:title", content: "Moments Worth Saying YES To" },
+      { property: "og:title", content: "Proposals & Celebrations in Portugal" },
       {
         property: "og:description",
         content:
-          "Proposals, anniversaries, birthdays and private celebrations shaped with local knowledge.",
+          "Private moments, shaped with care. Local knowledge behind every detail.",
       },
-      { property: "og:image", content: heroImg },
-      { property: "twitter:image", content: heroImg },
+      { property: "og:image", content: imgArrabidaWineLunch },
+      { property: "twitter:image", content: imgArrabidaWineLunch },
     ],
   }),
   component: ProposalsPage,
 });
 
-type Moment = {
-  id: string;
-  title: string;
-  line: string;
-  setting: string;
-  image: string;
-  icon: typeof Heart;
-  hint: string; // for WhatsApp prefill
-};
-
-const MOMENTS: Moment[] = [
+const BLOCKS = [
   {
-    id: "sea",
-    title: "Proposal by the sea",
-    line: "A quiet cove, the light just before sunset, only the two of you.",
-    setting: "Arrábida coast · golden hour",
-    image: coastal,
+    eyebrow: "Proposals",
+    title: "A private moment, shaped with care.",
+    emotional:
+      "From the setting to the timing, we help shape the moment discreetly, with local knowledge behind every detail.",
+    practical:
+      "Discreet location · careful timing · surprise logistics · planned with full discretion.",
+    local:
+      "Planned end to end with our local team — every detail confirmed before the day.",
+    image: imgArrabidaWineLunch,
     icon: Heart,
-    hint: "a proposal by the sea",
+    cta: "Plan a Proposal",
   },
   {
-    id: "vineyard",
-    title: "Vineyard toast",
-    line: "Old vines, a single table, a glass raised to what's next.",
-    setting: "Setúbal vineyards · late afternoon",
-    image: wine,
-    icon: Wine,
-    hint: "a vineyard toast",
-  },
-  {
-    id: "viewpoint",
-    title: "Sunset viewpoint",
-    line: "A hidden ridge above the Atlantic — held just for you, just for that moment.",
-    setting: "Arrábida ridge · sunset",
-    image: nature,
-    icon: Sun,
-    hint: "a sunset viewpoint moment",
-  },
-  {
-    id: "lunch",
-    title: "Private lunch",
-    line: "A long table by the water, a chef who cooks only for you.",
-    setting: "Portinho da Arrábida · midday",
-    image: gastronomy,
-    icon: UtensilsCrossed,
-    hint: "a private lunch celebration",
-  },
-  {
-    id: "intimate",
-    title: "Intimate celebration",
-    line: "Anniversary, vow renewal, a milestone birthday — held with care, never staged.",
-    setting: "Your chosen setting",
-    image: romantic,
+    eyebrow: "Celebrations",
+    title: "For days worth remembering.",
+    emotional:
+      "Birthdays, anniversaries, honeymoons or family moments — shaped around your rhythm, your people and the way you want to feel Portugal.",
+    practical:
+      "Up to 14 guests · private host · multi-activity planning · flexible scheduling.",
+    local:
+      "Coordinated by a local host who knows how each piece of the day connects.",
+    image: imgSintraEstates,
     icon: Sparkles,
-    hint: "an intimate celebration",
+    cta: "Plan a Celebration",
   },
   {
-    id: "family",
-    title: "Family gathering",
-    line: "Grandparents, children, the people who matter — one table, one afternoon.",
-    setting: "Countryside or coast",
-    image: decision,
+    eyebrow: "Family & Friends",
+    title: "Your people, your pace, your Portugal.",
+    emotional:
+      "When it's the people that matter most, the day shouldn't feel like a tour. It should feel like yours.",
+    practical:
+      "Small group days · private transport · personal touches · adjusted to your rhythm.",
+    local:
+      "We work with people we trust on the ground — places that welcome you as guests, not bookings.",
+    image: imgTroiaBeach,
     icon: Users,
-    hint: "a private family gathering",
+    cta: "Plan a Private Day",
   },
 ];
 
 function ProposalsPage() {
   return (
     <SiteLayout>
-      {/* ============ HERO ============ */}
-      <section className="relative pt-28 pb-16 md:pt-36 md:pb-24 overflow-hidden">
-        <img
-          src={heroImg}
-          alt=""
-          className="absolute inset-0 w-full h-full object-cover"
-          loading="eager"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/35 to-black/75" />
-        <div className="container-x relative text-center text-white">
-          <span className="text-[10px] uppercase tracking-[0.32em] text-[color:var(--gold-soft)]">
-            Held quietly · designed with care
-          </span>
-          <h1 className="serif text-[34px] md:text-6xl mt-4 leading-[1.08] max-w-3xl mx-auto">
-            Moments Worth
-            <br className="hidden sm:block" />{" "}
-            <span className="italic text-[color:var(--gold-soft)]">Saying YES To</span>
-          </h1>
-          <p className="mt-5 max-w-md md:max-w-xl mx-auto text-[15px] md:text-[16px] text-white/95 italic leading-[1.65] md:leading-relaxed [text-shadow:0_1px_8px_rgba(0,0,0,0.35)]">
-            Proposals, anniversaries, birthdays and private celebrations shaped with local knowledge.
-          </p>
-          <div className="mt-7 flex flex-col sm:flex-row gap-2.5 justify-center items-stretch sm:items-center max-w-md mx-auto">
-            <a
-              href={whatsappHref(
-                "Hi! I'd like to plan a private moment in Portugal — could you help me shape it?",
-              )}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 bg-[color:var(--ivory)] text-[color:var(--charcoal)] px-7 py-3.5 text-[11px] uppercase tracking-[0.22em] hover:bg-white transition-colors"
-            >
-              Plan Your Moment <ArrowRight size={14} />
-            </a>
-            <Link
-              to="/builder"
-              className="inline-flex items-center justify-center gap-2 border border-white/40 text-white px-7 py-3.5 text-[11px] uppercase tracking-[0.22em] hover:bg-white/10 transition-colors"
-            >
-              Shape it in the Studio
-            </Link>
-          </div>
-          <p className="mt-5 text-[10px] uppercase tracking-[0.28em] text-white/65 inline-flex items-center gap-2 justify-center">
-            <Lock size={10} /> Discreet · private · never staged
-          </p>
-        </div>
-      </section>
-
-      {/* ============ EMOTIONAL INTRO ============ */}
-      <section className="py-14 md:py-20 bg-[color:var(--sand)]">
+      {/* Hero */}
+      <section className="pt-28 pb-14 bg-[color:var(--sand)]">
         <div className="container-x max-w-3xl text-center">
-          <span className="eyebrow">Why it matters</span>
-          <h2 className="t-h2 mt-4 text-[color:var(--charcoal)]">
-            A moment is built from{" "}
-            <span className="italic text-[color:var(--teal)]">small, true things</span>.
-          </h2>
-          <p className="mt-5 text-[14px] md:text-[15px] text-[color:var(--charcoal-soft)] leading-relaxed">
-            The right light. The right hour. A place that feels like only yours. We don't stage these
-            moments — we hold them. Quietly, with people who know the coast, the vineyards and the
-            hidden corners of this country by heart.
-          </p>
-          <ul className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4 text-left">
-            {[
-              { k: "Setting", v: "A real place, chosen for you — not a backdrop." },
-              { k: "Timing", v: "The hour the light falls right." },
-              { k: "Atmosphere", v: "Quiet enough to hear what matters." },
-              { k: "Privacy", v: "Held only for you, no one else." },
-            ].map((it) => (
-              <li
-                key={it.k}
-                className="border-l-2 border-[color:var(--gold)]/50 pl-3 py-1"
-              >
-                <p className="text-[10px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
-                  {it.k}
-                </p>
-                <p className="mt-1.5 text-[12.5px] text-[color:var(--charcoal-soft)] italic leading-relaxed">
-                  {it.v}
-                </p>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      {/* ============ MOMENTS ============ */}
-      <section className="py-14 md:py-20">
-        <div className="container-x">
-          <div className="text-center max-w-2xl mx-auto">
-            <span className="eyebrow">Begin with a feeling</span>
-            <h2 className="t-h2 mt-4 text-[color:var(--charcoal)]">
-              Six <span className="italic text-[color:var(--teal)]">starting moments</span>.
-            </h2>
-            <p className="mt-3 text-[13px] md:text-[14px] text-[color:var(--charcoal-soft)] italic">
-              Each one is a beginning, not a package. We shape the rest with you.
-            </p>
-          </div>
-
-          <ul className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-            {MOMENTS.map((m) => (
-              <li key={m.id}>
-                <a
-                  href={whatsappHref(
-                    `Hi! I'd like to plan ${m.hint} in Portugal. Could you help me shape it?`,
-                  )}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group relative block aspect-[4/5] overflow-hidden rounded-sm ring-1 ring-[color:var(--border)] hover:ring-[color:var(--teal)]/50 transition-all"
-                >
-                  <div
-                    className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-[1.05]"
-                    style={{ backgroundImage: `url(${m.image})` }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
-                  <div className="absolute top-3 left-3 inline-flex items-center gap-1.5 px-2 py-1 bg-black/40 backdrop-blur-sm text-white/90 text-[10px] uppercase tracking-[0.22em]">
-                    <m.icon size={11} className="text-[color:var(--gold-soft)]" />
-                    Moment
-                  </div>
-                  <div className="absolute inset-x-0 bottom-0 p-4 md:p-5">
-                    <h3 className="serif text-[20px] md:text-[22px] text-white leading-tight">
-                      {m.title}
-                    </h3>
-                    <p className="mt-1.5 text-[12.5px] text-white/85 italic leading-snug">
-                      {m.line}
-                    </p>
-                    <p className="mt-2.5 text-[10px] uppercase tracking-[0.22em] text-[color:var(--gold-soft)] flex items-center gap-1.5">
-                      <MapPin size={10} /> {m.setting}
-                    </p>
-                  </div>
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      {/* ============ HOW IT WORKS ============ */}
-      <section className="py-14 md:py-20 bg-[color:var(--charcoal-deep)] text-[color:var(--ivory)]">
-        <div className="container-x max-w-4xl">
-          <div className="text-center max-w-2xl mx-auto">
-            <span className="text-[10px] uppercase tracking-[0.32em] text-[color:var(--gold-soft)]">
-              How a moment is shaped
+          <span className="eyebrow">Proposals & Celebrations</span>
+          <h1 className="font-display font-bold text-[2.4rem] md:text-[3.6rem] leading-[1.05] mt-5 text-[color:var(--charcoal)]">
+            Moments worth{" "}
+            <span className="font-serif italic font-normal text-[color:var(--teal)]">
+              saying yes to.
             </span>
-            <h2 className="t-h2 mt-4 text-white">
-              Quietly, <span className="italic text-[color:var(--gold-soft)]">step by step</span>.
-            </h2>
-          </div>
-
-          <ol className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-5">
-            {[
-              {
-                n: "01",
-                k: "Start with the moment",
-                v: "Tell us what you want to hold — a question, a milestone, a quiet anniversary.",
-              },
-              {
-                n: "02",
-                k: "Choose the mood",
-                v: "Sea or vines, sunset or candlelight, alone or with the people who matter.",
-              },
-              {
-                n: "03",
-                k: "Shape the setting",
-                v: "We propose places only locals know. You choose the one that feels right.",
-              },
-              {
-                n: "04",
-                k: "Confirm or chat",
-                v: "Confirm instantly through the Studio, or shape it message by message with a local.",
-              },
-            ].map((s) => (
-              <li
-                key={s.n}
-                className="border border-white/10 bg-white/[0.03] p-5 md:p-6 rounded-sm"
-              >
-                <p className="text-[10px] uppercase tracking-[0.28em] text-[color:var(--gold-soft)]">
-                  {s.n}
-                </p>
-                <h3 className="serif text-[20px] mt-2 text-white leading-tight">{s.k}</h3>
-                <p className="mt-2 text-[13px] text-white/75 italic leading-relaxed">{s.v}</p>
-              </li>
-            ))}
-          </ol>
-
-          <div className="mt-10 flex flex-col sm:flex-row gap-2.5 justify-center max-w-md mx-auto">
-            <a
-              href={whatsappHref(
-                "Hi! I'd like to shape a private moment in Portugal with a local.",
-              )}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 bg-[color:var(--ivory)] text-[color:var(--charcoal)] px-6 py-3.5 text-[11px] uppercase tracking-[0.22em] hover:bg-white transition-colors"
-            >
-              <MessageCircle size={13} /> Chat with a local
-            </a>
+          </h1>
+          <p className="mt-5 text-[1rem] md:text-[1.1rem] text-[color:var(--charcoal-soft)] leading-relaxed">
+            A private moment, shaped with care — with local knowledge behind
+            every detail.
+          </p>
+          <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
             <Link
-              to="/builder"
-              className="inline-flex items-center justify-center gap-2 border border-white/40 text-white px-6 py-3.5 text-[11px] uppercase tracking-[0.22em] hover:bg-white/10 transition-colors"
+              to="/contact"
+              className="inline-flex items-center justify-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] px-7 py-3.5 text-sm tracking-wide transition-colors"
             >
-              Open the Studio <ArrowRight size={13} />
+              Plan a Proposal
+              <ArrowRight size={16} />
+            </Link>
+            <Link
+              to="/contact"
+              className="inline-flex items-center justify-center gap-2 border border-[color:var(--charcoal)]/20 text-[color:var(--charcoal)] hover:border-[color:var(--teal)] hover:text-[color:var(--teal)] px-7 py-3.5 text-sm tracking-wide transition-colors"
+            >
+              <MessageCircle size={16} />
+              Talk to a Local
             </Link>
           </div>
         </div>
       </section>
 
-      {/* ============ TRUST ============ */}
-      <section className="py-14 md:py-20">
-        <div className="container-x max-w-3xl">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
-            {[
-              { i: Lock, k: "Discreet", v: "Held privately. No staging, no audience." },
-              { i: Heart, k: "Thoughtful", v: "Designed around the two of you, not a template." },
-              { i: Clock, k: "Timed right", v: "We know the hour the light falls in each place." },
-            ].map((t) => (
-              <div
-                key={t.k}
-                className="text-center border-t border-[color:var(--gold)]/40 pt-5"
+      {/* Service blocks */}
+      <section className="py-16 md:py-24">
+        <div className="container-x space-y-16 md:space-y-24">
+          {BLOCKS.map((b, i) => {
+            const Icon = b.icon;
+            const reverse = i % 2 === 1;
+            return (
+              <article
+                key={b.eyebrow}
+                className={`grid lg:grid-cols-2 gap-8 md:gap-12 items-center ${reverse ? "lg:[&>*:first-child]:order-2" : ""}`}
               >
-                <t.i size={18} className="mx-auto text-[color:var(--teal)]" />
-                <p className="mt-3 text-[10px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
-                  {t.k}
-                </p>
-                <p className="mt-2 text-[13px] text-[color:var(--charcoal-soft)] italic leading-relaxed">
-                  {t.v}
-                </p>
-              </div>
-            ))}
-          </div>
+                <div className="overflow-hidden">
+                  <img
+                    src={b.image}
+                    alt={b.title}
+                    loading="lazy"
+                    className="w-full aspect-[4/5] md:aspect-[5/6] object-cover transition-transform duration-700 hover:scale-[1.02]"
+                  />
+                </div>
+                <div>
+                  <div className="inline-flex items-center gap-2 text-[color:var(--gold)]">
+                    <Icon size={16} strokeWidth={1.6} />
+                    <span className="eyebrow">{b.eyebrow}</span>
+                  </div>
+                  <h2 className="font-display font-bold text-[1.75rem] md:text-[2.25rem] leading-[1.1] mt-4 text-[color:var(--charcoal)]">
+                    {b.title}
+                  </h2>
+                  <p className="mt-4 font-serif italic text-[1.05rem] md:text-[1.15rem] text-[color:var(--teal)] leading-snug">
+                    {b.emotional}
+                  </p>
+                  <p className="mt-4 text-[color:var(--charcoal-soft)] leading-relaxed">
+                    {b.practical}
+                  </p>
+                  <div className="mt-5 pl-4 border-l-2 border-[color:var(--gold)] text-sm text-[color:var(--charcoal-soft)] leading-relaxed">
+                    {b.local}
+                  </div>
+                  <Link
+                    to="/contact"
+                    className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-[color:var(--teal)] hover:gap-3 transition-all"
+                  >
+                    {b.cta}
+                    <ArrowRight size={14} />
+                  </Link>
+                </div>
+              </article>
+            );
+          })}
         </div>
       </section>
 
-      {/* ============ FINAL CTA ============ */}
-      <section className="relative py-20 md:py-28 overflow-hidden">
-        <img
-          src={romantic}
-          alt=""
-          className="absolute inset-0 w-full h-full object-cover"
-          loading="lazy"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/45 to-black/75" />
-        <div className="container-x relative text-center text-white max-w-2xl">
-          <span className="text-[10px] uppercase tracking-[0.32em] text-[color:var(--gold-soft)]">
-            When you're ready
-          </span>
-          <h2 className="serif text-[28px] md:text-5xl mt-4 leading-[1.1]">
-            Create Your <span className="italic text-[color:var(--gold-soft)]">Moment</span>.
+      {/* Closing CTA */}
+      <section className="py-16 md:py-20 bg-[color:var(--sand)]">
+        <div className="container-x max-w-2xl text-center">
+          <h2 className="font-display font-bold text-[1.75rem] md:text-[2.4rem] leading-tight text-[color:var(--charcoal)]">
+            Tell us about the moment.
           </h2>
-          <p className="mt-4 text-[14px] text-white/85 italic leading-relaxed">
-            Begin with a single message. We shape the rest, quietly.
+          <p className="mt-4 text-[color:var(--charcoal-soft)]">
+            We'll help you shape it — discreetly, with people who know the
+            place. No pressure.
           </p>
-          <div className="mt-7 flex flex-col sm:flex-row gap-2.5 justify-center max-w-md mx-auto">
-            <a
-              href={whatsappHref(
-                "Hi! I'd like to create a private moment in Portugal — could you help me begin?",
-              )}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 bg-[color:var(--ivory)] text-[color:var(--charcoal)] px-7 py-3.5 text-[11px] uppercase tracking-[0.22em] hover:bg-white transition-colors"
-            >
-              <MessageCircle size={13} /> Create Your Moment
-            </a>
+          <div className="mt-7 flex flex-col sm:flex-row gap-3 justify-center">
             <Link
-              to="/builder"
-              className="inline-flex items-center justify-center gap-2 border border-white/40 text-white px-7 py-3.5 text-[11px] uppercase tracking-[0.22em] hover:bg-white/10 transition-colors"
+              to="/contact"
+              className="inline-flex items-center justify-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] px-7 py-3.5 text-sm tracking-wide"
             >
-              Shape it in the Studio
+              Plan with us
+              <ArrowRight size={16} />
+            </Link>
+            <Link
+              to="/contact"
+              className="inline-flex items-center justify-center gap-2 border border-[color:var(--charcoal)]/20 text-[color:var(--charcoal)] hover:border-[color:var(--teal)] hover:text-[color:var(--teal)] px-7 py-3.5 text-sm tracking-wide"
+            >
+              <MessageCircle size={16} />
+              Talk to a Local
             </Link>
           </div>
         </div>
