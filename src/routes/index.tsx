@@ -1456,6 +1456,9 @@ function HomePage() {
                         className="transition-transform duration-200 group-hover:translate-x-0.5"
                       />
                     </Link>
+                    <p className="mt-3 text-[11px] leading-[1.5] text-[color:var(--charcoal-soft)] italic">
+                      {m.trust}
+                    </p>
                   </div>
                 </article>
               );
