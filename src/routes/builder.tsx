@@ -61,10 +61,10 @@ interface BuilderSearch {
 }
 
 const STEP_VALUES: Step[] = [0, 1, 2, 3, 4, 5, 6, 7];
-const MOOD_VALUES: Mood[] = ["wonder", "soulful", "discovery", "joy", "rest", "celebration"];
-const WHO_VALUES: Who[] = ["solo", "couple", "family", "friends", "corporate"];
-const INTENTION_VALUES: Intention[] = ["food", "nature", "culture", "wellness", "celebration", "discovery"];
-const PACE_VALUES: Pace[] = ["slow", "balanced", "energetic"];
+const MOOD_VALUES: Mood[] = ["slow", "curious", "romantic", "open", "energetic"];
+const WHO_VALUES: Who[] = ["couple", "family", "friends", "solo", "corporate", "group"];
+const INTENTION_VALUES: Intention[] = ["wine", "gastronomy", "nature", "heritage", "coast", "hidden", "wonder", "wellness"];
+const PACE_VALUES: Pace[] = ["relaxed", "balanced", "full"];
 
 function pick<T extends string | number>(value: unknown, allowed: readonly T[]): T | undefined {
   return allowed.includes(value as T) ? (value as T) : undefined;
