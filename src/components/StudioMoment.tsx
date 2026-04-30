@@ -407,14 +407,43 @@ function StudioMap({
             <circle cx={projected.region.x} cy={projected.region.y} r="3" fill="var(--charcoal)" />
           </g>
           {/* Stops */}
-          {projected.stops.map((s, i) => (
-            <g key={s.key} className="studio-stop" style={{ animationDelay: `${800 + i * 220}ms` }}>
-              <circle cx={s.x} cy={s.y} r="9" fill="var(--gold)" opacity="0.18" className="studio-stop-pulse" style={{ animationDelay: `${800 + i * 220}ms` }} />
-              <circle cx={s.x} cy={s.y} r="4" fill="var(--gold)" />
-              <circle cx={s.x} cy={s.y} r="1.6" fill="var(--ivory)" />
-            </g>
-          ))}
+          {projected.stops.map((s, i) => {
+            const isActive = activeStopKey === s.key;
+            return (
+              <g key={s.key} className="studio-stop" style={{ animationDelay: `${800 + i * 220}ms` }}>
+                <circle cx={s.x} cy={s.y} r="9" fill="var(--gold)" opacity="0.18" className="studio-stop-pulse" style={{ animationDelay: `${800 + i * 220}ms` }} />
+                <circle cx={s.x} cy={s.y} r={isActive ? 6 : 4} fill="var(--gold)" />
+                <circle cx={s.x} cy={s.y} r={isActive ? 2.2 : 1.6} fill="var(--ivory)" />
+                {isActive && (
+                  <circle cx={s.x} cy={s.y} r="10" fill="none" stroke="var(--teal)" strokeWidth="1.4" />
+                )}
+              </g>
+            );
+          })}
         </svg>
+      )}
+
+      {/* Clickable hit-targets per pin (44×44 minimum for a11y) */}
+      {projected && route && (
+        <div className="absolute inset-0" aria-label="Stops on this route" role="group">
+          {projected.stops.map((s, i) => {
+            const stop = route.stops[i];
+            return (
+              <button
+                key={s.key}
+                type="button"
+                onClick={() => onSelectStop(s.key)}
+                aria-label={`Open details for ${stop.label}`}
+                aria-pressed={activeStopKey === s.key}
+                className="absolute -translate-x-1/2 -translate-y-1/2 h-11 w-11 rounded-full focus-visible:outline-2 focus-visible:outline-[color:var(--teal)] focus-visible:outline-offset-2"
+                style={{
+                  left: `${(s.x / 360) * 100}%`,
+                  top: `${(s.y / 360) * 100}%`,
+                }}
+              />
+            );
+          })}
+        </div>
       )}
 
       {/* Live indicator */}
