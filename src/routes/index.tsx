@@ -842,6 +842,15 @@ function HomePage() {
             </ol>
           </div>
 
+          {/* Inner anchor target for /#studio — sits right before the
+              "Create it live." rail so deep-links land on the Studio
+              block, not the wider builder eyebrow. scroll-mt matches
+              the same offset used elsewhere on the page. */}
+          <div
+            id="studio"
+            aria-hidden="true"
+            className="scroll-mt-24 md:scroll-mt-28"
+          />
           <div className="grid lg:grid-cols-12 gap-10 lg:gap-14 items-center max-w-6xl mx-auto">
             {/* On mobile: text rail (with the headline) renders FIRST so
                 the user reads "Create it live." before seeing the
