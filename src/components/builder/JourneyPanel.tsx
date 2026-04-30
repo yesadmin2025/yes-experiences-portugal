@@ -1,5 +1,6 @@
 import { ArrowDown, ArrowUp, Clock, Leaf, MessageCircle, Plus, X, Zap } from "lucide-react";
 import { fmtMinutes, type Pace, type RouteUI, type RoutedStopUI, builderWaHref } from "./types";
+import { BuilderImage } from "./BuilderImage";
 
 interface StopImageRef {
   url: string;
@@ -75,18 +76,13 @@ export function JourneyPanel({
       {/* Story */}
       <section className="overflow-hidden rounded-[2px] border border-[color:var(--charcoal)]/10 bg-[color:var(--sand)]/40">
         {storyImage && (
-          <div className="relative aspect-[16/9] w-full bg-[color:var(--charcoal)]/10">
-            <img
-              src={storyImage.url}
-              alt={storyImage.alt}
-              loading="lazy"
-              className="absolute inset-0 h-full w-full object-cover"
-            />
-            <span
-              aria-hidden="true"
-              className="absolute inset-0 bg-gradient-to-t from-black/30 via-black/0 to-black/0"
-            />
-          </div>
+          <BuilderImage
+            src={storyImage.url}
+            alt={storyImage.alt}
+            ratio="16/9"
+            overlay
+            rounded={false}
+          />
         )}
         <div className="p-4">
           <span className="text-[10px] uppercase tracking-[0.28em] font-bold text-[color:var(--gold)]">
@@ -123,17 +119,16 @@ export function JourneyPanel({
               className="group flex items-start gap-3 rounded-[2px] border border-[color:var(--charcoal)]/10 bg-[color:var(--ivory)] p-3 transition-colors hover:border-[color:var(--charcoal)]/25"
             >
               {img ? (
-                <span className="relative flex h-14 w-14 shrink-0 overflow-hidden rounded-[2px] bg-[color:var(--charcoal)]/10">
-                  <img
-                    src={img.url}
-                    alt={img.alt}
-                    loading="lazy"
-                    className="absolute inset-0 h-full w-full object-cover"
-                  />
+                <BuilderImage
+                  src={img.url}
+                  alt={img.alt}
+                  ratio="1/1"
+                  className="h-14 w-14 shrink-0"
+                >
                   <span className="absolute left-1 top-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-[color:var(--teal)] text-[10px] font-bold text-[color:var(--ivory)] tabular-nums">
                     {i + 1}
                   </span>
-                </span>
+                </BuilderImage>
               ) : (
                 <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[color:var(--teal)] text-[11px] font-bold text-[color:var(--ivory)] tabular-nums">
                   {i + 1}
