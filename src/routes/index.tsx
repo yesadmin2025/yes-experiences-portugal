@@ -339,9 +339,22 @@ function HomePage() {
           // started watching). Belt-and-braces: also schedule a second
           // pass after a short delay in case images shift layout.
           const forceReveal = () => {
-            el.querySelectorAll<HTMLElement>(
-              ".reveal:not(.is-visible), .reveal-stagger:not(.is-visible)",
-            ).forEach((node) => node.classList.add("is-visible"));
+            // Reveal both the target itself (when it IS a .reveal node)
+            // and any .reveal/.reveal-stagger inside it. For inner-anchor
+            // <div> targets like #studio that have no children of their
+            // own, also reveal everything inside the closest enclosing
+            // <section> so the section's eyebrow + headline + subhead
+            // become visible.
+            const scope: ParentNode = el.querySelector(
+              ".reveal, .reveal-stagger",
+            )
+              ? el
+              : (el.closest("section") ?? el);
+            scope
+              .querySelectorAll<HTMLElement>(
+                ".reveal:not(.is-visible), .reveal-stagger:not(.is-visible)",
+              )
+              .forEach((node) => node.classList.add("is-visible"));
           };
           forceReveal();
           window.setTimeout(forceReveal, 250);
