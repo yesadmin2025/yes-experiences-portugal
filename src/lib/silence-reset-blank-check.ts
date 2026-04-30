@@ -34,12 +34,14 @@ export interface InstallResult {
 }
 
 export function installResetBlankCheckFilter(
-  target: (Window & typeof globalThis) | undefined = typeof window !== "undefined"
-    ? window
-    : undefined,
+  target?: (Window & typeof globalThis) | null,
 ): InstallResult {
-  if (!target) return { installed: false, dispose: () => {} };
-  const w = target as FlaggedWindow;
+  const resolved =
+    target === null
+      ? undefined
+      : (target ?? (typeof window !== "undefined" ? window : undefined));
+  if (!resolved) return { installed: false, dispose: () => {} };
+  const w = resolved as FlaggedWindow;
   if (w[FLAG]) return { installed: false, dispose: () => {} };
   w[FLAG] = true;
 
