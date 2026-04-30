@@ -894,27 +894,32 @@ function HiddenHeroCopyProbes() {
  * a "Choose one" radio group of real alternates (other variants of
  * the same canonical stop in this region) when any exist.
  *
- * Phase 1: alternates are presentational — selecting one highlights
- * it but doesn't recompose the route. Full swap belongs in /builder.
+ * Selecting an alternate commits the swap on the parent route — the
+ * map redraws, drive times are recomputed, and the live panel
+ * updates. Selecting the original variant clears the swap.
+ *
+ * `stop` is the currently displayed stop (may already reflect a
+ * prior swap), while `rawStop` is the server-composed original used
+ * to enumerate the stable list of variants for this anchor.
  * ────────────────────────────────────────────────────────────── */
 function StopDetailsDrawer({
   stop,
+  rawStop,
+  chosenVariantKey,
   stopIndex,
   regionLabel,
+  onSwap,
   onClose,
 }: {
   stop: DemoStop | null;
+  rawStop: DemoStop | null;
+  chosenVariantKey: string | null;
   stopIndex: number;
   regionLabel: string;
+  onSwap: (chosen: DemoStopAlternate | null) => void;
   onClose: () => void;
 }) {
   const open = stop !== null;
-  const [chosenVariant, setChosenVariant] = useState<string | null>(null);
-
-  // Reset selection when the open stop changes.
-  useEffect(() => {
-    setChosenVariant(stop ? stop.key : null);
-  }, [stop]);
 
   // ESC to close.
   useEffect(() => {
