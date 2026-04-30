@@ -25,7 +25,7 @@ export function StepHead({ num, eyebrow, title, onBack }: StepHeadProps) {
         )}
         <span className="inline-flex items-center gap-2 text-[10.5px] uppercase tracking-[0.28em] font-semibold text-[color:var(--gold)]">
           <Sparkles size={12} aria-hidden="true" />
-          0{num} · {eyebrow}
+          {eyebrow}
         </span>
       </div>
       <h2 className="serif text-[1.7rem] sm:text-[2.2rem] md:text-[2.6rem] leading-[1.05] tracking-[-0.01em] font-semibold text-[color:var(--charcoal)]">
