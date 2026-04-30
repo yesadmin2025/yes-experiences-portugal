@@ -1019,12 +1019,20 @@ function HomePage() {
                 </Link>
               </div>
 
-              {/* Reassurance line — replaces the legacy "Ask a local
-                  to shape it" CTA. One sentence, three reassurances,
-                  with local guidance still made visible. */}
-              <p className="mt-5 inline-flex items-start gap-2 text-[12.5px] md:text-[13px] leading-[1.6] text-[color:var(--charcoal)] max-w-md">
+              {/* Starting-point microcopy — sits just under the CTA so
+                  the user reads "this is a draft, designed for you"
+                  before the reassurance line. Italic Georgia per
+                  Typography v3, gold detail to keep it editorial. */}
+              <p className="mt-4 inline-flex items-center gap-2 text-[12.5px] md:text-[13px] leading-[1.55] text-[color:var(--charcoal-soft)] max-w-md">
+                <span aria-hidden="true" className="block h-px w-5 bg-[color:var(--gold)]" />
+                <span className="serif italic">A starting point, shaped around you.</span>
+              </p>
+
+              {/* Reassurance line — three short reassurances. "A local is
+                  one message away" matches the approved brief copy. */}
+              <p className="mt-3 inline-flex items-start gap-2 text-[12.5px] md:text-[13px] leading-[1.6] text-[color:var(--charcoal)] max-w-md">
                 <MessageCircle size={13} aria-hidden="true" className="mt-[3px] shrink-0 text-[color:var(--teal)]" />
-                <span>About a minute. No form. <span className="font-semibold">You can ask a local anytime.</span></span>
+                <span>About a minute. No form. <span className="font-semibold">A local is one message away.</span></span>
               </p>
             </div>
 
