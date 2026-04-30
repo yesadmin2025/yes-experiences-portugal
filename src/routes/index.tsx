@@ -856,21 +856,21 @@ function HomePage() {
                       className="text-[color:var(--teal)] transition-transform duration-300 ease-out group-hover:translate-x-0.5"
                     />
                   </span>
-                  <span className="serif text-[13px] tracking-[0.18em] text-[color:var(--gold)]">
+                  <span className="he-num">
                     {b.num}
                   </span>
                 </div>
                 <span className="mt-5 text-[10.5px] uppercase tracking-[0.32em] font-semibold text-[color:var(--charcoal)]">
                   {b.label}
                 </span>
-                <h3 className="serif mt-3 text-[1.55rem] md:text-[1.85rem] leading-[1.18] text-[color:var(--charcoal)]">
+                <h3 className="serif mt-3 text-[1.6rem] md:text-[1.95rem] leading-[1.18] text-[color:var(--charcoal)] font-semibold">
                   {b.title}
                 </h3>
                 <p className="mt-3.5 text-[15px] md:text-[15.5px] text-[color:var(--charcoal)] leading-[1.65]">
                   {b.body}
                 </p>
                 {/* One bold highlighted phrase per card */}
-                <p className="mt-5 serif italic text-[15px] md:text-[16px] leading-[1.4] text-[color:var(--charcoal)] border-l-2 border-[color:var(--gold)] pl-3">
+                <p className="he-pull mt-5 serif italic text-[15px] md:text-[16px] leading-[1.45] text-[color:var(--charcoal)]">
                   {b.pull}
                 </p>
               </li>
