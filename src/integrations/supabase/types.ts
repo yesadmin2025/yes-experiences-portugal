@@ -322,6 +322,78 @@ export type Database = {
           },
         ]
       }
+      experience_images: {
+        Row: {
+          alt_text: string
+          created_at: string
+          id: string
+          image_type: string
+          image_url: string
+          is_active: boolean
+          mood_tags: string[]
+          occasion_tags: string[]
+          priority_score: number
+          region_key: string | null
+          related_stop_key: string | null
+          related_tour_id: string | null
+          source_url: string | null
+          title: string | null
+          updated_at: string
+          usage_role: string
+        }
+        Insert: {
+          alt_text: string
+          created_at?: string
+          id?: string
+          image_type?: string
+          image_url: string
+          is_active?: boolean
+          mood_tags?: string[]
+          occasion_tags?: string[]
+          priority_score?: number
+          region_key?: string | null
+          related_stop_key?: string | null
+          related_tour_id?: string | null
+          source_url?: string | null
+          title?: string | null
+          updated_at?: string
+          usage_role?: string
+        }
+        Update: {
+          alt_text?: string
+          created_at?: string
+          id?: string
+          image_type?: string
+          image_url?: string
+          is_active?: boolean
+          mood_tags?: string[]
+          occasion_tags?: string[]
+          priority_score?: number
+          region_key?: string | null
+          related_stop_key?: string | null
+          related_tour_id?: string | null
+          source_url?: string | null
+          title?: string | null
+          updated_at?: string
+          usage_role?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "experience_images_region_key_fkey"
+            columns: ["region_key"]
+            isOneToOne: false
+            referencedRelation: "builder_regions"
+            referencedColumns: ["key"]
+          },
+          {
+            foreignKeyName: "experience_images_related_stop_key_fkey"
+            columns: ["related_stop_key"]
+            isOneToOne: false
+            referencedRelation: "builder_stops"
+            referencedColumns: ["key"]
+          },
+        ]
+      }
       import_mapping_rules: {
         Row: {
           created_at: string
