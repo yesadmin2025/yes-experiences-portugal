@@ -56,6 +56,18 @@ export interface StopRow {
   who_tags: string[];
   compatible_with: string[];
   weight: number;
+  // Real-Viator-data fields (Phase 2 schema)
+  canonical_key?: string | null;
+  variant_bucket?: string | null;
+  variant_label?: string | null;
+  source_tour_keys?: string[];
+}
+
+/** Co-occurrence pair from builder_compatibility_rules. */
+export interface CompatibilityRule {
+  stop_a: string; // canonical_key
+  stop_b: string; // canonical_key
+  cooccurrence_count: number;
 }
 
 export interface RegionRow {
