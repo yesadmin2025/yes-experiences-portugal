@@ -77,6 +77,209 @@ export type Database = {
         }
         Relationships: []
       }
+      builder_experience_types: {
+        Row: {
+          blurb: string | null
+          created_at: string
+          default_mood: string
+          default_pace: string
+          id: string
+          key: string
+          label: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          blurb?: string | null
+          created_at?: string
+          default_mood?: string
+          default_pace?: string
+          id?: string
+          key: string
+          label: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          blurb?: string | null
+          created_at?: string
+          default_mood?: string
+          default_pace?: string
+          id?: string
+          key?: string
+          label?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      builder_regions: {
+        Row: {
+          blurb: string | null
+          created_at: string
+          hero_image_url: string | null
+          id: string
+          key: string
+          label: string
+          lat: number
+          lng: number
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          blurb?: string | null
+          created_at?: string
+          hero_image_url?: string | null
+          id?: string
+          key: string
+          label: string
+          lat: number
+          lng: number
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          blurb?: string | null
+          created_at?: string
+          hero_image_url?: string | null
+          id?: string
+          key?: string
+          label?: string
+          lat?: number
+          lng?: number
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      builder_routing_rules: {
+        Row: {
+          base_price_per_person_eur: number
+          created_at: string
+          default_pace: string
+          id: string
+          is_active: boolean
+          max_driving_hours: number
+          max_experience_hours: number
+          max_stops: number
+          min_stops: number
+          pace_multiplier_balanced: number
+          pace_multiplier_full: number
+          pace_multiplier_relaxed: number
+          updated_at: string
+        }
+        Insert: {
+          base_price_per_person_eur?: number
+          created_at?: string
+          default_pace?: string
+          id?: string
+          is_active?: boolean
+          max_driving_hours?: number
+          max_experience_hours?: number
+          max_stops?: number
+          min_stops?: number
+          pace_multiplier_balanced?: number
+          pace_multiplier_full?: number
+          pace_multiplier_relaxed?: number
+          updated_at?: string
+        }
+        Update: {
+          base_price_per_person_eur?: number
+          created_at?: string
+          default_pace?: string
+          id?: string
+          is_active?: boolean
+          max_driving_hours?: number
+          max_experience_hours?: number
+          max_stops?: number
+          min_stops?: number
+          pace_multiplier_balanced?: number
+          pace_multiplier_full?: number
+          pace_multiplier_relaxed?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      builder_stops: {
+        Row: {
+          blurb: string | null
+          compatible_with: string[]
+          created_at: string
+          duration_minutes: number
+          id: string
+          image_url: string | null
+          intention_tags: string[]
+          is_active: boolean
+          key: string
+          label: string
+          lat: number
+          lng: number
+          mood_tags: string[]
+          open_from: string | null
+          open_to: string | null
+          pace_tags: string[]
+          region_key: string
+          tag: string | null
+          updated_at: string
+          weight: number
+          who_tags: string[]
+        }
+        Insert: {
+          blurb?: string | null
+          compatible_with?: string[]
+          created_at?: string
+          duration_minutes?: number
+          id?: string
+          image_url?: string | null
+          intention_tags?: string[]
+          is_active?: boolean
+          key: string
+          label: string
+          lat: number
+          lng: number
+          mood_tags?: string[]
+          open_from?: string | null
+          open_to?: string | null
+          pace_tags?: string[]
+          region_key: string
+          tag?: string | null
+          updated_at?: string
+          weight?: number
+          who_tags?: string[]
+        }
+        Update: {
+          blurb?: string | null
+          compatible_with?: string[]
+          created_at?: string
+          duration_minutes?: number
+          id?: string
+          image_url?: string | null
+          intention_tags?: string[]
+          is_active?: boolean
+          key?: string
+          label?: string
+          lat?: number
+          lng?: number
+          mood_tags?: string[]
+          open_from?: string | null
+          open_to?: string | null
+          pace_tags?: string[]
+          region_key?: string
+          tag?: string | null
+          updated_at?: string
+          weight?: number
+          who_tags?: string[]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "builder_stops_region_key_fkey"
+            columns: ["region_key"]
+            isOneToOne: false
+            referencedRelation: "builder_regions"
+            referencedColumns: ["key"]
+          },
+        ]
+      }
       import_mapping_rules: {
         Row: {
           created_at: string
