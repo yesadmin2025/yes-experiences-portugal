@@ -54,6 +54,65 @@ function useAppReadyFlag() {
   }, []);
 }
 
+/* ──────────────────────────────────────────────────────────────────
+ * Preview-harness console noise filter.
+ * The Lovable preview iframe receives `RESET_BLANK_CHECK` postMessage
+ * pings from the host frame during startup. Some are logged by code
+ * paths outside our control and confuse readiness diagnostics. We
+ * swallow ONLY that exact signal — every other postMessage is left
+ * untouched. Pure client, no-op on server, idempotent across HMR.
+ * ────────────────────────────────────────────────────────────── */
+function useSilenceResetBlankCheck() {
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const w = window as Window & { __resetBlankCheckSilenced__?: boolean };
+    if (w.__resetBlankCheckSilenced__) return;
+    w.__resetBlankCheckSilenced__ = true;
+
+    const isResetBlank = (data: unknown): boolean => {
+      if (typeof data === "string") return data.includes("RESET_BLANK_CHECK");
+      if (data && typeof data === "object") {
+        const t = (data as { type?: unknown }).type;
+        return typeof t === "string" && t.includes("RESET_BLANK_CHECK");
+      }
+      return false;
+    };
+
+    // Capture-phase listener stops the event before any logging
+    // listener (registered in bubble phase) sees it.
+    const filter = (e: MessageEvent) => {
+      if (isResetBlank(e.data)) {
+        e.stopImmediatePropagation();
+      }
+    };
+    window.addEventListener("message", filter, true);
+
+    // Belt-and-suspenders: also silence direct console.* lines that
+    // mention RESET_BLANK_CHECK (some harness builds log via console
+    // before posting). Keeps every other log intact.
+    const origLog = console.log;
+    const origInfo = console.info;
+    const origWarn = console.warn;
+    const wrap =
+      (orig: (...a: unknown[]) => void) =>
+      (...args: unknown[]) => {
+        if (args.some((a) => typeof a === "string" && a.includes("RESET_BLANK_CHECK"))) return;
+        orig.apply(console, args);
+      };
+    console.log = wrap(origLog);
+    console.info = wrap(origInfo);
+    console.warn = wrap(origWarn);
+
+    return () => {
+      window.removeEventListener("message", filter, true);
+      console.log = origLog;
+      console.info = origInfo;
+      console.warn = origWarn;
+      w.__resetBlankCheckSilenced__ = false;
+    };
+  }, []);
+}
+
 
 function NotFoundComponent() {
   return (
