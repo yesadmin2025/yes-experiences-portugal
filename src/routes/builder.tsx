@@ -38,6 +38,7 @@ import type {
   RoutedStopUI,
   Who,
 } from "@/components/builder/types";
+import { useBuilderRouteImages, useBuilderMoodImages } from "@/hooks/useBuilderImages";
 
 /* ────────────────────────────────────────────────────────────────
    Builder v6 — Fluid Experience Studio
