@@ -185,20 +185,33 @@ function BuilderPage() {
     }, 380);
   }, []);
 
+  // Live-feedback toast (transient, fades after each interaction)
+  const [liveToast, setLiveToast] = useState<string | null>(null);
+  const flashLive = useCallback((text: string) => {
+    setLiveToast(text);
+    window.setTimeout(() => setLiveToast(null), 1400);
+  }, []);
+
+  const pickPraise = (pool: string[]) => pool[Math.floor(Math.random() * pool.length)];
+
   const onPaceChange = (p: Pace) => {
+    if (p === pace) return;
     setPace(p);
+    flashLive(pickPraise(["Shaping your route", "Adjusting the rhythm", "Reshaping the day"]));
     if (route) void fetchRoute({ nextPace: p });
   };
 
   const onRemoveStop = (key: string) => {
     const nextExcluded = [...excluded, key];
     setExcluded(nextExcluded);
+    flashLive(pickPraise(["Updating your day", "Got it — reshaping", "Refining the route"]));
     void fetchRoute({ nextExcluded });
   };
 
   const onAddBackStop = (key: string) => {
     const nextExcluded = excluded.filter((k) => k !== key);
     setExcluded(nextExcluded);
+    flashLive(pickPraise(["Nice choice", "That works well", "Adding it back in"]));
     void fetchRoute({ nextExcluded });
   };
 
@@ -208,6 +221,7 @@ function BuilderPage() {
     const next = stops.slice();
     [next[idx], next[j]] = [next[j], next[idx]];
     setOrderOverride(next.map((s) => s.key));
+    flashLive("Reordering");
   };
 
   // Pool for "removed — add back" surface in the journey panel
@@ -219,6 +233,19 @@ function BuilderPage() {
   return (
     <SiteLayout>
       <article className="bg-[color:var(--ivory)] text-[color:var(--charcoal)]">
+        {/* Live-feedback toast — visible during step 6 interactions */}
+        {liveToast && step === 6 && (
+          <div
+            aria-live="polite"
+            className="fixed top-20 left-1/2 z-[60] -translate-x-1/2 builder-toast-in"
+          >
+            <span className="inline-flex items-center gap-2 rounded-full border border-[color:var(--gold)]/40 bg-[color:var(--ivory)]/95 px-3.5 py-1.5 text-[11.5px] uppercase tracking-[0.22em] font-bold text-[color:var(--charcoal)] shadow-[0_8px_22px_-10px_rgba(46,46,46,0.35)] backdrop-blur">
+              <Sparkles size={11} className="text-[color:var(--gold)]" />
+              {liveToast}
+            </span>
+          </div>
+        )}
+
         {/* STEP 0 — Entry */}
         {step === 0 && <EntryScreen onStart={() => setStep(1)} />}
 
@@ -241,7 +268,7 @@ function BuilderPage() {
             )}
 
             {step === 1 && (
-              <div className="builder-reveal">
+              <div key="step-1" className="builder-step-in">
                 <StepHead num={1} eyebrow="Mood" title="What are you in the mood for?" />
                 <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
                   {MOODS.map((m) => (
@@ -262,7 +289,7 @@ function BuilderPage() {
             )}
 
             {step === 2 && (
-              <div className="builder-reveal">
+              <div key="step-2" className="builder-step-in">
                 <StepHead num={2} eyebrow="Who" title="Who is this for?" onBack={() => setStep(1)} />
                 <div className="mt-8 grid grid-cols-2 lg:grid-cols-4 gap-3">
                   {WHOS.map((w) => (
@@ -283,7 +310,7 @@ function BuilderPage() {
             )}
 
             {step === 3 && (
-              <div className="builder-reveal">
+              <div key="step-3" className="builder-step-in">
                 <StepHead
                   num={3}
                   eyebrow="Intention"
@@ -308,7 +335,7 @@ function BuilderPage() {
             )}
 
             {step === 4 && (
-              <div className="builder-reveal">
+              <div key="step-4" className="builder-step-in">
                 <StepHead
                   num={4}
                   eyebrow="Rhythm"
