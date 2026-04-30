@@ -97,14 +97,13 @@ function ProbePage() {
   const [results, setResults] = useState<ProbeResult[] | null>(null);
 
   useEffect(() => {
-    runProbe().then((r) => {
-      setResults(r);
-      window.__E2E_POSTMESSAGE_RESULT__ = {
-        pass: r.every((x) => x.ok),
-        results: r,
-        ranAt: new Date().toISOString(),
-      };
-    });
+    const r = runProbeSync();
+    setResults(r);
+    window.__E2E_POSTMESSAGE_RESULT__ = {
+      pass: r.every((x) => x.ok),
+      results: r,
+      ranAt: new Date().toISOString(),
+    };
   }, []);
 
   const pass = results?.every((r) => r.ok) ?? null;
