@@ -3,6 +3,7 @@ import { useEffect } from "react";
 
 import { SiteLayout } from "@/components/SiteLayout";
 import { FAQ } from "@/components/FAQ";
+import { TheDifferenceSection } from "@/components/home/TheDifferenceSection";
 
 import heroImg from "@/assets/hero-coast.jpg";
 
@@ -80,9 +81,29 @@ interface StartPath {
   to: string;
   ariaLabel: string;
   bg: string;
+  /** Spec badge — short, all-caps. Featured card gets prominent treatment. */
+  badge: string;
+  /** Trust micro-text shown under the CTA. */
+  micro: string;
+  /** Whether this card is the FEATURED hero card (only one). */
+  featured?: boolean;
 }
 
 const startPaths: StartPath[] = [
+  {
+    tier: "primary",
+    icon: Sparkles,
+    eyebrow: "Studio",
+    title: "Build your own experience",
+    line: "Designed in real time, with you. Watch your journey evolve on a map. Confirm and go.",
+    cta: "Open the studio",
+    to: "/builder",
+    ariaLabel: "Build your own experience in the Experience Studio",
+    bg: imgSintraEstates,
+    badge: "★ Most control",
+    micro: "AI-assisted · Local-approved · 2–3 minutes",
+    featured: true,
+  },
   {
     tier: "primary",
     icon: BookOpen,
@@ -93,39 +114,34 @@ const startPaths: StartPath[] = [
     to: "/experiences",
     ariaLabel: "Explore Signature Experiences — complete private days, ready to confirm",
     bg: imgArrabidaWineHero,
-  },
-  {
-    tier: "primary",
-    icon: Sparkles,
-    eyebrow: "Studio",
-    title: "Build your private journey",
-    line: "Compose your own day with real stops, realistic timings and human support.",
-    cta: "Open the studio",
-    to: "/builder",
-    ariaLabel: "Build your private journey in the Experience Studio",
-    bg: imgSintraEstates,
+    badge: "★ Ready-made",
+    micro: "Most popular with first-time planners",
   },
   {
     tier: "secondary",
     icon: Wand2,
     eyebrow: "Tailored",
-    title: "Tailor a signature",
-    line: "Keep the day, adjust pace, pickup or a single stop.",
+    title: "Tailor a Signature",
+    line: "Start with a ready-made day. Adjust the pace, swap a stop, add upgrades.",
     cta: "See how",
     to: "/experiences",
     ariaLabel: "Tailor a Signature — adjust pace, pickup or a single stop",
     bg: imgAzeitaoWorkshop,
+    badge: "Flexible",
+    micro: "Best for decisive travellers",
   },
   {
     tier: "secondary",
     icon: Gift,
-    eyebrow: "Groups & moments",
-    title: "Proposals, groups, celebrations",
-    line: "For larger parties and dates worth marking. Designed with you, in conversation.",
+    eyebrow: "Moments",
+    title: "Plan a Moment",
+    line: "Proposals, celebrations, corporate events, larger groups. Designed in conversation.",
     cta: "Speak to a local",
     to: "/proposals",
     ariaLabel: "Proposals, groups and celebrations — speak to a local",
     bg: imgArrabidaWineLunch,
+    badge: "Premium",
+    micro: "Fully managed · Premium service",
   },
 ];
 
@@ -885,6 +901,12 @@ function HomePage() {
         </div>
       </section>
 
+      {/* 3.5 — THE DIFFERENCE
+          Editorial two-column "how it works / what you get" — explains
+          the YES design process in functional terms before asking the
+          user to pick a path. No competitor comparisons. */}
+      <TheDifferenceSection />
+
       {/* 4 — START HERE
           Four paths with explicit hierarchy: 2 primary (Signature,
           Studio), 2 secondary (Tailor, Proposals/Groups). Mobile: stacked.
@@ -897,34 +919,34 @@ function HomePage() {
       >
         <div className="container-x">
           <div className="reveal text-center max-w-2xl mx-auto mb-12 md:mb-16">
-            <span className="he-eyebrow-bar mb-5">Where to begin</span>
-            <h2 id="start-paths-title" className="serif mt-3 text-[2.55rem] md:text-[4.15rem] leading-[1.0] tracking-[-0.02em] text-[color:var(--charcoal)] font-semibold">
-              Four ways to <span className="italic">start.</span>
+            <span className="he-eyebrow-bar mb-5">Pick your path</span>
+            <h2 id="start-paths-title" className="mt-3 text-[2.55rem] md:text-[4.15rem] leading-[1.05] tracking-[-0.02em] text-[color:var(--charcoal-deep)] font-bold">
+              Four ways to <span className="italic font-normal">start.</span>
             </h2>
             <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] leading-[1.65] max-w-md mx-auto">
-              Pick the path that matches how you like to plan.
+              Choose how you want to create your experience.
             </p>
           </div>
 
           <ul className="he-stagger grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8 list-none p-0 max-w-5xl mx-auto">
             {startPaths.map((p) => {
               const Icon = p.icon;
-              const primary = p.tier === "primary";
+              const featured = p.featured === true;
               return (
-                <li key={p.title} className="reveal-stagger">
+                <li key={p.title} className={"reveal-stagger" + (featured ? " sm:col-span-2" : "")}>
                   <Link
                     to={p.to}
                     aria-label={p.ariaLabel}
                     className={
-                      "he-card-lift group relative flex flex-col h-full overflow-hidden rounded-[4px] border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--sand)] " +
-                      (primary
-                        ? "bg-[color:var(--ivory)] border-[color:var(--charcoal)]/20 shadow-[0_8px_22px_-10px_rgba(46,46,46,0.22)]"
-                        : "bg-[color:var(--ivory)]/85 border-[color:var(--border)]")
+                      "he-card-lift group relative flex flex-col h-full overflow-hidden rounded-[6px] border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--sand)] " +
+                      (featured
+                        ? "bg-[color:var(--ivory)] border-[color:var(--teal)]/30 shadow-[0_14px_40px_-18px_rgba(41,91,97,0.35)]"
+                        : "bg-[color:var(--ivory)] border-[color:var(--charcoal)]/15 shadow-[0_4px_14px_-8px_rgba(46,46,46,0.18)]")
                     }
                   >
                     <div className={
                       "relative overflow-hidden bg-[color:var(--card)] " +
-                      (primary ? "aspect-[16/10]" : "aspect-[16/7]")
+                      (featured ? "aspect-[16/8]" : "aspect-[16/9]")
                     }>
                       <img
                         src={p.bg}
@@ -933,28 +955,27 @@ function HomePage() {
                         loading="lazy"
                         className="absolute inset-0 w-full h-full object-cover transition-transform duration-[600ms] ease-out group-hover:scale-[1.04]"
                       />
-                      <div aria-hidden="true" className={
-                        "absolute inset-0 " +
-                        (primary
-                          ? "bg-gradient-to-t from-[color:var(--charcoal-deep)]/45 via-[color:var(--charcoal-deep)]/15 to-transparent"
-                          : "bg-gradient-to-t from-[color:var(--charcoal-deep)]/25 to-transparent")
-                      } />
-                      {primary && (
-                        <span className="absolute top-3 left-3 inline-flex items-center gap-1.5 rounded-full bg-[color:var(--gold)] px-2.5 py-1 text-[9.5px] uppercase tracking-[0.24em] font-bold text-[color:var(--charcoal)] shadow-[0_2px_6px_rgba(0,0,0,0.18)]">
-                          ★ Recommended
-                        </span>
-                      )}
+                      <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/55 via-[color:var(--charcoal-deep)]/15 to-transparent" />
+                      {/* Spec badge — top-left */}
+                      <span className={
+                        "absolute top-3 left-3 inline-flex items-center gap-1.5 rounded-[3px] px-2.5 py-1 text-[10px] uppercase tracking-[0.18em] font-bold shadow-[0_2px_8px_rgba(0,0,0,0.25)] " +
+                        (featured
+                          ? "bg-[color:var(--teal)] text-[color:var(--ivory)]"
+                          : "bg-[color:var(--ivory)] text-[color:var(--teal)]")
+                      }>
+                        {p.badge}
+                      </span>
                     </div>
-                    <div className={"flex flex-col gap-3 " + (primary ? "p-6 md:p-7" : "p-5 md:p-6")}>
+                    <div className={"flex flex-col gap-3 " + (featured ? "p-7 md:p-9" : "p-5 md:p-6")}>
                       <span className="inline-flex items-center gap-2 text-[10.5px] uppercase tracking-[0.28em] font-bold text-[color:var(--charcoal)]">
                         <Icon size={12} aria-hidden="true" className="text-[color:var(--teal)]" />
                         {p.eyebrow}
                       </span>
                       <h3 className={
-                        "serif leading-[1.15] text-[color:var(--charcoal)] " +
-                        (primary
-                          ? "text-[1.55rem] md:text-[1.85rem] font-semibold"
-                          : "text-[1.3rem] md:text-[1.45rem] font-medium")
+                        "leading-[1.2] text-[color:var(--charcoal-deep)] font-bold " +
+                        (featured
+                          ? "text-[1.7rem] md:text-[2rem]"
+                          : "text-[1.3rem] md:text-[1.45rem]")
                       }>
                         {p.title}
                       </h3>
@@ -962,8 +983,8 @@ function HomePage() {
                         {p.line}
                       </p>
                       <span className={
-                        "mt-auto inline-flex items-center gap-2 pt-3 uppercase font-bold text-[color:var(--teal)] transition-all duration-200 group-hover:gap-3 " +
-                        (primary
+                        "mt-2 inline-flex items-center gap-2 uppercase font-bold text-[color:var(--teal)] transition-all duration-200 group-hover:gap-3 " +
+                        (featured
                           ? "text-[13px] tracking-[0.2em]"
                           : "text-[12px] tracking-[0.18em]")
                       }>
@@ -973,6 +994,9 @@ function HomePage() {
                           className="transition-transform duration-200 group-hover:translate-x-1"
                         />
                       </span>
+                      <p className="mt-1 text-[11px] italic text-[color:var(--charcoal-soft)] leading-[1.5]">
+                        {p.micro}
+                      </p>
                     </div>
                   </Link>
                 </li>
