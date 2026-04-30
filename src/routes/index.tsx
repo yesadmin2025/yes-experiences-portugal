@@ -843,7 +843,7 @@ function HomePage() {
                   aria-hidden="true"
                   className="pointer-events-none absolute left-0 bottom-0 h-px w-full origin-left scale-x-0 bg-[color:var(--gold)]/60 transition-transform duration-500 ease-out group-hover:scale-x-100"
                 />
-                <div className="flex items-start justify-between gap-4">
+                <div className="flex items-start justify-between gap-4 pr-1">
                   <span className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--gold)]/35 bg-[color:var(--ivory)] transition-colors duration-300 group-hover:border-[color:var(--gold)]/70">
                     <b.Icon
                       size={18}
