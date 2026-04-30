@@ -387,13 +387,16 @@ type HeadlineSpec = {
 };
 
 const HEADLINES: HeadlineSpec[] = [
-  // Homepage hero — frozen contract, must not drift
+  // Homepage hero — frozen contract, must not drift.
+  // Anchored on the inner data-hero-field="eyebrow" span (stable hook),
+  // matching the Typography v3 hero markup (the outer wrapper sizing
+  // changed during the structural rework but the eyebrow text node is
+  // the actual locked element).
   {
     page: "home",
     role: "hero eyebrow",
     file: "src/routes/index.tsx",
-    pattern:
-      /<span className="(inline-flex items-center gap-2\.5[^"]*?animate-\[heroFade_1\.1s[^"]*?)"/,
+    pattern: /<span data-hero-field="eyebrow" className="([^"]+)"/,
   },
   {
     page: "home",
