@@ -21,14 +21,34 @@ declare global {
   }
 }
 
+// Best-effort POST to /api/health so the server-cached readiness
+// stage tracks client progress. Fire-and-forget; failures are silent
+// (it's diagnostic, not a source of truth).
+function reportStage(stage: "hydrating" | "app-ready", detail?: string) {
+  if (typeof window === "undefined") return;
+  try {
+    fetch("/api/health", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ stage, detail }),
+      keepalive: true,
+    }).catch(() => {});
+  } catch {
+    /* noop */
+  }
+}
+
 function useAppReadyFlag() {
   useEffect(() => {
     if (typeof window === "undefined") return;
+    // We're in the client effect → hydration has started.
+    reportStage("hydrating");
     // Defer one frame so layout/styles settle before we signal ready.
     const raf = requestAnimationFrame(() => {
       window.__APP_READY__ = true;
       window.__APP_READY_AT__ = Date.now();
       window.dispatchEvent(new CustomEvent("app:ready"));
+      reportStage("app-ready", `t+${Date.now() - performance.timeOrigin | 0}ms`);
     });
     return () => cancelAnimationFrame(raf);
   }, []);
