@@ -9,7 +9,10 @@ import { getStripe, getStripeEnvironment } from "@/lib/stripe";
 
 import { EntryScreen } from "@/components/builder/EntryScreen";
 import { PredictiveMoment } from "@/components/builder/PredictiveMoment";
-import { BuilderMap } from "@/components/builder/BuilderMap";
+// Leaflet touches `window` at module load — lazy-load to keep it out of SSR.
+const BuilderMap = lazy(() =>
+  import("@/components/builder/BuilderMap").then((m) => ({ default: m.BuilderMap })),
+);
 import { JourneyPanel } from "@/components/builder/JourneyPanel";
 import { StickyBar } from "@/components/builder/StickyBar";
 import { ReviewScreen } from "@/components/builder/ReviewScreen";
