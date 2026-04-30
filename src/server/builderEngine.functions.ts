@@ -18,7 +18,7 @@ import {
 
 const inputSchema = z.object({
   mood: z.enum(["slow", "curious", "romantic", "open", "energetic"]),
-  who: z.enum(["couple", "family", "friends", "solo"]),
+  who: z.enum(["couple", "family", "friends", "solo", "corporate", "group"]),
   intention: z.enum([
     "wine",
     "gastronomy",
@@ -98,7 +98,7 @@ export const generateBuilderRoute = createServerFn({ method: "POST" })
 const narrateSchema = z.object({
   routeStopKeys: z.array(z.string().min(1).max(64)).min(1).max(10),
   mood: z.enum(["slow", "curious", "romantic", "open", "energetic"]),
-  who: z.enum(["couple", "family", "friends", "solo"]),
+  who: z.enum(["couple", "family", "friends", "solo", "corporate", "group"]),
   intention: z.enum([
     "wine",
     "gastronomy",

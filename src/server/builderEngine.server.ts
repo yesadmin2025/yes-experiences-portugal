@@ -16,7 +16,7 @@
 
 export type Mood = "slow" | "curious" | "romantic" | "open" | "energetic";
 export type Pace = "relaxed" | "balanced" | "full";
-export type Who = "couple" | "family" | "friends" | "solo";
+export type Who = "couple" | "family" | "friends" | "solo" | "corporate" | "group";
 export type Intention =
   | "wine"
   | "gastronomy"
@@ -158,10 +158,15 @@ export function paceToTargetStops(pace: Pace, rules: RoutingRules) {
 }
 
 // ---------- scoring ----------
+// New whos (corporate, group) are scored as "friends" until DB tags catch up.
+function whoForScoring(who: Who): Who {
+  if (who === "corporate" || who === "group") return "friends";
+  return who;
+}
 function scoreStop(stop: StopRow, input: BuilderInput): number {
   let s = stop.weight;
   if (stop.mood_tags.includes(input.mood)) s += 30;
-  if (stop.who_tags.includes(input.who)) s += 20;
+  if (stop.who_tags.includes(whoForScoring(input.who))) s += 20;
   if (stop.intention_tags.includes(input.intention)) s += 35;
   if (input.pace && stop.pace_tags.includes(input.pace)) s += 10;
   return s;
