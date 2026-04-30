@@ -565,13 +565,15 @@ describe("Typography regression — headline class strings", () => {
  * Update with `bunx vitest run -u` when the change is intentional.
  * ───────────────────────────────────────────────────────────────── */
 
-// Note: /multi-day and /proposals were rebuilt to Typography v3 (Montserrat
-// font-display + Georgia italic + direct sizing) and intentionally no longer
-// use the legacy serif-based t-h* tokens. They're covered by the explicit
-// HEADLINES patterns above instead of the token sweep.
-const SECTION_PAGES = [
-  { page: "home", file: "src/routes/index.tsx" },
-];
+// Note: home, /multi-day and /proposals were rebuilt to Typography v3
+// (Montserrat font-display + Georgia italic + direct sizing) and intentionally
+// no longer use the legacy serif-based t-h* tokens. The homepage uses
+// `he-eyebrow-bar` and direct `font-display font-bold` per the v3 canon.
+// Hero fields are covered by the explicit HEADLINES patterns above; section
+// H2s on these pages are governed by Typography v3 source-level rules
+// elsewhere. The token sweep is now reserved for any future page that opts
+// into the legacy t-h* token system.
+const SECTION_PAGES: { page: string; file: string }[] = [];
 
 const TOKEN_CLASS_RE =
   /<(h1|h2|h3|h4|p|span|div)\b[^>]*\sclassName="([^"]*\b(?:t-h1|t-h2|t-h3|t-eyebrow|t-lead)\b[^"]*)"/g;
