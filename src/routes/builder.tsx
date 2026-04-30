@@ -52,34 +52,13 @@ import { useBuilderRouteImages, useBuilderMoodImages } from "@/hooks/useBuilderI
 type Step = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
 type MobileTab = "build" | "map" | "story";
 
-interface BuilderSearch {
-  step: Step;
-  mood?: Mood;
-  who?: Who;
-  intention?: Intention;
-  pace?: Pace;
-  status?: "success";
-}
-
-const STEP_VALUES: Step[] = [0, 1, 2, 3, 4, 5, 6, 7];
-const MOOD_VALUES: Mood[] = ["slow", "curious", "romantic", "open", "energetic"];
-const WHO_VALUES: Who[] = ["couple", "family", "friends", "solo", "corporate", "group"];
-const INTENTION_VALUES: Intention[] = ["wine", "gastronomy", "nature", "heritage", "coast", "hidden", "wonder", "wellness"];
-const PACE_VALUES: Pace[] = ["relaxed", "balanced", "full"];
-
-function pick<T extends string | number>(value: unknown, allowed: readonly T[]): T | undefined {
-  return allowed.includes(value as T) ? (value as T) : undefined;
-}
+import {
+  parseBuilderSearch,
+  type BuilderSearch,
+} from "@/components/builder/searchParams";
 
 export const Route = createFileRoute("/builder")({
-  validateSearch: (search: Record<string, unknown>): BuilderSearch => ({
-    step: (pick<Step>(Number(search.step), STEP_VALUES) ?? 0) as Step,
-    mood: pick<Mood>(search.mood as Mood, MOOD_VALUES),
-    who: pick<Who>(search.who as Who, WHO_VALUES),
-    intention: pick<Intention>(search.intention as Intention, INTENTION_VALUES),
-    pace: pick<Pace>(search.pace as Pace, PACE_VALUES),
-    status: search.status === "success" ? "success" : undefined,
-  }),
+  validateSearch: parseBuilderSearch,
   head: () => ({
     meta: [
       { title: "Create your Portugal experience — YES" },
