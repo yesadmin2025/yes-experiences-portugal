@@ -343,22 +343,26 @@ function BuilderPage() {
             {step === 1 && (
               <div key="step-1" className="builder-step-in">
                 <StepHead num={1} eyebrow="Mood" title="What are you in the mood for?" />
-                <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
-                  {MOODS.map((m) => (
-                    <MoodCard
-                      key={m.id}
-                      selected={mood === m.id}
-                      onClick={() => {
-                        setMood(m.id);
-                        flashAndAdvance(TRANSITION_MICROCOPY.mood, 2);
-                      }}
-                      label={m.label}
-                      sub={m.sub}
-                      cover={m.cover}
-                      realCover={moodImages[m.id] ?? null}
-                    />
-                  ))}
-                </div>
+                {moodImagesLoading && Object.keys(moodImages).length === 0 ? (
+                  <MoodGridSkeleton count={MOODS.length} />
+                ) : (
+                  <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+                    {MOODS.map((m) => (
+                      <MoodCard
+                        key={m.id}
+                        selected={mood === m.id}
+                        onClick={() => {
+                          setMood(m.id);
+                          flashAndAdvance(TRANSITION_MICROCOPY.mood, 2);
+                        }}
+                        label={m.label}
+                        sub={m.sub}
+                        cover={m.cover}
+                        realCover={moodImages[m.id] ?? null}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
             )}
 
