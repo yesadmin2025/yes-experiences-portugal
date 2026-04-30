@@ -243,27 +243,48 @@ function HomePage() {
   // closure variable in component scope.
 
   const TRACKED_IDS = [
-    "why-yes",
-    "builder",
-    "proposals",
-    "celebrations",
-    "corporate",
     "reviews",
+    "builder",
+    "studio",
+    "why-yes",
+    "signatures",
+    "occasions",
     "faq",
+    "final-cta",
   ] as const;
 
   const HASH_ALIASES: Record<string, string> = {
-    proposal: "proposals",
-    celebration: "celebrations",
-    corporate: "corporate",
-    groups: "corporate",
-    group: "corporate",
-    review: "reviews",
+    // Why YES
     "why-yes": "why-yes",
     whyyes: "why-yes",
     why: "why-yes",
-    studio: "builder",
+    // Builder / Studio — Studio is its own anchor inside the builder section
     build: "builder",
+    builder: "builder",
+    studio: "studio",
+    "experience-studio": "studio",
+    // Signatures
+    signature: "signatures",
+    signatures: "signatures",
+    // Occasions / Groups (legacy aliases preserved)
+    occasion: "occasions",
+    occasions: "occasions",
+    groups: "occasions",
+    group: "occasions",
+    proposal: "occasions",
+    proposals: "occasions",
+    celebration: "occasions",
+    celebrations: "occasions",
+    corporate: "occasions",
+    // Reviews / trust
+    review: "reviews",
+    reviews: "reviews",
+    // Final CTA
+    "final-cta": "final-cta",
+    final: "final-cta",
+    book: "final-cta",
+    talk: "final-cta",
+    contact: "final-cta",
   };
 
   // Shared "don't sync the hash right now" lock. Held while a programmatic
