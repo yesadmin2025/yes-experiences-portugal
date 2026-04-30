@@ -63,17 +63,6 @@ const signatures = FEATURED_TOUR_IDS
  * Moments / Groups preview — Multi-day, Celebrations, Corporate
  * collapsed into a single 3-card band.
  * ────────────────────────────────────────────────────────────── */
-const multiDay = [
-  {
-    eyebrow: "Multi-day",
-    title: "Routes across Portugal",
-    line: "Two to seven days, real driving times, real overnight stops — designed in conversation with a local team.",
-    cta: "Browse multi-day routes",
-    to: "/multi-day",
-    img: imgTroiaBeach,
-  },
-];
-
 const groupsAndCelebrations = [
   {
     id: "proposals",
@@ -128,6 +117,24 @@ const groupsAndCelebrations = [
     cta: "Plan a Group Experience",
     to: "/corporate",
     img: imgFatimaNazare,
+  },
+  {
+    id: "multi-day",
+    eyebrow: "Multi-day",
+    title: "Routes across Portugal.",
+    line: (<>Two to seven days, real driving times, real overnight stops — designed in conversation with a <span className="kw">local team</span>.</>),
+    pull: "More than a day. A real journey.",
+    detail: "2–7 days · local-designed",
+    handles: [
+      "Route planning",
+      "Real driving times",
+      "Curated overnight stops",
+      "Local team support",
+    ],
+    trust: "Designed in conversation with a local team",
+    cta: "Browse multi-day routes",
+    to: "/multi-day",
+    img: imgTroiaBeach,
   },
 ];
 
