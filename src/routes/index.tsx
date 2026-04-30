@@ -845,6 +845,98 @@ function HomePage() {
       </section>
 
 
+      {/* 4 — EXPERIENCE STUDIO PREVIEW
+          One clean band: map + route + summary. No "live" claim, no
+          decorative blobs, no glow. Emphasizes route realism, timing,
+          and human support. */}
+      <section
+        id="builder"
+        className="section-y-lg bg-[color:var(--sand)] border-b border-[color:var(--border)] scroll-mt-24 md:scroll-mt-28"
+        aria-labelledby="studio-title"
+      >
+        <div className="container-x">
+          <div className="grid lg:grid-cols-12 gap-10 lg:gap-14 items-center max-w-6xl mx-auto">
+            <div className="reveal lg:col-span-5">
+              <span className="he-eyebrow-bar mb-4">
+                <span className="live-dot" aria-hidden="true" />
+                Live preview
+              </span>
+              <h2 id="studio-title" className="serif mt-3 text-[2.5rem] md:text-[3.6rem] leading-[1.0] tracking-[-0.02em] text-[color:var(--charcoal)] font-semibold">
+                Create your experience <span className="italic">in Portugal</span>.
+              </h2>
+              <p className="serif italic mt-3 text-[1.05rem] md:text-[1.25rem] leading-[1.3] text-[color:var(--charcoal)]/85">
+                In real time. Your way.
+              </p>
+              <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] leading-[1.7] max-w-md">
+                Three quick choices &mdash; <span className="kw">mood</span>, <span className="kw">who</span>, <span className="kw">intention</span>. We shape a real day on the map. You adjust everything.
+              </p>
+              <ol className="mt-6 grid grid-cols-3 gap-1.5 max-w-md" aria-label="Three steps">
+                {["Mood", "Who", "Intention"].map((label, i) => (
+                  <li key={label} className="flex flex-col gap-1.5">
+                    <span aria-hidden="true" className="block h-[3px] bg-[color:var(--gold)]" />
+                    <span className="text-[10px] uppercase tracking-[0.18em] font-semibold text-[color:var(--charcoal)]/70 tabular-nums">
+                      0{i + 1} · {label}
+                    </span>
+                  </li>
+                ))}
+              </ol>
+              <p className="mt-4 text-[12px] leading-[1.5] text-[color:var(--charcoal)]/65 max-w-md">
+                A starting point will be created for you &mdash; you can adjust everything.
+              </p>
+              <div className="mt-8 flex flex-wrap gap-x-5 gap-y-4">
+                <Link
+                  to="/builder"
+                  className="he-glow he-sheen he-cta-shift group inline-flex items-center gap-2.5 sm:gap-2 bg-[color:var(--teal)] text-[color:var(--ivory)] px-6 sm:px-7 py-3.5 min-h-[48px] sm:min-h-[44px] text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold hover:bg-[color:var(--teal-2)] shadow-[0_8px_22px_-10px_rgba(41,91,97,0.65)]"
+                >
+                  Start your experience
+                  <ArrowRight size={14} className="transition-transform duration-200 group-hover:translate-x-1" />
+                </Link>
+                <Link
+                  to="/experiences"
+                  className="inline-flex items-center gap-2.5 sm:gap-2 min-h-[44px] px-1 text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold text-[color:var(--charcoal)] border-b-2 border-[color:var(--charcoal)]/40 pb-1 hover:border-[color:var(--charcoal)] transition-colors"
+                >
+                  Start from a Signature
+                </Link>
+              </div>
+              <p className="mt-5 inline-flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px] xs:text-[11px] uppercase tracking-[0.16em] xs:tracking-[0.2em] sm:tracking-[0.24em] text-[color:var(--teal)]">
+                <MessageCircle size={12} aria-hidden="true" className="shrink-0" />
+                <span className="text-balance">Local guidance available while you build</span>
+              </p>
+            </div>
+            <div className="lg:col-span-7">
+              <div className="he-parallax-counter relative aspect-[4/3] md:aspect-[16/11] overflow-hidden rounded-[2px] border border-[color:var(--border)] bg-[color:var(--ivory)] shadow-[0_8px_24px_-12px_rgba(46,46,46,0.18)]">
+                <LiveMapPreview />
+                <div className="hidden md:flex absolute bottom-4 right-4 flex-col gap-1.5 rounded-[4px] border border-[color:var(--gold)]/30 bg-[color:var(--ivory)]/95 backdrop-blur-sm px-4 py-3 shadow-[0_6px_18px_-8px_rgba(0,0,0,0.35)] max-w-[14rem]">
+                  <span className="inline-flex items-center gap-2 text-[9.5px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
+                    <span className="live-dot" aria-hidden="true" />
+                    Live draft
+                  </span>
+                  <span className="serif text-[15px] leading-[1.2] text-[color:var(--charcoal)]">
+                    4 stops &middot; ~7h &middot; Lisbon &rarr; Algarve
+                  </span>
+                  <span className="text-[10.5px] uppercase tracking-[0.22em] font-semibold text-[color:var(--charcoal)]">
+                    Reviewed by a local
+                  </span>
+                </div>
+              </div>
+              <div className="reveal md:hidden mt-4 flex flex-col gap-1.5 rounded-[4px] border border-[color:var(--gold)]/35 bg-[color:var(--ivory)] px-4 py-3.5 shadow-[0_6px_16px_-8px_rgba(0,0,0,0.28)]">
+                <span aria-hidden="true" className="gold-rule mb-1 max-w-[2.5rem]" />
+                <span className="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.28em] font-semibold text-[color:var(--gold)]">
+                  <span className="live-dot" aria-hidden="true" />
+                  Live draft
+                </span>
+                <span className="serif text-[15.5px] leading-[1.2] text-[color:var(--charcoal)]">
+                  4 stops &middot; ~7h &middot; Lisbon &rarr; Algarve
+                </span>
+                <span className="text-[10.5px] uppercase tracking-[0.22em] font-semibold text-[color:var(--charcoal)]">
+                  Reviewed by a local
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* 5 — SIGNATURE EXPERIENCES PREVIEW
           Up to 4 real Signature tours. Each card uses the tour's real
           hero image (sourced from the matching Viator page), real title
@@ -970,161 +1062,6 @@ function HomePage() {
               <ArrowRight size={14} />
             </Link>
           </div>
-        </div>
-      </section>
-
-      {/* 6 — EXPERIENCE STUDIO PREVIEW
-          One clean band: map + route + summary. No "live" claim, no
-          decorative blobs, no glow. Emphasizes route realism, timing,
-          and human support. */}
-      <section
-        id="builder"
-        className="section-y-lg bg-[color:var(--sand)] border-b border-[color:var(--border)] scroll-mt-24 md:scroll-mt-28"
-        aria-labelledby="studio-title"
-      >
-        <div className="container-x">
-          <div className="grid lg:grid-cols-12 gap-10 lg:gap-14 items-center max-w-6xl mx-auto">
-            <div className="reveal lg:col-span-5">
-              <span className="he-eyebrow-bar mb-4">
-                <span className="live-dot" aria-hidden="true" />
-                Live preview
-              </span>
-              <h2 id="studio-title" className="serif mt-3 text-[2.5rem] md:text-[3.6rem] leading-[1.0] tracking-[-0.02em] text-[color:var(--charcoal)] font-semibold">
-                Create your experience <span className="italic">in Portugal</span>.
-              </h2>
-              <p className="serif italic mt-3 text-[1.05rem] md:text-[1.25rem] leading-[1.3] text-[color:var(--charcoal)]/85">
-                In real time. Your way.
-              </p>
-              <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] leading-[1.7] max-w-md">
-                Three quick choices &mdash; <span className="kw">mood</span>, <span className="kw">who</span>, <span className="kw">intention</span>. We shape a real day on the map. You adjust everything.
-              </p>
-              <ol className="mt-6 grid grid-cols-3 gap-1.5 max-w-md" aria-label="Three steps">
-                {["Mood", "Who", "Intention"].map((label, i) => (
-                  <li key={label} className="flex flex-col gap-1.5">
-                    <span aria-hidden="true" className="block h-[3px] bg-[color:var(--gold)]" />
-                    <span className="text-[10px] uppercase tracking-[0.18em] font-semibold text-[color:var(--charcoal)]/70 tabular-nums">
-                      0{i + 1} · {label}
-                    </span>
-                  </li>
-                ))}
-              </ol>
-              <p className="mt-4 text-[12px] leading-[1.5] text-[color:var(--charcoal)]/65 max-w-md">
-                A starting point will be created for you &mdash; you can adjust everything.
-              </p>
-              <div className="mt-8 flex flex-wrap gap-x-5 gap-y-4">
-                <Link
-                  to="/builder"
-                  className="he-glow he-sheen he-cta-shift group inline-flex items-center gap-2.5 sm:gap-2 bg-[color:var(--teal)] text-[color:var(--ivory)] px-6 sm:px-7 py-3.5 min-h-[48px] sm:min-h-[44px] text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold hover:bg-[color:var(--teal-2)] shadow-[0_8px_22px_-10px_rgba(41,91,97,0.65)]"
-                >
-                  Start your experience
-                  <ArrowRight size={14} className="transition-transform duration-200 group-hover:translate-x-1" />
-                </Link>
-                <Link
-                  to="/experiences"
-                  className="inline-flex items-center gap-2.5 sm:gap-2 min-h-[44px] px-1 text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold text-[color:var(--charcoal)] border-b-2 border-[color:var(--charcoal)]/40 pb-1 hover:border-[color:var(--charcoal)] transition-colors"
-                >
-                  Start from a Signature
-                </Link>
-              </div>
-              <p className="mt-5 inline-flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px] xs:text-[11px] uppercase tracking-[0.16em] xs:tracking-[0.2em] sm:tracking-[0.24em] text-[color:var(--teal)]">
-                <MessageCircle size={12} aria-hidden="true" className="shrink-0" />
-                <span className="text-balance">Local guidance available while you build</span>
-              </p>
-            </div>
-            <div className="lg:col-span-7">
-              <div className="he-parallax-counter relative aspect-[4/3] md:aspect-[16/11] overflow-hidden rounded-[2px] border border-[color:var(--border)] bg-[color:var(--ivory)] shadow-[0_8px_24px_-12px_rgba(46,46,46,0.18)]">
-                <LiveMapPreview />
-                <div className="hidden md:flex absolute bottom-4 right-4 flex-col gap-1.5 rounded-[4px] border border-[color:var(--gold)]/30 bg-[color:var(--ivory)]/95 backdrop-blur-sm px-4 py-3 shadow-[0_6px_18px_-8px_rgba(0,0,0,0.35)] max-w-[14rem]">
-                  <span className="inline-flex items-center gap-2 text-[9.5px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
-                    <span className="live-dot" aria-hidden="true" />
-                    Live draft
-                  </span>
-                  <span className="serif text-[15px] leading-[1.2] text-[color:var(--charcoal)]">
-                    4 stops &middot; ~7h &middot; Lisbon &rarr; Algarve
-                  </span>
-                  <span className="text-[10.5px] uppercase tracking-[0.22em] font-semibold text-[color:var(--charcoal)]">
-                    Reviewed by a local
-                  </span>
-                </div>
-              </div>
-              <div className="reveal md:hidden mt-4 flex flex-col gap-1.5 rounded-[4px] border border-[color:var(--gold)]/35 bg-[color:var(--ivory)] px-4 py-3.5 shadow-[0_6px_16px_-8px_rgba(0,0,0,0.28)]">
-                <span aria-hidden="true" className="gold-rule mb-1 max-w-[2.5rem]" />
-                <span className="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.28em] font-semibold text-[color:var(--gold)]">
-                  <span className="live-dot" aria-hidden="true" />
-                  Live draft
-                </span>
-                <span className="serif text-[15.5px] leading-[1.2] text-[color:var(--charcoal)]">
-                  4 stops &middot; ~7h &middot; Lisbon &rarr; Algarve
-                </span>
-                <span className="text-[10.5px] uppercase tracking-[0.22em] font-semibold text-[color:var(--charcoal)]">
-                  Reviewed by a local
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 7 — MULTI-DAY TOURS
-          Multi-day routes get their own breathing room: one wide,
-          editorial card per route family. Same card system as the rest
-          of the page so the homepage doesn't feel like a stack of
-          unrelated blocks. */}
-      <section
-        className="section-y bg-[color:var(--ivory)] border-b border-[color:var(--border)]"
-        aria-labelledby="multiday-title"
-      >
-        <div className="container-x">
-          <div className="reveal text-center max-w-2xl mx-auto mb-12 md:mb-16">
-            <span className="he-eyebrow-bar mb-5">Multi-day</span>
-            <h2 id="multiday-title" className="serif mt-3 text-[2.55rem] md:text-[4.15rem] leading-[1.0] tracking-[-0.02em] text-[color:var(--charcoal)] font-semibold">
-              Routes <span className="italic">across</span> Portugal.
-            </h2>
-            <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] leading-[1.65] max-w-md mx-auto">
-              Two to seven days, real driving times, real overnight stops — designed in conversation with a local team.
-            </p>
-          </div>
-
-          <ul className="grid grid-cols-1 list-none p-0 max-w-3xl mx-auto">
-            {multiDay.map((m) => (
-              <li key={m.title}>
-                <Link
-                  to={m.to}
-                  className="group relative flex flex-col md:flex-row h-full overflow-hidden rounded-[2px] border border-[color:var(--border)] bg-[color:var(--ivory)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-[color:var(--charcoal)]/25 hover:shadow-[0_10px_24px_-12px_rgba(46,46,46,0.2)] focus-visible:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2"
-                >
-                  <div className="relative aspect-[4/3] md:aspect-auto md:w-1/2 overflow-hidden bg-[color:var(--card)]">
-                    <img
-                      src={m.img}
-                      alt=""
-                      aria-hidden="true"
-                      loading="lazy"
-                      className="absolute inset-0 w-full h-full object-cover"
-                    />
-                    <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/40 to-transparent" />
-                  </div>
-                  <div className="p-5 md:p-8 flex flex-col gap-2.5 md:w-1/2 md:justify-center">
-                    <span className="inline-flex items-center gap-2 text-[10.5px] uppercase tracking-[0.28em] font-semibold text-[color:var(--charcoal)]">
-                      <CalendarDays size={12} aria-hidden="true" />
-                      {m.eyebrow}
-                    </span>
-                    <h3 className="serif text-[1.25rem] md:text-[1.55rem] leading-[1.2] text-[color:var(--charcoal)]">
-                      {m.title}
-                    </h3>
-                    <p className="text-[14px] leading-[1.6] text-[color:var(--charcoal)]">
-                      {m.line}
-                    </p>
-                    <span className="mt-2 inline-flex items-center gap-2 sm:gap-1.5 min-h-[44px] text-[12px] uppercase tracking-[0.16em] sm:tracking-[0.18em] font-semibold text-[color:var(--teal)]">
-                      {m.cta}
-                      <ArrowRight
-                        size={12}
-                        className="transition-transform duration-200 group-hover:translate-x-0.5"
-                      />
-                    </span>
-                  </div>
-                </Link>
-              </li>
-            ))}
-          </ul>
         </div>
       </section>
 
