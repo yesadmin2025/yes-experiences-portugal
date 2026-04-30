@@ -207,6 +207,7 @@ function RootShell({ children }: { children: React.ReactNode }) {
 }
 
 function RootComponent() {
+  useSilenceResetBlankCheck();
   useAppReadyFlag();
   return (
     <>
