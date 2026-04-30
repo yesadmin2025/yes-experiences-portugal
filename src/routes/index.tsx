@@ -1347,26 +1347,36 @@ function HomePage() {
                   >
                     {/* Soft gold divider — animates from left on reveal */}
                     <span aria-hidden="true" className="gold-rule mb-4 md:mb-5 max-w-[3rem] md:max-w-[3.5rem]" />
-                    <span className="inline-flex items-center gap-2.5 text-[11px] md:text-[10.5px] uppercase tracking-[0.28em] md:tracking-[0.32em] font-bold text-[color:var(--charcoal)]">
-                      <span aria-hidden="true" className="inline-block h-[5px] w-[5px] rounded-full bg-[color:var(--gold)]" />
-                      {m.eyebrow}
-                    </span>
-                    <h3 className="serif mt-4 md:mt-3 text-[2.15rem] md:text-[2.65rem] leading-[1.04] md:leading-[1.05] tracking-[-0.018em] md:tracking-[-0.015em] text-[color:var(--charcoal)] font-semibold">
-                      {m.title}
-                    </h3>
-                    <p className="mt-5 md:mt-4 text-[16px] md:text-[16.5px] leading-[1.65] md:leading-[1.7] text-[color:var(--charcoal)]">
-                      {m.line}
-                    </p>
-                    <p className="mt-6 md:mt-5 serif italic text-[16.5px] md:text-[17px] leading-[1.45] text-[color:var(--charcoal)] font-semibold border-l-[3px] border-[color:var(--gold)] pl-4 py-0.5">
-                      {m.pull}
-                    </p>
-                    <p className="mt-6 md:mt-5 inline-flex items-center gap-2.5 text-[11px] md:text-[10.5px] uppercase tracking-[0.22em] md:tracking-[0.24em] font-bold text-[color:var(--charcoal)]">
-                      <span aria-hidden="true" className="inline-block h-[5px] w-[5px] rounded-full bg-[color:var(--gold)]" />
-                      {m.detail}
-                    </p>
+                    {(() => {
+                      const accent =
+                        m.id === "proposals" ? "var(--gold)" :
+                        m.id === "celebrations" ? "var(--teal-2)" :
+                        "var(--charcoal)";
+                      return (
+                        <>
+                          <span className="inline-flex items-center gap-2.5 text-[11px] md:text-[10.5px] uppercase tracking-[0.28em] md:tracking-[0.32em] font-bold text-[color:var(--charcoal)]">
+                            <span aria-hidden="true" className="inline-block h-[6px] w-[6px] rounded-full" style={{ backgroundColor: accent }} />
+                            {m.eyebrow}
+                          </span>
+                          <h3 className="serif mt-4 md:mt-3 text-[2.2rem] md:text-[2.85rem] leading-[1.04] md:leading-[1.04] tracking-[-0.02em] text-[color:var(--charcoal)] font-semibold">
+                            {m.title}
+                          </h3>
+                          <p className="mt-5 md:mt-4 text-[16px] md:text-[16.5px] leading-[1.65] md:leading-[1.7] text-[color:var(--charcoal)]">
+                            {m.line}
+                          </p>
+                          <p className="he-pull mt-6 md:mt-5 serif italic text-[16.5px] md:text-[17px] leading-[1.45] text-[color:var(--charcoal)] font-semibold" style={{ borderLeftColor: accent }}>
+                            {m.pull}
+                          </p>
+                          <p className="mt-6 md:mt-5 inline-flex items-center gap-2.5 text-[11px] md:text-[10.5px] uppercase tracking-[0.22em] md:tracking-[0.24em] font-bold text-[color:var(--charcoal)]">
+                            <span aria-hidden="true" className="inline-block h-[6px] w-[6px] rounded-full" style={{ backgroundColor: accent }} />
+                            {m.detail}
+                          </p>
+                        </>
+                      );
+                    })()}
                     <Link
                       to={m.to}
-                      className="he-glow he-sheen mt-7 md:mt-6 inline-flex items-center justify-center gap-2.5 sm:gap-2 self-start bg-[color:var(--teal)] text-[color:var(--ivory)] px-7 sm:px-7 py-3.5 min-h-[48px] sm:min-h-[44px] text-[12.5px] sm:text-[13px] uppercase tracking-[0.16em] sm:tracking-[0.18em] font-semibold transition-colors duration-200 hover:bg-[color:var(--teal-2)] hover:text-[color:var(--ivory)] active:bg-[color:var(--charcoal)] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-[color:var(--sand)] shadow-[0_6px_18px_-8px_rgba(41,91,97,0.6)]"
+                      className="he-glow he-sheen he-cta-shift mt-7 md:mt-6 inline-flex items-center justify-center gap-2.5 sm:gap-2 self-start bg-[color:var(--teal)] text-[color:var(--ivory)] px-7 sm:px-7 py-3.5 min-h-[48px] sm:min-h-[44px] text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold transition-colors duration-200 hover:bg-[color:var(--teal-2)] hover:text-[color:var(--ivory)] active:bg-[color:var(--charcoal)] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-[color:var(--sand)] shadow-[0_8px_22px_-10px_rgba(41,91,97,0.65)]"
                     >
                       {m.cta}
                       <ArrowRight
