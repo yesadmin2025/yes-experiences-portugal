@@ -37,8 +37,8 @@ export async function logAiUsage(entry: AiUsageLogInput): Promise<void> {
       config_hash: entry.configHash ?? null,
       error_code: entry.errorCode ?? null,
       error_message: entry.errorMessage?.slice(0, 500) ?? null,
-      metadata: entry.metadata ?? {},
-    });
+      metadata: (entry.metadata ?? {}) as never,
+    } as never);
   } catch (err) {
     console.error("[aiAuditLog] failed to record usage:", err);
   }
