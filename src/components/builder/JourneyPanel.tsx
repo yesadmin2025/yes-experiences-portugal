@@ -51,6 +51,8 @@ export function JourneyPanel({
   removablePool,
   stopImages,
   storyImage,
+  routeLoading = false,
+  imagesLoading = false,
 }: Props) {
   if (!route) return null;
   const totalMin = route.totals.experienceMinutes;
