@@ -1,6 +1,7 @@
 import { ArrowRight, Check, MessageCircle } from "lucide-react";
 import { fmtMinutes, type RouteUI, type RoutedStopUI, builderWaHref } from "./types";
 import type { BuilderImageRef } from "@/hooks/useBuilderImages";
+import { BuilderImage } from "./BuilderImage";
 
 interface Props {
   route: RouteUI;
