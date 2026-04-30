@@ -573,17 +573,17 @@ function HomePage() {
             </p>
 
             {/* CTAs — exactly two, per brief.
-                Order swapped from the previous build: Signature first
-                (Explore), Studio second (Build), so the calmer choice
-                leads. Both kept full-width on mobile, equal-width on
-                desktop, with identical internal anatomy. */}
+                Studio is the primary innovation, so "Create Your Story"
+                (→ /builder) leads. "Explore Signature Experiences" stays
+                visible as the calmer second path (→ /experiences).
+                Labels are byte-exact from HERO_COPY (e2e lock). */}
             <div className="mt-12 md:mt-12 flex flex-col sm:flex-row gap-4 sm:gap-4 w-full max-w-sm sm:max-w-xl opacity-0 animate-[heroFade_1.4s_ease-out_1.25s_forwards]">
               <Link
-                to="/experiences"
+                to="/builder"
                 data-hero-field="primaryCta"
                 className="hero-cta-button cta-primary he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left"
               >
-                <span className="block">Explore Signature Experiences</span>
+                <span className="block">{HERO_COPY.primaryCta}</span>
                 <ArrowRight
                   size={16}
                   className="shrink-0 transition-transform duration-300 group-hover:translate-x-1"
@@ -591,11 +591,11 @@ function HomePage() {
                 />
               </Link>
               <Link
-                to="/builder"
+                to="/experiences"
                 data-hero-field="secondaryCta"
                 className="hero-cta-button cta-secondary-dark he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left"
               >
-                <span className="block">Build your private journey</span>
+                <span className="block">{HERO_COPY.secondaryCta}</span>
                 <ArrowRight
                   size={16}
                   className="shrink-0 transition-transform duration-300 group-hover:translate-x-1"
@@ -604,21 +604,17 @@ function HomePage() {
               </Link>
             </div>
 
+            {/* Microcopy under the CTAs. Subline link to /contact removed
+                per brief — it competed with the two main CTAs and
+                fragmented the hero CTA hierarchy. Local guidance is
+                still surfaced in the Studio reassurance line, the FAQ
+                closer, and the Final CTA secondary button. */}
             <div className="hero-rhythm-cta-to-microcopy max-w-sm sm:max-w-xl mx-auto sm:mx-0 opacity-0 animate-[heroFade_1.4s_ease-out_1.5s_forwards]">
               <p
                 data-hero-field="microcopy"
                 className="text-[14px] md:text-[14.5px] text-[color:var(--ivory)] leading-[1.65] md:leading-[1.7] font-normal tracking-[0.005em] text-center sm:text-left"
               >
                 {HERO_COPY.microcopy}
-              </p>
-              <p className="mt-3 text-[13px] md:text-[13px] text-[color:var(--ivory)]/85 italic leading-[1.65] text-center sm:text-left">
-                Prefer guidance?{" "}
-                <Link
-                  to="/contact"
-                  className="link-soft link-soft--persistent text-[color:var(--ivory)]"
-                >
-                  A local designer can shape it with you.
-                </Link>
               </p>
             </div>
 
