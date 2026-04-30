@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { toast } from "sonner";
 import { SiteLayout } from "@/components/SiteLayout";
 
 /**
@@ -134,7 +135,177 @@ function QaMobilePage() {
   const toggle = (key: string) =>
     setChecked((prev) => ({ ...prev, [key]: !prev[key] }));
 
-  const reset = () => setChecked({});
+  const reset = () => {
+    if (
+      typeof window !== "undefined" &&
+      done > 0 &&
+      !window.confirm("Clear all checked items on this device?")
+    ) {
+      return;
+    }
+    setChecked({});
+    toast.success("Checklist reset");
+  };
+
+  /* ── Export ──────────────────────────────────────────────────────
+     Snapshot the current run as a portable JSON payload that can be
+     re-imported on another device. We include a schema version so we
+     can evolve the format without breaking older exports. */
+  type ChecklistExport = {
+    schema: "yes-qa-mobile-checklist";
+    version: 1;
+    exportedAt: string; // ISO string
+    progress: { done: number; total: number; pct: number };
+    checked: Record<string, boolean>;
+  };
+
+  const buildExport = (): ChecklistExport => ({
+    schema: "yes-qa-mobile-checklist",
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    progress: { done, total, pct },
+    checked,
+  });
+
+  const exportJson = async () => {
+    const payload = buildExport();
+    const json = JSON.stringify(payload, null, 2);
+    const stamp = new Date().toISOString().slice(0, 10);
+    const filename = `yes-qa-mobile-${stamp}.json`;
+
+    // Prefer the native share sheet on mobile when a File can be shared
+    // (iOS 15+ / modern Android Chrome). Falls back to a download link.
+    try {
+      const blob = new Blob([json], { type: "application/json" });
+      const file = new File([blob], filename, { type: "application/json" });
+      const navAny = navigator as Navigator & {
+        canShare?: (data: { files?: File[] }) => boolean;
+      };
+      if (navAny.canShare && navAny.canShare({ files: [file] })) {
+        await navigator.share({
+          files: [file],
+          title: "YES Mobile QA checklist",
+          text: `Mobile QA checklist · ${done}/${total} (${pct}%)`,
+        });
+        toast.success("Shared checklist");
+        return;
+      }
+    } catch {
+      /* fall through to download */
+    }
+
+    try {
+      const blob = new Blob([json], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      toast.success("Checklist exported");
+    } catch {
+      toast.error("Could not export — try copy instead");
+    }
+  };
+
+  const copyJson = async () => {
+    const json = JSON.stringify(buildExport(), null, 2);
+    try {
+      await navigator.clipboard.writeText(json);
+      toast.success("Copied JSON to clipboard");
+    } catch {
+      toast.error("Clipboard blocked — use Export instead");
+    }
+  };
+
+  /* ── Import ──────────────────────────────────────────────────────
+     Accept either a .json file (file input) or a pasted JSON string
+     (textarea inside a small inline panel). Validate the shape before
+     overwriting state, and ask for confirmation if there's existing
+     progress so a careless paste can't wipe a run.                   */
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [importPanelOpen, setImportPanelOpen] = useState(false);
+  const [importText, setImportText] = useState("");
+
+  const applyImport = (raw: string) => {
+    let parsed: unknown;
+    try {
+      parsed = JSON.parse(raw);
+    } catch {
+      toast.error("Invalid JSON");
+      return false;
+    }
+    // Accept either the full export envelope or a bare {key: boolean} map.
+    let nextChecked: Record<string, boolean> | null = null;
+    if (
+      parsed &&
+      typeof parsed === "object" &&
+      "checked" in (parsed as Record<string, unknown>) &&
+      typeof (parsed as { checked: unknown }).checked === "object"
+    ) {
+      nextChecked = (parsed as { checked: Record<string, boolean> }).checked;
+    } else if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+      nextChecked = parsed as Record<string, boolean>;
+    }
+    if (!nextChecked) {
+      toast.error("Unrecognized checklist format");
+      return false;
+    }
+    // Sanitize: only keep boolean values keyed by strings, and only keys
+    // we still know about (drops stale items from older schema versions).
+    const known = new Set(allItems);
+    const clean: Record<string, boolean> = {};
+    let kept = 0;
+    let dropped = 0;
+    for (const [k, v] of Object.entries(nextChecked)) {
+      if (typeof v !== "boolean") continue;
+      if (known.has(k)) {
+        clean[k] = v;
+        kept += 1;
+      } else {
+        dropped += 1;
+      }
+    }
+    if (
+      done > 0 &&
+      typeof window !== "undefined" &&
+      !window.confirm("Replace your current progress with the imported run?")
+    ) {
+      return false;
+    }
+    setChecked(clean);
+    toast.success(
+      `Imported ${kept} item${kept === 1 ? "" : "s"}` +
+        (dropped > 0 ? ` · ${dropped} unknown skipped` : ""),
+    );
+    return true;
+  };
+
+  const onFilePicked = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = ""; // allow picking the same file again later
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const text = typeof reader.result === "string" ? reader.result : "";
+      applyImport(text);
+    };
+    reader.onerror = () => toast.error("Could not read file");
+    reader.readAsText(file);
+  };
+
+  const submitPastedImport = () => {
+    if (!importText.trim()) {
+      toast.error("Paste a JSON payload first");
+      return;
+    }
+    if (applyImport(importText)) {
+      setImportText("");
+      setImportPanelOpen(false);
+    }
+  };
 
   return (
     <SiteLayout>
@@ -168,13 +339,101 @@ function QaMobilePage() {
                 style={{ width: `${pct}%` }}
               />
             </div>
-            <button
-              type="button"
-              onClick={reset}
-              className="mt-4 inline-flex items-center justify-center min-h-[44px] px-5 text-[12px] uppercase tracking-[0.2em] font-semibold border border-[color:var(--border)] bg-[color:var(--ivory)] text-[color:var(--charcoal)] hover:border-[color:var(--charcoal)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)]"
-            >
-              Reset run
-            </button>
+            {/* Action row — wraps cleanly on 360px. All buttons share
+                the same min-height so the touch targets stay even. */}
+            <div className="mt-4 flex flex-wrap gap-2.5">
+              <button
+                type="button"
+                onClick={exportJson}
+                className="inline-flex items-center justify-center min-h-[44px] px-5 text-[12px] uppercase tracking-[0.2em] font-semibold bg-[color:var(--teal)] text-[color:var(--ivory)] hover:bg-[color:var(--teal-2)] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--sand)] transition-colors"
+              >
+                Export JSON
+              </button>
+              <button
+                type="button"
+                onClick={() => setImportPanelOpen((v) => !v)}
+                aria-expanded={importPanelOpen}
+                className="inline-flex items-center justify-center min-h-[44px] px-5 text-[12px] uppercase tracking-[0.2em] font-semibold border border-[color:var(--charcoal)] bg-[color:var(--ivory)] text-[color:var(--charcoal)] hover:bg-[color:var(--charcoal)] hover:text-[color:var(--ivory)] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] transition-colors"
+              >
+                {importPanelOpen ? "Close import" : "Import JSON"}
+              </button>
+              <button
+                type="button"
+                onClick={copyJson}
+                className="inline-flex items-center justify-center min-h-[44px] px-5 text-[12px] uppercase tracking-[0.2em] font-semibold border border-[color:var(--border)] bg-[color:var(--ivory)] text-[color:var(--charcoal)] hover:border-[color:var(--charcoal)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)]"
+              >
+                Copy JSON
+              </button>
+              <button
+                type="button"
+                onClick={reset}
+                className="inline-flex items-center justify-center min-h-[44px] px-5 text-[12px] uppercase tracking-[0.2em] font-semibold border border-[color:var(--border)] bg-[color:var(--ivory)] text-[color:var(--charcoal-soft)] hover:border-[color:var(--charcoal)] hover:text-[color:var(--charcoal)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)]"
+              >
+                Reset
+              </button>
+            </div>
+
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="application/json,.json"
+              onChange={onFilePicked}
+              className="sr-only"
+              aria-hidden="true"
+              tabIndex={-1}
+            />
+
+            {importPanelOpen ? (
+              <div className="mt-5 rounded-[4px] border border-[color:var(--border)] bg-[color:var(--ivory)] p-4">
+                <p className="text-[12.5px] uppercase tracking-[0.22em] font-bold text-[color:var(--charcoal)]">
+                  Import a saved run
+                </p>
+                <p className="mt-2 text-[13.5px] leading-[1.55] text-[color:var(--charcoal)]">
+                  Pick a previously exported <code>.json</code> file, or paste the JSON below. Your current progress will be replaced.
+                </p>
+                <div className="mt-4 flex flex-wrap gap-2.5">
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="inline-flex items-center justify-center min-h-[44px] px-5 text-[12px] uppercase tracking-[0.2em] font-semibold bg-[color:var(--charcoal)] text-[color:var(--ivory)] hover:bg-[color:var(--charcoal-soft)] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--ivory)] transition-colors"
+                  >
+                    Choose file
+                  </button>
+                </div>
+                <label className="mt-4 block">
+                  <span className="text-[11px] uppercase tracking-[0.22em] font-bold text-[color:var(--charcoal-soft)]">
+                    Or paste JSON
+                  </span>
+                  <textarea
+                    value={importText}
+                    onChange={(e) => setImportText(e.target.value)}
+                    rows={6}
+                    spellCheck={false}
+                    placeholder='{"schema":"yes-qa-mobile-checklist", ...}'
+                    className="mt-2 w-full rounded-[4px] border border-[color:var(--border)] bg-[color:var(--ivory)] p-3 font-mono text-[12.5px] leading-[1.55] text-[color:var(--charcoal)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)]"
+                  />
+                </label>
+                <div className="mt-3 flex flex-wrap gap-2.5">
+                  <button
+                    type="button"
+                    onClick={submitPastedImport}
+                    className="inline-flex items-center justify-center min-h-[44px] px-5 text-[12px] uppercase tracking-[0.2em] font-semibold bg-[color:var(--teal)] text-[color:var(--ivory)] hover:bg-[color:var(--teal-2)] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--ivory)] transition-colors"
+                  >
+                    Apply paste
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setImportText("");
+                      setImportPanelOpen(false);
+                    }}
+                    className="inline-flex items-center justify-center min-h-[44px] px-5 text-[12px] uppercase tracking-[0.2em] font-semibold border border-[color:var(--border)] bg-[color:var(--ivory)] text-[color:var(--charcoal)] hover:border-[color:var(--charcoal)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)]"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            ) : null}
           </div>
 
           <div className="mt-12 space-y-12">
