@@ -52,11 +52,6 @@ import { useBuilderRouteImages, useBuilderMoodImages } from "@/hooks/useBuilderI
 type Step = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
 type MobileTab = "build" | "map" | "story";
 
-import {
-  parseBuilderSearch,
-  type BuilderSearch,
-} from "@/components/builder/searchParams";
-
 export const Route = createFileRoute("/builder")({
   validateSearch: parseBuilderSearch,
   head: () => ({
