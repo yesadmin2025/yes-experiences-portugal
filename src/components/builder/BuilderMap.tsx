@@ -92,12 +92,24 @@ export function BuilderMap({ stops, regionCenter, regionKey }: Props) {
     if (!map || !layer) return;
     layer.clearLayers();
 
+    // Guard against 0×0 containers (e.g. mobile tab hidden via display:none).
+    // Leaflet's flyTo/flyToBounds project against the map's pixel size and
+    // produce NaN coords when the container has no size.
+    const size = map.getSize();
+    const visible = size.x > 0 && size.y > 0;
+
     if (!stops.length) {
-      if (regionCenter) map.flyTo([regionCenter.lat, regionCenter.lng], 9, { duration: 0.6 });
+      if (regionCenter && visible)
+        map.flyTo([regionCenter.lat, regionCenter.lng], 9, { duration: 0.6 });
+      else if (regionCenter) map.setView([regionCenter.lat, regionCenter.lng], 9);
       return;
     }
 
-    const points = stops.map((s) => L.latLng(s.lat, s.lng));
+    const validStops = stops.filter(
+      (s) => Number.isFinite(s.lat) && Number.isFinite(s.lng),
+    );
+    if (!validStops.length) return;
+    const points = validStops.map((s) => L.latLng(s.lat, s.lng));
     const cs = getComputedStyle(document.documentElement);
     const teal = cs.getPropertyValue("--teal").trim() || "var(--teal)";
     const ivory = cs.getPropertyValue("--ivory").trim() || "var(--ivory)";
