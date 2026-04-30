@@ -451,6 +451,7 @@ function BuilderPage() {
             onReview={() => setStep(7)}
             stopImages={routeImages.stopImages}
             storyImage={routeImages.storyImage}
+            imagesLoading={routeImages.loading}
           />
         )}
 
