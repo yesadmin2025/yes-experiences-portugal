@@ -1373,10 +1373,10 @@ function HomePage() {
             <p className="mt-5 text-[14.5px] md:text-[15.5px] leading-[1.7] font-light text-[color:var(--ivory)]/85">
               Tell us roughly what you have in mind — dates, party, a feeling. A designer in Portugal will reply within a working day.
             </p>
-            <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+            <div className="mt-8 flex flex-col sm:flex-row gap-y-4 gap-x-5 justify-center">
               <Link
                 to="/contact"
-                className="he-glow he-sheen group inline-flex items-center justify-center gap-2 bg-[color:var(--gold)] text-[color:var(--charcoal)] px-7 py-3.5 min-h-[44px] text-[13px] uppercase tracking-[0.18em] font-semibold hover:bg-[color:var(--gold-soft)] shadow-[0_6px_18px_-8px_rgba(201,169,106,0.55)]"
+                className="he-glow he-sheen group inline-flex items-center justify-center gap-2.5 sm:gap-2 bg-[color:var(--gold)] text-[color:var(--charcoal)] px-6 sm:px-7 py-3.5 min-h-[48px] sm:min-h-[44px] text-[12.5px] sm:text-[13px] uppercase tracking-[0.16em] sm:tracking-[0.18em] font-semibold hover:bg-[color:var(--gold-soft)] shadow-[0_6px_18px_-8px_rgba(201,169,106,0.55)]"
               >
                 Speak to a local designer
                 <ArrowRight size={14} className="transition-transform duration-200 group-hover:translate-x-0.5" />
