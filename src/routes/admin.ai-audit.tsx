@@ -162,7 +162,7 @@ function AuditPage() {
           {(status !== "all" || provider !== "all") && (
             <Link
               from="/admin/ai-audit"
-              search={(prev) => ({ ...prev, status: "all", provider: "all", page: 1 })}
+              search={(prev: z.infer<typeof searchSchema>) => ({ ...prev, status: "all" as const, provider: "all" as const, page: 1 })}
               className="text-xs text-[color:var(--charcoal)]/60 underline underline-offset-4"
             >
               Clear filters
@@ -333,7 +333,7 @@ function PageLink({
   return (
     <Link
       from="/admin/ai-audit"
-      search={(prev) => ({ ...prev, page })}
+      search={(prev: z.infer<typeof searchSchema>) => ({ ...prev, page })}
       className="rounded-md border border-[color:var(--charcoal)]/15 bg-white px-3 py-1 text-xs text-[color:var(--charcoal)] hover:bg-[color:var(--ivory)]"
     >
       {children}
