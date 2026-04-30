@@ -23,7 +23,7 @@ import {
   LifeBuoy,
 } from "lucide-react";
 import { PlatformBadge } from "@/components/PlatformBadge";
-import { LiveMapPreview } from "@/components/LiveMapPreview";
+import { StudioLivePreview } from "@/components/home/StudioLivePreview";
 
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
 import { signatureTours, isValidTourId } from "@/data/signatureTours";
@@ -845,9 +845,11 @@ function HomePage() {
 
 
       {/* 4 — EXPERIENCE STUDIO PREVIEW
-          One clean band: map + route + summary. No "live" claim, no
-          decorative blobs, no glow. Emphasizes route realism, timing,
-          and human support. */}
+          The flagship innovation: a predictive private day taking
+          shape live. Map-led layout, route drawing, animated pins,
+          live story panel — all driven by <StudioLivePreview />. The
+          left rail explains the three Studio inputs and routes users
+          into the real /builder. No invented stops or prices. */}
       <section
         id="builder"
         className="section-y-lg bg-[color:var(--sand)] border-b border-[color:var(--border)] scroll-mt-24 md:scroll-mt-28"
@@ -855,22 +857,29 @@ function HomePage() {
       >
         <div className="container-x">
           <div className="grid lg:grid-cols-12 gap-10 lg:gap-14 items-center max-w-6xl mx-auto">
-            <div className="reveal lg:col-span-5">
+            {/* Live preview leads on mobile (visual hook), text rail
+                follows. On desktop the rail returns to the left so the
+                reading flow stays natural. */}
+            <div className="he-parallax-counter lg:col-span-7 lg:order-2">
+              <StudioLivePreview />
+            </div>
+
+            <div className="reveal lg:col-span-5 lg:order-1">
               <span className="he-eyebrow-bar mb-4">
                 <span className="live-dot" aria-hidden="true" />
-                Live preview
+                Experience Studio
               </span>
               <h2 id="studio-title" className="serif mt-3 text-[2.5rem] md:text-[3.6rem] leading-[1.0] tracking-[-0.02em] text-[color:var(--charcoal)] font-semibold">
-                Create your experience <span className="italic">in Portugal</span>.
+                Create it <span className="italic">live.</span>
               </h2>
-              <p className="serif italic mt-3 text-[1.05rem] md:text-[1.25rem] leading-[1.3] text-[color:var(--charcoal)]/85">
-                In real time. Your way.
-              </p>
               <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] leading-[1.7] max-w-md">
-                Three quick choices &mdash; <span className="kw">mood</span>, <span className="kw">who</span>, <span className="kw">intention</span>. We shape a real day on the map. You adjust everything.
+                Choose your <span className="kw">mood</span>, <span className="kw">rhythm</span> and <span className="kw">intention</span>. Watch your private Portugal experience take shape in real time — with local guidance whenever you want it.
               </p>
-              <ol className="mt-6 grid grid-cols-3 gap-1.5 max-w-md" aria-label="Three steps">
-                {["Mood", "Who", "Intention"].map((label, i) => (
+
+              {/* Three inputs of the Studio — small index, used to
+                  signpost the live chips at the top of the preview. */}
+              <ol className="mt-6 grid grid-cols-3 gap-1.5 max-w-md" aria-label="Three Studio inputs">
+                {["Mood", "Who", "Rhythm"].map((label, i) => (
                   <li key={label} className="flex flex-col gap-1.5">
                     <span aria-hidden="true" className="block h-[3px] bg-[color:var(--gold)]" />
                     <span className="text-[10px] uppercase tracking-[0.18em] font-semibold text-[color:var(--charcoal)]/70 tabular-nums">
@@ -879,58 +888,31 @@ function HomePage() {
                   </li>
                 ))}
               </ol>
-              <p className="mt-4 text-[12px] leading-[1.5] text-[color:var(--charcoal)]/65 max-w-md">
-                A starting point will be created for you &mdash; you can adjust everything.
-              </p>
+
               <div className="mt-8 flex flex-wrap gap-x-5 gap-y-4">
                 <Link
                   to="/builder"
                   className="he-glow he-sheen he-cta-shift group inline-flex items-center gap-2.5 sm:gap-2 bg-[color:var(--teal)] text-[color:var(--ivory)] px-6 sm:px-7 py-3.5 min-h-[48px] sm:min-h-[44px] text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold hover:bg-[color:var(--teal-2)] shadow-[0_8px_22px_-10px_rgba(41,91,97,0.65)]"
                 >
-                  Start your experience
+                  Open the Studio
                   <ArrowRight size={14} className="transition-transform duration-200 group-hover:translate-x-1" />
                 </Link>
                 <Link
-                  to="/experiences"
+                  to="/contact"
                   className="inline-flex items-center gap-2.5 sm:gap-2 min-h-[44px] px-1 text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold text-[color:var(--charcoal)] border-b-2 border-[color:var(--charcoal)]/40 pb-1 hover:border-[color:var(--charcoal)] transition-colors"
                 >
-                  Start from a Signature
+                  Ask a local to shape it
                 </Link>
               </div>
+
+              <p className="mt-4 text-[12.5px] leading-[1.6] text-[color:var(--charcoal-soft)] italic max-w-md">
+                Build it yourself, or ask a local to shape it with you.
+              </p>
+
               <p className="mt-5 inline-flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px] xs:text-[11px] uppercase tracking-[0.16em] xs:tracking-[0.2em] sm:tracking-[0.24em] text-[color:var(--teal)]">
                 <MessageCircle size={12} aria-hidden="true" className="shrink-0" />
                 <span className="text-balance">Local guidance available while you build</span>
               </p>
-            </div>
-            <div className="lg:col-span-7">
-              <div className="he-parallax-counter relative aspect-[4/3] md:aspect-[16/11] overflow-hidden rounded-[2px] border border-[color:var(--border)] bg-[color:var(--ivory)] shadow-[0_8px_24px_-12px_rgba(46,46,46,0.18)]">
-                <LiveMapPreview />
-                <div className="hidden md:flex absolute bottom-4 right-4 flex-col gap-1.5 rounded-[4px] border border-[color:var(--gold)]/30 bg-[color:var(--ivory)]/95 backdrop-blur-sm px-4 py-3 shadow-[0_6px_18px_-8px_rgba(0,0,0,0.35)] max-w-[14rem]">
-                  <span className="inline-flex items-center gap-2 text-[9.5px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
-                    <span className="live-dot" aria-hidden="true" />
-                    Live draft
-                  </span>
-                  <span className="serif text-[15px] leading-[1.2] text-[color:var(--charcoal)]">
-                    4 stops &middot; ~7h &middot; Lisbon &rarr; Algarve
-                  </span>
-                  <span className="text-[10.5px] uppercase tracking-[0.22em] font-semibold text-[color:var(--charcoal)]">
-                    Reviewed by a local
-                  </span>
-                </div>
-              </div>
-              <div className="reveal md:hidden mt-4 flex flex-col gap-1.5 rounded-[4px] border border-[color:var(--gold)]/35 bg-[color:var(--ivory)] px-4 py-3.5 shadow-[0_6px_16px_-8px_rgba(0,0,0,0.28)]">
-                <span aria-hidden="true" className="gold-rule mb-1 max-w-[2.5rem]" />
-                <span className="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.28em] font-semibold text-[color:var(--gold)]">
-                  <span className="live-dot" aria-hidden="true" />
-                  Live draft
-                </span>
-                <span className="serif text-[15.5px] leading-[1.2] text-[color:var(--charcoal)]">
-                  4 stops &middot; ~7h &middot; Lisbon &rarr; Algarve
-                </span>
-                <span className="text-[10.5px] uppercase tracking-[0.22em] font-semibold text-[color:var(--charcoal)]">
-                  Reviewed by a local
-                </span>
-              </div>
             </div>
           </div>
         </div>
