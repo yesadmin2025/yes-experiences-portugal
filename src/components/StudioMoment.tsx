@@ -24,12 +24,12 @@
  */
 
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, MessageCircle, Sparkles } from "lucide-react";
+import { ArrowRight, MessageCircle, Sparkles, X, Clock, Car } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
-import { getStudioHomeDemos, type DemoChipKey, type StudioDemoRoute } from "@/server/studioHomeDemo.functions";
+import { getStudioHomeDemos, type DemoChipKey, type DemoStop, type StudioDemoRoute } from "@/server/studioHomeDemo.functions";
 import { fmtMinutes, builderWaHref, type Mood } from "@/components/builder/types";
 
 /* ────────────────────────────────────────────────────────────────
@@ -96,6 +96,7 @@ export function StudioMoment({ className }: Props) {
   const [demos, setDemos] = useState<StudioDemoRoute[] | null>(null);
   const [activeChip, setActiveChip] = useState<DemoChipKey>("wine");
   const [loadError, setLoadError] = useState(false);
+  const [openStopKey, setOpenStopKey] = useState<string | null>(null);
   const fetchDemos = useServerFn(getStudioHomeDemos);
 
   // Fetch demos on mount.
@@ -119,6 +120,16 @@ export function StudioMoment({ className }: Props) {
     if (!demos) return null;
     return demos.find((d) => d.chip === activeChip) ?? demos[0];
   }, [demos, activeChip]);
+
+  // Reset drawer when chip changes.
+  useEffect(() => {
+    setOpenStopKey(null);
+  }, [activeChip]);
+
+  const openStop = useMemo<DemoStop | null>(() => {
+    if (!active || !openStopKey) return null;
+    return active.stops.find((s) => s.key === openStopKey) ?? null;
+  }, [active, openStopKey]);
 
   return (
     <section
@@ -196,8 +207,19 @@ export function StudioMoment({ className }: Props) {
           {/* ─── RIGHT: chip row + map + live panel ─── */}
           <div className="md:col-span-7 flex flex-col gap-5">
             <ChipRow active={activeChip} onSelect={setActiveChip} />
-            <StudioMap route={active} loading={!demos && !loadError} />
-            <JourneyPanel route={active} loading={!demos && !loadError} loadError={loadError} />
+            <StudioMap
+              route={active}
+              loading={!demos && !loadError}
+              activeStopKey={openStopKey}
+              onSelectStop={setOpenStopKey}
+            />
+            <JourneyPanel
+              route={active}
+              loading={!demos && !loadError}
+              loadError={loadError}
+              activeStopKey={openStopKey}
+              onSelectStop={setOpenStopKey}
+            />
           </div>
 
           {/* ─── Mobile-only mood question (below the map) ─── */}
@@ -206,6 +228,14 @@ export function StudioMoment({ className }: Props) {
           </div>
         </div>
       </div>
+
+      {/* ─── Stop details drawer ─── */}
+      <StopDetailsDrawer
+        stop={openStop}
+        stopIndex={openStop && active ? active.stops.findIndex((s) => s.key === openStop.key) : -1}
+        regionLabel={active?.region.label ?? ""}
+        onClose={() => setOpenStopKey(null)}
+      />
 
       {/* ─── HERO_COPY locks — visually hidden, byte-exact to the
             previous hero so the e2e snapshot test keeps passing.
@@ -273,9 +303,13 @@ function ChipRow({
 function StudioMap({
   route,
   loading,
+  activeStopKey,
+  onSelectStop,
 }: {
   route: StudioDemoRoute | null;
   loading: boolean;
+  activeStopKey: string | null;
+  onSelectStop: (key: string) => void;
 }) {
   // Re-key on chip change so the draw animation replays each time.
   const drawKey = route?.chip ?? "loading";
@@ -373,14 +407,43 @@ function StudioMap({
             <circle cx={projected.region.x} cy={projected.region.y} r="3" fill="var(--charcoal)" />
           </g>
           {/* Stops */}
-          {projected.stops.map((s, i) => (
-            <g key={s.key} className="studio-stop" style={{ animationDelay: `${800 + i * 220}ms` }}>
-              <circle cx={s.x} cy={s.y} r="9" fill="var(--gold)" opacity="0.18" className="studio-stop-pulse" style={{ animationDelay: `${800 + i * 220}ms` }} />
-              <circle cx={s.x} cy={s.y} r="4" fill="var(--gold)" />
-              <circle cx={s.x} cy={s.y} r="1.6" fill="var(--ivory)" />
-            </g>
-          ))}
+          {projected.stops.map((s, i) => {
+            const isActive = activeStopKey === s.key;
+            return (
+              <g key={s.key} className="studio-stop" style={{ animationDelay: `${800 + i * 220}ms` }}>
+                <circle cx={s.x} cy={s.y} r="9" fill="var(--gold)" opacity="0.18" className="studio-stop-pulse" style={{ animationDelay: `${800 + i * 220}ms` }} />
+                <circle cx={s.x} cy={s.y} r={isActive ? 6 : 4} fill="var(--gold)" />
+                <circle cx={s.x} cy={s.y} r={isActive ? 2.2 : 1.6} fill="var(--ivory)" />
+                {isActive && (
+                  <circle cx={s.x} cy={s.y} r="10" fill="none" stroke="var(--teal)" strokeWidth="1.4" />
+                )}
+              </g>
+            );
+          })}
         </svg>
+      )}
+
+      {/* Clickable hit-targets per pin (44×44 minimum for a11y) */}
+      {projected && route && (
+        <div className="absolute inset-0" aria-label="Stops on this route" role="group">
+          {projected.stops.map((s, i) => {
+            const stop = route.stops[i];
+            return (
+              <button
+                key={s.key}
+                type="button"
+                onClick={() => onSelectStop(s.key)}
+                aria-label={`Open details for ${stop.label}`}
+                aria-pressed={activeStopKey === s.key}
+                className="absolute -translate-x-1/2 -translate-y-1/2 h-11 w-11 rounded-full focus-visible:outline-2 focus-visible:outline-[color:var(--teal)] focus-visible:outline-offset-2"
+                style={{
+                  left: `${(s.x / 360) * 100}%`,
+                  top: `${(s.y / 360) * 100}%`,
+                }}
+              />
+            );
+          })}
+        </div>
       )}
 
       {/* Live indicator */}
@@ -443,10 +506,14 @@ function JourneyPanel({
   route,
   loading,
   loadError,
+  activeStopKey,
+  onSelectStop,
 }: {
   route: StudioDemoRoute | null;
   loading: boolean;
   loadError: boolean;
+  activeStopKey: string | null;
+  onSelectStop: (key: string) => void;
 }) {
   if (loadError) {
     return (
@@ -468,9 +535,6 @@ function JourneyPanel({
     );
   }
 
-  // Show the route as: Region → Stop1 → Stop2 → …
-  const trail = [route.region.label, ...route.stops.map((s) => s.label)];
-
   return (
     <div className="rounded-[14px] border border-[color:var(--charcoal)]/12 bg-[color:var(--ivory)] p-5 md:p-6 shadow-[0_2px_24px_-12px_color-mix(in_oklab,var(--charcoal)_30%,transparent)]">
       <div className="flex items-baseline justify-between gap-3">
@@ -482,9 +546,32 @@ function JourneyPanel({
         </span>
       </div>
 
-      <p className="mt-3 text-[14.5px] md:text-[15.5px] leading-[1.5] text-[color:var(--charcoal)] font-medium">
-        {trail.join(" → ")}
-      </p>
+      {/* Clickable trail — region label, then each stop as a button */}
+      <div className="mt-3 flex flex-wrap items-center gap-x-1.5 gap-y-1.5 text-[14.5px] md:text-[15.5px] leading-[1.5] text-[color:var(--charcoal)] font-medium">
+        <span>{route.region.label}</span>
+        {route.stops.map((s) => {
+          const isActive = activeStopKey === s.key;
+          return (
+            <span key={s.key} className="inline-flex items-center gap-1.5">
+              <span aria-hidden="true" className="text-[color:var(--charcoal)]/40">→</span>
+              <button
+                type="button"
+                onClick={() => onSelectStop(s.key)}
+                aria-pressed={isActive}
+                aria-label={`View details for ${s.label}`}
+                className={
+                  "min-h-[32px] px-2 -mx-2 py-0.5 rounded-md text-left underline-offset-4 transition-colors duration-150 " +
+                  (isActive
+                    ? "bg-[color:var(--sand)] text-[color:var(--teal)] underline decoration-[color:var(--gold)]/70"
+                    : "hover:text-[color:var(--teal)] hover:underline decoration-[color:var(--gold)]/70")
+                }
+              >
+                {s.label}
+              </button>
+            </span>
+          );
+        })}
+      </div>
 
       {/* Story */}
       <p className="serif italic mt-4 text-[15.5px] md:text-[16.5px] leading-[1.55] text-[color:var(--charcoal)]/85">
@@ -500,6 +587,10 @@ function JourneyPanel({
           </li>
         ))}
       </ul>
+
+      <p className="mt-4 text-[12px] text-[color:var(--charcoal)]/55">
+        Tap a stop on the map or above to see details.
+      </p>
 
       <div className="mt-5 pt-4 border-t border-[color:var(--charcoal)]/10 flex items-center justify-between gap-3">
         <Link
@@ -666,6 +757,210 @@ function HiddenHeroCopyProbes() {
           }}
         />
       </div>
+    </>
+  );
+}
+
+/* ────────────────────────────────────────────────────────────────
+ * Stop details drawer — slides in from the bottom on mobile, from
+ * the right on md+. Shows blurb + duration + drive-from-prev, plus
+ * a "Choose one" radio group of real alternates (other variants of
+ * the same canonical stop in this region) when any exist.
+ *
+ * Phase 1: alternates are presentational — selecting one highlights
+ * it but doesn't recompose the route. Full swap belongs in /builder.
+ * ────────────────────────────────────────────────────────────── */
+function StopDetailsDrawer({
+  stop,
+  stopIndex,
+  regionLabel,
+  onClose,
+}: {
+  stop: DemoStop | null;
+  stopIndex: number;
+  regionLabel: string;
+  onClose: () => void;
+}) {
+  const open = stop !== null;
+  const [chosenVariant, setChosenVariant] = useState<string | null>(null);
+
+  // Reset selection when the open stop changes.
+  useEffect(() => {
+    setChosenVariant(stop ? stop.key : null);
+  }, [stop]);
+
+  // ESC to close.
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open, onClose]);
+
+  return (
+    <>
+      {/* Scrim */}
+      <div
+        aria-hidden={!open}
+        onClick={onClose}
+        className={
+          "fixed inset-0 z-40 bg-[color:var(--charcoal)]/35 backdrop-blur-[1px] transition-opacity duration-200 " +
+          (open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none")
+        }
+      />
+
+      {/* Drawer */}
+      <aside
+        role="dialog"
+        aria-modal="true"
+        aria-label={stop ? `Stop details: ${stop.label}` : "Stop details"}
+        aria-hidden={!open}
+        className={
+          "fixed z-50 bg-[color:var(--ivory)] text-[color:var(--charcoal)] shadow-[0_-12px_40px_-20px_color-mix(in_oklab,var(--charcoal)_40%,transparent)] transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] " +
+          // Mobile: bottom sheet
+          "inset-x-0 bottom-0 max-h-[85vh] overflow-y-auto rounded-t-[20px] " +
+          // md+: right rail
+          "md:inset-y-0 md:right-0 md:left-auto md:max-h-none md:h-full md:w-[440px] md:rounded-none md:rounded-l-[20px] " +
+          (open
+            ? "translate-y-0 md:translate-x-0"
+            : "translate-y-full md:translate-y-0 md:translate-x-full")
+        }
+      >
+        {stop && (
+          <div className="p-6 md:p-7">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <span className="text-[10.5px] uppercase tracking-[0.28em] text-[color:var(--gold)] font-semibold">
+                  Stop {stopIndex + 1} · {regionLabel}
+                </span>
+                <h3 className="serif mt-2 text-[1.6rem] leading-[1.15] tracking-[-0.01em] font-semibold">
+                  {stop.label}
+                </h3>
+                {stop.variantLabel && (
+                  <p className="mt-1 text-[12.5px] text-[color:var(--charcoal)]/60">
+                    {stop.variantLabel}
+                  </p>
+                )}
+              </div>
+              <button
+                type="button"
+                onClick={onClose}
+                aria-label="Close stop details"
+                className="shrink-0 h-11 w-11 -mr-2 -mt-2 inline-flex items-center justify-center rounded-full text-[color:var(--charcoal)]/65 hover:text-[color:var(--teal)] hover:bg-[color:var(--sand)] focus-visible:outline-2 focus-visible:outline-[color:var(--teal)]"
+              >
+                <X size={18} aria-hidden="true" />
+              </button>
+            </div>
+
+            {/* Meta row */}
+            <div className="mt-4 flex flex-wrap items-center gap-4 text-[12.5px] text-[color:var(--charcoal)]/75">
+              <span className="inline-flex items-center gap-1.5">
+                <Clock size={13} aria-hidden="true" className="text-[color:var(--teal)]" />
+                {fmtMinutes(stop.durationMinutes)} on site
+              </span>
+              {stopIndex > 0 && stop.driveMinutesFromPrev > 0 && (
+                <span className="inline-flex items-center gap-1.5">
+                  <Car size={13} aria-hidden="true" className="text-[color:var(--teal)]" />
+                  {fmtMinutes(stop.driveMinutesFromPrev)} drive from previous
+                </span>
+              )}
+              {stop.tag && (
+                <span className="inline-flex items-center gap-1.5">
+                  <span className="h-1 w-1 rounded-full bg-[color:var(--gold)]" aria-hidden="true" />
+                  {stop.tag}
+                </span>
+              )}
+            </div>
+
+            {/* Blurb */}
+            {stop.blurb ? (
+              <p className="mt-5 text-[15px] leading-[1.6] text-[color:var(--charcoal)]/85">
+                {stop.blurb}
+              </p>
+            ) : (
+              <p className="mt-5 text-[14px] italic text-[color:var(--charcoal)]/55">
+                A local will share more about this stop in the Studio.
+              </p>
+            )}
+
+            {/* Alternates */}
+            {stop.alternates.length > 0 && (
+              <div className="mt-7 pt-5 border-t border-[color:var(--charcoal)]/10">
+                <span className="text-[10.5px] uppercase tracking-[0.28em] text-[color:var(--charcoal)]/55 font-semibold">
+                  Choose one
+                </span>
+                <p className="mt-1.5 text-[12.5px] text-[color:var(--charcoal)]/65 leading-[1.5]">
+                  Other real ways to do this stop. You can pick one in the Studio.
+                </p>
+                <fieldset className="mt-3 space-y-2">
+                  <legend className="sr-only">Pick a variant for {stop.label}</legend>
+                  {[
+                    {
+                      key: stop.key,
+                      label: stop.label,
+                      blurb: stop.blurb,
+                      variantLabel: stop.variantLabel,
+                      durationMinutes: stop.durationMinutes,
+                    },
+                    ...stop.alternates,
+                  ].map((opt) => {
+                    const checked = chosenVariant === opt.key;
+                    return (
+                      <label
+                        key={opt.key}
+                        className={
+                          "flex items-start gap-3 rounded-[12px] border px-4 py-3 cursor-pointer transition-colors duration-150 " +
+                          (checked
+                            ? "border-[color:var(--teal)] bg-[color:var(--sand)]"
+                            : "border-[color:var(--charcoal)]/12 hover:border-[color:var(--teal)]/60")
+                        }
+                      >
+                        <input
+                          type="radio"
+                          name={`variant-${stop.key}`}
+                          value={opt.key}
+                          checked={checked}
+                          onChange={() => setChosenVariant(opt.key)}
+                          className="mt-1 accent-[color:var(--teal)] h-4 w-4"
+                        />
+                        <span className="flex-1 min-w-0">
+                          <span className="block text-[13.5px] font-medium text-[color:var(--charcoal)]">
+                            {opt.variantLabel ?? opt.label}
+                          </span>
+                          <span className="block mt-0.5 text-[12px] text-[color:var(--charcoal)]/65">
+                            {fmtMinutes(opt.durationMinutes)}
+                            {opt.blurb ? ` · ${opt.blurb.slice(0, 90)}${opt.blurb.length > 90 ? "…" : ""}` : ""}
+                          </span>
+                        </span>
+                      </label>
+                    );
+                  })}
+                </fieldset>
+              </div>
+            )}
+
+            {/* CTA */}
+            <div className="mt-7 flex flex-col sm:flex-row gap-3">
+              <Link
+                to="/builder"
+                className="btn-editorial btn-editorial-primary inline-flex items-center justify-center gap-2 px-5 py-3.5 text-[13.5px] tracking-[0.04em]"
+              >
+                Open this in the Studio
+                <ArrowRight size={15} aria-hidden="true" />
+              </Link>
+              <button
+                type="button"
+                onClick={onClose}
+                className="btn-editorial btn-editorial-secondary inline-flex items-center justify-center gap-2 px-5 py-3.5 text-[13.5px] tracking-[0.04em]"
+              >
+                Keep exploring
+              </button>
+            </div>
+          </div>
+        )}
+      </aside>
     </>
   );
 }
