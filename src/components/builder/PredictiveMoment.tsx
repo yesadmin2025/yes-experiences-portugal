@@ -10,7 +10,7 @@ interface Props {
   ready: boolean;
 }
 
-const MIN_DISPLAY_MS = 1100;
+const MIN_DISPLAY_MS = 700;
 const PHRASES = [
   "Listening to your choices.",
   "Tracing real roads.",
