@@ -76,18 +76,13 @@ export function JourneyPanel({
       {/* Story */}
       <section className="overflow-hidden rounded-[2px] border border-[color:var(--charcoal)]/10 bg-[color:var(--sand)]/40">
         {storyImage && (
-          <div className="relative aspect-[16/9] w-full bg-[color:var(--charcoal)]/10">
-            <img
-              src={storyImage.url}
-              alt={storyImage.alt}
-              loading="lazy"
-              className="absolute inset-0 h-full w-full object-cover"
-            />
-            <span
-              aria-hidden="true"
-              className="absolute inset-0 bg-gradient-to-t from-black/30 via-black/0 to-black/0"
-            />
-          </div>
+          <BuilderImage
+            src={storyImage.url}
+            alt={storyImage.alt}
+            ratio="16/9"
+            overlay
+            rounded={false}
+          />
         )}
         <div className="p-4">
           <span className="text-[10px] uppercase tracking-[0.28em] font-bold text-[color:var(--gold)]">
