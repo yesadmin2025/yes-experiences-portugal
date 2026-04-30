@@ -23,29 +23,15 @@ import {
 
 export type DemoChipKey = "wine" | "coast" | "culture" | "moment";
 
-export interface DemoStopAlternate {
-  key: string;
-  label: string;
-  blurb: string | null;
-  tag: string | null;
-  variantLabel: string | null;
-  durationMinutes: number;
-  lat: number;
-  lng: number;
-}
-
 export interface DemoStop {
   key: string;
   label: string;
   blurb: string | null;
   tag: string | null;
-  variantLabel: string | null;
   lat: number;
   lng: number;
   durationMinutes: number;
   driveMinutesFromPrev: number;
-  /** Other real variants of the same canonical stop in this region. */
-  alternates: DemoStopAlternate[];
 }
 
 export interface StudioDemoRoute {
@@ -207,39 +193,16 @@ export const getStudioHomeDemos = createServerFn({ method: "GET" }).handler(
             lat: route.region.lat,
             lng: route.region.lng,
           },
-          stops: route.stops.map((s) => {
-            const canonical = s.canonical_key ?? s.key;
-            const alternates: DemoStopAlternate[] = stops
-              .filter(
-                (other) =>
-                  other.key !== s.key &&
-                  other.region_key === s.region_key &&
-                  (other.canonical_key ?? other.key) === canonical,
-              )
-              .slice(0, 3)
-              .map((other) => ({
-                key: other.key,
-                label: other.label,
-                blurb: other.blurb,
-                tag: other.tag,
-                variantLabel: other.variant_label ?? null,
-                durationMinutes: other.duration_minutes,
-                lat: Number(other.lat),
-                lng: Number(other.lng),
-              }));
-            return {
-              key: s.key,
-              label: s.label,
-              blurb: s.blurb,
-              tag: s.tag,
-              variantLabel: s.variant_label ?? null,
-              lat: s.lat,
-              lng: s.lng,
-              durationMinutes: s.duration_minutes,
-              driveMinutesFromPrev: s.driveMinutesFromPrev,
-              alternates,
-            };
-          }),
+          stops: route.stops.map((s) => ({
+            key: s.key,
+            label: s.label,
+            blurb: s.blurb,
+            tag: s.tag,
+            lat: s.lat,
+            lng: s.lng,
+            durationMinutes: s.duration_minutes,
+            driveMinutesFromPrev: s.driveMinutesFromPrev,
+          })),
           experienceMinutes: route.totals.experienceMinutes,
           drivingMinutes: route.totals.drivingMinutes,
           pace: route.pace,

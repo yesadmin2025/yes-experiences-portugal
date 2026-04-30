@@ -24,12 +24,12 @@
  */
 
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, MessageCircle, Sparkles, X, Clock, Car } from "lucide-react";
+import { ArrowRight, MessageCircle, Sparkles } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
-import { getStudioHomeDemos, type DemoChipKey, type DemoStop, type DemoStopAlternate, type StudioDemoRoute } from "@/server/studioHomeDemo.functions";
+import { getStudioHomeDemos, type DemoChipKey, type StudioDemoRoute } from "@/server/studioHomeDemo.functions";
 import { fmtMinutes, builderWaHref, type Mood } from "@/components/builder/types";
 
 /* ────────────────────────────────────────────────────────────────
@@ -81,27 +81,6 @@ function project(lat: number, lng: number): { x: number; y: number } {
 }
 
 /* ────────────────────────────────────────────────────────────────
- * Drive-time helper — must mirror the server engine (haversine ×
- * 1.25 detour factor, AVG_KMH ≈ 60). Used to recompute drive
- * minutes when the user swaps a stop for one of its alternates.
- * ────────────────────────────────────────────────────────────── */
-const AVG_KMH = 60;
-function haversineKm(a: { lat: number; lng: number }, b: { lat: number; lng: number }) {
-  const R = 6371;
-  const dLat = ((b.lat - a.lat) * Math.PI) / 180;
-  const dLng = ((b.lng - a.lng) * Math.PI) / 180;
-  const lat1 = (a.lat * Math.PI) / 180;
-  const lat2 = (b.lat * Math.PI) / 180;
-  const x =
-    Math.sin(dLat / 2) ** 2 +
-    Math.sin(dLng / 2) ** 2 * Math.cos(lat1) * Math.cos(lat2);
-  return 2 * R * Math.asin(Math.sqrt(x));
-}
-function driveMinutesBetween(a: { lat: number; lng: number }, b: { lat: number; lng: number }) {
-  return Math.round(((haversineKm(a, b) * 1.25) / AVG_KMH) * 60);
-}
-
-/* ────────────────────────────────────────────────────────────────
  * Stable, schematic Portugal coastline (not a real basemap — a
  * restrained editorial silhouette so nothing looks "techy").
  * Coordinates already projected into the same 0..360 viewBox.
@@ -117,16 +96,6 @@ export function StudioMoment({ className }: Props) {
   const [demos, setDemos] = useState<StudioDemoRoute[] | null>(null);
   const [activeChip, setActiveChip] = useState<DemoChipKey>("wine");
   const [loadError, setLoadError] = useState(false);
-  const [openStopKey, setOpenStopKey] = useState<string | null>(null);
-  /**
-   * Per-chip swap map. Key: chip → originalStopKey → chosen alternate.
-   * Tracked by ORIGINAL stop key (the one the server returned) so
-   * subsequent swaps still resolve back to the same anchor in the
-   * pre-composed route, regardless of how many times the user swaps.
-   */
-  const [swaps, setSwaps] = useState<
-    Partial<Record<DemoChipKey, Record<string, DemoStopAlternate>>>
-  >({});
   const fetchDemos = useServerFn(getStudioHomeDemos);
 
   // Fetch demos on mount.
@@ -146,98 +115,10 @@ export function StudioMoment({ className }: Props) {
     };
   }, [fetchDemos]);
 
-  // Raw demo for the active chip (server-composed, never mutated).
-  const rawActive = useMemo<StudioDemoRoute | null>(() => {
+  const active = useMemo<StudioDemoRoute | null>(() => {
     if (!demos) return null;
     return demos.find((d) => d.chip === activeChip) ?? demos[0];
   }, [demos, activeChip]);
-
-  // Apply swaps for the active chip and recompute drive minutes
-  // and total experience minutes from the resulting stop sequence.
-  const active = useMemo<StudioDemoRoute | null>(() => {
-    if (!rawActive) return null;
-    const chipSwaps = swaps[rawActive.chip] ?? {};
-    if (Object.keys(chipSwaps).length === 0) return rawActive;
-
-    const newStops: DemoStop[] = rawActive.stops.map((s) => {
-      const alt = chipSwaps[s.key];
-      if (!alt) return s;
-      // Swap in the alternate's content; preserve the ORIGINAL stop's
-      // alternates list and tag fallback so the drawer keeps offering
-      // the same family of variants and the user can swap back.
-      return {
-        ...s,
-        // Keep `key` as the original anchor so future swaps resolve
-        // against the same map entry — but expose the chosen variant's
-        // identity in the visible fields and on the map.
-        label: alt.label,
-        blurb: alt.blurb,
-        tag: alt.tag ?? s.tag,
-        variantLabel: alt.variantLabel,
-        lat: alt.lat,
-        lng: alt.lng,
-        durationMinutes: alt.durationMinutes,
-      };
-    });
-
-    // Recompute drive minutes from prev for each stop, anchored on
-    // the region. First stop drives from the region; rest from prev.
-    let prev: { lat: number; lng: number } = {
-      lat: rawActive.region.lat,
-      lng: rawActive.region.lng,
-    };
-    const recomputed: DemoStop[] = newStops.map((s) => {
-      const drive = driveMinutesBetween(prev, { lat: s.lat, lng: s.lng });
-      prev = { lat: s.lat, lng: s.lng };
-      return { ...s, driveMinutesFromPrev: drive };
-    });
-
-    const stopMinutes = recomputed.reduce((acc, s) => acc + s.durationMinutes, 0);
-    const drivingMinutes = recomputed.reduce(
-      (acc, s) => acc + s.driveMinutesFromPrev,
-      0,
-    );
-
-    return {
-      ...rawActive,
-      stops: recomputed,
-      experienceMinutes: stopMinutes + drivingMinutes,
-      drivingMinutes,
-    };
-  }, [rawActive, swaps]);
-
-  // Reset drawer when chip changes.
-  useEffect(() => {
-    setOpenStopKey(null);
-  }, [activeChip]);
-
-  const openStop = useMemo<DemoStop | null>(() => {
-    if (!active || !openStopKey) return null;
-    return active.stops.find((s) => s.key === openStopKey) ?? null;
-  }, [active, openStopKey]);
-
-  /**
-   * Commit a swap. `originalStopKey` is the key the server returned
-   * (also the React key in our active route). Selecting the original
-   * variant clears the swap.
-   */
-  const handleSwap = (
-    chip: DemoChipKey,
-    originalStopKey: string,
-    chosen: DemoStopAlternate | null,
-  ) => {
-    setSwaps((prev) => {
-      const next = { ...prev };
-      const chipMap = { ...(next[chip] ?? {}) };
-      if (chosen) {
-        chipMap[originalStopKey] = chosen;
-      } else {
-        delete chipMap[originalStopKey];
-      }
-      next[chip] = chipMap;
-      return next;
-    });
-  };
 
   return (
     <section
@@ -315,19 +196,8 @@ export function StudioMoment({ className }: Props) {
           {/* ─── RIGHT: chip row + map + live panel ─── */}
           <div className="md:col-span-7 flex flex-col gap-5">
             <ChipRow active={activeChip} onSelect={setActiveChip} />
-            <StudioMap
-              route={active}
-              loading={!demos && !loadError}
-              activeStopKey={openStopKey}
-              onSelectStop={setOpenStopKey}
-            />
-            <JourneyPanel
-              route={active}
-              loading={!demos && !loadError}
-              loadError={loadError}
-              activeStopKey={openStopKey}
-              onSelectStop={setOpenStopKey}
-            />
+            <StudioMap route={active} loading={!demos && !loadError} />
+            <JourneyPanel route={active} loading={!demos && !loadError} loadError={loadError} />
           </div>
 
           {/* ─── Mobile-only mood question (below the map) ─── */}
@@ -336,33 +206,6 @@ export function StudioMoment({ className }: Props) {
           </div>
         </div>
       </div>
-
-      {/* ─── Stop details drawer ─── */}
-      <StopDetailsDrawer
-        stop={openStop}
-        rawStop={
-          openStop && rawActive
-            ? rawActive.stops.find((s) => s.key === openStop.key) ?? null
-            : null
-        }
-        chosenVariantKey={
-          openStop && rawActive
-            ? swaps[rawActive.chip]?.[openStop.key]?.key ?? openStop.key
-            : null
-        }
-        stopIndex={openStop && active ? active.stops.findIndex((s) => s.key === openStop.key) : -1}
-        regionLabel={active?.region.label ?? ""}
-        onSwap={(chosen) => {
-          if (!openStop || !rawActive) return;
-          // If the user picked the original variant, clear the swap.
-          if (chosen === null || chosen.key === openStop.key) {
-            handleSwap(rawActive.chip, openStop.key, null);
-          } else {
-            handleSwap(rawActive.chip, openStop.key, chosen);
-          }
-        }}
-        onClose={() => setOpenStopKey(null)}
-      />
 
       {/* ─── HERO_COPY locks — visually hidden, byte-exact to the
             previous hero so the e2e snapshot test keeps passing.
@@ -430,13 +273,9 @@ function ChipRow({
 function StudioMap({
   route,
   loading,
-  activeStopKey,
-  onSelectStop,
 }: {
   route: StudioDemoRoute | null;
   loading: boolean;
-  activeStopKey: string | null;
-  onSelectStop: (key: string) => void;
 }) {
   // Re-key on chip change so the draw animation replays each time.
   const drawKey = route?.chip ?? "loading";
@@ -534,43 +373,14 @@ function StudioMap({
             <circle cx={projected.region.x} cy={projected.region.y} r="3" fill="var(--charcoal)" />
           </g>
           {/* Stops */}
-          {projected.stops.map((s, i) => {
-            const isActive = activeStopKey === s.key;
-            return (
-              <g key={s.key} className="studio-stop" style={{ animationDelay: `${800 + i * 220}ms` }}>
-                <circle cx={s.x} cy={s.y} r="9" fill="var(--gold)" opacity="0.18" className="studio-stop-pulse" style={{ animationDelay: `${800 + i * 220}ms` }} />
-                <circle cx={s.x} cy={s.y} r={isActive ? 6 : 4} fill="var(--gold)" />
-                <circle cx={s.x} cy={s.y} r={isActive ? 2.2 : 1.6} fill="var(--ivory)" />
-                {isActive && (
-                  <circle cx={s.x} cy={s.y} r="10" fill="none" stroke="var(--teal)" strokeWidth="1.4" />
-                )}
-              </g>
-            );
-          })}
+          {projected.stops.map((s, i) => (
+            <g key={s.key} className="studio-stop" style={{ animationDelay: `${800 + i * 220}ms` }}>
+              <circle cx={s.x} cy={s.y} r="9" fill="var(--gold)" opacity="0.18" className="studio-stop-pulse" style={{ animationDelay: `${800 + i * 220}ms` }} />
+              <circle cx={s.x} cy={s.y} r="4" fill="var(--gold)" />
+              <circle cx={s.x} cy={s.y} r="1.6" fill="var(--ivory)" />
+            </g>
+          ))}
         </svg>
-      )}
-
-      {/* Clickable hit-targets per pin (44×44 minimum for a11y) */}
-      {projected && route && (
-        <div className="absolute inset-0" aria-label="Stops on this route" role="group">
-          {projected.stops.map((s, i) => {
-            const stop = route.stops[i];
-            return (
-              <button
-                key={s.key}
-                type="button"
-                onClick={() => onSelectStop(s.key)}
-                aria-label={`Open details for ${stop.label}`}
-                aria-pressed={activeStopKey === s.key}
-                className="absolute -translate-x-1/2 -translate-y-1/2 h-11 w-11 rounded-full focus-visible:outline-2 focus-visible:outline-[color:var(--teal)] focus-visible:outline-offset-2"
-                style={{
-                  left: `${(s.x / 360) * 100}%`,
-                  top: `${(s.y / 360) * 100}%`,
-                }}
-              />
-            );
-          })}
-        </div>
       )}
 
       {/* Live indicator */}
@@ -633,14 +443,10 @@ function JourneyPanel({
   route,
   loading,
   loadError,
-  activeStopKey,
-  onSelectStop,
 }: {
   route: StudioDemoRoute | null;
   loading: boolean;
   loadError: boolean;
-  activeStopKey: string | null;
-  onSelectStop: (key: string) => void;
 }) {
   if (loadError) {
     return (
@@ -662,6 +468,9 @@ function JourneyPanel({
     );
   }
 
+  // Show the route as: Region → Stop1 → Stop2 → …
+  const trail = [route.region.label, ...route.stops.map((s) => s.label)];
+
   return (
     <div className="rounded-[14px] border border-[color:var(--charcoal)]/12 bg-[color:var(--ivory)] p-5 md:p-6 shadow-[0_2px_24px_-12px_color-mix(in_oklab,var(--charcoal)_30%,transparent)]">
       <div className="flex items-baseline justify-between gap-3">
@@ -673,32 +482,9 @@ function JourneyPanel({
         </span>
       </div>
 
-      {/* Clickable trail — region label, then each stop as a button */}
-      <div className="mt-3 flex flex-wrap items-center gap-x-1.5 gap-y-1.5 text-[14.5px] md:text-[15.5px] leading-[1.5] text-[color:var(--charcoal)] font-medium">
-        <span>{route.region.label}</span>
-        {route.stops.map((s) => {
-          const isActive = activeStopKey === s.key;
-          return (
-            <span key={s.key} className="inline-flex items-center gap-1.5">
-              <span aria-hidden="true" className="text-[color:var(--charcoal)]/40">→</span>
-              <button
-                type="button"
-                onClick={() => onSelectStop(s.key)}
-                aria-pressed={isActive}
-                aria-label={`View details for ${s.label}`}
-                className={
-                  "min-h-[32px] px-2 -mx-2 py-0.5 rounded-md text-left underline-offset-4 transition-colors duration-150 " +
-                  (isActive
-                    ? "bg-[color:var(--sand)] text-[color:var(--teal)] underline decoration-[color:var(--gold)]/70"
-                    : "hover:text-[color:var(--teal)] hover:underline decoration-[color:var(--gold)]/70")
-                }
-              >
-                {s.label}
-              </button>
-            </span>
-          );
-        })}
-      </div>
+      <p className="mt-3 text-[14.5px] md:text-[15.5px] leading-[1.5] text-[color:var(--charcoal)] font-medium">
+        {trail.join(" → ")}
+      </p>
 
       {/* Story */}
       <p className="serif italic mt-4 text-[15.5px] md:text-[16.5px] leading-[1.55] text-[color:var(--charcoal)]/85">
@@ -714,10 +500,6 @@ function JourneyPanel({
           </li>
         ))}
       </ul>
-
-      <p className="mt-4 text-[12px] text-[color:var(--charcoal)]/55">
-        Tap a stop on the map or above to see details.
-      </p>
 
       <div className="mt-5 pt-4 border-t border-[color:var(--charcoal)]/10 flex items-center justify-between gap-3">
         <Link
@@ -884,240 +666,6 @@ function HiddenHeroCopyProbes() {
           }}
         />
       </div>
-    </>
-  );
-}
-
-/* ────────────────────────────────────────────────────────────────
- * Stop details drawer — slides in from the bottom on mobile, from
- * the right on md+. Shows blurb + duration + drive-from-prev, plus
- * a "Choose one" radio group of real alternates (other variants of
- * the same canonical stop in this region) when any exist.
- *
- * Selecting an alternate commits the swap on the parent route — the
- * map redraws, drive times are recomputed, and the live panel
- * updates. Selecting the original variant clears the swap.
- *
- * `stop` is the currently displayed stop (may already reflect a
- * prior swap), while `rawStop` is the server-composed original used
- * to enumerate the stable list of variants for this anchor.
- * ────────────────────────────────────────────────────────────── */
-function StopDetailsDrawer({
-  stop,
-  rawStop,
-  chosenVariantKey,
-  stopIndex,
-  regionLabel,
-  onSwap,
-  onClose,
-}: {
-  stop: DemoStop | null;
-  rawStop: DemoStop | null;
-  chosenVariantKey: string | null;
-  stopIndex: number;
-  regionLabel: string;
-  onSwap: (chosen: DemoStopAlternate | null) => void;
-  onClose: () => void;
-}) {
-  const open = stop !== null;
-
-  // ESC to close.
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [open, onClose]);
-
-  return (
-    <>
-      {/* Scrim */}
-      <div
-        aria-hidden={!open}
-        onClick={onClose}
-        className={
-          "fixed inset-0 z-40 bg-[color:var(--charcoal)]/35 backdrop-blur-[1px] transition-opacity duration-200 " +
-          (open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none")
-        }
-      />
-
-      {/* Drawer */}
-      <aside
-        role="dialog"
-        aria-modal="true"
-        aria-label={stop ? `Stop details: ${stop.label}` : "Stop details"}
-        aria-hidden={!open}
-        className={
-          "fixed z-50 bg-[color:var(--ivory)] text-[color:var(--charcoal)] shadow-[0_-12px_40px_-20px_color-mix(in_oklab,var(--charcoal)_40%,transparent)] transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] " +
-          // Mobile: bottom sheet
-          "inset-x-0 bottom-0 max-h-[85vh] overflow-y-auto rounded-t-[20px] " +
-          // md+: right rail
-          "md:inset-y-0 md:right-0 md:left-auto md:max-h-none md:h-full md:w-[440px] md:rounded-none md:rounded-l-[20px] " +
-          (open
-            ? "translate-y-0 md:translate-x-0"
-            : "translate-y-full md:translate-y-0 md:translate-x-full")
-        }
-      >
-        {stop && (
-          <div className="p-6 md:p-7">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <span className="text-[10.5px] uppercase tracking-[0.28em] text-[color:var(--gold)] font-semibold">
-                  Stop {stopIndex + 1} · {regionLabel}
-                </span>
-                <h3 className="serif mt-2 text-[1.6rem] leading-[1.15] tracking-[-0.01em] font-semibold">
-                  {stop.label}
-                </h3>
-                {stop.variantLabel && (
-                  <p className="mt-1 text-[12.5px] text-[color:var(--charcoal)]/60">
-                    {stop.variantLabel}
-                  </p>
-                )}
-              </div>
-              <button
-                type="button"
-                onClick={onClose}
-                aria-label="Close stop details"
-                className="shrink-0 h-11 w-11 -mr-2 -mt-2 inline-flex items-center justify-center rounded-full text-[color:var(--charcoal)]/65 hover:text-[color:var(--teal)] hover:bg-[color:var(--sand)] focus-visible:outline-2 focus-visible:outline-[color:var(--teal)]"
-              >
-                <X size={18} aria-hidden="true" />
-              </button>
-            </div>
-
-            {/* Meta row */}
-            <div className="mt-4 flex flex-wrap items-center gap-4 text-[12.5px] text-[color:var(--charcoal)]/75">
-              <span className="inline-flex items-center gap-1.5">
-                <Clock size={13} aria-hidden="true" className="text-[color:var(--teal)]" />
-                {fmtMinutes(stop.durationMinutes)} on site
-              </span>
-              {stopIndex > 0 && stop.driveMinutesFromPrev > 0 && (
-                <span className="inline-flex items-center gap-1.5">
-                  <Car size={13} aria-hidden="true" className="text-[color:var(--teal)]" />
-                  {fmtMinutes(stop.driveMinutesFromPrev)} drive from previous
-                </span>
-              )}
-              {stop.tag && (
-                <span className="inline-flex items-center gap-1.5">
-                  <span className="h-1 w-1 rounded-full bg-[color:var(--gold)]" aria-hidden="true" />
-                  {stop.tag}
-                </span>
-              )}
-            </div>
-
-            {/* Blurb */}
-            {stop.blurb ? (
-              <p className="mt-5 text-[15px] leading-[1.6] text-[color:var(--charcoal)]/85">
-                {stop.blurb}
-              </p>
-            ) : (
-              <p className="mt-5 text-[14px] italic text-[color:var(--charcoal)]/55">
-                A local will share more about this stop in the Studio.
-              </p>
-            )}
-
-            {/* Alternates */}
-            {rawStop && rawStop.alternates.length > 0 && (
-              <div className="mt-7 pt-5 border-t border-[color:var(--charcoal)]/10">
-                <span className="text-[10.5px] uppercase tracking-[0.28em] text-[color:var(--charcoal)]/55 font-semibold">
-                  Choose one
-                </span>
-                <p className="mt-1.5 text-[12.5px] text-[color:var(--charcoal)]/65 leading-[1.5]">
-                  Other real ways to do this stop. Pick one to update your route.
-                </p>
-                <fieldset className="mt-3 space-y-2">
-                  <legend className="sr-only">Pick a variant for {rawStop.label}</legend>
-                  {[
-                    {
-                      key: rawStop.key,
-                      label: rawStop.label,
-                      blurb: rawStop.blurb,
-                      tag: rawStop.tag,
-                      variantLabel: rawStop.variantLabel,
-                      durationMinutes: rawStop.durationMinutes,
-                      lat: rawStop.lat,
-                      lng: rawStop.lng,
-                      isOriginal: true,
-                    },
-                    ...rawStop.alternates.map((a) => ({ ...a, isOriginal: false })),
-                  ].map((opt) => {
-                    const checked = chosenVariantKey === opt.key;
-                    const handleSelect = () => {
-                      if (opt.isOriginal) {
-                        onSwap(null);
-                      } else {
-                        onSwap({
-                          key: opt.key,
-                          label: opt.label,
-                          blurb: opt.blurb,
-                          tag: opt.tag ?? null,
-                          variantLabel: opt.variantLabel,
-                          durationMinutes: opt.durationMinutes,
-                          lat: opt.lat,
-                          lng: opt.lng,
-                        });
-                      }
-                    };
-                    return (
-                      <label
-                        key={opt.key}
-                        className={
-                          "flex items-start gap-3 rounded-[12px] border px-4 py-3 cursor-pointer transition-colors duration-150 " +
-                          (checked
-                            ? "border-[color:var(--teal)] bg-[color:var(--sand)]"
-                            : "border-[color:var(--charcoal)]/12 hover:border-[color:var(--teal)]/60")
-                        }
-                      >
-                        <input
-                          type="radio"
-                          name={`variant-${rawStop.key}`}
-                          value={opt.key}
-                          checked={checked}
-                          onChange={handleSelect}
-                          className="mt-1 accent-[color:var(--teal)] h-4 w-4"
-                        />
-                        <span className="flex-1 min-w-0">
-                          <span className="block text-[13.5px] font-medium text-[color:var(--charcoal)]">
-                            {opt.variantLabel ?? opt.label}
-                            {opt.isOriginal && (
-                              <span className="ml-2 text-[10px] uppercase tracking-[0.22em] text-[color:var(--charcoal)]/45">
-                                Original
-                              </span>
-                            )}
-                          </span>
-                          <span className="block mt-0.5 text-[12px] text-[color:var(--charcoal)]/65">
-                            {fmtMinutes(opt.durationMinutes)}
-                            {opt.blurb ? ` · ${opt.blurb.slice(0, 90)}${opt.blurb.length > 90 ? "…" : ""}` : ""}
-                          </span>
-                        </span>
-                      </label>
-                    );
-                  })}
-                </fieldset>
-              </div>
-            )}
-
-            {/* CTA */}
-            <div className="mt-7 flex flex-col sm:flex-row gap-3">
-              <Link
-                to="/builder"
-                className="btn-editorial btn-editorial-primary inline-flex items-center justify-center gap-2 px-5 py-3.5 text-[13.5px] tracking-[0.04em]"
-              >
-                Open this in the Studio
-                <ArrowRight size={15} aria-hidden="true" />
-              </Link>
-              <button
-                type="button"
-                onClick={onClose}
-                className="btn-editorial btn-editorial-secondary inline-flex items-center justify-center gap-2 px-5 py-3.5 text-[13.5px] tracking-[0.04em]"
-              >
-                Keep exploring
-              </button>
-            </div>
-          </div>
-        )}
-      </aside>
     </>
   );
 }
