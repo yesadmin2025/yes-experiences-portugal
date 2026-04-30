@@ -339,13 +339,101 @@ function QaMobilePage() {
                 style={{ width: `${pct}%` }}
               />
             </div>
-            <button
-              type="button"
-              onClick={reset}
-              className="mt-4 inline-flex items-center justify-center min-h-[44px] px-5 text-[12px] uppercase tracking-[0.2em] font-semibold border border-[color:var(--border)] bg-[color:var(--ivory)] text-[color:var(--charcoal)] hover:border-[color:var(--charcoal)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)]"
-            >
-              Reset run
-            </button>
+            {/* Action row — wraps cleanly on 360px. All buttons share
+                the same min-height so the touch targets stay even. */}
+            <div className="mt-4 flex flex-wrap gap-2.5">
+              <button
+                type="button"
+                onClick={exportJson}
+                className="inline-flex items-center justify-center min-h-[44px] px-5 text-[12px] uppercase tracking-[0.2em] font-semibold bg-[color:var(--teal)] text-[color:var(--ivory)] hover:bg-[color:var(--teal-2)] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--sand)] transition-colors"
+              >
+                Export JSON
+              </button>
+              <button
+                type="button"
+                onClick={() => setImportPanelOpen((v) => !v)}
+                aria-expanded={importPanelOpen}
+                className="inline-flex items-center justify-center min-h-[44px] px-5 text-[12px] uppercase tracking-[0.2em] font-semibold border border-[color:var(--charcoal)] bg-[color:var(--ivory)] text-[color:var(--charcoal)] hover:bg-[color:var(--charcoal)] hover:text-[color:var(--ivory)] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] transition-colors"
+              >
+                {importPanelOpen ? "Close import" : "Import JSON"}
+              </button>
+              <button
+                type="button"
+                onClick={copyJson}
+                className="inline-flex items-center justify-center min-h-[44px] px-5 text-[12px] uppercase tracking-[0.2em] font-semibold border border-[color:var(--border)] bg-[color:var(--ivory)] text-[color:var(--charcoal)] hover:border-[color:var(--charcoal)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)]"
+              >
+                Copy JSON
+              </button>
+              <button
+                type="button"
+                onClick={reset}
+                className="inline-flex items-center justify-center min-h-[44px] px-5 text-[12px] uppercase tracking-[0.2em] font-semibold border border-[color:var(--border)] bg-[color:var(--ivory)] text-[color:var(--charcoal-soft)] hover:border-[color:var(--charcoal)] hover:text-[color:var(--charcoal)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)]"
+              >
+                Reset
+              </button>
+            </div>
+
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="application/json,.json"
+              onChange={onFilePicked}
+              className="sr-only"
+              aria-hidden="true"
+              tabIndex={-1}
+            />
+
+            {importPanelOpen ? (
+              <div className="mt-5 rounded-[4px] border border-[color:var(--border)] bg-[color:var(--ivory)] p-4">
+                <p className="text-[12.5px] uppercase tracking-[0.22em] font-bold text-[color:var(--charcoal)]">
+                  Import a saved run
+                </p>
+                <p className="mt-2 text-[13.5px] leading-[1.55] text-[color:var(--charcoal)]">
+                  Pick a previously exported <code>.json</code> file, or paste the JSON below. Your current progress will be replaced.
+                </p>
+                <div className="mt-4 flex flex-wrap gap-2.5">
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="inline-flex items-center justify-center min-h-[44px] px-5 text-[12px] uppercase tracking-[0.2em] font-semibold bg-[color:var(--charcoal)] text-[color:var(--ivory)] hover:bg-[color:var(--charcoal-soft)] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--ivory)] transition-colors"
+                  >
+                    Choose file
+                  </button>
+                </div>
+                <label className="mt-4 block">
+                  <span className="text-[11px] uppercase tracking-[0.22em] font-bold text-[color:var(--charcoal-soft)]">
+                    Or paste JSON
+                  </span>
+                  <textarea
+                    value={importText}
+                    onChange={(e) => setImportText(e.target.value)}
+                    rows={6}
+                    spellCheck={false}
+                    placeholder='{"schema":"yes-qa-mobile-checklist", ...}'
+                    className="mt-2 w-full rounded-[4px] border border-[color:var(--border)] bg-[color:var(--ivory)] p-3 font-mono text-[12.5px] leading-[1.55] text-[color:var(--charcoal)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)]"
+                  />
+                </label>
+                <div className="mt-3 flex flex-wrap gap-2.5">
+                  <button
+                    type="button"
+                    onClick={submitPastedImport}
+                    className="inline-flex items-center justify-center min-h-[44px] px-5 text-[12px] uppercase tracking-[0.2em] font-semibold bg-[color:var(--teal)] text-[color:var(--ivory)] hover:bg-[color:var(--teal-2)] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--ivory)] transition-colors"
+                  >
+                    Apply paste
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setImportText("");
+                      setImportPanelOpen(false);
+                    }}
+                    className="inline-flex items-center justify-center min-h-[44px] px-5 text-[12px] uppercase tracking-[0.2em] font-semibold border border-[color:var(--border)] bg-[color:var(--ivory)] text-[color:var(--charcoal)] hover:border-[color:var(--charcoal)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)]"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            ) : null}
           </div>
 
           <div className="mt-12 space-y-12">
