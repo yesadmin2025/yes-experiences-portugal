@@ -72,22 +72,17 @@ export interface ApprovedSection {
 }
 
 /**
- * The approved 13-block structure (v3 — premium homepage rework).
+ * The approved 8-block structure (v4 — Builder-dominance rework).
  *
  * Order:
  *   1.  Hero
- *   2.  Trust strip
- *   3.  Why YES (manifesto)
- *   4.  The Difference (componentized)
- *   5.  Pick your path (Four Ways In)
- *   6.  Signature experiences preview
- *   7.  Experience Studio preview (map + summary)
- *   8.  Multi-day journeys
- *   9.  Groups & celebrations (Proposals + Celebrations + Corporate)
- *   10. Testimonials (Trustmary, componentized)
- *   11. FAQ
- *   12. Final CTA — talk to a local
- *   13. (Footer is rendered by SiteLayout, not counted here)
+ *   2.  Trust strip (reviews + private guide line)
+ *   3.  Three paths primer + Experience Studio (promoted)
+ *   4.  Why YES (4 manifesto cards)
+ *   5.  Signature experiences preview
+ *   6.  Occasions band (Proposals + Celebrations + Corporate + Multi-day)
+ *   7.  FAQ
+ *   8.  Final CTA — talk to a local
  */
 export const APPROVED_HOMEPAGE_SECTIONS: readonly ApprovedSection[] = [
   {
@@ -104,62 +99,36 @@ export const APPROVED_HOMEPAGE_SECTIONS: readonly ApprovedSection[] = [
   },
   {
     order: 3,
-    name: "Why YES — editorial manifesto (5 blocks)",
+    name: "Three paths primer + Experience Studio (promoted)",
+    ariaLabelledBy: "studio-title",
+    requiredSpacing: { kind: "py", minScale: 24 },
+  },
+  {
+    order: 4,
+    name: "Why YES — editorial manifesto (4 cards)",
     ariaLabelledBy: "why-yes-title",
     requiredSpacing: { kind: "py", minScale: 20 },
   },
   {
-    order: 4,
-    name: "The Difference — process & promise",
-    componentTag: "TheDifferenceSection",
-    inComponent: true,
-    requiredSpacing: null,
-  },
-  {
     order: 5,
-    name: "Pick your path — four ways to start",
-    ariaLabelledBy: "start-paths-title",
-    requiredSpacing: { kind: "py", minScale: 20 },
-  },
-  {
-    order: 6,
     name: "Signature experiences preview",
     ariaLabelledBy: "signatures-title",
     requiredSpacing: { kind: "py", minScale: 20 },
   },
   {
-    order: 7,
-    name: "Experience Studio preview (map + summary)",
-    ariaLabelledBy: "studio-title",
-    requiredSpacing: { kind: "py", minScale: 24 },
-  },
-  {
-    order: 8,
-    name: "Multi-day journeys — routes across Portugal",
-    ariaLabelledBy: "multiday-title",
-    requiredSpacing: { kind: "py", minScale: 20 },
-  },
-  {
-    order: 9,
-    name: "Groups & celebrations — proposals + celebrations + corporate",
+    order: 6,
+    name: "Occasions band — proposals + celebrations + corporate + multi-day",
     ariaLabelledBy: "groups-title",
     requiredSpacing: { kind: "py", minScale: 20 },
   },
   {
-    order: 10,
-    name: "Testimonials — verified traveler reviews",
-    componentTag: "TrustmarySection",
-    inComponent: true,
-    requiredSpacing: null,
-  },
-  {
-    order: 11,
+    order: 7,
     name: "FAQ — visible helpful answers",
     ariaLabelledBy: "faq-title",
     requiredSpacing: { kind: "py", minScale: 20 },
   },
   {
-    order: 12,
+    order: 8,
     name: "Final CTA — talk to a local",
     marker: "FINAL CTA",
     requiredSpacing: { kind: "pb", minScale: 20 },
