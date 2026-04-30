@@ -1419,6 +1419,29 @@ function HomePage() {
                             <span aria-hidden="true" className="inline-block h-[6px] w-[6px] rounded-full" style={{ backgroundColor: accent }} />
                             {m.detail}
                           </p>
+                          {/* What we handle — checklist of concrete deliverables.
+                              Editorial, not form-y: tight serif label, gold/teal
+                              ticks per accent, no boxes. */}
+                          <p className="mt-7 md:mt-6 text-[10.5px] uppercase tracking-[0.28em] font-semibold text-[color:var(--charcoal-soft)]">
+                            What we handle
+                          </p>
+                          <ul className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-2 list-none p-0">
+                            {m.handles.map((h) => (
+                              <li
+                                key={h}
+                                className="flex items-start gap-2 text-[13px] leading-[1.55] text-[color:var(--charcoal)]"
+                              >
+                                <span
+                                  aria-hidden="true"
+                                  className="mt-[2px] inline-flex shrink-0 items-center justify-center font-bold text-[12px]"
+                                  style={{ color: accent }}
+                                >
+                                  ✓
+                                </span>
+                                <span>{h}</span>
+                              </li>
+                            ))}
+                          </ul>
                         </>
                       );
                     })()}
