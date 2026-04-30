@@ -292,6 +292,7 @@ function BuilderPage() {
                       label={m.label}
                       sub={m.sub}
                       cover={m.cover}
+                      realCover={moodImages[m.id] ?? null}
                     />
                   ))}
                 </div>
