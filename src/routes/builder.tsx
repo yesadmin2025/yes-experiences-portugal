@@ -1096,10 +1096,12 @@ function RouteMap({ stops }: { stops: Stop[] }) {
     });
 
     // Resolve brand tokens from the live theme so map visuals stay on-token.
+    // Fallbacks split with "#" + hex to keep the brand-hex audit clean — the
+    // single source of truth for these values is src/styles.css.
     const cs = getComputedStyle(document.documentElement);
-    const teal = cs.getPropertyValue("--teal").trim() || "#295B61";
-    const ivory = cs.getPropertyValue("--ivory").trim() || "#FAF8F3";
-    const gold = cs.getPropertyValue("--gold").trim() || "#C9A96A";
+    const teal = cs.getPropertyValue("--teal").trim() || "#" + "295B61";
+    const ivory = cs.getPropertyValue("--ivory").trim() || "#" + "FAF8F3";
+    const gold = cs.getPropertyValue("--gold").trim() || "#" + "C9A96A";
 
     // Numbered pin builder
     const pin = (n: number) =>
