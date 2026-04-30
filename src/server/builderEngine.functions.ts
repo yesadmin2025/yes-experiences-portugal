@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { hashConfig, logAiUsage } from "./aiAuditLog.server";
 import {
   type BuilderInput,
   type BuilderRoute,
