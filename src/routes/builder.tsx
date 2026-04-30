@@ -980,7 +980,7 @@ function LiveExperience({
 
 /* ─── Stripe checkout modal ───────────────────────────────────── */
 
-const stripePromise = loadStripe(STRIPE_PUBLISHABLE_KEY);
+const stripePromise = getStripe();
 
 function CheckoutModal({
   route,
@@ -1008,7 +1008,7 @@ function CheckoutModal({
           stopLabels: stops.map((s) => s.label),
           pace: route.pace,
           returnUrl: `${window.location.origin}/builder?status=success`,
-          environment: "sandbox",
+          environment: getStripeEnvironment(),
         },
       })
       .then(({ data, error: fnError }) => {
