@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-04-30T01:24:42.456Z",
-  "filesScanned": 104,
+  "generatedAt": "2026-04-30T01:34:08.303Z",
+  "filesScanned": 106,
   "approvedPalette": {
     "teal": "#295B61",
     "teal-2": "#2A7C82",
@@ -18,9 +18,9 @@
     "#cccccc"
   ],
   "counts": {
-    "total": 176,
+    "total": 178,
     "approved": 41,
-    "allowlisted": 27,
+    "allowlisted": 29,
     "mismatch": 108
   },
   "findings": [
@@ -1214,7 +1214,7 @@
     },
     {
       "file": "src/routes/index.tsx",
-      "line": 834,
+      "line": 835,
       "col": 106,
       "raw": "#E7DDD0",
       "normalized": "#e7ddd0",
@@ -1417,6 +1417,24 @@
       "raw": "#000",
       "normalized": "#000000",
       "snippet": "background-color: #000;",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/styles.css",
+      "line": 2263,
+      "col": 41,
+      "raw": "#000",
+      "normalized": "#000000",
+      "snippet": "-webkit-mask-image: linear-gradient(#000, #000);",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/styles.css",
+      "line": 2263,
+      "col": 47,
+      "raw": "#000",
+      "normalized": "#000000",
+      "snippet": "-webkit-mask-image: linear-gradient(#000, #000);",
       "status": "allowlisted"
     },
     {
