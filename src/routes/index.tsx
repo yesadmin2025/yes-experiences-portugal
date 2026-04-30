@@ -1078,7 +1078,7 @@ function HomePage() {
           <div className="mt-12 md:mt-14 text-center">
             <Link
               to="/experiences"
-              className="inline-flex items-center gap-2 min-h-[44px] text-[13px] uppercase tracking-[0.18em] font-semibold text-[color:var(--charcoal)] border-b-2 border-[color:var(--charcoal)]/40 pb-1 hover:border-[color:var(--charcoal)] transition-colors"
+              className="inline-flex items-center gap-2.5 sm:gap-2 min-h-[44px] px-1 text-[12.5px] sm:text-[13px] uppercase tracking-[0.16em] sm:tracking-[0.18em] font-semibold text-[color:var(--charcoal)] border-b-2 border-[color:var(--charcoal)]/40 pb-1 hover:border-[color:var(--charcoal)] transition-colors"
             >
               See every Signature
               <ArrowRight size={14} />
