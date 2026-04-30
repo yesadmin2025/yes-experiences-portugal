@@ -82,14 +82,14 @@ export function StickyBar({
           onClick={onConfirm}
           disabled={disabled}
           className={[
-            "inline-flex items-center justify-center gap-2 px-5 sm:px-7 py-3 min-h-[48px] rounded-[2px] text-[12px] uppercase tracking-[0.2em] font-bold transition-all duration-200",
+            "shrink-0 inline-flex items-center justify-center gap-1.5 px-3.5 sm:px-7 py-3 min-h-[48px] rounded-[2px] text-[11px] sm:text-[12px] uppercase tracking-[0.18em] sm:tracking-[0.2em] font-bold transition-all duration-200",
             disabled
               ? "bg-[color:var(--charcoal)]/15 text-[color:var(--charcoal)]/40 cursor-not-allowed"
               : "bg-[color:var(--charcoal)] text-[color:var(--ivory)] hover:bg-[color:var(--teal)] shadow-[0_12px_24px_-14px_rgba(46,46,46,0.55)] hover:-translate-y-[1px]",
           ].join(" ")}
         >
           {ctaLabel}
-          <ArrowRight size={13} />
+          <ArrowRight size={12} />
         </button>
       </div>
     </div>
