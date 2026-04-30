@@ -111,21 +111,42 @@ function markerAbove(source: string, index: number): string | null {
 function resolveApprovedToSource(): {
   spec: ApprovedSection;
   match: SectionMatch | null;
+  /** Source character index for ordering checks (works for both
+   *  inline <section> matches and componentTag JSX usages). */
+  index: number;
 }[] {
   const allSections = findSections(SOURCE);
   return APPROVED_HOMEPAGE_SECTIONS.map((spec) => {
     let match: SectionMatch | null = null;
-    if (spec.ariaLabelledBy) {
-      match = allSections.find((s) => s.ariaLabelledBy === spec.ariaLabelledBy) ?? null;
+    let index = -1;
+    if (spec.inComponent && spec.componentTag) {
+      // Match the JSX usage `<ComponentTag` in source order. The
+      // component owns its own <section> tag internally; we only
+      // need to confirm presence + relative position here.
+      const re = new RegExp(`<${spec.componentTag}\\b`);
+      const m = re.exec(SOURCE);
+      if (m) {
+        index = m.index;
+        match = {
+          index,
+          openTag: m[0],
+          className: "",
+          ariaLabelledBy: null,
+        };
+      }
+    } else if (spec.ariaLabelledBy) {
+      match =
+        allSections.find((s) => s.ariaLabelledBy === spec.ariaLabelledBy) ?? null;
+      index = match?.index ?? -1;
     } else if (spec.marker) {
       const candidates = allSections.filter((s) => {
         const marker = markerAbove(SOURCE, s.index);
         return marker !== null && marker.includes(spec.marker!);
       });
-      // First match wins — sections already come back in source order.
       match = candidates[0] ?? null;
+      index = match?.index ?? -1;
     }
-    return { spec, match };
+    return { spec, match, index };
   });
 }
 
