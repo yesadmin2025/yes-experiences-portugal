@@ -25,6 +25,10 @@ interface Props {
   stopImages?: Record<string, StopImageRef | null>;
   /** One contextual image for the Story section (mood + region match). */
   storyImage?: StopImageRef | null;
+  /** True while the engine is reshaping the route — show skeleton placeholders. */
+  routeLoading?: boolean;
+  /** True while real images for stops are still being fetched from the DB. */
+  imagesLoading?: boolean;
 }
 
 const PACE_META: Record<Pace, { label: string; sub: string; icon: typeof Leaf }> = {
