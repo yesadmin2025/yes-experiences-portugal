@@ -1064,10 +1064,10 @@ function HomePage() {
         </div>
       </section>
 
-      {/* 8 — GROUPS & CELEBRATIONS
-          Proposals + Celebrations + Corporate together in one calm
-          band of 3 cards — distinct from multi-day so each occasion
-          type has clear hierarchy. */}
+      {/* 6 — PROPOSALS / CELEBRATIONS / CORPORATE / MULTI-DAY
+          One combined editorial band — Proposals, Celebrations,
+          Corporate & Groups, and Multi-Day routes — so every "bigger
+          occasion" path lives together with clear hierarchy. */}
       <section
         className="section-y bg-[color:var(--sand)] border-b border-[color:var(--border)]"
         aria-labelledby="groups-title"
