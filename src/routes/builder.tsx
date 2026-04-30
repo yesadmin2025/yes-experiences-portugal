@@ -517,11 +517,13 @@ function LiveBuilder({
               mobileTab === "map" ? "block" : "hidden lg:block",
             ].join(" ")}
           >
-            <BuilderMap
-              stops={stops}
-              regionCenter={regionCenter}
-              regionKey={route.region.key}
-            />
+            <Suspense fallback={<div className="h-full w-full bg-[color:var(--sand)]" aria-hidden="true" />}>
+              <BuilderMap
+                stops={stops}
+                regionCenter={regionCenter}
+                regionKey={route.region.key}
+              />
+            </Suspense>
           </div>
 
           {/* PANEL */}
