@@ -467,6 +467,8 @@ interface LiveBuilderProps {
   routeError: string | null;
   onRetry: () => void;
   onReview: () => void;
+  stopImages: Record<string, { url: string; alt: string } | null>;
+  storyImage: { url: string; alt: string } | null;
 }
 
 function LiveBuilder({
@@ -489,6 +491,8 @@ function LiveBuilder({
   routeError,
   onRetry,
   onReview,
+  stopImages,
+  storyImage,
 }: LiveBuilderProps) {
   const regionCenter = { lat: Number(route.region.lat), lng: Number(route.region.lng) };
 
