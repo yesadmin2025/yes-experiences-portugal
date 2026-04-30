@@ -48,7 +48,7 @@ export const INTENTIONS: { id: Intention; label: string; sub: string }[] = [
   { id: "nature", label: "Nature & wild edges", sub: "Cliffs, dunes, lagoons" },
 ];
 
-export const PACES: { id: Pace; label: string; sub: string; icon: typeof Leaf }[] = [
+export const PACES: { id: Pace; label: string; sub: string; icon: typeof Sprout }[] = [
   { id: "relaxed", label: "Relaxed", sub: "Fewer stops, more breath", icon: Sprout },
   { id: "balanced", label: "Balanced", sub: "Just right", icon: Clock },
   { id: "full", label: "Full", sub: "More to see, more pulse", icon: Zap },
