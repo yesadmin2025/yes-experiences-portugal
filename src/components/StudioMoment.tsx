@@ -24,12 +24,12 @@
  */
 
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, MessageCircle, Sparkles } from "lucide-react";
+import { ArrowRight, MessageCircle, Sparkles, X, Clock, Car } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
-import { getStudioHomeDemos, type DemoChipKey, type StudioDemoRoute } from "@/server/studioHomeDemo.functions";
+import { getStudioHomeDemos, type DemoChipKey, type DemoStop, type StudioDemoRoute } from "@/server/studioHomeDemo.functions";
 import { fmtMinutes, builderWaHref, type Mood } from "@/components/builder/types";
 
 /* ────────────────────────────────────────────────────────────────
