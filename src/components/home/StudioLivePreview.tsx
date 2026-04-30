@@ -115,7 +115,11 @@ export function StudioLivePreview() {
         </span>
       </div>
 
-      <div className="relative z-10 flex flex-wrap items-center gap-1.5 md:gap-2 border-b border-[color:var(--gold)]/12 bg-[color:var(--charcoal-deep)]/70 px-4 md:px-5 py-3">
+      <div
+        className="relative z-10 flex flex-wrap items-center gap-1.5 md:gap-2 border-b border-[color:var(--gold)]/12 bg-[color:var(--charcoal-deep)]/70 px-4 md:px-5 py-3"
+        role="group"
+        aria-label="Studio inputs preview"
+      >
         <Chip icon={<Wine size={11} aria-hidden="true" />} label="Mood" value="Wine & food" />
         <Chip icon={<Users size={11} aria-hidden="true" />} label="Who" value="Couple" />
         <Chip icon={<Clock3 size={11} aria-hidden="true" />} label="Rhythm" value="Relaxed" />
@@ -213,6 +217,10 @@ export function StudioLivePreview() {
           {STOPS.map((s, i) => (
             <g
               key={s.id}
+              className="slv-pin"
+              role="button"
+              tabIndex={0}
+              aria-label={`${s.label} — ${s.caption}`}
               style={{
                 opacity: active ? 1 : 0,
                 transform: active ? "translateY(0)" : "translateY(4px)",
@@ -221,6 +229,16 @@ export function StudioLivePreview() {
                 transformOrigin: `${s.x}px ${s.y}px`,
               }}
             >
+              {/* Focus ring — only visible on keyboard focus */}
+              <circle
+                className="slv-pin-focus"
+                cx={s.x}
+                cy={s.y}
+                r="8"
+                fill="none"
+                stroke="var(--gold)"
+                strokeWidth="1.2"
+              />
               {/* Outer pulse — first & last stops only, keeps it calm */}
               {(i === 0 || i === STOPS.length - 1) && (
                 <circle
@@ -298,7 +316,10 @@ export function StudioLivePreview() {
           ].map((moment, i) => (
             <li
               key={moment}
-              className="slv-moment inline-flex items-center gap-1.5 rounded-full border border-[color:var(--teal)]/25 bg-[color:var(--ivory)] px-3 py-1 text-[11.5px] tracking-[0.02em] text-[color:var(--charcoal)]"
+              tabIndex={0}
+              role="button"
+              aria-label={`Selected moment: ${moment}`}
+              className="slv-moment slv-focusable inline-flex items-center gap-1.5 rounded-full border border-[color:var(--teal)]/25 bg-[color:var(--ivory)] px-3 py-1 text-[11.5px] tracking-[0.02em] text-[color:var(--charcoal)]"
               style={{
                 opacity: active ? 1 : 0,
                 transform: active ? "translateY(0)" : "translateY(4px)",
@@ -334,6 +355,31 @@ export function StudioLivePreview() {
           transform-box: fill-box;
           animation: slv-pulse 2400ms cubic-bezier(0.22, 0.61, 0.36, 1) infinite;
         }
+
+        /* ── Focus states — premium, keyboard-only ─────────────────── */
+        /* SVG pin focus ring: hidden until :focus-visible */
+        .slv-pin { outline: none; cursor: pointer; }
+        .slv-pin .slv-pin-focus {
+          opacity: 0;
+          transition: opacity 160ms ease;
+        }
+        .slv-pin:focus-visible .slv-pin-focus,
+        .slv-pin:hover .slv-pin-focus {
+          opacity: 1;
+        }
+        .slv-pin:focus-visible {
+          outline: none;
+        }
+
+        /* Generic focusable chip/moment focus ring — gold ring + dark offset */
+        .slv-focusable { outline: none; }
+        .slv-focusable:focus-visible {
+          outline: 2px solid var(--gold);
+          outline-offset: 2px;
+          box-shadow: 0 0 0 4px rgba(46,46,46,0.35);
+          border-radius: 9999px;
+        }
+
         @media (prefers-reduced-motion: reduce) {
           .slv-pulse { animation: none !important; }
           .studio-live * { transition: none !important; }
@@ -345,7 +391,12 @@ export function StudioLivePreview() {
 
 function Chip({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-full border border-[color:var(--gold)]/30 bg-[color:var(--charcoal-deep)]/60 px-2.5 py-1 text-[color:var(--ivory)]">
+    <span
+      tabIndex={0}
+      role="button"
+      aria-label={`${label}: ${value}`}
+      className="slv-focusable inline-flex items-center gap-1.5 rounded-full border border-[color:var(--gold)]/30 bg-[color:var(--charcoal-deep)]/60 px-2.5 py-1 text-[color:var(--ivory)]"
+    >
       <span className="text-[color:var(--gold)]">{icon}</span>
       <span className="text-[9px] uppercase tracking-[0.26em] text-[color:var(--ivory)]/65">
         {label}
@@ -356,3 +407,4 @@ function Chip({ icon, label, value }: { icon: React.ReactNode; label: string; va
     </span>
   );
 }
+
