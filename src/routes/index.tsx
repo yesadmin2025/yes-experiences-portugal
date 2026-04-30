@@ -168,6 +168,13 @@ const groupsAndCelebrations = [
     line: (<>From the setting to the timing, we help shape the moment around your story, with <span className="kw">local knowledge</span> and discreet support.</>),
     pull: "Designed for the moment, not the template.",
     detail: "Discreet · location of your choosing",
+    handles: [
+      "Location scouting",
+      "Timing optimisation",
+      "Surprise logistics",
+      "Full discretion",
+    ],
+    trust: "Completed 50+ proposals · 100% success rate",
     cta: "Plan a Proposal",
     to: "/proposals",
     img: imgArrabidaWineLunch,
@@ -179,6 +186,13 @@ const groupsAndCelebrations = [
     line: (<>Birthdays, anniversaries, honeymoons or family moments — shaped around <span className="kw">your rhythm</span>, your people and the way you want to feel Portugal.</>),
     pull: "Your people, your pace, your Portugal.",
     detail: "Up to 14 guests · private host",
+    handles: [
+      "Group coordination",
+      "Multi-activity planning",
+      "Flexible scheduling",
+      "Personal touches",
+    ],
+    trust: "Up to 14 guests · private host available",
     cta: "Plan a Celebration",
     to: "/proposals",
     img: imgFatimaNazare,
@@ -190,11 +204,19 @@ const groupsAndCelebrations = [
     line: (<>For teams, incentives and private groups, we combine local experiences, timing, transport and logistics into a day that feels <span className="kw">effortless</span>.</>),
     pull: "End to end, handled by a local team.",
     detail: "Up to 30 pax · invoice & DMC support",
+    handles: [
+      "Full logistics management",
+      "Group experience design",
+      "Transport coordination",
+      "Invoice & DMC support",
+    ],
+    trust: "Up to 30 guests · full team coordination",
     cta: "Plan a Group Experience",
     to: "/corporate",
     img: imgFatimaNazare,
   },
 ];
+
 
 /* ──────────────────────────────────────────────────────────────────
  * Route definition — keeps headers, head meta and HERO_COPY_VERSION
@@ -1397,6 +1419,29 @@ function HomePage() {
                             <span aria-hidden="true" className="inline-block h-[6px] w-[6px] rounded-full" style={{ backgroundColor: accent }} />
                             {m.detail}
                           </p>
+                          {/* What we handle — checklist of concrete deliverables.
+                              Editorial, not form-y: tight serif label, gold/teal
+                              ticks per accent, no boxes. */}
+                          <p className="mt-7 md:mt-6 text-[10.5px] uppercase tracking-[0.28em] font-semibold text-[color:var(--charcoal-soft)]">
+                            What we handle
+                          </p>
+                          <ul className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-2 list-none p-0">
+                            {m.handles.map((h) => (
+                              <li
+                                key={h}
+                                className="flex items-start gap-2 text-[13px] leading-[1.55] text-[color:var(--charcoal)]"
+                              >
+                                <span
+                                  aria-hidden="true"
+                                  className="mt-[2px] inline-flex shrink-0 items-center justify-center font-bold text-[12px]"
+                                  style={{ color: accent }}
+                                >
+                                  ✓
+                                </span>
+                                <span>{h}</span>
+                              </li>
+                            ))}
+                          </ul>
                         </>
                       );
                     })()}
@@ -1411,6 +1456,9 @@ function HomePage() {
                         className="transition-transform duration-200 group-hover:translate-x-0.5"
                       />
                     </Link>
+                    <p className="mt-3 text-[11px] leading-[1.5] text-[color:var(--charcoal-soft)] italic">
+                      {m.trust}
+                    </p>
                   </div>
                 </article>
               );
@@ -1436,38 +1484,77 @@ function HomePage() {
           is the human escape hatch. No duplicate CTA band; one purpose,
           one button. */}
       <section
-        className="section-y bg-[color:var(--charcoal-deep)] text-[color:var(--ivory)] pb-20 md:pb-24"
+        className="section-y relative overflow-hidden bg-[color:var(--teal)] text-[color:var(--ivory)] pb-20 md:pb-24"
         aria-labelledby="final-cta-title"
       >
-        {/* FINAL CTA */}
-        <div className="container-x">
+        {/* FINAL CTA — solid teal base with editorial texture so it
+            doesn't read as a flat block:
+              · radial gold glow top-right (very low opacity)
+              · subtle linear darken bottom-left for depth
+              · faint diagonal noise via SVG dataurl (≤4% opacity)
+            All decorative + aria-hidden. Reduced-motion safe (no
+            animation on the texture). */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(60% 80% at 88% 10%, rgba(201,169,106,0.18), transparent 60%), " +
+              "radial-gradient(70% 90% at 10% 100%, rgba(0,0,0,0.28), transparent 65%)",
+          }}
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 opacity-[0.05] mix-blend-overlay"
+          style={{
+            backgroundImage:
+              "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>\")",
+          }}
+        />
+        {/* Soft gold hairline at the very top — editorial signature, not a banner */}
+        <div
+          aria-hidden="true"
+          className="absolute top-0 left-1/2 -translate-x-1/2 h-px w-32 md:w-48 bg-gradient-to-r from-transparent via-[color:var(--gold)]/70 to-transparent"
+        />
+
+        <div className="container-x relative">
           <div className="reveal max-w-xl mx-auto text-center">
-            <span className="he-rule-flank text-[10.5px] uppercase tracking-[0.28em] font-bold text-[color:var(--gold)]">
+            <span className="he-rule-flank text-[10.5px] uppercase tracking-[0.28em] font-bold text-[color:var(--gold-soft)]">
               <MessageCircle size={12} aria-hidden="true" />
               Prefer a conversation?
             </span>
-            <h2 id="final-cta-title" className="serif mt-5 text-[2.4rem] md:text-[3.6rem] leading-[1.02] tracking-[-0.02em] font-semibold">
-              Talk to a <span className="italic text-[color:var(--gold-soft)]">local.</span>
+            <h2
+              id="final-cta-title"
+              className="mt-5 text-[2.4rem] md:text-[3.6rem] leading-[1.02] tracking-[-0.02em] font-bold text-[color:var(--ivory)]"
+            >
+              Ready to design your{" "}
+              <span className="italic font-normal text-[color:var(--gold-soft)] serif">
+                Portugal?
+              </span>
             </h2>
-            <p className="mt-5 text-[15px] md:text-[16px] leading-[1.7] text-[color:var(--ivory)]/90">
-              Tell us roughly what you have in mind — dates, party, a feeling. A designer in Portugal will reply within a working day.
+            <p className="mt-5 text-[15px] md:text-[17px] leading-[1.7] text-[color:var(--ivory)]/90">
+              Start in the Studio. Explore Signatures. Or talk to a local — your
+              journey, your way.
             </p>
-            <div className="mt-9 flex flex-col sm:flex-row gap-y-4 gap-x-6 justify-center items-center">
+            <div className="mt-9 flex flex-col sm:flex-row gap-y-4 gap-x-4 justify-center items-stretch sm:items-center">
               <Link
-                to="/contact"
-                className="he-glow he-sheen he-cta-shift group inline-flex items-center justify-center gap-2.5 sm:gap-2 bg-[color:var(--gold)] text-[color:var(--charcoal)] px-7 py-3.5 min-h-[48px] sm:min-h-[44px] text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold hover:bg-[color:var(--gold-soft)] shadow-[0_8px_22px_-10px_rgba(201,169,106,0.6)]"
+                to="/builder"
+                className="he-glow he-sheen he-cta-shift group inline-flex items-center justify-center gap-2.5 bg-[color:var(--ivory)] text-[color:var(--charcoal)] px-7 py-3.5 min-h-[48px] text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold rounded-[2px] transition-colors duration-200 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--teal)] shadow-[0_8px_22px_-10px_rgba(0,0,0,0.5)]"
               >
-                Speak to a local designer
-                <ArrowRight size={14} className="transition-transform duration-200 group-hover:translate-x-1" />
+                <ArrowRight size={14} aria-hidden="true" />
+                Open the Studio
               </Link>
               <Link
                 to="/contact"
-                className="inline-flex items-center gap-2 min-h-[44px] text-[12.5px] uppercase tracking-[0.18em] font-bold text-[color:var(--gold-soft)] border-b-2 border-[color:var(--gold-soft)]/40 pb-1 hover:border-[color:var(--gold-soft)] transition-colors"
+                className="group inline-flex items-center justify-center gap-2 px-7 py-3.5 min-h-[48px] text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold rounded-[2px] border-2 border-[color:var(--ivory)]/85 text-[color:var(--ivory)] transition-all duration-200 hover:bg-[color:var(--ivory)]/10 hover:border-[color:var(--ivory)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--teal)]"
               >
-                Or write us on WhatsApp
-                <ArrowRight size={12} />
+                Talk to a local
+                <ArrowRight size={12} aria-hidden="true" className="transition-transform duration-200 group-hover:translate-x-0.5" />
               </Link>
             </div>
+            <p className="mt-6 text-[13px] italic text-[color:var(--ivory)]/85">
+              A local is one message away.
+            </p>
           </div>
         </div>
       </section>
