@@ -54,7 +54,13 @@ export function BuilderMap({ stops, regionCenter, regionKey }: Props) {
     mapRef.current = map;
     layerRef.current = L.layerGroup().addTo(map);
 
-    const ro = new ResizeObserver(() => map.invalidateSize());
+    const ro = new ResizeObserver(() => {
+      map.invalidateSize();
+      const s = map.getSize();
+      if (s.x > 0 && s.y > 0 && lastBoundsRef.current) {
+        map.fitBounds(lastBoundsRef.current);
+      }
+    });
     ro.observe(ref.current);
 
     map.on("zoomend moveend", () => {
