@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import { ArrowRight, Loader2, Map as MapIcon, Sparkles, X } from "lucide-react";
 import { SiteLayout } from "@/components/SiteLayout";
 import { generateBuilderRoute, narrateBuilderRoute } from "@/server/builderEngine.functions";
@@ -9,7 +9,10 @@ import { getStripe, getStripeEnvironment } from "@/lib/stripe";
 
 import { EntryScreen } from "@/components/builder/EntryScreen";
 import { PredictiveMoment } from "@/components/builder/PredictiveMoment";
-import { BuilderMap } from "@/components/builder/BuilderMap";
+// Leaflet touches `window` at module load — lazy-load to keep it out of SSR.
+const BuilderMap = lazy(() =>
+  import("@/components/builder/BuilderMap").then((m) => ({ default: m.BuilderMap })),
+);
 import { JourneyPanel } from "@/components/builder/JourneyPanel";
 import { StickyBar } from "@/components/builder/StickyBar";
 import { ReviewScreen } from "@/components/builder/ReviewScreen";
@@ -514,11 +517,13 @@ function LiveBuilder({
               mobileTab === "map" ? "block" : "hidden lg:block",
             ].join(" ")}
           >
-            <BuilderMap
-              stops={stops}
-              regionCenter={regionCenter}
-              regionKey={route.region.key}
-            />
+            <Suspense fallback={<div className="h-full w-full bg-[color:var(--sand)]" aria-hidden="true" />}>
+              <BuilderMap
+                stops={stops}
+                regionCenter={regionCenter}
+                regionKey={route.region.key}
+              />
+            </Suspense>
           </div>
 
           {/* PANEL */}
