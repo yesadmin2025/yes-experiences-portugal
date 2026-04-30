@@ -51,6 +51,9 @@ const signatures = FEATURED_TOUR_IDS
     region: t.region,
     priceFrom: t.priceFrom,
     durationHours: t.durationHours,
+    // First 3 real highlights from the matching Viator-sourced catalog.
+    // Never fabricated — sourced from `signatureTours[].highlights`.
+    highlights: t.highlights.slice(0, 3),
   }));
 
 /* ──────────────────────────────────────────────────────────────────
@@ -955,44 +958,42 @@ function HomePage() {
             aria-label="Signature experiences"
           >
             {signatures.map((t) => {
-              const paceLabel = Array.isArray(t.pace) ? t.pace[0] : t.pace;
-              const hook =
-                paceLabel === "Relaxed"
-                  ? "Unhurried, all in one day"
-                  : paceLabel === "Energetic"
-                    ? "Big day, real ground covered"
-                    : "Designed end to end";
               return (
                 <li
                   key={t.id}
                   className="snap-center shrink-0 w-[84vw] sm:w-auto sm:shrink"
                 >
-                  <Link
-                    to="/tours/$tourId"
-                    params={{ tourId: t.id }}
-                    className="group relative flex flex-col h-full overflow-hidden rounded-[6px] border border-[color:var(--border)] bg-[color:var(--charcoal)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-[color:var(--charcoal)]/30 hover:shadow-[0_14px_30px_-14px_rgba(46,46,46,0.28)] focus-visible:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2"
+                  {/* Card is a structured composition (NOT a single link) so
+                      we can expose two distinct CTAs — Book + Tailor — and
+                      a short list of REAL highlights pulled from the
+                      Viator-sourced catalog. No invented copy. */}
+                  <article
+                    className="group relative flex flex-col h-full overflow-hidden rounded-[6px] border border-[color:var(--border)] bg-[color:var(--ivory)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-[color:var(--charcoal)]/30 hover:shadow-[0_14px_30px_-14px_rgba(46,46,46,0.28)]"
                   >
-                    {/* Cover image — full card, editorial 4:5 */}
-                    <div className="relative aspect-[4/5] overflow-hidden bg-[color:var(--card)]">
+                    {/* Cover — clickable to detail page */}
+                    <Link
+                      to="/tours/$tourId"
+                      params={{ tourId: t.id }}
+                      className="relative block aspect-[4/5] overflow-hidden bg-[color:var(--card)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2"
+                      aria-label={`Open ${t.title}`}
+                    >
                       <img
                         src={t.img}
                         alt={t.title}
                         loading="lazy"
                         className="absolute inset-0 w-full h-full object-cover transition-transform duration-[600ms] ease-out group-hover:scale-[1.03]"
                       />
-                      {/* Bottom-anchored gradient for text legibility (≤45%) */}
                       <div
                         aria-hidden="true"
-                        className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"
+                        className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/15 to-transparent"
                       />
-
-                      {/* Top row: region eyebrow + price badge */}
+                      {/* Top row: region + price */}
                       <div className="absolute inset-x-0 top-0 p-4 md:p-5 flex items-start justify-between gap-3">
                         <span className="text-[10px] uppercase tracking-[0.28em] text-white/85 drop-shadow-sm">
                           {t.region}
                         </span>
                         <span className="inline-flex items-baseline gap-1 rounded-full bg-[color:var(--ivory)]/95 px-2.5 py-1 text-[color:var(--charcoal)] shadow-[0_2px_6px_rgba(0,0,0,0.18)]">
-                          <span className="text-[10.5px] uppercase tracking-[0.2em] font-semibold text-[color:var(--charcoal)]">
+                          <span className="text-[10.5px] uppercase tracking-[0.2em] font-semibold">
                             From
                           </span>
                           <span className="serif text-[14px] leading-none">
@@ -1000,30 +1001,66 @@ function HomePage() {
                           </span>
                         </span>
                       </div>
-
-                      {/* Bottom block: catchy hook + title + duration + CTA */}
+                      {/* Bottom: real title + real duration */}
                       <div className="absolute inset-x-0 bottom-0 p-5 md:p-6 text-white">
-                        <span className="inline-block text-[10.5px] uppercase tracking-[0.24em] text-[color:var(--gold)]">
-                          {hook}
-                        </span>
-                        <h3 className="serif mt-2 text-[1.35rem] md:text-[1.45rem] leading-[1.18] text-white text-balance">
+                        <h3 className="serif text-[1.3rem] md:text-[1.4rem] leading-[1.18] text-white text-balance">
                           {t.title}
                         </h3>
-                        <div className="mt-3 flex items-center justify-between gap-3">
-                          <span className="text-[11px] uppercase tracking-[0.22em] text-white/80">
-                            {t.durationHours} · Private
-                          </span>
-                          <span className="inline-flex items-center gap-1.5 text-[12px] uppercase tracking-[0.18em] font-semibold text-white">
-                            View
-                            <ArrowRight
-                              size={12}
-                              className="transition-transform duration-200 group-hover:translate-x-0.5"
-                            />
-                          </span>
-                        </div>
+                        <span className="mt-2 inline-block text-[11px] uppercase tracking-[0.22em] text-white/85">
+                          {t.durationHours} · Private
+                        </span>
+                      </div>
+                    </Link>
+
+                    {/* Body — real teaser + real highlights + dual CTAs */}
+                    <div className="flex flex-col gap-4 p-5 md:p-6">
+                      <p className="text-[13.5px] leading-[1.55] text-[color:var(--charcoal)]">
+                        {t.line}
+                      </p>
+
+                      {/* Real highlights — pulled directly from the
+                          tour's `highlights` array. Capped at 3 for
+                          card-level legibility. */}
+                      {t.highlights.length > 0 && (
+                        <ul className="flex flex-col gap-1.5 text-[12.5px] leading-[1.5] text-[color:var(--charcoal)]">
+                          {t.highlights.map((h) => (
+                            <li key={h} className="flex items-start gap-2">
+                              <span
+                                aria-hidden="true"
+                                className="mt-[7px] h-1 w-1 shrink-0 rounded-full bg-[color:var(--gold)]"
+                              />
+                              <span>{h}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+
+                      {/* Dual CTAs — Book + Tailor. Book is the primary
+                          (solid teal); Tailor is a quieter outlined
+                          option, reflecting the brand rule that Tailored
+                          = adjustments INSIDE one Signature, never a
+                          replacement for the Signature itself. */}
+                      <div className="mt-auto flex flex-col xs:flex-row gap-2.5 pt-1">
+                        <Link
+                          to="/tours/$tourId"
+                          params={{ tourId: t.id }}
+                          className="inline-flex items-center justify-center gap-1.5 min-h-[44px] flex-1 px-4 text-[12px] uppercase tracking-[0.18em] font-semibold bg-[color:var(--teal)] text-[color:var(--ivory)] hover:bg-[color:var(--teal-2)] transition-colors rounded-[3px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2"
+                          aria-label={`Book ${t.title}`}
+                        >
+                          Book
+                          <ArrowRight size={13} />
+                        </Link>
+                        <Link
+                          to="/tours/$tourId/tailor"
+                          params={{ tourId: t.id }}
+                          className="inline-flex items-center justify-center gap-1.5 min-h-[44px] flex-1 px-4 text-[12px] uppercase tracking-[0.18em] font-semibold border border-[color:var(--charcoal)]/25 text-[color:var(--charcoal)] hover:border-[color:var(--charcoal)] hover:bg-[color:var(--sand)] transition-colors rounded-[3px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2"
+                          aria-label={`Tailor ${t.title}`}
+                        >
+                          Tailor
+                        </Link>
                       </div>
                     </div>
-                  </Link>
+                  </article>
                 </li>
               );
             })}
