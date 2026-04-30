@@ -297,6 +297,16 @@ function QaMobilePage() {
         dropped += 1;
       }
     }
+    // No recognizable items → refuse rather than wipe the run.
+    if (kept === 0) {
+      toast.error("No matching checklist items", {
+        description:
+          dropped > 0
+            ? `All ${dropped} item${dropped === 1 ? "" : "s"} in the file are unknown to this checklist. Your current progress is unchanged.`
+            : "The file didn't contain any boolean items. Your current progress is unchanged.",
+      });
+      return false;
+    }
     if (
       done > 0 &&
       typeof window !== "undefined" &&
@@ -308,6 +318,9 @@ function QaMobilePage() {
     toast.success(
       `Imported ${kept} item${kept === 1 ? "" : "s"}` +
         (dropped > 0 ? ` · ${dropped} unknown skipped` : ""),
+      looksLikeEnvelope
+        ? undefined
+        : { description: "No schema/version found — accepted as a bare map." },
     );
     return true;
   };
