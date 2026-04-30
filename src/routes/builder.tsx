@@ -48,7 +48,37 @@ import { useBuilderRouteImages, useBuilderMoodImages } from "@/hooks/useBuilderI
    Booking = Stripe (TEST MODE). WhatsApp = "Chat with a local".
 ──────────────────────────────────────────────────────────────── */
 
+type Step = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
+type MobileTab = "build" | "map" | "story";
+
+interface BuilderSearch {
+  step: Step;
+  mood?: Mood;
+  who?: Who;
+  intention?: Intention;
+  pace?: Pace;
+  status?: "success";
+}
+
+const STEP_VALUES: Step[] = [0, 1, 2, 3, 4, 5, 6, 7];
+const MOOD_VALUES: Mood[] = ["wonder", "soulful", "discovery", "joy", "rest", "celebration"];
+const WHO_VALUES: Who[] = ["solo", "couple", "family", "friends", "corporate"];
+const INTENTION_VALUES: Intention[] = ["food", "nature", "culture", "wellness", "celebration", "discovery"];
+const PACE_VALUES: Pace[] = ["slow", "balanced", "energetic"];
+
+function pick<T extends string | number>(value: unknown, allowed: readonly T[]): T | undefined {
+  return allowed.includes(value as T) ? (value as T) : undefined;
+}
+
 export const Route = createFileRoute("/builder")({
+  validateSearch: (search: Record<string, unknown>): BuilderSearch => ({
+    step: (pick<Step>(Number(search.step), STEP_VALUES) ?? 0) as Step,
+    mood: pick<Mood>(search.mood as Mood, MOOD_VALUES),
+    who: pick<Who>(search.who as Who, WHO_VALUES),
+    intention: pick<Intention>(search.intention as Intention, INTENTION_VALUES),
+    pace: pick<Pace>(search.pace as Pace, PACE_VALUES),
+    status: search.status === "success" ? "success" : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Create your Portugal experience — YES" },
@@ -68,16 +98,34 @@ export const Route = createFileRoute("/builder")({
   component: BuilderPage,
 });
 
-type Step = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
-type MobileTab = "build" | "map" | "story";
-
 function BuilderPage() {
-  const [step, setStep] = useState<Step>(0);
-  const [mood, setMood] = useState<Mood | undefined>();
-  const [who, setWho] = useState<Who | undefined>();
-  const [intention, setIntention] = useState<Intention | undefined>();
-  const [pace, setPace] = useState<Pace>("balanced");
+  const search = Route.useSearch();
+  const navigate = useNavigate({ from: "/builder" });
+
+  const step = search.step;
+  const mood = search.mood;
+  const who = search.who;
+  const intention = search.intention;
+  const pace: Pace = search.pace ?? "balanced";
+
+  const setSearch = useCallback(
+    (patch: Partial<BuilderSearch>) => {
+      void navigate({
+        search: (prev) => ({ ...(prev as BuilderSearch), ...patch }),
+        replace: false,
+      });
+    },
+    [navigate],
+  );
+
+  const setStep = useCallback((s: Step) => setSearch({ step: s }), [setSearch]);
+  const setMood = useCallback((m: Mood) => setSearch({ mood: m }), [setSearch]);
+  const setWho = useCallback((w: Who) => setSearch({ who: w }), [setSearch]);
+  const setIntention = useCallback((i: Intention) => setSearch({ intention: i }), [setSearch]);
+  const setPace = useCallback((p: Pace) => setSearch({ pace: p }), [setSearch]);
+
   const [microcopy, setMicrocopy] = useState<string | null>(null);
+
 
   const [route, setRoute] = useState<RouteUI | null>(null);
   const [excluded, setExcluded] = useState<string[]>([]);
