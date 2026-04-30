@@ -1027,7 +1027,8 @@ function HomePage() {
           and real blurb from `signatureTours`. No vague taglines, no
           repeated labels. */}
       <section
-        className="section-y bg-[color:var(--ivory)] border-b border-[color:var(--border)]"
+        id="signatures"
+        className="section-y bg-[color:var(--ivory)] border-b border-[color:var(--border)] scroll-mt-24 md:scroll-mt-28"
         aria-labelledby="signatures-title"
       >
         <div className="container-x">
