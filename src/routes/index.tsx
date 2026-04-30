@@ -718,31 +718,34 @@ function HomePage() {
           page (per "no repeated review sections" guardrail). */}
       <section
         id="reviews"
-        className="bg-[color:var(--ivory)] border-b border-[color:var(--border)] section-y-sm scroll-mt-24 md:scroll-mt-28"
+        className="he-trust-rule bg-[color:var(--ivory)] border-b border-[color:var(--border)] section-y-sm scroll-mt-24 md:scroll-mt-28"
         aria-labelledby="trust-bar-title"
       >
         <h2 id="trust-bar-title" className="sr-only">
           700+ five-star reviews across major platforms
         </h2>
         <div className="container-x">
-          <div className="flex flex-col items-center text-center gap-5">
-            <p
-              className="flex items-center gap-1 text-[color:var(--gold)]"
-              role="img"
-              aria-label="Rated 5 out of 5 stars"
-            >
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} size={16} fill="currentColor" strokeWidth={0} aria-hidden="true" focusable="false" />
-              ))}
-            </p>
-            <p className="serif text-[1.5rem] md:text-[1.9rem] text-[color:var(--charcoal)] leading-[1.2]">
-              700+ <span className="italic">five-star reviews</span>
-            </p>
-            <p className="max-w-md text-[14.5px] md:text-[15.5px] text-[color:var(--charcoal)] leading-[1.65]">
-              <span className="kw">Private</span> <span className="kw">local</span> guides who actually live here — every day designed and confirmed by a small team in Portugal.
-            </p>
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5 md:gap-8 text-center md:text-left">
+            <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-5">
+              <p
+                className="flex items-center justify-center md:justify-start gap-1 text-[color:var(--gold)]"
+                role="img"
+                aria-label="Rated 5 out of 5 stars"
+              >
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} size={15} fill="currentColor" strokeWidth={0} aria-hidden="true" focusable="false" />
+                ))}
+              </p>
+              <p className="serif text-[1.35rem] md:text-[1.55rem] text-[color:var(--charcoal)] leading-[1.2]">
+                700+ <span className="italic">five-star reviews</span>
+                <span className="hidden md:inline text-[color:var(--charcoal-soft)]"> · </span>
+                <span className="block md:inline text-[12px] md:text-[13px] uppercase tracking-[0.22em] font-semibold text-[color:var(--charcoal)] md:ml-1 mt-1 md:mt-0">
+                  Private locals · designed in Portugal
+                </span>
+              </p>
+            </div>
             <ul
-              className="mt-2 flex flex-wrap items-center justify-center gap-x-9 gap-y-4 md:gap-x-12 list-none p-0 h-7 md:h-8"
+              className="flex flex-wrap items-center justify-center md:justify-end gap-x-7 gap-y-3 md:gap-x-9 list-none p-0 h-7 md:h-8"
               aria-label="Featured on Google, Tripadvisor, Viator, GetYourGuide and Trustpilot"
             >
               {(["google", "tripadvisor", "viator", "getyourguide", "trustpilot"] as const).map((p) => (
