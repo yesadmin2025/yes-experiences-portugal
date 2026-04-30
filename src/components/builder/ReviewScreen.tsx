@@ -1,11 +1,13 @@
 import { ArrowRight, Check, MessageCircle } from "lucide-react";
 import { fmtMinutes, type RouteUI, type RoutedStopUI, builderWaHref } from "./types";
+import type { BuilderImageRef } from "@/hooks/useBuilderImages";
 
 interface Props {
   route: RouteUI;
   stops: RoutedStopUI[];
   guests: number;
   narrative: string;
+  reviewThumbs?: BuilderImageRef[];
   onConfirm: () => void;
   onBack: () => void;
 }
