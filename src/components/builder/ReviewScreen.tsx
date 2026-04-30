@@ -81,19 +81,14 @@ export function ReviewScreen({ route, stops, guests, narrative, reviewThumbs, on
             {thumbs.length > 0 && (
               <div className="-mx-1 grid grid-cols-2 gap-2 sm:grid-cols-4">
                 {thumbs.map((t, i) => (
-                  <figure
+                  <BuilderImage
                     key={`${t.url}-${i}`}
-                    className="relative overflow-hidden rounded-[2px] border border-[color:var(--charcoal)]/10 bg-[color:var(--sand)]/40 aspect-[4/5]"
-                  >
-                    <img
-                      src={t.url}
-                      alt={t.alt}
-                      loading="lazy"
-                      decoding="async"
-                      className="h-full w-full object-cover transition-transform duration-[600ms] ease-out hover:scale-[1.03]"
-                    />
-                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal)]/35 via-transparent to-transparent" />
-                  </figure>
+                    src={t.url}
+                    alt={t.alt}
+                    ratio="4/5"
+                    overlay
+                    className="border border-[color:var(--charcoal)]/10"
+                  />
                 ))}
               </div>
             )}
