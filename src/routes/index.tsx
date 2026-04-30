@@ -491,6 +491,7 @@ function HomePage() {
       cancelled = true;
       window.removeEventListener("hashchange", onHashChange);
       if (timer) window.clearTimeout(timer);
+      if (cleanupRescroll) cleanupRescroll();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
