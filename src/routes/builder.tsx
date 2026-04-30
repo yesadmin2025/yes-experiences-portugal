@@ -1095,6 +1095,12 @@ function RouteMap({ stops }: { stops: Stop[] }) {
       return L.latLng(g.lat, g.lng);
     });
 
+    // Resolve brand tokens from the live theme so map visuals stay on-token.
+    const cs = getComputedStyle(document.documentElement);
+    const teal = cs.getPropertyValue("--teal").trim() || "#295B61";
+    const ivory = cs.getPropertyValue("--ivory").trim() || "#FAF8F3";
+    const gold = cs.getPropertyValue("--gold").trim() || "#C9A96A";
+
     // Numbered pin builder
     const pin = (n: number) =>
       L.divIcon({
@@ -1102,10 +1108,10 @@ function RouteMap({ stops }: { stops: Stop[] }) {
         html: `<div style="
           width:30px;height:30px;border-radius:50% 50% 50% 0;
           transform:rotate(-45deg);
-          background:#295B61;border:2px solid #FAF8F3;
+          background:${teal};border:2px solid ${ivory};
           box-shadow:0 4px 10px rgba(0,0,0,0.28);
           display:flex;align-items:center;justify-content:center;">
-          <span style="transform:rotate(45deg);color:#FAF8F3;font-weight:700;font-size:12px;font-family:ui-sans-serif,system-ui;">${n}</span>
+          <span style="transform:rotate(45deg);color:${ivory};font-weight:700;font-size:12px;font-family:ui-sans-serif,system-ui;">${n}</span>
         </div>`,
         iconSize: [30, 30],
         iconAnchor: [15, 30],
@@ -1119,7 +1125,7 @@ function RouteMap({ stops }: { stops: Stop[] }) {
 
     // Route line — animated draw via dasharray
     const line = L.polyline(points, {
-      color: "#C9A96A",
+      color: gold,
       weight: 3.5,
       opacity: 0.95,
       lineCap: "round",
