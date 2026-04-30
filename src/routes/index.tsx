@@ -8,11 +8,7 @@ import heroImg from "@/assets/hero-coast.jpg";
 
 // Real Viator-sourced tour photography — every card maps to an actual
 // Signature tour. No stock or invented imagery.
-import imgArrabidaWineHero from "@/assets/tours/arrabida-wine-allinclusive/hero.jpg";
 import imgArrabidaWineLunch from "@/assets/tours/arrabida-wine-allinclusive/lunch.jpg";
-import imgArrabidaBoatCoves from "@/assets/tours/arrabida-boat/coves.jpg";
-import imgAzeitaoWorkshop from "@/assets/tours/azeitao-cheese/workshop.jpg";
-import imgSintraEstates from "@/assets/tours/sintra-cascais/estates.jpg";
 import imgTroiaBeach from "@/assets/tours/troia-comporta/beach.jpg";
 import imgFatimaNazare from "@/assets/tours/fatima-nazare-obidos/nazare.jpg";
 
