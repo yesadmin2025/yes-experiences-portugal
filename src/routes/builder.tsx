@@ -40,6 +40,10 @@ import type {
   Who,
 } from "@/components/builder/types";
 import { useBuilderRouteImages, useBuilderMoodImages } from "@/hooks/useBuilderImages";
+import {
+  parseBuilderSearch,
+  type BuilderSearch,
+} from "@/components/builder/searchParams";
 
 /* ────────────────────────────────────────────────────────────────
    Builder v6 — Fluid Experience Studio
