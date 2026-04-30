@@ -73,19 +73,35 @@ export function JourneyPanel({
       </header>
 
       {/* Story */}
-      <section className="rounded-[2px] border border-[color:var(--charcoal)]/10 bg-[color:var(--sand)]/40 p-4">
-        <span className="text-[10px] uppercase tracking-[0.28em] font-bold text-[color:var(--gold)]">
-          Story
-        </span>
-        <p
-          className={[
-            "mt-2 serif italic leading-[1.5] text-[15px] text-[color:var(--charcoal)]/85 transition-opacity duration-300",
-            narrativeLoading ? "opacity-50" : "opacity-100",
-          ].join(" ")}
-        >
-          {narrative ||
-            "A real, achievable day in Portugal — shaped from your choices, ready to adjust."}
-        </p>
+      <section className="overflow-hidden rounded-[2px] border border-[color:var(--charcoal)]/10 bg-[color:var(--sand)]/40">
+        {storyImage && (
+          <div className="relative aspect-[16/9] w-full bg-[color:var(--charcoal)]/10">
+            <img
+              src={storyImage.url}
+              alt={storyImage.alt}
+              loading="lazy"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+            <span
+              aria-hidden="true"
+              className="absolute inset-0 bg-gradient-to-t from-black/30 via-black/0 to-black/0"
+            />
+          </div>
+        )}
+        <div className="p-4">
+          <span className="text-[10px] uppercase tracking-[0.28em] font-bold text-[color:var(--gold)]">
+            Story
+          </span>
+          <p
+            className={[
+              "mt-2 serif italic leading-[1.5] text-[15px] text-[color:var(--charcoal)]/85 transition-opacity duration-300",
+              narrativeLoading ? "opacity-50" : "opacity-100",
+            ].join(" ")}
+          >
+            {narrative ||
+              "A real, achievable day in Portugal — shaped from your choices, ready to adjust."}
+          </p>
+        </div>
       </section>
 
       {/* Stops list */}
