@@ -896,9 +896,9 @@ function HomePage() {
         aria-labelledby="start-paths-title"
       >
         <div className="container-x">
-          <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
-            <span className="eyebrow">Where to begin</span>
-            <h2 id="start-paths-title" className="serif mt-5 text-[2.55rem] md:text-[3.95rem] leading-[1.0] tracking-[-0.018em] text-[color:var(--charcoal)] font-semibold">
+          <div className="reveal text-center max-w-2xl mx-auto mb-12 md:mb-16">
+            <span className="he-eyebrow-bar mb-5">Where to begin</span>
+            <h2 id="start-paths-title" className="serif mt-3 text-[2.55rem] md:text-[4.15rem] leading-[1.0] tracking-[-0.02em] text-[color:var(--charcoal)] font-semibold">
               Four ways to <span className="italic">start.</span>
             </h2>
             <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] leading-[1.65] max-w-md mx-auto">
@@ -906,53 +906,71 @@ function HomePage() {
             </p>
           </div>
 
-          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8 list-none p-0 max-w-5xl mx-auto">
+          <ul className="he-stagger grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8 list-none p-0 max-w-5xl mx-auto">
             {startPaths.map((p) => {
               const Icon = p.icon;
               const primary = p.tier === "primary";
               return (
-                <li key={p.title}>
+                <li key={p.title} className="reveal-stagger">
                   <Link
                     to={p.to}
                     aria-label={p.ariaLabel}
                     className={
-                      "group relative flex flex-col h-full overflow-hidden rounded-[2px] border transition-all duration-200 ease-out hover:-translate-y-0.5 focus-visible:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--sand)] " +
+                      "he-card-lift group relative flex flex-col h-full overflow-hidden rounded-[4px] border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--sand)] " +
                       (primary
-                        ? "bg-[color:var(--ivory)] border-[color:var(--charcoal)]/15 shadow-[0_4px_12px_-6px_rgba(46,46,46,0.18)] hover:shadow-[0_10px_24px_-10px_rgba(46,46,46,0.28)]"
-                        : "bg-[color:var(--ivory)]/70 border-[color:var(--border)] hover:border-[color:var(--charcoal)]/25")
+                        ? "bg-[color:var(--ivory)] border-[color:var(--charcoal)]/20 shadow-[0_8px_22px_-10px_rgba(46,46,46,0.22)]"
+                        : "bg-[color:var(--ivory)]/85 border-[color:var(--border)]")
                     }
                   >
-                    <div className="relative aspect-[16/10] overflow-hidden bg-[color:var(--card)]">
+                    <div className={
+                      "relative overflow-hidden bg-[color:var(--card)] " +
+                      (primary ? "aspect-[16/10]" : "aspect-[16/7]")
+                    }>
                       <img
                         src={p.bg}
                         alt=""
                         aria-hidden="true"
                         loading="lazy"
-                        className="absolute inset-0 w-full h-full object-cover"
+                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-[600ms] ease-out group-hover:scale-[1.04]"
                       />
-                      <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/35 to-transparent" />
+                      <div aria-hidden="true" className={
+                        "absolute inset-0 " +
+                        (primary
+                          ? "bg-gradient-to-t from-[color:var(--charcoal-deep)]/45 via-[color:var(--charcoal-deep)]/15 to-transparent"
+                          : "bg-gradient-to-t from-[color:var(--charcoal-deep)]/25 to-transparent")
+                      } />
+                      {primary && (
+                        <span className="absolute top-3 left-3 inline-flex items-center gap-1.5 rounded-full bg-[color:var(--gold)] px-2.5 py-1 text-[9.5px] uppercase tracking-[0.24em] font-bold text-[color:var(--charcoal)] shadow-[0_2px_6px_rgba(0,0,0,0.18)]">
+                          ★ Recommended
+                        </span>
+                      )}
                     </div>
-                    <div className="p-6 md:p-7 flex flex-col gap-3">
-                      <span className="inline-flex items-center gap-2 text-[10.5px] uppercase tracking-[0.28em] font-semibold text-[color:var(--charcoal)]">
-                        <Icon size={12} aria-hidden="true" />
+                    <div className={"flex flex-col gap-3 " + (primary ? "p-6 md:p-7" : "p-5 md:p-6")}>
+                      <span className="inline-flex items-center gap-2 text-[10.5px] uppercase tracking-[0.28em] font-bold text-[color:var(--charcoal)]">
+                        <Icon size={12} aria-hidden="true" className="text-[color:var(--teal)]" />
                         {p.eyebrow}
-                        {primary && (
-                          <span className="ml-auto inline-flex items-center text-[9.5px] uppercase tracking-[0.24em] text-[color:var(--gold)]">
-                            Recommended
-                          </span>
-                        )}
                       </span>
-                      <h3 className="serif text-[1.45rem] md:text-[1.6rem] leading-[1.15] text-[color:var(--charcoal)]">
+                      <h3 className={
+                        "serif leading-[1.15] text-[color:var(--charcoal)] " +
+                        (primary
+                          ? "text-[1.55rem] md:text-[1.85rem] font-semibold"
+                          : "text-[1.3rem] md:text-[1.45rem] font-medium")
+                      }>
                         {p.title}
                       </h3>
                       <p className="text-[14.5px] md:text-[15.5px] leading-[1.65] text-[color:var(--charcoal)]">
                         {p.line}
                       </p>
-                      <span className="mt-auto inline-flex items-center gap-2 pt-3 text-[12.5px] uppercase tracking-[0.18em] font-semibold text-[color:var(--teal)]">
+                      <span className={
+                        "mt-auto inline-flex items-center gap-2 pt-3 uppercase font-bold text-[color:var(--teal)] transition-all duration-200 group-hover:gap-3 " +
+                        (primary
+                          ? "text-[13px] tracking-[0.2em]"
+                          : "text-[12px] tracking-[0.18em]")
+                      }>
                         {p.cta}
                         <ArrowRight
                           size={14}
-                          className="transition-transform duration-200 group-hover:translate-x-0.5"
+                          className="transition-transform duration-200 group-hover:translate-x-1"
                         />
                       </span>
                     </div>
