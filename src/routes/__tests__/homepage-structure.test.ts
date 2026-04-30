@@ -29,6 +29,7 @@ import { resolve } from "node:path";
 import {
   APPROVED_HOMEPAGE_SECTIONS,
   APPROVED_SECTION_COUNT,
+  APPROVED_INLINE_SECTION_COUNT,
   MOBILE_LAYOUT_INVARIANTS,
   type ApprovedSection,
 } from "../../content/approved-homepage-structure";
