@@ -1,0 +1,79 @@
+/**
+ * Preview-harness postMessage/console noise filter.
+ *
+ * The Lovable preview iframe receives `RESET_BLANK_CHECK` postMessage
+ * pings from the host frame during startup. Some are logged via console
+ * before being posted, which clutters readiness diagnostics. This module
+ * silences ONLY that exact signal — every other postMessage and every
+ * other console line is left untouched.
+ *
+ * Idempotent: calling install() twice without disposing is a no-op.
+ * Server-safe: returns a no-op disposer when window is undefined.
+ *
+ * Exported for unit testing — see src/lib/__tests__/silence-reset-blank-check.test.ts.
+ */
+
+const FLAG = "__resetBlankCheckSilenced__" as const;
+
+type FlaggedWindow = Window & { [FLAG]?: boolean };
+
+export function isResetBlankMessage(data: unknown): boolean {
+  if (typeof data === "string") return data.includes("RESET_BLANK_CHECK");
+  if (data && typeof data === "object") {
+    const t = (data as { type?: unknown }).type;
+    return typeof t === "string" && t.includes("RESET_BLANK_CHECK");
+  }
+  return false;
+}
+
+export interface InstallResult {
+  /** True if this call actually installed the filter; false if it was already active. */
+  installed: boolean;
+  /** Restores all listeners and console methods. Safe to call multiple times. */
+  dispose: () => void;
+}
+
+export function installResetBlankCheckFilter(
+  target: (Window & typeof globalThis) | undefined = typeof window !== "undefined"
+    ? window
+    : undefined,
+): InstallResult {
+  if (!target) return { installed: false, dispose: () => {} };
+  const w = target as FlaggedWindow;
+  if (w[FLAG]) return { installed: false, dispose: () => {} };
+  w[FLAG] = true;
+
+  const filter = (e: MessageEvent) => {
+    if (isResetBlankMessage(e.data)) {
+      e.stopImmediatePropagation();
+    }
+  };
+  target.addEventListener("message", filter, true);
+
+  const origLog = target.console.log;
+  const origInfo = target.console.info;
+  const origWarn = target.console.warn;
+  const wrap =
+    (orig: (...a: unknown[]) => void) =>
+    (...args: unknown[]) => {
+      if (args.some((a) => typeof a === "string" && a.includes("RESET_BLANK_CHECK"))) return;
+      orig.apply(target.console, args);
+    };
+  target.console.log = wrap(origLog);
+  target.console.info = wrap(origInfo);
+  target.console.warn = wrap(origWarn);
+
+  let disposed = false;
+  return {
+    installed: true,
+    dispose: () => {
+      if (disposed) return;
+      disposed = true;
+      target.removeEventListener("message", filter, true);
+      target.console.log = origLog;
+      target.console.info = origInfo;
+      target.console.warn = origWarn;
+      w[FLAG] = false;
+    },
+  };
+}
