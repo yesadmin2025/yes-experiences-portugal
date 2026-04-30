@@ -164,7 +164,20 @@ export function BuilderMap({ stops, regionCenter, regionKey }: Props) {
     }
 
     const bounds = L.latLngBounds(points).pad(0.35);
-    map.flyToBounds(bounds, { duration: 0.7 });
+    if (visible) {
+      map.flyToBounds(bounds, { duration: 0.7 });
+    } else {
+      // Container hidden (e.g. mobile tab) — set view without animation.
+      map.fitBounds(bounds);
+      // Re-fit once the container becomes visible.
+      requestAnimationFrame(() => {
+        const s = map.getSize();
+        if (s.x > 0 && s.y > 0) {
+          map.invalidateSize();
+          map.fitBounds(bounds);
+        }
+      });
+    }
   }, [stops, regionCenter]);
 
   return (
