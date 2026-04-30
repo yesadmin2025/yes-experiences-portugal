@@ -1,6 +1,11 @@
 import { ArrowDown, ArrowUp, Clock, Leaf, MessageCircle, Plus, X, Zap } from "lucide-react";
 import { fmtMinutes, type Pace, type RouteUI, type RoutedStopUI, builderWaHref } from "./types";
 
+interface StopImageRef {
+  url: string;
+  alt: string;
+}
+
 interface Props {
   route: RouteUI | null;
   stops: RoutedStopUI[];
@@ -14,6 +19,10 @@ interface Props {
   onMove: (idx: number, dir: -1 | 1) => void;
   /** Stops the engine excluded — surfaced so the user can re-add. */
   removablePool?: { key: string; label: string }[];
+  /** Real image per stop (from experience_images), keyed by stop.key. */
+  stopImages?: Record<string, StopImageRef | null>;
+  /** One contextual image for the Story section (mood + region match). */
+  storyImage?: StopImageRef | null;
 }
 
 const PACE_META: Record<Pace, { label: string; sub: string; icon: typeof Leaf }> = {
@@ -34,6 +43,8 @@ export function JourneyPanel({
   onAddBackStop,
   onMove,
   removablePool,
+  stopImages,
+  storyImage,
 }: Props) {
   if (!route) return null;
   const totalMin = route.totals.experienceMinutes;
@@ -62,19 +73,35 @@ export function JourneyPanel({
       </header>
 
       {/* Story */}
-      <section className="rounded-[2px] border border-[color:var(--charcoal)]/10 bg-[color:var(--sand)]/40 p-4">
-        <span className="text-[10px] uppercase tracking-[0.28em] font-bold text-[color:var(--gold)]">
-          Story
-        </span>
-        <p
-          className={[
-            "mt-2 serif italic leading-[1.5] text-[15px] text-[color:var(--charcoal)]/85 transition-opacity duration-300",
-            narrativeLoading ? "opacity-50" : "opacity-100",
-          ].join(" ")}
-        >
-          {narrative ||
-            "A real, achievable day in Portugal — shaped from your choices, ready to adjust."}
-        </p>
+      <section className="overflow-hidden rounded-[2px] border border-[color:var(--charcoal)]/10 bg-[color:var(--sand)]/40">
+        {storyImage && (
+          <div className="relative aspect-[16/9] w-full bg-[color:var(--charcoal)]/10">
+            <img
+              src={storyImage.url}
+              alt={storyImage.alt}
+              loading="lazy"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+            <span
+              aria-hidden="true"
+              className="absolute inset-0 bg-gradient-to-t from-black/30 via-black/0 to-black/0"
+            />
+          </div>
+        )}
+        <div className="p-4">
+          <span className="text-[10px] uppercase tracking-[0.28em] font-bold text-[color:var(--gold)]">
+            Story
+          </span>
+          <p
+            className={[
+              "mt-2 serif italic leading-[1.5] text-[15px] text-[color:var(--charcoal)]/85 transition-opacity duration-300",
+              narrativeLoading ? "opacity-50" : "opacity-100",
+            ].join(" ")}
+          >
+            {narrative ||
+              "A real, achievable day in Portugal — shaped from your choices, ready to adjust."}
+          </p>
+        </div>
       </section>
 
       {/* Stops list */}
@@ -88,14 +115,30 @@ export function JourneyPanel({
           </span>
         </div>
         <ol className="mt-3 flex flex-col gap-2">
-          {stops.map((s, i) => (
+          {stops.map((s, i) => {
+            const img = stopImages?.[s.key];
+            return (
             <li
               key={s.key}
               className="group flex items-start gap-3 rounded-[2px] border border-[color:var(--charcoal)]/10 bg-[color:var(--ivory)] p-3 transition-colors hover:border-[color:var(--charcoal)]/25"
             >
-              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[color:var(--teal)] text-[11px] font-bold text-[color:var(--ivory)] tabular-nums">
-                {i + 1}
-              </span>
+              {img ? (
+                <span className="relative flex h-14 w-14 shrink-0 overflow-hidden rounded-[2px] bg-[color:var(--charcoal)]/10">
+                  <img
+                    src={img.url}
+                    alt={img.alt}
+                    loading="lazy"
+                    className="absolute inset-0 h-full w-full object-cover"
+                  />
+                  <span className="absolute left-1 top-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-[color:var(--teal)] text-[10px] font-bold text-[color:var(--ivory)] tabular-nums">
+                    {i + 1}
+                  </span>
+                </span>
+              ) : (
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[color:var(--teal)] text-[11px] font-bold text-[color:var(--ivory)] tabular-nums">
+                  {i + 1}
+                </span>
+              )}
               <div className="min-w-0 flex-1">
                 <p className="text-[13.5px] font-semibold text-[color:var(--charcoal)] leading-tight">
                   {s.label}
@@ -141,7 +184,8 @@ export function JourneyPanel({
                 </button>
               </div>
             </li>
-          ))}
+            );
+          })}
         </ol>
 
         {removablePool && removablePool.length > 0 && excluded.length > 0 && (

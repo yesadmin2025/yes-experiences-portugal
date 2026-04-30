@@ -38,6 +38,7 @@ import type {
   RoutedStopUI,
   Who,
 } from "@/components/builder/types";
+import { useBuilderRouteImages, useBuilderMoodImages } from "@/hooks/useBuilderImages";
 
 /* ────────────────────────────────────────────────────────────────
    Builder v6 — Fluid Experience Studio
@@ -230,6 +231,15 @@ function BuilderPage() {
     return route.stops.map((s) => ({ key: s.key, label: s.label }));
   }, [route]);
 
+  const moodIds = useMemo(() => MOODS.map((m) => m.id), []);
+  const { moodImages } = useBuilderMoodImages(moodIds);
+  const routeImages = useBuilderRouteImages({
+    regionKey: route?.region.key,
+    stopKeys: stops.map((s) => s.key),
+    mood,
+    occasion: intention,
+  });
+
   return (
     <SiteLayout>
       <article className="bg-[color:var(--ivory)] text-[color:var(--charcoal)]">
@@ -282,6 +292,7 @@ function BuilderPage() {
                       label={m.label}
                       sub={m.sub}
                       cover={m.cover}
+                      realCover={moodImages[m.id] ?? null}
                     />
                   ))}
                 </div>
@@ -393,6 +404,8 @@ function BuilderPage() {
             routeError={routeError}
             onRetry={() => void fetchRoute()}
             onReview={() => setStep(7)}
+            stopImages={routeImages.stopImages}
+            storyImage={routeImages.storyImage}
           />
         )}
 
@@ -454,6 +467,8 @@ interface LiveBuilderProps {
   routeError: string | null;
   onRetry: () => void;
   onReview: () => void;
+  stopImages: Record<string, { url: string; alt: string } | null>;
+  storyImage: { url: string; alt: string } | null;
 }
 
 function LiveBuilder({
@@ -476,6 +491,8 @@ function LiveBuilder({
   routeError,
   onRetry,
   onReview,
+  stopImages,
+  storyImage,
 }: LiveBuilderProps) {
   const regionCenter = { lat: Number(route.region.lat), lng: Number(route.region.lng) };
 
@@ -572,6 +589,8 @@ function LiveBuilder({
               onAddBackStop={onAddBackStop}
               onMove={onMove}
               removablePool={removablePool}
+              stopImages={stopImages}
+              storyImage={storyImage}
             />
           </div>
 
