@@ -544,12 +544,12 @@ function HomePage() {
 
         <div className="container-x relative z-10 pb-14 md:pb-36 pt-32 md:pt-40">
           <div className="max-w-3xl text-[color:var(--ivory)]">
-            <span className="inline-flex items-center gap-2.5 sm:gap-3.5 whitespace-nowrap text-[10.5px] sm:text-[12px] md:text-[13px] uppercase tracking-[0.18em] sm:tracking-[0.26em] md:tracking-[0.3em] text-[color:var(--gold)] opacity-0 animate-[heroFade_1.1s_ease-out_0.3s_forwards]">
-              <span aria-hidden="true">✦</span>
-              <span data-hero-field="eyebrow" className="whitespace-nowrap">
+            <span className="inline-flex items-center gap-2 sm:gap-3.5 max-w-full text-[9.5px] xs:text-[10.5px] sm:text-[12px] md:text-[13px] uppercase tracking-[0.12em] xs:tracking-[0.16em] sm:tracking-[0.26em] md:tracking-[0.3em] text-[color:var(--gold)] opacity-0 animate-[heroFade_1.1s_ease-out_0.3s_forwards]">
+              <span aria-hidden="true" className="shrink-0">✦</span>
+              <span data-hero-field="eyebrow" className="whitespace-nowrap truncate">
                 {HERO_COPY.eyebrow}
               </span>
-              <span aria-hidden="true">✦</span>
+              <span aria-hidden="true" className="shrink-0">✦</span>
             </span>
 
             <h1
@@ -873,9 +873,9 @@ function HomePage() {
           </ul>
 
           {/* Closing microline */}
-          <p className="reveal mt-10 md:mt-12 text-center inline-flex w-full items-center justify-center gap-2 text-[12px] uppercase tracking-[0.28em] text-[color:var(--teal)]">
-            <MessageCircle size={13} aria-hidden="true" />
-            A local is always one message away
+          <p className="reveal mt-10 md:mt-12 text-center inline-flex flex-wrap w-full items-center justify-center gap-x-2 gap-y-1 px-4 text-[10.5px] xs:text-[11.5px] sm:text-[12px] uppercase tracking-[0.18em] xs:tracking-[0.22em] sm:tracking-[0.28em] text-[color:var(--teal)]">
+            <MessageCircle size={13} aria-hidden="true" className="shrink-0" />
+            <span className="text-balance">A local is always one message away</span>
           </p>
         </div>
       </section>
@@ -1138,9 +1138,9 @@ function HomePage() {
                   Talk to a designer
                 </Link>
               </div>
-              <p className="mt-5 inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.24em] text-[color:var(--teal)]">
-                <MessageCircle size={12} aria-hidden="true" />
-                Local guidance available while you build
+              <p className="mt-5 inline-flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px] xs:text-[11px] uppercase tracking-[0.16em] xs:tracking-[0.2em] sm:tracking-[0.24em] text-[color:var(--teal)]">
+                <MessageCircle size={12} aria-hidden="true" className="shrink-0" />
+                <span className="text-balance">Local guidance available while you build</span>
               </p>
             </div>
             <div className="lg:col-span-7">
