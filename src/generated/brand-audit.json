@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-30T22:13:24.973Z",
+  "generatedAt": "2026-04-30T22:20:12.874Z",
   "filesScanned": 133,
   "approvedPalette": {
     "teal": "#295B61",
@@ -18,10 +18,10 @@
     "#cccccc"
   ],
   "counts": {
-    "total": 158,
+    "total": 159,
     "approved": 41,
     "allowlisted": 29,
-    "mismatch": 88
+    "mismatch": 89
   },
   "findings": [
     {
@@ -1256,6 +1256,15 @@
       "normalized": "#000000",
       "snippet": "-webkit-mask-image: linear-gradient(#000, #000);",
       "status": "allowlisted"
+    },
+    {
+      "file": "src/styles.css",
+      "line": 2584,
+      "col": 7,
+      "raw": "#555",
+      "normalized": "#555555",
+      "snippet": "(#555) which clears 7:1 on ivory and never reads washed out.",
+      "status": "mismatch"
     },
     {
       "file": "src/tailwind.config.lov.json",
