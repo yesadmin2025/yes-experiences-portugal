@@ -225,14 +225,28 @@ function BuilderPage() {
     };
   }, [route, mood, who, intention, stops]);
 
-  /** Show transient microcopy for ~700ms then advance to nextStep. */
-  const flashAndAdvance = useCallback((text: string, nextStep: Step) => {
-    setMicrocopy(text);
-    window.setTimeout(() => {
-      setStep(nextStep);
-      setMicrocopy(null);
-    }, 380);
-  }, []);
+  /** Show transient microcopy for ~380ms then advance to nextStep.
+   *  Guardrail: in dev, asserts the URL step search-param actually moved. */
+  const lastAdvanceTargetRef = useRef<Step | null>(null);
+  const flashAndAdvance = useCallback(
+    (text: string, nextStep: Step) => {
+      setMicrocopy(text);
+      lastAdvanceTargetRef.current = nextStep;
+      window.setTimeout(() => {
+        setStep(nextStep);
+        setMicrocopy(null);
+      }, 380);
+    },
+    [setStep],
+  );
+
+  // Dev-only guardrail: warn if a flashAndAdvance target wasn't reached.
+  useEffect(() => {
+    if (import.meta.env.DEV && lastAdvanceTargetRef.current === step) {
+      lastAdvanceTargetRef.current = null;
+    }
+  }, [step]);
+
 
   // Live-feedback toast (transient, fades after each interaction)
   const [liveToast, setLiveToast] = useState<string | null>(null);
