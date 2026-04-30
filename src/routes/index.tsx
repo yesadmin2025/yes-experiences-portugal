@@ -310,6 +310,11 @@ function HomePage() {
 
     let cancelled = false;
     let timer = 0;
+    // Outstanding cleanup callbacks scheduled by the most recent
+    // scrollToHash() call (image listeners, settle timers, etc.).
+    // Replaced on every new call so we don't leak handlers when the
+    // user changes hashes quickly.
+    let cleanupRescroll: (() => void) | null = null;
 
     const scrollToHash = (rawHash: string, smooth: boolean) => {
       // Lock for ~1100ms — long enough for browsers' native smooth scroll
@@ -317,34 +322,35 @@ function HomePage() {
       (window as unknown as Record<string, number>)[getLockKey()] =
         performance.now() + 1100;
 
+      // Tear down any rescroll listeners from a previous deep-link.
+      if (cleanupRescroll) {
+        cleanupRescroll();
+        cleanupRescroll = null;
+      }
+
       let tries = 0;
       const tick = () => {
         if (cancelled) return;
         const el = resolveTarget(rawHash);
         if (el) {
-          el.scrollIntoView({
-            behavior: smooth ? "smooth" : "auto",
-            block: "start",
-          });
-          // Re-arm the lock once we actually scroll, since route
-          // hydration may have just happened (clock effectively reset).
-          (window as unknown as Record<string, number>)[getLockKey()] =
-            performance.now() + 1100;
-          // Force-reveal any .reveal / .reveal-stagger elements inside
-          // the target section. Without this, deep-linking to a section
-          // can race the IntersectionObserver in SiteLayout and leave
-          // the eyebrow + headline + subhead at opacity:0 (they sit at
-          // the top of the viewport and never trigger the observer's
-          // enter callback because they were already in-view when it
-          // started watching). Belt-and-braces: also schedule a second
-          // pass after a short delay in case images shift layout.
+          // -- 1. Initial scroll ---------------------------------------
+          const doScroll = (behavior: ScrollBehavior) => {
+            // Re-arm the lock right before each scroll so the observer
+            // doesn't fight us mid-correction.
+            (window as unknown as Record<string, number>)[getLockKey()] =
+              performance.now() + 1100;
+            el.scrollIntoView({ behavior, block: "start" });
+          };
+          doScroll(smooth ? "smooth" : "auto");
+
+          // -- 2. Force-reveal ----------------------------------------
+          // Without this, deep-linking can race the IntersectionObserver
+          // in SiteLayout and leave the eyebrow + headline + subhead at
+          // opacity:0 (they sit at the top of the viewport and never
+          // trigger the observer's enter callback because they were
+          // already in-view when it started watching). Belt-and-braces:
+          // multiple passes catch late layout shifts.
           const forceReveal = () => {
-            // Reveal both the target itself (when it IS a .reveal node)
-            // and any .reveal/.reveal-stagger inside it. For inner-anchor
-            // <div> targets like #studio that have no children of their
-            // own, also reveal everything inside the closest enclosing
-            // <section> so the section's eyebrow + headline + subhead
-            // become visible.
             const scope: ParentNode = el.querySelector(
               ".reveal, .reveal-stagger",
             )
@@ -357,8 +363,97 @@ function HomePage() {
               .forEach((node) => node.classList.add("is-visible"));
           };
           forceReveal();
-          window.setTimeout(forceReveal, 250);
-          window.setTimeout(forceReveal, 800);
+          const t1 = window.setTimeout(forceReveal, 250);
+          const t2 = window.setTimeout(forceReveal, 800);
+
+          // -- 3. Corrective re-scroll --------------------------------
+          // After the initial scroll, the section's top can still drift
+          // because of (a) lazy images decoding, (b) web fonts settling
+          // and reflowing headlines, (c) reveal transforms releasing
+          // their translateY, (d) homepage parallax classes adjusting.
+          // Re-run scrollIntoView a few times so the user always lands
+          // on the section's true top, even if hydration was slow.
+          //
+          // We use "auto" behavior for these corrections so the page
+          // doesn't visibly bounce — only the smooth initial scroll is
+          // perceived.
+          const scope: ParentNode =
+            el.closest("section") ?? el.parentElement ?? document.body;
+          const scopedImages = Array.from(
+            (scope as HTMLElement).querySelectorAll("img"),
+          );
+
+          let rescrollDone = false;
+          let imageRescrollLeft = 2; // throttle: only re-scroll on the
+          // first few image loads so a long carousel doesn't keep
+          // jumping after the user starts interacting.
+          const rescroll = (reason: "settle" | "image" | "fonts") => {
+            if (rescrollDone || cancelled) return;
+            // Only re-scroll if the section's top has drifted by more
+            // than a few px from where the user should be, OR if it's
+            // the first short-delay correction.
+            const target = resolveTarget(rawHash);
+            if (!target) return;
+            const rect = target.getBoundingClientRect();
+            const navOffset = window.innerWidth < 768 ? 64 : 80;
+            const drift = Math.abs(rect.top - navOffset);
+            if (reason === "settle" || drift > 6) {
+              doScroll("auto");
+            }
+            if (reason === "image") {
+              imageRescrollLeft -= 1;
+            }
+          };
+
+          // Short settle pass — catches reveal transforms releasing.
+          const settleTimer = window.setTimeout(
+            () => rescroll("settle"),
+            500,
+          );
+          // Final settle pass — catches anything slow.
+          const finalTimer = window.setTimeout(() => {
+            rescroll("settle");
+            rescrollDone = true;
+          }, 1400);
+
+          // Image loaders: only watch ones not yet complete; re-run
+          // scroll when they finish, but cap the count.
+          const onImgLoad = () => {
+            if (imageRescrollLeft <= 0) return;
+            rescroll("image");
+          };
+          const watchedImages: HTMLImageElement[] = [];
+          for (const img of scopedImages) {
+            if (!img.complete) {
+              img.addEventListener("load", onImgLoad, { once: true });
+              img.addEventListener("error", onImgLoad, { once: true });
+              watchedImages.push(img);
+            }
+          }
+
+          // Fonts: re-run once when web fonts are ready (headline
+          // reflow can shift the section by a few px).
+          const fonts = (
+            document as Document & {
+              fonts?: { ready?: Promise<unknown> };
+            }
+          ).fonts;
+          if (fonts?.ready && typeof fonts.ready.then === "function") {
+            fonts.ready.then(() => rescroll("fonts")).catch(() => {});
+          }
+
+          cleanupRescroll = () => {
+            window.clearTimeout(t1);
+            window.clearTimeout(t2);
+            window.clearTimeout(settleTimer);
+            window.clearTimeout(finalTimer);
+            for (const img of watchedImages) {
+              img.removeEventListener("load", onImgLoad);
+              img.removeEventListener("error", onImgLoad);
+            }
+          };
+
+          // -- 4. URL canonicalisation --------------------------------
           // Normalise the URL to the canonical id (e.g. #proposal → #occasions)
           const canonical =
             HASH_ALIASES[rawHash.toLowerCase()] ?? rawHash.toLowerCase();
@@ -396,6 +491,7 @@ function HomePage() {
       cancelled = true;
       window.removeEventListener("hashchange", onHashChange);
       if (timer) window.clearTimeout(timer);
+      if (cleanupRescroll) cleanupRescroll();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -923,12 +1019,20 @@ function HomePage() {
                 </Link>
               </div>
 
-              {/* Reassurance line — replaces the legacy "Ask a local
-                  to shape it" CTA. One sentence, three reassurances,
-                  with local guidance still made visible. */}
-              <p className="mt-5 inline-flex items-start gap-2 text-[12.5px] md:text-[13px] leading-[1.6] text-[color:var(--charcoal)] max-w-md">
+              {/* Starting-point microcopy — sits just under the CTA so
+                  the user reads "this is a draft, designed for you"
+                  before the reassurance line. Italic Georgia per
+                  Typography v3, gold detail to keep it editorial. */}
+              <p className="mt-4 inline-flex items-center gap-2 text-[12.5px] md:text-[13px] leading-[1.55] text-[color:var(--charcoal-soft)] max-w-md">
+                <span aria-hidden="true" className="block h-px w-5 bg-[color:var(--gold)]" />
+                <span className="serif italic">A starting point, shaped around you.</span>
+              </p>
+
+              {/* Reassurance line — three short reassurances. "A local is
+                  one message away" matches the approved brief copy. */}
+              <p className="mt-3 inline-flex items-start gap-2 text-[12.5px] md:text-[13px] leading-[1.6] text-[color:var(--charcoal)] max-w-md">
                 <MessageCircle size={13} aria-hidden="true" className="mt-[3px] shrink-0 text-[color:var(--teal)]" />
-                <span>About a minute. No form. <span className="font-semibold">You can ask a local anytime.</span></span>
+                <span>About a minute. No form. <span className="font-semibold">A local is one message away.</span></span>
               </p>
             </div>
 
