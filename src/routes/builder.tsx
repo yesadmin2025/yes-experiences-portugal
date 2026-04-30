@@ -404,6 +404,8 @@ function BuilderPage() {
             routeError={routeError}
             onRetry={() => void fetchRoute()}
             onReview={() => setStep(7)}
+            stopImages={routeImages.stopImages}
+            storyImage={routeImages.storyImage}
           />
         )}
 
