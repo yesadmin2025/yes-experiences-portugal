@@ -29,7 +29,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
-import { getStudioHomeDemos, type DemoChipKey, type DemoStop, type StudioDemoRoute } from "@/server/studioHomeDemo.functions";
+import { getStudioHomeDemos, type DemoChipKey, type DemoStop, type DemoStopAlternate, type StudioDemoRoute } from "@/server/studioHomeDemo.functions";
 import { fmtMinutes, builderWaHref, type Mood } from "@/components/builder/types";
 
 /* ────────────────────────────────────────────────────────────────
@@ -81,6 +81,27 @@ function project(lat: number, lng: number): { x: number; y: number } {
 }
 
 /* ────────────────────────────────────────────────────────────────
+ * Drive-time helper — must mirror the server engine (haversine ×
+ * 1.25 detour factor, AVG_KMH ≈ 60). Used to recompute drive
+ * minutes when the user swaps a stop for one of its alternates.
+ * ────────────────────────────────────────────────────────────── */
+const AVG_KMH = 60;
+function haversineKm(a: { lat: number; lng: number }, b: { lat: number; lng: number }) {
+  const R = 6371;
+  const dLat = ((b.lat - a.lat) * Math.PI) / 180;
+  const dLng = ((b.lng - a.lng) * Math.PI) / 180;
+  const lat1 = (a.lat * Math.PI) / 180;
+  const lat2 = (b.lat * Math.PI) / 180;
+  const x =
+    Math.sin(dLat / 2) ** 2 +
+    Math.sin(dLng / 2) ** 2 * Math.cos(lat1) * Math.cos(lat2);
+  return 2 * R * Math.asin(Math.sqrt(x));
+}
+function driveMinutesBetween(a: { lat: number; lng: number }, b: { lat: number; lng: number }) {
+  return Math.round(((haversineKm(a, b) * 1.25) / AVG_KMH) * 60);
+}
+
+/* ────────────────────────────────────────────────────────────────
  * Stable, schematic Portugal coastline (not a real basemap — a
  * restrained editorial silhouette so nothing looks "techy").
  * Coordinates already projected into the same 0..360 viewBox.
@@ -97,6 +118,15 @@ export function StudioMoment({ className }: Props) {
   const [activeChip, setActiveChip] = useState<DemoChipKey>("wine");
   const [loadError, setLoadError] = useState(false);
   const [openStopKey, setOpenStopKey] = useState<string | null>(null);
+  /**
+   * Per-chip swap map. Key: chip → originalStopKey → chosen alternate.
+   * Tracked by ORIGINAL stop key (the one the server returned) so
+   * subsequent swaps still resolve back to the same anchor in the
+   * pre-composed route, regardless of how many times the user swaps.
+   */
+  const [swaps, setSwaps] = useState<
+    Partial<Record<DemoChipKey, Record<string, DemoStopAlternate>>>
+  >({});
   const fetchDemos = useServerFn(getStudioHomeDemos);
 
   // Fetch demos on mount.
@@ -116,10 +146,65 @@ export function StudioMoment({ className }: Props) {
     };
   }, [fetchDemos]);
 
-  const active = useMemo<StudioDemoRoute | null>(() => {
+  // Raw demo for the active chip (server-composed, never mutated).
+  const rawActive = useMemo<StudioDemoRoute | null>(() => {
     if (!demos) return null;
     return demos.find((d) => d.chip === activeChip) ?? demos[0];
   }, [demos, activeChip]);
+
+  // Apply swaps for the active chip and recompute drive minutes
+  // and total experience minutes from the resulting stop sequence.
+  const active = useMemo<StudioDemoRoute | null>(() => {
+    if (!rawActive) return null;
+    const chipSwaps = swaps[rawActive.chip] ?? {};
+    if (Object.keys(chipSwaps).length === 0) return rawActive;
+
+    const newStops: DemoStop[] = rawActive.stops.map((s) => {
+      const alt = chipSwaps[s.key];
+      if (!alt) return s;
+      // Swap in the alternate's content; preserve the ORIGINAL stop's
+      // alternates list and tag fallback so the drawer keeps offering
+      // the same family of variants and the user can swap back.
+      return {
+        ...s,
+        // Keep `key` as the original anchor so future swaps resolve
+        // against the same map entry — but expose the chosen variant's
+        // identity in the visible fields and on the map.
+        label: alt.label,
+        blurb: alt.blurb,
+        tag: alt.tag ?? s.tag,
+        variantLabel: alt.variantLabel,
+        lat: alt.lat,
+        lng: alt.lng,
+        durationMinutes: alt.durationMinutes,
+      };
+    });
+
+    // Recompute drive minutes from prev for each stop, anchored on
+    // the region. First stop drives from the region; rest from prev.
+    let prev: { lat: number; lng: number } = {
+      lat: rawActive.region.lat,
+      lng: rawActive.region.lng,
+    };
+    const recomputed: DemoStop[] = newStops.map((s) => {
+      const drive = driveMinutesBetween(prev, { lat: s.lat, lng: s.lng });
+      prev = { lat: s.lat, lng: s.lng };
+      return { ...s, driveMinutesFromPrev: drive };
+    });
+
+    const stopMinutes = recomputed.reduce((acc, s) => acc + s.durationMinutes, 0);
+    const drivingMinutes = recomputed.reduce(
+      (acc, s) => acc + s.driveMinutesFromPrev,
+      0,
+    );
+
+    return {
+      ...rawActive,
+      stops: recomputed,
+      experienceMinutes: stopMinutes + drivingMinutes,
+      drivingMinutes,
+    };
+  }, [rawActive, swaps]);
 
   // Reset drawer when chip changes.
   useEffect(() => {
@@ -130,6 +215,29 @@ export function StudioMoment({ className }: Props) {
     if (!active || !openStopKey) return null;
     return active.stops.find((s) => s.key === openStopKey) ?? null;
   }, [active, openStopKey]);
+
+  /**
+   * Commit a swap. `originalStopKey` is the key the server returned
+   * (also the React key in our active route). Selecting the original
+   * variant clears the swap.
+   */
+  const handleSwap = (
+    chip: DemoChipKey,
+    originalStopKey: string,
+    chosen: DemoStopAlternate | null,
+  ) => {
+    setSwaps((prev) => {
+      const next = { ...prev };
+      const chipMap = { ...(next[chip] ?? {}) };
+      if (chosen) {
+        chipMap[originalStopKey] = chosen;
+      } else {
+        delete chipMap[originalStopKey];
+      }
+      next[chip] = chipMap;
+      return next;
+    });
+  };
 
   return (
     <section
@@ -232,8 +340,27 @@ export function StudioMoment({ className }: Props) {
       {/* ─── Stop details drawer ─── */}
       <StopDetailsDrawer
         stop={openStop}
+        rawStop={
+          openStop && rawActive
+            ? rawActive.stops.find((s) => s.key === openStop.key) ?? null
+            : null
+        }
+        chosenVariantKey={
+          openStop && rawActive
+            ? swaps[rawActive.chip]?.[openStop.key]?.key ?? openStop.key
+            : null
+        }
         stopIndex={openStop && active ? active.stops.findIndex((s) => s.key === openStop.key) : -1}
         regionLabel={active?.region.label ?? ""}
+        onSwap={(chosen) => {
+          if (!openStop || !rawActive) return;
+          // If the user picked the original variant, clear the swap.
+          if (chosen === null || chosen.key === openStop.key) {
+            handleSwap(rawActive.chip, openStop.key, null);
+          } else {
+            handleSwap(rawActive.chip, openStop.key, chosen);
+          }
+        }}
         onClose={() => setOpenStopKey(null)}
       />
 
@@ -767,27 +894,32 @@ function HiddenHeroCopyProbes() {
  * a "Choose one" radio group of real alternates (other variants of
  * the same canonical stop in this region) when any exist.
  *
- * Phase 1: alternates are presentational — selecting one highlights
- * it but doesn't recompose the route. Full swap belongs in /builder.
+ * Selecting an alternate commits the swap on the parent route — the
+ * map redraws, drive times are recomputed, and the live panel
+ * updates. Selecting the original variant clears the swap.
+ *
+ * `stop` is the currently displayed stop (may already reflect a
+ * prior swap), while `rawStop` is the server-composed original used
+ * to enumerate the stable list of variants for this anchor.
  * ────────────────────────────────────────────────────────────── */
 function StopDetailsDrawer({
   stop,
+  rawStop,
+  chosenVariantKey,
   stopIndex,
   regionLabel,
+  onSwap,
   onClose,
 }: {
   stop: DemoStop | null;
+  rawStop: DemoStop | null;
+  chosenVariantKey: string | null;
   stopIndex: number;
   regionLabel: string;
+  onSwap: (chosen: DemoStopAlternate | null) => void;
   onClose: () => void;
 }) {
   const open = stop !== null;
-  const [chosenVariant, setChosenVariant] = useState<string | null>(null);
-
-  // Reset selection when the open stop changes.
-  useEffect(() => {
-    setChosenVariant(stop ? stop.key : null);
-  }, [stop]);
 
   // ESC to close.
   useEffect(() => {
@@ -886,27 +1018,47 @@ function StopDetailsDrawer({
             )}
 
             {/* Alternates */}
-            {stop.alternates.length > 0 && (
+            {rawStop && rawStop.alternates.length > 0 && (
               <div className="mt-7 pt-5 border-t border-[color:var(--charcoal)]/10">
                 <span className="text-[10.5px] uppercase tracking-[0.28em] text-[color:var(--charcoal)]/55 font-semibold">
                   Choose one
                 </span>
                 <p className="mt-1.5 text-[12.5px] text-[color:var(--charcoal)]/65 leading-[1.5]">
-                  Other real ways to do this stop. You can pick one in the Studio.
+                  Other real ways to do this stop. Pick one to update your route.
                 </p>
                 <fieldset className="mt-3 space-y-2">
-                  <legend className="sr-only">Pick a variant for {stop.label}</legend>
+                  <legend className="sr-only">Pick a variant for {rawStop.label}</legend>
                   {[
                     {
-                      key: stop.key,
-                      label: stop.label,
-                      blurb: stop.blurb,
-                      variantLabel: stop.variantLabel,
-                      durationMinutes: stop.durationMinutes,
+                      key: rawStop.key,
+                      label: rawStop.label,
+                      blurb: rawStop.blurb,
+                      tag: rawStop.tag,
+                      variantLabel: rawStop.variantLabel,
+                      durationMinutes: rawStop.durationMinutes,
+                      lat: rawStop.lat,
+                      lng: rawStop.lng,
+                      isOriginal: true,
                     },
-                    ...stop.alternates,
+                    ...rawStop.alternates.map((a) => ({ ...a, isOriginal: false })),
                   ].map((opt) => {
-                    const checked = chosenVariant === opt.key;
+                    const checked = chosenVariantKey === opt.key;
+                    const handleSelect = () => {
+                      if (opt.isOriginal) {
+                        onSwap(null);
+                      } else {
+                        onSwap({
+                          key: opt.key,
+                          label: opt.label,
+                          blurb: opt.blurb,
+                          tag: opt.tag ?? null,
+                          variantLabel: opt.variantLabel,
+                          durationMinutes: opt.durationMinutes,
+                          lat: opt.lat,
+                          lng: opt.lng,
+                        });
+                      }
+                    };
                     return (
                       <label
                         key={opt.key}
@@ -919,15 +1071,20 @@ function StopDetailsDrawer({
                       >
                         <input
                           type="radio"
-                          name={`variant-${stop.key}`}
+                          name={`variant-${rawStop.key}`}
                           value={opt.key}
                           checked={checked}
-                          onChange={() => setChosenVariant(opt.key)}
+                          onChange={handleSelect}
                           className="mt-1 accent-[color:var(--teal)] h-4 w-4"
                         />
                         <span className="flex-1 min-w-0">
                           <span className="block text-[13.5px] font-medium text-[color:var(--charcoal)]">
                             {opt.variantLabel ?? opt.label}
+                            {opt.isOriginal && (
+                              <span className="ml-2 text-[10px] uppercase tracking-[0.22em] text-[color:var(--charcoal)]/45">
+                                Original
+                              </span>
+                            )}
                           </span>
                           <span className="block mt-0.5 text-[12px] text-[color:var(--charcoal)]/65">
                             {fmtMinutes(opt.durationMinutes)}
