@@ -94,8 +94,8 @@ async function loadCatalog() {
 export const generateBuilderRoute = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => inputSchema.parse(input))
   .handler(async ({ data }) => {
-    const { regions, stops, rules } = await loadCatalog();
-    const route = generateRoute(data as BuilderInput, regions, stops, rules);
+    const { regions, stops, rules, compatibility } = await loadCatalog();
+    const route = generateRoute(data as BuilderInput, regions, stops, rules, compatibility);
     return { route };
   });
 
