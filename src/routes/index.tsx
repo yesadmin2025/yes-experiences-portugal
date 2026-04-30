@@ -1358,7 +1358,8 @@ function HomePage() {
           is the human escape hatch. No duplicate CTA band; one purpose,
           one button. */}
       <section
-        className="section-y relative overflow-hidden bg-[color:var(--teal)] text-[color:var(--ivory)] pb-20 md:pb-24"
+        id="final-cta"
+        className="section-y relative overflow-hidden bg-[color:var(--teal)] text-[color:var(--ivory)] pb-20 md:pb-24 scroll-mt-24 md:scroll-mt-28"
         aria-labelledby="final-cta-title"
       >
         {/* FINAL CTA — solid teal base with editorial texture so it
