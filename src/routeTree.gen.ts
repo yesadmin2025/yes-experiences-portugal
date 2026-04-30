@@ -30,6 +30,7 @@ import { Route as ApiVerifyHeroRouteImport } from './routes/api/verify-hero'
 import { Route as ApiImgRouteImport } from './routes/api/img'
 import { Route as AdminTourLinkAuditRouteImport } from './routes/admin.tour-link-audit'
 import { Route as AdminImportToursRouteImport } from './routes/admin.import-tours'
+import { Route as AdminBuilderImagesRouteImport } from './routes/admin.builder-images'
 import { Route as AdminAiAuditRouteImport } from './routes/admin.ai-audit'
 import { Route as ToursTourIdTailorRouteImport } from './routes/tours.$tourId.tailor'
 
@@ -138,6 +139,11 @@ const AdminImportToursRoute = AdminImportToursRouteImport.update({
   path: '/admin/import-tours',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminBuilderImagesRoute = AdminBuilderImagesRouteImport.update({
+  id: '/admin/builder-images',
+  path: '/admin/builder-images',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminAiAuditRoute = AdminAiAuditRouteImport.update({
   id: '/admin/ai-audit',
   path: '/admin/ai-audit',
@@ -166,6 +172,7 @@ export interface FileRoutesByFullPath {
   '/proposals': typeof ProposalsRoute
   '/typography-audit': typeof TypographyAuditRoute
   '/admin/ai-audit': typeof AdminAiAuditRoute
+  '/admin/builder-images': typeof AdminBuilderImagesRoute
   '/admin/import-tours': typeof AdminImportToursRoute
   '/admin/tour-link-audit': typeof AdminTourLinkAuditRoute
   '/api/img': typeof ApiImgRoute
@@ -191,6 +198,7 @@ export interface FileRoutesByTo {
   '/proposals': typeof ProposalsRoute
   '/typography-audit': typeof TypographyAuditRoute
   '/admin/ai-audit': typeof AdminAiAuditRoute
+  '/admin/builder-images': typeof AdminBuilderImagesRoute
   '/admin/import-tours': typeof AdminImportToursRoute
   '/admin/tour-link-audit': typeof AdminTourLinkAuditRoute
   '/api/img': typeof ApiImgRoute
@@ -217,6 +225,7 @@ export interface FileRoutesById {
   '/proposals': typeof ProposalsRoute
   '/typography-audit': typeof TypographyAuditRoute
   '/admin/ai-audit': typeof AdminAiAuditRoute
+  '/admin/builder-images': typeof AdminBuilderImagesRoute
   '/admin/import-tours': typeof AdminImportToursRoute
   '/admin/tour-link-audit': typeof AdminTourLinkAuditRoute
   '/api/img': typeof ApiImgRoute
@@ -244,6 +253,7 @@ export interface FileRouteTypes {
     | '/proposals'
     | '/typography-audit'
     | '/admin/ai-audit'
+    | '/admin/builder-images'
     | '/admin/import-tours'
     | '/admin/tour-link-audit'
     | '/api/img'
@@ -269,6 +279,7 @@ export interface FileRouteTypes {
     | '/proposals'
     | '/typography-audit'
     | '/admin/ai-audit'
+    | '/admin/builder-images'
     | '/admin/import-tours'
     | '/admin/tour-link-audit'
     | '/api/img'
@@ -294,6 +305,7 @@ export interface FileRouteTypes {
     | '/proposals'
     | '/typography-audit'
     | '/admin/ai-audit'
+    | '/admin/builder-images'
     | '/admin/import-tours'
     | '/admin/tour-link-audit'
     | '/api/img'
@@ -320,6 +332,7 @@ export interface RootRouteChildren {
   ProposalsRoute: typeof ProposalsRoute
   TypographyAuditRoute: typeof TypographyAuditRoute
   AdminAiAuditRoute: typeof AdminAiAuditRoute
+  AdminBuilderImagesRoute: typeof AdminBuilderImagesRoute
   AdminImportToursRoute: typeof AdminImportToursRoute
   AdminTourLinkAuditRoute: typeof AdminTourLinkAuditRoute
   ApiImgRoute: typeof ApiImgRoute
@@ -477,6 +490,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminImportToursRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/builder-images': {
+      id: '/admin/builder-images'
+      path: '/admin/builder-images'
+      fullPath: '/admin/builder-images'
+      preLoaderRoute: typeof AdminBuilderImagesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/ai-audit': {
       id: '/admin/ai-audit'
       path: '/admin/ai-audit'
@@ -523,6 +543,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProposalsRoute: ProposalsRoute,
   TypographyAuditRoute: TypographyAuditRoute,
   AdminAiAuditRoute: AdminAiAuditRoute,
+  AdminBuilderImagesRoute: AdminBuilderImagesRoute,
   AdminImportToursRoute: AdminImportToursRoute,
   AdminTourLinkAuditRoute: AdminTourLinkAuditRoute,
   ApiImgRoute: ApiImgRoute,
