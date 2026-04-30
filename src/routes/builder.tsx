@@ -516,6 +516,7 @@ interface LiveBuilderProps {
   onReview: () => void;
   stopImages: Record<string, { url: string; alt: string } | null>;
   storyImage: { url: string; alt: string } | null;
+  imagesLoading: boolean;
 }
 
 function LiveBuilder({
