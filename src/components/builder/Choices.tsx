@@ -171,26 +171,69 @@ export function ChoiceRow({ selected, onClick, label, sub }: ChoiceRowProps) {
   );
 }
 
-/** Slim progress chip rendered above each step. */
-export function ProgressDots({ step, total }: { step: number; total: number }) {
+/**
+ * Step indicator rendered above each selection step.
+ *
+ * Shows a textual label ("Step 01 / 04") and a row of slim bars.
+ * `step` is the user-facing 1-based index (1..total). The builder route
+ * has 8 internal phases (0 entry, 1 mood, 2 who, 3 intention, 4 pace,
+ * 5 predictive, 6 live, 7 review) — only call this for the four
+ * selection phases (1..4), where `total === 4`.
+ *
+ * Accessibility: rendered as a `progressbar` with `aria-valuenow`,
+ * `aria-valuemin`, `aria-valuemax` so assistive tech reads the right
+ * position even while the visual bars animate.
+ */
+export function ProgressDots({
+  step,
+  total,
+  showLabel = true,
+}: {
+  step: number;
+  total: number;
+  /** When true (default) prepend "Step 01 / 04". Set false for compact mode. */
+  showLabel?: boolean;
+}) {
+  // Clamp to the visible range so an out-of-flow step never shows "05/04".
+  const current = Math.max(1, Math.min(step, total));
+  const pad = (n: number) => String(n).padStart(2, "0");
   return (
-    <ol className="flex items-center gap-1.5" aria-label="Builder progress">
-      {Array.from({ length: total }, (_, i) => {
-        const n = i + 1;
-        const done = step > n;
-        const active = step === n;
-        return (
-          <li
-            key={n}
-            aria-current={active ? "step" : undefined}
-            className={[
-              "h-[3px] rounded-full transition-all duration-300",
-              done || active ? "bg-[color:var(--gold)]" : "bg-[color:var(--charcoal)]/15",
-              active ? "w-10" : "w-6",
-            ].join(" ")}
-          />
-        );
-      })}
-    </ol>
+    <div
+      className="flex items-center gap-3"
+      role="progressbar"
+      aria-valuemin={1}
+      aria-valuemax={total}
+      aria-valuenow={current}
+      aria-label={`Step ${current} of ${total}`}
+      data-testid="builder-progress"
+    >
+      {showLabel && (
+        <span
+          className="text-[11px] uppercase tracking-[0.22em] font-semibold text-[color:var(--charcoal-soft)] tabular-nums"
+          data-testid="builder-progress-label"
+        >
+          Step <span className="text-[color:var(--charcoal)]">{pad(current)}</span>
+          {" / "}
+          {pad(total)}
+        </span>
+      )}
+      <ol className="flex items-center gap-1.5" aria-hidden="true">
+        {Array.from({ length: total }, (_, i) => {
+          const n = i + 1;
+          const done = current > n;
+          const active = current === n;
+          return (
+            <li
+              key={n}
+              className={[
+                "h-[3px] rounded-full transition-all duration-200 ease-out",
+                done || active ? "bg-[color:var(--gold)]" : "bg-[color:var(--charcoal)]/15",
+                active ? "w-10" : "w-6",
+              ].join(" ")}
+            />
+          );
+        })}
+      </ol>
+    </div>
   );
 }
