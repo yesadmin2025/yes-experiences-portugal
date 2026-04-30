@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { zodValidator, fallback } from "@tanstack/zod-adapter";
+import { z } from "zod";
+import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 interface UsageRow {
@@ -24,6 +26,16 @@ interface Stats {
   byProvider: Record<string, number>;
 }
 
+const PAGE_SIZE = 50;
+const STATUS_OPTIONS = ["all", "success", "failure", "rate_limited", "fallback"] as const;
+const PROVIDER_OPTIONS = ["all", "openai", "lovable_ai", "none"] as const;
+
+const searchSchema = z.object({
+  page: fallback(z.number().int().min(1).max(9999), 1).default(1),
+  status: fallback(z.enum(STATUS_OPTIONS), "all").default("all"),
+  provider: fallback(z.enum(PROVIDER_OPTIONS), "all").default("all"),
+});
+
 function statusColor(s: string) {
   if (s === "success") return "text-emerald-700 bg-emerald-50";
   if (s === "rate_limited") return "text-amber-800 bg-amber-50";
@@ -32,8 +44,9 @@ function statusColor(s: string) {
 }
 
 function AuditPage() {
-  const [rows, setRows] = useState<UsageRow[] | null>(null);
-  const [stats, setStats] = useState<Stats | null>(null);
+  const { page, status, provider } = Route.useSearch();
+
+  const [allRows, setAllRows] = useState<UsageRow[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [allowed, setAllowed] = useState<boolean | null>(null);
 
@@ -45,12 +58,11 @@ function AuditPage() {
         if (active) setAllowed(false);
         return;
       }
-      // Try to read; RLS will reject non-admins
       const { data, error } = await supabase
         .from("ai_usage_logs")
         .select("id,created_at,provider,model,feature,status,latency_ms,error_code,error_message")
         .order("created_at", { ascending: false })
-        .limit(200);
+        .limit(1000);
       if (!active) return;
       if (error) {
         setAllowed(false);
@@ -58,32 +70,53 @@ function AuditPage() {
         return;
       }
       setAllowed(true);
-      const list = (data ?? []) as UsageRow[];
-      setRows(list);
-
-      const success = list.filter((r) => r.status === "success");
-      const failures = list.filter((r) => r.status === "failure" || r.status === "rate_limited");
-      const byProvider = list.reduce<Record<string, number>>((acc, r) => {
-        acc[r.provider] = (acc[r.provider] ?? 0) + 1;
-        return acc;
-      }, {});
-      const latencies = list.map((r) => r.latency_ms).filter((n): n is number => n !== null);
-      setStats({
-        total: list.length,
-        success: success.length,
-        failures: failures.length,
-        lastSuccessAt: success[0]?.created_at ?? null,
-        lastFailureAt: failures[0]?.created_at ?? null,
-        avgLatency: latencies.length
-          ? Math.round(latencies.reduce((a, b) => a + b, 0) / latencies.length)
-          : null,
-        byProvider,
-      });
+      setAllRows((data ?? []) as UsageRow[]);
     })();
     return () => {
       active = false;
     };
   }, []);
+
+  const filtered = useMemo(() => {
+    if (!allRows) return null;
+    return allRows.filter((r) => {
+      if (status !== "all" && r.status !== status) return false;
+      if (provider !== "all" && r.provider !== provider) return false;
+      return true;
+    });
+  }, [allRows, status, provider]);
+
+  const stats: Stats | null = useMemo(() => {
+    if (!filtered) return null;
+    const success = filtered.filter((r) => r.status === "success");
+    const failures = filtered.filter(
+      (r) => r.status === "failure" || r.status === "rate_limited",
+    );
+    const byProvider = filtered.reduce<Record<string, number>>((acc, r) => {
+      acc[r.provider] = (acc[r.provider] ?? 0) + 1;
+      return acc;
+    }, {});
+    const latencies = filtered
+      .map((r) => r.latency_ms)
+      .filter((n): n is number => n !== null);
+    return {
+      total: filtered.length,
+      success: success.length,
+      failures: failures.length,
+      lastSuccessAt: success[0]?.created_at ?? null,
+      lastFailureAt: failures[0]?.created_at ?? null,
+      avgLatency: latencies.length
+        ? Math.round(latencies.reduce((a, b) => a + b, 0) / latencies.length)
+        : null,
+      byProvider,
+    };
+  }, [filtered]);
+
+  const totalPages = filtered ? Math.max(1, Math.ceil(filtered.length / PAGE_SIZE)) : 1;
+  const safePage = Math.min(page, totalPages);
+  const pageRows = filtered
+    ? filtered.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE)
+    : null;
 
   if (allowed === false) {
     return (
@@ -100,9 +133,9 @@ function AuditPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#FAF8F3] px-6 py-12">
-      <div className="mx-auto max-w-5xl">
-        <div className="flex items-baseline justify-between">
+    <main className="min-h-screen bg-[#FAF8F3] px-4 py-10 sm:px-6 sm:py-12">
+      <div className="mx-auto max-w-5xl pb-16">
+        <div className="flex flex-wrap items-baseline justify-between gap-2">
           <h1 className="font-serif text-3xl text-[#2E2E2E]">AI usage audit</h1>
           <Link to="/" className="text-sm text-[#2E2E2E]/70 underline underline-offset-4">
             Home
@@ -112,8 +145,33 @@ function AuditPage() {
           Every narrative generation call is logged here. The API key value is never stored.
         </p>
 
+        {/* Filters */}
+        <div className="mt-6 flex flex-wrap items-center gap-3">
+          <FilterSelect
+            label="Status"
+            value={status}
+            options={STATUS_OPTIONS}
+            paramKey="status"
+          />
+          <FilterSelect
+            label="Provider"
+            value={provider}
+            options={PROVIDER_OPTIONS}
+            paramKey="provider"
+          />
+          {(status !== "all" || provider !== "all") && (
+            <Link
+              from="/admin/ai-audit"
+              search={(prev) => ({ ...prev, status: "all", provider: "all", page: 1 })}
+              className="text-xs text-[#2E2E2E]/60 underline underline-offset-4"
+            >
+              Clear filters
+            </Link>
+          )}
+        </div>
+
         {stats && (
-          <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
             <Stat label="Total calls" value={String(stats.total)} />
             <Stat label="Successful" value={String(stats.success)} />
             <Stat label="Failures" value={String(stats.failures)} />
@@ -140,8 +198,8 @@ function AuditPage() {
           </div>
         )}
 
-        <div className="mt-10 overflow-hidden rounded-2xl border border-[#2E2E2E]/10 bg-white">
-          <table className="w-full text-left text-sm">
+        <div className="mt-8 overflow-x-auto rounded-2xl border border-[#2E2E2E]/10 bg-white">
+          <table className="w-full min-w-[640px] text-left text-sm">
             <thead className="bg-[#FAF8F3] text-xs uppercase tracking-wider text-[#2E2E2E]/60">
               <tr>
                 <th className="px-4 py-3">When</th>
@@ -153,20 +211,20 @@ function AuditPage() {
               </tr>
             </thead>
             <tbody>
-              {rows === null ? (
+              {pageRows === null ? (
                 <tr>
                   <td colSpan={6} className="px-4 py-8 text-center text-[#2E2E2E]/50">
                     Loading…
                   </td>
                 </tr>
-              ) : rows.length === 0 ? (
+              ) : pageRows.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="px-4 py-8 text-center text-[#2E2E2E]/50">
-                    No calls yet. Generate a narrative in the Builder to populate this list.
+                    No calls match these filters.
                   </td>
                 </tr>
               ) : (
-                rows.map((r) => (
+                pageRows.map((r) => (
                   <tr key={r.id} className="border-t border-[#2E2E2E]/5">
                     <td className="px-4 py-3 text-[#2E2E2E]/80">
                       {new Date(r.created_at).toLocaleString()}
@@ -182,7 +240,9 @@ function AuditPage() {
                       {r.latency_ms !== null ? `${r.latency_ms} ms` : "—"}
                     </td>
                     <td className="px-4 py-3 text-xs text-[#2E2E2E]/60">
-                      {r.error_code ? `${r.error_code}${r.error_message ? ` · ${r.error_message}` : ""}` : "—"}
+                      {r.error_code
+                        ? `${r.error_code}${r.error_message ? ` · ${r.error_message}` : ""}`
+                        : "—"}
                     </td>
                   </tr>
                 ))
@@ -190,8 +250,94 @@ function AuditPage() {
             </tbody>
           </table>
         </div>
+
+        {/* Pagination */}
+        {filtered && filtered.length > 0 && (
+          <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
+            <div className="text-xs text-[#2E2E2E]/60">
+              Showing {(safePage - 1) * PAGE_SIZE + 1}–
+              {Math.min(safePage * PAGE_SIZE, filtered.length)} of {filtered.length}
+            </div>
+            <div className="flex items-center gap-2">
+              <PageLink page={safePage - 1} disabled={safePage <= 1}>
+                ← Prev
+              </PageLink>
+              <span className="text-xs text-[#2E2E2E]/70">
+                Page {safePage} of {totalPages}
+              </span>
+              <PageLink page={safePage + 1} disabled={safePage >= totalPages}>
+                Next →
+              </PageLink>
+            </div>
+          </div>
+        )}
       </div>
     </main>
+  );
+}
+
+function FilterSelect({
+  label,
+  value,
+  options,
+  paramKey,
+}: {
+  label: string;
+  value: string;
+  options: readonly string[];
+  paramKey: "status" | "provider";
+}) {
+  return (
+    <label className="flex items-center gap-2 text-xs text-[#2E2E2E]/70">
+      <span className="uppercase tracking-wider">{label}</span>
+      <select
+        value={value}
+        onChange={(e) => {
+          const v = e.target.value;
+          // Use location to navigate without TS friction on union types
+          const url = new URL(window.location.href);
+          url.searchParams.set(paramKey, v);
+          url.searchParams.set("page", "1");
+          window.history.pushState({}, "", url.toString());
+          // Force route to re-read search via reload of search state
+          window.dispatchEvent(new PopStateEvent("popstate"));
+        }}
+        className="rounded-md border border-[#2E2E2E]/15 bg-white px-2 py-1 text-xs text-[#2E2E2E]"
+      >
+        {options.map((o) => (
+          <option key={o} value={o}>
+            {o}
+          </option>
+        ))}
+      </select>
+    </label>
+  );
+}
+
+function PageLink({
+  page,
+  disabled,
+  children,
+}: {
+  page: number;
+  disabled?: boolean;
+  children: React.ReactNode;
+}) {
+  if (disabled) {
+    return (
+      <span className="rounded-md border border-[#2E2E2E]/10 px-3 py-1 text-xs text-[#2E2E2E]/30">
+        {children}
+      </span>
+    );
+  }
+  return (
+    <Link
+      from="/admin/ai-audit"
+      search={(prev) => ({ ...prev, page })}
+      className="rounded-md border border-[#2E2E2E]/15 bg-white px-3 py-1 text-xs text-[#2E2E2E] hover:bg-[#FAF8F3]"
+    >
+      {children}
+    </Link>
   );
 }
 
@@ -205,6 +351,7 @@ function Stat({ label, value }: { label: string; value: string }) {
 }
 
 export const Route = createFileRoute("/admin/ai-audit")({
+  validateSearch: zodValidator(searchSchema),
   head: () => ({
     meta: [
       { title: "AI usage audit · YesExperiences" },
