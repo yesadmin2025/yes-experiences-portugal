@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-04-30T20:59:13.118Z",
-  "filesScanned": 131,
+  "generatedAt": "2026-04-30T21:07:35.398Z",
+  "filesScanned": 132,
   "approvedPalette": {
     "teal": "#295B61",
     "teal-2": "#2A7C82",
@@ -18,10 +18,10 @@
     "#cccccc"
   ],
   "counts": {
-    "total": 156,
+    "total": 158,
     "approved": 41,
     "allowlisted": 29,
-    "mismatch": 86
+    "mismatch": 88
   },
   "findings": [
     {
@@ -1013,6 +1013,24 @@
       "normalized": "#cccccc",
       "snippet": "\"#ccc\", // recharts internal selectors only",
       "status": "allowlisted"
+    },
+    {
+      "file": "src/routes/e2e.postmessage-probe.tsx",
+      "line": 131,
+      "col": 69,
+      "raw": "#a3271f",
+      "normalized": "#a3271f",
+      "snippet": "pass === null ? \"var(--teal)\" : pass ? \"var(--teal)\" : \"#a3271f\",",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/routes/e2e.postmessage-probe.tsx",
+      "line": 178,
+      "col": 52,
+      "raw": "#a3271f",
+      "normalized": "#a3271f",
+      "snippet": "color: r.ok ? \"var(--teal)\" : \"#a3271f\",",
+      "status": "mismatch"
     },
     {
       "file": "src/routes/index.tsx",
