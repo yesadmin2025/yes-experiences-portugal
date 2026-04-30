@@ -789,7 +789,7 @@ function HomePage() {
               body. Scroll-stagger fade+rise via .reveal-stagger (cadence
               applied by SiteLayout). Hover: lift, warmer border, gold
               underline sweep. */}
-          <ul className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6 list-none p-0">
+          <ul className="he-stagger max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6 list-none p-0">
             {[
               {
                 Icon: Feather,
