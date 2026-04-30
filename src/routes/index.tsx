@@ -32,6 +32,7 @@ import {
 } from "lucide-react";
 import { PlatformBadge } from "@/components/PlatformBadge";
 import { LiveMapPreview } from "@/components/LiveMapPreview";
+import { TrustmarySection } from "@/components/TrustmarySection";
 
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
 import { signatureTours, isValidTourId } from "@/data/signatureTours";
