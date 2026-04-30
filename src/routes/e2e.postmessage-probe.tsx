@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
 /**
- * /__e2e/postmessage-probe — end-to-end probe for the
+ * /e2e/postmessage-probe — end-to-end probe for the
  * RESET_BLANK_CHECK postMessage filter.
  *
  * Dev-only smoke route. Loaded inside the preview iframe (so the real
@@ -205,6 +205,6 @@ function ProbePage() {
   );
 }
 
-export const Route = createFileRoute("/__e2e/postmessage-probe")({
+export const Route = createFileRoute("/e2e/postmessage-probe")({
   component: ProbePage,
 });

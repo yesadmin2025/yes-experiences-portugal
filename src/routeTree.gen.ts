@@ -26,6 +26,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ToursTourIdRouteImport } from './routes/tours.$tourId'
 import { Route as QaMobileRouteImport } from './routes/qa.mobile'
+import { Route as E2ePostmessageProbeRouteImport } from './routes/e2e.postmessage-probe'
 import { Route as ApiVerifyHeroRouteImport } from './routes/api/verify-hero'
 import { Route as ApiImgRouteImport } from './routes/api/img'
 import { Route as ApiHealthRouteImport } from './routes/api/health'
@@ -34,7 +35,6 @@ import { Route as AdminImportToursRouteImport } from './routes/admin.import-tour
 import { Route as AdminBuilderImagesQaRouteImport } from './routes/admin.builder-images-qa'
 import { Route as AdminBuilderImagesRouteImport } from './routes/admin.builder-images'
 import { Route as AdminAiAuditRouteImport } from './routes/admin.ai-audit'
-import { Route as _e2ePostmessageProbeRouteImport } from './routes/__e2e.postmessage-probe'
 import { Route as ToursTourIdTailorRouteImport } from './routes/tours.$tourId.tailor'
 
 const TypographyAuditRoute = TypographyAuditRouteImport.update({
@@ -122,6 +122,11 @@ const QaMobileRoute = QaMobileRouteImport.update({
   path: '/qa/mobile',
   getParentRoute: () => rootRouteImport,
 } as any)
+const E2ePostmessageProbeRoute = E2ePostmessageProbeRouteImport.update({
+  id: '/e2e/postmessage-probe',
+  path: '/e2e/postmessage-probe',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiVerifyHeroRoute = ApiVerifyHeroRouteImport.update({
   id: '/api/verify-hero',
   path: '/api/verify-hero',
@@ -162,11 +167,6 @@ const AdminAiAuditRoute = AdminAiAuditRouteImport.update({
   path: '/admin/ai-audit',
   getParentRoute: () => rootRouteImport,
 } as any)
-const _e2ePostmessageProbeRoute = _e2ePostmessageProbeRouteImport.update({
-  id: '/__e2e/postmessage-probe',
-  path: '/postmessage-probe',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ToursTourIdTailorRoute = ToursTourIdTailorRouteImport.update({
   id: '/tailor',
   path: '/tailor',
@@ -189,7 +189,6 @@ export interface FileRoutesByFullPath {
   '/preview-check': typeof PreviewCheckRoute
   '/proposals': typeof ProposalsRoute
   '/typography-audit': typeof TypographyAuditRoute
-  '/postmessage-probe': typeof _e2ePostmessageProbeRoute
   '/admin/ai-audit': typeof AdminAiAuditRoute
   '/admin/builder-images': typeof AdminBuilderImagesRoute
   '/admin/builder-images-qa': typeof AdminBuilderImagesQaRoute
@@ -198,6 +197,7 @@ export interface FileRoutesByFullPath {
   '/api/health': typeof ApiHealthRoute
   '/api/img': typeof ApiImgRoute
   '/api/verify-hero': typeof ApiVerifyHeroRoute
+  '/e2e/postmessage-probe': typeof E2ePostmessageProbeRoute
   '/qa/mobile': typeof QaMobileRoute
   '/tours/$tourId': typeof ToursTourIdRouteWithChildren
   '/tours/$tourId/tailor': typeof ToursTourIdTailorRoute
@@ -218,7 +218,6 @@ export interface FileRoutesByTo {
   '/preview-check': typeof PreviewCheckRoute
   '/proposals': typeof ProposalsRoute
   '/typography-audit': typeof TypographyAuditRoute
-  '/postmessage-probe': typeof _e2ePostmessageProbeRoute
   '/admin/ai-audit': typeof AdminAiAuditRoute
   '/admin/builder-images': typeof AdminBuilderImagesRoute
   '/admin/builder-images-qa': typeof AdminBuilderImagesQaRoute
@@ -227,6 +226,7 @@ export interface FileRoutesByTo {
   '/api/health': typeof ApiHealthRoute
   '/api/img': typeof ApiImgRoute
   '/api/verify-hero': typeof ApiVerifyHeroRoute
+  '/e2e/postmessage-probe': typeof E2ePostmessageProbeRoute
   '/qa/mobile': typeof QaMobileRoute
   '/tours/$tourId': typeof ToursTourIdRouteWithChildren
   '/tours/$tourId/tailor': typeof ToursTourIdTailorRoute
@@ -248,7 +248,6 @@ export interface FileRoutesById {
   '/preview-check': typeof PreviewCheckRoute
   '/proposals': typeof ProposalsRoute
   '/typography-audit': typeof TypographyAuditRoute
-  '/__e2e/postmessage-probe': typeof _e2ePostmessageProbeRoute
   '/admin/ai-audit': typeof AdminAiAuditRoute
   '/admin/builder-images': typeof AdminBuilderImagesRoute
   '/admin/builder-images-qa': typeof AdminBuilderImagesQaRoute
@@ -257,6 +256,7 @@ export interface FileRoutesById {
   '/api/health': typeof ApiHealthRoute
   '/api/img': typeof ApiImgRoute
   '/api/verify-hero': typeof ApiVerifyHeroRoute
+  '/e2e/postmessage-probe': typeof E2ePostmessageProbeRoute
   '/qa/mobile': typeof QaMobileRoute
   '/tours/$tourId': typeof ToursTourIdRouteWithChildren
   '/tours/$tourId/tailor': typeof ToursTourIdTailorRoute
@@ -279,7 +279,6 @@ export interface FileRouteTypes {
     | '/preview-check'
     | '/proposals'
     | '/typography-audit'
-    | '/postmessage-probe'
     | '/admin/ai-audit'
     | '/admin/builder-images'
     | '/admin/builder-images-qa'
@@ -288,6 +287,7 @@ export interface FileRouteTypes {
     | '/api/health'
     | '/api/img'
     | '/api/verify-hero'
+    | '/e2e/postmessage-probe'
     | '/qa/mobile'
     | '/tours/$tourId'
     | '/tours/$tourId/tailor'
@@ -308,7 +308,6 @@ export interface FileRouteTypes {
     | '/preview-check'
     | '/proposals'
     | '/typography-audit'
-    | '/postmessage-probe'
     | '/admin/ai-audit'
     | '/admin/builder-images'
     | '/admin/builder-images-qa'
@@ -317,6 +316,7 @@ export interface FileRouteTypes {
     | '/api/health'
     | '/api/img'
     | '/api/verify-hero'
+    | '/e2e/postmessage-probe'
     | '/qa/mobile'
     | '/tours/$tourId'
     | '/tours/$tourId/tailor'
@@ -337,7 +337,6 @@ export interface FileRouteTypes {
     | '/preview-check'
     | '/proposals'
     | '/typography-audit'
-    | '/__e2e/postmessage-probe'
     | '/admin/ai-audit'
     | '/admin/builder-images'
     | '/admin/builder-images-qa'
@@ -346,6 +345,7 @@ export interface FileRouteTypes {
     | '/api/health'
     | '/api/img'
     | '/api/verify-hero'
+    | '/e2e/postmessage-probe'
     | '/qa/mobile'
     | '/tours/$tourId'
     | '/tours/$tourId/tailor'
@@ -367,7 +367,6 @@ export interface RootRouteChildren {
   PreviewCheckRoute: typeof PreviewCheckRoute
   ProposalsRoute: typeof ProposalsRoute
   TypographyAuditRoute: typeof TypographyAuditRoute
-  _e2ePostmessageProbeRoute: typeof _e2ePostmessageProbeRoute
   AdminAiAuditRoute: typeof AdminAiAuditRoute
   AdminBuilderImagesRoute: typeof AdminBuilderImagesRoute
   AdminBuilderImagesQaRoute: typeof AdminBuilderImagesQaRoute
@@ -376,6 +375,7 @@ export interface RootRouteChildren {
   ApiHealthRoute: typeof ApiHealthRoute
   ApiImgRoute: typeof ApiImgRoute
   ApiVerifyHeroRoute: typeof ApiVerifyHeroRoute
+  E2ePostmessageProbeRoute: typeof E2ePostmessageProbeRoute
   QaMobileRoute: typeof QaMobileRoute
   ToursTourIdRoute: typeof ToursTourIdRouteWithChildren
 }
@@ -501,6 +501,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof QaMobileRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/e2e/postmessage-probe': {
+      id: '/e2e/postmessage-probe'
+      path: '/e2e/postmessage-probe'
+      fullPath: '/e2e/postmessage-probe'
+      preLoaderRoute: typeof E2ePostmessageProbeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/verify-hero': {
       id: '/api/verify-hero'
       path: '/api/verify-hero'
@@ -557,13 +564,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAiAuditRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/__e2e/postmessage-probe': {
-      id: '/__e2e/postmessage-probe'
-      path: '/postmessage-probe'
-      fullPath: '/postmessage-probe'
-      preLoaderRoute: typeof _e2ePostmessageProbeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/tours/$tourId/tailor': {
       id: '/tours/$tourId/tailor'
       path: '/tailor'
@@ -602,7 +602,6 @@ const rootRouteChildren: RootRouteChildren = {
   PreviewCheckRoute: PreviewCheckRoute,
   ProposalsRoute: ProposalsRoute,
   TypographyAuditRoute: TypographyAuditRoute,
-  _e2ePostmessageProbeRoute: _e2ePostmessageProbeRoute,
   AdminAiAuditRoute: AdminAiAuditRoute,
   AdminBuilderImagesRoute: AdminBuilderImagesRoute,
   AdminBuilderImagesQaRoute: AdminBuilderImagesQaRoute,
@@ -611,6 +610,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiHealthRoute: ApiHealthRoute,
   ApiImgRoute: ApiImgRoute,
   ApiVerifyHeroRoute: ApiVerifyHeroRoute,
+  E2ePostmessageProbeRoute: E2ePostmessageProbeRoute,
   QaMobileRoute: QaMobileRoute,
   ToursTourIdRoute: ToursTourIdRouteWithChildren,
 }
