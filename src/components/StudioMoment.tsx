@@ -303,9 +303,13 @@ function ChipRow({
 function StudioMap({
   route,
   loading,
+  activeStopKey,
+  onSelectStop,
 }: {
   route: StudioDemoRoute | null;
   loading: boolean;
+  activeStopKey: string | null;
+  onSelectStop: (key: string) => void;
 }) {
   // Re-key on chip change so the draw animation replays each time.
   const drawKey = route?.chip ?? "loading";
