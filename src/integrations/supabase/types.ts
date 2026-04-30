@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_usage_logs: {
+        Row: {
+          config_hash: string | null
+          created_at: string
+          error_code: string | null
+          error_message: string | null
+          feature: string
+          id: string
+          latency_ms: number | null
+          metadata: Json
+          model: string | null
+          provider: string
+          status: string
+        }
+        Insert: {
+          config_hash?: string | null
+          created_at?: string
+          error_code?: string | null
+          error_message?: string | null
+          feature: string
+          id?: string
+          latency_ms?: number | null
+          metadata?: Json
+          model?: string | null
+          provider: string
+          status: string
+        }
+        Update: {
+          config_hash?: string | null
+          created_at?: string
+          error_code?: string | null
+          error_message?: string | null
+          feature?: string
+          id?: string
+          latency_ms?: number | null
+          metadata?: Json
+          model?: string | null
+          provider?: string
+          status?: string
+        }
+        Relationships: []
+      }
       bookings: {
         Row: {
           amount_total: number
