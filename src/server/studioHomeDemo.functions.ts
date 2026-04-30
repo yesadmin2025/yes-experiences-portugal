@@ -23,15 +23,26 @@ import {
 
 export type DemoChipKey = "wine" | "coast" | "culture" | "moment";
 
+export interface DemoStopAlternate {
+  key: string;
+  label: string;
+  blurb: string | null;
+  variantLabel: string | null;
+  durationMinutes: number;
+}
+
 export interface DemoStop {
   key: string;
   label: string;
   blurb: string | null;
   tag: string | null;
+  variantLabel: string | null;
   lat: number;
   lng: number;
   durationMinutes: number;
   driveMinutesFromPrev: number;
+  /** Other real variants of the same canonical stop in this region. */
+  alternates: DemoStopAlternate[];
 }
 
 export interface StudioDemoRoute {
