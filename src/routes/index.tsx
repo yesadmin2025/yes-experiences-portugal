@@ -80,9 +80,29 @@ interface StartPath {
   to: string;
   ariaLabel: string;
   bg: string;
+  /** Spec badge — short, all-caps. Featured card gets prominent treatment. */
+  badge: string;
+  /** Trust micro-text shown under the CTA. */
+  micro: string;
+  /** Whether this card is the FEATURED hero card (only one). */
+  featured?: boolean;
 }
 
 const startPaths: StartPath[] = [
+  {
+    tier: "primary",
+    icon: Sparkles,
+    eyebrow: "Studio",
+    title: "Build your own experience",
+    line: "Designed in real time, with you. Watch your journey evolve on a map. Confirm and go.",
+    cta: "Open the studio",
+    to: "/builder",
+    ariaLabel: "Build your own experience in the Experience Studio",
+    bg: imgSintraEstates,
+    badge: "★ Most control",
+    micro: "AI-assisted · Local-approved · 2–3 minutes",
+    featured: true,
+  },
   {
     tier: "primary",
     icon: BookOpen,
@@ -93,39 +113,34 @@ const startPaths: StartPath[] = [
     to: "/experiences",
     ariaLabel: "Explore Signature Experiences — complete private days, ready to confirm",
     bg: imgArrabidaWineHero,
-  },
-  {
-    tier: "primary",
-    icon: Sparkles,
-    eyebrow: "Studio",
-    title: "Build your private journey",
-    line: "Compose your own day with real stops, realistic timings and human support.",
-    cta: "Open the studio",
-    to: "/builder",
-    ariaLabel: "Build your private journey in the Experience Studio",
-    bg: imgSintraEstates,
+    badge: "★ Ready-made",
+    micro: "Most popular with first-time planners",
   },
   {
     tier: "secondary",
     icon: Wand2,
     eyebrow: "Tailored",
-    title: "Tailor a signature",
-    line: "Keep the day, adjust pace, pickup or a single stop.",
+    title: "Tailor a Signature",
+    line: "Start with a ready-made day. Adjust the pace, swap a stop, add upgrades.",
     cta: "See how",
     to: "/experiences",
     ariaLabel: "Tailor a Signature — adjust pace, pickup or a single stop",
     bg: imgAzeitaoWorkshop,
+    badge: "Flexible",
+    micro: "Best for decisive travellers",
   },
   {
     tier: "secondary",
     icon: Gift,
-    eyebrow: "Groups & moments",
-    title: "Proposals, groups, celebrations",
-    line: "For larger parties and dates worth marking. Designed with you, in conversation.",
+    eyebrow: "Moments",
+    title: "Plan a Moment",
+    line: "Proposals, celebrations, corporate events, larger groups. Designed in conversation.",
     cta: "Speak to a local",
     to: "/proposals",
     ariaLabel: "Proposals, groups and celebrations — speak to a local",
     bg: imgArrabidaWineLunch,
+    badge: "Premium",
+    micro: "Fully managed · Premium service",
   },
 ];
 
