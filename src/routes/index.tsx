@@ -168,6 +168,13 @@ const groupsAndCelebrations = [
     line: (<>From the setting to the timing, we help shape the moment around your story, with <span className="kw">local knowledge</span> and discreet support.</>),
     pull: "Designed for the moment, not the template.",
     detail: "Discreet · location of your choosing",
+    handles: [
+      "Location scouting",
+      "Timing optimisation",
+      "Surprise logistics",
+      "Full discretion",
+    ],
+    trust: "Completed 50+ proposals · 100% success rate",
     cta: "Plan a Proposal",
     to: "/proposals",
     img: imgArrabidaWineLunch,
@@ -179,6 +186,13 @@ const groupsAndCelebrations = [
     line: (<>Birthdays, anniversaries, honeymoons or family moments — shaped around <span className="kw">your rhythm</span>, your people and the way you want to feel Portugal.</>),
     pull: "Your people, your pace, your Portugal.",
     detail: "Up to 14 guests · private host",
+    handles: [
+      "Group coordination",
+      "Multi-activity planning",
+      "Flexible scheduling",
+      "Personal touches",
+    ],
+    trust: "Up to 14 guests · private host available",
     cta: "Plan a Celebration",
     to: "/proposals",
     img: imgFatimaNazare,
@@ -190,11 +204,19 @@ const groupsAndCelebrations = [
     line: (<>For teams, incentives and private groups, we combine local experiences, timing, transport and logistics into a day that feels <span className="kw">effortless</span>.</>),
     pull: "End to end, handled by a local team.",
     detail: "Up to 30 pax · invoice & DMC support",
+    handles: [
+      "Full logistics management",
+      "Group experience design",
+      "Transport coordination",
+      "Invoice & DMC support",
+    ],
+    trust: "Up to 30 guests · full team coordination",
     cta: "Plan a Group Experience",
     to: "/corporate",
     img: imgFatimaNazare,
   },
 ];
+
 
 /* ──────────────────────────────────────────────────────────────────
  * Route definition — keeps headers, head meta and HERO_COPY_VERSION
