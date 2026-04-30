@@ -1,5 +1,6 @@
 import type { LucideIcon } from "lucide-react";
 import { ArrowLeft, Check, Sparkles } from "lucide-react";
+import { BuilderImage } from "./BuilderImage";
 
 interface StepHeadProps {
   num: number;
