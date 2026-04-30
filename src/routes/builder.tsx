@@ -589,8 +589,8 @@ function LiveBuilder({
               onAddBackStop={onAddBackStop}
               onMove={onMove}
               removablePool={removablePool}
-              stopImages={routeImages.stopImages}
-              storyImage={routeImages.storyImage}
+              stopImages={stopImages}
+              storyImage={storyImage}
             />
           </div>
 
