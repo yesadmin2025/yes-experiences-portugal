@@ -111,7 +111,7 @@ function BuilderPage() {
   const setSearch = useCallback(
     (patch: Partial<BuilderSearch>) => {
       void navigate({
-        search: (prev) => ({ ...(prev as BuilderSearch), ...patch }),
+        search: (prev: BuilderSearch) => ({ ...prev, ...patch }),
         replace: false,
       });
     },
