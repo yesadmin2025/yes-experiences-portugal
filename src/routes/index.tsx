@@ -32,6 +32,7 @@ import {
 } from "lucide-react";
 import { PlatformBadge } from "@/components/PlatformBadge";
 import { LiveMapPreview } from "@/components/LiveMapPreview";
+import { StudioMoment } from "@/components/StudioMoment";
 import { TrustmarySection } from "@/components/TrustmarySection";
 
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
@@ -529,187 +530,13 @@ function HomePage() {
           no zoom. HERO_COPY stays byte-exact for lock parity. The brand
           signature ("Whatever you have in mind, We say YES.") is rendered
           ONCE inside HERO_COPY.brandLine — no duplicate slogans. */}
-      <section
-        className="relative min-h-[80vh] md:min-h-[94vh] flex items-end overflow-hidden"
-      >
-        <img
-          src={heroImg}
-          alt="Hidden coastal road in Portugal at golden hour"
-          className="he-parallax absolute inset-0 w-full h-full object-cover object-center"
-          width={1920}
-          height={1080}
-        />
-        {/* Soft dark gradient — required by brief for any text-over-image. */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/85 via-[color:var(--charcoal-deep)]/45 to-[color:var(--charcoal-deep)]/40 md:from-[color:var(--charcoal-deep)]/80 md:via-[color:var(--charcoal-deep)]/35 md:to-[color:var(--charcoal-deep)]/30 pointer-events-none" />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(15,15,15,0.65)_0%,rgba(15,15,15,0.4)_35%,transparent_70%)] md:bg-[linear-gradient(90deg,rgba(15,15,15,0.6)_0%,rgba(15,15,15,0.32)_40%,transparent_72%)] pointer-events-none" />
+      {/* HERO — Experience Studio moment (Phase 1).
+          Replaces the static cover with a live, predictive Studio:
+          chip row + animated map + journey panel + first mood
+          question. All HERO_COPY locks are preserved internally
+          via hidden probes so the copy snapshot/version stays green. */}
+      <StudioMoment />
 
-        <div className="container-x relative z-10 pb-14 md:pb-36 pt-32 md:pt-40">
-          <div className="max-w-3xl text-[color:var(--ivory)]">
-            <span className="inline-flex items-center gap-2 sm:gap-3.5 max-w-full text-[9.5px] xs:text-[10.5px] sm:text-[12px] md:text-[13px] uppercase tracking-[0.12em] xs:tracking-[0.16em] sm:tracking-[0.26em] md:tracking-[0.3em] text-[color:var(--gold)] opacity-0 animate-[heroFade_1.1s_ease-out_0.3s_forwards]">
-              <span aria-hidden="true" className="shrink-0">✦</span>
-              <span data-hero-field="eyebrow" className="whitespace-nowrap truncate">
-                {HERO_COPY.eyebrow}
-              </span>
-              <span aria-hidden="true" className="shrink-0">✦</span>
-            </span>
-
-            <h1
-              data-hero-field="headlineLine1 headlineLine2"
-              className="hero-h1 serif mt-7 md:mt-10 text-[2.05rem] sm:text-5xl md:text-7xl lg:text-[5.4rem] leading-[1.08] sm:leading-[1.04] md:leading-[0.96] tracking-[-0.012em] text-[color:var(--ivory)] text-left opacity-0 animate-[heroFade_1.4s_ease-out_0.6s_forwards] [text-shadow:0_2px_18px_rgba(0,0,0,0.35)]"
-            >
-              <span data-hero-field="headlineLine1" className="block">
-                {HERO_COPY.headlineLine1}
-              </span>
-              <span
-                data-hero-field="headlineLine2"
-                className="block italic font-medium text-[color:var(--gold-soft)] mt-1.5 md:mt-1 text-[2.2rem] sm:text-[3.4rem] md:text-[5rem] lg:text-[5.7rem] tracking-[-0.018em] leading-[1.05] md:leading-[0.96]"
-              >
-                {HERO_COPY.headlineLine2}
-              </span>
-            </h1>
-
-            <p
-              data-hero-field="subheadline"
-              className="mt-8 md:mt-10 text-[17px] md:text-[22px] text-[color:var(--ivory)]/95 max-w-md md:max-w-lg leading-[1.6] md:leading-[1.75] font-light text-left opacity-0 animate-[heroFade_1.4s_ease-out_0.95s_forwards] [text-shadow:0_1px_8px_rgba(0,0,0,0.3)]"
-            >
-              {HERO_COPY.subheadline}
-            </p>
-
-            {/* CTAs — exactly two, per brief.
-                Order swapped from the previous build: Signature first
-                (Explore), Studio second (Build), so the calmer choice
-                leads. Both kept full-width on mobile, equal-width on
-                desktop, with identical internal anatomy. */}
-            <div className="mt-12 md:mt-12 flex flex-col sm:flex-row gap-4 sm:gap-4 w-full max-w-sm sm:max-w-xl opacity-0 animate-[heroFade_1.4s_ease-out_1.25s_forwards]">
-              <Link
-                to="/experiences"
-                data-hero-field="primaryCta"
-                className="hero-cta-button cta-primary he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left"
-              >
-                <span className="block">Explore Signature Experiences</span>
-                <ArrowRight
-                  size={16}
-                  className="shrink-0 transition-transform duration-300 group-hover:translate-x-1"
-                  aria-hidden="true"
-                />
-              </Link>
-              <Link
-                to="/builder"
-                data-hero-field="secondaryCta"
-                className="hero-cta-button cta-secondary-dark he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left"
-              >
-                <span className="block">Build your private journey</span>
-                <ArrowRight
-                  size={16}
-                  className="shrink-0 transition-transform duration-300 group-hover:translate-x-1"
-                  aria-hidden="true"
-                />
-              </Link>
-            </div>
-
-            <div className="hero-rhythm-cta-to-microcopy max-w-sm sm:max-w-xl mx-auto sm:mx-0 opacity-0 animate-[heroFade_1.4s_ease-out_1.5s_forwards]">
-              <p
-                data-hero-field="microcopy"
-                className="text-[14px] md:text-[14.5px] text-[color:var(--ivory)] leading-[1.65] md:leading-[1.7] font-normal tracking-[0.005em] text-center sm:text-left"
-              >
-                {HERO_COPY.microcopy}
-              </p>
-              <p className="mt-3 text-[13px] md:text-[13px] text-[color:var(--ivory)]/85 italic leading-[1.65] text-center sm:text-left">
-                Prefer guidance?{" "}
-                <Link
-                  to="/contact"
-                  className="link-soft link-soft--persistent text-[color:var(--ivory)]"
-                >
-                  A local designer can shape it with you.
-                </Link>
-              </p>
-            </div>
-
-            {/* Brand signature — rendered ONCE (Patch 2A dedup).
-                The visible split is the only copy of the line; SRs read
-                it via aria-label on the wrapper. */}
-            <div className="hero-rhythm-microcopy-to-signature mb-2 md:mb-2 mt-8 md:mt-10 flex justify-center opacity-0 animate-[heroFade_1.4s_ease-out_1.75s_forwards]">
-              <div
-                data-hero-field="brandLine"
-                aria-label={HERO_COPY.brandLine}
-                className="inline-flex items-center gap-6 md:gap-7 text-[color:var(--gold-soft)]"
-              >
-                <span aria-hidden="true" className="h-px w-12 md:w-16 bg-gradient-to-r from-transparent to-[color:var(--gold)] shrink-0 opacity-90" />
-                <span className="flex flex-col items-center gap-2 md:gap-2.5 text-[10.5px] md:text-[11px] uppercase tracking-[0.32em] leading-[1.2] text-center">
-                  <span className="text-[color:var(--ivory)]/85" style={{ fontWeight: 450 }}>
-                    Whatever you have in mind,
-                  </span>
-                  <span
-                    className="text-[color:var(--gold)] tracking-[0.4em] text-[12.5px] md:text-[13px]"
-                    style={{ fontWeight: 600 }}
-                  >
-                    We say YES.
-                  </span>
-                </span>
-                <span aria-hidden="true" className="h-px w-12 md:w-16 bg-gradient-to-l from-transparent to-[color:var(--gold)] shrink-0 opacity-90" />
-              </div>
-            </div>
-
-            {/* Hidden hero-copy probes — required by HERO_COPY locks.
-                Visually-hidden, no layout impact. */}
-            <div
-              data-hero-copy-version={HERO_COPY_VERSION}
-              data-hero-eyebrow={HERO_COPY.eyebrow}
-              data-hero-headline={`${HERO_COPY.headlineLine1} ${HERO_COPY.headlineLine2}`}
-              data-hero-subheadline={HERO_COPY.subheadline}
-              data-hero-primary-cta={HERO_COPY.primaryCta}
-              data-hero-secondary-cta={HERO_COPY.secondaryCta}
-              data-hero-microcopy={HERO_COPY.microcopy}
-              data-hero-brand-line={HERO_COPY.brandLine}
-              data-testid="hero-copy-version"
-              aria-hidden="true"
-              style={{
-                position: "absolute",
-                width: 1,
-                height: 1,
-                padding: 0,
-                margin: -1,
-                overflow: "hidden",
-                clip: "rect(0,0,0,0)",
-                whiteSpace: "nowrap",
-                border: 0,
-              }}
-            >
-              <span data-probe-field="version">hero-copy-version:{HERO_COPY_VERSION}</span>
-              {" | "}
-              <span data-probe-field="headline">
-                {HERO_COPY.headlineLine1} {HERO_COPY.headlineLine2}
-              </span>
-              {" | "}
-              <span data-probe-field="subheadline">{HERO_COPY.subheadline}</span>
-            </div>
-            <div
-              data-hero-copy-json={JSON.stringify({ version: HERO_COPY_VERSION, copy: HERO_COPY })}
-              data-testid="hero-copy-json"
-              aria-hidden="true"
-              style={{
-                position: "absolute",
-                width: 1,
-                height: 1,
-                padding: 0,
-                margin: -1,
-                overflow: "hidden",
-                clip: "rect(0,0,0,0)",
-                whiteSpace: "nowrap",
-                border: 0,
-              }}
-            >
-              <script
-                type="application/json"
-                data-probe-field="hero-copy-json"
-                dangerouslySetInnerHTML={{
-                  __html: JSON.stringify({ version: HERO_COPY_VERSION, copy: HERO_COPY }, null, 2),
-                }}
-              />
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* 2 — TRUST STRIP
           Restrained: review count, real platforms, one short line about
