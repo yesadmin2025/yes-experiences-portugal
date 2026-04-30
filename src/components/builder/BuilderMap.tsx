@@ -171,6 +171,7 @@ export function BuilderMap({ stops, regionCenter, regionKey }: Props) {
     }
 
     const bounds = L.latLngBounds(points).pad(0.35);
+    lastBoundsRef.current = bounds;
     if (visible) {
       map.flyToBounds(bounds, { duration: 0.7 });
     } else {
