@@ -873,9 +873,9 @@ function HomePage() {
           </ul>
 
           {/* Closing microline */}
-          <p className="reveal mt-10 md:mt-12 text-center inline-flex w-full items-center justify-center gap-2 text-[12px] uppercase tracking-[0.28em] text-[color:var(--teal)]">
-            <MessageCircle size={13} aria-hidden="true" />
-            A local is always one message away
+          <p className="reveal mt-10 md:mt-12 text-center inline-flex flex-wrap w-full items-center justify-center gap-x-2 gap-y-1 px-4 text-[10.5px] xs:text-[11.5px] sm:text-[12px] uppercase tracking-[0.18em] xs:tracking-[0.22em] sm:tracking-[0.28em] text-[color:var(--teal)]">
+            <MessageCircle size={13} aria-hidden="true" className="shrink-0" />
+            <span className="text-balance">A local is always one message away</span>
           </p>
         </div>
       </section>
