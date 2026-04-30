@@ -2,6 +2,18 @@ import { Link } from "@tanstack/react-router";
 import { Instagram, Facebook, Youtube, Linkedin } from "lucide-react";
 import { Logo } from "@/components/Logo";
 
+/**
+ * Footer — 4-column nav with logo + tagline on desktop,
+ * stacked on mobile. Per v3 homepage spec:
+ *   col 1: Experiences
+ *   col 2: Occasions
+ *   col 3: Company
+ *   col 4: Connect (social icons)
+ *
+ * Logo + tagline sit ABOVE the column grid so the 4 columns get
+ * proportionate space at desktop instead of being squeezed beside
+ * a logo block. On mobile everything stacks vertically.
+ */
 const SOCIALS = [
   { href: "https://instagram.com/", label: "Instagram", Icon: Instagram },
   { href: "https://facebook.com/", label: "Facebook", Icon: Facebook },
@@ -12,35 +24,32 @@ const SOCIALS = [
 export function Footer() {
   return (
     <footer className="bg-[color:var(--charcoal-deep)] text-[color:var(--ivory)]">
-      <div className="container-x py-24 md:py-28">
-        <div className="grid md:grid-cols-4 gap-14">
-          <div className="md:col-span-1">
-            {/* Gold variant of the approved header artwork — same silhouette
-                and scale, with a softer champagne-gold finish for the dark
-                footer surface. */}
-            <Link
-              to="/"
-              className="inline-block rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--charcoal-deep)]"
-              aria-label="YES experiences PORTUGAL — Home"
-            >
-              {/* Shared <Logo> wrapper — `theme` prop binds the gold
-                  artwork to the .logo-mark--gold-on-charcoal filter
-                  recipe so they can never drift apart. */}
-              <Logo
-                theme="gold-on-charcoal"
-                loading="lazy"
-                className="block h-[60px] md:h-[64px] lg:h-[68px] w-auto select-none"
-              />
-            </Link>
-            <p
-              className="mt-8 text-[14.5px] text-[color:var(--ivory)]/85 leading-[1.8] max-w-xs"
-              style={{ fontWeight: 320, letterSpacing: "0.005em" }}
-            >
-              Private, designed Portugal experiences — crafted around your story by passionate local
-              experts.
-            </p>
-          </div>
+      <div className="container-x py-20 md:py-24">
+        {/* Brand row — logo + tagline. Sits above the column grid so
+            the 4 nav columns can breathe at desktop. */}
+        <div className="max-w-3xl">
+          <Link
+            to="/"
+            className="inline-block rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--charcoal-deep)]"
+            aria-label="YES experiences PORTUGAL — Home"
+          >
+            <Logo
+              theme="gold-on-charcoal"
+              loading="lazy"
+              className="block h-[56px] md:h-[60px] w-auto select-none"
+            />
+          </Link>
+          <p
+            className="mt-6 text-[14px] text-[color:var(--ivory)]/80 leading-[1.7] max-w-md"
+            style={{ fontWeight: 320, letterSpacing: "0.005em" }}
+          >
+            Private, designed Portugal experiences — crafted around your story by passionate local
+            experts.
+          </p>
+        </div>
 
+        {/* 4-column nav grid */}
+        <div className="mt-14 md:mt-16 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-12 md:gap-10">
           <FooterCol
             title="Experiences"
             links={[
@@ -65,26 +74,39 @@ export function Footer() {
               { to: "/contact", label: "Contact" },
             ]}
           />
+
+          {/* Connect column — social icons rendered inline as part of
+              the 4-column grid. Each icon is a 44×44 hit target on
+              mobile to satisfy A11y. */}
+          <div>
+            <h4
+              className="font-sans text-[11px] uppercase tracking-[0.32em] text-[color:var(--gold)] mb-6"
+              style={{ fontWeight: 400 }}
+            >
+              Connect
+            </h4>
+            <ul className="flex flex-wrap items-center gap-3 list-none p-0 m-0">
+              {SOCIALS.map(({ href, label, Icon }) => (
+                <li key={label}>
+                  <a
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={label}
+                    className="inline-flex items-center justify-center h-11 w-11 rounded-sm border border-[color:var(--ivory)]/40 text-[color:var(--ivory)]/65 hover:text-[color:var(--gold)] hover:border-[color:var(--gold)]/70 hover:-translate-y-0.5 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--charcoal-deep)]"
+                  >
+                    <Icon size={18} strokeWidth={1.5} />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
-        <div className="mt-20 pt-10 border-t border-[color:var(--ivory)]/15 flex flex-col items-center gap-8">
-          <ul className="flex items-center gap-6 list-none p-0 m-0">
-            {SOCIALS.map(({ href, label, Icon }) => (
-              <li key={label}>
-                <a
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={label}
-                  className="inline-flex items-center justify-center text-[color:var(--ivory)]/55 hover:text-[color:var(--gold)] hover:-translate-y-0.5 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--charcoal-deep)] rounded-sm"
-                >
-                  <Icon size={17} strokeWidth={1.5} />
-                </a>
-              </li>
-            ))}
-          </ul>
+        {/* Bottom bar — copyright + tagline. Quiet, single line. */}
+        <div className="mt-16 md:mt-20 pt-8 border-t border-[color:var(--ivory)]/15">
           <div
-            className="w-full flex flex-col md:flex-row justify-between items-center gap-4 text-[12px] text-[color:var(--ivory)]/75"
+            className="flex flex-col md:flex-row justify-between items-center gap-3 text-[12px] text-[color:var(--ivory)]/70"
             style={{ fontWeight: 350 }}
           >
             <p>© {new Date().getFullYear()} YES experiences Portugal. All rights reserved.</p>
@@ -110,7 +132,7 @@ function FooterCol({ title, links }: { title: string; links: { to: string; label
       >
         {title}
       </h4>
-      <ul className="space-y-3.5 text-[14.5px]" style={{ fontWeight: 350 }}>
+      <ul className="space-y-3 text-[14px]" style={{ fontWeight: 350 }}>
         {links.map((l) => (
           <li key={l.to}>
             <Link
