@@ -900,6 +900,12 @@ function HomePage() {
         </div>
       </section>
 
+      {/* 3.5 — THE DIFFERENCE
+          Editorial two-column "how it works / what you get" — explains
+          the YES design process in functional terms before asking the
+          user to pick a path. No competitor comparisons. */}
+      <TheDifferenceSection />
+
       {/* 4 — START HERE
           Four paths with explicit hierarchy: 2 primary (Signature,
           Studio), 2 secondary (Tailor, Proposals/Groups). Mobile: stacked.
