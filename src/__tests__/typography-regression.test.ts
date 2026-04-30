@@ -579,6 +579,15 @@ const TOKEN_CLASS_RE =
   /<(h1|h2|h3|h4|p|span|div)\b[^>]*\sclassName="([^"]*\b(?:t-h1|t-h2|t-h3|t-eyebrow|t-lead)\b[^"]*)"/g;
 
 describe("Typography regression — section headlines (token sweep)", () => {
+  if (SECTION_PAGES.length === 0) {
+    // All current pages were rebuilt to Typography v3 raw classes and
+    // intentionally do NOT use the legacy serif-based t-h* tokens. The sweep
+    // remains armed for any future page that opts into the token system.
+    it("no pages currently use the legacy t-h* token system (Typography v3)", () => {
+      expect(SECTION_PAGES).toEqual([]);
+    });
+    return;
+  }
   for (const { page, file } of SECTION_PAGES) {
     it(`[${page}] all tokenized section headlines`, () => {
       const src = read(file);
