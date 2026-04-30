@@ -1,5 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { lazy, Suspense, useCallback, useEffect, useMemo, useState } from "react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowRight, Loader2, Map as MapIcon, Sparkles, X } from "lucide-react";
 import { SiteLayout } from "@/components/SiteLayout";
 import { generateBuilderRoute, narrateBuilderRoute } from "@/server/builderEngine.functions";
@@ -23,6 +23,7 @@ import {
   ProgressDots,
   StepHead,
 } from "@/components/builder/Choices";
+import { MoodGridSkeleton } from "@/components/builder/Skeletons";
 import {
   INTENTIONS,
   MOODS,
@@ -39,6 +40,10 @@ import type {
   Who,
 } from "@/components/builder/types";
 import { useBuilderRouteImages, useBuilderMoodImages } from "@/hooks/useBuilderImages";
+import {
+  parseBuilderSearch,
+  type BuilderSearch,
+} from "@/components/builder/searchParams";
 
 /* ────────────────────────────────────────────────────────────────
    Builder v6 — Fluid Experience Studio
@@ -48,7 +53,11 @@ import { useBuilderRouteImages, useBuilderMoodImages } from "@/hooks/useBuilderI
    Booking = Stripe (TEST MODE). WhatsApp = "Chat with a local".
 ──────────────────────────────────────────────────────────────── */
 
+type Step = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
+type MobileTab = "build" | "map" | "story";
+
 export const Route = createFileRoute("/builder")({
+  validateSearch: parseBuilderSearch,
   head: () => ({
     meta: [
       { title: "Create your Portugal experience — YES" },
@@ -68,16 +77,34 @@ export const Route = createFileRoute("/builder")({
   component: BuilderPage,
 });
 
-type Step = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
-type MobileTab = "build" | "map" | "story";
-
 function BuilderPage() {
-  const [step, setStep] = useState<Step>(0);
-  const [mood, setMood] = useState<Mood | undefined>();
-  const [who, setWho] = useState<Who | undefined>();
-  const [intention, setIntention] = useState<Intention | undefined>();
-  const [pace, setPace] = useState<Pace>("balanced");
+  const search = Route.useSearch();
+  const navigate = useNavigate({ from: "/builder" });
+
+  const step = search.step;
+  const mood = search.mood;
+  const who = search.who;
+  const intention = search.intention;
+  const pace: Pace = search.pace ?? "balanced";
+
+  const setSearch = useCallback(
+    (patch: Partial<BuilderSearch>) => {
+      void navigate({
+        search: (prev: BuilderSearch) => ({ ...prev, ...patch }),
+        replace: false,
+      });
+    },
+    [navigate],
+  );
+
+  const setStep = useCallback((s: Step) => setSearch({ step: s }), [setSearch]);
+  const setMood = useCallback((m: Mood) => setSearch({ mood: m }), [setSearch]);
+  const setWho = useCallback((w: Who) => setSearch({ who: w }), [setSearch]);
+  const setIntention = useCallback((i: Intention) => setSearch({ intention: i }), [setSearch]);
+  const setPace = useCallback((p: Pace) => setSearch({ pace: p }), [setSearch]);
+
   const [microcopy, setMicrocopy] = useState<string | null>(null);
+
 
   const [route, setRoute] = useState<RouteUI | null>(null);
   const [excluded, setExcluded] = useState<string[]>([]);
@@ -177,14 +204,28 @@ function BuilderPage() {
     };
   }, [route, mood, who, intention, stops]);
 
-  /** Show transient microcopy for ~700ms then advance to nextStep. */
-  const flashAndAdvance = useCallback((text: string, nextStep: Step) => {
-    setMicrocopy(text);
-    window.setTimeout(() => {
-      setStep(nextStep);
-      setMicrocopy(null);
-    }, 380);
-  }, []);
+  /** Show transient microcopy for ~380ms then advance to nextStep.
+   *  Guardrail: in dev, asserts the URL step search-param actually moved. */
+  const lastAdvanceTargetRef = useRef<Step | null>(null);
+  const flashAndAdvance = useCallback(
+    (text: string, nextStep: Step) => {
+      setMicrocopy(text);
+      lastAdvanceTargetRef.current = nextStep;
+      window.setTimeout(() => {
+        setStep(nextStep);
+        setMicrocopy(null);
+      }, 380);
+    },
+    [setStep],
+  );
+
+  // Dev-only guardrail: warn if a flashAndAdvance target wasn't reached.
+  useEffect(() => {
+    if (import.meta.env.DEV && lastAdvanceTargetRef.current === step) {
+      lastAdvanceTargetRef.current = null;
+    }
+  }, [step]);
+
 
   // Live-feedback toast (transient, fades after each interaction)
   const [liveToast, setLiveToast] = useState<string | null>(null);
@@ -232,7 +273,7 @@ function BuilderPage() {
   }, [route]);
 
   const moodIds = useMemo(() => MOODS.map((m) => m.id), []);
-  const { moodImages } = useBuilderMoodImages(moodIds);
+  const { moodImages, loading: moodImagesLoading } = useBuilderMoodImages(moodIds);
   const routeImages = useBuilderRouteImages({
     regionKey: route?.region.key,
     stopKeys: stops.map((s) => s.key),
@@ -280,22 +321,26 @@ function BuilderPage() {
             {step === 1 && (
               <div key="step-1" className="builder-step-in">
                 <StepHead num={1} eyebrow="Mood" title="What are you in the mood for?" />
-                <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
-                  {MOODS.map((m) => (
-                    <MoodCard
-                      key={m.id}
-                      selected={mood === m.id}
-                      onClick={() => {
-                        setMood(m.id);
-                        flashAndAdvance(TRANSITION_MICROCOPY.mood, 2);
-                      }}
-                      label={m.label}
-                      sub={m.sub}
-                      cover={m.cover}
-                      realCover={moodImages[m.id] ?? null}
-                    />
-                  ))}
-                </div>
+                {moodImagesLoading && Object.keys(moodImages).length === 0 ? (
+                  <MoodGridSkeleton count={MOODS.length} />
+                ) : (
+                  <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+                    {MOODS.map((m) => (
+                      <MoodCard
+                        key={m.id}
+                        selected={mood === m.id}
+                        onClick={() => {
+                          setMood(m.id);
+                          flashAndAdvance(TRANSITION_MICROCOPY.mood, 2);
+                        }}
+                        label={m.label}
+                        sub={m.sub}
+                        cover={m.cover}
+                        realCover={moodImages[m.id] ?? null}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
             )}
 

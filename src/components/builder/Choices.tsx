@@ -1,5 +1,6 @@
 import type { LucideIcon } from "lucide-react";
 import { ArrowLeft, Check, Sparkles } from "lucide-react";
+import { BuilderImage } from "./BuilderImage";
 
 interface StepHeadProps {
   num: number;
@@ -62,29 +63,30 @@ export function MoodCard({
       aria-pressed={selected}
       className={[
         "group relative overflow-hidden rounded-[2px] text-left transition-all duration-300",
-        "min-h-[220px] sm:min-h-[260px] flex items-end p-4 sm:p-5",
         "border",
         selected
           ? "border-[color:var(--gold)] ring-2 ring-[color:var(--gold)]/40 -translate-y-[2px] shadow-[0_18px_36px_-18px_rgba(46,46,46,0.45)]"
           : "border-[color:var(--charcoal)]/10 hover:-translate-y-[2px] hover:shadow-[0_14px_28px_-16px_rgba(46,46,46,0.35)]",
       ].join(" ")}
     >
-      <img
+      <BuilderImage
         src={src}
         alt={alt}
-        loading="lazy"
-        className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-      />
-      <span aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/25 to-black/0" />
-      {selected && (
-        <span className="absolute top-3 right-3 inline-flex h-7 w-7 items-center justify-center rounded-full bg-[color:var(--gold)] text-[color:var(--charcoal)]">
-          <Check size={14} strokeWidth={2.5} />
+        ratio="4/5"
+        overlay
+        rounded={false}
+        imgClassName="transition-transform duration-500 group-hover:scale-[1.03]"
+      >
+        {selected && (
+          <span className="absolute top-3 right-3 z-10 inline-flex h-7 w-7 items-center justify-center rounded-full bg-[color:var(--gold)] text-[color:var(--charcoal)]">
+            <Check size={14} strokeWidth={2.5} />
+          </span>
+        )}
+        <span className="absolute inset-x-0 bottom-0 z-10 flex flex-col gap-1 p-4 sm:p-5 text-[color:var(--ivory)]">
+          <span className="serif text-[1.25rem] sm:text-[1.4rem] leading-[1.1] font-semibold">{label}</span>
+          <span className="text-[12.5px] tracking-wide opacity-90">{sub}</span>
         </span>
-      )}
-      <span className="relative z-10 flex flex-col gap-1 text-[color:var(--ivory)]">
-        <span className="serif text-[1.25rem] sm:text-[1.4rem] leading-[1.1] font-semibold">{label}</span>
-        <span className="text-[12.5px] tracking-wide opacity-90">{sub}</span>
-      </span>
+      </BuilderImage>
     </button>
   );
 }
