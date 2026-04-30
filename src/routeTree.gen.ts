@@ -26,6 +26,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ToursTourIdRouteImport } from './routes/tours.$tourId'
 import { Route as QaMobileRouteImport } from './routes/qa.mobile'
+import { Route as E2ePostmessageProbeRouteImport } from './routes/e2e.postmessage-probe'
 import { Route as ApiVerifyHeroRouteImport } from './routes/api/verify-hero'
 import { Route as ApiImgRouteImport } from './routes/api/img'
 import { Route as ApiHealthRouteImport } from './routes/api/health'
@@ -121,6 +122,11 @@ const QaMobileRoute = QaMobileRouteImport.update({
   path: '/qa/mobile',
   getParentRoute: () => rootRouteImport,
 } as any)
+const E2ePostmessageProbeRoute = E2ePostmessageProbeRouteImport.update({
+  id: '/e2e/postmessage-probe',
+  path: '/e2e/postmessage-probe',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiVerifyHeroRoute = ApiVerifyHeroRouteImport.update({
   id: '/api/verify-hero',
   path: '/api/verify-hero',
@@ -191,6 +197,7 @@ export interface FileRoutesByFullPath {
   '/api/health': typeof ApiHealthRoute
   '/api/img': typeof ApiImgRoute
   '/api/verify-hero': typeof ApiVerifyHeroRoute
+  '/e2e/postmessage-probe': typeof E2ePostmessageProbeRoute
   '/qa/mobile': typeof QaMobileRoute
   '/tours/$tourId': typeof ToursTourIdRouteWithChildren
   '/tours/$tourId/tailor': typeof ToursTourIdTailorRoute
@@ -219,6 +226,7 @@ export interface FileRoutesByTo {
   '/api/health': typeof ApiHealthRoute
   '/api/img': typeof ApiImgRoute
   '/api/verify-hero': typeof ApiVerifyHeroRoute
+  '/e2e/postmessage-probe': typeof E2ePostmessageProbeRoute
   '/qa/mobile': typeof QaMobileRoute
   '/tours/$tourId': typeof ToursTourIdRouteWithChildren
   '/tours/$tourId/tailor': typeof ToursTourIdTailorRoute
@@ -248,6 +256,7 @@ export interface FileRoutesById {
   '/api/health': typeof ApiHealthRoute
   '/api/img': typeof ApiImgRoute
   '/api/verify-hero': typeof ApiVerifyHeroRoute
+  '/e2e/postmessage-probe': typeof E2ePostmessageProbeRoute
   '/qa/mobile': typeof QaMobileRoute
   '/tours/$tourId': typeof ToursTourIdRouteWithChildren
   '/tours/$tourId/tailor': typeof ToursTourIdTailorRoute
@@ -278,6 +287,7 @@ export interface FileRouteTypes {
     | '/api/health'
     | '/api/img'
     | '/api/verify-hero'
+    | '/e2e/postmessage-probe'
     | '/qa/mobile'
     | '/tours/$tourId'
     | '/tours/$tourId/tailor'
@@ -306,6 +316,7 @@ export interface FileRouteTypes {
     | '/api/health'
     | '/api/img'
     | '/api/verify-hero'
+    | '/e2e/postmessage-probe'
     | '/qa/mobile'
     | '/tours/$tourId'
     | '/tours/$tourId/tailor'
@@ -334,6 +345,7 @@ export interface FileRouteTypes {
     | '/api/health'
     | '/api/img'
     | '/api/verify-hero'
+    | '/e2e/postmessage-probe'
     | '/qa/mobile'
     | '/tours/$tourId'
     | '/tours/$tourId/tailor'
@@ -363,6 +375,7 @@ export interface RootRouteChildren {
   ApiHealthRoute: typeof ApiHealthRoute
   ApiImgRoute: typeof ApiImgRoute
   ApiVerifyHeroRoute: typeof ApiVerifyHeroRoute
+  E2ePostmessageProbeRoute: typeof E2ePostmessageProbeRoute
   QaMobileRoute: typeof QaMobileRoute
   ToursTourIdRoute: typeof ToursTourIdRouteWithChildren
 }
@@ -488,6 +501,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof QaMobileRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/e2e/postmessage-probe': {
+      id: '/e2e/postmessage-probe'
+      path: '/e2e/postmessage-probe'
+      fullPath: '/e2e/postmessage-probe'
+      preLoaderRoute: typeof E2ePostmessageProbeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/verify-hero': {
       id: '/api/verify-hero'
       path: '/api/verify-hero'
@@ -590,6 +610,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiHealthRoute: ApiHealthRoute,
   ApiImgRoute: ApiImgRoute,
   ApiVerifyHeroRoute: ApiVerifyHeroRoute,
+  E2ePostmessageProbeRoute: E2ePostmessageProbeRoute,
   QaMobileRoute: QaMobileRoute,
   ToursTourIdRoute: ToursTourIdRouteWithChildren,
 }
