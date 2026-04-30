@@ -221,8 +221,11 @@ export const getStudioHomeDemos = createServerFn({ method: "GET" }).handler(
                 key: other.key,
                 label: other.label,
                 blurb: other.blurb,
+                tag: other.tag,
                 variantLabel: other.variant_label ?? null,
                 durationMinutes: other.duration_minutes,
+                lat: Number(other.lat),
+                lng: Number(other.lng),
               }));
             return {
               key: s.key,
