@@ -294,7 +294,7 @@ function BuilderPage() {
   }, [route]);
 
   const moodIds = useMemo(() => MOODS.map((m) => m.id), []);
-  const { moodImages } = useBuilderMoodImages(moodIds);
+  const { moodImages, loading: moodImagesLoading } = useBuilderMoodImages(moodIds);
   const routeImages = useBuilderRouteImages({
     regionKey: route?.region.key,
     stopKeys: stops.map((s) => s.key),
