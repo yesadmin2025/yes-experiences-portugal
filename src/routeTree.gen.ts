@@ -30,6 +30,7 @@ import { Route as ApiVerifyHeroRouteImport } from './routes/api/verify-hero'
 import { Route as ApiImgRouteImport } from './routes/api/img'
 import { Route as AdminTourLinkAuditRouteImport } from './routes/admin.tour-link-audit'
 import { Route as AdminImportToursRouteImport } from './routes/admin.import-tours'
+import { Route as AdminBuilderImagesQaRouteImport } from './routes/admin.builder-images-qa'
 import { Route as AdminBuilderImagesRouteImport } from './routes/admin.builder-images'
 import { Route as AdminAiAuditRouteImport } from './routes/admin.ai-audit'
 import { Route as ToursTourIdTailorRouteImport } from './routes/tours.$tourId.tailor'
@@ -139,6 +140,11 @@ const AdminImportToursRoute = AdminImportToursRouteImport.update({
   path: '/admin/import-tours',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminBuilderImagesQaRoute = AdminBuilderImagesQaRouteImport.update({
+  id: '/admin/builder-images-qa',
+  path: '/admin/builder-images-qa',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminBuilderImagesRoute = AdminBuilderImagesRouteImport.update({
   id: '/admin/builder-images',
   path: '/admin/builder-images',
@@ -173,6 +179,7 @@ export interface FileRoutesByFullPath {
   '/typography-audit': typeof TypographyAuditRoute
   '/admin/ai-audit': typeof AdminAiAuditRoute
   '/admin/builder-images': typeof AdminBuilderImagesRoute
+  '/admin/builder-images-qa': typeof AdminBuilderImagesQaRoute
   '/admin/import-tours': typeof AdminImportToursRoute
   '/admin/tour-link-audit': typeof AdminTourLinkAuditRoute
   '/api/img': typeof ApiImgRoute
@@ -199,6 +206,7 @@ export interface FileRoutesByTo {
   '/typography-audit': typeof TypographyAuditRoute
   '/admin/ai-audit': typeof AdminAiAuditRoute
   '/admin/builder-images': typeof AdminBuilderImagesRoute
+  '/admin/builder-images-qa': typeof AdminBuilderImagesQaRoute
   '/admin/import-tours': typeof AdminImportToursRoute
   '/admin/tour-link-audit': typeof AdminTourLinkAuditRoute
   '/api/img': typeof ApiImgRoute
@@ -226,6 +234,7 @@ export interface FileRoutesById {
   '/typography-audit': typeof TypographyAuditRoute
   '/admin/ai-audit': typeof AdminAiAuditRoute
   '/admin/builder-images': typeof AdminBuilderImagesRoute
+  '/admin/builder-images-qa': typeof AdminBuilderImagesQaRoute
   '/admin/import-tours': typeof AdminImportToursRoute
   '/admin/tour-link-audit': typeof AdminTourLinkAuditRoute
   '/api/img': typeof ApiImgRoute
@@ -254,6 +263,7 @@ export interface FileRouteTypes {
     | '/typography-audit'
     | '/admin/ai-audit'
     | '/admin/builder-images'
+    | '/admin/builder-images-qa'
     | '/admin/import-tours'
     | '/admin/tour-link-audit'
     | '/api/img'
@@ -280,6 +290,7 @@ export interface FileRouteTypes {
     | '/typography-audit'
     | '/admin/ai-audit'
     | '/admin/builder-images'
+    | '/admin/builder-images-qa'
     | '/admin/import-tours'
     | '/admin/tour-link-audit'
     | '/api/img'
@@ -306,6 +317,7 @@ export interface FileRouteTypes {
     | '/typography-audit'
     | '/admin/ai-audit'
     | '/admin/builder-images'
+    | '/admin/builder-images-qa'
     | '/admin/import-tours'
     | '/admin/tour-link-audit'
     | '/api/img'
@@ -333,6 +345,7 @@ export interface RootRouteChildren {
   TypographyAuditRoute: typeof TypographyAuditRoute
   AdminAiAuditRoute: typeof AdminAiAuditRoute
   AdminBuilderImagesRoute: typeof AdminBuilderImagesRoute
+  AdminBuilderImagesQaRoute: typeof AdminBuilderImagesQaRoute
   AdminImportToursRoute: typeof AdminImportToursRoute
   AdminTourLinkAuditRoute: typeof AdminTourLinkAuditRoute
   ApiImgRoute: typeof ApiImgRoute
@@ -490,6 +503,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminImportToursRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/builder-images-qa': {
+      id: '/admin/builder-images-qa'
+      path: '/admin/builder-images-qa'
+      fullPath: '/admin/builder-images-qa'
+      preLoaderRoute: typeof AdminBuilderImagesQaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/builder-images': {
       id: '/admin/builder-images'
       path: '/admin/builder-images'
@@ -544,6 +564,7 @@ const rootRouteChildren: RootRouteChildren = {
   TypographyAuditRoute: TypographyAuditRoute,
   AdminAiAuditRoute: AdminAiAuditRoute,
   AdminBuilderImagesRoute: AdminBuilderImagesRoute,
+  AdminBuilderImagesQaRoute: AdminBuilderImagesQaRoute,
   AdminImportToursRoute: AdminImportToursRoute,
   AdminTourLinkAuditRoute: AdminTourLinkAuditRoute,
   ApiImgRoute: ApiImgRoute,
