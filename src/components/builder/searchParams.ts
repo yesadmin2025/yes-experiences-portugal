@@ -15,7 +15,7 @@ import type { Intention, Mood, Pace, Who } from "@/components/builder/types";
 export type BuilderStep = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
 export interface BuilderSearch {
-  step: BuilderStep;
+  step?: BuilderStep;
   mood?: Mood;
   who?: Who;
   intention?: Intention;
