@@ -96,6 +96,7 @@ export function StudioMoment({ className }: Props) {
   const [demos, setDemos] = useState<StudioDemoRoute[] | null>(null);
   const [activeChip, setActiveChip] = useState<DemoChipKey>("wine");
   const [loadError, setLoadError] = useState(false);
+  const [openStopKey, setOpenStopKey] = useState<string | null>(null);
   const fetchDemos = useServerFn(getStudioHomeDemos);
 
   // Fetch demos on mount.
@@ -119,6 +120,16 @@ export function StudioMoment({ className }: Props) {
     if (!demos) return null;
     return demos.find((d) => d.chip === activeChip) ?? demos[0];
   }, [demos, activeChip]);
+
+  // Reset drawer when chip changes.
+  useEffect(() => {
+    setOpenStopKey(null);
+  }, [activeChip]);
+
+  const openStop = useMemo<DemoStop | null>(() => {
+    if (!active || !openStopKey) return null;
+    return active.stops.find((s) => s.key === openStopKey) ?? null;
+  }, [active, openStopKey]);
 
   return (
     <section
