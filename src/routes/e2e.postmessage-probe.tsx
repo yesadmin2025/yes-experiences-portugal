@@ -106,9 +106,7 @@ function ProbePage() {
   const [results, setResults] = useState<ProbeResult[] | null>(null);
 
   useEffect(() => {
-    let cancelled = false;
     runProbe().then((r) => {
-      if (cancelled) return;
       setResults(r);
       window.__E2E_POSTMESSAGE_RESULT__ = {
         pass: r.every((x) => x.ok),
@@ -116,9 +114,6 @@ function ProbePage() {
         ranAt: new Date().toISOString(),
       };
     });
-    return () => {
-      cancelled = true;
-    };
   }, []);
 
   const pass = results?.every((r) => r.ok) ?? null;
