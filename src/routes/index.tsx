@@ -330,7 +330,23 @@ function HomePage() {
           // hydration may have just happened (clock effectively reset).
           (window as unknown as Record<string, number>)[getLockKey()] =
             performance.now() + 1100;
-          // Normalise the URL to the canonical id (e.g. #proposal → #proposals)
+          // Force-reveal any .reveal / .reveal-stagger elements inside
+          // the target section. Without this, deep-linking to a section
+          // can race the IntersectionObserver in SiteLayout and leave
+          // the eyebrow + headline + subhead at opacity:0 (they sit at
+          // the top of the viewport and never trigger the observer's
+          // enter callback because they were already in-view when it
+          // started watching). Belt-and-braces: also schedule a second
+          // pass after a short delay in case images shift layout.
+          const forceReveal = () => {
+            el.querySelectorAll<HTMLElement>(
+              ".reveal:not(.is-visible), .reveal-stagger:not(.is-visible)",
+            ).forEach((node) => node.classList.add("is-visible"));
+          };
+          forceReveal();
+          window.setTimeout(forceReveal, 250);
+          window.setTimeout(forceReveal, 800);
+          // Normalise the URL to the canonical id (e.g. #proposal → #occasions)
           const canonical =
             HASH_ALIASES[rawHash.toLowerCase()] ?? rawHash.toLowerCase();
           if (canonical && `#${canonical}` !== window.location.hash) {
