@@ -168,8 +168,8 @@ describe("installResetBlankCheckFilter", () => {
 });
 
 describe("installResetBlankCheckFilter — server safety", () => {
-  it("returns a no-op disposer when target is undefined", () => {
-    const r = installResetBlankCheckFilter(undefined);
+  it("returns a no-op disposer when target is explicitly null (server)", () => {
+    const r = installResetBlankCheckFilter(null);
     expect(r.installed).toBe(false);
     expect(() => r.dispose()).not.toThrow();
   });
