@@ -420,34 +420,34 @@ const HEADLINES: HeadlineSpec[] = [
     pattern: /<p\s+data-hero-field="microcopy"\s+className="([^"]+)"/,
   },
 
-  // Multi-day page hero + section H2s
+  // Multi-day page hero (Typography v3 — Montserrat font-display, not serif)
   {
     page: "multi-day",
     role: "hero h1",
     file: "src/routes/multi-day.tsx",
-    pattern: /<h1 className="(serif text-\[34px\] md:text-6xl[^"]+)"/,
+    pattern: /<h1 className="(font-display font-bold text-\[2\.4rem\][^"]+)">\s*\n\s*More than one day/,
   },
   {
     page: "multi-day",
     role: "hero subhead",
     file: "src/routes/multi-day.tsx",
     pattern:
-      /<p className="(mt-5 max-w-md md:max-w-xl mx-auto text-\[15px\][^"]+)">\s*Shape each day/,
+      /<p className="(mt-6 text-\[1rem\][^"]+)">\s*\n\s*Build Portugal across regions/,
   },
 
-  // Proposals page hero + section H2s
+  // Proposals page hero (Typography v3 — Montserrat font-display, not serif)
   {
     page: "proposals",
     role: "hero h1",
     file: "src/routes/proposals.tsx",
-    pattern: /<h1 className="(serif text-\[34px\] md:text-6xl[^"]+)"/,
+    pattern: /<h1 className="(font-display font-bold text-\[2\.4rem\][^"]+)">\s*\n\s*Moments worth/,
   },
   {
     page: "proposals",
     role: "hero subhead",
     file: "src/routes/proposals.tsx",
     pattern:
-      /<p className="(mt-5 max-w-md md:max-w-xl mx-auto text-\[15px\][^"]+)">\s*Proposals, anniversaries/,
+      /<p className="(mt-6 text-\[1rem\][^"]+)">\s*\n\s*A private moment/,
   },
 ];
 
