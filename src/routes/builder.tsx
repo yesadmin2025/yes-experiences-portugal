@@ -451,6 +451,7 @@ function BuilderPage() {
             onReview={() => setStep(7)}
             stopImages={routeImages.stopImages}
             storyImage={routeImages.storyImage}
+            imagesLoading={routeImages.loading}
           />
         )}
 
@@ -515,6 +516,7 @@ interface LiveBuilderProps {
   onReview: () => void;
   stopImages: Record<string, { url: string; alt: string } | null>;
   storyImage: { url: string; alt: string } | null;
+  imagesLoading: boolean;
 }
 
 function LiveBuilder({
@@ -539,6 +541,7 @@ function LiveBuilder({
   onReview,
   stopImages,
   storyImage,
+  imagesLoading,
 }: LiveBuilderProps) {
   const regionCenter = { lat: Number(route.region.lat), lng: Number(route.region.lng) };
 
@@ -637,6 +640,8 @@ function LiveBuilder({
               removablePool={removablePool}
               stopImages={stopImages}
               storyImage={storyImage}
+              routeLoading={routeLoading}
+              imagesLoading={imagesLoading}
             />
           </div>
 

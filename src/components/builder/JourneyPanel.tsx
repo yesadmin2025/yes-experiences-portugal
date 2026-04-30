@@ -1,6 +1,7 @@
 import { ArrowDown, ArrowUp, Clock, Leaf, MessageCircle, Plus, X, Zap } from "lucide-react";
 import { fmtMinutes, type Pace, type RouteUI, type RoutedStopUI, builderWaHref } from "./types";
 import { BuilderImage } from "./BuilderImage";
+import { StopListSkeleton } from "./Skeletons";
 
 interface StopImageRef {
   url: string;
@@ -24,6 +25,10 @@ interface Props {
   stopImages?: Record<string, StopImageRef | null>;
   /** One contextual image for the Story section (mood + region match). */
   storyImage?: StopImageRef | null;
+  /** True while the engine is reshaping the route — show skeleton placeholders. */
+  routeLoading?: boolean;
+  /** True while real images for stops are still being fetched from the DB. */
+  imagesLoading?: boolean;
 }
 
 const PACE_META: Record<Pace, { label: string; sub: string; icon: typeof Leaf }> = {
@@ -46,6 +51,8 @@ export function JourneyPanel({
   removablePool,
   stopImages,
   storyImage,
+  routeLoading = false,
+  imagesLoading = false,
 }: Props) {
   if (!route) return null;
   const totalMin = route.totals.experienceMinutes;
@@ -75,7 +82,7 @@ export function JourneyPanel({
 
       {/* Story */}
       <section className="overflow-hidden rounded-[2px] border border-[color:var(--charcoal)]/10 bg-[color:var(--sand)]/40">
-        {storyImage && (
+        {storyImage ? (
           <BuilderImage
             src={storyImage.url}
             alt={storyImage.alt}
@@ -83,7 +90,13 @@ export function JourneyPanel({
             overlay
             rounded={false}
           />
-        )}
+        ) : imagesLoading || routeLoading ? (
+          <div
+            role="status"
+            aria-label="Loading story image"
+            className="aspect-[16/9] w-full bg-[linear-gradient(135deg,color-mix(in_oklab,var(--sand)_85%,transparent)_0%,color-mix(in_oklab,var(--charcoal)_15%,transparent)_100%)] animate-pulse"
+          />
+        ) : null}
         <div className="p-4">
           <span className="text-[10px] uppercase tracking-[0.28em] font-bold text-[color:var(--gold)]">
             Story
@@ -107,21 +120,30 @@ export function JourneyPanel({
             Selected moments
           </span>
           <span className="text-[11px] text-[color:var(--charcoal)]/50 tabular-nums">
-            {stops.length} stop{stops.length === 1 ? "" : "s"}
+            {routeLoading && stops.length === 0
+              ? "shaping…"
+              : `${stops.length} stop${stops.length === 1 ? "" : "s"}`}
           </span>
         </div>
+        {routeLoading && stops.length === 0 ? (
+          <div className="mt-3">
+            <StopListSkeleton count={4} />
+          </div>
+        ) : null}
         <ol className="mt-3 flex flex-col gap-2">
           {stops.map((s, i) => {
-            const img = stopImages?.[s.key];
+            const stopImageEntry = stopImages?.[s.key];
+            const stopImageStillLoading =
+              imagesLoading && stopImages && !(s.key in stopImages);
             return (
             <li
               key={s.key}
               className="group flex items-start gap-3 rounded-[2px] border border-[color:var(--charcoal)]/10 bg-[color:var(--ivory)] p-3 transition-colors hover:border-[color:var(--charcoal)]/25"
             >
-              {img ? (
+              {stopImageEntry ? (
                 <BuilderImage
-                  src={img.url}
-                  alt={img.alt}
+                  src={stopImageEntry.url}
+                  alt={stopImageEntry.alt}
                   ratio="1/1"
                   className="h-14 w-14 shrink-0"
                 >
@@ -129,6 +151,15 @@ export function JourneyPanel({
                     {i + 1}
                   </span>
                 </BuilderImage>
+              ) : stopImageStillLoading ? (
+                <div
+                  aria-hidden="true"
+                  className="relative h-14 w-14 shrink-0 overflow-hidden rounded-[2px] bg-[color:var(--sand)]/70 animate-pulse"
+                >
+                  <span className="absolute left-1 top-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-[color:var(--teal)] text-[10px] font-bold text-[color:var(--ivory)] tabular-nums">
+                    {i + 1}
+                  </span>
+                </div>
               ) : (
                 <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[color:var(--teal)] text-[11px] font-bold text-[color:var(--ivory)] tabular-nums">
                   {i + 1}
