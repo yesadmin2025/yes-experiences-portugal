@@ -736,47 +736,49 @@ function HomePage() {
               <span className="italic">same way</span> by everyone.
             </h2>
             <p className="mt-6 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] leading-[1.7] max-w-xl mx-auto">
-              For some, it's wine. For others, the coast, history, food, or a moment that matters. Because no two people experience Portugal the same way, we chose to do things differently — not just in how we guide you, but in how you choose and create your experience from the very beginning.
+              That's why YES changed the way people <span className="kw">choose</span>, <span className="kw">shape</span> and <span className="kw">book</span> private experiences in Portugal — from the very first decision to the day itself.
             </p>
+            {/* Subtle champagne gold divider between intro and grid */}
+            <span aria-hidden="true" className="gold-rule mt-9 md:mt-10 mx-auto block max-w-[3.5rem]" />
           </div>
 
           {/* Modular block grid — 5 premium editorial cards. 2-col desktop,
               stacked mobile. Each card: number, icon, label, serif headline,
-              body. Scroll-stagger fade+rise via .reveal-stagger (cadence
-              applied by SiteLayout). Hover: lift, warmer border, gold
-              underline sweep. */}
+              body, strategic phrase. Scroll-stagger fade+rise via
+              .reveal-stagger. Hover: lift, warmer border, gold underline
+              sweep. Icon reveal on hover via translate. */}
           <ul className="he-stagger max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6 list-none p-0">
             {[
               {
                 Icon: Feather,
                 num: "01",
-                label: "Personal",
+                label: "You decide",
                 title: (<>You shape the <span className="italic">story.</span></>),
-                body: (<>Portugal becomes what you want it to be — a <span className="kw">private</span> day, a proposal, a celebration, a corporate experience or a full journey. You choose what you want to feel, how you move, and who you share it with.</>),
+                body: (<>Choose the <span className="kw">rhythm</span>, the places, the people, the occasion and the feeling you want to take home.</>),
                 pull: "Designed around you, not a template.",
               },
               {
-                Icon: MapPin,
-                num: "02",
-                label: "Place",
-                title: (<>Portugal is the <span className="italic">stage.</span></>),
-                body: (<>From iconic places to <span className="kw">hidden gems</span>, every moment is set in the right place, at the right time — whether it's something simple or something you'll never forget.</>),
-                pull: "The right place, at the right hour.",
-              },
-              {
                 Icon: Compass,
-                num: "03",
-                label: "Local",
+                num: "02",
+                label: "Local from the start",
                 title: (<>Local, from the <span className="italic">very beginning.</span></>),
-                body: (<>Everything is guided by real <span className="kw">local</span> knowledge — with proximity, care and the kind of insight that only comes from living it.</>),
+                body: (<>Real <span className="kw">local knowledge</span> guides everything — from iconic places to hidden gems, each route is shaped with timing, proximity and the insight that only comes from living it.</>),
                 pull: "Locals on the ground, not call-centres.",
               },
               {
                 Icon: Sparkles,
+                num: "03",
+                label: "Any occasion",
+                title: (<>For any <span className="italic">occasion.</span></>),
+                body: (<>Portugal can be a private day, a <span className="kw">proposal</span>, a <span className="kw">celebration</span>, a corporate moment or a full journey. The experience changes because the intention changes.</>),
+                pull: "The intention shapes the day.",
+              },
+              {
+                Icon: MapPin,
                 num: "04",
-                label: "How you choose",
-                title: (<>A different way to <span className="italic">choose.</span></>),
-                body: (<>Start from a Signature, tailor selected details, or build your experience from scratch in the Studio — shaping it step by step, in <span className="kw">real time</span>.</>),
+                label: "Built live",
+                title: (<>Built in <span className="italic">real time.</span></>),
+                body: (<>Start from a Signature, tailor selected details, or build from scratch in the Studio — your experience takes shape in <span className="kw">real time</span>, with you.</>),
                 pull: "Choose, tailor, or build — your call.",
               },
               {
@@ -784,7 +786,7 @@ function HomePage() {
                 num: "05",
                 label: "Supported",
                 title: (<>Simple, clear, <span className="italic">supported.</span></>),
-                body: (<>Even if this feels new, it's designed to be easy. You decide at <span className="kw">your rhythm</span>, with <span className="kw">local guidance</span> whenever you want it.</>),
+                body: (<>Even if this feels new, it's designed to feel simple. You decide at <span className="kw">your pace</span>, with <span className="kw">local guidance</span> whenever you want it.</>),
                 pull: "A local is one message away.",
                 wide: true,
               },
@@ -804,7 +806,7 @@ function HomePage() {
                   className="pointer-events-none absolute left-0 bottom-0 h-px w-full origin-left scale-x-0 bg-[color:var(--gold)]/60 transition-transform duration-500 ease-out group-hover:scale-x-100"
                 />
                 <div className="flex items-start justify-between gap-4 pr-1">
-                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--gold)]/35 bg-[color:var(--ivory)] transition-colors duration-300 group-hover:border-[color:var(--gold)]/70">
+                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--gold)]/35 bg-[color:var(--ivory)] transition-all duration-300 group-hover:border-[color:var(--gold)]/70 group-hover:scale-[1.06]">
                     <b.Icon
                       size={18}
                       strokeWidth={1.5}
