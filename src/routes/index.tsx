@@ -544,12 +544,12 @@ function HomePage() {
 
         <div className="container-x relative z-10 pb-14 md:pb-36 pt-32 md:pt-40">
           <div className="max-w-3xl text-[color:var(--ivory)]">
-            <span className="inline-flex items-center gap-2.5 sm:gap-3.5 whitespace-nowrap text-[10.5px] sm:text-[12px] md:text-[13px] uppercase tracking-[0.18em] sm:tracking-[0.26em] md:tracking-[0.3em] text-[color:var(--gold)] opacity-0 animate-[heroFade_1.1s_ease-out_0.3s_forwards]">
-              <span aria-hidden="true">✦</span>
-              <span data-hero-field="eyebrow" className="whitespace-nowrap">
+            <span className="inline-flex items-center gap-2 sm:gap-3.5 max-w-full text-[9.5px] xs:text-[10.5px] sm:text-[12px] md:text-[13px] uppercase tracking-[0.12em] xs:tracking-[0.16em] sm:tracking-[0.26em] md:tracking-[0.3em] text-[color:var(--gold)] opacity-0 animate-[heroFade_1.1s_ease-out_0.3s_forwards]">
+              <span aria-hidden="true" className="shrink-0">✦</span>
+              <span data-hero-field="eyebrow" className="whitespace-nowrap truncate">
                 {HERO_COPY.eyebrow}
               </span>
-              <span aria-hidden="true">✦</span>
+              <span aria-hidden="true" className="shrink-0">✦</span>
             </span>
 
             <h1
