@@ -1138,9 +1138,9 @@ function HomePage() {
                   Talk to a designer
                 </Link>
               </div>
-              <p className="mt-5 inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.24em] text-[color:var(--teal)]">
-                <MessageCircle size={12} aria-hidden="true" />
-                Local guidance available while you build
+              <p className="mt-5 inline-flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px] xs:text-[11px] uppercase tracking-[0.16em] xs:tracking-[0.2em] sm:tracking-[0.24em] text-[color:var(--teal)]">
+                <MessageCircle size={12} aria-hidden="true" className="shrink-0" />
+                <span className="text-balance">Local guidance available while you build</span>
               </p>
             </div>
             <div className="lg:col-span-7">
