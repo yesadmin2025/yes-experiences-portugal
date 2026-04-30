@@ -2307,6 +2307,175 @@
     animation-duration: 1700ms;
   }
 
+  /* ── Wave 2 utilities — visual tension, hierarchy, conversion energy.
+     All scoped under .home-energy. Reduced-motion disables motion only,
+     never colour/typography. ─────────────────────────────────────── */
+
+  /* Eyebrow bar — short gold line that draws in on reveal, paired with
+     a tracked uppercase label. Used at the top of section intros to
+     anchor hierarchy without adding chrome. */
+  .home-energy .he-eyebrow-bar {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    color: var(--charcoal);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+  }
+  .home-energy .he-eyebrow-bar::before {
+    content: "";
+    display: inline-block;
+    width: 0;
+    height: 1.5px;
+    background: var(--gold);
+    transition: width 720ms cubic-bezier(0.22, 0.61, 0.36, 1) 80ms;
+  }
+  .home-energy .reveal-stagger.is-visible .he-eyebrow-bar::before,
+  .home-energy .is-visible .he-eyebrow-bar::before,
+  .home-energy .he-eyebrow-bar.is-visible::before {
+    width: 32px;
+  }
+
+  /* Section top rule — a 1px gold rule pinned to the section's top.
+     Reads as a quiet editorial "page break" between sections so each
+     one feels distinct without changing background colours. */
+  .home-energy .he-section-rule {
+    position: relative;
+  }
+  .home-energy .he-section-rule::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--gold) 50%,
+      transparent 100%
+    );
+    opacity: 0.55;
+    transition: width 900ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+  .home-energy .he-section-rule.is-visible::before,
+  .home-energy .is-visible .he-section-rule::before {
+    width: min(120px, 24%);
+  }
+
+  /* Stagger cadence — sharper than the calm site-wide rhythm. Up to 6
+     children get sequential delays so cards land with rhythm, not a
+     single dump. Pairs with `.reveal-stagger` on each child. */
+  .home-energy .he-stagger > .reveal-stagger:nth-child(1) { transition-delay:   0ms !important; }
+  .home-energy .he-stagger > .reveal-stagger:nth-child(2) { transition-delay:  90ms !important; }
+  .home-energy .he-stagger > .reveal-stagger:nth-child(3) { transition-delay: 180ms !important; }
+  .home-energy .he-stagger > .reveal-stagger:nth-child(4) { transition-delay: 270ms !important; }
+  .home-energy .he-stagger > .reveal-stagger:nth-child(5) { transition-delay: 360ms !important; }
+  .home-energy .he-stagger > .reveal-stagger:nth-child(6) { transition-delay: 450ms !important; }
+
+  /* Editorial number block — for the "01–05" markers in Why YES. Larger,
+     mixed serif/uppercase, with a quiet gold underline on hover. */
+  .home-energy .he-num {
+    font-family: var(--font-serif);
+    font-weight: 350;
+    font-size: 2.6rem;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--gold);
+    display: inline-block;
+    position: relative;
+  }
+  .home-energy .he-num::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    width: 24px;
+    height: 1px;
+    background: var(--gold);
+    opacity: 0.5;
+    transform: scaleX(0.5);
+    transform-origin: left;
+    transition: transform 320ms cubic-bezier(0.22, 0.61, 0.36, 1),
+                opacity 320ms ease;
+  }
+  .home-energy .he-card-lift:hover .he-num::after,
+  .home-energy .he-card-lift:focus-within .he-num::after {
+    transform: scaleX(1);
+    opacity: 0.9;
+  }
+
+  /* Pull-quote with sand wash — used inside Why YES cards. Replaces the
+     plain border-l with a soft warm panel + the gold rule, so the
+     "highlighted phrase" actually reads as highlighted. */
+  .home-energy .he-pull {
+    position: relative;
+    background: color-mix(in oklab, var(--sand) 75%, transparent);
+    border-left: 2px solid var(--gold);
+    padding: 14px 16px 14px 18px;
+    border-radius: 0 4px 4px 0;
+  }
+
+  /* Section CTA shift — slightly stronger arrow nudge + label glow on
+     hover for in-section CTAs (Why YES, Multi-day, Builder). */
+  .home-energy .he-cta-shift {
+    transition:
+      transform 280ms cubic-bezier(0.22, 0.61, 0.36, 1),
+      letter-spacing 280ms cubic-bezier(0.22, 0.61, 0.36, 1),
+      box-shadow 320ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+  .home-energy .he-cta-shift:hover,
+  .home-energy .he-cta-shift:focus-visible {
+    letter-spacing: 0.2em;
+    box-shadow:
+      0 18px 40px -18px rgba(41, 91, 97, 0.55),
+      0 0 0 1px rgba(201, 169, 106, 0.4);
+  }
+
+  /* Distinct accent for each Group/Celebration eyebrow dot — creates
+     clear hierarchy across the three articles without colour-coding
+     full surfaces (which would break the warm-neutral guardrail). */
+  .home-energy .he-accent-gold { color: var(--gold); }
+  .home-energy .he-accent-teal { color: var(--teal-2); }
+  .home-energy .he-accent-ink  { color: var(--charcoal); }
+
+  /* Trust strip refined band — single horizontal row at desktop, two
+     stacked rows at mobile, with a faint gold rule above. */
+  .home-energy .he-trust-rule {
+    position: relative;
+  }
+  .home-energy .he-trust-rule::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold) 50%, transparent);
+    opacity: 0.5;
+  }
+
+  /* Final CTA decorative gold rules around the eyebrow — same anatomy
+     as the hero brand line, in muted scale. */
+  .home-energy .he-rule-flank {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .home-energy .he-rule-flank::before,
+  .home-energy .he-rule-flank::after {
+    content: "";
+    display: inline-block;
+    width: 28px;
+    height: 1px;
+    background: var(--gold);
+    opacity: 0.7;
+  }
+
   /* Disable everything for users who prefer reduced motion. */
   @media (prefers-reduced-motion: reduce) {
     .home-energy .he-parallax,
@@ -2320,12 +2489,17 @@
     .home-energy .he-image-rise img,
     .home-energy .he-image-cinema,
     .home-energy .he-image-cinema img,
-    .home-energy .he-tilt {
+    .home-energy .he-tilt,
+    .home-energy .he-cta-shift,
+    .home-energy .he-eyebrow-bar::before,
+    .home-energy .he-section-rule::before,
+    .home-energy .he-num::after {
       transition: none !important;
       transform: none !important;
       animation: none !important;
       clip-path: none !important;
-      opacity: 1 !important;
     }
+    .home-energy .he-eyebrow-bar::before { width: 32px !important; }
+    .home-energy .he-section-rule::before { width: 96px !important; }
   }
 }
