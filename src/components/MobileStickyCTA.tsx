@@ -313,10 +313,10 @@ export function MobileStickyCTA() {
                 ("Private. Local. Instantly secured."). Both stay short
                 enough to never wrap inside the ~60% column. */}
             <div className="min-w-0 flex-1">
-              <p className="serif italic text-[15px] leading-tight text-[color:var(--charcoal)] truncate">
+              <p className="serif italic text-[14px] xs:text-[15px] leading-tight text-[color:var(--charcoal)] truncate">
                 Your Portugal, Your Way
               </p>
-              <p className="text-[10.5px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)] mt-0.5 truncate">
+              <p className="text-[9.5px] xs:text-[10.5px] uppercase tracking-[0.14em] xs:tracking-[0.2em] text-[color:var(--charcoal-soft)] mt-0.5 truncate">
                 Private. Local. Curated.
               </p>
             </div>
