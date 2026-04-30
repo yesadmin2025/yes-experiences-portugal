@@ -1272,9 +1272,9 @@ function HomePage() {
         aria-labelledby="groups-title"
       >
         <div className="container-x">
-          <div className="text-center max-w-2xl mx-auto mb-14 md:mb-20">
-            <span className="eyebrow">Groups & celebrations</span>
-            <h2 id="groups-title" className="serif mt-5 text-[2.6rem] md:text-[4rem] leading-[1.0] tracking-[-0.018em] text-[color:var(--charcoal)] font-semibold">
+          <div className="reveal text-center max-w-2xl mx-auto mb-14 md:mb-20">
+            <span className="he-eyebrow-bar mb-5">Groups &amp; celebrations</span>
+            <h2 id="groups-title" className="serif mt-3 text-[2.6rem] md:text-[4.2rem] leading-[1.0] tracking-[-0.02em] text-[color:var(--charcoal)] font-semibold">
               When the <span className="italic font-medium">occasion</span> is bigger.
             </h2>
             <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] leading-[1.6] max-w-md mx-auto">
