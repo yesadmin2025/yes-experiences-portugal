@@ -151,17 +151,20 @@ function QaMobilePage() {
      Snapshot the current run as a portable JSON payload that can be
      re-imported on another device. We include a schema version so we
      can evolve the format without breaking older exports. */
+  const SCHEMA_NAME = "yes-qa-mobile-checklist" as const;
+  const SCHEMA_VERSION = 1 as const;
+
   type ChecklistExport = {
-    schema: "yes-qa-mobile-checklist";
-    version: 1;
+    schema: typeof SCHEMA_NAME;
+    version: typeof SCHEMA_VERSION;
     exportedAt: string; // ISO string
     progress: { done: number; total: number; pct: number };
     checked: Record<string, boolean>;
   };
 
   const buildExport = (): ChecklistExport => ({
-    schema: "yes-qa-mobile-checklist",
-    version: 1,
+    schema: SCHEMA_NAME,
+    version: SCHEMA_VERSION,
     exportedAt: new Date().toISOString(),
     progress: { done, total, pct },
     checked,
