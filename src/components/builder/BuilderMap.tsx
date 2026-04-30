@@ -23,6 +23,7 @@ export function BuilderMap({ stops, regionCenter, regionKey }: Props) {
   const ref = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<L.Map | null>(null);
   const layerRef = useRef<L.LayerGroup | null>(null);
+  const lastBoundsRef = useRef<L.LatLngBounds | null>(null);
   const lastRegionRef = useRef<string | undefined>(undefined);
 
   useEffect(() => {
