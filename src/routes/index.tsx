@@ -16,7 +16,6 @@ import {
   ArrowRight,
   Star,
   Sparkles,
-  CalendarDays,
   MapPin,
   MessageCircle,
   Compass,
