@@ -1,7 +1,39 @@
 import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { Toaster } from "sonner";
 
 import appCss from "../styles.css?url";
+
+/* ──────────────────────────────────────────────────────────────────
+ * App readiness flag — sets `window.__APP_READY__ = true` and fires
+ * a `app:ready` CustomEvent after the React tree mounts. Useful for:
+ *   - external readiness probes (preview harness, Playwright, smoke
+ *     scripts) that want to know when the SPA is interactive, not
+ *     just when the SSR HTML was streamed,
+ *   - in-page extensions/listeners that should defer until first
+ *     paint is done.
+ * Pure no-op on the server.
+ * ────────────────────────────────────────────────────────────── */
+declare global {
+  interface Window {
+    __APP_READY__?: boolean;
+    __APP_READY_AT__?: number;
+  }
+}
+
+function useAppReadyFlag() {
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    // Defer one frame so layout/styles settle before we signal ready.
+    const raf = requestAnimationFrame(() => {
+      window.__APP_READY__ = true;
+      window.__APP_READY_AT__ = Date.now();
+      window.dispatchEvent(new CustomEvent("app:ready"));
+    });
+    return () => cancelAnimationFrame(raf);
+  }, []);
+}
+
 
 function NotFoundComponent() {
   return (
