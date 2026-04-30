@@ -231,6 +231,15 @@ function BuilderPage() {
     return route.stops.map((s) => ({ key: s.key, label: s.label }));
   }, [route]);
 
+  const moodIds = useMemo(() => MOODS.map((m) => m.id), []);
+  const { moodImages } = useBuilderMoodImages(moodIds);
+  const routeImages = useBuilderRouteImages({
+    regionKey: route?.region.key,
+    stopKeys: stops.map((s) => s.key),
+    mood,
+    occasion: intention,
+  });
+
   return (
     <SiteLayout>
       <article className="bg-[color:var(--ivory)] text-[color:var(--charcoal)]">
