@@ -1264,14 +1264,14 @@ function HomePage() {
               animated category label, soft gold divider, bold serif
               headline, body with one highlighted phrase, italic pull
               line, gold detail line, CTA with arrow nudge. */}
-          <div className="max-w-6xl mx-auto flex flex-col gap-16 md:gap-24">
+          <div className="max-w-6xl mx-auto flex flex-col gap-20 md:gap-24">
             {groupsAndCelebrations.map((m, i) => {
               const reverse = i % 2 === 1;
               return (
                 <article
                   key={m.eyebrow}
                   id={m.id}
-                  className="reveal-stagger he-seq group grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center scroll-mt-24 md:scroll-mt-28"
+                  className="reveal-stagger he-seq group grid grid-cols-1 md:grid-cols-12 gap-7 md:gap-12 items-center scroll-mt-24 md:scroll-mt-28"
                 >
                   {/* Image side */}
                   <Link
