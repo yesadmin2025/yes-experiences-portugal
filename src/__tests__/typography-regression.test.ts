@@ -562,10 +562,12 @@ describe("Typography regression — headline class strings", () => {
  * Update with `bunx vitest run -u` when the change is intentional.
  * ───────────────────────────────────────────────────────────────── */
 
+// Note: /multi-day and /proposals were rebuilt to Typography v3 (Montserrat
+// font-display + Georgia italic + direct sizing) and intentionally no longer
+// use the legacy serif-based t-h* tokens. They're covered by the explicit
+// HEADLINES patterns above instead of the token sweep.
 const SECTION_PAGES = [
   { page: "home", file: "src/routes/index.tsx" },
-  { page: "multi-day", file: "src/routes/multi-day.tsx" },
-  { page: "proposals", file: "src/routes/proposals.tsx" },
 ];
 
 const TOKEN_CLASS_RE =
