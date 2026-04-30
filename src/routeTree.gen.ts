@@ -28,6 +28,7 @@ import { Route as ToursTourIdRouteImport } from './routes/tours.$tourId'
 import { Route as QaMobileRouteImport } from './routes/qa.mobile'
 import { Route as ApiVerifyHeroRouteImport } from './routes/api/verify-hero'
 import { Route as ApiImgRouteImport } from './routes/api/img'
+import { Route as ApiHealthRouteImport } from './routes/api/health'
 import { Route as AdminTourLinkAuditRouteImport } from './routes/admin.tour-link-audit'
 import { Route as AdminImportToursRouteImport } from './routes/admin.import-tours'
 import { Route as AdminBuilderImagesQaRouteImport } from './routes/admin.builder-images-qa'
@@ -130,6 +131,11 @@ const ApiImgRoute = ApiImgRouteImport.update({
   path: '/api/img',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiHealthRoute = ApiHealthRouteImport.update({
+  id: '/api/health',
+  path: '/api/health',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminTourLinkAuditRoute = AdminTourLinkAuditRouteImport.update({
   id: '/admin/tour-link-audit',
   path: '/admin/tour-link-audit',
@@ -182,6 +188,7 @@ export interface FileRoutesByFullPath {
   '/admin/builder-images-qa': typeof AdminBuilderImagesQaRoute
   '/admin/import-tours': typeof AdminImportToursRoute
   '/admin/tour-link-audit': typeof AdminTourLinkAuditRoute
+  '/api/health': typeof ApiHealthRoute
   '/api/img': typeof ApiImgRoute
   '/api/verify-hero': typeof ApiVerifyHeroRoute
   '/qa/mobile': typeof QaMobileRoute
@@ -209,6 +216,7 @@ export interface FileRoutesByTo {
   '/admin/builder-images-qa': typeof AdminBuilderImagesQaRoute
   '/admin/import-tours': typeof AdminImportToursRoute
   '/admin/tour-link-audit': typeof AdminTourLinkAuditRoute
+  '/api/health': typeof ApiHealthRoute
   '/api/img': typeof ApiImgRoute
   '/api/verify-hero': typeof ApiVerifyHeroRoute
   '/qa/mobile': typeof QaMobileRoute
@@ -237,6 +245,7 @@ export interface FileRoutesById {
   '/admin/builder-images-qa': typeof AdminBuilderImagesQaRoute
   '/admin/import-tours': typeof AdminImportToursRoute
   '/admin/tour-link-audit': typeof AdminTourLinkAuditRoute
+  '/api/health': typeof ApiHealthRoute
   '/api/img': typeof ApiImgRoute
   '/api/verify-hero': typeof ApiVerifyHeroRoute
   '/qa/mobile': typeof QaMobileRoute
@@ -266,6 +275,7 @@ export interface FileRouteTypes {
     | '/admin/builder-images-qa'
     | '/admin/import-tours'
     | '/admin/tour-link-audit'
+    | '/api/health'
     | '/api/img'
     | '/api/verify-hero'
     | '/qa/mobile'
@@ -293,6 +303,7 @@ export interface FileRouteTypes {
     | '/admin/builder-images-qa'
     | '/admin/import-tours'
     | '/admin/tour-link-audit'
+    | '/api/health'
     | '/api/img'
     | '/api/verify-hero'
     | '/qa/mobile'
@@ -320,6 +331,7 @@ export interface FileRouteTypes {
     | '/admin/builder-images-qa'
     | '/admin/import-tours'
     | '/admin/tour-link-audit'
+    | '/api/health'
     | '/api/img'
     | '/api/verify-hero'
     | '/qa/mobile'
@@ -348,6 +360,7 @@ export interface RootRouteChildren {
   AdminBuilderImagesQaRoute: typeof AdminBuilderImagesQaRoute
   AdminImportToursRoute: typeof AdminImportToursRoute
   AdminTourLinkAuditRoute: typeof AdminTourLinkAuditRoute
+  ApiHealthRoute: typeof ApiHealthRoute
   ApiImgRoute: typeof ApiImgRoute
   ApiVerifyHeroRoute: typeof ApiVerifyHeroRoute
   QaMobileRoute: typeof QaMobileRoute
@@ -489,6 +502,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiImgRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/health': {
+      id: '/api/health'
+      path: '/api/health'
+      fullPath: '/api/health'
+      preLoaderRoute: typeof ApiHealthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/tour-link-audit': {
       id: '/admin/tour-link-audit'
       path: '/admin/tour-link-audit'
@@ -567,6 +587,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminBuilderImagesQaRoute: AdminBuilderImagesQaRoute,
   AdminImportToursRoute: AdminImportToursRoute,
   AdminTourLinkAuditRoute: AdminTourLinkAuditRoute,
+  ApiHealthRoute: ApiHealthRoute,
   ApiImgRoute: ApiImgRoute,
   ApiVerifyHeroRoute: ApiVerifyHeroRoute,
   QaMobileRoute: QaMobileRoute,
