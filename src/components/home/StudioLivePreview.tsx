@@ -316,7 +316,10 @@ export function StudioLivePreview() {
           ].map((moment, i) => (
             <li
               key={moment}
-              className="slv-moment inline-flex items-center gap-1.5 rounded-full border border-[color:var(--teal)]/25 bg-[color:var(--ivory)] px-3 py-1 text-[11.5px] tracking-[0.02em] text-[color:var(--charcoal)]"
+              tabIndex={0}
+              role="button"
+              aria-label={`Selected moment: ${moment}`}
+              className="slv-moment slv-focusable inline-flex items-center gap-1.5 rounded-full border border-[color:var(--teal)]/25 bg-[color:var(--ivory)] px-3 py-1 text-[11.5px] tracking-[0.02em] text-[color:var(--charcoal)]"
               style={{
                 opacity: active ? 1 : 0,
                 transform: active ? "translateY(0)" : "translateY(4px)",
