@@ -185,20 +185,33 @@ function BuilderPage() {
     }, 380);
   }, []);
 
+  // Live-feedback toast (transient, fades after each interaction)
+  const [liveToast, setLiveToast] = useState<string | null>(null);
+  const flashLive = useCallback((text: string) => {
+    setLiveToast(text);
+    window.setTimeout(() => setLiveToast(null), 1400);
+  }, []);
+
+  const pickPraise = (pool: string[]) => pool[Math.floor(Math.random() * pool.length)];
+
   const onPaceChange = (p: Pace) => {
+    if (p === pace) return;
     setPace(p);
+    flashLive(pickPraise(["Shaping your route", "Adjusting the rhythm", "Reshaping the day"]));
     if (route) void fetchRoute({ nextPace: p });
   };
 
   const onRemoveStop = (key: string) => {
     const nextExcluded = [...excluded, key];
     setExcluded(nextExcluded);
+    flashLive(pickPraise(["Updating your day", "Got it — reshaping", "Refining the route"]));
     void fetchRoute({ nextExcluded });
   };
 
   const onAddBackStop = (key: string) => {
     const nextExcluded = excluded.filter((k) => k !== key);
     setExcluded(nextExcluded);
+    flashLive(pickPraise(["Nice choice", "That works well", "Adding it back in"]));
     void fetchRoute({ nextExcluded });
   };
 
@@ -208,6 +221,7 @@ function BuilderPage() {
     const next = stops.slice();
     [next[idx], next[j]] = [next[j], next[idx]];
     setOrderOverride(next.map((s) => s.key));
+    flashLive("Reordering");
   };
 
   // Pool for "removed — add back" surface in the journey panel
