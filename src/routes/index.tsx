@@ -573,17 +573,17 @@ function HomePage() {
             </p>
 
             {/* CTAs — exactly two, per brief.
-                Order swapped from the previous build: Signature first
-                (Explore), Studio second (Build), so the calmer choice
-                leads. Both kept full-width on mobile, equal-width on
-                desktop, with identical internal anatomy. */}
+                Studio is the primary innovation, so "Create Your Story"
+                (→ /builder) leads. "Explore Signature Experiences" stays
+                visible as the calmer second path (→ /experiences).
+                Labels are byte-exact from HERO_COPY (e2e lock). */}
             <div className="mt-12 md:mt-12 flex flex-col sm:flex-row gap-4 sm:gap-4 w-full max-w-sm sm:max-w-xl opacity-0 animate-[heroFade_1.4s_ease-out_1.25s_forwards]">
               <Link
-                to="/experiences"
+                to="/builder"
                 data-hero-field="primaryCta"
                 className="hero-cta-button cta-primary he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left"
               >
-                <span className="block">Explore Signature Experiences</span>
+                <span className="block">{HERO_COPY.primaryCta}</span>
                 <ArrowRight
                   size={16}
                   className="shrink-0 transition-transform duration-300 group-hover:translate-x-1"
@@ -591,11 +591,11 @@ function HomePage() {
                 />
               </Link>
               <Link
-                to="/builder"
+                to="/experiences"
                 data-hero-field="secondaryCta"
                 className="hero-cta-button cta-secondary-dark he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left"
               >
-                <span className="block">Build your private journey</span>
+                <span className="block">{HERO_COPY.secondaryCta}</span>
                 <ArrowRight
                   size={16}
                   className="shrink-0 transition-transform duration-300 group-hover:translate-x-1"
@@ -604,21 +604,17 @@ function HomePage() {
               </Link>
             </div>
 
+            {/* Microcopy under the CTAs. Subline link to /contact removed
+                per brief — it competed with the two main CTAs and
+                fragmented the hero CTA hierarchy. Local guidance is
+                still surfaced in the Studio reassurance line, the FAQ
+                closer, and the Final CTA secondary button. */}
             <div className="hero-rhythm-cta-to-microcopy max-w-sm sm:max-w-xl mx-auto sm:mx-0 opacity-0 animate-[heroFade_1.4s_ease-out_1.5s_forwards]">
               <p
                 data-hero-field="microcopy"
                 className="text-[14px] md:text-[14.5px] text-[color:var(--ivory)] leading-[1.65] md:leading-[1.7] font-normal tracking-[0.005em] text-center sm:text-left"
               >
                 {HERO_COPY.microcopy}
-              </p>
-              <p className="mt-3 text-[13px] md:text-[13px] text-[color:var(--ivory)]/85 italic leading-[1.65] text-center sm:text-left">
-                Prefer guidance?{" "}
-                <Link
-                  to="/contact"
-                  className="link-soft link-soft--persistent text-[color:var(--ivory)]"
-                >
-                  A local designer can shape it with you.
-                </Link>
               </p>
             </div>
 
@@ -755,12 +751,141 @@ function HomePage() {
         </div>
       </section>
 
-      {/* 3 — WHY YES
-          Editorial manifesto: one title, one intro, five asymmetric
-          blocks that bring together personalization, local knowledge,
-          proximity, the choose/book innovation, and the simple-and-
-          supported reassurance. Premium, human, intelligent — not a
-          features grid. Soft fade-in only, no bounce, no parallax. */}
+      {/* 3 — THREE PATHS + EXPERIENCE STUDIO (promoted)
+          Promoted up the page so the Builder reads as the core
+          innovation, not just another tile. The section opens with a
+          compact Three-paths primer (Signature / Tailored / Studio)
+          so users immediately understand the three distinct ways to
+          shape Portugal — then drops into the live Studio device.
+          Mobile order: paths primer → headline → live preview → CTA.
+          Desktop: text rail left, preview right. One CTA only
+          ("Open the Studio"). The "Ask a local" duplicate has been
+          removed; local guidance lives in the reassurance line, the
+          FAQ closer, and the Final CTA. */}
+      <section
+        id="builder"
+        className="section-y-lg bg-[color:var(--sand)] border-b border-[color:var(--border)] scroll-mt-24 md:scroll-mt-28"
+        aria-labelledby="studio-title"
+      >
+        <div className="container-x">
+          {/* Three paths primer — compact horizontal strip on desktop,
+              stacked on mobile. No images, no large surfaces; numbered
+              labels + a one-line definition each. Establishes the
+              vocabulary used everywhere downstream. */}
+          <div className="reveal max-w-5xl mx-auto mb-12 md:mb-16">
+            <div className="text-center">
+              <span className="he-eyebrow-bar mb-4">Three ways in</span>
+              <h2
+                id="paths-title"
+                className="serif mt-3 text-[1.85rem] md:text-[2.4rem] leading-[1.1] tracking-[-0.015em] text-[color:var(--charcoal)] font-semibold"
+              >
+                Three ways to shape your <span className="italic">Portugal.</span>
+              </h2>
+            </div>
+            <ol
+              className="he-stagger mt-8 md:mt-10 grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5 list-none p-0"
+              aria-label="Three paths to shape your Portugal experience"
+            >
+              {[
+                {
+                  num: "01",
+                  label: "Signature",
+                  body: "Ready-to-book private experiences, designed by locals.",
+                },
+                {
+                  num: "02",
+                  label: "Tailored",
+                  body: "Adjust selected details inside a Signature experience.",
+                },
+                {
+                  num: "03",
+                  label: "Studio",
+                  body: "Create your experience from scratch, in real time.",
+                },
+              ].map((p) => (
+                <li
+                  key={p.num}
+                  className="reveal-stagger relative flex items-start gap-4 rounded-[6px] border border-[#E7DDD0] bg-[color:var(--ivory)] px-5 py-4 md:px-5 md:py-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-[color:var(--gold)]/55"
+                >
+                  <span className="he-num shrink-0 text-[color:var(--gold)]">{p.num}</span>
+                  <div className="flex flex-col">
+                    <span className="text-[11px] uppercase tracking-[0.28em] font-bold text-[color:var(--charcoal)]">
+                      {p.label}
+                    </span>
+                    <p className="mt-1.5 text-[13.5px] md:text-[14px] leading-[1.55] text-[color:var(--charcoal)]">
+                      {p.body}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+
+          <div className="grid lg:grid-cols-12 gap-10 lg:gap-14 items-center max-w-6xl mx-auto">
+            {/* On mobile: text rail (with the headline) renders FIRST so
+                the user reads "Create it live." before seeing the
+                device. On desktop the rail returns to the left so the
+                reading flow stays natural. */}
+            <div className="reveal lg:col-span-5 lg:order-1 order-1">
+              <span className="he-eyebrow-bar mb-4">
+                <span className="live-dot" aria-hidden="true" />
+                Experience Studio
+              </span>
+              <h2
+                id="studio-title"
+                className="serif mt-3 text-[2.85rem] md:text-[4.15rem] leading-[0.98] tracking-[-0.02em] text-[color:var(--charcoal)] font-bold"
+              >
+                Create it <span className="italic font-semibold">live.</span>
+              </h2>
+              <p className="mt-6 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] leading-[1.7] max-w-md">
+                Choose your <span className="kw">mood</span>, <span className="kw">rhythm</span> and <span className="kw">intention</span>. Watch your private Portugal experience take shape in real time — with local guidance whenever you want it.
+              </p>
+
+              {/* Three Studio inputs — small index, signposts the
+                  live chips at the top of the preview device. */}
+              <ol className="mt-7 grid grid-cols-3 gap-1.5 max-w-md" aria-label="Three Studio inputs">
+                {["Mood", "Who", "Rhythm"].map((label, i) => (
+                  <li key={label} className="flex flex-col gap-1.5">
+                    <span aria-hidden="true" className="block h-[3px] bg-[color:var(--gold)]" />
+                    <span className="text-[10.5px] uppercase tracking-[0.18em] font-semibold text-[color:var(--charcoal)] tabular-nums">
+                      0{i + 1} · {label}
+                    </span>
+                  </li>
+                ))}
+              </ol>
+
+              <div className="mt-8 flex flex-wrap gap-x-5 gap-y-4">
+                <Link
+                  to="/builder"
+                  className="he-glow he-sheen he-cta-shift group inline-flex items-center gap-2.5 sm:gap-2 bg-[color:var(--teal)] text-[color:var(--ivory)] px-6 sm:px-7 py-3.5 min-h-[48px] sm:min-h-[44px] text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold hover:bg-[color:var(--teal-2)] shadow-[0_8px_22px_-10px_rgba(41,91,97,0.65)]"
+                >
+                  Open the Studio
+                  <ArrowRight size={14} className="transition-transform duration-200 group-hover:translate-x-1" />
+                </Link>
+              </div>
+
+              {/* Reassurance line — replaces the legacy "Ask a local
+                  to shape it" CTA. One sentence, three reassurances,
+                  with local guidance still made visible. */}
+              <p className="mt-5 inline-flex items-start gap-2 text-[12.5px] md:text-[13px] leading-[1.6] text-[color:var(--charcoal)] max-w-md">
+                <MessageCircle size={13} aria-hidden="true" className="mt-[3px] shrink-0 text-[color:var(--teal)]" />
+                <span>About a minute. No form. <span className="font-semibold">You can ask a local anytime.</span></span>
+              </p>
+            </div>
+
+            <div className="he-parallax-counter lg:col-span-7 lg:order-2 order-2">
+              <StudioLivePreview />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 4 — WHY YES
+          Editorial manifesto — 4 modular cards (down from 5 per the
+          approved consolidation). Each card carries a number, icon,
+          label, serif headline, body and one strategic phrase.
+          Closing microline keeps the "a local is always one message
+          away" reassurance. */}
       <section
         id="why-yes"
         className="section-y bg-[color:var(--ivory)] border-b border-[color:var(--border)] scroll-mt-24 md:scroll-mt-28"
@@ -777,17 +902,14 @@ function HomePage() {
               <span className="italic">same way</span> by everyone.
             </h2>
             <p className="mt-6 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] leading-[1.7] max-w-xl mx-auto">
-              That's why YES changed the way people <span className="kw">choose</span>, <span className="kw">shape</span> and <span className="kw">book</span> private experiences in Portugal — from the very first decision to the day itself.
+              That's why YES changed the way people <span className="kw">choose</span>, <span className="kw">shape</span> and <span className="kw">book</span> private experiences in Portugal.
             </p>
-            {/* Subtle champagne gold divider between intro and grid */}
             <span aria-hidden="true" className="gold-rule mt-9 md:mt-10 mx-auto block max-w-[3.5rem]" />
           </div>
 
-          {/* Modular block grid — 5 premium editorial cards. 2-col desktop,
-              stacked mobile. Each card: number, icon, label, serif headline,
-              body, strategic phrase. Scroll-stagger fade+rise via
-              .reveal-stagger. Hover: lift, warmer border, gold underline
-              sweep. Icon reveal on hover via translate. */}
+          {/* 4-card editorial grid (consolidated from 5). 2-col desktop,
+              stacked mobile. Each card: number, icon, label, serif
+              headline, body, strategic phrase. */}
           <ul className="he-stagger max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6 list-none p-0">
             {[
               {
@@ -802,8 +924,8 @@ function HomePage() {
                 Icon: Compass,
                 num: "02",
                 label: "Local from the start",
-                title: (<>Local, from the <span className="italic">very beginning.</span></>),
-                body: (<>Real <span className="kw">local knowledge</span> guides everything — from iconic places to hidden gems, each route is shaped with timing, proximity and the insight that only comes from living it.</>),
+                title: (<>Real local <span className="italic">knowledge</span> guides everything.</>),
+                body: (<>From iconic places to <span className="kw">hidden gems</span>, each route is shaped with timing, proximity and insight that only comes from living it.</>),
                 pull: "Locals on the ground, not call-centres.",
               },
               {
@@ -817,31 +939,17 @@ function HomePage() {
               {
                 Icon: MapPin,
                 num: "04",
-                label: "Built live",
-                title: (<>Built in <span className="italic">real time.</span></>),
-                body: (<>Start from a Signature, tailor selected details, or build from scratch in the Studio — your experience takes shape in <span className="kw">real time</span>, with you.</>),
+                label: "Three ways to shape it",
+                title: (<>Three ways to <span className="italic">shape it.</span></>),
+                body: (<>Start from a <span className="kw">Signature</span>, tailor selected details, or build from scratch in the <span className="kw">Studio</span>. Your experience takes shape in the way that fits you.</>),
                 pull: "Choose, tailor, or build — your call.",
-              },
-              {
-                Icon: LifeBuoy,
-                num: "05",
-                label: "Supported",
-                title: (<>Simple, clear, <span className="italic">supported.</span></>),
-                body: (<>Even if this feels new, it's designed to feel simple. You decide at <span className="kw">your pace</span>, with <span className="kw">local guidance</span> whenever you want it.</>),
-                pull: "A local is one message away.",
-                wide: true,
               },
             ].map((b) => (
               <li
                 key={b.num}
-                className={
-                  "reveal-stagger he-card-lift group relative flex flex-col rounded-[6px] border border-[#E7DDD0] bg-[color:var(--ivory)] p-7 md:p-9 shadow-[0_1px_2px_rgba(46,46,46,0.04)] overflow-hidden " +
-                  (b.wide ? "md:col-span-2" : "")
-                }
+                className="reveal-stagger he-card-lift group relative flex flex-col rounded-[6px] border border-[#E7DDD0] bg-[color:var(--ivory)] p-7 md:p-9 shadow-[0_1px_2px_rgba(46,46,46,0.04)] overflow-hidden"
               >
-                {/* Animated gold rule — draws in on reveal */}
                 <span aria-hidden="true" className="gold-rule absolute left-0 top-0" />
-                {/* Gold sweep underline on hover (desktop) */}
                 <span
                   aria-hidden="true"
                   className="pointer-events-none absolute left-0 bottom-0 h-px w-full origin-left scale-x-0 bg-[color:var(--gold)]/60 transition-transform duration-500 ease-out group-hover:scale-x-100"
@@ -868,7 +976,6 @@ function HomePage() {
                 <p className="mt-3.5 text-[15px] md:text-[15.5px] text-[color:var(--charcoal)] leading-[1.65]">
                   {b.body}
                 </p>
-                {/* One bold highlighted phrase per card */}
                 <p className="he-pull mt-5 serif italic text-[15px] md:text-[16px] leading-[1.45] text-[color:var(--charcoal)]">
                   {b.pull}
                 </p>
@@ -876,7 +983,6 @@ function HomePage() {
             ))}
           </ul>
 
-          {/* Closing microline */}
           <p className="reveal mt-10 md:mt-12 text-center inline-flex flex-wrap w-full items-center justify-center gap-x-2 gap-y-1 px-4 text-[10.5px] xs:text-[11.5px] sm:text-[12px] uppercase tracking-[0.18em] xs:tracking-[0.22em] sm:tracking-[0.28em] text-[color:var(--teal)]">
             <MessageCircle size={13} aria-hidden="true" className="shrink-0" />
             <span className="text-balance">A local is always one message away</span>
@@ -884,80 +990,6 @@ function HomePage() {
         </div>
       </section>
 
-
-      {/* 4 — EXPERIENCE STUDIO PREVIEW
-          The flagship innovation: a predictive private day taking
-          shape live. Map-led layout, route drawing, animated pins,
-          live story panel — all driven by <StudioLivePreview />. The
-          left rail explains the three Studio inputs and routes users
-          into the real /builder. No invented stops or prices. */}
-      <section
-        id="builder"
-        className="section-y-lg bg-[color:var(--sand)] border-b border-[color:var(--border)] scroll-mt-24 md:scroll-mt-28"
-        aria-labelledby="studio-title"
-      >
-        <div className="container-x">
-          <div className="grid lg:grid-cols-12 gap-10 lg:gap-14 items-center max-w-6xl mx-auto">
-            {/* Live preview leads on mobile (visual hook), text rail
-                follows. On desktop the rail returns to the left so the
-                reading flow stays natural. */}
-            <div className="he-parallax-counter lg:col-span-7 lg:order-2">
-              <StudioLivePreview />
-            </div>
-
-            <div className="reveal lg:col-span-5 lg:order-1">
-              <span className="he-eyebrow-bar mb-4">
-                <span className="live-dot" aria-hidden="true" />
-                Experience Studio
-              </span>
-              <h2 id="studio-title" className="serif mt-3 text-[2.5rem] md:text-[3.6rem] leading-[1.0] tracking-[-0.02em] text-[color:var(--charcoal)] font-semibold">
-                Create it <span className="italic">live.</span>
-              </h2>
-              <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] leading-[1.7] max-w-md">
-                Choose your <span className="kw">mood</span>, <span className="kw">rhythm</span> and <span className="kw">intention</span>. Watch your private Portugal experience take shape in real time — with local guidance whenever you want it.
-              </p>
-
-              {/* Three inputs of the Studio — small index, used to
-                  signpost the live chips at the top of the preview. */}
-              <ol className="mt-6 grid grid-cols-3 gap-1.5 max-w-md" aria-label="Three Studio inputs">
-                {["Mood", "Who", "Rhythm"].map((label, i) => (
-                  <li key={label} className="flex flex-col gap-1.5">
-                    <span aria-hidden="true" className="block h-[3px] bg-[color:var(--gold)]" />
-                    <span className="text-[10px] uppercase tracking-[0.18em] font-semibold text-[color:var(--charcoal)]/70 tabular-nums">
-                      0{i + 1} · {label}
-                    </span>
-                  </li>
-                ))}
-              </ol>
-
-              <div className="mt-8 flex flex-wrap gap-x-5 gap-y-4">
-                <Link
-                  to="/builder"
-                  className="he-glow he-sheen he-cta-shift group inline-flex items-center gap-2.5 sm:gap-2 bg-[color:var(--teal)] text-[color:var(--ivory)] px-6 sm:px-7 py-3.5 min-h-[48px] sm:min-h-[44px] text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold hover:bg-[color:var(--teal-2)] shadow-[0_8px_22px_-10px_rgba(41,91,97,0.65)]"
-                >
-                  Open the Studio
-                  <ArrowRight size={14} className="transition-transform duration-200 group-hover:translate-x-1" />
-                </Link>
-                <Link
-                  to="/contact"
-                  className="inline-flex items-center gap-2.5 sm:gap-2 min-h-[44px] px-1 text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold text-[color:var(--charcoal)] border-b-2 border-[color:var(--charcoal)]/40 pb-1 hover:border-[color:var(--charcoal)] transition-colors"
-                >
-                  Ask a local to shape it
-                </Link>
-              </div>
-
-              <p className="mt-4 text-[12.5px] leading-[1.6] text-[color:var(--charcoal-soft)] italic max-w-md">
-                Build it yourself, or ask a local to shape it with you.
-              </p>
-
-              <p className="mt-5 inline-flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px] xs:text-[11px] uppercase tracking-[0.16em] xs:tracking-[0.2em] sm:tracking-[0.24em] text-[color:var(--teal)]">
-                <MessageCircle size={12} aria-hidden="true" className="shrink-0" />
-                <span className="text-balance">Local guidance available while you build</span>
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* 5 — SIGNATURE EXPERIENCES PREVIEW
           Up to 4 real Signature tours. Each card uses the tour's real
@@ -1352,13 +1384,13 @@ function HomePage() {
                 className="he-glow he-sheen he-cta-shift group inline-flex items-center justify-center gap-2.5 bg-[color:var(--ivory)] text-[color:var(--charcoal)] px-7 py-3.5 min-h-[48px] text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold rounded-[2px] transition-colors duration-200 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--teal)] shadow-[0_8px_22px_-10px_rgba(0,0,0,0.5)]"
               >
                 <ArrowRight size={14} aria-hidden="true" />
-                Open the Studio
+                Create Your Story
               </Link>
               <Link
                 to="/contact"
                 className="group inline-flex items-center justify-center gap-2 px-7 py-3.5 min-h-[48px] text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold rounded-[2px] border-2 border-[color:var(--ivory)]/85 text-[color:var(--ivory)] transition-all duration-200 hover:bg-[color:var(--ivory)]/10 hover:border-[color:var(--ivory)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--teal)]"
               >
-                Talk to a local
+                Talk to a Local
                 <ArrowRight size={12} aria-hidden="true" className="transition-transform duration-200 group-hover:translate-x-0.5" />
               </Link>
             </div>
