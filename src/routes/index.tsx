@@ -59,86 +59,9 @@ const signatures = FEATURED_TOUR_IDS
   }));
 
 /* ──────────────────────────────────────────────────────────────────
- * "Start here" decision block — 4 paths with explicit hierarchy:
- *   tier "primary"   → Signature Experiences, Experience Studio
- *   tier "secondary" → Tailor a Signature, Proposals / Groups
- * Brief: "Each card must feel like a clear choice, not a decorative teaser."
+ * Moments / Groups preview — Multi-day, Proposals, Celebrations,
+ * Corporate collapsed into a single band (see groupsAndCelebrations).
  * ────────────────────────────────────────────────────────────── */
-type StartTier = "primary" | "secondary";
-
-interface StartPath {
-  tier: StartTier;
-  icon: typeof BookOpen;
-  eyebrow: string;
-  title: string;
-  line: string;
-  cta: string;
-  to: string;
-  ariaLabel: string;
-  bg: string;
-  /** Spec badge — short, all-caps. Featured card gets prominent treatment. */
-  badge: string;
-  /** Trust micro-text shown under the CTA. */
-  micro: string;
-  /** Whether this card is the FEATURED hero card (only one). */
-  featured?: boolean;
-}
-
-const startPaths: StartPath[] = [
-  {
-    tier: "primary",
-    icon: Sparkles,
-    eyebrow: "Studio",
-    title: "Build your own experience",
-    line: "Designed in real time, with you. Watch your journey evolve on a map. Confirm and go.",
-    cta: "Open the studio",
-    to: "/builder",
-    ariaLabel: "Build your own experience in the Experience Studio",
-    bg: imgSintraEstates,
-    badge: "★ Most control",
-    micro: "AI-assisted · Local-approved · 2–3 minutes",
-    featured: true,
-  },
-  {
-    tier: "primary",
-    icon: BookOpen,
-    eyebrow: "Signature",
-    title: "Explore Signature Experiences",
-    line: "Complete private days, already designed and ready to confirm.",
-    cta: "Browse signatures",
-    to: "/experiences",
-    ariaLabel: "Explore Signature Experiences — complete private days, ready to confirm",
-    bg: imgArrabidaWineHero,
-    badge: "★ Ready-made",
-    micro: "Most popular with first-time planners",
-  },
-  {
-    tier: "secondary",
-    icon: Wand2,
-    eyebrow: "Tailored",
-    title: "Tailor a Signature",
-    line: "Start with a ready-made day. Adjust the pace, swap a stop, add upgrades.",
-    cta: "See how",
-    to: "/experiences",
-    ariaLabel: "Tailor a Signature — adjust pace, pickup or a single stop",
-    bg: imgAzeitaoWorkshop,
-    badge: "Flexible",
-    micro: "Best for decisive travellers",
-  },
-  {
-    tier: "secondary",
-    icon: Gift,
-    eyebrow: "Moments",
-    title: "Plan a Moment",
-    line: "Proposals, celebrations, corporate events, larger groups. Designed in conversation.",
-    cta: "Speak to a local",
-    to: "/proposals",
-    ariaLabel: "Proposals, groups and celebrations — speak to a local",
-    bg: imgArrabidaWineLunch,
-    badge: "Premium",
-    micro: "Fully managed · Premium service",
-  },
-];
 
 /* ──────────────────────────────────────────────────────────────────
  * Moments / Groups preview — Multi-day, Celebrations, Corporate
