@@ -27,8 +27,11 @@ export interface DemoStopAlternate {
   key: string;
   label: string;
   blurb: string | null;
+  tag: string | null;
   variantLabel: string | null;
   durationMinutes: number;
+  lat: number;
+  lng: number;
 }
 
 export interface DemoStop {
