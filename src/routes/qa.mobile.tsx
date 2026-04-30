@@ -151,17 +151,20 @@ function QaMobilePage() {
      Snapshot the current run as a portable JSON payload that can be
      re-imported on another device. We include a schema version so we
      can evolve the format without breaking older exports. */
+  const SCHEMA_NAME = "yes-qa-mobile-checklist" as const;
+  const SCHEMA_VERSION = 1 as const;
+
   type ChecklistExport = {
-    schema: "yes-qa-mobile-checklist";
-    version: 1;
+    schema: typeof SCHEMA_NAME;
+    version: typeof SCHEMA_VERSION;
     exportedAt: string; // ISO string
     progress: { done: number; total: number; pct: number };
     checked: Record<string, boolean>;
   };
 
   const buildExport = (): ChecklistExport => ({
-    schema: "yes-qa-mobile-checklist",
-    version: 1,
+    schema: SCHEMA_NAME,
+    version: SCHEMA_VERSION,
     exportedAt: new Date().toISOString(),
     progress: { done, total, pct },
     checked,
@@ -234,24 +237,50 @@ function QaMobilePage() {
     try {
       parsed = JSON.parse(raw);
     } catch {
-      toast.error("Invalid JSON");
+      toast.error("Invalid JSON", {
+        description: "The file isn't valid JSON. Your current progress is unchanged.",
+      });
       return false;
     }
-    // Accept either the full export envelope or a bare {key: boolean} map.
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+      toast.error("Unrecognized checklist format", {
+        description: "Expected a JSON object. Your current progress is unchanged.",
+      });
+      return false;
+    }
+    const obj = parsed as Record<string, unknown>;
+
+    // Strict path — payload looks like our envelope (has schema or version).
+    // We refuse anything that doesn't match the exact name + supported
+    // version, so an export from a future or unrelated tool can't quietly
+    // overwrite the run.
+    const looksLikeEnvelope = "schema" in obj || "version" in obj;
     let nextChecked: Record<string, boolean> | null = null;
-    if (
-      parsed &&
-      typeof parsed === "object" &&
-      "checked" in (parsed as Record<string, unknown>) &&
-      typeof (parsed as { checked: unknown }).checked === "object"
-    ) {
-      nextChecked = (parsed as { checked: Record<string, boolean> }).checked;
-    } else if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
-      nextChecked = parsed as Record<string, boolean>;
-    }
-    if (!nextChecked) {
-      toast.error("Unrecognized checklist format");
-      return false;
+
+    if (looksLikeEnvelope) {
+      if (obj.schema !== SCHEMA_NAME) {
+        toast.error("Wrong checklist schema", {
+          description: `Expected "${SCHEMA_NAME}", got "${String(obj.schema ?? "—")}". Your current progress is unchanged.`,
+        });
+        return false;
+      }
+      if (obj.version !== SCHEMA_VERSION) {
+        toast.error("Incompatible checklist version", {
+          description: `This tool supports version ${SCHEMA_VERSION}; the file is version ${String(obj.version ?? "—")}. Your current progress is unchanged.`,
+        });
+        return false;
+      }
+      const inner = obj.checked;
+      if (!inner || typeof inner !== "object" || Array.isArray(inner)) {
+        toast.error("Checklist payload is missing items", {
+          description: "Expected a `checked` object inside the envelope. Your current progress is unchanged.",
+        });
+        return false;
+      }
+      nextChecked = inner as Record<string, boolean>;
+    } else {
+      // Bare {key: boolean} map — unversioned, accept but flag.
+      nextChecked = obj as Record<string, boolean>;
     }
     // Sanitize: only keep boolean values keyed by strings, and only keys
     // we still know about (drops stale items from older schema versions).
@@ -268,6 +297,16 @@ function QaMobilePage() {
         dropped += 1;
       }
     }
+    // No recognizable items → refuse rather than wipe the run.
+    if (kept === 0) {
+      toast.error("No matching checklist items", {
+        description:
+          dropped > 0
+            ? `All ${dropped} item${dropped === 1 ? "" : "s"} in the file are unknown to this checklist. Your current progress is unchanged.`
+            : "The file didn't contain any boolean items. Your current progress is unchanged.",
+      });
+      return false;
+    }
     if (
       done > 0 &&
       typeof window !== "undefined" &&
@@ -279,6 +318,9 @@ function QaMobilePage() {
     toast.success(
       `Imported ${kept} item${kept === 1 ? "" : "s"}` +
         (dropped > 0 ? ` · ${dropped} unknown skipped` : ""),
+      looksLikeEnvelope
+        ? undefined
+        : { description: "No schema/version found — accepted as a bare map." },
     );
     return true;
   };
