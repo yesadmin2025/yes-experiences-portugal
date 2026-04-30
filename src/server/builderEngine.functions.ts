@@ -116,7 +116,8 @@ const narrateSchema = z.object({
 export const narrateBuilderRoute = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => narrateSchema.parse(input))
   .handler(async ({ data }) => {
-    const apiKey = process.env.LOVABLE_API_KEY;
+    const openaiKey = process.env.OPENAI_API_KEY;
+    const lovableKey = process.env.LOVABLE_API_KEY;
     const { regions, stops, rules } = await loadCatalog();
     const route = generateRoute(
       {
@@ -138,21 +139,50 @@ export const narrateBuilderRoute = createServerFn({ method: "POST" })
       intention: data.intention as Intention,
     });
 
-    if (!apiKey) return { narrative: fallback, source: "fallback" as const };
+    const configHash = hashConfig({
+      stops: data.routeStopKeys,
+      mood: data.mood,
+      who: data.who,
+      intention: data.intention,
+      pace: data.pace,
+      region: data.regionKey,
+    });
+
+    // No provider configured — fallback only
+    if (!openaiKey && !lovableKey) {
+      await logAiUsage({
+        provider: "none",
+        feature: "builder_narrative",
+        status: "fallback",
+        configHash,
+        errorCode: "no_provider",
+      });
+      return { narrative: fallback, source: "fallback" as const };
+    }
+
+    const useOpenAI = Boolean(openaiKey);
+    const provider = useOpenAI ? "openai" : "lovable_ai";
+    const model = useOpenAI ? "gpt-4o-mini" : "google/gemini-2.5-flash";
+    const startedAt = Date.now();
 
     try {
       const stopList = route.stops
         .map((s, i) => `${i + 1}. ${s.label}${s.tag ? ` (${s.tag})` : ""} — ${s.blurb ?? ""}`)
         .join("\n");
 
-      const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      const url = useOpenAI
+        ? "https://api.openai.com/v1/chat/completions"
+        : "https://ai.gateway.lovable.dev/v1/chat/completions";
+      const authKey = useOpenAI ? openaiKey! : lovableKey!;
+
+      const res = await fetch(url, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${apiKey}`,
+          Authorization: `Bearer ${authKey}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "google/gemini-2.5-flash",
+          model,
           messages: [
             {
               role: "system",
@@ -169,16 +199,58 @@ export const narrateBuilderRoute = createServerFn({ method: "POST" })
         }),
       });
 
+      const latencyMs = Date.now() - startedAt;
+
       if (!res.ok) {
+        const status = res.status === 429 ? "rate_limited" : "failure";
+        await logAiUsage({
+          provider,
+          model,
+          feature: "builder_narrative",
+          status,
+          latencyMs,
+          configHash,
+          errorCode: String(res.status),
+          errorMessage: `${res.status} ${res.statusText}`,
+        });
         return { narrative: fallback, source: "fallback" as const };
       }
       const json = (await res.json()) as {
         choices?: { message?: { content?: string } }[];
       };
       const text = json.choices?.[0]?.message?.content?.trim();
-      if (!text) return { narrative: fallback, source: "fallback" as const };
+      if (!text) {
+        await logAiUsage({
+          provider,
+          model,
+          feature: "builder_narrative",
+          status: "failure",
+          latencyMs,
+          configHash,
+          errorCode: "empty_response",
+        });
+        return { narrative: fallback, source: "fallback" as const };
+      }
+      await logAiUsage({
+        provider,
+        model,
+        feature: "builder_narrative",
+        status: "success",
+        latencyMs,
+        configHash,
+      });
       return { narrative: text, source: "ai" as const };
-    } catch {
+    } catch (err) {
+      await logAiUsage({
+        provider,
+        model,
+        feature: "builder_narrative",
+        status: "failure",
+        latencyMs: Date.now() - startedAt,
+        configHash,
+        errorCode: "exception",
+        errorMessage: err instanceof Error ? err.message : String(err),
+      });
       return { narrative: fallback, source: "fallback" as const };
     }
   });
