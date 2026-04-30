@@ -157,26 +157,27 @@ function ProposalsPage() {
       </section>
 
       {/* Closing CTA */}
-      <section className="py-16 md:py-20 bg-[color:var(--sand)]">
+      <section className="py-16 md:py-20 bg-[color:var(--sand)] reveal">
         <div className="container-x max-w-2xl text-center">
-          <h2 className="font-display font-bold text-[1.75rem] md:text-[2.4rem] leading-tight text-[color:var(--charcoal)]">
+          <h2 className="font-display font-bold text-[1.85rem] md:text-[2.5rem] leading-tight text-[color:var(--charcoal)]">
             Tell us about the moment.
           </h2>
-          <p className="mt-4 text-[color:var(--charcoal-soft)]">
+          <span className="gold-rule mt-5 mx-auto max-w-[64px]" aria-hidden="true" />
+          <p className="mt-5 text-[color:var(--charcoal-soft)] leading-relaxed">
             We'll help you shape it — discreetly, with people who know the
             place. No pressure.
           </p>
           <div className="mt-7 flex flex-col sm:flex-row gap-3 justify-center">
             <Link
               to="/contact"
-              className="inline-flex items-center justify-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] px-7 py-3.5 text-sm tracking-wide"
+              className="group inline-flex items-center justify-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] px-7 py-3.5 text-sm tracking-wide transition-all duration-200 hover:-translate-y-[2px] min-h-[44px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--teal)]"
             >
               Plan with us
-              <ArrowRight size={16} />
+              <ArrowRight size={16} className="cta-arrow" />
             </Link>
             <Link
               to="/contact"
-              className="inline-flex items-center justify-center gap-2 border border-[color:var(--charcoal)]/20 text-[color:var(--charcoal)] hover:border-[color:var(--teal)] hover:text-[color:var(--teal)] px-7 py-3.5 text-sm tracking-wide"
+              className="inline-flex items-center justify-center gap-2 border border-[color:var(--charcoal)]/25 text-[color:var(--charcoal)] hover:border-[color:var(--teal)] hover:text-[color:var(--teal)] px-7 py-3.5 text-sm tracking-wide transition-colors min-h-[44px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--teal)]"
             >
               <MessageCircle size={16} />
               Talk to a Local
