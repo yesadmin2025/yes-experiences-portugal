@@ -120,9 +120,16 @@ export function JourneyPanel({
             Selected moments
           </span>
           <span className="text-[11px] text-[color:var(--charcoal)]/50 tabular-nums">
-            {stops.length} stop{stops.length === 1 ? "" : "s"}
+            {routeLoading && stops.length === 0
+              ? "shaping…"
+              : `${stops.length} stop${stops.length === 1 ? "" : "s"}`}
           </span>
         </div>
+        {routeLoading && stops.length === 0 ? (
+          <div className="mt-3">
+            <StopListSkeleton count={4} />
+          </div>
+        ) : null}
         <ol className="mt-3 flex flex-col gap-2">
           {stops.map((s, i) => {
             const img = stopImages?.[s.key];
