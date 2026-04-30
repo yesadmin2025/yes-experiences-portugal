@@ -1,5 +1,6 @@
 import { ArrowDown, ArrowUp, Clock, Leaf, MessageCircle, Plus, X, Zap } from "lucide-react";
 import { fmtMinutes, type Pace, type RouteUI, type RoutedStopUI, builderWaHref } from "./types";
+import { BuilderImage } from "./BuilderImage";
 
 interface StopImageRef {
   url: string;
