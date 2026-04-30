@@ -1221,7 +1221,7 @@ function HomePage() {
       </section>
 
 
-      {/* 9 — FAQ
+      {/* 7 — FAQ
           Reuses the shared FAQ component, which renders its own
           labelled landmark with visible expandable answers. The wrapper
           section below carries the spacing class the lock checks; the
