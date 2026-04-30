@@ -23,6 +23,7 @@ import {
   ProgressDots,
   StepHead,
 } from "@/components/builder/Choices";
+import { MoodGridSkeleton } from "@/components/builder/Skeletons";
 import {
   INTENTIONS,
   MOODS,
