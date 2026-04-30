@@ -1278,18 +1278,32 @@ function HomePage() {
                   <Link
                     to={m.to}
                     aria-label={m.cta}
+                    onMouseMove={(e) => {
+                      // Pointer-aware micro-tilt: max ±2.5deg, dampened.
+                      const el = e.currentTarget as HTMLElement;
+                      const r = el.getBoundingClientRect();
+                      const px = (e.clientX - r.left) / r.width - 0.5;
+                      const py = (e.clientY - r.top) / r.height - 0.5;
+                      el.style.setProperty("--tilt-y", `${(px * 5).toFixed(2)}deg`);
+                      el.style.setProperty("--tilt-x", `${(-py * 4).toFixed(2)}deg`);
+                    }}
+                    onMouseLeave={(e) => {
+                      const el = e.currentTarget as HTMLElement;
+                      el.style.setProperty("--tilt-y", "0deg");
+                      el.style.setProperty("--tilt-x", "0deg");
+                    }}
                     className={
-                      "relative block md:col-span-7 overflow-hidden rounded-[2px] border border-[color:var(--border)] bg-[color:var(--card)] transition-transform duration-300 ease-out group-hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 " +
+                      "he-tilt relative block md:col-span-7 overflow-hidden rounded-[2px] border border-[color:var(--border)] bg-[color:var(--card)] transition-transform duration-300 ease-out group-hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 " +
                       (reverse ? "md:order-2" : "md:order-1")
                     }
                   >
-                    <div className="he-image-rise relative aspect-[4/3] md:aspect-[5/4] overflow-hidden">
+                    <div className="he-image-cinema he-image-rise relative aspect-[4/3] md:aspect-[5/4] overflow-hidden">
                       <img
                         src={m.img}
                         alt=""
                         aria-hidden="true"
                         loading="lazy"
-                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-[700ms] ease-out group-hover:scale-[1.03]"
+                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-[700ms] ease-out group-hover:scale-[1.05]"
                       />
                       <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/40 via-[color:var(--charcoal-deep)]/10 to-transparent" />
                       {/* Subtle animated category label — soft pulsing
