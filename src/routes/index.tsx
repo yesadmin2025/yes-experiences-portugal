@@ -1136,7 +1136,7 @@ function HomePage() {
               When the <span className="italic font-medium">occasion</span> is bigger.
             </h2>
             <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] leading-[1.6] max-w-md mx-auto">
-              <strong className="font-semibold">Proposals</strong>, private <strong className="font-semibold">celebrations</strong> and <strong className="font-semibold">corporate groups</strong> — quietly planned by a local team.
+              <strong className="font-semibold">Proposals</strong>, private <strong className="font-semibold">celebrations</strong>, <strong className="font-semibold">corporate groups</strong> and <strong className="font-semibold">multi-day journeys</strong> — quietly planned by a local team.
             </p>
           </div>
 
