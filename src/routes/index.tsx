@@ -992,9 +992,9 @@ function HomePage() {
         aria-labelledby="signatures-title"
       >
         <div className="container-x">
-          <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
-            <span className="eyebrow">Signature experiences</span>
-            <h2 id="signatures-title" className="serif mt-5 text-[2.55rem] md:text-[3.95rem] leading-[1.0] tracking-[-0.018em] text-[color:var(--charcoal)] font-semibold">
+          <div className="reveal text-center max-w-2xl mx-auto mb-12 md:mb-16">
+            <span className="he-eyebrow-bar mb-5">Signature experiences</span>
+            <h2 id="signatures-title" className="serif mt-3 text-[2.55rem] md:text-[4.15rem] leading-[1.0] tracking-[-0.02em] text-[color:var(--charcoal)] font-semibold">
               Days <span className="italic">already designed.</span>
             </h2>
             <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] leading-[1.65] max-w-md mx-auto">
