@@ -37,7 +37,7 @@ const inputSchema = z.object({
 });
 
 async function loadCatalog() {
-  const [regionsRes, stopsRes, rulesRes] = await Promise.all([
+  const [regionsRes, stopsRes, rulesRes, compatRes] = await Promise.all([
     supabaseAdmin
       .from("builder_regions")
       .select("key,label,blurb,lat,lng")
@@ -45,7 +45,7 @@ async function loadCatalog() {
     supabaseAdmin
       .from("builder_stops")
       .select(
-        "key,region_key,label,blurb,tag,lat,lng,duration_minutes,mood_tags,pace_tags,intention_tags,who_tags,compatible_with,weight",
+        "key,canonical_key,variant_bucket,variant_label,source_tour_keys,region_key,label,blurb,tag,lat,lng,duration_minutes,mood_tags,pace_tags,intention_tags,who_tags,compatible_with,weight",
       )
       .eq("is_active", true),
     supabaseAdmin
@@ -54,11 +54,15 @@ async function loadCatalog() {
       .eq("is_active", true)
       .limit(1)
       .maybeSingle(),
+    supabaseAdmin
+      .from("builder_compatibility_rules")
+      .select("stop_a,stop_b,cooccurrence_count"),
   ]);
 
   if (regionsRes.error) throw new Error(regionsRes.error.message);
   if (stopsRes.error) throw new Error(stopsRes.error.message);
   if (rulesRes.error) throw new Error(rulesRes.error.message);
+  if (compatRes.error) throw new Error(compatRes.error.message);
 
   const regions = (regionsRes.data ?? []).map((r) => ({
     ...r,
@@ -81,8 +85,9 @@ async function loadCatalog() {
     pace_multiplier_balanced: 1,
     pace_multiplier_full: 1.2,
   }) as RoutingRules;
+  const compatibility = (compatRes.data ?? []) as CompatibilityRule[];
 
-  return { regions, stops, rules };
+  return { regions, stops, rules, compatibility };
 }
 
 /** Generate a feasible route from emotional input. Pure logic, no AI. */
