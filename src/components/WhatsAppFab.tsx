@@ -1,13 +1,18 @@
 import { MessageCircle } from "lucide-react";
 
 const WA_NUMBER = "351911889992"; // +351 911 889 992
-const WA_TEXT = "Olá! Estou a montar a minha experiência e gostaria de uma sugestão.";
+
+/** Build a wa.me deep link with a pre-filled message. */
+export function whatsappHref(message: string): string {
+  return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(message)}`;
+}
+
+const DEFAULT_TEXT = "Olá! Estou a montar a minha experiência e gostaria de uma sugestão.";
 
 export function WhatsAppFab() {
-  const href = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(WA_TEXT)}`;
   return (
     <a
-      href={href}
+      href={whatsappHref(DEFAULT_TEXT)}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="A local is one message away — chat on WhatsApp"
