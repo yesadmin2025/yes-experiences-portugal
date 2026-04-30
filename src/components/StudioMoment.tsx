@@ -1018,27 +1018,47 @@ function StopDetailsDrawer({
             )}
 
             {/* Alternates */}
-            {stop.alternates.length > 0 && (
+            {rawStop && rawStop.alternates.length > 0 && (
               <div className="mt-7 pt-5 border-t border-[color:var(--charcoal)]/10">
                 <span className="text-[10.5px] uppercase tracking-[0.28em] text-[color:var(--charcoal)]/55 font-semibold">
                   Choose one
                 </span>
                 <p className="mt-1.5 text-[12.5px] text-[color:var(--charcoal)]/65 leading-[1.5]">
-                  Other real ways to do this stop. You can pick one in the Studio.
+                  Other real ways to do this stop. Pick one to update your route.
                 </p>
                 <fieldset className="mt-3 space-y-2">
-                  <legend className="sr-only">Pick a variant for {stop.label}</legend>
+                  <legend className="sr-only">Pick a variant for {rawStop.label}</legend>
                   {[
                     {
-                      key: stop.key,
-                      label: stop.label,
-                      blurb: stop.blurb,
-                      variantLabel: stop.variantLabel,
-                      durationMinutes: stop.durationMinutes,
+                      key: rawStop.key,
+                      label: rawStop.label,
+                      blurb: rawStop.blurb,
+                      tag: rawStop.tag,
+                      variantLabel: rawStop.variantLabel,
+                      durationMinutes: rawStop.durationMinutes,
+                      lat: rawStop.lat,
+                      lng: rawStop.lng,
+                      isOriginal: true,
                     },
-                    ...stop.alternates,
+                    ...rawStop.alternates.map((a) => ({ ...a, isOriginal: false })),
                   ].map((opt) => {
-                    const checked = chosenVariant === opt.key;
+                    const checked = chosenVariantKey === opt.key;
+                    const handleSelect = () => {
+                      if (opt.isOriginal) {
+                        onSwap(null);
+                      } else {
+                        onSwap({
+                          key: opt.key,
+                          label: opt.label,
+                          blurb: opt.blurb,
+                          tag: opt.tag ?? null,
+                          variantLabel: opt.variantLabel,
+                          durationMinutes: opt.durationMinutes,
+                          lat: opt.lat,
+                          lng: opt.lng,
+                        });
+                      }
+                    };
                     return (
                       <label
                         key={opt.key}
@@ -1051,15 +1071,20 @@ function StopDetailsDrawer({
                       >
                         <input
                           type="radio"
-                          name={`variant-${stop.key}`}
+                          name={`variant-${rawStop.key}`}
                           value={opt.key}
                           checked={checked}
-                          onChange={() => setChosenVariant(opt.key)}
+                          onChange={handleSelect}
                           className="mt-1 accent-[color:var(--teal)] h-4 w-4"
                         />
                         <span className="flex-1 min-w-0">
                           <span className="block text-[13.5px] font-medium text-[color:var(--charcoal)]">
                             {opt.variantLabel ?? opt.label}
+                            {opt.isOriginal && (
+                              <span className="ml-2 text-[10px] uppercase tracking-[0.22em] text-[color:var(--charcoal)]/45">
+                                Original
+                              </span>
+                            )}
                           </span>
                           <span className="block mt-0.5 text-[12px] text-[color:var(--charcoal)]/65">
                             {fmtMinutes(opt.durationMinutes)}
