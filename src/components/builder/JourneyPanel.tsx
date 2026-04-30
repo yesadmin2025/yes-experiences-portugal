@@ -115,14 +115,30 @@ export function JourneyPanel({
           </span>
         </div>
         <ol className="mt-3 flex flex-col gap-2">
-          {stops.map((s, i) => (
+          {stops.map((s, i) => {
+            const img = stopImages?.[s.key];
+            return (
             <li
               key={s.key}
               className="group flex items-start gap-3 rounded-[2px] border border-[color:var(--charcoal)]/10 bg-[color:var(--ivory)] p-3 transition-colors hover:border-[color:var(--charcoal)]/25"
             >
-              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[color:var(--teal)] text-[11px] font-bold text-[color:var(--ivory)] tabular-nums">
-                {i + 1}
-              </span>
+              {img ? (
+                <span className="relative flex h-14 w-14 shrink-0 overflow-hidden rounded-[2px] bg-[color:var(--charcoal)]/10">
+                  <img
+                    src={img.url}
+                    alt={img.alt}
+                    loading="lazy"
+                    className="absolute inset-0 h-full w-full object-cover"
+                  />
+                  <span className="absolute left-1 top-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-[color:var(--teal)] text-[10px] font-bold text-[color:var(--ivory)] tabular-nums">
+                    {i + 1}
+                  </span>
+                </span>
+              ) : (
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[color:var(--teal)] text-[11px] font-bold text-[color:var(--ivory)] tabular-nums">
+                  {i + 1}
+                </span>
+              )}
               <div className="min-w-0 flex-1">
                 <p className="text-[13.5px] font-semibold text-[color:var(--charcoal)] leading-tight">
                   {s.label}
