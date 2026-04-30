@@ -1220,8 +1220,6 @@ function HomePage() {
         </div>
       </section>
 
-      {/* 8.5 — TRUSTMARY REVIEWS — Branded wrapper around verified reviews */}
-      <TrustmarySection />
 
       {/* 9 — FAQ
           Reuses the shared FAQ component, which renders its own
