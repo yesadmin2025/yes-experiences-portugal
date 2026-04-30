@@ -1415,21 +1415,21 @@ function HomePage() {
       >
         {/* FINAL CTA */}
         <div className="container-x">
-          <div className="max-w-xl mx-auto text-center">
-            <span className="inline-flex items-center gap-2 text-[10.5px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
+          <div className="reveal max-w-xl mx-auto text-center">
+            <span className="he-rule-flank text-[10.5px] uppercase tracking-[0.28em] font-bold text-[color:var(--gold)]">
               <MessageCircle size={12} aria-hidden="true" />
               Prefer a conversation?
             </span>
-            <h2 id="final-cta-title" className="serif mt-5 text-[2.3rem] md:text-[3.3rem] leading-[1.04] tracking-[-0.016em] font-semibold">
+            <h2 id="final-cta-title" className="serif mt-5 text-[2.4rem] md:text-[3.6rem] leading-[1.02] tracking-[-0.02em] font-semibold">
               Talk to a <span className="italic text-[color:var(--gold-soft)]">local.</span>
             </h2>
-            <p className="mt-5 text-[14.5px] md:text-[15.5px] leading-[1.7] font-light text-[color:var(--ivory)]/85">
+            <p className="mt-5 text-[15px] md:text-[16px] leading-[1.7] text-[color:var(--ivory)]/90">
               Tell us roughly what you have in mind — dates, party, a feeling. A designer in Portugal will reply within a working day.
             </p>
-            <div className="mt-8 flex flex-col sm:flex-row gap-y-4 gap-x-5 justify-center">
+            <div className="mt-9 flex flex-col sm:flex-row gap-y-4 gap-x-6 justify-center items-center">
               <Link
                 to="/contact"
-                className="he-glow he-sheen group inline-flex items-center justify-center gap-2.5 sm:gap-2 bg-[color:var(--gold)] text-[color:var(--charcoal)] px-6 sm:px-7 py-3.5 min-h-[48px] sm:min-h-[44px] text-[12.5px] sm:text-[13px] uppercase tracking-[0.16em] sm:tracking-[0.18em] font-semibold hover:bg-[color:var(--gold-soft)] shadow-[0_6px_18px_-8px_rgba(201,169,106,0.55)]"
+                className="he-glow he-sheen he-cta-shift group inline-flex items-center justify-center gap-2.5 sm:gap-2 bg-[color:var(--gold)] text-[color:var(--charcoal)] px-7 py-3.5 min-h-[48px] sm:min-h-[44px] text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold hover:bg-[color:var(--gold-soft)] shadow-[0_8px_22px_-10px_rgba(201,169,106,0.6)]"
               >
                 Speak to a local designer
                 <ArrowRight size={14} className="transition-transform duration-200 group-hover:translate-x-0.5" />
