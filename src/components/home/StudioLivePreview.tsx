@@ -97,6 +97,7 @@ export function StudioLivePreview() {
   return (
     <div
       ref={wrapRef}
+      data-active={active ? "true" : "false"}
       className="studio-live relative overflow-hidden rounded-[6px] border border-[color:var(--gold)]/25 bg-[color:var(--charcoal-deep)] shadow-[0_18px_40px_-20px_rgba(46,46,46,0.45)]"
       role="img"
       aria-label="Experience Studio live preview: Lisbon to Azeitão to Sesimbra, a relaxed day around wine and the coast, estimated seven and a half hours"
@@ -344,47 +345,9 @@ export function StudioLivePreview() {
         </p>
       </div>
 
-      <style>{`
-        @keyframes slv-pulse {
-          0%   { transform: scale(0.6); opacity: 0.5; }
-          70%  { transform: scale(2.4); opacity: 0; }
-          100% { transform: scale(2.4); opacity: 0; }
-        }
-        .slv-pulse {
-          transform-origin: center;
-          transform-box: fill-box;
-          animation: slv-pulse 2400ms cubic-bezier(0.22, 0.61, 0.36, 1) infinite;
-        }
-
-        /* ── Focus states — premium, keyboard-only ─────────────────── */
-        /* SVG pin focus ring: hidden until :focus-visible */
-        .slv-pin { outline: none; cursor: pointer; }
-        .slv-pin .slv-pin-focus {
-          opacity: 0;
-          transition: opacity 160ms ease;
-        }
-        .slv-pin:focus-visible .slv-pin-focus,
-        .slv-pin:hover .slv-pin-focus {
-          opacity: 1;
-        }
-        .slv-pin:focus-visible {
-          outline: none;
-        }
-
-        /* Generic focusable chip/moment focus ring — gold ring + dark offset */
-        .slv-focusable { outline: none; }
-        .slv-focusable:focus-visible {
-          outline: 2px solid var(--gold);
-          outline-offset: 2px;
-          box-shadow: 0 0 0 4px rgba(46,46,46,0.35);
-          border-radius: 9999px;
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          .slv-pulse { animation: none !important; }
-          .studio-live * { transition: none !important; }
-        }
-      `}</style>
+      {/* Animations + focus styles for this device live in styles.css
+          under the `.studio-live` scope so the CSS is parsed once and
+          honours `prefers-reduced-motion` globally. */}
     </div>
   );
 }

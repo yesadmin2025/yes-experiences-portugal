@@ -2704,3 +2704,56 @@
     }
   }
 }
+
+/* ── StudioLivePreview — homepage device animations ─────────────────
+   Extracted from the component's inline <style> tag so the CSS is
+   parsed once at startup instead of on every render. Scoped under
+   .studio-live to avoid leaking into other map devices. */
+@keyframes slv-pulse {
+  0%   { transform: scale(0.6); opacity: 0.5; }
+  70%  { transform: scale(2.4); opacity: 0; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+.slv-pulse {
+  transform-origin: center;
+  transform-box: fill-box;
+  animation: slv-pulse 2400ms cubic-bezier(0.22, 0.61, 0.36, 1) infinite;
+  will-change: transform, opacity;
+}
+
+/* SVG pin focus ring — keyboard-only */
+.slv-pin { outline: none; cursor: pointer; }
+.slv-pin .slv-pin-focus {
+  opacity: 0;
+  transition: opacity 160ms ease;
+}
+.slv-pin:focus-visible .slv-pin-focus,
+.slv-pin:hover .slv-pin-focus {
+  opacity: 1;
+}
+.slv-pin:focus-visible { outline: none; }
+
+/* Generic focusable chip / moment focus ring */
+.slv-focusable { outline: none; }
+.slv-focusable:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(46, 46, 46, 0.35);
+  border-radius: 9999px;
+}
+
+/* While the device is animating in, hint the compositor for the
+   route path stroke and revealing pin groups. */
+.studio-live[data-active="true"] svg path[style*="stroke-dashoffset"] {
+  will-change: stroke-dashoffset;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slv-pulse { animation: none !important; }
+  .studio-live *,
+  .studio-live svg path,
+  .studio-live svg g {
+    transition: none !important;
+  }
+}
+
