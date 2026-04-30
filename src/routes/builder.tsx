@@ -268,7 +268,7 @@ function BuilderPage() {
             )}
 
             {step === 1 && (
-              <div className="builder-reveal">
+              <div key="step-1" className="builder-step-in">
                 <StepHead num={1} eyebrow="Mood" title="What are you in the mood for?" />
                 <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
                   {MOODS.map((m) => (
@@ -289,7 +289,7 @@ function BuilderPage() {
             )}
 
             {step === 2 && (
-              <div className="builder-reveal">
+              <div key="step-2" className="builder-step-in">
                 <StepHead num={2} eyebrow="Who" title="Who is this for?" onBack={() => setStep(1)} />
                 <div className="mt-8 grid grid-cols-2 lg:grid-cols-4 gap-3">
                   {WHOS.map((w) => (
@@ -310,7 +310,7 @@ function BuilderPage() {
             )}
 
             {step === 3 && (
-              <div className="builder-reveal">
+              <div key="step-3" className="builder-step-in">
                 <StepHead
                   num={3}
                   eyebrow="Intention"
@@ -335,7 +335,7 @@ function BuilderPage() {
             )}
 
             {step === 4 && (
-              <div className="builder-reveal">
+              <div key="step-4" className="builder-step-in">
                 <StepHead
                   num={4}
                   eyebrow="Rhythm"
