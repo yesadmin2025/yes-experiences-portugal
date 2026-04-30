@@ -207,8 +207,19 @@ export function StudioMoment({ className }: Props) {
           {/* ─── RIGHT: chip row + map + live panel ─── */}
           <div className="md:col-span-7 flex flex-col gap-5">
             <ChipRow active={activeChip} onSelect={setActiveChip} />
-            <StudioMap route={active} loading={!demos && !loadError} />
-            <JourneyPanel route={active} loading={!demos && !loadError} loadError={loadError} />
+            <StudioMap
+              route={active}
+              loading={!demos && !loadError}
+              activeStopKey={openStopKey}
+              onSelectStop={setOpenStopKey}
+            />
+            <JourneyPanel
+              route={active}
+              loading={!demos && !loadError}
+              loadError={loadError}
+              activeStopKey={openStopKey}
+              onSelectStop={setOpenStopKey}
+            />
           </div>
 
           {/* ─── Mobile-only mood question (below the map) ─── */}
