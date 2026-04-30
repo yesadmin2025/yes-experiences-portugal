@@ -34,24 +34,24 @@ export function StickyBar({
       role="region"
       aria-label="Experience summary"
     >
-      <div className="container-x flex items-center justify-between gap-3 py-3">
-        <div className="flex min-w-0 items-center gap-3 sm:gap-5 text-[color:var(--charcoal)]">
-          <span className="hidden sm:inline-flex items-center gap-1.5 text-[12px]">
-            <Clock size={13} className="text-[color:var(--charcoal)]/55" />
+      <div className="container-x flex items-center justify-between gap-2 sm:gap-3 py-3">
+        <div className="flex min-w-0 items-center gap-2 sm:gap-4 text-[color:var(--charcoal)]">
+          <span className="inline-flex items-center gap-1 text-[11.5px] sm:text-[12px]">
+            <Clock size={12} className="text-[color:var(--charcoal)]/55" />
             <span className="tabular-nums font-semibold">{fmtMinutes(totalMinutes)}</span>
           </span>
 
-          <span className="inline-flex items-center gap-1 rounded-full border border-[color:var(--charcoal)]/15 bg-[color:var(--ivory)] px-1 py-0.5">
+          <span className="inline-flex items-center gap-0.5 rounded-full border border-[color:var(--charcoal)]/15 bg-[color:var(--ivory)] px-0.5 py-0.5">
             <button
               type="button"
               onClick={() => setGuests(Math.max(1, guests - 1))}
               aria-label="Remove guest"
               className="inline-flex h-7 w-7 items-center justify-center rounded-full text-[color:var(--charcoal)]/65 hover:text-[color:var(--charcoal)]"
             >
-              <Minus size={12} />
+              <Minus size={11} />
             </button>
-            <span className="inline-flex items-center gap-1 px-1 text-[12px] tabular-nums font-semibold">
-              <Users size={11} className="text-[color:var(--charcoal)]/55" />
+            <span className="inline-flex items-center gap-0.5 px-1 text-[11.5px] tabular-nums font-semibold">
+              <Users size={10} className="text-[color:var(--charcoal)]/55" />
               {guests}
             </span>
             <button
@@ -60,17 +60,17 @@ export function StickyBar({
               aria-label="Add guest"
               className="inline-flex h-7 w-7 items-center justify-center rounded-full text-[color:var(--charcoal)]/65 hover:text-[color:var(--charcoal)]"
             >
-              <Plus size={12} />
+              <Plus size={11} />
             </button>
           </span>
 
           <span className="flex flex-col leading-tight">
-            <span className="text-[10px] uppercase tracking-[0.22em] font-semibold text-[color:var(--charcoal)]/55">
+            <span className="hidden sm:inline text-[10px] uppercase tracking-[0.22em] font-semibold text-[color:var(--charcoal)]/55">
               From
             </span>
-            <span className="text-[15px] tabular-nums font-semibold text-[color:var(--charcoal)]">
+            <span className="text-[14px] sm:text-[15px] tabular-nums font-semibold text-[color:var(--charcoal)]">
               €{total}
-              <span className="ml-1 text-[11px] font-normal text-[color:var(--charcoal)]/55">
+              <span className="ml-1 hidden sm:inline text-[11px] font-normal text-[color:var(--charcoal)]/55">
                 total
               </span>
             </span>
