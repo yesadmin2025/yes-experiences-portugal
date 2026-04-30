@@ -1225,7 +1225,7 @@ function HomePage() {
                     <p className="text-[14px] leading-[1.6] text-[color:var(--charcoal)] font-light">
                       {m.line}
                     </p>
-                    <span className="mt-2 inline-flex items-center gap-1.5 text-[12px] uppercase tracking-[0.18em] font-semibold text-[color:var(--teal)]">
+                    <span className="mt-2 inline-flex items-center gap-2 sm:gap-1.5 min-h-[44px] text-[12px] uppercase tracking-[0.16em] sm:tracking-[0.18em] font-semibold text-[color:var(--teal)]">
                       {m.cta}
                       <ArrowRight
                         size={12}
