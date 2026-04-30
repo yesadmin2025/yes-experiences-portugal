@@ -82,7 +82,7 @@ export function JourneyPanel({
 
       {/* Story */}
       <section className="overflow-hidden rounded-[2px] border border-[color:var(--charcoal)]/10 bg-[color:var(--sand)]/40">
-        {storyImage && (
+        {storyImage ? (
           <BuilderImage
             src={storyImage.url}
             alt={storyImage.alt}
@@ -90,7 +90,13 @@ export function JourneyPanel({
             overlay
             rounded={false}
           />
-        )}
+        ) : imagesLoading || routeLoading ? (
+          <div
+            role="status"
+            aria-label="Loading story image"
+            className="aspect-[16/9] w-full bg-[linear-gradient(135deg,color-mix(in_oklab,var(--sand)_85%,transparent)_0%,color-mix(in_oklab,var(--charcoal)_15%,transparent)_100%)] animate-pulse"
+          />
+        ) : null}
         <div className="p-4">
           <span className="text-[10px] uppercase tracking-[0.28em] font-bold text-[color:var(--gold)]">
             Story
