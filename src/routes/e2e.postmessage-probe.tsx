@@ -67,29 +67,20 @@ declare global {
   }
 }
 
-function runProbe(): Promise<ProbeResult[]> {
-  return new Promise((resolve) => {
-    const received: unknown[] = [];
-    const listener = (e: MessageEvent) => received.push(e.data);
-    window.addEventListener("message", listener);
-
-    // Dispatch synchronously; postMessage is async but dispatchEvent on
-    // window with a MessageEvent fires synchronously, which is what the
-    // capture-phase filter relies on. We use dispatchEvent for
-    // determinism — same path the unit tests cover.
+function runProbeSync(): ProbeResult[] {
+  const received: unknown[] = [];
+  const listener = (e: MessageEvent) => received.push(e.data);
+  window.addEventListener("message", listener);
+  try {
     for (const p of PROBES) {
       window.dispatchEvent(new MessageEvent("message", { data: p.data }));
     }
-
-    // Yield once so any async listeners flush, then evaluate.
-    setTimeout(() => {
-      window.removeEventListener("message", listener);
-      const results: ProbeResult[] = PROBES.map((p) => {
-        const wasReceived = received.some((d) => deepEqual(d, p.data));
-        return { ...p, received: wasReceived, ok: wasReceived === p.shouldPass };
-      });
-      resolve(results);
-    }, 0);
+  } finally {
+    window.removeEventListener("message", listener);
+  }
+  return PROBES.map((p) => {
+    const wasReceived = received.some((d) => deepEqual(d, p.data));
+    return { ...p, received: wasReceived, ok: wasReceived === p.shouldPass };
   });
 }
 
