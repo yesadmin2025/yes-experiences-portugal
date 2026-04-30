@@ -25,6 +25,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ToursTourIdRouteImport } from './routes/tours.$tourId'
+import { Route as QaMobileRouteImport } from './routes/qa.mobile'
 import { Route as ApiVerifyHeroRouteImport } from './routes/api/verify-hero'
 import { Route as ApiImgRouteImport } from './routes/api/img'
 import { Route as AdminTourLinkAuditRouteImport } from './routes/admin.tour-link-audit'
@@ -111,6 +112,11 @@ const ToursTourIdRoute = ToursTourIdRouteImport.update({
   path: '/tours/$tourId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const QaMobileRoute = QaMobileRouteImport.update({
+  id: '/qa/mobile',
+  path: '/qa/mobile',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiVerifyHeroRoute = ApiVerifyHeroRouteImport.update({
   id: '/api/verify-hero',
   path: '/api/verify-hero',
@@ -157,6 +163,7 @@ export interface FileRoutesByFullPath {
   '/admin/tour-link-audit': typeof AdminTourLinkAuditRoute
   '/api/img': typeof ApiImgRoute
   '/api/verify-hero': typeof ApiVerifyHeroRoute
+  '/qa/mobile': typeof QaMobileRoute
   '/tours/$tourId': typeof ToursTourIdRouteWithChildren
   '/tours/$tourId/tailor': typeof ToursTourIdTailorRoute
 }
@@ -180,6 +187,7 @@ export interface FileRoutesByTo {
   '/admin/tour-link-audit': typeof AdminTourLinkAuditRoute
   '/api/img': typeof ApiImgRoute
   '/api/verify-hero': typeof ApiVerifyHeroRoute
+  '/qa/mobile': typeof QaMobileRoute
   '/tours/$tourId': typeof ToursTourIdRouteWithChildren
   '/tours/$tourId/tailor': typeof ToursTourIdTailorRoute
 }
@@ -204,6 +212,7 @@ export interface FileRoutesById {
   '/admin/tour-link-audit': typeof AdminTourLinkAuditRoute
   '/api/img': typeof ApiImgRoute
   '/api/verify-hero': typeof ApiVerifyHeroRoute
+  '/qa/mobile': typeof QaMobileRoute
   '/tours/$tourId': typeof ToursTourIdRouteWithChildren
   '/tours/$tourId/tailor': typeof ToursTourIdTailorRoute
 }
@@ -229,6 +238,7 @@ export interface FileRouteTypes {
     | '/admin/tour-link-audit'
     | '/api/img'
     | '/api/verify-hero'
+    | '/qa/mobile'
     | '/tours/$tourId'
     | '/tours/$tourId/tailor'
   fileRoutesByTo: FileRoutesByTo
@@ -252,6 +262,7 @@ export interface FileRouteTypes {
     | '/admin/tour-link-audit'
     | '/api/img'
     | '/api/verify-hero'
+    | '/qa/mobile'
     | '/tours/$tourId'
     | '/tours/$tourId/tailor'
   id:
@@ -275,6 +286,7 @@ export interface FileRouteTypes {
     | '/admin/tour-link-audit'
     | '/api/img'
     | '/api/verify-hero'
+    | '/qa/mobile'
     | '/tours/$tourId'
     | '/tours/$tourId/tailor'
   fileRoutesById: FileRoutesById
@@ -299,6 +311,7 @@ export interface RootRouteChildren {
   AdminTourLinkAuditRoute: typeof AdminTourLinkAuditRoute
   ApiImgRoute: typeof ApiImgRoute
   ApiVerifyHeroRoute: typeof ApiVerifyHeroRoute
+  QaMobileRoute: typeof QaMobileRoute
   ToursTourIdRoute: typeof ToursTourIdRouteWithChildren
 }
 
@@ -416,6 +429,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ToursTourIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/qa/mobile': {
+      id: '/qa/mobile'
+      path: '/qa/mobile'
+      fullPath: '/qa/mobile'
+      preLoaderRoute: typeof QaMobileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/verify-hero': {
       id: '/api/verify-hero'
       path: '/api/verify-hero'
@@ -486,6 +506,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminTourLinkAuditRoute: AdminTourLinkAuditRoute,
   ApiImgRoute: ApiImgRoute,
   ApiVerifyHeroRoute: ApiVerifyHeroRoute,
+  QaMobileRoute: QaMobileRoute,
   ToursTourIdRoute: ToursTourIdRouteWithChildren,
 }
 export const routeTree = rootRouteImport
