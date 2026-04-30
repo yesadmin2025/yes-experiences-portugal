@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-30T22:45:38.018Z",
+  "generatedAt": "2026-04-30T22:49:59.335Z",
   "filesScanned": 133,
   "approvedPalette": {
     "teal": "#295B61",
@@ -18,10 +18,10 @@
     "#cccccc"
   ],
   "counts": {
-    "total": 160,
+    "total": 158,
     "approved": 41,
     "allowlisted": 29,
-    "mismatch": 90
+    "mismatch": 88
   },
   "findings": [
     {
@@ -1048,24 +1048,6 @@
       "raw": "#E7DDD0",
       "normalized": "#e7ddd0",
       "snippet": "className=\"reveal-stagger he-card-lift group relative flex flex-col rounded-[6px] border border-[#E7DDD0] bg-[color:var(--ivory)] p-7 md:p-9 shadow-[0_1px_2px_r",
-      "status": "mismatch"
-    },
-    {
-      "file": "src/routes/multi-day.tsx",
-      "line": 610,
-      "col": 60,
-      "raw": "#0a1f24",
-      "normalized": "#0a1f24",
-      "snippet": "<rect x=\"0\" y=\"0\" width=\"100\" height=\"100\" fill=\"#0a1f24\" />",
-      "status": "mismatch"
-    },
-    {
-      "file": "src/routes/multi-day.tsx",
-      "line": 614,
-      "col": 19,
-      "raw": "#1a3338",
-      "normalized": "#1a3338",
-      "snippet": "fill=\"#1a3338\"",
       "status": "mismatch"
     },
     {

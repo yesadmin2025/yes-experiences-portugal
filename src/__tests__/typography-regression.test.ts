@@ -420,34 +420,34 @@ const HEADLINES: HeadlineSpec[] = [
     pattern: /<p\s+data-hero-field="microcopy"\s+className="([^"]+)"/,
   },
 
-  // Multi-day page hero + section H2s
+  // Multi-day page hero (Typography v3 — Montserrat font-display, not serif)
   {
     page: "multi-day",
     role: "hero h1",
     file: "src/routes/multi-day.tsx",
-    pattern: /<h1 className="(serif text-\[34px\] md:text-6xl[^"]+)"/,
+    pattern: /<h1 className="(font-display font-bold text-\[2\.4rem\][^"]+)">\s*\n\s*More than one day/,
   },
   {
     page: "multi-day",
     role: "hero subhead",
     file: "src/routes/multi-day.tsx",
     pattern:
-      /<p className="(mt-5 max-w-md md:max-w-xl mx-auto text-\[15px\][^"]+)">\s*Shape each day/,
+      /<p className="(mt-6 text-\[1rem\][^"]+)">\s*\n\s*Build Portugal across regions/,
   },
 
-  // Proposals page hero + section H2s
+  // Proposals page hero (Typography v3 — Montserrat font-display, not serif)
   {
     page: "proposals",
     role: "hero h1",
     file: "src/routes/proposals.tsx",
-    pattern: /<h1 className="(serif text-\[34px\] md:text-6xl[^"]+)"/,
+    pattern: /<h1 className="(font-display font-bold text-\[2\.4rem\][^"]+)">\s*\n\s*Moments worth/,
   },
   {
     page: "proposals",
     role: "hero subhead",
     file: "src/routes/proposals.tsx",
     pattern:
-      /<p className="(mt-5 max-w-md md:max-w-xl mx-auto text-\[15px\][^"]+)">\s*Proposals, anniversaries/,
+      /<p className="(mt-6 text-\[1rem\][^"]+)">\s*\n\s*A private moment/,
   },
 ];
 
@@ -562,10 +562,12 @@ describe("Typography regression — headline class strings", () => {
  * Update with `bunx vitest run -u` when the change is intentional.
  * ───────────────────────────────────────────────────────────────── */
 
+// Note: /multi-day and /proposals were rebuilt to Typography v3 (Montserrat
+// font-display + Georgia italic + direct sizing) and intentionally no longer
+// use the legacy serif-based t-h* tokens. They're covered by the explicit
+// HEADLINES patterns above instead of the token sweep.
 const SECTION_PAGES = [
   { page: "home", file: "src/routes/index.tsx" },
-  { page: "multi-day", file: "src/routes/multi-day.tsx" },
-  { page: "proposals", file: "src/routes/proposals.tsx" },
 ];
 
 const TOKEN_CLASS_RE =
