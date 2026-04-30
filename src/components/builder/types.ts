@@ -1,7 +1,7 @@
 // Shared Builder types — must match builderEngine.server.ts vocabulary.
 
 export type Mood = "slow" | "curious" | "romantic" | "open" | "energetic";
-export type Who = "couple" | "family" | "friends" | "solo";
+export type Who = "couple" | "family" | "friends" | "solo" | "corporate" | "group";
 export type Intention =
   | "wine"
   | "gastronomy"
