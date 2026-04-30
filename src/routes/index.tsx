@@ -67,12 +67,30 @@ const signatures = FEATURED_TOUR_IDS
  * Moments / Groups preview — Multi-day, Celebrations, Corporate
  * collapsed into a single 3-card band.
  * ────────────────────────────────────────────────────────────── */
+/* ──────────────────────────────────────────────────────────────────
+ * Occasions band — Proposals · Celebrations · Corporate & Groups ·
+ * Multi-Day. Each block carries the four required elements:
+ *   1. strong headline (`title`)
+ *   2. short emotional value (`pull`)
+ *   3. practical value (`line` body + `detail` + `handles`)
+ *   4. local guidance / logistics note (`trust`)
+ *   + CTA (`cta` + `to`)
+ * Copy is approved verbatim — do not paraphrase without explicit ask.
+ * Each block uses its OWN real Viator-sourced image (no duplicates,
+ * no stock, no invented imagery).
+ * ────────────────────────────────────────────────────────────── */
 const groupsAndCelebrations = [
   {
     id: "proposals",
     eyebrow: "Proposals",
     title: "A private moment, shaped with care.",
-    line: (<>From the setting to the timing, we help shape the moment around your story, with <span className="kw">local knowledge</span> and discreet support.</>),
+    line: (
+      <>
+        From the setting to the timing, we help shape the moment{" "}
+        <span className="kw">discreetly</span>, with local knowledge behind
+        every detail.
+      </>
+    ),
     pull: "Designed for the moment, not the template.",
     detail: "Discreet · location of your choosing",
     handles: [
@@ -81,7 +99,7 @@ const groupsAndCelebrations = [
       "Surprise logistics",
       "Full discretion",
     ],
-    trust: "Completed 50+ proposals · 100% success rate",
+    trust: "Planned end to end with our local team — every detail confirmed before the day.",
     cta: "Plan a Proposal",
     to: "/proposals",
     img: imgArrabidaWineLunch,
@@ -90,7 +108,13 @@ const groupsAndCelebrations = [
     id: "celebrations",
     eyebrow: "Celebrations",
     title: "For days worth remembering.",
-    line: (<>Birthdays, anniversaries, honeymoons or family moments — shaped around <span className="kw">your rhythm</span>, your people and the way you want to feel Portugal.</>),
+    line: (
+      <>
+        Birthdays, anniversaries, honeymoons or family moments — shaped around{" "}
+        <span className="kw">your rhythm</span>, your people and the way you
+        want to feel Portugal.
+      </>
+    ),
     pull: "Your people, your pace, your Portugal.",
     detail: "Up to 14 guests · private host",
     handles: [
@@ -99,16 +123,22 @@ const groupsAndCelebrations = [
       "Flexible scheduling",
       "Personal touches",
     ],
-    trust: "Up to 14 guests · private host available",
+    trust: "Coordinated by a local host who knows how each piece of the day connects.",
     cta: "Plan a Celebration",
     to: "/proposals",
-    img: imgFatimaNazare,
+    img: imgSintraEstates,
   },
   {
     id: "corporate",
     eyebrow: "Corporate & Groups",
     title: "Private group days, without the generic formula.",
-    line: (<>For teams, incentives and private groups, we combine local experiences, timing, transport and logistics into a day that feels <span className="kw">effortless</span>.</>),
+    line: (
+      <>
+        For teams, incentives and private groups, we combine local experiences,
+        timing, transport and logistics into a day that feels{" "}
+        <span className="kw">effortless</span>.
+      </>
+    ),
     pull: "End to end, handled by a local team.",
     detail: "Up to 30 pax · invoice & DMC support",
     handles: [
@@ -117,7 +147,7 @@ const groupsAndCelebrations = [
       "Transport coordination",
       "Invoice & DMC support",
     ],
-    trust: "Up to 30 guests · full team coordination",
+    trust: "Real driving times, real venues, real partners — we handle the moving parts on the ground.",
     cta: "Plan a Group Experience",
     to: "/corporate",
     img: imgFatimaNazare,
@@ -125,18 +155,24 @@ const groupsAndCelebrations = [
   {
     id: "multi-day",
     eyebrow: "Multi-day",
-    title: "Routes across Portugal.",
-    line: (<>Two to seven days, real driving times, real overnight stops — designed in conversation with a <span className="kw">local team</span>.</>),
+    title: "More than one day. One coherent journey.",
+    line: (
+      <>
+        Build Portugal across regions with realistic timing, local flow and{" "}
+        <span className="kw">support</span> from people who know how each day
+        should connect.
+      </>
+    ),
     pull: "More than a day. A real journey.",
     detail: "2–7 days · local-designed",
     handles: [
-      "Route planning",
+      "Route planning across regions",
       "Real driving times",
       "Curated overnight stops",
-      "Local team support",
+      "Daily local support",
     ],
-    trust: "Designed in conversation with a local team",
-    cta: "Browse multi-day routes",
+    trust: "Designed in conversation with a local team — never a copy-paste itinerary.",
+    cta: "Plan a Multi-Day Journey",
     to: "/multi-day",
     img: imgTroiaBeach,
   },
