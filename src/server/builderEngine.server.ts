@@ -344,24 +344,40 @@ export function generateRoute(
   regions: RegionRow[],
   allStops: StopRow[],
   rules: RoutingRules,
+  compatibilityRules: CompatibilityRule[] = [],
 ): BuilderRoute {
   const region = pickRegion(input, regions);
   const pace: Pace = input.pace ?? (rules.default_pace as Pace) ?? "balanced";
 
-  const candidates = allStops
+  const excluded = new Set(input.excludedStopKeys ?? []);
+  const pinnedKeys = new Set(input.pinnedStopKeys ?? []);
+
+  // 1. Region pool, then exclude.
+  const regionPool = allStops
     .filter((s) => s.region_key === region.key)
-    .filter((s) => !(input.excludedStopKeys ?? []).includes(s.key));
+    .filter((s) => !excluded.has(s.key));
 
-  // 1. force-include pinned stops in this region
-  const pinned = candidates.filter((s) => (input.pinnedStopKeys ?? []).includes(s.key));
+  // 2. Pinned stops bypass variant selection — they're explicit user choices.
+  const pinned = regionPool.filter((s) => pinnedKeys.has(s.key));
+  const pinnedCanonicals = new Set(pinned.map((p) => canonicalOf(p)));
 
-  // 2. score & sort the rest
-  const remaining = candidates
-    .filter((s) => !pinned.includes(s))
-    .map((s) => ({ s, score: scoreStop(s, input) }))
-    .sort((a, b) => b.score - a.score);
+  // 3. Reduce remaining variants to one row per canonical_key, picking the
+  //    bucket that matches the requested pace. Drop any canonical_key
+  //    already covered by a pinned stop so we don't duplicate places.
+  const reducible = regionPool.filter(
+    (s) => !pinnedKeys.has(s.key) && !pinnedCanonicals.has(canonicalOf(s)),
+  );
+  const reduced = selectVariantsForPace(reducible, pace);
 
-  // 3. fill up to target with hard rule checks
+  // 4. Build compatibility index (canonical-keyed) once.
+  const compatIndex = buildCompatibilityIndex(compatibilityRules);
+
+  // 5. Base score (mood/who/intention/pace) computed once per candidate.
+  const scored = reduced
+    .map((s) => ({ s, base: scoreStop(s, input) }))
+    .sort((a, b) => b.base - a.base);
+
+  // 6. Hard-rule filling with compatibility-aware selection.
   const target = paceToTargetStops(pace, rules);
   const maxExpMin = rules.max_experience_hours * 60;
   const maxDriveMin = rules.max_driving_hours * 60;
@@ -380,20 +396,37 @@ export function generateRoute(
     return { ordered, drive, stay, total: drive + stay };
   };
 
-  for (const { s } of remaining) {
-    if (chosen.length >= target) break;
-    const trial = [...chosen, s];
+  // Greedy: at each step, re-rank remaining candidates by
+  // base score + compatibility boost vs already-chosen, then pick the best
+  // one that still fits within hard limits.
+  const remaining = scored.slice();
+  while (chosen.length < target && remaining.length) {
+    let bestIdx = -1;
+    let bestComposite = -Infinity;
+    for (let i = 0; i < remaining.length; i++) {
+      const cand = remaining[i];
+      const composite = cand.base + compatibilityBoost(cand.s, chosen, compatIndex);
+      if (composite > bestComposite) {
+        bestComposite = composite;
+        bestIdx = i;
+      }
+    }
+    if (bestIdx === -1) break;
+    const cand = remaining.splice(bestIdx, 1)[0];
+    const trial = [...chosen, cand.s];
     const t = trySequence(trial);
     if (t.total <= maxExpMin && t.drive <= maxDriveMin) {
-      chosen.push(s);
+      chosen.push(cand.s);
     }
   }
 
-  // 4. ensure min_stops; if pinned/excluded made it too small, pad with
-  // best-fit ignoring intention tags last
+  // 7. Floor: ensure min_stops; if pinned/excluded made it too small, pad
+  //    with best-fit ignoring intention tags last (still respecting variant
+  //    reduction so we never repeat a canonical place).
   if (chosen.length < rules.min_stops) {
-    const fallback = candidates
-      .filter((s) => !chosen.includes(s))
+    const chosenCanonicals = new Set(chosen.map(canonicalOf));
+    const fallback = reduced
+      .filter((s) => !chosen.includes(s) && !chosenCanonicals.has(canonicalOf(s)))
       .sort((a, b) => b.weight - a.weight);
     for (const s of fallback) {
       if (chosen.length >= rules.min_stops) break;
@@ -406,16 +439,16 @@ export function generateRoute(
     }
   }
 
-  // 5. final ordering and totals
-  const final = trySequence(chosen);
+  // 8. Final ordering and totals.
+  const finalSeq = trySequence(chosen);
   let prev: { lat: number; lng: number } = region;
-  const routedStops: RoutedStop[] = final.ordered.map((s) => {
+  const routedStops: RoutedStop[] = finalSeq.ordered.map((s) => {
     const d = driveMinutesBetween(prev, s);
     prev = s;
     return { ...s, driveMinutesFromPrev: d };
   });
 
-  // 6. price
+  // 9. Price.
   const paceMult =
     pace === "relaxed"
       ? rules.pace_multiplier_relaxed
@@ -427,19 +460,22 @@ export function generateRoute(
 
   const warnings: string[] = [];
   if (routedStops.length < rules.min_stops) warnings.push("Fewer stops than ideal for this pace.");
-  if (final.drive > maxDriveMin) warnings.push("Driving time exceeds the comfortable maximum.");
+  if (finalSeq.drive > maxDriveMin) warnings.push("Driving time exceeds the comfortable maximum.");
 
   return {
     region,
     pace,
     stops: routedStops,
     totals: {
-      drivingMinutes: final.drive,
-      stopMinutes: final.stay,
-      experienceMinutes: final.total,
+      drivingMinutes: finalSeq.drive,
+      stopMinutes: finalSeq.stay,
+      experienceMinutes: finalSeq.total,
     },
     pricePerPersonEur,
-    feasible: final.total <= maxExpMin && final.drive <= maxDriveMin && routedStops.length >= rules.min_stops,
+    feasible:
+      finalSeq.total <= maxExpMin &&
+      finalSeq.drive <= maxDriveMin &&
+      routedStops.length >= rules.min_stops,
     warnings,
   };
 }
