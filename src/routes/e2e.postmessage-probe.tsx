@@ -115,8 +115,8 @@ function ProbePage() {
         padding: "24px",
         maxWidth: 720,
         margin: "0 auto",
-        color: "#2E2E2E",
-        background: "#FAF8F3",
+        color: "var(--charcoal)",
+        background: "var(--ivory)",
         minHeight: "100vh",
       }}
     >
@@ -128,7 +128,7 @@ function ProbePage() {
           fontSize: 28,
           margin: 0,
           color:
-            pass === null ? "#295B61" : pass ? "#295B61" : "#a3271f",
+            pass === null ? "var(--teal)" : pass ? "var(--teal)" : "#a3271f",
         }}
       >
         {pass === null
@@ -175,7 +175,7 @@ function ProbePage() {
                 <td
                   style={{
                     padding: "6px 4px",
-                    color: r.ok ? "#295B61" : "#a3271f",
+                    color: r.ok ? "var(--teal)" : "#a3271f",
                     fontWeight: 600,
                   }}
                 >
