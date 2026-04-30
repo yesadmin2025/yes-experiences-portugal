@@ -3,6 +3,7 @@ import { useEffect } from "react";
 
 import { SiteLayout } from "@/components/SiteLayout";
 import { FAQ } from "@/components/FAQ";
+import { TheDifferenceSection } from "@/components/home/TheDifferenceSection";
 
 import heroImg from "@/assets/hero-coast.jpg";
 
