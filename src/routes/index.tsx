@@ -51,6 +51,9 @@ const signatures = FEATURED_TOUR_IDS
     region: t.region,
     priceFrom: t.priceFrom,
     durationHours: t.durationHours,
+    // First 3 real highlights from the matching Viator-sourced catalog.
+    // Never fabricated — sourced from `signatureTours[].highlights`.
+    highlights: t.highlights.slice(0, 3),
   }));
 
 /* ──────────────────────────────────────────────────────────────────
