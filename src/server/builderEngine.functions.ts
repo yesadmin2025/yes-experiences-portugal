@@ -5,6 +5,7 @@ import { hashConfig, logAiUsage } from "./aiAuditLog.server";
 import {
   type BuilderInput,
   type BuilderRoute,
+  type CompatibilityRule,
   type Intention,
   type Mood,
   type Pace,
