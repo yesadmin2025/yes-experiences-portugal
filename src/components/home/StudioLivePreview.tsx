@@ -217,6 +217,10 @@ export function StudioLivePreview() {
           {STOPS.map((s, i) => (
             <g
               key={s.id}
+              className="slv-pin"
+              role="button"
+              tabIndex={0}
+              aria-label={`${s.label} — ${s.caption}`}
               style={{
                 opacity: active ? 1 : 0,
                 transform: active ? "translateY(0)" : "translateY(4px)",
@@ -225,6 +229,16 @@ export function StudioLivePreview() {
                 transformOrigin: `${s.x}px ${s.y}px`,
               }}
             >
+              {/* Focus ring — only visible on keyboard focus */}
+              <circle
+                className="slv-pin-focus"
+                cx={s.x}
+                cy={s.y}
+                r="8"
+                fill="none"
+                stroke="var(--gold)"
+                strokeWidth="1.2"
+              />
               {/* Outer pulse — first & last stops only, keeps it calm */}
               {(i === 0 || i === STOPS.length - 1) && (
                 <circle
