@@ -855,7 +855,7 @@ function HomePage() {
                     {b.num}
                   </span>
                 </div>
-                <span className="mt-5 text-[10.5px] uppercase tracking-[0.32em] text-[color:var(--charcoal-soft)]">
+                <span className="mt-5 text-[10.5px] uppercase tracking-[0.32em] font-semibold text-[color:var(--charcoal)]">
                   {b.label}
                 </span>
                 <h3 className="serif mt-3 text-[1.55rem] md:text-[1.85rem] leading-[1.18] text-[color:var(--charcoal)]">
@@ -928,7 +928,7 @@ function HomePage() {
                       <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/35 to-transparent" />
                     </div>
                     <div className="p-6 md:p-7 flex flex-col gap-3">
-                      <span className="inline-flex items-center gap-2 text-[10.5px] uppercase tracking-[0.28em] text-[color:var(--charcoal-soft)]">
+                      <span className="inline-flex items-center gap-2 text-[10.5px] uppercase tracking-[0.28em] font-semibold text-[color:var(--charcoal)]">
                         <Icon size={12} aria-hidden="true" />
                         {p.eyebrow}
                         {primary && (
@@ -1033,7 +1033,7 @@ function HomePage() {
                           {t.region}
                         </span>
                         <span className="inline-flex items-baseline gap-1 rounded-full bg-[color:var(--ivory)]/95 px-2.5 py-1 text-[color:var(--charcoal)] shadow-[0_2px_6px_rgba(0,0,0,0.18)]">
-                          <span className="text-[9.5px] uppercase tracking-[0.18em] text-[color:var(--charcoal-soft)]">
+                          <span className="text-[10.5px] uppercase tracking-[0.2em] font-semibold text-[color:var(--charcoal)]">
                             From
                           </span>
                           <span className="serif text-[14px] leading-none">
@@ -1071,7 +1071,7 @@ function HomePage() {
           </ul>
 
           {/* Mobile-only swipe hint */}
-          <p className="sm:hidden mt-4 text-center text-[10.5px] uppercase tracking-[0.28em] text-[color:var(--charcoal-soft)]">
+          <p className="sm:hidden mt-4 text-center text-[10.5px] uppercase tracking-[0.28em] font-semibold text-[color:var(--charcoal)]">
             Swipe to explore
           </p>
 
@@ -1154,7 +1154,7 @@ function HomePage() {
                   <span className="serif text-[15px] leading-[1.2] text-[color:var(--charcoal)]">
                     4 stops &middot; ~7h &middot; Lisbon &rarr; Algarve
                   </span>
-                  <span className="text-[10.5px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)]">
+                  <span className="text-[10.5px] uppercase tracking-[0.22em] font-semibold text-[color:var(--charcoal)]">
                     Reviewed by a local
                   </span>
                 </div>
@@ -1168,7 +1168,7 @@ function HomePage() {
                 <span className="serif text-[15.5px] leading-[1.2] text-[color:var(--charcoal)]">
                   4 stops &middot; ~7h &middot; Lisbon &rarr; Algarve
                 </span>
-                <span className="text-[10.5px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)]">
+                <span className="text-[10.5px] uppercase tracking-[0.22em] font-semibold text-[color:var(--charcoal)]">
                   Reviewed by a local
                 </span>
               </div>
@@ -1215,7 +1215,7 @@ function HomePage() {
                     <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/40 to-transparent" />
                   </div>
                   <div className="p-5 md:p-8 flex flex-col gap-2.5 md:w-1/2 md:justify-center">
-                    <span className="inline-flex items-center gap-2 text-[10.5px] uppercase tracking-[0.28em] text-[color:var(--charcoal-soft)]">
+                    <span className="inline-flex items-center gap-2 text-[10.5px] uppercase tracking-[0.28em] font-semibold text-[color:var(--charcoal)]">
                       <CalendarDays size={12} aria-hidden="true" />
                       {m.eyebrow}
                     </span>
