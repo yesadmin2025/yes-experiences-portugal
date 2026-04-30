@@ -25,7 +25,7 @@
 
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, MessageCircle, Sparkles } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
@@ -504,12 +504,11 @@ function JourneyPanel({
       <div className="mt-5 pt-4 border-t border-[color:var(--charcoal)]/10 flex items-center justify-between gap-3">
         <Link
           to="/builder"
-          search={(prev) => ({
-            ...prev,
+          search={{
             step: 1,
             intention: intentionFromChip(route.chip),
             mood: moodFromChip(route.chip),
-          })}
+          }}
           className="link-soft text-[13px] text-[color:var(--teal)] font-medium inline-flex items-center gap-1.5"
         >
           Open this in the Studio
@@ -569,13 +568,11 @@ function MoodQuestion() {
           <li key={o.key}>
             <Link
               to="/builder"
-              search={(prev) => ({
-                ...prev,
+              search={{
                 step: 2,
                 mood: o.mood,
                 intention: o.intention,
-                ...(o.regionKey ? {} : {}),
-              })}
+              }}
               className="group block rounded-[12px] border border-[color:var(--charcoal)]/12 bg-[color:var(--ivory)] px-4 py-3.5 transition-all duration-200 hover:border-[color:var(--teal)] hover:bg-[color:var(--sand)] focus-visible:outline-2 focus-visible:outline-[color:var(--teal)]"
             >
               <span className="block text-[14px] font-medium text-[color:var(--charcoal)] group-hover:text-[color:var(--teal)] transition-colors">
@@ -673,5 +670,3 @@ function HiddenHeroCopyProbes() {
   );
 }
 
-// useRef is imported for forward-compatibility; suppress unused-var for now.
-void useRef;
