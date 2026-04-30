@@ -1,6 +1,11 @@
 import { ArrowDown, ArrowUp, Clock, Leaf, MessageCircle, Plus, X, Zap } from "lucide-react";
 import { fmtMinutes, type Pace, type RouteUI, type RoutedStopUI, builderWaHref } from "./types";
 
+interface StopImageRef {
+  url: string;
+  alt: string;
+}
+
 interface Props {
   route: RouteUI | null;
   stops: RoutedStopUI[];
@@ -14,6 +19,10 @@ interface Props {
   onMove: (idx: number, dir: -1 | 1) => void;
   /** Stops the engine excluded — surfaced so the user can re-add. */
   removablePool?: { key: string; label: string }[];
+  /** Real image per stop (from experience_images), keyed by stop.key. */
+  stopImages?: Record<string, StopImageRef | null>;
+  /** One contextual image for the Story section (mood + region match). */
+  storyImage?: StopImageRef | null;
 }
 
 const PACE_META: Record<Pace, { label: string; sub: string; icon: typeof Leaf }> = {
