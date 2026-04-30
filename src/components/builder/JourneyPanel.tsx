@@ -184,7 +184,8 @@ export function JourneyPanel({
                 </button>
               </div>
             </li>
-          ))}
+            );
+          })}
         </ol>
 
         {removablePool && removablePool.length > 0 && excluded.length > 0 && (
