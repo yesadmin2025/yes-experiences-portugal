@@ -34,6 +34,7 @@ import { Route as AdminImportToursRouteImport } from './routes/admin.import-tour
 import { Route as AdminBuilderImagesQaRouteImport } from './routes/admin.builder-images-qa'
 import { Route as AdminBuilderImagesRouteImport } from './routes/admin.builder-images'
 import { Route as AdminAiAuditRouteImport } from './routes/admin.ai-audit'
+import { Route as _e2ePostmessageProbeRouteImport } from './routes/__e2e.postmessage-probe'
 import { Route as ToursTourIdTailorRouteImport } from './routes/tours.$tourId.tailor'
 
 const TypographyAuditRoute = TypographyAuditRouteImport.update({
@@ -161,6 +162,11 @@ const AdminAiAuditRoute = AdminAiAuditRouteImport.update({
   path: '/admin/ai-audit',
   getParentRoute: () => rootRouteImport,
 } as any)
+const _e2ePostmessageProbeRoute = _e2ePostmessageProbeRouteImport.update({
+  id: '/__e2e/postmessage-probe',
+  path: '/postmessage-probe',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ToursTourIdTailorRoute = ToursTourIdTailorRouteImport.update({
   id: '/tailor',
   path: '/tailor',
@@ -183,6 +189,7 @@ export interface FileRoutesByFullPath {
   '/preview-check': typeof PreviewCheckRoute
   '/proposals': typeof ProposalsRoute
   '/typography-audit': typeof TypographyAuditRoute
+  '/postmessage-probe': typeof _e2ePostmessageProbeRoute
   '/admin/ai-audit': typeof AdminAiAuditRoute
   '/admin/builder-images': typeof AdminBuilderImagesRoute
   '/admin/builder-images-qa': typeof AdminBuilderImagesQaRoute
@@ -211,6 +218,7 @@ export interface FileRoutesByTo {
   '/preview-check': typeof PreviewCheckRoute
   '/proposals': typeof ProposalsRoute
   '/typography-audit': typeof TypographyAuditRoute
+  '/postmessage-probe': typeof _e2ePostmessageProbeRoute
   '/admin/ai-audit': typeof AdminAiAuditRoute
   '/admin/builder-images': typeof AdminBuilderImagesRoute
   '/admin/builder-images-qa': typeof AdminBuilderImagesQaRoute
@@ -240,6 +248,7 @@ export interface FileRoutesById {
   '/preview-check': typeof PreviewCheckRoute
   '/proposals': typeof ProposalsRoute
   '/typography-audit': typeof TypographyAuditRoute
+  '/__e2e/postmessage-probe': typeof _e2ePostmessageProbeRoute
   '/admin/ai-audit': typeof AdminAiAuditRoute
   '/admin/builder-images': typeof AdminBuilderImagesRoute
   '/admin/builder-images-qa': typeof AdminBuilderImagesQaRoute
@@ -270,6 +279,7 @@ export interface FileRouteTypes {
     | '/preview-check'
     | '/proposals'
     | '/typography-audit'
+    | '/postmessage-probe'
     | '/admin/ai-audit'
     | '/admin/builder-images'
     | '/admin/builder-images-qa'
@@ -298,6 +308,7 @@ export interface FileRouteTypes {
     | '/preview-check'
     | '/proposals'
     | '/typography-audit'
+    | '/postmessage-probe'
     | '/admin/ai-audit'
     | '/admin/builder-images'
     | '/admin/builder-images-qa'
@@ -326,6 +337,7 @@ export interface FileRouteTypes {
     | '/preview-check'
     | '/proposals'
     | '/typography-audit'
+    | '/__e2e/postmessage-probe'
     | '/admin/ai-audit'
     | '/admin/builder-images'
     | '/admin/builder-images-qa'
@@ -355,6 +367,7 @@ export interface RootRouteChildren {
   PreviewCheckRoute: typeof PreviewCheckRoute
   ProposalsRoute: typeof ProposalsRoute
   TypographyAuditRoute: typeof TypographyAuditRoute
+  _e2ePostmessageProbeRoute: typeof _e2ePostmessageProbeRoute
   AdminAiAuditRoute: typeof AdminAiAuditRoute
   AdminBuilderImagesRoute: typeof AdminBuilderImagesRoute
   AdminBuilderImagesQaRoute: typeof AdminBuilderImagesQaRoute
@@ -544,6 +557,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAiAuditRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/__e2e/postmessage-probe': {
+      id: '/__e2e/postmessage-probe'
+      path: '/postmessage-probe'
+      fullPath: '/postmessage-probe'
+      preLoaderRoute: typeof _e2ePostmessageProbeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tours/$tourId/tailor': {
       id: '/tours/$tourId/tailor'
       path: '/tailor'
@@ -582,6 +602,7 @@ const rootRouteChildren: RootRouteChildren = {
   PreviewCheckRoute: PreviewCheckRoute,
   ProposalsRoute: ProposalsRoute,
   TypographyAuditRoute: TypographyAuditRoute,
+  _e2ePostmessageProbeRoute: _e2ePostmessageProbeRoute,
   AdminAiAuditRoute: AdminAiAuditRoute,
   AdminBuilderImagesRoute: AdminBuilderImagesRoute,
   AdminBuilderImagesQaRoute: AdminBuilderImagesQaRoute,
