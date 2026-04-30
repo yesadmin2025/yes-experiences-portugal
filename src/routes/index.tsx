@@ -1310,20 +1310,21 @@ function HomePage() {
                   >
                     {/* Soft gold divider — animates from left on reveal */}
                     <span aria-hidden="true" className="gold-rule mb-5 md:mb-5 max-w-[3rem] md:max-w-[3.5rem]" />
-                    <span className="text-[10.5px] uppercase tracking-[0.32em] font-semibold text-[color:var(--gold)]">
+                    <span className="inline-flex items-center gap-2 text-[11px] md:text-[10.5px] uppercase tracking-[0.28em] md:tracking-[0.32em] font-bold text-[color:var(--charcoal)]">
+                      <span aria-hidden="true" className="inline-block h-[5px] w-[5px] rounded-full bg-[color:var(--gold)]" />
                       {m.eyebrow}
                     </span>
-                    <h3 className="serif mt-3 text-[2.05rem] md:text-[2.65rem] leading-[1.05] tracking-[-0.015em] text-[color:var(--charcoal)] font-semibold">
+                    <h3 className="serif mt-3 text-[2.15rem] md:text-[2.65rem] leading-[1.04] md:leading-[1.05] tracking-[-0.018em] md:tracking-[-0.015em] text-[color:var(--charcoal)] font-semibold">
                       {m.title}
                     </h3>
-                    <p className="mt-4 text-[15.5px] md:text-[16.5px] leading-[1.7] text-[color:var(--charcoal)]">
+                    <p className="mt-4 text-[16px] md:text-[16.5px] leading-[1.65] md:leading-[1.7] text-[color:var(--charcoal)]">
                       {m.line}
                     </p>
-                    <p className="mt-4 serif italic text-[16px] md:text-[17px] leading-[1.45] text-[color:var(--charcoal)] font-medium border-l-2 border-[color:var(--gold)] pl-3.5">
+                    <p className="mt-5 serif italic text-[16.5px] md:text-[17px] leading-[1.42] md:leading-[1.45] text-[color:var(--charcoal)] font-semibold border-l-[3px] border-[color:var(--gold)] pl-4">
                       {m.pull}
                     </p>
-                    <p className="mt-5 text-[10.5px] uppercase tracking-[0.24em] font-semibold text-[color:var(--gold)]">
-                      {m.detail}
+                    <p className="mt-5 text-[11px] md:text-[10.5px] uppercase tracking-[0.22em] md:tracking-[0.24em] font-bold text-[color:var(--charcoal)]">
+                      <span className="text-[color:var(--gold)]">●</span>&nbsp;&nbsp;{m.detail}
                     </p>
                     <Link
                       to={m.to}
