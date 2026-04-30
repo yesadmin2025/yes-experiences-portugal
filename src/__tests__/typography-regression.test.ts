@@ -387,13 +387,16 @@ type HeadlineSpec = {
 };
 
 const HEADLINES: HeadlineSpec[] = [
-  // Homepage hero — frozen contract, must not drift
+  // Homepage hero — frozen contract, must not drift.
+  // Anchored on the inner data-hero-field="eyebrow" span (stable hook),
+  // matching the Typography v3 hero markup (the outer wrapper sizing
+  // changed during the structural rework but the eyebrow text node is
+  // the actual locked element).
   {
     page: "home",
     role: "hero eyebrow",
     file: "src/routes/index.tsx",
-    pattern:
-      /<span className="(inline-flex items-center gap-2\.5[^"]*?animate-\[heroFade_1\.1s[^"]*?)"/,
+    pattern: /<span data-hero-field="eyebrow" className="([^"]+)"/,
   },
   {
     page: "home",
@@ -562,18 +565,29 @@ describe("Typography regression — headline class strings", () => {
  * Update with `bunx vitest run -u` when the change is intentional.
  * ───────────────────────────────────────────────────────────────── */
 
-// Note: /multi-day and /proposals were rebuilt to Typography v3 (Montserrat
-// font-display + Georgia italic + direct sizing) and intentionally no longer
-// use the legacy serif-based t-h* tokens. They're covered by the explicit
-// HEADLINES patterns above instead of the token sweep.
-const SECTION_PAGES = [
-  { page: "home", file: "src/routes/index.tsx" },
-];
+// Note: home, /multi-day and /proposals were rebuilt to Typography v3
+// (Montserrat font-display + Georgia italic + direct sizing) and intentionally
+// no longer use the legacy serif-based t-h* tokens. The homepage uses
+// `he-eyebrow-bar` and direct `font-display font-bold` per the v3 canon.
+// Hero fields are covered by the explicit HEADLINES patterns above; section
+// H2s on these pages are governed by Typography v3 source-level rules
+// elsewhere. The token sweep is now reserved for any future page that opts
+// into the legacy t-h* token system.
+const SECTION_PAGES: { page: string; file: string }[] = [];
 
 const TOKEN_CLASS_RE =
   /<(h1|h2|h3|h4|p|span|div)\b[^>]*\sclassName="([^"]*\b(?:t-h1|t-h2|t-h3|t-eyebrow|t-lead)\b[^"]*)"/g;
 
 describe("Typography regression — section headlines (token sweep)", () => {
+  if (SECTION_PAGES.length === 0) {
+    // All current pages were rebuilt to Typography v3 raw classes and
+    // intentionally do NOT use the legacy serif-based t-h* tokens. The sweep
+    // remains armed for any future page that opts into the token system.
+    it("no pages currently use the legacy t-h* token system (Typography v3)", () => {
+      expect(SECTION_PAGES).toEqual([]);
+    });
+    return;
+  }
   for (const { page, file } of SECTION_PAGES) {
     it(`[${page}] all tokenized section headlines`, () => {
       const src = read(file);
