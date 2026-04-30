@@ -236,22 +236,84 @@ function TailorPage() {
         </div>
       </section>
 
-      {/* ── 3 · WHAT STAYS THE SAME (reassurance) ───────────── */}
-      <section className="py-6 bg-[color:var(--ivory)] border-y border-[color:var(--border)]">
+      {/* ── 3 · WHAT STAYS / WHAT YOU CAN ADJUST ──────────────
+          Two-column reassurance block. The user must understand:
+          "I can adjust this tour a little, without starting from
+          zero." Tailored = selected adjustments INSIDE this one
+          Signature — never a new itinerary, never stops from other
+          tours, never a mix of regions. */}
+      <section
+        className="py-10 md:py-12 bg-[color:var(--ivory)] border-y border-[color:var(--border)]"
+        aria-labelledby="tailor-scope-title"
+      >
         <div className="container-x max-w-6xl">
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-[11px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)]">
-            <span className="inline-flex items-center gap-2 text-[color:var(--charcoal)]">
-              <Lock size={12} className="text-[color:var(--gold)]" />
-              What stays the same:
-            </span>
-            <span>The route</span>
-            <span>·</span>
-            <span>The story</span>
-            <span>·</span>
-            <span>The local guide</span>
-            <span>·</span>
-            <span>The quality of every stop</span>
+          <h2 id="tailor-scope-title" className="sr-only">
+            What stays the same and what you can adjust
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
+            {/* What stays the same */}
+            <div className="border border-[color:var(--border)] bg-[color:var(--ivory)] p-5 md:p-6">
+              <div className="flex items-center gap-2.5">
+                <Lock size={14} className="text-[color:var(--gold)] shrink-0" aria-hidden="true" />
+                <span className="text-[10.5px] uppercase tracking-[0.24em] font-semibold text-[color:var(--charcoal)]">
+                  What stays the same
+                </span>
+              </div>
+              <p className="mt-3 text-[14px] leading-[1.6] text-[color:var(--charcoal)]">
+                The core route, quality and local flow remain intact.
+              </p>
+              <ul className="mt-4 flex flex-col gap-2 text-[13px] leading-[1.55] text-[color:var(--charcoal)]">
+                {[
+                  "The real route and order of stops",
+                  "The trusted local guide and driver",
+                  "The quality of every stop and partner",
+                  "The region — only this Signature, no mixing",
+                ].map((line) => (
+                  <li key={line} className="flex items-start gap-2.5">
+                    <Check size={13} className="mt-[3px] text-[color:var(--teal)] shrink-0" aria-hidden="true" />
+                    <span>{line}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* What you can adjust */}
+            <div className="border border-[color:var(--border)] bg-[color:var(--sand)] p-5 md:p-6">
+              <div className="flex items-center gap-2.5">
+                <Sparkles size={14} className="text-[color:var(--teal)] shrink-0" aria-hidden="true" />
+                <span className="text-[10.5px] uppercase tracking-[0.24em] font-semibold text-[color:var(--charcoal)]">
+                  What you can adjust
+                </span>
+              </div>
+              <p className="mt-3 text-[14px] leading-[1.6] text-[color:var(--charcoal)]">
+                Selected details available inside this specific experience.
+              </p>
+              <ul className="mt-4 flex flex-col gap-2 text-[13px] leading-[1.55] text-[color:var(--charcoal)]">
+                {[
+                  "Pace and timing",
+                  "Optional stops, when available",
+                  "Available add-ons for this tour",
+                  "Lunch preference, when applicable",
+                  "Group size, language and accessibility needs",
+                ].map((line) => (
+                  <li key={line} className="flex items-start gap-2.5">
+                    <span
+                      aria-hidden="true"
+                      className="mt-[7px] h-1 w-1 shrink-0 rounded-full bg-[color:var(--gold)]"
+                    />
+                    <span>{line}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
+
+          {/* Plain-language clarification — sets the right mental model
+              before the user touches any control. */}
+          <p className="mt-5 text-[12.5px] leading-[1.6] text-[color:var(--charcoal-soft)] italic max-w-2xl">
+            You're adjusting this tour a little — not starting from zero. To design
+            a day from scratch, open the Studio.
+          </p>
         </div>
       </section>
 
@@ -605,7 +667,7 @@ function TailorPage() {
                     rel="noopener noreferrer"
                     className="inline-flex w-full items-center justify-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] px-5 py-4 text-sm tracking-wide transition-all min-h-[52px]"
                   >
-                    <Sparkles size={15} /> Confirm Tailored Journey
+                    <Sparkles size={15} /> Tailor this Signature
                   </a>
                   <p className="mt-2 text-[11px] text-[color:var(--charcoal-soft)] text-center">
                     Instant confirmation. No forms. No waiting.
