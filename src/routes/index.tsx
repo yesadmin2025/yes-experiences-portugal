@@ -1127,31 +1127,27 @@ function HomePage() {
                 Live preview
               </span>
               <h2 id="studio-title" className="serif mt-3 text-[2.5rem] md:text-[3.6rem] leading-[1.0] tracking-[-0.02em] text-[color:var(--charcoal)] font-semibold">
-                Build a day that <span className="italic">actually fits.</span>
+                Five choices. <span className="italic">One real day</span>.
               </h2>
               <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] leading-[1.7] max-w-md">
-                Pick stops on a real map. The Studio composes the route as you choose &mdash; feasibility, timing and an estimate breakdown, all updated in <span className="kw">real time</span>, with <span className="kw">local guidance</span> one message away.
+                Region, duration, pace, style, group. Your day takes shape as you choose &mdash; <span className="kw">live preview</span>, honest timing, fair estimate, with <span className="kw">local guidance</span> one message away.
               </p>
-              <ul className="mt-6 space-y-2.5 text-[13.5px] text-[color:var(--charcoal)] leading-[1.6]">
-                <li className="flex gap-2">
-                  <span aria-hidden="true" className="text-[color:var(--gold)]">&middot;</span>
-                  Real stops only &mdash; no invented venues
-                </li>
-                <li className="flex gap-2">
-                  <span aria-hidden="true" className="text-[color:var(--gold)]">&middot;</span>
-                  Honest driving times and pace
-                </li>
-                <li className="flex gap-2">
-                  <span aria-hidden="true" className="text-[color:var(--gold)]">&middot;</span>
-                  A <span className="kw">local</span> designer reviews every build
-                </li>
-              </ul>
+              <ol className="mt-6 grid grid-cols-5 gap-1.5 max-w-md" aria-label="The five choices">
+                {["Region", "Duration", "Pace", "Style", "Group"].map((label, i) => (
+                  <li key={label} className="flex flex-col gap-1.5">
+                    <span aria-hidden="true" className="block h-[3px] bg-[color:var(--gold)]" />
+                    <span className="text-[10px] uppercase tracking-[0.18em] font-semibold text-[color:var(--charcoal)]/70 tabular-nums">
+                      0{i + 1} · {label}
+                    </span>
+                  </li>
+                ))}
+              </ol>
               <div className="mt-8 flex flex-wrap gap-x-5 gap-y-4">
                 <Link
                   to="/builder"
                   className="he-glow he-sheen he-cta-shift group inline-flex items-center gap-2.5 sm:gap-2 bg-[color:var(--teal)] text-[color:var(--ivory)] px-6 sm:px-7 py-3.5 min-h-[48px] sm:min-h-[44px] text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold hover:bg-[color:var(--teal-2)] shadow-[0_8px_22px_-10px_rgba(41,91,97,0.65)]"
                 >
-                  Open the studio
+                  Start building
                   <ArrowRight size={14} className="transition-transform duration-200 group-hover:translate-x-1" />
                 </Link>
                 <Link
