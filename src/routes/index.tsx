@@ -751,147 +751,17 @@ function HomePage() {
         </div>
       </section>
 
-      {/* 3 — WHY YES
-          Editorial manifesto: one title, one intro, five asymmetric
-          blocks that bring together personalization, local knowledge,
-          proximity, the choose/book innovation, and the simple-and-
-          supported reassurance. Premium, human, intelligent — not a
-          features grid. Soft fade-in only, no bounce, no parallax. */}
-      <section
-        id="why-yes"
-        className="section-y bg-[color:var(--ivory)] border-b border-[color:var(--border)] scroll-mt-24 md:scroll-mt-28"
-        aria-labelledby="why-yes-title"
-      >
-        <div className="container-x">
-          <div className="reveal max-w-2xl mx-auto text-center mb-12 md:mb-16">
-            <span className="he-eyebrow-bar mb-5">Why YES</span>
-            <h2
-              id="why-yes-title"
-              className="serif mt-3 text-[2.55rem] md:text-[4.15rem] leading-[1.0] tracking-[-0.02em] text-[color:var(--charcoal)] font-semibold text-balance"
-            >
-              Portugal isn't experienced the{" "}
-              <span className="italic">same way</span> by everyone.
-            </h2>
-            <p className="mt-6 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] leading-[1.7] max-w-xl mx-auto">
-              That's why YES changed the way people <span className="kw">choose</span>, <span className="kw">shape</span> and <span className="kw">book</span> private experiences in Portugal — from the very first decision to the day itself.
-            </p>
-            {/* Subtle champagne gold divider between intro and grid */}
-            <span aria-hidden="true" className="gold-rule mt-9 md:mt-10 mx-auto block max-w-[3.5rem]" />
-          </div>
-
-          {/* Modular block grid — 5 premium editorial cards. 2-col desktop,
-              stacked mobile. Each card: number, icon, label, serif headline,
-              body, strategic phrase. Scroll-stagger fade+rise via
-              .reveal-stagger. Hover: lift, warmer border, gold underline
-              sweep. Icon reveal on hover via translate. */}
-          <ul className="he-stagger max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6 list-none p-0">
-            {[
-              {
-                Icon: Feather,
-                num: "01",
-                label: "You decide",
-                title: (<>You shape the <span className="italic">story.</span></>),
-                body: (<>Choose the <span className="kw">rhythm</span>, the places, the people, the occasion and the feeling you want to take home.</>),
-                pull: "Designed around you, not a template.",
-              },
-              {
-                Icon: Compass,
-                num: "02",
-                label: "Local from the start",
-                title: (<>Local, from the <span className="italic">very beginning.</span></>),
-                body: (<>Real <span className="kw">local knowledge</span> guides everything — from iconic places to hidden gems, each route is shaped with timing, proximity and the insight that only comes from living it.</>),
-                pull: "Locals on the ground, not call-centres.",
-              },
-              {
-                Icon: Sparkles,
-                num: "03",
-                label: "Any occasion",
-                title: (<>For any <span className="italic">occasion.</span></>),
-                body: (<>Portugal can be a private day, a <span className="kw">proposal</span>, a <span className="kw">celebration</span>, a corporate moment or a full journey. The experience changes because the intention changes.</>),
-                pull: "The intention shapes the day.",
-              },
-              {
-                Icon: MapPin,
-                num: "04",
-                label: "Built live",
-                title: (<>Built in <span className="italic">real time.</span></>),
-                body: (<>Start from a Signature, tailor selected details, or build from scratch in the Studio — your experience takes shape in <span className="kw">real time</span>, with you.</>),
-                pull: "Choose, tailor, or build — your call.",
-              },
-              {
-                Icon: LifeBuoy,
-                num: "05",
-                label: "Supported",
-                title: (<>Simple, clear, <span className="italic">supported.</span></>),
-                body: (<>Even if this feels new, it's designed to feel simple. You decide at <span className="kw">your pace</span>, with <span className="kw">local guidance</span> whenever you want it.</>),
-                pull: "A local is one message away.",
-                wide: true,
-              },
-            ].map((b) => (
-              <li
-                key={b.num}
-                className={
-                  "reveal-stagger he-card-lift group relative flex flex-col rounded-[6px] border border-[#E7DDD0] bg-[color:var(--ivory)] p-7 md:p-9 shadow-[0_1px_2px_rgba(46,46,46,0.04)] overflow-hidden " +
-                  (b.wide ? "md:col-span-2" : "")
-                }
-              >
-                {/* Animated gold rule — draws in on reveal */}
-                <span aria-hidden="true" className="gold-rule absolute left-0 top-0" />
-                {/* Gold sweep underline on hover (desktop) */}
-                <span
-                  aria-hidden="true"
-                  className="pointer-events-none absolute left-0 bottom-0 h-px w-full origin-left scale-x-0 bg-[color:var(--gold)]/60 transition-transform duration-500 ease-out group-hover:scale-x-100"
-                />
-                <div className="flex items-start justify-between gap-4 pr-1">
-                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--gold)]/35 bg-[color:var(--ivory)] transition-all duration-300 group-hover:border-[color:var(--gold)]/70 group-hover:scale-[1.06]">
-                    <b.Icon
-                      size={18}
-                      strokeWidth={1.5}
-                      aria-hidden="true"
-                      className="text-[color:var(--teal)] transition-transform duration-300 ease-out group-hover:translate-x-0.5"
-                    />
-                  </span>
-                  <span className="he-num">
-                    {b.num}
-                  </span>
-                </div>
-                <span className="mt-5 text-[10.5px] uppercase tracking-[0.32em] font-semibold text-[color:var(--charcoal)]">
-                  {b.label}
-                </span>
-                <h3 className="serif mt-3 text-[1.6rem] md:text-[1.95rem] leading-[1.18] text-[color:var(--charcoal)] font-semibold">
-                  {b.title}
-                </h3>
-                <p className="mt-3.5 text-[15px] md:text-[15.5px] text-[color:var(--charcoal)] leading-[1.65]">
-                  {b.body}
-                </p>
-                {/* One bold highlighted phrase per card */}
-                <p className="he-pull mt-5 serif italic text-[15px] md:text-[16px] leading-[1.45] text-[color:var(--charcoal)]">
-                  {b.pull}
-                </p>
-              </li>
-            ))}
-          </ul>
-
-          {/* Closing microline */}
-          <p className="reveal mt-10 md:mt-12 text-center inline-flex flex-wrap w-full items-center justify-center gap-x-2 gap-y-1 px-4 text-[10.5px] xs:text-[11.5px] sm:text-[12px] uppercase tracking-[0.18em] xs:tracking-[0.22em] sm:tracking-[0.28em] text-[color:var(--teal)]">
-            <MessageCircle size={13} aria-hidden="true" className="shrink-0" />
-            <span className="text-balance">A local is always one message away</span>
-          </p>
-        </div>
-      </section>
-
-
       {/* 3 — THREE PATHS + EXPERIENCE STUDIO (promoted)
-          Promoted up the page (now section 3 of 8) so the Builder
-          reads as the core innovation, not just another tile. The
-          section opens with a compact Three-paths primer (Signature /
-          Tailored / Studio) so users immediately understand the three
-          distinct ways to shape Portugal — then drops into the live
-          Studio device. Mobile order: paths primer → headline → live
-          preview → CTA. Desktop: text rail left, preview right.
-          One CTA only ("Open the Studio"). The "Ask a local"
-          duplicate has been removed; local guidance lives in the
-          reassurance line, the FAQ closer, and the Final CTA. */}
+          Promoted up the page so the Builder reads as the core
+          innovation, not just another tile. The section opens with a
+          compact Three-paths primer (Signature / Tailored / Studio)
+          so users immediately understand the three distinct ways to
+          shape Portugal — then drops into the live Studio device.
+          Mobile order: paths primer → headline → live preview → CTA.
+          Desktop: text rail left, preview right. One CTA only
+          ("Open the Studio"). The "Ask a local" duplicate has been
+          removed; local guidance lives in the reassurance line, the
+          FAQ closer, and the Final CTA. */}
       <section
         id="builder"
         className="section-y-lg bg-[color:var(--sand)] border-b border-[color:var(--border)] scroll-mt-24 md:scroll-mt-28"
@@ -1011,10 +881,115 @@ function HomePage() {
       </section>
 
       {/* 4 — WHY YES
-          Editorial manifesto — now 4 modular cards (down from 5) per
-          brief. Each card carries a number, icon, label, serif headline,
-          body and one strategic phrase. Closing microline keeps the
-          "a local is always one message away" reassurance. */}
+          Editorial manifesto — 4 modular cards (down from 5 per the
+          approved consolidation). Each card carries a number, icon,
+          label, serif headline, body and one strategic phrase.
+          Closing microline keeps the "a local is always one message
+          away" reassurance. */}
+      <section
+        id="why-yes"
+        className="section-y bg-[color:var(--ivory)] border-b border-[color:var(--border)] scroll-mt-24 md:scroll-mt-28"
+        aria-labelledby="why-yes-title"
+      >
+        <div className="container-x">
+          <div className="reveal max-w-2xl mx-auto text-center mb-12 md:mb-16">
+            <span className="he-eyebrow-bar mb-5">Why YES</span>
+            <h2
+              id="why-yes-title"
+              className="serif mt-3 text-[2.55rem] md:text-[4.15rem] leading-[1.0] tracking-[-0.02em] text-[color:var(--charcoal)] font-semibold text-balance"
+            >
+              Portugal isn't experienced the{" "}
+              <span className="italic">same way</span> by everyone.
+            </h2>
+            <p className="mt-6 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] leading-[1.7] max-w-xl mx-auto">
+              That's why YES changed the way people <span className="kw">choose</span>, <span className="kw">shape</span> and <span className="kw">book</span> private experiences in Portugal.
+            </p>
+            <span aria-hidden="true" className="gold-rule mt-9 md:mt-10 mx-auto block max-w-[3.5rem]" />
+          </div>
+
+          {/* 4-card editorial grid (consolidated from 5). 2-col desktop,
+              stacked mobile. Each card: number, icon, label, serif
+              headline, body, strategic phrase. */}
+          <ul className="he-stagger max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6 list-none p-0">
+            {[
+              {
+                Icon: Feather,
+                num: "01",
+                label: "You decide",
+                title: (<>You shape the <span className="italic">story.</span></>),
+                body: (<>Choose the <span className="kw">rhythm</span>, the places, the people, the occasion and the feeling you want to take home.</>),
+                pull: "Designed around you, not a template.",
+              },
+              {
+                Icon: Compass,
+                num: "02",
+                label: "Local from the start",
+                title: (<>Real local <span className="italic">knowledge</span> guides everything.</>),
+                body: (<>From iconic places to <span className="kw">hidden gems</span>, each route is shaped with timing, proximity and insight that only comes from living it.</>),
+                pull: "Locals on the ground, not call-centres.",
+              },
+              {
+                Icon: Sparkles,
+                num: "03",
+                label: "Any occasion",
+                title: (<>For any <span className="italic">occasion.</span></>),
+                body: (<>Portugal can be a private day, a <span className="kw">proposal</span>, a <span className="kw">celebration</span>, a corporate moment or a full journey. The experience changes because the intention changes.</>),
+                pull: "The intention shapes the day.",
+              },
+              {
+                Icon: MapPin,
+                num: "04",
+                label: "Three ways to shape it",
+                title: (<>Three ways to <span className="italic">shape it.</span></>),
+                body: (<>Start from a <span className="kw">Signature</span>, tailor selected details, or build from scratch in the <span className="kw">Studio</span>. Your experience takes shape in the way that fits you.</>),
+                pull: "Choose, tailor, or build — your call.",
+              },
+            ].map((b) => (
+              <li
+                key={b.num}
+                className="reveal-stagger he-card-lift group relative flex flex-col rounded-[6px] border border-[#E7DDD0] bg-[color:var(--ivory)] p-7 md:p-9 shadow-[0_1px_2px_rgba(46,46,46,0.04)] overflow-hidden"
+              >
+                <span aria-hidden="true" className="gold-rule absolute left-0 top-0" />
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute left-0 bottom-0 h-px w-full origin-left scale-x-0 bg-[color:var(--gold)]/60 transition-transform duration-500 ease-out group-hover:scale-x-100"
+                />
+                <div className="flex items-start justify-between gap-4 pr-1">
+                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--gold)]/35 bg-[color:var(--ivory)] transition-all duration-300 group-hover:border-[color:var(--gold)]/70 group-hover:scale-[1.06]">
+                    <b.Icon
+                      size={18}
+                      strokeWidth={1.5}
+                      aria-hidden="true"
+                      className="text-[color:var(--teal)] transition-transform duration-300 ease-out group-hover:translate-x-0.5"
+                    />
+                  </span>
+                  <span className="he-num">
+                    {b.num}
+                  </span>
+                </div>
+                <span className="mt-5 text-[10.5px] uppercase tracking-[0.32em] font-semibold text-[color:var(--charcoal)]">
+                  {b.label}
+                </span>
+                <h3 className="serif mt-3 text-[1.6rem] md:text-[1.95rem] leading-[1.18] text-[color:var(--charcoal)] font-semibold">
+                  {b.title}
+                </h3>
+                <p className="mt-3.5 text-[15px] md:text-[15.5px] text-[color:var(--charcoal)] leading-[1.65]">
+                  {b.body}
+                </p>
+                <p className="he-pull mt-5 serif italic text-[15px] md:text-[16px] leading-[1.45] text-[color:var(--charcoal)]">
+                  {b.pull}
+                </p>
+              </li>
+            ))}
+          </ul>
+
+          <p className="reveal mt-10 md:mt-12 text-center inline-flex flex-wrap w-full items-center justify-center gap-x-2 gap-y-1 px-4 text-[10.5px] xs:text-[11.5px] sm:text-[12px] uppercase tracking-[0.18em] xs:tracking-[0.22em] sm:tracking-[0.28em] text-[color:var(--teal)]">
+            <MessageCircle size={13} aria-hidden="true" className="shrink-0" />
+            <span className="text-balance">A local is always one message away</span>
+          </p>
+        </div>
+      </section>
+
 
       {/* 5 — SIGNATURE EXPERIENCES PREVIEW
           Up to 4 real Signature tours. Each card uses the tour's real
