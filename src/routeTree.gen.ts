@@ -30,6 +30,7 @@ import { Route as ApiVerifyHeroRouteImport } from './routes/api/verify-hero'
 import { Route as ApiImgRouteImport } from './routes/api/img'
 import { Route as AdminTourLinkAuditRouteImport } from './routes/admin.tour-link-audit'
 import { Route as AdminImportToursRouteImport } from './routes/admin.import-tours'
+import { Route as AdminAiAuditRouteImport } from './routes/admin.ai-audit'
 import { Route as ToursTourIdTailorRouteImport } from './routes/tours.$tourId.tailor'
 
 const TypographyAuditRoute = TypographyAuditRouteImport.update({
@@ -137,6 +138,11 @@ const AdminImportToursRoute = AdminImportToursRouteImport.update({
   path: '/admin/import-tours',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminAiAuditRoute = AdminAiAuditRouteImport.update({
+  id: '/admin/ai-audit',
+  path: '/admin/ai-audit',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ToursTourIdTailorRoute = ToursTourIdTailorRouteImport.update({
   id: '/tailor',
   path: '/tailor',
@@ -159,6 +165,7 @@ export interface FileRoutesByFullPath {
   '/preview-check': typeof PreviewCheckRoute
   '/proposals': typeof ProposalsRoute
   '/typography-audit': typeof TypographyAuditRoute
+  '/admin/ai-audit': typeof AdminAiAuditRoute
   '/admin/import-tours': typeof AdminImportToursRoute
   '/admin/tour-link-audit': typeof AdminTourLinkAuditRoute
   '/api/img': typeof ApiImgRoute
@@ -183,6 +190,7 @@ export interface FileRoutesByTo {
   '/preview-check': typeof PreviewCheckRoute
   '/proposals': typeof ProposalsRoute
   '/typography-audit': typeof TypographyAuditRoute
+  '/admin/ai-audit': typeof AdminAiAuditRoute
   '/admin/import-tours': typeof AdminImportToursRoute
   '/admin/tour-link-audit': typeof AdminTourLinkAuditRoute
   '/api/img': typeof ApiImgRoute
@@ -208,6 +216,7 @@ export interface FileRoutesById {
   '/preview-check': typeof PreviewCheckRoute
   '/proposals': typeof ProposalsRoute
   '/typography-audit': typeof TypographyAuditRoute
+  '/admin/ai-audit': typeof AdminAiAuditRoute
   '/admin/import-tours': typeof AdminImportToursRoute
   '/admin/tour-link-audit': typeof AdminTourLinkAuditRoute
   '/api/img': typeof ApiImgRoute
@@ -234,6 +243,7 @@ export interface FileRouteTypes {
     | '/preview-check'
     | '/proposals'
     | '/typography-audit'
+    | '/admin/ai-audit'
     | '/admin/import-tours'
     | '/admin/tour-link-audit'
     | '/api/img'
@@ -258,6 +268,7 @@ export interface FileRouteTypes {
     | '/preview-check'
     | '/proposals'
     | '/typography-audit'
+    | '/admin/ai-audit'
     | '/admin/import-tours'
     | '/admin/tour-link-audit'
     | '/api/img'
@@ -282,6 +293,7 @@ export interface FileRouteTypes {
     | '/preview-check'
     | '/proposals'
     | '/typography-audit'
+    | '/admin/ai-audit'
     | '/admin/import-tours'
     | '/admin/tour-link-audit'
     | '/api/img'
@@ -307,6 +319,7 @@ export interface RootRouteChildren {
   PreviewCheckRoute: typeof PreviewCheckRoute
   ProposalsRoute: typeof ProposalsRoute
   TypographyAuditRoute: typeof TypographyAuditRoute
+  AdminAiAuditRoute: typeof AdminAiAuditRoute
   AdminImportToursRoute: typeof AdminImportToursRoute
   AdminTourLinkAuditRoute: typeof AdminTourLinkAuditRoute
   ApiImgRoute: typeof ApiImgRoute
@@ -464,6 +477,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminImportToursRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/ai-audit': {
+      id: '/admin/ai-audit'
+      path: '/admin/ai-audit'
+      fullPath: '/admin/ai-audit'
+      preLoaderRoute: typeof AdminAiAuditRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tours/$tourId/tailor': {
       id: '/tours/$tourId/tailor'
       path: '/tailor'
@@ -502,6 +522,7 @@ const rootRouteChildren: RootRouteChildren = {
   PreviewCheckRoute: PreviewCheckRoute,
   ProposalsRoute: ProposalsRoute,
   TypographyAuditRoute: TypographyAuditRoute,
+  AdminAiAuditRoute: AdminAiAuditRoute,
   AdminImportToursRoute: AdminImportToursRoute,
   AdminTourLinkAuditRoute: AdminTourLinkAuditRoute,
   ApiImgRoute: ApiImgRoute,
