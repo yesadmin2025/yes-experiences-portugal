@@ -584,23 +584,25 @@ function HomePage() {
               <Link
                 to="/experiences"
                 data-hero-field="primaryCta"
-                className="hero-cta-button cta-primary he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-start text-left"
+                className="hero-cta-button cta-primary he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left"
               >
                 <span className="block">Explore Signature Experiences</span>
                 <ArrowRight
-                  size={14}
-                  className="absolute right-5 top-1/2 -translate-y-1/2 group-hover:translate-x-1 transition-transform duration-300"
+                  size={16}
+                  className="shrink-0 transition-transform duration-300 group-hover:translate-x-1"
+                  aria-hidden="true"
                 />
               </Link>
               <Link
                 to="/builder"
                 data-hero-field="secondaryCta"
-                className="hero-cta-button cta-secondary-dark he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-start text-left"
+                className="hero-cta-button cta-secondary-dark he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left"
               >
                 <span className="block">Build your private journey</span>
                 <ArrowRight
-                  size={14}
-                  className="absolute right-5 top-1/2 -translate-y-1/2 group-hover:translate-x-1 transition-transform duration-300"
+                  size={16}
+                  className="shrink-0 transition-transform duration-300 group-hover:translate-x-1"
+                  aria-hidden="true"
                 />
               </Link>
             </div>
