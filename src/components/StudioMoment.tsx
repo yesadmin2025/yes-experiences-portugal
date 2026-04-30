@@ -118,6 +118,15 @@ export function StudioMoment({ className }: Props) {
   const [activeChip, setActiveChip] = useState<DemoChipKey>("wine");
   const [loadError, setLoadError] = useState(false);
   const [openStopKey, setOpenStopKey] = useState<string | null>(null);
+  /**
+   * Per-chip swap map. Key: chip → originalStopKey → chosen alternate.
+   * Tracked by ORIGINAL stop key (the one the server returned) so
+   * subsequent swaps still resolve back to the same anchor in the
+   * pre-composed route, regardless of how many times the user swaps.
+   */
+  const [swaps, setSwaps] = useState<
+    Partial<Record<DemoChipKey, Record<string, DemoStopAlternate>>>
+  >({});
   const fetchDemos = useServerFn(getStudioHomeDemos);
 
   // Fetch demos on mount.
@@ -137,10 +146,65 @@ export function StudioMoment({ className }: Props) {
     };
   }, [fetchDemos]);
 
-  const active = useMemo<StudioDemoRoute | null>(() => {
+  // Raw demo for the active chip (server-composed, never mutated).
+  const rawActive = useMemo<StudioDemoRoute | null>(() => {
     if (!demos) return null;
     return demos.find((d) => d.chip === activeChip) ?? demos[0];
   }, [demos, activeChip]);
+
+  // Apply swaps for the active chip and recompute drive minutes
+  // and total experience minutes from the resulting stop sequence.
+  const active = useMemo<StudioDemoRoute | null>(() => {
+    if (!rawActive) return null;
+    const chipSwaps = swaps[rawActive.chip] ?? {};
+    if (Object.keys(chipSwaps).length === 0) return rawActive;
+
+    const newStops: DemoStop[] = rawActive.stops.map((s) => {
+      const alt = chipSwaps[s.key];
+      if (!alt) return s;
+      // Swap in the alternate's content; preserve the ORIGINAL stop's
+      // alternates list and tag fallback so the drawer keeps offering
+      // the same family of variants and the user can swap back.
+      return {
+        ...s,
+        // Keep `key` as the original anchor so future swaps resolve
+        // against the same map entry — but expose the chosen variant's
+        // identity in the visible fields and on the map.
+        label: alt.label,
+        blurb: alt.blurb,
+        tag: alt.tag ?? s.tag,
+        variantLabel: alt.variantLabel,
+        lat: alt.lat,
+        lng: alt.lng,
+        durationMinutes: alt.durationMinutes,
+      };
+    });
+
+    // Recompute drive minutes from prev for each stop, anchored on
+    // the region. First stop drives from the region; rest from prev.
+    let prev: { lat: number; lng: number } = {
+      lat: rawActive.region.lat,
+      lng: rawActive.region.lng,
+    };
+    const recomputed: DemoStop[] = newStops.map((s) => {
+      const drive = driveMinutesBetween(prev, { lat: s.lat, lng: s.lng });
+      prev = { lat: s.lat, lng: s.lng };
+      return { ...s, driveMinutesFromPrev: drive };
+    });
+
+    const stopMinutes = recomputed.reduce((acc, s) => acc + s.durationMinutes, 0);
+    const drivingMinutes = recomputed.reduce(
+      (acc, s) => acc + s.driveMinutesFromPrev,
+      0,
+    );
+
+    return {
+      ...rawActive,
+      stops: recomputed,
+      experienceMinutes: stopMinutes + drivingMinutes,
+      drivingMinutes,
+    };
+  }, [rawActive, swaps]);
 
   // Reset drawer when chip changes.
   useEffect(() => {
@@ -151,6 +215,29 @@ export function StudioMoment({ className }: Props) {
     if (!active || !openStopKey) return null;
     return active.stops.find((s) => s.key === openStopKey) ?? null;
   }, [active, openStopKey]);
+
+  /**
+   * Commit a swap. `originalStopKey` is the key the server returned
+   * (also the React key in our active route). Selecting the original
+   * variant clears the swap.
+   */
+  const handleSwap = (
+    chip: DemoChipKey,
+    originalStopKey: string,
+    chosen: DemoStopAlternate | null,
+  ) => {
+    setSwaps((prev) => {
+      const next = { ...prev };
+      const chipMap = { ...(next[chip] ?? {}) };
+      if (chosen) {
+        chipMap[originalStopKey] = chosen;
+      } else {
+        delete chipMap[originalStopKey];
+      }
+      next[chip] = chipMap;
+      return next;
+    });
+  };
 
   return (
     <section
