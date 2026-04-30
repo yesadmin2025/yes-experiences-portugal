@@ -26,9 +26,8 @@ import {
 import { SiteLayout } from "@/components/SiteLayout";
 import { generateBuilderRoute, narrateBuilderRoute } from "@/server/builderEngine.functions";
 import { supabase } from "@/integrations/supabase/client";
-import { loadStripe } from "@stripe/stripe-js";
 import { EmbeddedCheckoutProvider, EmbeddedCheckout } from "@stripe/react-stripe-js";
-import { STRIPE_PUBLISHABLE_KEY } from "@/lib/stripe";
+import { getStripe, getStripeEnvironment } from "@/lib/stripe";
 
 import expCoastal from "@/assets/exp-coastal.jpg";
 import expWine from "@/assets/exp-wine.jpg";
