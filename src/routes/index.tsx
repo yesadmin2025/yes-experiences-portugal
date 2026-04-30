@@ -1432,7 +1432,14 @@ function HomePage() {
                 className="he-glow he-sheen he-cta-shift group inline-flex items-center justify-center gap-2.5 sm:gap-2 bg-[color:var(--gold)] text-[color:var(--charcoal)] px-7 py-3.5 min-h-[48px] sm:min-h-[44px] text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold hover:bg-[color:var(--gold-soft)] shadow-[0_8px_22px_-10px_rgba(201,169,106,0.6)]"
               >
                 Speak to a local designer
-                <ArrowRight size={14} className="transition-transform duration-200 group-hover:translate-x-0.5" />
+                <ArrowRight size={14} className="transition-transform duration-200 group-hover:translate-x-1" />
+              </Link>
+              <Link
+                to="/contact"
+                className="inline-flex items-center gap-2 min-h-[44px] text-[12.5px] uppercase tracking-[0.18em] font-bold text-[color:var(--gold-soft)] border-b-2 border-[color:var(--gold-soft)]/40 pb-1 hover:border-[color:var(--gold-soft)] transition-colors"
+              >
+                Or write us on WhatsApp
+                <ArrowRight size={12} />
               </Link>
             </div>
           </div>
