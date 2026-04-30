@@ -355,6 +355,31 @@ export function StudioLivePreview() {
           transform-box: fill-box;
           animation: slv-pulse 2400ms cubic-bezier(0.22, 0.61, 0.36, 1) infinite;
         }
+
+        /* ── Focus states — premium, keyboard-only ─────────────────── */
+        /* SVG pin focus ring: hidden until :focus-visible */
+        .slv-pin { outline: none; cursor: pointer; }
+        .slv-pin .slv-pin-focus {
+          opacity: 0;
+          transition: opacity 160ms ease;
+        }
+        .slv-pin:focus-visible .slv-pin-focus,
+        .slv-pin:hover .slv-pin-focus {
+          opacity: 1;
+        }
+        .slv-pin:focus-visible {
+          outline: none;
+        }
+
+        /* Generic focusable chip/moment focus ring — gold ring + dark offset */
+        .slv-focusable { outline: none; }
+        .slv-focusable:focus-visible {
+          outline: 2px solid var(--gold);
+          outline-offset: 2px;
+          box-shadow: 0 0 0 4px rgba(46,46,46,0.35);
+          border-radius: 9999px;
+        }
+
         @media (prefers-reduced-motion: reduce) {
           .slv-pulse { animation: none !important; }
           .studio-live * { transition: none !important; }
@@ -366,7 +391,12 @@ export function StudioLivePreview() {
 
 function Chip({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-full border border-[color:var(--gold)]/30 bg-[color:var(--charcoal-deep)]/60 px-2.5 py-1 text-[color:var(--ivory)]">
+    <span
+      tabIndex={0}
+      role="button"
+      aria-label={`${label}: ${value}`}
+      className="slv-focusable inline-flex items-center gap-1.5 rounded-full border border-[color:var(--gold)]/30 bg-[color:var(--charcoal-deep)]/60 px-2.5 py-1 text-[color:var(--ivory)]"
+    >
       <span className="text-[color:var(--gold)]">{icon}</span>
       <span className="text-[9px] uppercase tracking-[0.26em] text-[color:var(--ivory)]/65">
         {label}
@@ -377,3 +407,4 @@ function Chip({ icon, label, value }: { icon: React.ReactNode; label: string; va
     </span>
   );
 }
+
