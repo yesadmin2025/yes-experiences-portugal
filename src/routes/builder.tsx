@@ -233,6 +233,19 @@ function BuilderPage() {
   return (
     <SiteLayout>
       <article className="bg-[color:var(--ivory)] text-[color:var(--charcoal)]">
+        {/* Live-feedback toast — visible during step 6 interactions */}
+        {liveToast && step === 6 && (
+          <div
+            aria-live="polite"
+            className="fixed top-20 left-1/2 z-[60] -translate-x-1/2 builder-toast-in"
+          >
+            <span className="inline-flex items-center gap-2 rounded-full border border-[color:var(--gold)]/40 bg-[color:var(--ivory)]/95 px-3.5 py-1.5 text-[11.5px] uppercase tracking-[0.22em] font-bold text-[color:var(--charcoal)] shadow-[0_8px_22px_-10px_rgba(46,46,46,0.35)] backdrop-blur">
+              <Sparkles size={11} className="text-[color:var(--gold)]" />
+              {liveToast}
+            </span>
+          </div>
+        )}
+
         {/* STEP 0 — Entry */}
         {step === 0 && <EntryScreen onStart={() => setStep(1)} />}
 
