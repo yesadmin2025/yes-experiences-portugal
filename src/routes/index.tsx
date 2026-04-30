@@ -718,31 +718,34 @@ function HomePage() {
           page (per "no repeated review sections" guardrail). */}
       <section
         id="reviews"
-        className="bg-[color:var(--ivory)] border-b border-[color:var(--border)] section-y-sm scroll-mt-24 md:scroll-mt-28"
+        className="he-trust-rule bg-[color:var(--ivory)] border-b border-[color:var(--border)] section-y-sm scroll-mt-24 md:scroll-mt-28"
         aria-labelledby="trust-bar-title"
       >
         <h2 id="trust-bar-title" className="sr-only">
           700+ five-star reviews across major platforms
         </h2>
         <div className="container-x">
-          <div className="flex flex-col items-center text-center gap-5">
-            <p
-              className="flex items-center gap-1 text-[color:var(--gold)]"
-              role="img"
-              aria-label="Rated 5 out of 5 stars"
-            >
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} size={16} fill="currentColor" strokeWidth={0} aria-hidden="true" focusable="false" />
-              ))}
-            </p>
-            <p className="serif text-[1.5rem] md:text-[1.9rem] text-[color:var(--charcoal)] leading-[1.2]">
-              700+ <span className="italic">five-star reviews</span>
-            </p>
-            <p className="max-w-md text-[14.5px] md:text-[15.5px] text-[color:var(--charcoal)] leading-[1.65]">
-              <span className="kw">Private</span> <span className="kw">local</span> guides who actually live here — every day designed and confirmed by a small team in Portugal.
-            </p>
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5 md:gap-8 text-center md:text-left">
+            <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-5">
+              <p
+                className="flex items-center justify-center md:justify-start gap-1 text-[color:var(--gold)]"
+                role="img"
+                aria-label="Rated 5 out of 5 stars"
+              >
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} size={15} fill="currentColor" strokeWidth={0} aria-hidden="true" focusable="false" />
+                ))}
+              </p>
+              <p className="serif text-[1.35rem] md:text-[1.55rem] text-[color:var(--charcoal)] leading-[1.2]">
+                700+ <span className="italic">five-star reviews</span>
+                <span className="hidden md:inline text-[color:var(--charcoal-soft)]"> · </span>
+                <span className="block md:inline text-[12px] md:text-[13px] uppercase tracking-[0.22em] font-semibold text-[color:var(--charcoal)] md:ml-1 mt-1 md:mt-0">
+                  Private locals · designed in Portugal
+                </span>
+              </p>
+            </div>
             <ul
-              className="mt-2 flex flex-wrap items-center justify-center gap-x-9 gap-y-4 md:gap-x-12 list-none p-0 h-7 md:h-8"
+              className="flex flex-wrap items-center justify-center md:justify-end gap-x-7 gap-y-3 md:gap-x-9 list-none p-0 h-7 md:h-8"
               aria-label="Featured on Google, Tripadvisor, Viator, GetYourGuide and Trustpilot"
             >
               {(["google", "tripadvisor", "viator", "getyourguide", "trustpilot"] as const).map((p) => (
@@ -767,12 +770,11 @@ function HomePage() {
         aria-labelledby="why-yes-title"
       >
         <div className="container-x">
-          <div className="max-w-2xl mx-auto text-center mb-12 md:mb-16">
-            <span aria-hidden="true" className="gold-rule mx-auto mb-6 block max-w-[3rem]" />
-            <span className="eyebrow">Why YES</span>
+          <div className="reveal max-w-2xl mx-auto text-center mb-12 md:mb-16">
+            <span className="he-eyebrow-bar mb-5">Why YES</span>
             <h2
               id="why-yes-title"
-              className="serif mt-5 text-[2.55rem] md:text-[3.95rem] leading-[1.0] tracking-[-0.018em] text-[color:var(--charcoal)] font-semibold text-balance"
+              className="serif mt-3 text-[2.55rem] md:text-[4.15rem] leading-[1.0] tracking-[-0.02em] text-[color:var(--charcoal)] font-semibold text-balance"
             >
               Portugal isn't experienced the{" "}
               <span className="italic">same way</span> by everyone.
@@ -787,7 +789,7 @@ function HomePage() {
               body. Scroll-stagger fade+rise via .reveal-stagger (cadence
               applied by SiteLayout). Hover: lift, warmer border, gold
               underline sweep. */}
-          <ul className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6 list-none p-0">
+          <ul className="he-stagger max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6 list-none p-0">
             {[
               {
                 Icon: Feather,
@@ -854,21 +856,21 @@ function HomePage() {
                       className="text-[color:var(--teal)] transition-transform duration-300 ease-out group-hover:translate-x-0.5"
                     />
                   </span>
-                  <span className="serif text-[13px] tracking-[0.18em] text-[color:var(--gold)]">
+                  <span className="he-num">
                     {b.num}
                   </span>
                 </div>
                 <span className="mt-5 text-[10.5px] uppercase tracking-[0.32em] font-semibold text-[color:var(--charcoal)]">
                   {b.label}
                 </span>
-                <h3 className="serif mt-3 text-[1.55rem] md:text-[1.85rem] leading-[1.18] text-[color:var(--charcoal)]">
+                <h3 className="serif mt-3 text-[1.6rem] md:text-[1.95rem] leading-[1.18] text-[color:var(--charcoal)] font-semibold">
                   {b.title}
                 </h3>
                 <p className="mt-3.5 text-[15px] md:text-[15.5px] text-[color:var(--charcoal)] leading-[1.65]">
                   {b.body}
                 </p>
                 {/* One bold highlighted phrase per card */}
-                <p className="mt-5 serif italic text-[15px] md:text-[16px] leading-[1.4] text-[color:var(--charcoal)] border-l-2 border-[color:var(--gold)] pl-3">
+                <p className="he-pull mt-5 serif italic text-[15px] md:text-[16px] leading-[1.45] text-[color:var(--charcoal)]">
                   {b.pull}
                 </p>
               </li>
@@ -894,9 +896,9 @@ function HomePage() {
         aria-labelledby="start-paths-title"
       >
         <div className="container-x">
-          <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
-            <span className="eyebrow">Where to begin</span>
-            <h2 id="start-paths-title" className="serif mt-5 text-[2.55rem] md:text-[3.95rem] leading-[1.0] tracking-[-0.018em] text-[color:var(--charcoal)] font-semibold">
+          <div className="reveal text-center max-w-2xl mx-auto mb-12 md:mb-16">
+            <span className="he-eyebrow-bar mb-5">Where to begin</span>
+            <h2 id="start-paths-title" className="serif mt-3 text-[2.55rem] md:text-[4.15rem] leading-[1.0] tracking-[-0.02em] text-[color:var(--charcoal)] font-semibold">
               Four ways to <span className="italic">start.</span>
             </h2>
             <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] leading-[1.65] max-w-md mx-auto">
@@ -904,53 +906,71 @@ function HomePage() {
             </p>
           </div>
 
-          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8 list-none p-0 max-w-5xl mx-auto">
+          <ul className="he-stagger grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8 list-none p-0 max-w-5xl mx-auto">
             {startPaths.map((p) => {
               const Icon = p.icon;
               const primary = p.tier === "primary";
               return (
-                <li key={p.title}>
+                <li key={p.title} className="reveal-stagger">
                   <Link
                     to={p.to}
                     aria-label={p.ariaLabel}
                     className={
-                      "group relative flex flex-col h-full overflow-hidden rounded-[2px] border transition-all duration-200 ease-out hover:-translate-y-0.5 focus-visible:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--sand)] " +
+                      "he-card-lift group relative flex flex-col h-full overflow-hidden rounded-[4px] border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--sand)] " +
                       (primary
-                        ? "bg-[color:var(--ivory)] border-[color:var(--charcoal)]/15 shadow-[0_4px_12px_-6px_rgba(46,46,46,0.18)] hover:shadow-[0_10px_24px_-10px_rgba(46,46,46,0.28)]"
-                        : "bg-[color:var(--ivory)]/70 border-[color:var(--border)] hover:border-[color:var(--charcoal)]/25")
+                        ? "bg-[color:var(--ivory)] border-[color:var(--charcoal)]/20 shadow-[0_8px_22px_-10px_rgba(46,46,46,0.22)]"
+                        : "bg-[color:var(--ivory)]/85 border-[color:var(--border)]")
                     }
                   >
-                    <div className="relative aspect-[16/10] overflow-hidden bg-[color:var(--card)]">
+                    <div className={
+                      "relative overflow-hidden bg-[color:var(--card)] " +
+                      (primary ? "aspect-[16/10]" : "aspect-[16/7]")
+                    }>
                       <img
                         src={p.bg}
                         alt=""
                         aria-hidden="true"
                         loading="lazy"
-                        className="absolute inset-0 w-full h-full object-cover"
+                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-[600ms] ease-out group-hover:scale-[1.04]"
                       />
-                      <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/35 to-transparent" />
+                      <div aria-hidden="true" className={
+                        "absolute inset-0 " +
+                        (primary
+                          ? "bg-gradient-to-t from-[color:var(--charcoal-deep)]/45 via-[color:var(--charcoal-deep)]/15 to-transparent"
+                          : "bg-gradient-to-t from-[color:var(--charcoal-deep)]/25 to-transparent")
+                      } />
+                      {primary && (
+                        <span className="absolute top-3 left-3 inline-flex items-center gap-1.5 rounded-full bg-[color:var(--gold)] px-2.5 py-1 text-[9.5px] uppercase tracking-[0.24em] font-bold text-[color:var(--charcoal)] shadow-[0_2px_6px_rgba(0,0,0,0.18)]">
+                          ★ Recommended
+                        </span>
+                      )}
                     </div>
-                    <div className="p-6 md:p-7 flex flex-col gap-3">
-                      <span className="inline-flex items-center gap-2 text-[10.5px] uppercase tracking-[0.28em] font-semibold text-[color:var(--charcoal)]">
-                        <Icon size={12} aria-hidden="true" />
+                    <div className={"flex flex-col gap-3 " + (primary ? "p-6 md:p-7" : "p-5 md:p-6")}>
+                      <span className="inline-flex items-center gap-2 text-[10.5px] uppercase tracking-[0.28em] font-bold text-[color:var(--charcoal)]">
+                        <Icon size={12} aria-hidden="true" className="text-[color:var(--teal)]" />
                         {p.eyebrow}
-                        {primary && (
-                          <span className="ml-auto inline-flex items-center text-[9.5px] uppercase tracking-[0.24em] text-[color:var(--gold)]">
-                            Recommended
-                          </span>
-                        )}
                       </span>
-                      <h3 className="serif text-[1.45rem] md:text-[1.6rem] leading-[1.15] text-[color:var(--charcoal)]">
+                      <h3 className={
+                        "serif leading-[1.15] text-[color:var(--charcoal)] " +
+                        (primary
+                          ? "text-[1.55rem] md:text-[1.85rem] font-semibold"
+                          : "text-[1.3rem] md:text-[1.45rem] font-medium")
+                      }>
                         {p.title}
                       </h3>
                       <p className="text-[14.5px] md:text-[15.5px] leading-[1.65] text-[color:var(--charcoal)]">
                         {p.line}
                       </p>
-                      <span className="mt-auto inline-flex items-center gap-2 pt-3 text-[12.5px] uppercase tracking-[0.18em] font-semibold text-[color:var(--teal)]">
+                      <span className={
+                        "mt-auto inline-flex items-center gap-2 pt-3 uppercase font-bold text-[color:var(--teal)] transition-all duration-200 group-hover:gap-3 " +
+                        (primary
+                          ? "text-[13px] tracking-[0.2em]"
+                          : "text-[12px] tracking-[0.18em]")
+                      }>
                         {p.cta}
                         <ArrowRight
                           size={14}
-                          className="transition-transform duration-200 group-hover:translate-x-0.5"
+                          className="transition-transform duration-200 group-hover:translate-x-1"
                         />
                       </span>
                     </div>
@@ -972,9 +992,9 @@ function HomePage() {
         aria-labelledby="signatures-title"
       >
         <div className="container-x">
-          <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
-            <span className="eyebrow">Signature experiences</span>
-            <h2 id="signatures-title" className="serif mt-5 text-[2.55rem] md:text-[3.95rem] leading-[1.0] tracking-[-0.018em] text-[color:var(--charcoal)] font-semibold">
+          <div className="reveal text-center max-w-2xl mx-auto mb-12 md:mb-16">
+            <span className="he-eyebrow-bar mb-5">Signature experiences</span>
+            <h2 id="signatures-title" className="serif mt-3 text-[2.55rem] md:text-[4.15rem] leading-[1.0] tracking-[-0.02em] text-[color:var(--charcoal)] font-semibold">
               Days <span className="italic">already designed.</span>
             </h2>
             <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] leading-[1.65] max-w-md mx-auto">
@@ -1101,12 +1121,12 @@ function HomePage() {
       >
         <div className="container-x">
           <div className="grid lg:grid-cols-12 gap-10 lg:gap-14 items-center max-w-6xl mx-auto">
-            <div className="lg:col-span-5">
-              <span className="eyebrow inline-flex items-center gap-3">
+            <div className="reveal lg:col-span-5">
+              <span className="he-eyebrow-bar mb-4">
                 <span className="live-dot" aria-hidden="true" />
-                <span>Created in <span className="kw">real time</span></span>
+                Live preview
               </span>
-              <h2 id="studio-title" className="serif mt-5 text-[2.4rem] md:text-[3.4rem] leading-[1.02] tracking-[-0.016em] text-[color:var(--charcoal)] font-semibold">
+              <h2 id="studio-title" className="serif mt-3 text-[2.5rem] md:text-[3.6rem] leading-[1.0] tracking-[-0.02em] text-[color:var(--charcoal)] font-semibold">
                 Build a day that <span className="italic">actually fits.</span>
               </h2>
               <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] leading-[1.7] max-w-md">
@@ -1129,14 +1149,14 @@ function HomePage() {
               <div className="mt-8 flex flex-wrap gap-x-5 gap-y-4">
                 <Link
                   to="/builder"
-                  className="he-glow he-sheen group inline-flex items-center gap-2.5 sm:gap-2 bg-[color:var(--teal)] text-[color:var(--ivory)] px-6 sm:px-7 py-3.5 min-h-[48px] sm:min-h-[44px] text-[12.5px] sm:text-[13px] uppercase tracking-[0.16em] sm:tracking-[0.18em] font-semibold hover:bg-[color:var(--teal-2)] shadow-[0_6px_18px_-8px_rgba(41,91,97,0.6)]"
+                  className="he-glow he-sheen he-cta-shift group inline-flex items-center gap-2.5 sm:gap-2 bg-[color:var(--teal)] text-[color:var(--ivory)] px-6 sm:px-7 py-3.5 min-h-[48px] sm:min-h-[44px] text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold hover:bg-[color:var(--teal-2)] shadow-[0_8px_22px_-10px_rgba(41,91,97,0.65)]"
                 >
                   Open the studio
-                  <ArrowRight size={14} className="transition-transform duration-200 group-hover:translate-x-0.5" />
+                  <ArrowRight size={14} className="transition-transform duration-200 group-hover:translate-x-1" />
                 </Link>
                 <Link
                   to="/contact"
-                  className="inline-flex items-center gap-2.5 sm:gap-2 min-h-[44px] px-1 text-[12.5px] sm:text-[13px] uppercase tracking-[0.16em] sm:tracking-[0.18em] font-semibold text-[color:var(--charcoal)] border-b-2 border-[color:var(--charcoal)]/40 pb-1 hover:border-[color:var(--charcoal)] transition-colors"
+                  className="inline-flex items-center gap-2.5 sm:gap-2 min-h-[44px] px-1 text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold text-[color:var(--charcoal)] border-b-2 border-[color:var(--charcoal)]/40 pb-1 hover:border-[color:var(--charcoal)] transition-colors"
                 >
                   Talk to a designer
                 </Link>
@@ -1190,9 +1210,9 @@ function HomePage() {
         aria-labelledby="multiday-title"
       >
         <div className="container-x">
-          <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
-            <span className="eyebrow">Multi-day</span>
-            <h2 id="multiday-title" className="serif mt-5 text-[2.55rem] md:text-[3.95rem] leading-[1.0] tracking-[-0.018em] text-[color:var(--charcoal)] font-semibold">
+          <div className="reveal text-center max-w-2xl mx-auto mb-12 md:mb-16">
+            <span className="he-eyebrow-bar mb-5">Multi-day</span>
+            <h2 id="multiday-title" className="serif mt-3 text-[2.55rem] md:text-[4.15rem] leading-[1.0] tracking-[-0.02em] text-[color:var(--charcoal)] font-semibold">
               Routes <span className="italic">across</span> Portugal.
             </h2>
             <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] leading-[1.65] max-w-md mx-auto">
@@ -1252,9 +1272,9 @@ function HomePage() {
         aria-labelledby="groups-title"
       >
         <div className="container-x">
-          <div className="text-center max-w-2xl mx-auto mb-14 md:mb-20">
-            <span className="eyebrow">Groups & celebrations</span>
-            <h2 id="groups-title" className="serif mt-5 text-[2.6rem] md:text-[4rem] leading-[1.0] tracking-[-0.018em] text-[color:var(--charcoal)] font-semibold">
+          <div className="reveal text-center max-w-2xl mx-auto mb-14 md:mb-20">
+            <span className="he-eyebrow-bar mb-5">Groups &amp; celebrations</span>
+            <h2 id="groups-title" className="serif mt-3 text-[2.6rem] md:text-[4.2rem] leading-[1.0] tracking-[-0.02em] text-[color:var(--charcoal)] font-semibold">
               When the <span className="italic font-medium">occasion</span> is bigger.
             </h2>
             <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] leading-[1.6] max-w-md mx-auto">
@@ -1327,26 +1347,36 @@ function HomePage() {
                   >
                     {/* Soft gold divider — animates from left on reveal */}
                     <span aria-hidden="true" className="gold-rule mb-4 md:mb-5 max-w-[3rem] md:max-w-[3.5rem]" />
-                    <span className="inline-flex items-center gap-2.5 text-[11px] md:text-[10.5px] uppercase tracking-[0.28em] md:tracking-[0.32em] font-bold text-[color:var(--charcoal)]">
-                      <span aria-hidden="true" className="inline-block h-[5px] w-[5px] rounded-full bg-[color:var(--gold)]" />
-                      {m.eyebrow}
-                    </span>
-                    <h3 className="serif mt-4 md:mt-3 text-[2.15rem] md:text-[2.65rem] leading-[1.04] md:leading-[1.05] tracking-[-0.018em] md:tracking-[-0.015em] text-[color:var(--charcoal)] font-semibold">
-                      {m.title}
-                    </h3>
-                    <p className="mt-5 md:mt-4 text-[16px] md:text-[16.5px] leading-[1.65] md:leading-[1.7] text-[color:var(--charcoal)]">
-                      {m.line}
-                    </p>
-                    <p className="mt-6 md:mt-5 serif italic text-[16.5px] md:text-[17px] leading-[1.45] text-[color:var(--charcoal)] font-semibold border-l-[3px] border-[color:var(--gold)] pl-4 py-0.5">
-                      {m.pull}
-                    </p>
-                    <p className="mt-6 md:mt-5 inline-flex items-center gap-2.5 text-[11px] md:text-[10.5px] uppercase tracking-[0.22em] md:tracking-[0.24em] font-bold text-[color:var(--charcoal)]">
-                      <span aria-hidden="true" className="inline-block h-[5px] w-[5px] rounded-full bg-[color:var(--gold)]" />
-                      {m.detail}
-                    </p>
+                    {(() => {
+                      const accent =
+                        m.id === "proposals" ? "var(--gold)" :
+                        m.id === "celebrations" ? "var(--teal-2)" :
+                        "var(--charcoal)";
+                      return (
+                        <>
+                          <span className="inline-flex items-center gap-2.5 text-[11px] md:text-[10.5px] uppercase tracking-[0.28em] md:tracking-[0.32em] font-bold text-[color:var(--charcoal)]">
+                            <span aria-hidden="true" className="inline-block h-[6px] w-[6px] rounded-full" style={{ backgroundColor: accent }} />
+                            {m.eyebrow}
+                          </span>
+                          <h3 className="serif mt-4 md:mt-3 text-[2.2rem] md:text-[2.85rem] leading-[1.04] md:leading-[1.04] tracking-[-0.02em] text-[color:var(--charcoal)] font-semibold">
+                            {m.title}
+                          </h3>
+                          <p className="mt-5 md:mt-4 text-[16px] md:text-[16.5px] leading-[1.65] md:leading-[1.7] text-[color:var(--charcoal)]">
+                            {m.line}
+                          </p>
+                          <p className="he-pull mt-6 md:mt-5 serif italic text-[16.5px] md:text-[17px] leading-[1.45] text-[color:var(--charcoal)] font-semibold" style={{ borderLeftColor: accent }}>
+                            {m.pull}
+                          </p>
+                          <p className="mt-6 md:mt-5 inline-flex items-center gap-2.5 text-[11px] md:text-[10.5px] uppercase tracking-[0.22em] md:tracking-[0.24em] font-bold text-[color:var(--charcoal)]">
+                            <span aria-hidden="true" className="inline-block h-[6px] w-[6px] rounded-full" style={{ backgroundColor: accent }} />
+                            {m.detail}
+                          </p>
+                        </>
+                      );
+                    })()}
                     <Link
                       to={m.to}
-                      className="he-glow he-sheen mt-7 md:mt-6 inline-flex items-center justify-center gap-2.5 sm:gap-2 self-start bg-[color:var(--teal)] text-[color:var(--ivory)] px-7 sm:px-7 py-3.5 min-h-[48px] sm:min-h-[44px] text-[12.5px] sm:text-[13px] uppercase tracking-[0.16em] sm:tracking-[0.18em] font-semibold transition-colors duration-200 hover:bg-[color:var(--teal-2)] hover:text-[color:var(--ivory)] active:bg-[color:var(--charcoal)] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-[color:var(--sand)] shadow-[0_6px_18px_-8px_rgba(41,91,97,0.6)]"
+                      className="he-glow he-sheen he-cta-shift mt-7 md:mt-6 inline-flex items-center justify-center gap-2.5 sm:gap-2 self-start bg-[color:var(--teal)] text-[color:var(--ivory)] px-7 sm:px-7 py-3.5 min-h-[48px] sm:min-h-[44px] text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold transition-colors duration-200 hover:bg-[color:var(--teal-2)] hover:text-[color:var(--ivory)] active:bg-[color:var(--charcoal)] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-[color:var(--sand)] shadow-[0_8px_22px_-10px_rgba(41,91,97,0.65)]"
                     >
                       {m.cta}
                       <ArrowRight
@@ -1385,24 +1415,31 @@ function HomePage() {
       >
         {/* FINAL CTA */}
         <div className="container-x">
-          <div className="max-w-xl mx-auto text-center">
-            <span className="inline-flex items-center gap-2 text-[10.5px] uppercase tracking-[0.28em] text-[color:var(--gold)]">
+          <div className="reveal max-w-xl mx-auto text-center">
+            <span className="he-rule-flank text-[10.5px] uppercase tracking-[0.28em] font-bold text-[color:var(--gold)]">
               <MessageCircle size={12} aria-hidden="true" />
               Prefer a conversation?
             </span>
-            <h2 id="final-cta-title" className="serif mt-5 text-[2.3rem] md:text-[3.3rem] leading-[1.04] tracking-[-0.016em] font-semibold">
+            <h2 id="final-cta-title" className="serif mt-5 text-[2.4rem] md:text-[3.6rem] leading-[1.02] tracking-[-0.02em] font-semibold">
               Talk to a <span className="italic text-[color:var(--gold-soft)]">local.</span>
             </h2>
-            <p className="mt-5 text-[14.5px] md:text-[15.5px] leading-[1.7] font-light text-[color:var(--ivory)]/85">
+            <p className="mt-5 text-[15px] md:text-[16px] leading-[1.7] text-[color:var(--ivory)]/90">
               Tell us roughly what you have in mind — dates, party, a feeling. A designer in Portugal will reply within a working day.
             </p>
-            <div className="mt-8 flex flex-col sm:flex-row gap-y-4 gap-x-5 justify-center">
+            <div className="mt-9 flex flex-col sm:flex-row gap-y-4 gap-x-6 justify-center items-center">
               <Link
                 to="/contact"
-                className="he-glow he-sheen group inline-flex items-center justify-center gap-2.5 sm:gap-2 bg-[color:var(--gold)] text-[color:var(--charcoal)] px-6 sm:px-7 py-3.5 min-h-[48px] sm:min-h-[44px] text-[12.5px] sm:text-[13px] uppercase tracking-[0.16em] sm:tracking-[0.18em] font-semibold hover:bg-[color:var(--gold-soft)] shadow-[0_6px_18px_-8px_rgba(201,169,106,0.55)]"
+                className="he-glow he-sheen he-cta-shift group inline-flex items-center justify-center gap-2.5 sm:gap-2 bg-[color:var(--gold)] text-[color:var(--charcoal)] px-7 py-3.5 min-h-[48px] sm:min-h-[44px] text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold hover:bg-[color:var(--gold-soft)] shadow-[0_8px_22px_-10px_rgba(201,169,106,0.6)]"
               >
                 Speak to a local designer
-                <ArrowRight size={14} className="transition-transform duration-200 group-hover:translate-x-0.5" />
+                <ArrowRight size={14} className="transition-transform duration-200 group-hover:translate-x-1" />
+              </Link>
+              <Link
+                to="/contact"
+                className="inline-flex items-center gap-2 min-h-[44px] text-[12.5px] uppercase tracking-[0.18em] font-bold text-[color:var(--gold-soft)] border-b-2 border-[color:var(--gold-soft)]/40 pb-1 hover:border-[color:var(--gold-soft)] transition-colors"
+              >
+                Or write us on WhatsApp
+                <ArrowRight size={12} />
               </Link>
             </div>
           </div>
