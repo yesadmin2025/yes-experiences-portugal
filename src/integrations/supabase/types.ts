@@ -119,6 +119,30 @@ export type Database = {
         }
         Relationships: []
       }
+      builder_compatibility_rules: {
+        Row: {
+          cooccurrence_count: number
+          created_at: string
+          id: string
+          stop_a: string
+          stop_b: string
+        }
+        Insert: {
+          cooccurrence_count?: number
+          created_at?: string
+          id?: string
+          stop_a: string
+          stop_b: string
+        }
+        Update: {
+          cooccurrence_count?: number
+          created_at?: string
+          id?: string
+          stop_a?: string
+          stop_b?: string
+        }
+        Relationships: []
+      }
       builder_experience_types: {
         Row: {
           blurb: string | null
@@ -245,6 +269,7 @@ export type Database = {
       builder_stops: {
         Row: {
           blurb: string | null
+          canonical_key: string | null
           compatible_with: string[]
           created_at: string
           duration_minutes: number
@@ -261,13 +286,17 @@ export type Database = {
           open_to: string | null
           pace_tags: string[]
           region_key: string
+          source_tour_keys: string[]
           tag: string | null
           updated_at: string
+          variant_bucket: string | null
+          variant_label: string | null
           weight: number
           who_tags: string[]
         }
         Insert: {
           blurb?: string | null
+          canonical_key?: string | null
           compatible_with?: string[]
           created_at?: string
           duration_minutes?: number
@@ -284,13 +313,17 @@ export type Database = {
           open_to?: string | null
           pace_tags?: string[]
           region_key: string
+          source_tour_keys?: string[]
           tag?: string | null
           updated_at?: string
+          variant_bucket?: string | null
+          variant_label?: string | null
           weight?: number
           who_tags?: string[]
         }
         Update: {
           blurb?: string | null
+          canonical_key?: string | null
           compatible_with?: string[]
           created_at?: string
           duration_minutes?: number
@@ -307,8 +340,11 @@ export type Database = {
           open_to?: string | null
           pace_tags?: string[]
           region_key?: string
+          source_tour_keys?: string[]
           tag?: string | null
           updated_at?: string
+          variant_bucket?: string | null
+          variant_label?: string | null
           weight?: number
           who_tags?: string[]
         }
@@ -321,6 +357,84 @@ export type Database = {
             referencedColumns: ["key"]
           },
         ]
+      }
+      builder_tour_sources: {
+        Row: {
+          blurb: string | null
+          created_at: string
+          duration_text: string | null
+          exclusions: string[]
+          id: string
+          inclusions: string[]
+          pickup_zone: string | null
+          source_url: string
+          title: string
+          tour_key: string
+          updated_at: string
+          varies_by_option: string[]
+        }
+        Insert: {
+          blurb?: string | null
+          created_at?: string
+          duration_text?: string | null
+          exclusions?: string[]
+          id?: string
+          inclusions?: string[]
+          pickup_zone?: string | null
+          source_url: string
+          title: string
+          tour_key: string
+          updated_at?: string
+          varies_by_option?: string[]
+        }
+        Update: {
+          blurb?: string | null
+          created_at?: string
+          duration_text?: string | null
+          exclusions?: string[]
+          id?: string
+          inclusions?: string[]
+          pickup_zone?: string | null
+          source_url?: string
+          title?: string
+          tour_key?: string
+          updated_at?: string
+          varies_by_option?: string[]
+        }
+        Relationships: []
+      }
+      builder_tour_stops: {
+        Row: {
+          created_at: string
+          duration_minutes: number
+          id: string
+          optional: boolean
+          position: number
+          stop_canonical: string
+          tour_key: string
+          variant_bucket: string
+        }
+        Insert: {
+          created_at?: string
+          duration_minutes: number
+          id?: string
+          optional?: boolean
+          position: number
+          stop_canonical: string
+          tour_key: string
+          variant_bucket: string
+        }
+        Update: {
+          created_at?: string
+          duration_minutes?: number
+          id?: string
+          optional?: boolean
+          position?: number
+          stop_canonical?: string
+          tour_key?: string
+          variant_bucket?: string
+        }
+        Relationships: []
       }
       experience_images: {
         Row: {
