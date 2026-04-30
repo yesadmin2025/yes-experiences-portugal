@@ -115,7 +115,11 @@ export function StudioLivePreview() {
         </span>
       </div>
 
-      <div className="relative z-10 flex flex-wrap items-center gap-1.5 md:gap-2 border-b border-[color:var(--gold)]/12 bg-[color:var(--charcoal-deep)]/70 px-4 md:px-5 py-3">
+      <div
+        className="relative z-10 flex flex-wrap items-center gap-1.5 md:gap-2 border-b border-[color:var(--gold)]/12 bg-[color:var(--charcoal-deep)]/70 px-4 md:px-5 py-3"
+        role="group"
+        aria-label="Studio inputs preview"
+      >
         <Chip icon={<Wine size={11} aria-hidden="true" />} label="Mood" value="Wine & food" />
         <Chip icon={<Users size={11} aria-hidden="true" />} label="Who" value="Couple" />
         <Chip icon={<Clock3 size={11} aria-hidden="true" />} label="Rhythm" value="Relaxed" />
