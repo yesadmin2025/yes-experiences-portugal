@@ -1310,19 +1310,19 @@ function HomePage() {
                   >
                     {/* Soft gold divider — animates from left on reveal */}
                     <span aria-hidden="true" className="gold-rule mb-5 max-w-[3.5rem]" />
-                    <span className="text-[10.5px] uppercase tracking-[0.32em] font-semibold text-[color:var(--charcoal-soft)]">
+                    <span className="text-[10.5px] uppercase tracking-[0.32em] font-semibold text-[color:var(--gold)]">
                       {m.eyebrow}
                     </span>
-                    <h3 className="serif mt-3 text-[1.9rem] md:text-[2.4rem] leading-[1.08] tracking-[-0.012em] text-[color:var(--charcoal)] font-medium">
+                    <h3 className="serif mt-3 text-[2.05rem] md:text-[2.65rem] leading-[1.05] tracking-[-0.015em] text-[color:var(--charcoal)] font-semibold">
                       {m.title}
                     </h3>
-                    <p className="mt-4 text-[15px] md:text-[16px] leading-[1.7] text-[color:var(--charcoal)] font-light">
+                    <p className="mt-4 text-[15.5px] md:text-[16.5px] leading-[1.7] text-[color:var(--charcoal)]">
                       {m.line}
                     </p>
-                    <p className="mt-4 serif italic text-[15.5px] md:text-[16.5px] leading-[1.4] text-[color:var(--charcoal)] border-l-2 border-[color:var(--gold)] pl-3.5">
+                    <p className="mt-4 serif italic text-[16px] md:text-[17px] leading-[1.45] text-[color:var(--charcoal)] font-medium border-l-2 border-[color:var(--gold)] pl-3.5">
                       {m.pull}
                     </p>
-                    <p className="mt-5 text-[10.5px] uppercase tracking-[0.24em] font-medium text-[color:var(--gold)]">
+                    <p className="mt-5 text-[10.5px] uppercase tracking-[0.24em] font-semibold text-[color:var(--gold)]">
                       {m.detail}
                     </p>
                     <Link
