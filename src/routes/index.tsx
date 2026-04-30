@@ -1189,7 +1189,8 @@ function HomePage() {
           Corporate & Groups, and Multi-Day routes — so every "bigger
           occasion" path lives together with clear hierarchy. */}
       <section
-        className="section-y bg-[color:var(--sand)] border-b border-[color:var(--border)]"
+        id="occasions"
+        className="section-y bg-[color:var(--sand)] border-b border-[color:var(--border)] scroll-mt-24 md:scroll-mt-28"
         aria-labelledby="groups-title"
       >
         <div className="container-x">
