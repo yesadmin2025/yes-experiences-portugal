@@ -56,6 +56,18 @@ export interface StopRow {
   who_tags: string[];
   compatible_with: string[];
   weight: number;
+  // Real-Viator-data fields (Phase 2 schema)
+  canonical_key?: string | null;
+  variant_bucket?: string | null;
+  variant_label?: string | null;
+  source_tour_keys?: string[];
+}
+
+/** Co-occurrence pair from builder_compatibility_rules. */
+export interface CompatibilityRule {
+  stop_a: string; // canonical_key
+  stop_b: string; // canonical_key
+  cooccurrence_count: number;
 }
 
 export interface RegionRow {
@@ -118,15 +130,58 @@ function driveMinutesBetween(a: { lat: number; lng: number }, b: { lat: number; 
 const _kmPerDegLat = KM_PER_DEG_LAT; // kept for tooling; not exported
 
 // ---------- region picker ----------
+// New region keys (post-Phase 2): arrabida-setubal, troia-comporta,
+// sintra-cascais, evora-alentejo, centro-tomar-coimbra,
+// centro-fatima-nazare-obidos. Legacy keys kept for backwards-compat scoring.
 const INTENTION_REGION_BIAS: Record<Intention, Record<string, number>> = {
-  wine: { porto: 3, lisbon: 2, alentejo: 3, algarve: 0 },
-  gastronomy: { porto: 2, lisbon: 3, alentejo: 2, algarve: 1 },
-  nature: { algarve: 3, alentejo: 2, lisbon: 2, porto: 2 },
-  heritage: { porto: 3, lisbon: 3, alentejo: 3, algarve: 1 },
-  coast: { algarve: 3, lisbon: 3, alentejo: 1, porto: 1 },
-  hidden: { alentejo: 3, algarve: 2, porto: 1, lisbon: 1 },
-  wonder: { lisbon: 3, porto: 2, algarve: 2, alentejo: 2 },
-  wellness: { algarve: 2, alentejo: 3, lisbon: 1, porto: 1 },
+  wine: {
+    "evora-alentejo": 4,
+    "arrabida-setubal": 3,
+    "troia-comporta": 2,
+    "sintra-cascais": 1,
+  },
+  gastronomy: {
+    "arrabida-setubal": 3,
+    "troia-comporta": 3,
+    "evora-alentejo": 3,
+    "sintra-cascais": 2,
+  },
+  nature: {
+    "arrabida-setubal": 3,
+    "troia-comporta": 3,
+    "centro-fatima-nazare-obidos": 2,
+    "sintra-cascais": 2,
+  },
+  heritage: {
+    "centro-tomar-coimbra": 4,
+    "evora-alentejo": 3,
+    "sintra-cascais": 3,
+    "centro-fatima-nazare-obidos": 3,
+  },
+  coast: {
+    "troia-comporta": 4,
+    "sintra-cascais": 3,
+    "arrabida-setubal": 3,
+    "centro-fatima-nazare-obidos": 2,
+  },
+  hidden: {
+    "troia-comporta": 3,
+    "evora-alentejo": 3,
+    "arrabida-setubal": 2,
+    "centro-tomar-coimbra": 2,
+  },
+  wonder: {
+    "sintra-cascais": 4,
+    "centro-fatima-nazare-obidos": 3,
+    "centro-tomar-coimbra": 2,
+    "arrabida-setubal": 2,
+  },
+  wellness: {
+    "troia-comporta": 3,
+    "arrabida-setubal": 3,
+    "evora-alentejo": 2,
+    "sintra-cascais": 2,
+  },
 };
 
 export function pickRegion(input: BuilderInput, regions: RegionRow[]): RegionRow {
@@ -134,7 +189,6 @@ export function pickRegion(input: BuilderInput, regions: RegionRow[]): RegionRow
     const found = regions.find((r) => r.key === input.regionKey);
     if (found) return found;
   }
-  // Score regions by intention bias; tie-break by sort (already done in DB)
   const bias = INTENTION_REGION_BIAS[input.intention] ?? {};
   let best = regions[0];
   let bestScore = -1;
@@ -148,13 +202,27 @@ export function pickRegion(input: BuilderInput, regions: RegionRow[]): RegionRow
   return best;
 }
 
-// ---------- pace -> stop count ----------
+// ---------- pace -> stop count + variant bucket ----------
 export function paceToTargetStops(pace: Pace, rules: RoutingRules) {
   const min = rules.min_stops;
   const max = rules.max_stops;
   if (pace === "relaxed") return Math.max(min, Math.min(max, min + 1)); // 4
   if (pace === "full") return Math.min(max, max); // 6
   return Math.max(min, Math.min(max, min + 2)); // 5
+}
+
+/**
+ * Pace → preferred variant bucket, with fallback order so we always find
+ * *some* variant of a canonical stop even when the preferred bucket isn't
+ * seeded for it.
+ *   relaxed → deep first (long, immersive visits)
+ *   balanced → medium first (standard tour pacing)
+ *   full → short first (more stops, shorter dwells)
+ */
+export function paceToVariantPreference(pace: Pace): string[] {
+  if (pace === "relaxed") return ["deep", "extended", "medium", "short"];
+  if (pace === "full") return ["short", "medium", "deep", "extended"];
+  return ["medium", "short", "deep", "extended"];
 }
 
 // ---------- scoring ----------
@@ -170,6 +238,81 @@ function scoreStop(stop: StopRow, input: BuilderInput): number {
   if (stop.intention_tags.includes(input.intention)) s += 35;
   if (input.pace && stop.pace_tags.includes(input.pace)) s += 10;
   return s;
+}
+
+/**
+ * Pick the best variant of each canonical stop given the requested pace.
+ * Reduces a list of variants (multiple rows sharing canonical_key) down to
+ * one row per canonical_key, choosing the bucket that best matches the pace
+ * preference and falling back through the list when needed.
+ */
+export function selectVariantsForPace(stops: StopRow[], pace: Pace): StopRow[] {
+  const preference = paceToVariantPreference(pace);
+  const byCanonical = new Map<string, StopRow[]>();
+  for (const s of stops) {
+    const k = s.canonical_key ?? s.key;
+    const arr = byCanonical.get(k);
+    if (arr) arr.push(s);
+    else byCanonical.set(k, [s]);
+  }
+  const out: StopRow[] = [];
+  for (const variants of byCanonical.values()) {
+    if (variants.length === 1) {
+      out.push(variants[0]);
+      continue;
+    }
+    let picked: StopRow | undefined;
+    for (const bucket of preference) {
+      picked = variants.find((v) => v.variant_bucket === bucket);
+      if (picked) break;
+    }
+    out.push(picked ?? variants[0]);
+  }
+  return out;
+}
+
+/**
+ * Build a co-occurrence map keyed by canonical_key for O(1) adjacency
+ * scoring. Symmetric: rule (a,b,n) means both a→b and b→a get +n.
+ */
+export function buildCompatibilityIndex(
+  rules: CompatibilityRule[],
+): Map<string, Map<string, number>> {
+  const idx = new Map<string, Map<string, number>>();
+  const bump = (a: string, b: string, n: number) => {
+    let inner = idx.get(a);
+    if (!inner) {
+      inner = new Map();
+      idx.set(a, inner);
+    }
+    inner.set(b, (inner.get(b) ?? 0) + n);
+  };
+  for (const r of rules) {
+    bump(r.stop_a, r.stop_b, r.cooccurrence_count);
+    bump(r.stop_b, r.stop_a, r.cooccurrence_count);
+  }
+  return idx;
+}
+
+function canonicalOf(s: StopRow): string {
+  return s.canonical_key ?? s.key;
+}
+
+function compatibilityBoost(
+  candidate: StopRow,
+  chosen: StopRow[],
+  index: Map<string, Map<string, number>>,
+): number {
+  if (chosen.length === 0) return 0;
+  const cKey = canonicalOf(candidate);
+  const inner = index.get(cKey);
+  if (!inner) return 0;
+  let boost = 0;
+  for (const c of chosen) {
+    const n = inner.get(canonicalOf(c));
+    if (n) boost += Math.min(40, n * 12); // capped per pair
+  }
+  return boost;
 }
 
 // ---------- nearest-neighbor ordering ----------
@@ -201,24 +344,40 @@ export function generateRoute(
   regions: RegionRow[],
   allStops: StopRow[],
   rules: RoutingRules,
+  compatibilityRules: CompatibilityRule[] = [],
 ): BuilderRoute {
   const region = pickRegion(input, regions);
   const pace: Pace = input.pace ?? (rules.default_pace as Pace) ?? "balanced";
 
-  const candidates = allStops
+  const excluded = new Set(input.excludedStopKeys ?? []);
+  const pinnedKeys = new Set(input.pinnedStopKeys ?? []);
+
+  // 1. Region pool, then exclude.
+  const regionPool = allStops
     .filter((s) => s.region_key === region.key)
-    .filter((s) => !(input.excludedStopKeys ?? []).includes(s.key));
+    .filter((s) => !excluded.has(s.key));
 
-  // 1. force-include pinned stops in this region
-  const pinned = candidates.filter((s) => (input.pinnedStopKeys ?? []).includes(s.key));
+  // 2. Pinned stops bypass variant selection — they're explicit user choices.
+  const pinned = regionPool.filter((s) => pinnedKeys.has(s.key));
+  const pinnedCanonicals = new Set(pinned.map((p) => canonicalOf(p)));
 
-  // 2. score & sort the rest
-  const remaining = candidates
-    .filter((s) => !pinned.includes(s))
-    .map((s) => ({ s, score: scoreStop(s, input) }))
-    .sort((a, b) => b.score - a.score);
+  // 3. Reduce remaining variants to one row per canonical_key, picking the
+  //    bucket that matches the requested pace. Drop any canonical_key
+  //    already covered by a pinned stop so we don't duplicate places.
+  const reducible = regionPool.filter(
+    (s) => !pinnedKeys.has(s.key) && !pinnedCanonicals.has(canonicalOf(s)),
+  );
+  const reduced = selectVariantsForPace(reducible, pace);
 
-  // 3. fill up to target with hard rule checks
+  // 4. Build compatibility index (canonical-keyed) once.
+  const compatIndex = buildCompatibilityIndex(compatibilityRules);
+
+  // 5. Base score (mood/who/intention/pace) computed once per candidate.
+  const scored = reduced
+    .map((s) => ({ s, base: scoreStop(s, input) }))
+    .sort((a, b) => b.base - a.base);
+
+  // 6. Hard-rule filling with compatibility-aware selection.
   const target = paceToTargetStops(pace, rules);
   const maxExpMin = rules.max_experience_hours * 60;
   const maxDriveMin = rules.max_driving_hours * 60;
@@ -237,20 +396,37 @@ export function generateRoute(
     return { ordered, drive, stay, total: drive + stay };
   };
 
-  for (const { s } of remaining) {
-    if (chosen.length >= target) break;
-    const trial = [...chosen, s];
+  // Greedy: at each step, re-rank remaining candidates by
+  // base score + compatibility boost vs already-chosen, then pick the best
+  // one that still fits within hard limits.
+  const remaining = scored.slice();
+  while (chosen.length < target && remaining.length) {
+    let bestIdx = -1;
+    let bestComposite = -Infinity;
+    for (let i = 0; i < remaining.length; i++) {
+      const cand = remaining[i];
+      const composite = cand.base + compatibilityBoost(cand.s, chosen, compatIndex);
+      if (composite > bestComposite) {
+        bestComposite = composite;
+        bestIdx = i;
+      }
+    }
+    if (bestIdx === -1) break;
+    const cand = remaining.splice(bestIdx, 1)[0];
+    const trial = [...chosen, cand.s];
     const t = trySequence(trial);
     if (t.total <= maxExpMin && t.drive <= maxDriveMin) {
-      chosen.push(s);
+      chosen.push(cand.s);
     }
   }
 
-  // 4. ensure min_stops; if pinned/excluded made it too small, pad with
-  // best-fit ignoring intention tags last
+  // 7. Floor: ensure min_stops; if pinned/excluded made it too small, pad
+  //    with best-fit ignoring intention tags last (still respecting variant
+  //    reduction so we never repeat a canonical place).
   if (chosen.length < rules.min_stops) {
-    const fallback = candidates
-      .filter((s) => !chosen.includes(s))
+    const chosenCanonicals = new Set(chosen.map(canonicalOf));
+    const fallback = reduced
+      .filter((s) => !chosen.includes(s) && !chosenCanonicals.has(canonicalOf(s)))
       .sort((a, b) => b.weight - a.weight);
     for (const s of fallback) {
       if (chosen.length >= rules.min_stops) break;
@@ -263,16 +439,16 @@ export function generateRoute(
     }
   }
 
-  // 5. final ordering and totals
-  const final = trySequence(chosen);
+  // 8. Final ordering and totals.
+  const finalSeq = trySequence(chosen);
   let prev: { lat: number; lng: number } = region;
-  const routedStops: RoutedStop[] = final.ordered.map((s) => {
+  const routedStops: RoutedStop[] = finalSeq.ordered.map((s) => {
     const d = driveMinutesBetween(prev, s);
     prev = s;
     return { ...s, driveMinutesFromPrev: d };
   });
 
-  // 6. price
+  // 9. Price.
   const paceMult =
     pace === "relaxed"
       ? rules.pace_multiplier_relaxed
@@ -284,19 +460,22 @@ export function generateRoute(
 
   const warnings: string[] = [];
   if (routedStops.length < rules.min_stops) warnings.push("Fewer stops than ideal for this pace.");
-  if (final.drive > maxDriveMin) warnings.push("Driving time exceeds the comfortable maximum.");
+  if (finalSeq.drive > maxDriveMin) warnings.push("Driving time exceeds the comfortable maximum.");
 
   return {
     region,
     pace,
     stops: routedStops,
     totals: {
-      drivingMinutes: final.drive,
-      stopMinutes: final.stay,
-      experienceMinutes: final.total,
+      drivingMinutes: finalSeq.drive,
+      stopMinutes: finalSeq.stay,
+      experienceMinutes: finalSeq.total,
     },
     pricePerPersonEur,
-    feasible: final.total <= maxExpMin && final.drive <= maxDriveMin && routedStops.length >= rules.min_stops,
+    feasible:
+      finalSeq.total <= maxExpMin &&
+      finalSeq.drive <= maxDriveMin &&
+      routedStops.length >= rules.min_stops,
     warnings,
   };
 }
