@@ -770,12 +770,11 @@ function HomePage() {
         aria-labelledby="why-yes-title"
       >
         <div className="container-x">
-          <div className="max-w-2xl mx-auto text-center mb-12 md:mb-16">
-            <span aria-hidden="true" className="gold-rule mx-auto mb-6 block max-w-[3rem]" />
-            <span className="eyebrow">Why YES</span>
+          <div className="reveal max-w-2xl mx-auto text-center mb-12 md:mb-16">
+            <span className="he-eyebrow-bar mb-5">Why YES</span>
             <h2
               id="why-yes-title"
-              className="serif mt-5 text-[2.55rem] md:text-[3.95rem] leading-[1.0] tracking-[-0.018em] text-[color:var(--charcoal)] font-semibold text-balance"
+              className="serif mt-3 text-[2.55rem] md:text-[4.15rem] leading-[1.0] tracking-[-0.02em] text-[color:var(--charcoal)] font-semibold text-balance"
             >
               Portugal isn't experienced the{" "}
               <span className="italic">same way</span> by everyone.
