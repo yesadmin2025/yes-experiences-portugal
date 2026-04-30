@@ -175,16 +175,11 @@ export function BuilderMap({ stops, regionCenter, regionKey }: Props) {
     if (visible) {
       map.flyToBounds(bounds, { duration: 0.7 });
     } else {
-      // Container hidden (e.g. mobile tab) — set view without animation.
-      map.fitBounds(bounds);
-      // Re-fit once the container becomes visible.
-      requestAnimationFrame(() => {
-        const s = map.getSize();
-        if (s.x > 0 && s.y > 0) {
-          map.invalidateSize();
-          map.fitBounds(bounds);
-        }
-      });
+      // Container hidden (e.g. mobile tab on display:none) — fitBounds on a
+      // 0×0 map produces NaN. Just center on the first point; ResizeObserver
+      // will fitBounds once the container becomes visible.
+      const first = points[0];
+      map.setView(first, 9);
     }
   }, [stops, regionCenter]);
 
