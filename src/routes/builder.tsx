@@ -81,7 +81,7 @@ function BuilderPage() {
   const search = Route.useSearch();
   const navigate = useNavigate({ from: "/builder" });
 
-  const step = search.step;
+  const step = search.step ?? 0;
   const mood = search.mood;
   const who = search.who;
   const intention = search.intention;
