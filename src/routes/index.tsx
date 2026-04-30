@@ -1304,12 +1304,12 @@ function HomePage() {
                   {/* Text side */}
                   <div
                     className={
-                      "md:col-span-5 flex flex-col " +
+                      "md:col-span-5 flex flex-col pt-1 md:pt-0 " +
                       (reverse ? "md:order-1" : "md:order-2")
                     }
                   >
                     {/* Soft gold divider — animates from left on reveal */}
-                    <span aria-hidden="true" className="gold-rule mb-5 max-w-[3.5rem]" />
+                    <span aria-hidden="true" className="gold-rule mb-5 md:mb-5 max-w-[3rem] md:max-w-[3.5rem]" />
                     <span className="text-[10.5px] uppercase tracking-[0.32em] font-semibold text-[color:var(--gold)]">
                       {m.eyebrow}
                     </span>
