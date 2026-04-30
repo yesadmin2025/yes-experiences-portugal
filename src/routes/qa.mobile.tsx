@@ -237,24 +237,50 @@ function QaMobilePage() {
     try {
       parsed = JSON.parse(raw);
     } catch {
-      toast.error("Invalid JSON");
+      toast.error("Invalid JSON", {
+        description: "The file isn't valid JSON. Your current progress is unchanged.",
+      });
       return false;
     }
-    // Accept either the full export envelope or a bare {key: boolean} map.
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+      toast.error("Unrecognized checklist format", {
+        description: "Expected a JSON object. Your current progress is unchanged.",
+      });
+      return false;
+    }
+    const obj = parsed as Record<string, unknown>;
+
+    // Strict path — payload looks like our envelope (has schema or version).
+    // We refuse anything that doesn't match the exact name + supported
+    // version, so an export from a future or unrelated tool can't quietly
+    // overwrite the run.
+    const looksLikeEnvelope = "schema" in obj || "version" in obj;
     let nextChecked: Record<string, boolean> | null = null;
-    if (
-      parsed &&
-      typeof parsed === "object" &&
-      "checked" in (parsed as Record<string, unknown>) &&
-      typeof (parsed as { checked: unknown }).checked === "object"
-    ) {
-      nextChecked = (parsed as { checked: Record<string, boolean> }).checked;
-    } else if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
-      nextChecked = parsed as Record<string, boolean>;
-    }
-    if (!nextChecked) {
-      toast.error("Unrecognized checklist format");
-      return false;
+
+    if (looksLikeEnvelope) {
+      if (obj.schema !== SCHEMA_NAME) {
+        toast.error("Wrong checklist schema", {
+          description: `Expected "${SCHEMA_NAME}", got "${String(obj.schema ?? "—")}". Your current progress is unchanged.`,
+        });
+        return false;
+      }
+      if (obj.version !== SCHEMA_VERSION) {
+        toast.error("Incompatible checklist version", {
+          description: `This tool supports version ${SCHEMA_VERSION}; the file is version ${String(obj.version ?? "—")}. Your current progress is unchanged.`,
+        });
+        return false;
+      }
+      const inner = obj.checked;
+      if (!inner || typeof inner !== "object" || Array.isArray(inner)) {
+        toast.error("Checklist payload is missing items", {
+          description: "Expected a `checked` object inside the envelope. Your current progress is unchanged.",
+        });
+        return false;
+      }
+      nextChecked = inner as Record<string, boolean>;
+    } else {
+      // Bare {key: boolean} map — unversioned, accept but flag.
+      nextChecked = obj as Record<string, boolean>;
     }
     // Sanitize: only keep boolean values keyed by strings, and only keys
     // we still know about (drops stale items from older schema versions).
