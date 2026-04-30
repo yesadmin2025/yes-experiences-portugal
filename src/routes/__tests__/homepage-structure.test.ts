@@ -197,14 +197,15 @@ function parseMobileSpacing(className: string, kind: "py" | "pb"): number | null
 /* ------------------------------------------------------------------ */
 
 describe("Approved homepage structure (source lock)", () => {
-  it(`renders exactly ${APPROVED_SECTION_COUNT} <section> tags`, () => {
+  it(`renders exactly ${APPROVED_INLINE_SECTION_COUNT} inline <section> tags (componentized rows excluded)`, () => {
     const sections = findSections(SOURCE);
     expect(
       sections.length,
-      `Expected ${APPROVED_SECTION_COUNT} top-level <section> tags in src/routes/index.tsx, ` +
-        `found ${sections.length}. If you intentionally added or removed a section, ` +
-        `update src/content/approved-homepage-structure.ts FIRST, then re-run the suite.`,
-    ).toBe(APPROVED_SECTION_COUNT);
+      `Expected ${APPROVED_INLINE_SECTION_COUNT} top-level <section> tags in src/routes/index.tsx ` +
+        `(componentized rows like <TheDifferenceSection /> render their own <section> internally and ` +
+        `are not counted here). Found ${sections.length}. If you intentionally added or removed a ` +
+        `section, update src/content/approved-homepage-structure.ts FIRST, then re-run the suite.`,
+    ).toBe(APPROVED_INLINE_SECTION_COUNT);
   });
 
   describe("section identity", () => {
@@ -213,11 +214,14 @@ describe("Approved homepage structure (source lock)", () => {
       it(`#${spec.order} "${spec.name}" is present in the source`, () => {
         expect(
           match,
-          spec.ariaLabelledBy
-            ? `Could not find a <section aria-labelledby="${spec.ariaLabelledBy}"> in src/routes/index.tsx. ` +
-                `Either restore the section or update the spec.`
-            : `Could not find a <section> immediately preceded by the comment ` +
-                `{/* ${spec.marker} */} in src/routes/index.tsx.`,
+          spec.inComponent && spec.componentTag
+            ? `Could not find a JSX usage of <${spec.componentTag} ... /> in src/routes/index.tsx. ` +
+                `Either restore the component or update the spec.`
+            : spec.ariaLabelledBy
+              ? `Could not find a <section aria-labelledby="${spec.ariaLabelledBy}"> in src/routes/index.tsx. ` +
+                  `Either restore the section or update the spec.`
+              : `Could not find a <section> immediately preceded by the comment ` +
+                  `{/* ${spec.marker} */} in src/routes/index.tsx.`,
         ).not.toBeNull();
       });
     }
@@ -225,9 +229,7 @@ describe("Approved homepage structure (source lock)", () => {
 
   it("sections appear in the approved top-to-bottom order", () => {
     const resolved = resolveApprovedToSource();
-    const indices = resolved.map((r) => r.match?.index ?? -1);
-    // All present (covered by the per-section tests too, but assert
-    // here so a partial regression doesn't mask an ordering bug).
+    const indices = resolved.map((r) => r.index);
     expect(indices.every((i) => i >= 0)).toBe(true);
     const sorted = [...indices].sort((a, b) => a - b);
     expect(
@@ -243,12 +245,10 @@ describe("Approved homepage structure (source lock)", () => {
     for (const { spec, match } of resolved) {
       const rule = spec.requiredSpacing;
       if (rule === null) continue;
+      if (spec.inComponent) continue; // child component owns its spacing
       if (rule.kind === "min-h-vh") {
         it(`#${spec.order} "${spec.name}" uses at least min-h-[${rule.minVh}vh] (or h-[${rule.minVh}vh]) at mobile`, () => {
           expect(match).not.toBeNull();
-          // Hero pattern is `min-h-[80vh] md:min-h-[94vh]`. Editorial
-          // transition uses `h-[58vh] md:h-[70vh]`. Accept either —
-          // both pin a meaningful mobile vertical floor.
           const m =
             match!.className.match(/(?<!:)min-h-\[(\d+)vh\]/) ??
             match!.className.match(/(?<!:)h-\[(\d+)vh\]/);
@@ -274,13 +274,13 @@ describe("Approved homepage structure (source lock)", () => {
   });
 
   describe("layout invariants", () => {
-    it("uses .container-x in at least every non-hero section", () => {
+    it("uses .container-x in at least every non-hero inline section", () => {
       if (!MOBILE_LAYOUT_INVARIANTS.containerXWrapperPerSection) return;
       const count = (SOURCE.match(/className="[^"]*\bcontainer-x\b/g) ?? []).length;
-      const floor = APPROVED_SECTION_COUNT - 1;
+      const floor = APPROVED_INLINE_SECTION_COUNT - 1;
       expect(
         count,
-        `Expected at least ${floor} occurrences of .container-x (one per non-hero section), found ${count}.`,
+        `Expected at least ${floor} occurrences of .container-x (one per non-hero inline section), found ${count}.`,
       ).toBeGreaterThanOrEqual(floor);
     });
 
@@ -296,3 +296,7 @@ describe("Approved homepage structure (source lock)", () => {
     });
   });
 });
+
+// Reference exported constant so unused-import lint stays quiet
+// (APPROVED_SECTION_COUNT is used by external suites/specs).
+void APPROVED_SECTION_COUNT;
