@@ -640,6 +640,8 @@ function LiveBuilder({
               removablePool={removablePool}
               stopImages={stopImages}
               storyImage={storyImage}
+              routeLoading={routeLoading}
+              imagesLoading={imagesLoading}
             />
           </div>
 
