@@ -282,14 +282,46 @@ function QaMobilePage() {
       // Bare {key: boolean} map — unversioned, accept but flag.
       nextChecked = obj as Record<string, boolean>;
     }
-    // Sanitize: only keep boolean values keyed by strings, and only keys
-    // we still know about (drops stale items from older schema versions).
+    // Strict type check: every value in `checked` must be a real boolean.
+    // If any value isn't, refuse the import entirely and keep the current
+    // run intact — no silent coercion, no partial apply.
+    const invalidEntries: Array<{ key: string; type: string; value: string }> = [];
+    for (const [k, v] of Object.entries(nextChecked)) {
+      if (typeof v !== "boolean") {
+        let preview: string;
+        try {
+          preview = JSON.stringify(v);
+        } catch {
+          preview = String(v);
+        }
+        if (preview && preview.length > 24) preview = preview.slice(0, 21) + "…";
+        invalidEntries.push({
+          key: k,
+          type: v === null ? "null" : Array.isArray(v) ? "array" : typeof v,
+          value: preview ?? String(v),
+        });
+      }
+    }
+    if (invalidEntries.length > 0) {
+      const sample = invalidEntries.slice(0, 2)
+        .map((e) => `"${e.key}": ${e.value} (${e.type})`)
+        .join(", ");
+      const more =
+        invalidEntries.length > 2
+          ? ` …and ${invalidEntries.length - 2} more`
+          : "";
+      toast.error("Checklist has non-boolean values", {
+        description: `Every \`checked\` value must be true or false. Got ${sample}${more}. Your current progress is unchanged.`,
+      });
+      return false;
+    }
+    // Sanitize: drop keys we no longer know about (stale items from older
+    // schema versions). All remaining values are guaranteed booleans.
     const known = new Set(allItems);
     const clean: Record<string, boolean> = {};
     let kept = 0;
     let dropped = 0;
-    for (const [k, v] of Object.entries(nextChecked)) {
-      if (typeof v !== "boolean") continue;
+    for (const [k, v] of Object.entries(nextChecked as Record<string, boolean>)) {
       if (known.has(k)) {
         clean[k] = v;
         kept += 1;
