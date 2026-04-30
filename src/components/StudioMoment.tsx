@@ -506,10 +506,14 @@ function JourneyPanel({
   route,
   loading,
   loadError,
+  activeStopKey,
+  onSelectStop,
 }: {
   route: StudioDemoRoute | null;
   loading: boolean;
   loadError: boolean;
+  activeStopKey: string | null;
+  onSelectStop: (key: string) => void;
 }) {
   if (loadError) {
     return (
@@ -531,9 +535,6 @@ function JourneyPanel({
     );
   }
 
-  // Show the route as: Region → Stop1 → Stop2 → …
-  const trail = [route.region.label, ...route.stops.map((s) => s.label)];
-
   return (
     <div className="rounded-[14px] border border-[color:var(--charcoal)]/12 bg-[color:var(--ivory)] p-5 md:p-6 shadow-[0_2px_24px_-12px_color-mix(in_oklab,var(--charcoal)_30%,transparent)]">
       <div className="flex items-baseline justify-between gap-3">
@@ -545,9 +546,32 @@ function JourneyPanel({
         </span>
       </div>
 
-      <p className="mt-3 text-[14.5px] md:text-[15.5px] leading-[1.5] text-[color:var(--charcoal)] font-medium">
-        {trail.join(" → ")}
-      </p>
+      {/* Clickable trail — region label, then each stop as a button */}
+      <div className="mt-3 flex flex-wrap items-center gap-x-1.5 gap-y-1.5 text-[14.5px] md:text-[15.5px] leading-[1.5] text-[color:var(--charcoal)] font-medium">
+        <span>{route.region.label}</span>
+        {route.stops.map((s) => {
+          const isActive = activeStopKey === s.key;
+          return (
+            <span key={s.key} className="inline-flex items-center gap-1.5">
+              <span aria-hidden="true" className="text-[color:var(--charcoal)]/40">→</span>
+              <button
+                type="button"
+                onClick={() => onSelectStop(s.key)}
+                aria-pressed={isActive}
+                aria-label={`View details for ${s.label}`}
+                className={
+                  "min-h-[32px] px-2 -mx-2 py-0.5 rounded-md text-left underline-offset-4 transition-colors duration-150 " +
+                  (isActive
+                    ? "bg-[color:var(--sand)] text-[color:var(--teal)] underline decoration-[color:var(--gold)]/70"
+                    : "hover:text-[color:var(--teal)] hover:underline decoration-[color:var(--gold)]/70")
+                }
+              >
+                {s.label}
+              </button>
+            </span>
+          );
+        })}
+      </div>
 
       {/* Story */}
       <p className="serif italic mt-4 text-[15.5px] md:text-[16.5px] leading-[1.55] text-[color:var(--charcoal)]/85">
@@ -563,6 +587,10 @@ function JourneyPanel({
           </li>
         ))}
       </ul>
+
+      <p className="mt-4 text-[12px] text-[color:var(--charcoal)]/55">
+        Tap a stop on the map or above to see details.
+      </p>
 
       <div className="mt-5 pt-4 border-t border-[color:var(--charcoal)]/10 flex items-center justify-between gap-3">
         <Link
