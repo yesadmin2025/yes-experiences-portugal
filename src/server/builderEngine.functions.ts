@@ -124,7 +124,7 @@ export const narrateBuilderRoute = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const openaiKey = process.env.OPENAI_API_KEY;
     const lovableKey = process.env.LOVABLE_API_KEY;
-    const { regions, stops, rules } = await loadCatalog();
+    const { regions, stops, rules, compatibility } = await loadCatalog();
     const route = generateRoute(
       {
         mood: data.mood as Mood,
@@ -137,6 +137,7 @@ export const narrateBuilderRoute = createServerFn({ method: "POST" })
       regions,
       stops,
       rules,
+      compatibility,
     );
 
     const fallback = fallbackNarrative(route, {
