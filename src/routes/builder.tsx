@@ -417,6 +417,7 @@ function BuilderPage() {
               stops={stops}
               guests={guests}
               narrative={narrative}
+              reviewThumbs={routeImages.reviewThumbs}
               onConfirm={() => setCheckoutOpen(true)}
               onBack={() => setStep(6)}
             />
