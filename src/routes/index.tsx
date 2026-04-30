@@ -1384,13 +1384,13 @@ function HomePage() {
                 className="he-glow he-sheen he-cta-shift group inline-flex items-center justify-center gap-2.5 bg-[color:var(--ivory)] text-[color:var(--charcoal)] px-7 py-3.5 min-h-[48px] text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold rounded-[2px] transition-colors duration-200 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--teal)] shadow-[0_8px_22px_-10px_rgba(0,0,0,0.5)]"
               >
                 <ArrowRight size={14} aria-hidden="true" />
-                Open the Studio
+                Create Your Story
               </Link>
               <Link
                 to="/contact"
                 className="group inline-flex items-center justify-center gap-2 px-7 py-3.5 min-h-[48px] text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold rounded-[2px] border-2 border-[color:var(--ivory)]/85 text-[color:var(--ivory)] transition-all duration-200 hover:bg-[color:var(--ivory)]/10 hover:border-[color:var(--ivory)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--teal)]"
               >
-                Talk to a local
+                Talk to a Local
                 <ArrowRight size={12} aria-hidden="true" className="transition-transform duration-200 group-hover:translate-x-0.5" />
               </Link>
             </div>
