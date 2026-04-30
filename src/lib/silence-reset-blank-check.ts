@@ -50,20 +50,20 @@ export function installResetBlankCheckFilter(
       e.stopImmediatePropagation();
     }
   };
-  target.addEventListener("message", filter, true);
+  resolved.addEventListener("message", filter, true);
 
-  const origLog = target.console.log;
-  const origInfo = target.console.info;
-  const origWarn = target.console.warn;
+  const origLog = resolved.console.log;
+  const origInfo = resolved.console.info;
+  const origWarn = resolved.console.warn;
   const wrap =
     (orig: (...a: unknown[]) => void) =>
     (...args: unknown[]) => {
       if (args.some((a) => typeof a === "string" && a.includes("RESET_BLANK_CHECK"))) return;
-      orig.apply(target.console, args);
+      orig.apply(resolved.console, args);
     };
-  target.console.log = wrap(origLog);
-  target.console.info = wrap(origInfo);
-  target.console.warn = wrap(origWarn);
+  resolved.console.log = wrap(origLog);
+  resolved.console.info = wrap(origInfo);
+  resolved.console.warn = wrap(origWarn);
 
   let disposed = false;
   return {
@@ -71,10 +71,10 @@ export function installResetBlankCheckFilter(
     dispose: () => {
       if (disposed) return;
       disposed = true;
-      target.removeEventListener("message", filter, true);
-      target.console.log = origLog;
-      target.console.info = origInfo;
-      target.console.warn = origWarn;
+      resolved.removeEventListener("message", filter, true);
+      resolved.console.log = origLog;
+      resolved.console.info = origInfo;
+      resolved.console.warn = origWarn;
       w[FLAG] = false;
     },
   };
