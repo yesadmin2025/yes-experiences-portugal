@@ -8,93 +8,13 @@ exports[`Typography regression — headline class strings > [home] hero microcop
 
 exports[`Typography regression — headline class strings > [home] hero subheadline 1`] = `"mt-8 md:mt-10 text-[17px] md:text-[22px] text-[color:var(--ivory)]/95 max-w-md md:max-w-lg leading-[1.6] md:leading-[1.75] font-light text-left opacity-0 animate-[heroFade_1.4s_ease-out_0.95s_forwards] [text-shadow:0_1px_8px_rgba(0,0,0,0.3)]"`;
 
-exports[`Typography regression — headline class strings > [multi-day] hero h1 1`] = `"serif text-[34px] md:text-6xl mt-4 leading-[1.08] max-w-3xl mx-auto"`;
+exports[`Typography regression — headline class strings > [multi-day] hero h1 1`] = `"font-display font-bold text-[2.4rem] md:text-[3.6rem] leading-[1.05] mt-5 text-[color:var(--charcoal)]"`;
 
-exports[`Typography regression — headline class strings > [multi-day] hero subhead 1`] = `"mt-5 max-w-md md:max-w-xl mx-auto text-[15px] md:text-[16px] text-white/95 italic leading-[1.65] md:leading-relaxed [text-shadow:0_1px_8px_rgba(0,0,0,0.35)]"`;
+exports[`Typography regression — headline class strings > [multi-day] hero subhead 1`] = `"mt-6 text-[1rem] md:text-[1.1rem] text-[color:var(--charcoal-soft)] leading-relaxed"`;
 
-exports[`Typography regression — headline class strings > [proposals] hero h1 1`] = `"serif text-[34px] md:text-6xl mt-4 leading-[1.08] max-w-3xl mx-auto"`;
+exports[`Typography regression — headline class strings > [proposals] hero h1 1`] = `"font-display font-bold text-[2.4rem] md:text-[3.6rem] leading-[1.05] mt-5 text-[color:var(--charcoal)]"`;
 
-exports[`Typography regression — headline class strings > [proposals] hero subhead 1`] = `"mt-5 max-w-md md:max-w-xl mx-auto text-[15px] md:text-[16px] text-white/95 italic leading-[1.65] md:leading-relaxed [text-shadow:0_1px_8px_rgba(0,0,0,0.35)]"`;
-
-exports[`Typography regression — section headlines (token sweep) > [multi-day] all tokenized section headlines 1`] = `
-[
-  {
-    "cls": "t-h2 mt-4 text-[color:var(--charcoal)]",
-    "tag": "h2",
-    "trace": {
-      "file": "src/routes/multi-day.tsx",
-      "index": 0,
-      "line": 228,
-      "selector": "h2.t-h2",
-    },
-  },
-  {
-    "cls": "t-h2 mt-4 text-[color:var(--charcoal)]",
-    "tag": "h2",
-    "trace": {
-      "file": "src/routes/multi-day.tsx",
-      "index": 1,
-      "line": 264,
-      "selector": "h2.t-h2",
-    },
-  },
-  {
-    "cls": "t-h2 mt-4 text-white",
-    "tag": "h2",
-    "trace": {
-      "file": "src/routes/multi-day.tsx",
-      "index": 2,
-      "line": 315,
-      "selector": "h2.t-h2",
-    },
-  },
-  {
-    "cls": "t-h2 mt-4 text-[color:var(--charcoal)]",
-    "tag": "h2",
-    "trace": {
-      "file": "src/routes/multi-day.tsx",
-      "index": 3,
-      "line": 333,
-      "selector": "h2.t-h2",
-    },
-  },
-]
-`;
-
-exports[`Typography regression — section headlines (token sweep) > [proposals] all tokenized section headlines 1`] = `
-[
-  {
-    "cls": "t-h2 mt-4 text-[color:var(--charcoal)]",
-    "tag": "h2",
-    "trace": {
-      "file": "src/routes/proposals.tsx",
-      "index": 0,
-      "line": 166,
-      "selector": "h2.t-h2",
-    },
-  },
-  {
-    "cls": "t-h2 mt-4 text-[color:var(--charcoal)]",
-    "tag": "h2",
-    "trace": {
-      "file": "src/routes/proposals.tsx",
-      "index": 1,
-      "line": 203,
-      "selector": "h2.t-h2",
-    },
-  },
-  {
-    "cls": "t-h2 mt-4 text-white",
-    "tag": "h2",
-    "trace": {
-      "file": "src/routes/proposals.tsx",
-      "index": 2,
-      "line": 256,
-      "selector": "h2.t-h2",
-    },
-  },
-]
-`;
+exports[`Typography regression — headline class strings > [proposals] hero subhead 1`] = `"mt-6 text-[1rem] md:text-[1.1rem] text-[color:var(--charcoal-soft)] leading-relaxed"`;
 
 exports[`Typography regression — token rules from styles.css > token .hero-h1 1`] = `
 "base: letter-spacing: -0.012em; line-height: 1.08;
