@@ -667,7 +667,7 @@ function TailorPage() {
                     rel="noopener noreferrer"
                     className="inline-flex w-full items-center justify-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] px-5 py-4 text-sm tracking-wide transition-all min-h-[52px]"
                   >
-                    <Sparkles size={15} /> Confirm Tailored Journey
+                    <Sparkles size={15} /> Tailor this Signature
                   </a>
                   <p className="mt-2 text-[11px] text-[color:var(--charcoal-soft)] text-center">
                     Instant confirmation. No forms. No waiting.
