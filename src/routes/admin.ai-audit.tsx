@@ -121,8 +121,8 @@ function AuditPage() {
   if (allowed === false) {
     return (
       <main className="mx-auto max-w-2xl px-6 py-24 text-center">
-        <h1 className="font-serif text-3xl text-[#2E2E2E]">Admins only</h1>
-        <p className="mt-3 text-sm text-[#2E2E2E]/70">
+        <h1 className="font-serif text-3xl text-[color:var(--charcoal)]">Admins only</h1>
+        <p className="mt-3 text-sm text-[color:var(--charcoal)]/70">
           {error ?? "You need an admin account to view this page."}
         </p>
         <Link to="/" className="mt-6 inline-block text-sm underline underline-offset-4">
@@ -133,15 +133,15 @@ function AuditPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#FAF8F3] px-4 py-10 sm:px-6 sm:py-12">
+    <main className="min-h-screen bg-[color:var(--ivory)] px-4 py-10 sm:px-6 sm:py-12">
       <div className="mx-auto max-w-5xl pb-16">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h1 className="font-serif text-3xl text-[#2E2E2E]">AI usage audit</h1>
-          <Link to="/" className="text-sm text-[#2E2E2E]/70 underline underline-offset-4">
+          <h1 className="font-serif text-3xl text-[color:var(--charcoal)]">AI usage audit</h1>
+          <Link to="/" className="text-sm text-[color:var(--charcoal)]/70 underline underline-offset-4">
             Home
           </Link>
         </div>
-        <p className="mt-2 max-w-2xl text-sm text-[#2E2E2E]/70">
+        <p className="mt-2 max-w-2xl text-sm text-[color:var(--charcoal)]/70">
           Every narrative generation call is logged here. The API key value is never stored.
         </p>
 
@@ -163,7 +163,7 @@ function AuditPage() {
             <Link
               from="/admin/ai-audit"
               search={(prev) => ({ ...prev, status: "all", provider: "all", page: 1 })}
-              className="text-xs text-[#2E2E2E]/60 underline underline-offset-4"
+              className="text-xs text-[color:var(--charcoal)]/60 underline underline-offset-4"
             >
               Clear filters
             </Link>
@@ -198,9 +198,9 @@ function AuditPage() {
           </div>
         )}
 
-        <div className="mt-8 overflow-x-auto rounded-2xl border border-[#2E2E2E]/10 bg-white">
+        <div className="mt-8 overflow-x-auto rounded-2xl border border-[color:var(--charcoal)]/10 bg-white">
           <table className="w-full min-w-[640px] text-left text-sm">
-            <thead className="bg-[#FAF8F3] text-xs uppercase tracking-wider text-[#2E2E2E]/60">
+            <thead className="bg-[color:var(--ivory)] text-xs uppercase tracking-wider text-[color:var(--charcoal)]/60">
               <tr>
                 <th className="px-4 py-3">When</th>
                 <th className="px-4 py-3">Provider</th>
@@ -213,33 +213,33 @@ function AuditPage() {
             <tbody>
               {pageRows === null ? (
                 <tr>
-                  <td colSpan={6} className="px-4 py-8 text-center text-[#2E2E2E]/50">
+                  <td colSpan={6} className="px-4 py-8 text-center text-[color:var(--charcoal)]/50">
                     Loading…
                   </td>
                 </tr>
               ) : pageRows.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-4 py-8 text-center text-[#2E2E2E]/50">
+                  <td colSpan={6} className="px-4 py-8 text-center text-[color:var(--charcoal)]/50">
                     No calls match these filters.
                   </td>
                 </tr>
               ) : (
                 pageRows.map((r) => (
-                  <tr key={r.id} className="border-t border-[#2E2E2E]/5">
-                    <td className="px-4 py-3 text-[#2E2E2E]/80">
+                  <tr key={r.id} className="border-t border-[color:var(--charcoal)]/5">
+                    <td className="px-4 py-3 text-[color:var(--charcoal)]/80">
                       {new Date(r.created_at).toLocaleString()}
                     </td>
                     <td className="px-4 py-3">{r.provider}</td>
-                    <td className="px-4 py-3 text-[#2E2E2E]/70">{r.model ?? "—"}</td>
+                    <td className="px-4 py-3 text-[color:var(--charcoal)]/70">{r.model ?? "—"}</td>
                     <td className="px-4 py-3">
                       <span className={`rounded-full px-2 py-0.5 text-xs ${statusColor(r.status)}`}>
                         {r.status}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-[#2E2E2E]/70">
+                    <td className="px-4 py-3 text-[color:var(--charcoal)]/70">
                       {r.latency_ms !== null ? `${r.latency_ms} ms` : "—"}
                     </td>
-                    <td className="px-4 py-3 text-xs text-[#2E2E2E]/60">
+                    <td className="px-4 py-3 text-xs text-[color:var(--charcoal)]/60">
                       {r.error_code
                         ? `${r.error_code}${r.error_message ? ` · ${r.error_message}` : ""}`
                         : "—"}
@@ -254,7 +254,7 @@ function AuditPage() {
         {/* Pagination */}
         {filtered && filtered.length > 0 && (
           <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
-            <div className="text-xs text-[#2E2E2E]/60">
+            <div className="text-xs text-[color:var(--charcoal)]/60">
               Showing {(safePage - 1) * PAGE_SIZE + 1}–
               {Math.min(safePage * PAGE_SIZE, filtered.length)} of {filtered.length}
             </div>
@@ -262,7 +262,7 @@ function AuditPage() {
               <PageLink page={safePage - 1} disabled={safePage <= 1}>
                 ← Prev
               </PageLink>
-              <span className="text-xs text-[#2E2E2E]/70">
+              <span className="text-xs text-[color:var(--charcoal)]/70">
                 Page {safePage} of {totalPages}
               </span>
               <PageLink page={safePage + 1} disabled={safePage >= totalPages}>
@@ -288,7 +288,7 @@ function FilterSelect({
   paramKey: "status" | "provider";
 }) {
   return (
-    <label className="flex items-center gap-2 text-xs text-[#2E2E2E]/70">
+    <label className="flex items-center gap-2 text-xs text-[color:var(--charcoal)]/70">
       <span className="uppercase tracking-wider">{label}</span>
       <select
         value={value}
@@ -302,7 +302,7 @@ function FilterSelect({
           // Force route to re-read search via reload of search state
           window.dispatchEvent(new PopStateEvent("popstate"));
         }}
-        className="rounded-md border border-[#2E2E2E]/15 bg-white px-2 py-1 text-xs text-[#2E2E2E]"
+        className="rounded-md border border-[color:var(--charcoal)]/15 bg-white px-2 py-1 text-xs text-[color:var(--charcoal)]"
       >
         {options.map((o) => (
           <option key={o} value={o}>
@@ -325,7 +325,7 @@ function PageLink({
 }) {
   if (disabled) {
     return (
-      <span className="rounded-md border border-[#2E2E2E]/10 px-3 py-1 text-xs text-[#2E2E2E]/30">
+      <span className="rounded-md border border-[color:var(--charcoal)]/10 px-3 py-1 text-xs text-[color:var(--charcoal)]/30">
         {children}
       </span>
     );
@@ -334,7 +334,7 @@ function PageLink({
     <Link
       from="/admin/ai-audit"
       search={(prev) => ({ ...prev, page })}
-      className="rounded-md border border-[#2E2E2E]/15 bg-white px-3 py-1 text-xs text-[#2E2E2E] hover:bg-[#FAF8F3]"
+      className="rounded-md border border-[color:var(--charcoal)]/15 bg-white px-3 py-1 text-xs text-[color:var(--charcoal)] hover:bg-[color:var(--ivory)]"
     >
       {children}
     </Link>
@@ -343,9 +343,9 @@ function PageLink({
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-2xl border border-[#2E2E2E]/10 bg-white px-4 py-3">
-      <div className="text-[10px] uppercase tracking-wider text-[#2E2E2E]/50">{label}</div>
-      <div className="mt-1 font-serif text-base text-[#2E2E2E]">{value}</div>
+    <div className="rounded-2xl border border-[color:var(--charcoal)]/10 bg-white px-4 py-3">
+      <div className="text-[10px] uppercase tracking-wider text-[color:var(--charcoal)]/50">{label}</div>
+      <div className="mt-1 font-serif text-base text-[color:var(--charcoal)]">{value}</div>
     </div>
   );
 }
