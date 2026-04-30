@@ -132,7 +132,7 @@ export function BuilderMap({ stops, regionCenter, regionKey }: Props) {
 
     points.forEach((p, i) => {
       const m = L.marker(p, { icon: pin(i + 1) });
-      m.bindTooltip(stops[i].label, { direction: "top", offset: [0, -28] });
+      m.bindTooltip(validStops[i].label, { direction: "top", offset: [0, -28] });
       layer.addLayer(m);
     });
 
