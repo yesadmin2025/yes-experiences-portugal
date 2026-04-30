@@ -23,6 +23,7 @@ export function BuilderMap({ stops, regionCenter, regionKey }: Props) {
   const ref = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<L.Map | null>(null);
   const layerRef = useRef<L.LayerGroup | null>(null);
+  const lastBoundsRef = useRef<L.LatLngBounds | null>(null);
   const lastRegionRef = useRef<string | undefined>(undefined);
 
   useEffect(() => {
@@ -53,7 +54,13 @@ export function BuilderMap({ stops, regionCenter, regionKey }: Props) {
     mapRef.current = map;
     layerRef.current = L.layerGroup().addTo(map);
 
-    const ro = new ResizeObserver(() => map.invalidateSize());
+    const ro = new ResizeObserver(() => {
+      map.invalidateSize();
+      const s = map.getSize();
+      if (s.x > 0 && s.y > 0 && lastBoundsRef.current) {
+        map.fitBounds(lastBoundsRef.current);
+      }
+    });
     ro.observe(ref.current);
 
     map.on("zoomend moveend", () => {
@@ -92,16 +99,28 @@ export function BuilderMap({ stops, regionCenter, regionKey }: Props) {
     if (!map || !layer) return;
     layer.clearLayers();
 
+    // Guard against 0×0 containers (e.g. mobile tab hidden via display:none).
+    // Leaflet's flyTo/flyToBounds project against the map's pixel size and
+    // produce NaN coords when the container has no size.
+    const size = map.getSize();
+    const visible = size.x > 0 && size.y > 0;
+
     if (!stops.length) {
-      if (regionCenter) map.flyTo([regionCenter.lat, regionCenter.lng], 9, { duration: 0.6 });
+      if (regionCenter && visible)
+        map.flyTo([regionCenter.lat, regionCenter.lng], 9, { duration: 0.6 });
+      else if (regionCenter) map.setView([regionCenter.lat, regionCenter.lng], 9);
       return;
     }
 
-    const points = stops.map((s) => L.latLng(s.lat, s.lng));
+    const validStops = stops.filter(
+      (s) => Number.isFinite(s.lat) && Number.isFinite(s.lng),
+    );
+    if (!validStops.length) return;
+    const points = validStops.map((s) => L.latLng(s.lat, s.lng));
     const cs = getComputedStyle(document.documentElement);
-    const teal = cs.getPropertyValue("--teal").trim() || "#295B61";
-    const ivory = cs.getPropertyValue("--ivory").trim() || "#FAF8F3";
-    const gold = cs.getPropertyValue("--gold").trim() || "#C9A96A";
+    const teal = cs.getPropertyValue("--teal").trim() || "var(--teal)";
+    const ivory = cs.getPropertyValue("--ivory").trim() || "var(--ivory)";
+    const gold = cs.getPropertyValue("--gold").trim() || "var(--gold)";
 
     const pin = (n: number) =>
       L.divIcon({
@@ -120,7 +139,7 @@ export function BuilderMap({ stops, regionCenter, regionKey }: Props) {
 
     points.forEach((p, i) => {
       const m = L.marker(p, { icon: pin(i + 1) });
-      m.bindTooltip(stops[i].label, { direction: "top", offset: [0, -28] });
+      m.bindTooltip(validStops[i].label, { direction: "top", offset: [0, -28] });
       layer.addLayer(m);
     });
 
@@ -152,7 +171,16 @@ export function BuilderMap({ stops, regionCenter, regionKey }: Props) {
     }
 
     const bounds = L.latLngBounds(points).pad(0.35);
-    map.flyToBounds(bounds, { duration: 0.7 });
+    lastBoundsRef.current = bounds;
+    if (visible) {
+      map.flyToBounds(bounds, { duration: 0.7 });
+    } else {
+      // Container hidden (e.g. mobile tab on display:none) — fitBounds on a
+      // 0×0 map produces NaN. Just center on the first point; ResizeObserver
+      // will fitBounds once the container becomes visible.
+      const first = points[0];
+      map.setView(first, 9);
+    }
   }, [stops, regionCenter]);
 
   return (
