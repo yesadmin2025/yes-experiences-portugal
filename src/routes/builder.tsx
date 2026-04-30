@@ -302,8 +302,8 @@ function BuilderPage() {
 
         {/* STEPS 1–4 — selection flow */}
         {step >= 1 && step <= 4 && (
-          <section className="container-x py-10 md:py-16">
-            <div className="mb-7 builder-reveal">
+          <section className="container-x pt-6 pb-10 md:pt-10 md:pb-16">
+            <div className="mb-5 builder-reveal">
               <ProgressDots step={step} total={4} />
             </div>
 
