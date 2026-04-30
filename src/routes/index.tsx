@@ -11,6 +11,8 @@ import heroImg from "@/assets/hero-coast.jpg";
 import imgArrabidaWineLunch from "@/assets/tours/arrabida-wine-allinclusive/lunch.jpg";
 import imgTroiaBeach from "@/assets/tours/troia-comporta/beach.jpg";
 import imgFatimaNazare from "@/assets/tours/fatima-nazare-obidos/nazare.jpg";
+import imgSintraEstates from "@/assets/tours/sintra-cascais/estates.jpg";
+import imgAzeitaoWinery from "@/assets/tours/azeitao-cheese/winery.jpg";
 
 import {
   ArrowRight,
