@@ -16,7 +16,7 @@ import { whatsappHref } from "@/components/WhatsAppFab";
  * shown OPEN by default so users get immediate clarity without an
  * extra click. The rest stay collapsed for calm density.
  */
-const FAQS: { q: string; a: React.ReactNode }[] = [
+const FAQS: { q: string; a: ReactNode }[] = [
   {
     q: "Can I confirm instantly?",
     a: (
