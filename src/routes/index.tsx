@@ -243,27 +243,48 @@ function HomePage() {
   // closure variable in component scope.
 
   const TRACKED_IDS = [
-    "why-yes",
-    "builder",
-    "proposals",
-    "celebrations",
-    "corporate",
     "reviews",
+    "builder",
+    "studio",
+    "why-yes",
+    "signatures",
+    "occasions",
     "faq",
+    "final-cta",
   ] as const;
 
   const HASH_ALIASES: Record<string, string> = {
-    proposal: "proposals",
-    celebration: "celebrations",
-    corporate: "corporate",
-    groups: "corporate",
-    group: "corporate",
-    review: "reviews",
+    // Why YES
     "why-yes": "why-yes",
     whyyes: "why-yes",
     why: "why-yes",
-    studio: "builder",
+    // Builder / Studio — Studio is its own anchor inside the builder section
     build: "builder",
+    builder: "builder",
+    studio: "studio",
+    "experience-studio": "studio",
+    // Signatures
+    signature: "signatures",
+    signatures: "signatures",
+    // Occasions / Groups (legacy aliases preserved)
+    occasion: "occasions",
+    occasions: "occasions",
+    groups: "occasions",
+    group: "occasions",
+    proposal: "occasions",
+    proposals: "occasions",
+    celebration: "occasions",
+    celebrations: "occasions",
+    corporate: "occasions",
+    // Reviews / trust
+    review: "reviews",
+    reviews: "reviews",
+    // Final CTA
+    "final-cta": "final-cta",
+    final: "final-cta",
+    book: "final-cta",
+    talk: "final-cta",
+    contact: "final-cta",
   };
 
   // Shared "don't sync the hash right now" lock. Held while a programmatic
@@ -309,7 +330,36 @@ function HomePage() {
           // hydration may have just happened (clock effectively reset).
           (window as unknown as Record<string, number>)[getLockKey()] =
             performance.now() + 1100;
-          // Normalise the URL to the canonical id (e.g. #proposal → #proposals)
+          // Force-reveal any .reveal / .reveal-stagger elements inside
+          // the target section. Without this, deep-linking to a section
+          // can race the IntersectionObserver in SiteLayout and leave
+          // the eyebrow + headline + subhead at opacity:0 (they sit at
+          // the top of the viewport and never trigger the observer's
+          // enter callback because they were already in-view when it
+          // started watching). Belt-and-braces: also schedule a second
+          // pass after a short delay in case images shift layout.
+          const forceReveal = () => {
+            // Reveal both the target itself (when it IS a .reveal node)
+            // and any .reveal/.reveal-stagger inside it. For inner-anchor
+            // <div> targets like #studio that have no children of their
+            // own, also reveal everything inside the closest enclosing
+            // <section> so the section's eyebrow + headline + subhead
+            // become visible.
+            const scope: ParentNode = el.querySelector(
+              ".reveal, .reveal-stagger",
+            )
+              ? el
+              : (el.closest("section") ?? el);
+            scope
+              .querySelectorAll<HTMLElement>(
+                ".reveal:not(.is-visible), .reveal-stagger:not(.is-visible)",
+              )
+              .forEach((node) => node.classList.add("is-visible"));
+          };
+          forceReveal();
+          window.setTimeout(forceReveal, 250);
+          window.setTimeout(forceReveal, 800);
+          // Normalise the URL to the canonical id (e.g. #proposal → #occasions)
           const canonical =
             HASH_ALIASES[rawHash.toLowerCase()] ?? rawHash.toLowerCase();
           if (canonical && `#${canonical}` !== window.location.hash) {
@@ -821,6 +871,15 @@ function HomePage() {
             </ol>
           </div>
 
+          {/* Inner anchor target for /#studio — sits right before the
+              "Create it live." rail so deep-links land on the Studio
+              block, not the wider builder eyebrow. scroll-mt matches
+              the same offset used elsewhere on the page. */}
+          <div
+            id="studio"
+            aria-hidden="true"
+            className="scroll-mt-24 md:scroll-mt-28"
+          />
           <div className="grid lg:grid-cols-12 gap-10 lg:gap-14 items-center max-w-6xl mx-auto">
             {/* On mobile: text rail (with the headline) renders FIRST so
                 the user reads "Create it live." before seeing the
@@ -997,7 +1056,8 @@ function HomePage() {
           and real blurb from `signatureTours`. No vague taglines, no
           repeated labels. */}
       <section
-        className="section-y bg-[color:var(--ivory)] border-b border-[color:var(--border)]"
+        id="signatures"
+        className="section-y bg-[color:var(--ivory)] border-b border-[color:var(--border)] scroll-mt-24 md:scroll-mt-28"
         aria-labelledby="signatures-title"
       >
         <div className="container-x">
@@ -1158,7 +1218,8 @@ function HomePage() {
           Corporate & Groups, and Multi-Day routes — so every "bigger
           occasion" path lives together with clear hierarchy. */}
       <section
-        className="section-y bg-[color:var(--sand)] border-b border-[color:var(--border)]"
+        id="occasions"
+        className="section-y bg-[color:var(--sand)] border-b border-[color:var(--border)] scroll-mt-24 md:scroll-mt-28"
         aria-labelledby="groups-title"
       >
         <div className="container-x">
@@ -1326,7 +1387,8 @@ function HomePage() {
           is the human escape hatch. No duplicate CTA band; one purpose,
           one button. */}
       <section
-        className="section-y relative overflow-hidden bg-[color:var(--teal)] text-[color:var(--ivory)] pb-20 md:pb-24"
+        id="final-cta"
+        className="section-y relative overflow-hidden bg-[color:var(--teal)] text-[color:var(--ivory)] pb-20 md:pb-24 scroll-mt-24 md:scroll-mt-28"
         aria-labelledby="final-cta-title"
       >
         {/* FINAL CTA — solid teal base with editorial texture so it
