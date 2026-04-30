@@ -39,10 +39,22 @@ interface MoodCardProps {
   onClick: () => void;
   label: string;
   sub: string;
+  /** Static fallback asset bundled with the app. */
   cover: string;
+  /** Optional real image URL pulled from experience_images (preferred). */
+  realCover?: { url: string; alt: string } | null;
 }
 
-export function MoodCard({ selected, onClick, label, sub, cover }: MoodCardProps) {
+export function MoodCard({
+  selected,
+  onClick,
+  label,
+  sub,
+  cover,
+  realCover,
+}: MoodCardProps) {
+  const src = realCover?.url ?? cover;
+  const alt = realCover?.alt ?? "";
   return (
     <button
       type="button"
@@ -58,8 +70,8 @@ export function MoodCard({ selected, onClick, label, sub, cover }: MoodCardProps
       ].join(" ")}
     >
       <img
-        src={cover}
-        alt=""
+        src={src}
+        alt={alt}
         loading="lazy"
         className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
       />
