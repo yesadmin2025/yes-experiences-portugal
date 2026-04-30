@@ -99,9 +99,9 @@ export function BuilderMap({ stops, regionCenter, regionKey }: Props) {
 
     const points = stops.map((s) => L.latLng(s.lat, s.lng));
     const cs = getComputedStyle(document.documentElement);
-    const teal = cs.getPropertyValue("--teal").trim() || "#295B61";
-    const ivory = cs.getPropertyValue("--ivory").trim() || "#FAF8F3";
-    const gold = cs.getPropertyValue("--gold").trim() || "#C9A96A";
+    const teal = cs.getPropertyValue("--teal").trim() || "var(--teal)";
+    const ivory = cs.getPropertyValue("--ivory").trim() || "var(--ivory)";
+    const gold = cs.getPropertyValue("--gold").trim() || "var(--gold)";
 
     const pin = (n: number) =>
       L.divIcon({
