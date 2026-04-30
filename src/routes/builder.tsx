@@ -526,16 +526,13 @@ function LiveBuilder({
             </Suspense>
           </div>
 
-          {/* PANEL */}
+          {/* PANEL — Build (controls) */}
           <div
             className={[
               "rounded-[2px] border border-[color:var(--charcoal)]/12 bg-[color:var(--ivory)] min-h-[60svh]",
-              mobileTab === "build" || mobileTab === "story"
-                ? "block"
-                : "hidden lg:block",
+              mobileTab === "build" ? "block" : "hidden lg:block",
             ].join(" ")}
           >
-            {/* On mobile, the "story" tab focuses the narrative card visually */}
             <JourneyPanel
               route={route}
               stops={stops}
@@ -549,6 +546,53 @@ function LiveBuilder({
               onMove={onMove}
               removablePool={removablePool}
             />
+          </div>
+
+          {/* PANEL — Story (mobile-only focused narrative view) */}
+          <div
+            className={[
+              "lg:hidden rounded-[2px] border border-[color:var(--charcoal)]/12 bg-[color:var(--sand)]/40 min-h-[60svh] p-5",
+              mobileTab === "story" ? "block" : "hidden",
+            ].join(" ")}
+          >
+            <span className="inline-flex items-center gap-2 text-[10.5px] uppercase tracking-[0.28em] font-semibold text-[color:var(--gold)]">
+              Story
+            </span>
+            <h3 className="serif mt-3 text-[1.6rem] leading-[1.1] font-semibold text-[color:var(--charcoal)]">
+              {stops.length >= 2
+                ? `${stops[0].label} → ${stops[stops.length - 1].label}`
+                : route.region.label}
+            </h3>
+            <p
+              className={[
+                "mt-4 serif italic leading-[1.45] text-[1.05rem] text-[color:var(--charcoal)]/85 transition-opacity duration-300",
+                narrativeLoading ? "opacity-50" : "opacity-100",
+              ].join(" ")}
+            >
+              {narrative ||
+                "A real, achievable day in Portugal — shaped from your choices, ready to adjust."}
+            </p>
+            <dl className="mt-6 grid grid-cols-3 gap-3">
+              <div>
+                <dt className="text-[9.5px] uppercase tracking-[0.24em] font-semibold text-[color:var(--charcoal)]/55">Stops</dt>
+                <dd className="mt-1 serif text-[1.15rem] font-semibold tabular-nums">{stops.length}</dd>
+              </div>
+              <div>
+                <dt className="text-[9.5px] uppercase tracking-[0.24em] font-semibold text-[color:var(--charcoal)]/55">Duration</dt>
+                <dd className="mt-1 serif text-[1.15rem] font-semibold tabular-nums">{Math.floor(route.totals.experienceMinutes / 60)}h{route.totals.experienceMinutes % 60 ? String(route.totals.experienceMinutes % 60).padStart(2, "0") : ""}</dd>
+              </div>
+              <div>
+                <dt className="text-[9.5px] uppercase tracking-[0.24em] font-semibold text-[color:var(--charcoal)]/55">Pace</dt>
+                <dd className="mt-1 serif text-[1.15rem] font-semibold capitalize">{route.pace}</dd>
+              </div>
+            </dl>
+            <button
+              type="button"
+              onClick={() => setMobileTab("build")}
+              className="mt-6 inline-flex items-center gap-2 text-[12px] uppercase tracking-[0.2em] font-bold text-[color:var(--teal)] hover:text-[color:var(--charcoal)]"
+            >
+              Adjust the journey →
+            </button>
           </div>
         </div>
 
