@@ -229,6 +229,14 @@ export function StudioMoment({ className }: Props) {
         </div>
       </div>
 
+      {/* ─── Stop details drawer ─── */}
+      <StopDetailsDrawer
+        stop={openStop}
+        stopIndex={openStop && active ? active.stops.findIndex((s) => s.key === openStop.key) : -1}
+        regionLabel={active?.region.label ?? ""}
+        onClose={() => setOpenStopKey(null)}
+      />
+
       {/* ─── HERO_COPY locks — visually hidden, byte-exact to the
             previous hero so the e2e snapshot test keeps passing.
             DO NOT change these strings; edit src/content/hero-copy.ts. ─── */}
