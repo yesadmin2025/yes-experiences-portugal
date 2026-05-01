@@ -166,7 +166,7 @@ describe("reveal class coverage — .reveal / .reveal-stagger / .section-enter",
     const els = Array.from(document.querySelectorAll<HTMLElement>(".reveal-stagger"));
     expect(els).toHaveLength(3);
 
-    act(() => ioFor(".reveal-stagger").fireAllVisible());
+    // Initial sweep claims everything synchronously.
 
     const t = window.__yesRevealTelemetry!;
     expect(t.reveal.total).toBe(3);
@@ -195,7 +195,7 @@ describe("reveal class coverage — .reveal / .reveal-stagger / .section-enter",
     const els = Array.from(document.querySelectorAll<HTMLElement>(".section-enter"));
     expect(els).toHaveLength(2);
 
-    act(() => ioFor(".section-enter").fireAllVisible());
+    // Initial sweep claims everything synchronously.
 
     const t = window.__yesRevealTelemetry!;
     expect(t.sectionEnter.total).toBe(2);
@@ -229,12 +229,8 @@ describe("reveal class coverage — .reveal / .reveal-stagger / .section-enter",
     expect(reveals).toHaveLength(4);
     expect(sections).toHaveLength(2);
 
-    // Fire both observers — order matches SiteLayout's effect order
-    // (reveal observer registered first, section-enter second).
-    act(() => {
-      ioFor(".reveal").fireAllVisible();
-      ioFor(".section-enter").fireAllVisible();
-    });
+    // Initial sweeps for both observers claim everything synchronously
+    // at mount under JSDOM's default rect of (0,0,0,0).
 
     const t = window.__yesRevealTelemetry!;
     // Per-class counter assertions:
