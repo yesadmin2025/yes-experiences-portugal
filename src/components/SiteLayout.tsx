@@ -5,6 +5,7 @@ import { FloatingActions } from "./FloatingActions";
 import { WhatsAppFab } from "./WhatsAppFab";
 import { MobileStickyCTA } from "./MobileStickyCTA";
 import { PostHeroAnnouncer } from "./PostHeroAnnouncer";
+import { ReplayRevealsButton } from "./dev/ReplayRevealsButton";
 import { installSmoothAnchorScroll } from "@/lib/smooth-anchor-scroll";
 import {
   applyScrollDebugClasses,
@@ -604,6 +605,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
           first scrolls past the hero, giving screen-reader users parity
           with sighted users who see the post-hero CTA surfaces appear. */}
       <PostHeroAnnouncer />
+      <ReplayRevealsButton />
     </div>
   );
 }
