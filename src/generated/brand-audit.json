@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-05-01T06:02:18.780Z",
-  "filesScanned": 151,
+  "generatedAt": "2026-05-01T06:07:09.534Z",
+  "filesScanned": 152,
   "approvedPalette": {
     "teal": "#295B61",
     "teal-2": "#2A7C82",
@@ -18,12 +18,21 @@
     "#cccccc"
   ],
   "counts": {
-    "total": 172,
+    "total": 173,
     "approved": 49,
-    "allowlisted": 30,
+    "allowlisted": 31,
     "mismatch": 93
   },
   "findings": [
+    {
+      "file": "src/__tests__/cta-band-guardrail.test.ts",
+      "line": 19,
+      "col": 29,
+      "raw": "#ffffff",
+      "normalized": "#ffffff",
+      "snippet": "*      `bg-blue-500`, `bg-[#ffffff]`) are forbidden — every CTA must",
+      "status": "allowlisted"
+    },
     {
       "file": "src/__tests__/homepage-contrast.test.ts",
       "line": 22,
