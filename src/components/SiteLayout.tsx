@@ -643,9 +643,41 @@ export function SiteLayout({ children }: { children: ReactNode }) {
       if (forced > 0) telemetry.markFailSafeFired();
     }, 1200);
 
+    // SCROLL CATCH-UP: throttled scroll listener that catches any reveal
+    // element whose vertical bbox enters the viewport but whose IO entry
+    // never fires (e.g. an element nested inside a transformed/clipped
+    // ancestor whose intersection rect doesn't match the document
+    // viewport). Vertical-only check — horizontal position is ignored.
+    // Uses requestAnimationFrame coalescing so it never blocks scroll.
+    let scrollRaf = 0;
+    const scrollSweep = () => {
+      scrollRaf = 0;
+      const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+      els.forEach((el) => {
+        if (el.classList.contains("is-visible")) return;
+        const rect = el.getBoundingClientRect();
+        // Vertical band only — top has reached at least the lower 90%
+        // of the viewport AND bottom is still above the top.
+        if (rect.top < viewportHeight * 0.92 && rect.bottom > 0) {
+          revealEl(el, "io");
+          io.unobserve(el);
+        } else if (rect.bottom <= 0) {
+          revealEl(el, "io");
+          io.unobserve(el);
+        }
+      });
+    };
+    const onScroll = () => {
+      if (scrollRaf) return;
+      scrollRaf = window.requestAnimationFrame(scrollSweep);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+
     return () => {
       window.clearTimeout(t);
       window.clearTimeout(failSafe);
+      window.removeEventListener("scroll", onScroll);
+      if (scrollRaf) window.cancelAnimationFrame(scrollRaf);
       io.disconnect();
     };
   }, []);
