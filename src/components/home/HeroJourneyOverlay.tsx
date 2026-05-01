@@ -1,24 +1,22 @@
 /**
  * HeroJourneyOverlay
  *
- * Subtle animated layer that sits on top of the hero image and beneath the
- * dark gradient + headline. Communicates the product concept — "your
- * Portugal journey is being shaped in real time" — through:
+ * Narrative motion layer for the hero. Sits above the hero image and
+ * beneath the dark gradient + headline. Communicates the product
+ * concept — "your Portugal experience is being shaped, in real time,
+ * by local choices" — through a coordinated sequence:
  *
- *   1. A slowly-drawing dashed route line (gold → teal), the same visual
- *      vocabulary used by the Builder map and the Studio preview.
+ *   1. A slowly-drawing dashed route line (gold → teal), the same
+ *      vocabulary used by the Builder map.
  *   2. Three location pings that fade in sequentially along the route.
- *   3. A faint moving "studio" highlight that glides along the path,
- *      suggesting an in-progress build.
+ *   3. Soft narrative labels next to each ping ("Wine", "Coast",
+ *      "Hidden places", "Celebration", "Local stop", "Group journey")
+ *      that fade in and rotate, suggesting choices being made.
+ *   4. A faint moving "studio" highlight gliding along the path.
  *
- * Pure SVG. No video, no images, no JS. ~0 perf cost.
- * Honours `prefers-reduced-motion`: line is shown statically, pings are
- * shown but do not pulse, highlight does not move.
- *
- * Layout-agnostic — fills its parent. Use inside the hero <section> as
- * an absolutely-positioned sibling of the background <img>, BEFORE the
- * dark gradient overlays so the overlay still tones it down for
- * readability.
+ * Pure SVG + a thin absolutely-positioned label layer. No video, no
+ * extra images. Mobile-first: labels shrink, studio glow stays.
+ * Honours `prefers-reduced-motion`.
  */
 export function HeroJourneyOverlay() {
   return (
@@ -56,10 +54,7 @@ export function HeroJourneyOverlay() {
         </defs>
 
         {/* Faint base path — always visible so the route reads even before
-            the animated overlay completes its draw. Path traces the upper
-            band of the hero so it sits above the dark gradient peak and
-            stays visible behind/above the headline area without blocking
-            text contrast. */}
+            the animated overlay completes its draw. */}
         <path
           d="M -20 220 C 180 160, 340 120, 520 180 S 820 320, 980 240 1180 120 1240 80"
           stroke="var(--ivory)"
@@ -82,14 +77,13 @@ export function HeroJourneyOverlay() {
         />
 
         {/* Moving studio highlight — small soft glow that travels along
-            the path on a long, calm loop. Gives the "being built right
-            now" feel without flashy motion. */}
+            the path on a long, calm loop. */}
         <g className="hero-journey-studio">
           <circle r="38" fill="url(#heroRouteHighlight)" />
         </g>
 
-        {/* Three location pings, staggered. Coordinates roughly match the
-            inflection points of the route above. */}
+        {/* Three location pings, staggered. Coordinates match the
+            inflection points of the route. */}
         <g className="hero-journey-pings">
           <g transform="translate(340 130)" className="hero-journey-ping hero-journey-ping-1">
             <circle r="20" fill="url(#heroPingGrad)" className="hero-journey-ping-halo" />
@@ -105,6 +99,51 @@ export function HeroJourneyOverlay() {
           </g>
         </g>
       </svg>
+
+      {/* Narrative labels — short single words/phrases that gently fade
+          in next to each ping then rotate to a second word, suggesting
+          choices being shaped. Positioned in % so they track with the
+          hero box across breakpoints. Two labels per slot, cross-faded. */}
+      <div className="hero-journey-labels">
+        <span
+          className="hero-journey-label hero-journey-label-1a"
+          style={{ left: "26%", top: "16%" }}
+        >
+          Wine
+        </span>
+        <span
+          className="hero-journey-label hero-journey-label-1b"
+          style={{ left: "26%", top: "16%" }}
+        >
+          Local stop
+        </span>
+
+        <span
+          className="hero-journey-label hero-journey-label-2a"
+          style={{ left: "56%", top: "35%" }}
+        >
+          Coast
+        </span>
+        <span
+          className="hero-journey-label hero-journey-label-2b"
+          style={{ left: "56%", top: "35%" }}
+        >
+          Celebration
+        </span>
+
+        <span
+          className="hero-journey-label hero-journey-label-3a"
+          style={{ left: "80%", top: "25%" }}
+        >
+          Hidden places
+        </span>
+        <span
+          className="hero-journey-label hero-journey-label-3b"
+          style={{ left: "80%", top: "25%" }}
+        >
+          Group journey
+        </span>
+      </div>
     </div>
   );
 }
