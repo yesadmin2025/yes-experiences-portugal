@@ -961,13 +961,13 @@ function HomePage() {
         aria-labelledby="signatures-title"
       >
         <div className="container-x">
-          <div className="reveal text-center max-w-2xl mx-auto mb-12 md:mb-16">
+          <div className="reveal text-center max-w-2xl mx-auto mb-10 md:mb-14">
             <span className="he-eyebrow-bar mb-5">Signature experiences</span>
-            <h2 id="signatures-title" className="serif mt-3 text-[2.5rem] sm:text-[2.85rem] md:text-[4.15rem] leading-[1.02] md:leading-[1.0] tracking-[-0.02em] text-[color:var(--charcoal)] font-semibold">
-              Days <span className="italic">already designed.</span>
+            <h2 id="signatures-title" className="serif mt-3 text-[2rem] sm:text-[2.4rem] md:text-[3.6rem] leading-[1.1] md:leading-[1.0] tracking-[-0.016em] text-[color:var(--charcoal)] font-medium">
+              Signature days, <span className="italic">ready when you are.</span>
             </h2>
-            <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] leading-[1.65] max-w-md mx-auto">
-              Confirm a Signature as it ships, or tailor a few details inside.
+            <p className="mt-4 text-[14.5px] md:text-[16px] text-[color:var(--charcoal-soft)] leading-[1.65] max-w-md mx-auto">
+              Book a Signature as it is, or tailor selected details.
             </p>
           </div>
 
