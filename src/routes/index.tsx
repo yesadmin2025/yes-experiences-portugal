@@ -113,8 +113,8 @@ const groupsAndCelebrations = [
         <span className="kw">your people</span> and pace.
       </>
     ),
-    pull: "Your people, your pace, your Portugal.",
-    detail: "Up to 14 guests · private host",
+    pull: "Your people, your pace.",
+    detail: "Private host · any group size",
     handles: [
       "Group coordination",
       "Multi-activity planning",
@@ -135,8 +135,8 @@ const groupsAndCelebrations = [
         <span className="kw">effortless</span> day.
       </>
     ),
-    pull: "End to end, handled by a local team.",
-    detail: "Up to 30 pax · invoice & DMC support",
+    pull: "Handled end to end, locally.",
+    detail: "Any group size · invoice & DMC support",
     handles: [
       "Full logistics management",
       "Transport coordination",
@@ -157,8 +157,8 @@ const groupsAndCelebrations = [
         <span className="kw">local flow</span>.
       </>
     ),
-    pull: "More than a day. A real journey.",
-    detail: "2–7 days · local-designed",
+    pull: "A real journey, not a checklist.",
+    detail: "Any length · local-designed",
     handles: [
       "Route planning across regions",
       "Curated overnight stops",
