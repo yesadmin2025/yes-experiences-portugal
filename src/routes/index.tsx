@@ -113,8 +113,8 @@ const groupsAndCelebrations = [
         <span className="kw">your people</span> and pace.
       </>
     ),
-    pull: "Your people, your pace, your Portugal.",
-    detail: "Up to 14 guests · private host",
+    pull: "Your people, your pace.",
+    detail: "Private host · any group size",
     handles: [
       "Group coordination",
       "Multi-activity planning",
@@ -135,8 +135,8 @@ const groupsAndCelebrations = [
         <span className="kw">effortless</span> day.
       </>
     ),
-    pull: "End to end, handled by a local team.",
-    detail: "Up to 30 pax · invoice & DMC support",
+    pull: "Handled end to end, locally.",
+    detail: "Any group size · invoice & DMC support",
     handles: [
       "Full logistics management",
       "Transport coordination",
@@ -157,8 +157,8 @@ const groupsAndCelebrations = [
         <span className="kw">local flow</span>.
       </>
     ),
-    pull: "More than a day. A real journey.",
-    detail: "2–7 days · local-designed",
+    pull: "A real journey, not a checklist.",
+    detail: "Any length · local-designed",
     handles: [
       "Route planning across regions",
       "Curated overnight stops",
@@ -484,14 +484,14 @@ function HomePage() {
 
             <h1
               data-hero-field="headlineLine1 headlineLine2"
-              className="hero-h1 serif mt-5 md:mt-8 text-[2.05rem] sm:text-[2.7rem] md:text-[4rem] lg:text-[4.6rem] leading-[1.12] sm:leading-[1.06] md:leading-[1.02] tracking-[-0.018em] text-[color:var(--ivory)] text-left opacity-0 animate-[heroFade_0.9s_ease-out_0.25s_forwards] [text-shadow:0_2px_18px_rgba(0,0,0,0.35)]"
+              className="hero-h1 serif mt-5 md:mt-8 text-[2.05rem] sm:text-[2.7rem] md:text-[4rem] lg:text-[4.6rem] leading-[1.1] sm:leading-[1.04] md:leading-[1.0] tracking-[-0.02em] text-[color:var(--ivory)] text-left opacity-0 animate-[heroFade_0.9s_ease-out_0.25s_forwards] [text-shadow:0_2px_18px_rgba(0,0,0,0.35)]"
             >
-              <span data-hero-field="headlineLine1" className="block font-medium">
+              <span data-hero-field="headlineLine1" className="block font-medium tracking-[-0.018em]">
                 {HERO_COPY.headlineLine1}
               </span>
               <span
                 data-hero-field="headlineLine2"
-                className="block italic font-normal text-[color:var(--gold-soft)] mt-0.5 md:mt-1 text-[2.05rem] sm:text-[2.7rem] md:text-[4rem] lg:text-[4.6rem] tracking-[-0.022em] leading-[1.12] sm:leading-[1.06] md:leading-[1.02]"
+                className="block italic font-normal text-[color:var(--gold-soft)] mt-1 md:mt-1.5 text-[2.05rem] sm:text-[2.7rem] md:text-[4rem] lg:text-[4.6rem] tracking-[-0.024em] leading-[1.1] sm:leading-[1.04] md:leading-[1.0]"
               >
                 {HERO_COPY.headlineLine2}
               </span>
@@ -499,7 +499,7 @@ function HomePage() {
 
             <p
               data-hero-field="subheadline"
-              className="mt-5 md:mt-7 text-[15.5px] md:text-[19px] text-[color:var(--ivory)]/92 max-w-md md:max-w-lg leading-[1.65] md:leading-[1.7] font-light text-left opacity-0 animate-[heroFade_0.9s_ease-out_0.45s_forwards] [text-shadow:0_1px_8px_rgba(0,0,0,0.3)]"
+              className="mt-5 md:mt-7 text-[15.5px] md:text-[19px] text-[color:var(--ivory)]/95 max-w-md md:max-w-lg leading-[1.6] md:leading-[1.65] font-normal text-left opacity-0 animate-[heroFade_0.9s_ease-out_0.45s_forwards] [text-shadow:0_1px_8px_rgba(0,0,0,0.3)]"
             >
               {HERO_COPY.subheadline}
             </p>
@@ -518,7 +518,7 @@ function HomePage() {
                 <span className="block">{HERO_COPY.primaryCta}</span>
                 <ArrowRight
                   size={16}
-                  className="shrink-0 transition-transform duration-300 group-hover:translate-x-1"
+                  className="shrink-0 transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1.5"
                   aria-hidden="true"
                 />
               </Link>
@@ -530,7 +530,7 @@ function HomePage() {
                 <span className="block">{HERO_COPY.secondaryCta}</span>
                 <ArrowRight
                   size={16}
-                  className="shrink-0 transition-transform duration-300 group-hover:translate-x-1"
+                  className="shrink-0 transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1.5"
                   aria-hidden="true"
                 />
               </Link>
@@ -934,9 +934,9 @@ function HomePage() {
             ))}
           </ul>
 
-          <p className="reveal mt-10 md:mt-12 text-center inline-flex flex-wrap w-full items-center justify-center gap-x-2 gap-y-1 px-4 text-[10.5px] xs:text-[11.5px] sm:text-[12px] uppercase tracking-[0.18em] xs:tracking-[0.22em] sm:tracking-[0.28em] text-[color:var(--teal)]">
-            <MessageCircle size={13} aria-hidden="true" className="shrink-0" />
-            <span className="text-balance">A local is always one message away</span>
+          <p className="reveal mt-10 md:mt-12 text-center inline-flex flex-wrap w-full items-center justify-center gap-x-2 gap-y-1 px-4 text-[14px] md:text-[15px] leading-[1.6] tracking-[0.005em] text-[color:var(--charcoal-soft)]">
+            <MessageCircle size={14} aria-hidden="true" className="shrink-0 text-[color:var(--teal)]" />
+            <span className="text-balance">Need help shaping it? <span className="text-[color:var(--charcoal)]">A local is one message away.</span></span>
           </p>
         </div>
       </section>
@@ -1214,7 +1214,7 @@ function HomePage() {
                           <p className="mt-4 md:mt-4 text-[14.5px] md:text-[16px] leading-[1.65] md:leading-[1.7] text-[color:var(--charcoal-soft)]">
                             {m.line}
                           </p>
-                          <p className="he-pull mt-5 md:mt-5 serif italic text-[15px] md:text-[16.5px] leading-[1.45] text-[color:var(--charcoal)] font-normal" style={{ borderLeftColor: accent }}>
+                          <p className="mt-4 md:mt-4 text-[13.5px] md:text-[14.5px] leading-[1.55] text-[color:var(--charcoal-soft)]">
                             {m.pull}
                           </p>
                           <p className="mt-5 md:mt-5 inline-flex items-center gap-2.5 text-[10.5px] md:text-[10.5px] uppercase tracking-[0.22em] md:tracking-[0.26em] font-semibold text-[color:var(--charcoal-soft)]">
