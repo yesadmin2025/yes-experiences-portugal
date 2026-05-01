@@ -921,7 +921,7 @@ function HomePage() {
                 <span className="mt-4 text-[10.5px] uppercase tracking-[0.28em] font-semibold text-[color:var(--charcoal-soft)]">
                   {b.label}
                 </span>
-                <h3 className="serif mt-2.5 text-[1.4rem] md:text-[1.7rem] leading-[1.2] text-[color:var(--charcoal)] font-medium">
+                <h3 className="serif mt-2.5 text-[1.4rem] md:text-[1.8rem] leading-[1.2] md:leading-[1.18] text-[color:var(--charcoal)] font-medium">
                   {b.title}
                 </h3>
                 <p className="mt-3 text-[14px] md:text-[15px] text-[color:var(--charcoal-soft)] leading-[1.6]">
