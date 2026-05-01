@@ -40,9 +40,9 @@ export function TheDifferenceSection() {
           <span className="he-eyebrow-bar mb-5">The difference</span>
           <h2
             id="difference-title"
-            className="mt-3 text-[2.4rem] md:text-[3.4rem] leading-[1.08] tracking-[-0.02em] text-[color:var(--charcoal-deep)] font-bold"
+            className="serif mt-3 text-[2rem] sm:text-[2.4rem] md:text-[3.6rem] leading-[1.1] md:leading-[1.0] tracking-[-0.018em] text-[color:var(--charcoal)] font-medium"
           >
-            How YES <span className="italic font-normal">approaches</span> your day.
+            How YES <span className="italic font-normal text-[color:var(--teal)]">approaches</span> your day.
           </h2>
           <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] leading-[1.65] max-w-md mx-auto">
             Personalised travel design, made simple.

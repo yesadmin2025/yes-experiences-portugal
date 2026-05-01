@@ -2432,25 +2432,66 @@
      All scoped under .home-energy. Reduced-motion disables motion only,
      never colour/typography. ─────────────────────────────────────── */
 
-  /* Eyebrow bar — short gold line that draws in on reveal, paired with
-     a tracked uppercase label. Used at the top of section intros to
-     anchor hierarchy without adding chrome. */
-  .home-energy .he-eyebrow-bar {
+  /* ── Eyebrow bar — CANONICAL section eyebrow ─────────────────
+     Single source of truth across the site. Used at the top of
+     every section intro to anchor hierarchy without adding chrome.
+
+     Visual contract (must stay identical site-wide):
+       • Inter, 11px, 700, tracking 0.28em, uppercase
+       • color: --charcoal           (label reads as primary, not soft)
+       • gap: 14px between rule, optional icon, and label
+       • leading rule: 1.5px tall, --gold-deep (was --gold — too pale on ivory)
+       • inline icon: --gold-deep, 12px, vertically centered
+       • optional trailing rule (.flank) for centered titles (FAQ-style)
+
+     Motion: only the leading rule width animation is scoped to
+     .home-energy (draws 0 → 32px on reveal). Color, weight, spacing
+     are global so non-homepage routes look identical at rest. */
+  .he-eyebrow-bar {
     display: inline-flex;
     align-items: center;
     gap: 14px;
     color: var(--charcoal);
+    font-family: var(--font-sans);
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 0.28em;
     text-transform: uppercase;
+    line-height: 1;
   }
-  .home-energy .he-eyebrow-bar::before {
+  .he-eyebrow-bar::before {
     content: "";
     display: inline-block;
-    width: 0;
+    width: 32px;
     height: 1.5px;
-    background: var(--gold);
+    background: var(--gold-deep);
+    flex-shrink: 0;
+  }
+  /* Lucide / inline SVG icons inside the eyebrow always render as
+     gold-deep micro-detail at 12px, vertically centered. Prevents
+     ad-hoc text-[color:...] overrides at the call site. */
+  .he-eyebrow-bar > svg {
+    width: 12px;
+    height: 12px;
+    color: var(--gold-deep);
+    flex-shrink: 0;
+  }
+  /* Optional flanking rule (matches the older .eyebrow style for
+     centered titles like FAQ). Add `flank` modifier on the span. */
+  .he-eyebrow-bar.flank::after {
+    content: "";
+    display: inline-block;
+    width: 32px;
+    height: 1.5px;
+    background: var(--gold-deep);
+    flex-shrink: 0;
+  }
+
+  /* Homepage-only motion override — the leading rule draws in on
+     reveal. Identical end state to the global rule, so no visual
+     drift between routes once the animation completes. */
+  .home-energy .he-eyebrow-bar::before {
+    width: 0;
     transition: width 720ms cubic-bezier(0.22, 0.61, 0.36, 1) 80ms;
   }
   .home-energy .reveal-stagger.is-visible .he-eyebrow-bar::before,
