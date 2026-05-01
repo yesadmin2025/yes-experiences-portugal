@@ -170,6 +170,8 @@ export function SiteLayout({ children }: { children: ReactNode }) {
     const flags = getScrollDebugFlags();
     const mobileRevealsDisabled =
       flags.disableMobileReveals && window.matchMedia("(max-width: 767.98px)").matches;
+    const telemetry = getRevealTelemetry();
+    telemetry.setTotal("reveal", els.length);
 
     if (
       mobileRevealsDisabled ||
@@ -201,7 +203,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
       items.forEach((el, i) => indexByEl.set(el, Math.min(i, MAX_STEPS)));
     });
 
-    const revealEl = (target: HTMLElement) => {
+    const revealEl = (target: HTMLElement, source: RevealSource) => {
       if (target.classList.contains("is-visible")) return;
       // Only apply our cadence when no inline delay is already set, so
       // route-level overrides still win.
@@ -210,6 +212,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
         target.style.transitionDelay = `${idx * STAGGER_MS}ms`;
       }
       target.classList.add("is-visible");
+      telemetry.log("reveal", source, describeReveal(target));
     };
 
     const io = new IntersectionObserver(
@@ -222,7 +225,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
           // the user scrolls back. Mirrors the .section-enter observer.
           const passed = entry.boundingClientRect.bottom <= 0;
           if (!entry.isIntersecting && !passed) return;
-          revealEl(entry.target as HTMLElement);
+          revealEl(entry.target as HTMLElement, "io");
           io.unobserve(entry.target);
         });
       },
@@ -237,21 +240,21 @@ export function SiteLayout({ children }: { children: ReactNode }) {
     // Initial sweep: any reveal already on-screen at mount (e.g. after
     // a deep-link / refresh near the bottom of the page, or after a
     // very fast scroll before the IO has reported) is shown right away.
-    const sweep = () => {
+    const sweep = (source: "sweepInitial" | "sweepDelayed") => {
       const vh = window.innerHeight || 0;
       els.forEach((el) => {
         if (el.classList.contains("is-visible")) return;
         const rect = el.getBoundingClientRect();
         if (rect.bottom <= 0 || rect.top < vh * 0.95) {
-          revealEl(el);
+          revealEl(el, source);
           io.unobserve(el);
         }
       });
     };
-    sweep();
+    sweep("sweepInitial");
     // Safety net for extreme fling scrolls: re-sweep once shortly after
     // mount to catch anything the IO missed during the first frame.
-    const t = window.setTimeout(sweep, 250);
+    const t = window.setTimeout(() => sweep("sweepDelayed"), 250);
 
     return () => {
       window.clearTimeout(t);
