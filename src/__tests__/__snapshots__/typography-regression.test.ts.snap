@@ -26,7 +26,7 @@ base: letter-spacing: -0.022em; line-height: 1.1;"
 `;
 
 exports[`Typography regression — token rules from styles.css > token .t-display 1`] = `
-"base: font-family: var(--font-serif); font-size: 2.75rem; line-height: 1.04; letter-spacing: -0.022em;
+"base: font-family: var(--font-display); font-weight: 700; font-size: 2.25rem; /* 36px mobile — within 32–36 hero band */ line-height: 1.06; letter-spacing: -0.022em;
 base: font-size: 4rem;
 base: font-size: 4.75rem; line-height: 0.98;"
 `;
@@ -34,17 +34,17 @@ base: font-size: 4.75rem; line-height: 0.98;"
 exports[`Typography regression — token rules from styles.css > token .t-eyebrow 1`] = `"base: font-family: var(--font-sans); font-size: 11px; line-height: 1; letter-spacing: 0.28em; text-transform: uppercase; color: var(--charcoal-soft);"`;
 
 exports[`Typography regression — token rules from styles.css > token .t-h1 1`] = `
-"base: font-family: var(--font-serif); font-size: 2.125rem; /* 34px mobile */ line-height: 1.08; letter-spacing: -0.018em;
+"base: font-family: var(--font-display); font-weight: 700; font-size: 2rem; /* 32px mobile — Builder/anchor sections (within 30–34 band) */ line-height: 1.1; letter-spacing: -0.018em;
 base: font-size: 3.75rem; /* 60px tablet+ */ line-height: 1.04;"
 `;
 
 exports[`Typography regression — token rules from styles.css > token .t-h2 1`] = `
-"base: font-family: var(--font-serif); font-size: 1.625rem; /* 26px mobile */ line-height: 1.15; letter-spacing: -0.014em;
+"base: font-family: var(--font-display); font-weight: 700; font-size: 1.78rem; /* ~28.5px mobile */ line-height: 1.18; letter-spacing: -0.014em;
 base: font-size: 2.25rem; /* 36px tablet+ */ line-height: 1.1;"
 `;
 
 exports[`Typography regression — token rules from styles.css > token .t-h3 1`] = `
-"base: font-family: var(--font-serif); font-size: 1.375rem; /* 22px mobile */ line-height: 1.2; letter-spacing: -0.012em;
+"base: font-family: var(--font-display); font-weight: 600; font-size: 1.47rem; /* ~23.5px mobile */ line-height: 1.22; letter-spacing: -0.012em;
 base: font-size: 1.75rem; /* 28px tablet+ */ line-height: 1.18;"
 `;
 
