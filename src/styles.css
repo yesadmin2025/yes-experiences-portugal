@@ -2682,10 +2682,10 @@ svg.lucide {
     top: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 80px;
+    width: 96px;
     height: 1px;
-    background: linear-gradient(90deg, transparent, var(--gold) 50%, transparent);
-    opacity: 0.5;
+    background: linear-gradient(90deg, transparent, var(--gold-warm, var(--gold)) 50%, transparent);
+    opacity: 0.65;
   }
 
   /* Final CTA decorative gold rules around the eyebrow — same anatomy
