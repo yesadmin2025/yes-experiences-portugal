@@ -23,6 +23,13 @@ export type ScrollDebugFlags = {
   disableMobileReveals: boolean;
   staticMobileCarousels: boolean;
   disableMobileStudioMotion: boolean;
+  /**
+   * Reveal debug overlay: when ?scroll-debug=reveal-debug (or ?reveal-debug)
+   * is in the URL, every IntersectionObserver/sweep trigger logs to the
+   * console and flashes a visible outline + label badge on the affected
+   * element. Useful on mobile where the dev tools console isn't visible.
+   */
+  revealDebug: boolean;
 };
 
 declare global {
@@ -42,6 +49,7 @@ const EMPTY_FLAGS: ScrollDebugFlags = {
   disableMobileReveals: false,
   staticMobileCarousels: false,
   disableMobileStudioMotion: false,
+  revealDebug: false,
 };
 
 function tokensFromUrl(win: Window): Set<string> {
@@ -61,7 +69,14 @@ export function getScrollDebugFlags(
 ): ScrollDebugFlags {
   if (!win) return EMPTY_FLAGS;
   const params = new URLSearchParams(win.location.search);
-  if (!params.has("scroll-debug")) return EMPTY_FLAGS;
+  // Standalone shortcut: ?reveal-debug enables reveal debug without
+  // pulling in the rest of the scroll-debug instrumentation.
+  const standaloneRevealDebug = params.has("reveal-debug");
+  if (!params.has("scroll-debug")) {
+    return standaloneRevealDebug
+      ? { ...EMPTY_FLAGS, enabled: true, revealDebug: true }
+      : EMPTY_FLAGS;
+  }
   const tokens = tokensFromUrl(win);
   const all = tokens.has("all");
   return {
@@ -71,6 +86,8 @@ export function getScrollDebugFlags(
     disableMobileReveals: all || tokens.has("reveals-off") || tokens.has("no-mobile-reveals"),
     staticMobileCarousels: all || tokens.has("carousels-off") || tokens.has("static-carousels"),
     disableMobileStudioMotion: all || tokens.has("studio-static") || tokens.has("no-studio-motion"),
+    revealDebug:
+      standaloneRevealDebug || tokens.has("reveal-debug") || tokens.has("debug-reveals"),
   };
 }
 
