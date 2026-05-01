@@ -1560,6 +1560,33 @@ svg.lucide {
   }
 }
 
+@keyframes siteRevealIn {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes siteRevealStaggerIn {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes siteSectionFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 /* Reveal-on-scroll utility (IntersectionObserver toggles .is-visible) */
 /* Soft, slow, consistent — sections lift gently into place */
 .reveal {
@@ -1573,6 +1600,7 @@ svg.lucide {
 .reveal.is-visible {
   opacity: 1;
   transform: translateY(0);
+  animation: siteRevealIn 420ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
 }
 
 /* Stagger child — opt-in reveal for individual items inside a parent.
@@ -1589,6 +1617,7 @@ svg.lucide {
 .reveal-stagger.is-visible {
   opacity: 1;
   transform: translateY(0);
+  animation: siteRevealStaggerIn 380ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
 }
 
 @media (max-width: 767.98px) {
@@ -3044,12 +3073,14 @@ svg.lucide {
   }
   .section-enter.is-visible {
     opacity: 1;
+    animation: siteSectionFadeIn 460ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
   }
   @media (prefers-reduced-motion: reduce) {
     .section-enter,
     .section-enter.is-visible {
       opacity: 1 !important;
       transition: none !important;
+      animation: none !important;
     }
   }
 }

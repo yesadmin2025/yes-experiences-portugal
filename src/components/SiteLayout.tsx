@@ -326,17 +326,19 @@ export function SiteLayout({ children }: { children: ReactNode }) {
 
     els.forEach((el) => io.observe(el));
 
-    // Initial sweep: ONLY reveal items already scrolled past (bottom ≤ 0)
-    // — items still in or near the viewport must keep their opacity:0
-    // start state so the IO transition is actually perceived. Mobile
-    // viewports (~600px tall) used to lose the entrance animation
-    // because `rect.top < vh * 0.95` flagged most on-screen sections
-    // as "already visible" and they popped in without a fade.
+    // Initial sweep: reveal anything already inside the viewport or already
+    // scrolled past. Because `.is-visible` now also starts a keyframe, the
+    // mobile preview still gets a visible entrance even when IO reports the
+    // element as intersecting immediately on mount.
     const sweep = (source: "sweepInitial" | "sweepDelayed") => {
       els.forEach((el) => {
         if (el.classList.contains("is-visible")) return;
         const rect = el.getBoundingClientRect();
-        if (rect.bottom <= 0) {
+        const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+        if (rect.top < viewportHeight && rect.bottom > 0) {
+          revealEl(el, source);
+          io.unobserve(el);
+        } else if (rect.bottom <= 0) {
           revealEl(el, source);
           io.unobserve(el);
         }
@@ -403,14 +405,18 @@ export function SiteLayout({ children }: { children: ReactNode }) {
     els.forEach((el) => io.observe(el));
 
     // Initial + delayed sweep mirrors the reveal observer: on very fast
-    // mobile flings the IO can miss a section entirely. Force-show any
-    // wrapper already on-screen (or scrolled past) at mount, then
-    // re-check shortly after to catch anything still pending.
+    // mobile flings the IO can miss a section entirely. Mark anything
+    // already on-screen or scrolled past; CSS keyframes keep this animated
+    // instead of popping instantly visible on mobile.
     const sweep = (source: "sweepInitial" | "sweepDelayed") => {
       els.forEach((el) => {
         if (el.classList.contains("is-visible")) return;
         const rect = el.getBoundingClientRect();
-        if (rect.bottom <= 0) {
+        const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+        if (rect.top < viewportHeight && rect.bottom > 0) {
+          markVisible(el, source);
+          io.unobserve(el);
+        } else if (rect.bottom <= 0) {
           markVisible(el, source);
           io.unobserve(el);
         }
