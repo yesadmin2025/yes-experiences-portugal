@@ -143,8 +143,8 @@ function FooterCol({ title, links }: { title: string; links: { to: string; label
   return (
     <div>
       <h4
-        className="font-sans text-[11px] uppercase tracking-[0.32em] text-[color:var(--gold)] mb-6"
-        style={{ fontWeight: 400 }}
+        className="font-sans text-[11px] uppercase tracking-[0.32em] text-[color:var(--gold-warm)] mb-5"
+        style={{ fontWeight: 500 }}
       >
         {title}
       </h4>
