@@ -25,12 +25,31 @@ type Telemetry = {
   ioFired?: boolean;
   failSafeFired?: boolean;
   iframeFallbackFired?: boolean;
+  timings?: Array<{
+    section: string;
+    source: string;
+    atMs: number;
+    fold: string;
+    durationMs: number;
+    delayMs: number;
+    realisticallyVisible: boolean;
+    note: string;
+  }>;
 };
 
 function readQueryFlag(): boolean {
   if (typeof window === "undefined") return false;
   try {
     return new URLSearchParams(window.location.search).get("motion-qa") === "1";
+  } catch {
+    return false;
+  }
+}
+
+function readVisibleTestFlag(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    return new URLSearchParams(window.location.search).get("motion-visible-test") === "1";
   } catch {
     return false;
   }
