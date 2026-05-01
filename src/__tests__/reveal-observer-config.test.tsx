@@ -635,12 +635,7 @@ describe("reveal observers — sequenced firing on mobile", () => {
     });
 
     // Find the section-enter observer specifically.
-    const sectionIO = FakeIO.instances.find((io) =>
-      Array.from(io.observedHistory).some((t) =>
-        (t as Element).classList.contains("section-enter"),
-      ),
-    );
-    expect(sectionIO).toBeDefined();
+    const sectionIO = FakeIO.section();
 
     // Fire only s0 and s2 (skip s1) — middle stays invisible until its
     // own entry arrives. This proves visibility isn't a side-effect of
