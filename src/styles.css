@@ -593,9 +593,12 @@
      spacing — the scale never bakes in margins.
      ───────────────────────────────────────────────────────────── */
   .t-display {
-    font-family: var(--font-serif);
-    font-size: 2.75rem;
-    line-height: 1.04;
+    /* Typography v3 — all headlines Montserrat; Georgia only for inline
+       italic emphasis (handled by base h1/h2/h3 em rules). */
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 2.25rem; /* 36px mobile — within 32–36 hero band */
+    line-height: 1.06;
     letter-spacing: -0.022em;
   }
   @media (min-width: 768px) {
@@ -610,9 +613,10 @@
     }
   }
   .t-h1 {
-    font-family: var(--font-serif);
-    font-size: 2.125rem; /* 34px mobile */
-    line-height: 1.08;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 2rem; /* 32px mobile — Builder/anchor sections (within 30–34 band) */
+    line-height: 1.1;
     letter-spacing: -0.018em;
   }
   @media (min-width: 768px) {
@@ -622,9 +626,13 @@
     }
   }
   .t-h2 {
-    font-family: var(--font-serif);
-    font-size: 1.625rem; /* 26px mobile */
-    line-height: 1.15;
+    font-family: var(--font-display);
+    font-weight: 700;
+    /* Mobile bumped 26 → 28.5px so other section titles read clearly as
+       section headings without competing with hero/Builder. Sits in the
+       28–32 band defined by the proportional pass. */
+    font-size: 1.78rem; /* ~28.5px mobile */
+    line-height: 1.18;
     letter-spacing: -0.014em;
   }
   @media (min-width: 768px) {
@@ -634,9 +642,12 @@
     }
   }
   .t-h3 {
-    font-family: var(--font-serif);
-    font-size: 1.375rem; /* 22px mobile */
-    line-height: 1.2;
+    font-family: var(--font-display);
+    font-weight: 600;
+    /* Card heading: 22 → 23.5px mobile so cards have a clear secondary
+       hierarchy under section titles, still inside 22–26 band. */
+    font-size: 1.47rem; /* ~23.5px mobile */
+    line-height: 1.22;
     letter-spacing: -0.012em;
   }
   @media (min-width: 768px) {
