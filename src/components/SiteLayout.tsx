@@ -227,6 +227,22 @@ export function SiteLayout({ children }: { children: ReactNode }) {
     return () => window.clearTimeout(timer);
   }, []);
 
+  // Reveal-telemetry entry-mode tracking: ensure the singleton exists at
+  // mount (so the initial entry mode is captured before any sweep runs),
+  // and flip `entry` to "hash" whenever the URL hash changes after mount.
+  // This way reveals triggered by clicking an in-page anchor mid-session
+  // are attributed to `hash` instead of leaking into `cold` totals.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const telemetry = getRevealTelemetry();
+    const onHashChange = () => {
+      telemetry.entry = "hash";
+      telemetry.hash = window.location.hash || "";
+    };
+    window.addEventListener("hashchange", onHashChange);
+    return () => window.removeEventListener("hashchange", onHashChange);
+  }, []);
+
   // Smooth anchor scroll with navbar offset — covers every <a href="#…">
   // on every page so jumps land cleanly below the fixed header rather
   // than getting clipped under it. Reduced-motion safe.
