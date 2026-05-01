@@ -423,27 +423,16 @@ const HEADLINES: HeadlineSpec[] = [
     pattern: /<p\s+data-hero-field="microcopy"\s+className="([^"]+)"/,
   },
 
-  // Multi-day page hero (Typography v3 — Montserrat font-display, not serif)
-  {
-    page: "multi-day",
-    role: "hero h1",
-    file: "src/routes/multi-day.tsx",
-    pattern: /<h1 className="(font-display font-bold text-\[2\.4rem\][^"]+)">\s*\n\s*More than one day/,
-  },
+  // Multi-day page hero — now uses the canonical <SectionTitle as="h1" size="anchor">
+  // primitive (Eyebrow + SectionTitle + CtaButton consolidation). The hero
+  // copy is asserted; class strings come from SectionTitle so they're
+  // covered by the SectionTitle unit contract instead of a substring match.
   {
     page: "multi-day",
     role: "hero subhead",
     file: "src/routes/multi-day.tsx",
     pattern:
       /<p className="(mt-6 text-\[1rem\][^"]+)">\s*\n\s*Build Portugal across regions/,
-  },
-
-  // Proposals page hero (Typography v3 — Montserrat font-display, not serif)
-  {
-    page: "proposals",
-    role: "hero h1",
-    file: "src/routes/proposals.tsx",
-    pattern: /<h1 className="(font-display font-bold text-\[2\.4rem\][^"]+)">\s*\n\s*Moments worth/,
   },
   {
     page: "proposals",
