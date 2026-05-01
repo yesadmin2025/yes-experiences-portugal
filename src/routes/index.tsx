@@ -484,14 +484,14 @@ function HomePage() {
 
             <h1
               data-hero-field="headlineLine1 headlineLine2"
-              className="hero-h1 serif mt-5 md:mt-8 text-[2.05rem] sm:text-[2.7rem] md:text-[4rem] lg:text-[4.6rem] leading-[1.12] sm:leading-[1.06] md:leading-[1.02] tracking-[-0.018em] text-[color:var(--ivory)] text-left opacity-0 animate-[heroFade_0.9s_ease-out_0.25s_forwards] [text-shadow:0_2px_18px_rgba(0,0,0,0.35)]"
+              className="hero-h1 serif mt-5 md:mt-8 text-[2.05rem] sm:text-[2.7rem] md:text-[4rem] lg:text-[4.6rem] leading-[1.1] sm:leading-[1.04] md:leading-[1.0] tracking-[-0.02em] text-[color:var(--ivory)] text-left opacity-0 animate-[heroFade_0.9s_ease-out_0.25s_forwards] [text-shadow:0_2px_18px_rgba(0,0,0,0.35)]"
             >
-              <span data-hero-field="headlineLine1" className="block font-medium">
+              <span data-hero-field="headlineLine1" className="block font-medium tracking-[-0.018em]">
                 {HERO_COPY.headlineLine1}
               </span>
               <span
                 data-hero-field="headlineLine2"
-                className="block italic font-normal text-[color:var(--gold-soft)] mt-0.5 md:mt-1 text-[2.05rem] sm:text-[2.7rem] md:text-[4rem] lg:text-[4.6rem] tracking-[-0.022em] leading-[1.12] sm:leading-[1.06] md:leading-[1.02]"
+                className="block italic font-normal text-[color:var(--gold-soft)] mt-1 md:mt-1.5 text-[2.05rem] sm:text-[2.7rem] md:text-[4rem] lg:text-[4.6rem] tracking-[-0.024em] leading-[1.1] sm:leading-[1.04] md:leading-[1.0]"
               >
                 {HERO_COPY.headlineLine2}
               </span>
@@ -499,7 +499,7 @@ function HomePage() {
 
             <p
               data-hero-field="subheadline"
-              className="mt-5 md:mt-7 text-[15.5px] md:text-[19px] text-[color:var(--ivory)]/92 max-w-md md:max-w-lg leading-[1.65] md:leading-[1.7] font-light text-left opacity-0 animate-[heroFade_0.9s_ease-out_0.45s_forwards] [text-shadow:0_1px_8px_rgba(0,0,0,0.3)]"
+              className="mt-5 md:mt-7 text-[15.5px] md:text-[19px] text-[color:var(--ivory)]/95 max-w-md md:max-w-lg leading-[1.6] md:leading-[1.65] font-normal text-left opacity-0 animate-[heroFade_0.9s_ease-out_0.45s_forwards] [text-shadow:0_1px_8px_rgba(0,0,0,0.3)]"
             >
               {HERO_COPY.subheadline}
             </p>
