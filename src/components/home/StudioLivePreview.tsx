@@ -196,13 +196,13 @@ export function StudioLivePreview() {
             d={ROUTE_D}
             fill="none"
             stroke="url(#slv-route)"
-            strokeOpacity="0.35"
-            strokeWidth="3.6"
+            strokeOpacity="0.45"
+            strokeWidth="3.8"
             strokeLinecap="round"
             filter="url(#slv-soft)"
             strokeDasharray={pathLen}
             strokeDashoffset={renderedActive ? 0 : pathLen}
-            style={{ transition: "stroke-dashoffset 2400ms cubic-bezier(0.22, 0.61, 0.36, 1)" }}
+            style={{ transition: "stroke-dashoffset 2520ms cubic-bezier(0.22, 0.61, 0.36, 1)" }}
           />
           {/* Sharp route line */}
           <path
@@ -210,11 +210,12 @@ export function StudioLivePreview() {
             d={ROUTE_D}
             fill="none"
             stroke="url(#slv-route)"
-            strokeWidth="1.8"
+            strokeOpacity="1"
+            strokeWidth="1.95"
             strokeLinecap="round"
             strokeDasharray={pathLen}
             strokeDashoffset={renderedActive ? 0 : pathLen}
-            style={{ transition: "stroke-dashoffset 2400ms cubic-bezier(0.22, 0.61, 0.36, 1)" }}
+            style={{ transition: "stroke-dashoffset 2520ms cubic-bezier(0.22, 0.61, 0.36, 1)" }}
           />
 
           {/* Stops */}
