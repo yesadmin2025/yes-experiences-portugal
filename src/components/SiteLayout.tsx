@@ -254,6 +254,7 @@ function getRevealTelemetry(): RevealTelemetry {
           pending: state.sectionEnter.pending,
         },
         byEntry: state.byEntry,
+        timings: state.timings,
       };
       // eslint-disable-next-line no-console
       console.groupCollapsed(
@@ -273,6 +274,8 @@ function getRevealTelemetry(): RevealTelemetry {
       });
       // eslint-disable-next-line no-console
       console.table(rows);
+      // eslint-disable-next-line no-console
+      console.table(state.timings);
       // eslint-disable-next-line no-console
       console.groupEnd();
       return snapshot;
