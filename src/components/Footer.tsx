@@ -23,8 +23,18 @@ const SOCIALS = [
 
 export function Footer() {
   return (
-    <footer className="bg-[color:var(--charcoal-deep)] text-[color:var(--ivory)]">
-      <div className="container-x py-20 md:py-24">
+    <footer className="relative bg-[color:var(--charcoal)] text-[color:var(--ivory)]">
+      {/* Thin champagne-gold top hairline — visual handoff from the
+          ivory final-CTA section into the footer. Decorative. */}
+      <div
+        aria-hidden="true"
+        className="absolute top-0 inset-x-0 h-px"
+        style={{
+          background:
+            "linear-gradient(90deg, transparent, color-mix(in oklab, var(--gold) 70%, transparent) 50%, transparent)",
+        }}
+      />
+      <div className="container-x py-14 md:py-16">
         {/* Brand row — logo + tagline. Sits above the column grid so
             the 4 nav columns can breathe at desktop. */}
         <div className="max-w-3xl">
