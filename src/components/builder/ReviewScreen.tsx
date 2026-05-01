@@ -3,6 +3,8 @@ import { fmtMinutes, type RouteUI, type RoutedStopUI, builderWaHref } from "./ty
 import type { BuilderImageRef } from "@/hooks/useBuilderImages";
 import { BuilderImage } from "./BuilderImage";
 import { CtaButton } from "@/components/ui/CtaButton";
+import { ReferenceUploader, type ToneResult } from "./ReferenceUploader";
+import { useBuilderSessionId } from "@/hooks/useBuilderSessionId";
 
 interface Props {
   route: RouteUI;
@@ -12,6 +14,7 @@ interface Props {
   reviewThumbs?: BuilderImageRef[];
   onConfirm: () => void;
   onBack: () => void;
+  onToneReady?: (tone: ToneResult) => void;
 }
 
 const TRUST_POINTS = [
@@ -40,9 +43,10 @@ const FLEXIBLE = [
  * one clean editorial layout, surfaces trust, and offers a final call to
  * either confirm (Stripe) or talk to a local first (WhatsApp).
  */
-export function ReviewScreen({ route, stops, guests, narrative, reviewThumbs, onConfirm, onBack }: Props) {
+export function ReviewScreen({ route, stops, guests, narrative, reviewThumbs, onConfirm, onBack, onToneReady }: Props) {
   const thumbs = (reviewThumbs ?? []).slice(0, 4);
   const totalEur = route.pricePerPersonEur * guests;
+  const sessionId = useBuilderSessionId();
 
   return (
     <section className="bg-[color:var(--ivory)] text-[color:var(--charcoal)]">
@@ -105,6 +109,13 @@ export function ReviewScreen({ route, stops, guests, narrative, reviewThumbs, on
               <Block title="What's included" items={INCLUDED} />
               <Block title="What can still change" items={FLEXIBLE} muted />
             </div>
+
+            {sessionId && (
+              <ReferenceUploader
+                sessionId={sessionId}
+                onToneReady={onToneReady}
+              />
+            )}
           </div>
 
           {/* Right: trust + price + CTAs */}

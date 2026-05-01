@@ -179,6 +179,51 @@ export type Database = {
         }
         Relationships: []
       }
+      builder_reference_uploads: {
+        Row: {
+          analyzed_at: string | null
+          created_at: string
+          expires_at: string
+          file_name: string
+          file_path: string
+          file_size_bytes: number
+          file_url: string
+          id: string
+          mime_type: string
+          session_id: string
+          tone_keywords: string[]
+          tone_summary: string | null
+        }
+        Insert: {
+          analyzed_at?: string | null
+          created_at?: string
+          expires_at?: string
+          file_name: string
+          file_path: string
+          file_size_bytes: number
+          file_url: string
+          id?: string
+          mime_type: string
+          session_id: string
+          tone_keywords?: string[]
+          tone_summary?: string | null
+        }
+        Update: {
+          analyzed_at?: string | null
+          created_at?: string
+          expires_at?: string
+          file_name?: string
+          file_path?: string
+          file_size_bytes?: number
+          file_url?: string
+          id?: string
+          mime_type?: string
+          session_id?: string
+          tone_keywords?: string[]
+          tone_summary?: string | null
+        }
+        Relationships: []
+      }
       builder_regions: {
         Row: {
           blurb: string | null
