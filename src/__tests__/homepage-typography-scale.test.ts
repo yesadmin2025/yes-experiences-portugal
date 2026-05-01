@@ -109,8 +109,13 @@ describe("Homepage eyebrow labels — minimum legibility", () => {
 
       const px = parseFloat(m[1]);
       const tracking = parseFloat(m[2]);
-      // Skip labels with a documented xs:/sm: ramp (hero eyebrow).
-      const hasRamp = fragment.includes("xs:text-[") || fragment.includes("sm:text-[");
+      // Skip labels with a documented xs:/sm: ramp (hero eyebrow,
+      // "what changes" reveal label).
+      const hasRamp =
+        fragment.includes("xs:text-[") ||
+        fragment.includes("sm:text-[") ||
+        fragment.includes("xs:tracking-[") ||
+        fragment.includes("sm:tracking-[");
       if (hasRamp) continue;
 
       eyebrowCount++;
