@@ -700,7 +700,7 @@ function HomePage() {
           FAQ closer, and the Final CTA. */}
       <section
         id="builder"
-        className="py-20 md:section-y-lg bg-[color:var(--sand)] border-b border-[color:var(--border)] scroll-mt-24 md:scroll-mt-28"
+        className="he-section-rule reveal py-20 md:section-y-lg bg-[color:var(--sand)] border-b border-[color:var(--border)] scroll-mt-24 md:scroll-mt-28"
         aria-labelledby="studio-title"
       >
         <div className="container-x">
@@ -844,7 +844,7 @@ function HomePage() {
           away" reassurance. */}
       <section
         id="why-yes"
-        className="section-enter section-y bg-[color:var(--ivory)] border-b border-[color:var(--border)] scroll-mt-24 md:scroll-mt-28"
+        className="he-section-rule section-enter section-y bg-[color:var(--ivory)] border-b border-[color:var(--border)] scroll-mt-24 md:scroll-mt-28"
         aria-labelledby="why-yes-title"
       >
         <div className="container-x">
@@ -953,7 +953,7 @@ function HomePage() {
           repeated labels. */}
       <section
         id="signatures"
-        className="section-enter section-y bg-[color:var(--ivory)] border-b border-[color:var(--border)] scroll-mt-24 md:scroll-mt-28"
+        className="he-section-rule section-enter section-y bg-[color:var(--ivory)] border-b border-[color:var(--border)] scroll-mt-24 md:scroll-mt-28"
         aria-labelledby="signatures-title"
       >
         <div className="container-x">
@@ -1120,7 +1120,7 @@ function HomePage() {
           occasion" path lives together with clear hierarchy. */}
       <section
         id="occasions"
-        className="section-enter section-y bg-[color:var(--sand)] border-b border-[color:var(--border)] scroll-mt-24 md:scroll-mt-28"
+        className="he-section-rule section-enter section-y bg-[color:var(--sand)] border-b border-[color:var(--border)] scroll-mt-24 md:scroll-mt-28"
         aria-labelledby="groups-title"
       >
         <div className="container-x">

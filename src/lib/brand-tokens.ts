@@ -143,4 +143,7 @@ export const BRAND_HEX_EXEMPT_PATH_PREFIXES = [
   // Brand QA reference page — intentionally hard-codes the approved
   // palette as the source of truth for the runtime audit script.
   "src/routes/brand-qa.tsx",
+  // Contrast regression test — locks the palette hex values so WCAG
+  // ratios can be computed without depending on a CSS parser.
+  "src/__tests__/homepage-contrast.test.ts",
 ] as const;

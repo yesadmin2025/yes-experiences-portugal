@@ -135,7 +135,7 @@ export function FAQ() {
   return (
     <section
       id="faq"
-      className="py-16 md:py-20 bg-[color:var(--ivory)]"
+      className="he-section-rule reveal py-16 md:py-20 bg-[color:var(--ivory)]"
       aria-labelledby="faq-title"
     >
       <div className="container-x">
@@ -165,7 +165,7 @@ export function FAQ() {
               <AccordionItem
                 key={i}
                 value={`item-${i}`}
-                className="group border border-[color:var(--border)] hover:border-[color:var(--teal)]/40 bg-white/80 backdrop-blur-sm transition-colors duration-200 [&[data-state=open]]:border-[color:var(--teal)]/50 [&[data-state=open]]:shadow-[var(--shadow-card)]"
+                className="group relative border border-[color:var(--border)] hover:border-[color:var(--teal)]/40 bg-white/80 backdrop-blur-sm transition-colors duration-200 [&[data-state=open]]:border-[color:var(--teal)]/55 [&[data-state=open]]:shadow-[var(--shadow-card)] [&[data-state=open]]:before:content-[''] [&[data-state=open]]:before:absolute [&[data-state=open]]:before:left-0 [&[data-state=open]]:before:top-3 [&[data-state=open]]:before:bottom-3 [&[data-state=open]]:before:w-[2px] [&[data-state=open]]:before:bg-[color:var(--gold)]"
               >
                 <AccordionTrigger className="px-5 md:px-6 py-4 md:py-5 text-left text-[15px] md:text-[17px] serif text-[color:var(--charcoal)] hover:no-underline hover:text-[color:var(--teal)] transition-colors duration-200 [&[data-state=open]]:text-[color:var(--teal)]">
                   {item.q}
@@ -188,10 +188,10 @@ export function FAQ() {
           </p>
           <Link
             to="/contact"
-            className="mt-5 inline-flex items-center justify-center gap-2 min-h-[48px] px-7 py-3.5 text-[12.5px] uppercase tracking-[0.18em] font-bold bg-[color:var(--teal)] text-[color:var(--ivory)] hover:bg-[color:var(--teal-2)] transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--ivory)] shadow-[0_8px_22px_-10px_rgba(41,91,97,0.55)]"
+            className="group mt-5 inline-flex items-center justify-center gap-2 min-h-[48px] px-7 py-3.5 text-[12.5px] uppercase tracking-[0.18em] font-bold bg-[color:var(--teal)] text-[color:var(--ivory)] border border-[color:color-mix(in_oklab,var(--gold)_60%,transparent)] hover:bg-[color:var(--teal-2)] hover:border-[color:color-mix(in_oklab,var(--gold)_85%,transparent)] hover:-translate-y-0.5 transition-all duration-200 ease-[cubic-bezier(0.22,0.61,0.36,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--ivory)] shadow-[0_8px_22px_-10px_rgba(41,91,97,0.55)] active:translate-y-0"
           >
             Talk to a Local
-            <ArrowRight size={14} aria-hidden="true" />
+            <ArrowRight size={14} aria-hidden="true" className="text-[color:var(--gold-soft)] transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1" />
           </Link>
           <p className="mt-4 text-[13px] italic leading-[1.55] text-[color:var(--charcoal-soft)]">
             We'll help you shape it — no pressure.
