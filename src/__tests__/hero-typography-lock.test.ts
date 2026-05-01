@@ -92,47 +92,81 @@ function readDecl(
 }
 
 /**
- * Extract a CSS rule body for `.hero-cta-button` (only the bare
- * selector, not the `.hero-cta-button.cta-*` compound rules). If
- * `inMediaMin` is given, restricts the search to inside an
- * `@media (min-width: <px>px)` block.
+ * Find an `@media (min-width: <px>px) { ... }` block via brace
+ * counting (regex can't reliably balance nested rules).
+ */
+function findMediaBlock(minWidthPx: number): string {
+  const opener = new RegExp(
+    `@media\\s*\\(\\s*min-width:\\s*${minWidthPx}px\\s*\\)\\s*\\{`,
+  );
+  const m = stylesSrc.match(opener);
+  if (!m || m.index == null) {
+    throw new Error(
+      `@media (min-width: ${minWidthPx}px) block not found`,
+    );
+  }
+  // Start counting from the `{` of the @media rule.
+  const start = m.index + m[0].length;
+  let depth = 1;
+  let i = start;
+  while (i < stylesSrc.length && depth > 0) {
+    const ch = stylesSrc[i];
+    if (ch === "{") depth++;
+    else if (ch === "}") depth--;
+    if (depth === 0) return stylesSrc.slice(start, i);
+    i++;
+  }
+  throw new Error(
+    `@media (min-width: ${minWidthPx}px) block is unbalanced`,
+  );
+}
+
+/**
+ * Extract the body of a `.hero-cta-button { ... }` rule (only the
+ * bare selector, not `.hero-cta-button.cta-*`). Optionally restricts
+ * the search to inside a given `@media (min-width: <px>px)` block.
  */
 function extractHeroCtaRule(inMediaMin?: number): string {
-  // The bare selector: `.hero-cta-button {` with NO `.` following the
-  // class name. This excludes `.hero-cta-button.cta-secondary-dark`.
-  const ruleRe = /\.hero-cta-button\s*\{([^}]+)\}/g;
+  const scope =
+    inMediaMin == null ? stylesSrc : findMediaBlock(inMediaMin);
 
-  let scope = stylesSrc;
-  if (inMediaMin != null) {
-    const mediaRe = new RegExp(
-      `@media\\s*\\(\\s*min-width:\\s*${inMediaMin}px\\s*\\)\\s*\\{([\\s\\S]*?)\\n\\s*\\}\\s*(?=\\n|$)`,
-    );
-    const mediaBlock = stylesSrc.match(mediaRe);
-    if (!mediaBlock) {
-      throw new Error(`@media (min-width: ${inMediaMin}px) block not found`);
-    }
-    scope = mediaBlock[1];
-  }
-
-  // Walk all `.hero-cta-button { ... }` matches and pick the first one
-  // where the character right before the `{` is whitespace (not `.`),
-  // which means the bare class — not a compound selector.
+  // Walk every `.hero-cta-button` occurrence and pick the first one
+  // that is the BARE class — i.e. immediately followed by whitespace
+  // and `{`, never `.` or `>` (which would be a compound selector).
+  const re = /\.hero-cta-button(?=[\s{])/g;
   let m: RegExpExecArray | null;
-  while ((m = ruleRe.exec(scope)) !== null) {
-    const before = scope.slice(Math.max(0, m.index - 1), m.index);
-    // m.index points at the `.` — the char before that should be whitespace
-    // or start-of-block, never `.` (that would be a compound selector).
-    if (before === "" || /\s/.test(before)) {
-      // Also ensure the char IMMEDIATELY after `.hero-cta-button` is `{`
-      // or whitespace — not `.` (compound) or `>` etc.
-      const after = m[0].slice(".hero-cta-button".length, ".hero-cta-button".length + 1);
-      if (/\s|\{/.test(after)) {
-        return m[1];
-      }
+  while ((m = re.exec(scope)) !== null) {
+    // Must NOT be preceded by another class/word char (would mean
+    // we're inside a compound selector like .hero-cta-button.cta-primary
+    // when read backwards from a different starting class).
+    const before = scope[m.index - 1] ?? "";
+    if (/[A-Za-z0-9_\-]/.test(before)) continue;
+
+    // Find the next `{` and matching `}` — bracket count for safety.
+    const openIdx = scope.indexOf("{", m.index);
+    if (openIdx === -1) continue;
+
+    // The chars between `.hero-cta-button` and `{` must contain no
+    // other class continuation (no `.`).
+    const between = scope.slice(
+      m.index + ".hero-cta-button".length,
+      openIdx,
+    );
+    if (/\./.test(between)) continue;
+
+    let depth = 1;
+    let i = openIdx + 1;
+    while (i < scope.length && depth > 0) {
+      if (scope[i] === "{") depth++;
+      else if (scope[i] === "}") depth--;
+      if (depth === 0) return scope.slice(openIdx + 1, i);
+      i++;
     }
   }
   throw new Error(
-    `Bare .hero-cta-button rule not found${inMediaMin != null ? ` inside @media min-width:${inMediaMin}px` : ""}`,
+    `Bare .hero-cta-button rule not found${
+      inMediaMin != null ? ` inside @media min-width:${inMediaMin}px` : ""
+    }`,
   );
 }
 
