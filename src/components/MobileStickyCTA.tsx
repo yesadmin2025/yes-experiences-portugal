@@ -286,7 +286,8 @@ export function MobileStickyCTA() {
               </span>
               <ArrowRight
                 size={14}
-                className="text-[color:var(--gold-soft)] group-hover:text-[color:var(--gold)] group-hover:translate-x-0.5 transition-[color,transform]"
+                aria-hidden="true"
+                className="bg-[color:var(--teal)]/0 text-[color:var(--gold-soft)] group-hover:text-[color:var(--gold)] group-hover:translate-x-0.5 transition-[color,transform]"
               />
             </Link>
           </div>
