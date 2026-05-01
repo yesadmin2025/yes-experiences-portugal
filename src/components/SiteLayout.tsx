@@ -666,6 +666,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
           with sighted users who see the post-hero CTA surfaces appear. */}
       <PostHeroAnnouncer />
       <QaPanel />
+      <MotionQaPanel />
     </div>
   );
 }
