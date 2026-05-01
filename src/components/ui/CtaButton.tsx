@@ -45,7 +45,13 @@ type AnchorCtaProps = CommonProps &
     to?: never;
   };
 
-export type CtaButtonProps = LinkCtaProps | AnchorCtaProps;
+type ButtonCtaProps = CommonProps &
+  Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "children" | "className"> & {
+    href?: never;
+    to?: never;
+  };
+
+export type CtaButtonProps = LinkCtaProps | AnchorCtaProps | ButtonCtaProps;
 
 const sizeClasses: Record<Size, string> = {
   md:
@@ -55,7 +61,7 @@ const sizeClasses: Record<Size, string> = {
 };
 
 const baseClasses =
-  "he-glow he-sheen group inline-flex items-center justify-center gap-2.5 font-sans uppercase font-bold rounded-[2px] transition-all duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] hover:-translate-y-[1px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--ivory)]";
+  "he-glow he-sheen group inline-flex items-center justify-center gap-2.5 font-sans uppercase font-bold rounded-[2px] transition-all duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] hover:-translate-y-[1px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--ivory)] disabled:pointer-events-none disabled:opacity-40";
 
 const variantClasses: Record<Variant, string> = {
   primary:
@@ -141,11 +147,20 @@ export function CtaButton(props: CtaButtonProps) {
     );
   }
 
-  const { to, variant: _v, size: _s, icon: _i, iconLeading: _il, className: _c, children: _ch, ...rest } = props as LinkCtaProps;
+  if ("to" in props && props.to !== undefined) {
+    const { to, variant: _v, size: _s, icon: _i, iconLeading: _il, className: _c, children: _ch, ...rest } = props;
+    return (
+      <Link to={to} className={sharedClassName} style={sharedStyle} {...(rest as object)}>
+        {content}
+      </Link>
+    );
+  }
+
+  const { variant: _v, size: _s, icon: _i, iconLeading: _il, className: _c, children: _ch, ...rest } = props;
   return (
-    <Link to={to} className={sharedClassName} style={sharedStyle} {...(rest as object)}>
+    <button className={sharedClassName} style={sharedStyle} {...rest}>
       {content}
-    </Link>
+    </button>
   );
 }
 
