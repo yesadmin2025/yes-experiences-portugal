@@ -1204,20 +1204,20 @@ function HomePage() {
                         "var(--charcoal)";
                       return (
                         <>
-                          <span className="inline-flex items-center gap-2.5 text-[10.5px] md:text-[10.5px] uppercase tracking-[0.28em] md:tracking-[0.32em] font-bold text-[color:var(--charcoal)]">
+                          <span className="inline-flex items-center gap-2.5 text-[10.5px] md:text-[10.5px] uppercase tracking-[0.24em] md:tracking-[0.3em] font-semibold text-[color:var(--charcoal-soft)]">
                             <span aria-hidden="true" className="inline-block h-[6px] w-[6px] rounded-full" style={{ backgroundColor: accent }} />
                             {m.eyebrow}
                           </span>
-                          <h3 className="serif mt-4 md:mt-3 text-[2.2rem] md:text-[2.85rem] leading-[1.04] md:leading-[1.04] tracking-[-0.02em] text-[color:var(--charcoal)] font-semibold">
+                          <h3 className="serif mt-3 text-[1.75rem] md:text-[2.4rem] leading-[1.12] md:leading-[1.06] tracking-[-0.014em] text-[color:var(--charcoal)] font-medium">
                             {m.title}
                           </h3>
-                          <p className="mt-5 md:mt-4 text-[16px] md:text-[16.5px] leading-[1.65] md:leading-[1.7] text-[color:var(--charcoal)]">
+                          <p className="mt-4 md:mt-4 text-[14.5px] md:text-[16px] leading-[1.65] md:leading-[1.7] text-[color:var(--charcoal-soft)]">
                             {m.line}
                           </p>
-                          <p className="he-pull mt-6 md:mt-5 serif italic text-[16.5px] md:text-[17px] leading-[1.45] text-[color:var(--charcoal)] font-semibold" style={{ borderLeftColor: accent }}>
+                          <p className="he-pull mt-5 md:mt-5 serif italic text-[15px] md:text-[16.5px] leading-[1.45] text-[color:var(--charcoal)] font-normal" style={{ borderLeftColor: accent }}>
                             {m.pull}
                           </p>
-                          <p className="mt-6 md:mt-5 inline-flex items-center gap-2.5 text-[10.5px] md:text-[10.5px] uppercase tracking-[0.24em] md:tracking-[0.28em] font-bold text-[color:var(--charcoal)]">
+                          <p className="mt-5 md:mt-5 inline-flex items-center gap-2.5 text-[10.5px] md:text-[10.5px] uppercase tracking-[0.22em] md:tracking-[0.26em] font-semibold text-[color:var(--charcoal-soft)]">
                             <span aria-hidden="true" className="inline-block h-[6px] w-[6px] rounded-full" style={{ backgroundColor: accent }} />
                             {m.detail}
                           </p>
