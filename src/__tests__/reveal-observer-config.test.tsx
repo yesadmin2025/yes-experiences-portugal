@@ -972,5 +972,64 @@ describe("FakeIO.kind — auto-classification on first observe", () => {
     expect(FakeIO.allOf("section-enter")).toEqual([b]);
     expect(FakeIO.allOf("other")).toEqual([c]);
   });
+
+  it("classifies a larger mix of observers correctly from the FIRST observe of each", () => {
+    FakeIO.reset();
+
+    function makeElLocal(...classes: string[]): HTMLElement {
+      const el = document.createElement("div");
+      for (const c of classes) el.classList.add(c);
+      return el;
+    }
+
+    // 6 observers, each gets a distinct first-observed element so that the
+    // `kind` is locked in by the very first call to observe().
+    const ioReveal = new FakeIO(() => {});
+    const ioStagger = new FakeIO(() => {});
+    const ioSection = new FakeIO(() => {});
+    const ioOtherA = new FakeIO(() => {});
+    const ioOtherB = new FakeIO(() => {});
+    const ioRevealCombo = new FakeIO(() => {});
+
+    // Drive each observer with a deliberately mixed sequence:
+    // first observe sets the kind; subsequent observes must NOT change it.
+    ioReveal.observe(makeElLocal("reveal"));
+    ioReveal.observe(makeElLocal("section-enter")); // must not flip
+    ioReveal.observe(makeElLocal("not-tracked"));
+
+    ioStagger.observe(makeElLocal("reveal-stagger"));
+    ioStagger.observe(makeElLocal("section-enter")); // must not flip
+    ioStagger.observe(makeElLocal("reveal"));
+
+    ioSection.observe(makeElLocal("section-enter"));
+    ioSection.observe(makeElLocal("reveal")); // must not flip
+    ioSection.observe(makeElLocal("reveal-stagger"));
+
+    ioOtherA.observe(makeElLocal("not-tracked"));
+    ioOtherA.observe(makeElLocal("foo", "bar"));
+
+    ioOtherB.observe(makeElLocal()); // no classes
+    ioOtherB.observe(makeElLocal("baz"));
+
+    // First observe is reveal-stagger + reveal together → still "reveal".
+    ioRevealCombo.observe(makeElLocal("reveal", "reveal-stagger"));
+    ioRevealCombo.observe(makeElLocal("section-enter"));
+
+    // Per-instance kind assertions
+    expect(ioReveal.kind).toBe("reveal");
+    expect(ioStagger.kind).toBe("reveal");
+    expect(ioSection.kind).toBe("section-enter");
+    expect(ioOtherA.kind).toBe("other");
+    expect(ioOtherB.kind).toBe("other");
+    expect(ioRevealCombo.kind).toBe("reveal");
+
+    // Partitioning across the whole set
+    expect(FakeIO.allOf("reveal")).toEqual([ioReveal, ioStagger, ioRevealCombo]);
+    expect(FakeIO.allOf("section-enter")).toEqual([ioSection]);
+    expect(FakeIO.allOf("other")).toEqual([ioOtherA, ioOtherB]);
+
+    // Total instance count is what we created — no phantom observers.
+    expect(FakeIO.instances).toHaveLength(6);
+  });
 });
 
