@@ -516,14 +516,42 @@ export function SiteLayout({ children }: { children: ReactNode }) {
       if (revealDebug) flashDebug(target, `reveal·${source}`);
     };
 
-    // Mobile-aware IO config: on narrow viewports tall sections take up
-    // most of the screen, so a tight threshold (0.08) means they only
-    // fire after 8% of a 1000px section is on-screen — feels late.
-    // Lower threshold + larger negative bottom margin on mobile so reveals
-    // fire as soon as the top edge starts to appear.
+    // Mobile-aware IO config: on narrow viewports we want reveals to
+    // trigger slightly earlier so the section is still inside the fold
+    // when motion starts (avoids "animation completed before visible"
+    // on fast Occasions / long-section scrolls). Reduced from -18% to
+    // -10% on mobile after motion-QA showed Occasions occasionally
+    // catching the IO catch-up branch (bottom <= 0) on 393px scrolls.
     const ioOptions: IntersectionObserverInit = isMobile
-      ? { threshold: 0.01, rootMargin: "0px 0px -18% 0px" }
-      : { threshold: 0.04, rootMargin: "0px 0px -14% 0px" };
+      ? { threshold: 0.01, rootMargin: "0px 0px -10% 0px" }
+      : { threshold: 0.04, rootMargin: "0px 0px -12% 0px" };
+
+    // Some `.reveal-stagger` items live inside a horizontal scroller
+    // (e.g. mobile Signature carousel: 4 cards at 84vw each, only the
+    // first card sits inside the visible horizontal viewport). The
+    // default IO root is the document viewport, which uses BOTH axes —
+    // so cards that are vertically in view but horizontally off-screen
+    // never satisfy `isIntersecting` until the user swipes the strip.
+    // We bridge this by observing the carousel parent itself: when its
+    // vertical band enters the viewport, we reveal every stagger child
+    // at once (the existing per-child stagger delay still produces the
+    // sequenced fade). This keeps motion-QA's "hidden" count at 0 even
+    // for users who only scroll vertically.
+    const horizontalParents = new Map<HTMLElement, HTMLElement[]>();
+    els.forEach((el) => {
+      let p: HTMLElement | null = el.parentElement;
+      while (p && p !== document.body) {
+        const cs = window.getComputedStyle(p);
+        const ox = cs.overflowX;
+        if ((ox === "auto" || ox === "scroll") && p.scrollWidth > p.clientWidth + 1) {
+          const arr = horizontalParents.get(p) ?? [];
+          arr.push(el);
+          horizontalParents.set(p, arr);
+          break;
+        }
+        p = p.parentElement;
+      }
+    });
 
     const io = new IntersectionObserver((entries) => {
       telemetry.markIoFired();
@@ -536,6 +564,27 @@ export function SiteLayout({ children }: { children: ReactNode }) {
     }, ioOptions);
 
     els.forEach((el) => io.observe(el));
+
+    // Vertical-band observer for horizontal-carousel children. Uses
+    // the SAME rootMargin so timing matches the rest of the page. When
+    // the parent strip enters the vertical viewport, every off-screen
+    // child is revealed via the standard `revealEl` path (so stagger
+    // delays still apply and telemetry attributes the source as IO).
+    if (horizontalParents.size > 0) {
+      const carouselIo = new IntersectionObserver((entries) => {
+        telemetry.markIoFired();
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting && entry.boundingClientRect.bottom > 0) return;
+          const children = horizontalParents.get(entry.target as HTMLElement) ?? [];
+          children.forEach((child) => {
+            revealEl(child, "io");
+            io.unobserve(child);
+          });
+          carouselIo.unobserve(entry.target);
+        });
+      }, ioOptions);
+      horizontalParents.forEach((_children, parent) => carouselIo.observe(parent));
+    }
 
     if (revealDebug) {
       // eslint-disable-next-line no-console
