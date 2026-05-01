@@ -12,6 +12,138 @@ import {
   reportScrollDebug,
 } from "@/lib/scroll-debug";
 
+// Reveal telemetry: tracks how every `.reveal` / `.reveal-stagger` /
+// `.section-enter` element actually gets shown — by IntersectionObserver,
+// by the initial mount sweep, or by the delayed (250ms) safety-net sweep.
+// Helps diagnose "section stays invisible during fast mobile scroll".
+// • If `pending > 0` after ~1s → IO genuinely missed an element.
+// • If `sweepDelayed` is large on mobile → IO fires too late; tune
+//   rootMargin/threshold.
+// • If `sweepInitial` dominates → most reveals were already on-screen at
+//   mount (deep-link, refresh mid-page, or fast fling before first frame).
+// Counters are always collected (cheap); console logging only happens
+// when ?scroll-debug is active. Inspect via `window.__yesRevealTelemetry.report()`.
+type RevealSource = "io" | "sweepInitial" | "sweepDelayed";
+type RevealBucket = {
+  total: number;
+  io: number;
+  sweepInitial: number;
+  sweepDelayed: number;
+  readonly pending: number;
+};
+type RevealTelemetry = {
+  reveal: RevealBucket;
+  sectionEnter: RevealBucket;
+  log: (
+    bucket: "reveal" | "sectionEnter",
+    source: RevealSource,
+    selector?: string,
+  ) => void;
+  setTotal: (bucket: "reveal" | "sectionEnter", total: number) => void;
+  report: () => unknown;
+  reset: () => void;
+};
+
+declare global {
+  interface Window {
+    __yesRevealTelemetry?: RevealTelemetry;
+  }
+}
+
+function makeBucket(): RevealBucket {
+  return {
+    total: 0,
+    io: 0,
+    sweepInitial: 0,
+    sweepDelayed: 0,
+    get pending() {
+      return Math.max(0, this.total - this.io - this.sweepInitial - this.sweepDelayed);
+    },
+  };
+}
+
+function getRevealTelemetry(): RevealTelemetry {
+  if (typeof window === "undefined") {
+    // SSR: return a no-op shim so call sites stay simple.
+    return {
+      reveal: makeBucket(),
+      sectionEnter: makeBucket(),
+      log: () => {},
+      setTotal: () => {},
+      report: () => null,
+      reset: () => {},
+    };
+  }
+  if (window.__yesRevealTelemetry) return window.__yesRevealTelemetry;
+
+  const debug = getScrollDebugFlags(window).enabled;
+  const state: RevealTelemetry = {
+    reveal: makeBucket(),
+    sectionEnter: makeBucket(),
+    log(bucket, source, selector) {
+      const b = state[bucket];
+      b[source] += 1;
+      if (debug) {
+        // eslint-disable-next-line no-console
+        console.debug(
+          `[reveal-telemetry] ${bucket} via ${source}`,
+          selector ?? "",
+          {
+            total: b.total,
+            io: b.io,
+            sweepInitial: b.sweepInitial,
+            sweepDelayed: b.sweepDelayed,
+            pending: b.pending,
+          },
+        );
+      }
+    },
+    setTotal(bucket, total) {
+      state[bucket].total = total;
+    },
+    report() {
+      const snapshot = {
+        reveal: {
+          total: state.reveal.total,
+          io: state.reveal.io,
+          sweepInitial: state.reveal.sweepInitial,
+          sweepDelayed: state.reveal.sweepDelayed,
+          pending: state.reveal.pending,
+        },
+        sectionEnter: {
+          total: state.sectionEnter.total,
+          io: state.sectionEnter.io,
+          sweepInitial: state.sectionEnter.sweepInitial,
+          sweepDelayed: state.sectionEnter.sweepDelayed,
+          pending: state.sectionEnter.pending,
+        },
+      };
+      // eslint-disable-next-line no-console
+      console.table([
+        { bucket: "reveal", ...snapshot.reveal },
+        { bucket: "sectionEnter", ...snapshot.sectionEnter },
+      ]);
+      return snapshot;
+    },
+    reset() {
+      state.reveal = makeBucket();
+      state.sectionEnter = makeBucket();
+    },
+  };
+  window.__yesRevealTelemetry = state;
+  return state;
+}
+
+function describeReveal(el: Element): string {
+  const tag = el.tagName.toLowerCase();
+  const id = el.id ? `#${el.id}` : "";
+  const cls =
+    typeof el.className === "string"
+      ? el.className.split(/\s+/).filter(Boolean).slice(0, 2).map((c) => `.${c}`).join("")
+      : "";
+  return `${tag}${id}${cls}`;
+}
+
 export function SiteLayout({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (typeof window === "undefined") return;
