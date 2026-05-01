@@ -552,8 +552,20 @@ export function SiteLayout({ children }: { children: ReactNode }) {
     sweep("sweepInitial");
     const t = window.setTimeout(() => sweep("sweepDelayed"), 600);
 
+    // FAIL-SAFE (1200ms): force any still-pending section-enter visible
+    // so content never stays at opacity: 0 if IO failed to fire.
+    const failSafe = window.setTimeout(() => {
+      els.forEach((el) => {
+        if (el.classList.contains("is-visible")) return;
+        el.style.transition = "none";
+        el.classList.add("is-visible");
+        telemetry.log("sectionEnter", "sweepDelayed", describeReveal(el));
+      });
+    }, 1200);
+
     return () => {
       window.clearTimeout(t);
+      window.clearTimeout(failSafe);
       io.disconnect();
     };
   }, []);
