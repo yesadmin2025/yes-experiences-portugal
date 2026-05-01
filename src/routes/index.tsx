@@ -414,6 +414,7 @@ function HomePage() {
   // stays "everyday", never woozy.
   useEffect(() => {
     if (typeof window === "undefined") return;
+    if (window.innerWidth < 768) return;
     if (getScrollDebugFlags().disableMobileStudioMotion && window.innerWidth < 768) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
@@ -435,8 +436,8 @@ function HomePage() {
         // Normalised position: -1 (above viewport) → 0 (centred) → 1 (below).
         const center = rect.top + rect.height / 2;
         const t = (center - vh / 2) / vh; // ~ -1..1 across viewport
-        // Cap travel: ±18px on phones, ±28px on larger screens.
-        const cap = window.innerWidth < 768 ? 18 : 28;
+        // Cap travel on tablet/desktop only. Mobile parallax is disabled.
+        const cap = 28;
         const y = Math.max(-cap, Math.min(cap, t * cap * -1));
         el.style.setProperty("--parallax-y", `${y.toFixed(2)}px`);
       }
