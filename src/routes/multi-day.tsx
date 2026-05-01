@@ -1,6 +1,9 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
-import { ArrowRight, MessageCircle, Compass, MapPin, Calendar } from "lucide-react";
+import { MessageCircle, Compass, MapPin, Calendar } from "lucide-react";
+import { Eyebrow } from "@/components/ui/Eyebrow";
+import { SectionTitle } from "@/components/ui/SectionTitle";
+import { CtaButton } from "@/components/ui/CtaButton";
 import imgTroiaBeach from "@/assets/tours/troia-comporta/beach.jpg";
 import imgArrabidaWineLunch from "@/assets/tours/arrabida-wine-allinclusive/lunch.jpg";
 import imgSintraEstates from "@/assets/tours/sintra-cascais/estates.jpg";
@@ -72,33 +75,28 @@ function MultiDayPage() {
       {/* Hero */}
       <section className="pt-28 pb-14 bg-[color:var(--sand)] reveal">
         <div className="container-x max-w-3xl text-center">
-          <span className="eyebrow">Multi-Day Journeys</span>
-          <h1 className="font-display font-bold text-[2.4rem] md:text-[3.6rem] leading-[1.05] mt-5 text-[color:var(--charcoal)]">
+          <Eyebrow flank>Multi-Day Journeys</Eyebrow>
+          <SectionTitle as="h1" size="anchor" spacing="loose">
             More than one day.{" "}
-            <span className="font-serif italic font-normal text-[color:var(--teal)]">
-              One coherent journey.
-            </span>
-          </h1>
+            <SectionTitle.Em>One coherent journey.</SectionTitle.Em>
+          </SectionTitle>
           <span className="gold-rule mt-6 mx-auto max-w-[80px]" aria-hidden="true" />
           <p className="mt-6 text-[1rem] md:text-[1.1rem] text-[color:var(--charcoal-soft)] leading-relaxed">
             Build Portugal across regions with realistic timing, <span className="kw">local flow</span> and
             support from people who know how each day should connect.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
-            <Link
-              to="/builder"
-              className="group inline-flex items-center justify-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] px-7 py-3.5 text-sm tracking-wide transition-all duration-200 hover:-translate-y-[2px] min-h-[44px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--teal)]"
-            >
+            <CtaButton to="/builder" variant="primary">
               Plan a Multi-Day Journey
-              <ArrowRight size={16} className="cta-arrow" />
-            </Link>
-            <Link
+            </CtaButton>
+            <CtaButton
               to="/contact"
-              className="inline-flex items-center justify-center gap-2 border border-[color:var(--charcoal)]/25 text-[color:var(--charcoal)] hover:border-[color:var(--teal)] hover:text-[color:var(--teal)] px-7 py-3.5 text-sm tracking-wide transition-colors min-h-[44px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--teal)]"
+              variant="ghost"
+              icon={null}
+              iconLeading={<MessageCircle size={14} aria-hidden="true" />}
             >
-              <MessageCircle size={16} />
               Talk to a Local
-            </Link>
+            </CtaButton>
           </div>
         </div>
       </section>
@@ -123,14 +121,11 @@ function MultiDayPage() {
                   />
                 </div>
                 <div>
-                  <div className="inline-flex items-center gap-2 text-[color:var(--gold)]">
-                    <Icon size={16} strokeWidth={1.8} />
-                    <span className="eyebrow">{b.eyebrow}</span>
-                  </div>
+                  <Eyebrow icon={<Icon strokeWidth={1.8} />}>{b.eyebrow}</Eyebrow>
                   <span className="gold-rule mt-4 max-w-[64px]" aria-hidden="true" />
-                  <h2 className="font-display font-bold text-[1.85rem] md:text-[2.35rem] leading-[1.1] mt-4 text-[color:var(--charcoal)]">
+                  <SectionTitle size="compact" spacing="loose">
                     {b.title}
-                  </h2>
+                  </SectionTitle>
                   <p className="mt-4 font-serif italic text-[1.1rem] md:text-[1.2rem] text-[color:var(--teal)] leading-snug">
                     {b.emotional}
                   </p>
