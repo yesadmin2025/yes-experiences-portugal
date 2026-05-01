@@ -923,7 +923,7 @@ function HomePage() {
               <span className="he-eyebrow-bar mb-4">Three ways in</span>
               <h2
                 id="paths-title"
-                className="serif mt-3 text-[1.85rem] md:text-[2.4rem] leading-[1.1] tracking-[-0.015em] text-[color:var(--charcoal)] font-semibold"
+                className="serif mt-3 text-[1.85rem] sm:text-[2.1rem] md:text-[2.4rem] leading-[1.12] md:leading-[1.1] tracking-[-0.015em] text-[color:var(--charcoal)] font-semibold"
               >
                 Three ways to shape your <span className="italic">Portugal.</span>
               </h2>
