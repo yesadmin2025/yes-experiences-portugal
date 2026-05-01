@@ -319,10 +319,10 @@ describe("reveal class coverage — .reveal / .reveal-stagger / .section-enter",
         expect(t.reveal.pending).toBe(2);
         expect(t.sectionEnter.pending).toBe(1);
 
-        // Phase 2 — advance past 250ms. The delayed sweep now sees
+        // Phase 2 — advance past 600ms. The delayed sweep now sees
         // "scrolled past" rects and must claim every element.
         phase = "delayed";
-        vi.advanceTimersByTime(300);
+        vi.advanceTimersByTime(700);
 
         // Class-flip side-effect must have happened on every node.
         expect(reveal.classList.contains("is-visible")).toBe(true);

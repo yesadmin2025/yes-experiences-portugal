@@ -1494,7 +1494,36 @@
   }
 }
 
-/* Hero motion neutralised (Patch 1, brand guardrails — no parallax,
+/* Hero CTA arrow — discreet pulse-shimmer that loops on the trailing
+   gold arrow of the primary CTA, drawing attention without movement
+   on the button itself. Pure opacity + filter, GPU-friendly, paused
+   under prefers-reduced-motion. */
+@keyframes heroArrowPulse {
+  0%, 100% {
+    opacity: 0.85;
+    filter: drop-shadow(0 0 0 transparent);
+    transform: translateX(0);
+  }
+  50% {
+    opacity: 1;
+    filter: drop-shadow(0 0 6px color-mix(in oklab, var(--gold) 65%, transparent));
+    transform: translateX(2px);
+  }
+}
+.hero-cta-arrow-pulse {
+  animation: heroArrowPulse 2.4s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  animation-delay: 1.6s;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-cta-arrow-pulse { animation: none !important; }
+}
+
+/* Global lucide icon emphasis — slightly heavier stroke and fuller
+   default size so the system feels less timid. Per-call sizing via
+   `size={n}` still wins (lucide sets width/height inline). */
+svg.lucide {
+  stroke-width: 2.1;
+}
    no autoplay drift). Keyframes kept as no-ops so existing
    `animate-[heroZoom...]` / `animate-[heroDrift...]` class refs in
    route files keep parsing until the per-page refactor (Patch 2)
@@ -2476,9 +2505,10 @@
      gold-deep micro-detail at 12px, vertically centered. Prevents
      ad-hoc text-[color:...] overrides at the call site. */
   .he-eyebrow-bar > svg {
-    width: 12px;
-    height: 12px;
-    color: var(--gold-deep);
+    width: 14px;
+    height: 14px;
+    color: var(--gold);
+    stroke-width: 2.25;
     flex-shrink: 0;
   }
   /* Optional flanking rule (matches the older .eyebrow style for
