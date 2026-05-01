@@ -505,7 +505,7 @@ function HomePage() {
 
             <p
               data-hero-field="subheadline"
-              className="mt-4 md:mt-7 text-[15px] md:text-[19px] text-[color:var(--ivory)] max-w-md md:max-w-lg leading-[1.55] md:leading-[1.65] font-normal text-left opacity-0 animate-[heroFade_0.9s_ease-out_0.45s_forwards] [text-shadow:0_1px_10px_rgba(0,0,0,0.45)]"
+              className="mt-4 md:mt-7 text-[15.5px] md:text-[19px] text-[color:var(--ivory)] max-w-md md:max-w-lg leading-[1.6] md:leading-[1.65] font-normal text-left opacity-0 animate-[heroFade_0.9s_ease-out_0.45s_forwards] [text-shadow:0_1px_10px_rgba(0,0,0,0.45)]"
             >
               {HERO_COPY.subheadline}
             </p>
