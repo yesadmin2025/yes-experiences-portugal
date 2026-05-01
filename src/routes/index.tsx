@@ -852,48 +852,47 @@ function HomePage() {
         aria-labelledby="why-yes-title"
       >
         <div className="container-x">
-          <div className="reveal max-w-2xl mx-auto text-center mb-12 md:mb-16">
+          <div className="reveal max-w-2xl mx-auto text-center mb-10 md:mb-14">
             <span className="he-eyebrow-bar mb-5">Why YES</span>
             <h2
               id="why-yes-title"
-              className="serif mt-3 text-[2.5rem] sm:text-[2.85rem] md:text-[4.15rem] leading-[1.02] md:leading-[1.0] tracking-[-0.02em] text-[color:var(--charcoal)] font-semibold text-balance"
+              className="serif mt-3 text-[2rem] sm:text-[2.4rem] md:text-[3.6rem] leading-[1.1] md:leading-[1.02] tracking-[-0.016em] text-[color:var(--charcoal)] font-medium text-balance"
             >
-              Portugal isn't experienced the{" "}
-              <span className="italic">same way</span> by everyone.
+              Portugal feels different to <span className="italic">everyone.</span>
             </h2>
-            <p className="mt-6 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] leading-[1.7] max-w-xl mx-auto">
-              That's why YES changed the way people <span className="kw">choose</span>, <span className="kw">shape</span> and <span className="kw">book</span> private experiences in Portugal.
+            <p className="mt-5 text-[14.5px] md:text-[16px] text-[color:var(--charcoal-soft)] leading-[1.7] max-w-xl mx-auto">
+              That's why YES lets you choose, shape and book private experiences around your <span className="kw">rhythm</span>, occasion and intention.
             </p>
-            <span aria-hidden="true" className="gold-rule mt-9 md:mt-10 mx-auto block max-w-[3.5rem]" />
+            <span aria-hidden="true" className="gold-rule mt-8 md:mt-9 mx-auto block max-w-[3rem]" />
           </div>
 
           {/* 4-card editorial grid (consolidated from 5). 2-col desktop,
               stacked mobile. Each card: number, icon, label, serif
               headline, body, strategic phrase. */}
-          <ul className="he-stagger max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6 list-none p-0">
+          <ul className="he-stagger max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5 list-none p-0">
             {[
               {
                 Icon: Feather,
                 num: "01",
                 label: "You decide",
                 title: (<>You shape the <span className="italic">story.</span></>),
-                body: (<>Choose the <span className="kw">rhythm</span>, the places, the people, the occasion and the feeling you want to take home.</>),
+                body: (<>Choose the rhythm, places and feeling you want to take home.</>),
                 pull: "Designed around you, not a template.",
               },
               {
                 Icon: Compass,
                 num: "02",
                 label: "Local from the start",
-                title: (<>Real local <span className="italic">knowledge</span> guides everything.</>),
-                body: (<>From iconic places to <span className="kw">hidden gems</span>, each route is shaped with timing, proximity and insight that only comes from living it.</>),
+                title: (<>Local <span className="italic">from the start.</span></>),
+                body: (<>Real <span className="kw">local knowledge</span> guides the route, timing and hidden details.</>),
                 pull: "Locals on the ground, not call-centres.",
               },
               {
                 Icon: Sparkles,
                 num: "03",
                 label: "Any occasion",
-                title: (<>For any <span className="italic">occasion.</span></>),
-                body: (<>Portugal can be a private day, a <span className="kw">proposal</span>, a <span className="kw">celebration</span>, a corporate moment or a full journey. The experience changes because the intention changes.</>),
+                title: (<>Any <span className="italic">occasion.</span></>),
+                body: (<>Private days, proposals, celebrations, corporate moments or full journeys.</>),
                 pull: "The intention shapes the day.",
               },
               {
@@ -901,42 +900,42 @@ function HomePage() {
                 num: "04",
                 label: "Three ways to shape it",
                 title: (<>Three ways to <span className="italic">shape it.</span></>),
-                body: (<>Start from a <span className="kw">Signature</span>, tailor selected details, or build from scratch in the <span className="kw">Studio</span>. Your experience takes shape in the way that fits you.</>),
-                pull: "Choose, tailor, or build — your call.",
+                body: (<>Start with a Signature, tailor details, or build from scratch in the Studio.</>),
+                pull: "Choose, tailor, or build.",
               },
             ].map((b) => (
               <li
                 key={b.num}
-                className="reveal-stagger he-card-lift group relative flex flex-col rounded-[6px] border border-[#E7DDD0] bg-[color:var(--ivory)] p-7 md:p-9 shadow-[0_1px_2px_rgba(46,46,46,0.04)] overflow-hidden"
+                className="reveal-stagger he-card-lift group relative flex flex-col rounded-[6px] border border-[#EAE2D6] bg-[color:var(--ivory)] p-6 md:p-8 shadow-[0_1px_2px_rgba(46,46,46,0.04)] overflow-hidden"
               >
                 <span aria-hidden="true" className="gold-rule absolute left-0 top-0" />
                 <span
                   aria-hidden="true"
-                  className="pointer-events-none absolute left-0 bottom-0 h-px w-full origin-left scale-x-0 bg-[color:var(--gold)]/60 transition-transform duration-500 ease-out group-hover:scale-x-100"
+                  className="pointer-events-none absolute left-0 bottom-0 h-px w-full origin-left scale-x-0 bg-[color:var(--gold)]/55 transition-transform duration-500 ease-out group-hover:scale-x-100"
                 />
                 <div className="flex items-start justify-between gap-4 pr-1">
-                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--gold)]/35 bg-[color:var(--ivory)] transition-all duration-300 group-hover:border-[color:var(--gold)]/70 group-hover:scale-[1.06]">
+                  <span className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[color:var(--gold)]/30 bg-[color:var(--ivory)] transition-all duration-300 group-hover:border-[color:var(--gold)]/60 group-hover:scale-[1.05]">
                     <b.Icon
-                      size={18}
+                      size={16}
                       strokeWidth={1.5}
                       aria-hidden="true"
                       className="text-[color:var(--teal)] transition-transform duration-300 ease-out group-hover:translate-x-0.5"
                     />
                   </span>
-                  <span className="he-num">
+                  <span className="serif text-[1.9rem] md:text-[2.1rem] leading-none text-[color:var(--gold)] font-light tabular-nums">
                     {b.num}
                   </span>
                 </div>
-                <span className="mt-5 text-[10.5px] uppercase tracking-[0.32em] font-semibold text-[color:var(--charcoal)]">
+                <span className="mt-4 text-[10.5px] uppercase tracking-[0.28em] font-semibold text-[color:var(--charcoal-soft)]">
                   {b.label}
                 </span>
-                <h3 className="serif mt-3 text-[1.6rem] md:text-[1.95rem] leading-[1.18] text-[color:var(--charcoal)] font-semibold">
+                <h3 className="serif mt-2.5 text-[1.4rem] md:text-[1.7rem] leading-[1.2] text-[color:var(--charcoal)] font-medium">
                   {b.title}
                 </h3>
-                <p className="mt-3.5 text-[15px] md:text-[15.5px] text-[color:var(--charcoal)] leading-[1.65]">
+                <p className="mt-3 text-[14px] md:text-[15px] text-[color:var(--charcoal-soft)] leading-[1.6]">
                   {b.body}
                 </p>
-                <p className="he-pull mt-5 serif italic text-[15px] md:text-[16px] leading-[1.45] text-[color:var(--charcoal)]">
+                <p className="he-pull mt-4 serif italic text-[14px] md:text-[15px] leading-[1.45] text-[color:var(--charcoal)]">
                   {b.pull}
                 </p>
               </li>
