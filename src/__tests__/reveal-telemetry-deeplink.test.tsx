@@ -231,6 +231,8 @@ describe("reveal telemetry — deep-link / fast-scroll attribution", () => {
     expect(cold.io + cold.sweepInitial + cold.sweepDelayed).toBe(0);
     const restore = t.byEntry["scroll-restore"].reveal;
     expect(restore.io + restore.sweepInitial + restore.sweepDelayed).toBe(0);
+    // Class-flip side-effect: every reveal must carry `.is-visible`.
+    els.forEach((el) => expect(el.classList.contains("is-visible")).toBe(true));
   });
 
   it("scroll-restore entry: non-zero initial scrollY without hash → entry === 'scroll-restore'", () => {
