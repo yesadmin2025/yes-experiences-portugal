@@ -830,12 +830,7 @@ describe("reveal observers — sequenced firing on mobile", () => {
       el.classList.remove("is-visible");
       placeBelowFold(el, i);
     });
-    const revealIO = FakeIO.instances.find((io) =>
-      Array.from(io.observedHistory).some((t) =>
-        (t as Element).classList.contains("reveal"),
-      ),
-    );
-    expect(revealIO).toBeDefined();
+    const revealIO = FakeIO.reveal();
     for (const el of els) revealIO.observe(el);
     expect(revealIO.targets.size).toBe(6);
 
