@@ -6,6 +6,7 @@ import { WhatsAppFab } from "./WhatsAppFab";
 import { MobileStickyCTA } from "./MobileStickyCTA";
 import { PostHeroAnnouncer } from "./PostHeroAnnouncer";
 import { QaPanel } from "./dev/QaPanel";
+import { MotionQaPanel } from "./dev/MotionQaPanel";
 import { installSmoothAnchorScroll } from "@/lib/smooth-anchor-scroll";
 import {
   applyScrollDebugClasses,
@@ -54,12 +55,21 @@ type RevealTelemetry = {
   reveal: RevealBucket;
   sectionEnter: RevealBucket;
   byEntry: Record<RevealEntry, { reveal: RevealEntryBucket; sectionEnter: RevealEntryBucket }>;
+  /** True once any IntersectionObserver has fired at least one entry. */
+  ioFired: boolean;
+  /** True once the 1200ms fail-safe forced visibility on at least one element. */
+  failSafeFired: boolean;
+  /** True once the iframe-aware safety pass forced visibility (iframe only). */
+  iframeFallbackFired: boolean;
   log: (
     bucket: "reveal" | "sectionEnter",
     source: RevealSource,
     selector?: string,
   ) => void;
   setTotal: (bucket: "reveal" | "sectionEnter", total: number) => void;
+  markIoFired: () => void;
+  markFailSafeFired: () => void;
+  markIframeFallbackFired: () => void;
   report: () => unknown;
   reset: () => void;
 };
@@ -116,8 +126,14 @@ function getRevealTelemetry(): RevealTelemetry {
       reveal: makeBucket(),
       sectionEnter: makeBucket(),
       byEntry: makeEntryBuckets(),
+      ioFired: false,
+      failSafeFired: false,
+      iframeFallbackFired: false,
       log: () => {},
       setTotal: () => {},
+      markIoFired: () => {},
+      markFailSafeFired: () => {},
+      markIframeFallbackFired: () => {},
       report: () => null,
       reset: () => {},
     };
@@ -133,6 +149,9 @@ function getRevealTelemetry(): RevealTelemetry {
     reveal: makeBucket(),
     sectionEnter: makeBucket(),
     byEntry: makeEntryBuckets(),
+    ioFired: false,
+    failSafeFired: false,
+    iframeFallbackFired: false,
     log(bucket, source, selector) {
       const b = state[bucket];
       b[source] += 1;
@@ -154,6 +173,15 @@ function getRevealTelemetry(): RevealTelemetry {
     },
     setTotal(bucket, total) {
       state[bucket].total = total;
+    },
+    markIoFired() {
+      state.ioFired = true;
+    },
+    markFailSafeFired() {
+      state.failSafeFired = true;
+    },
+    markIframeFallbackFired() {
+      state.iframeFallbackFired = true;
     },
     report() {
       const snapshot = {
@@ -409,12 +437,8 @@ export function SiteLayout({ children }: { children: ReactNode }) {
       : { threshold: 0.08, rootMargin: "0px 0px -6% 0px" };
 
     const io = new IntersectionObserver((entries) => {
+      telemetry.markIoFired();
       entries.forEach((entry) => {
-        // Reveal when intersecting OR when the element has already
-        // scrolled past the viewport (bottom ≤ 0). On fast mobile
-        // flings the IO can skip the intersecting callback entirely;
-        // without this guard those items would stay invisible until
-        // the user scrolls back. Mirrors the .section-enter observer.
         const passed = entry.boundingClientRect.bottom <= 0;
         if (!entry.isIntersecting && !passed) return;
         revealEl(entry.target as HTMLElement, "io");
@@ -461,13 +485,16 @@ export function SiteLayout({ children }: { children: ReactNode }) {
     // so off-screen elements don't animate while invisible — they just
     // appear as the user scrolls to them.
     const failSafe = window.setTimeout(() => {
+      let forced = 0;
       els.forEach((el) => {
         if (el.classList.contains("is-visible")) return;
         el.style.transition = "none";
         el.style.transitionDelay = "0ms";
         el.classList.add("is-visible");
         telemetry.log("reveal", "sweepDelayed", describeReveal(el));
+        forced += 1;
       });
+      if (forced > 0) telemetry.markFailSafeFired();
     }, 1200);
 
     return () => {
@@ -518,6 +545,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
       : { threshold: 0.02, rootMargin: "0px 0px -8% 0px" };
 
     const io = new IntersectionObserver((entries) => {
+      telemetry.markIoFired();
       entries.forEach((entry) => {
         const passed = entry.boundingClientRect.bottom <= 0;
         if (!entry.isIntersecting && !passed) return;
@@ -555,12 +583,15 @@ export function SiteLayout({ children }: { children: ReactNode }) {
     // FAIL-SAFE (1200ms): force any still-pending section-enter visible
     // so content never stays at opacity: 0 if IO failed to fire.
     const failSafe = window.setTimeout(() => {
+      let forced = 0;
       els.forEach((el) => {
         if (el.classList.contains("is-visible")) return;
         el.style.transition = "none";
         el.classList.add("is-visible");
         telemetry.log("sectionEnter", "sweepDelayed", describeReveal(el));
+        forced += 1;
       });
+      if (forced > 0) telemetry.markFailSafeFired();
     }, 1200);
 
     return () => {
@@ -635,6 +666,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
           with sighted users who see the post-hero CTA surfaces appear. */}
       <PostHeroAnnouncer />
       <QaPanel />
+      <MotionQaPanel />
     </div>
   );
 }

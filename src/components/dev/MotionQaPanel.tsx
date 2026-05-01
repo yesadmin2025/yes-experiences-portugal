@@ -1,0 +1,182 @@
+import { useEffect, useState } from "react";
+
+/**
+ * Motion-QA diagnostic panel.
+ *
+ * Activates ONLY when the URL contains `?motion-qa=1`. Renders a small
+ * fixed read-out reporting the live state of the homepage motion system:
+ *
+ *   - total / visible / hidden reveal-class elements
+ *   - whether IntersectionObserver fired at least once
+ *   - whether the 1200ms fail-safe fired
+ *   - prefers-reduced-motion state
+ *   - scroll-debug class state on <html>
+ *   - iframe / sandbox detection
+ *   - whether the key `.reveal` keyframes are present in CSSOM
+ *
+ * No side-effects: this panel only reads state. It never forces visibility,
+ * never mutates classes, never intercepts events. Safe to leave on in any
+ * environment when the flag is set.
+ */
+
+type Telemetry = {
+  reveal: { total: number; pending: number; io: number; sweepInitial: number; sweepDelayed: number };
+  sectionEnter: { total: number; pending: number; io: number; sweepInitial: number; sweepDelayed: number };
+  ioFired?: boolean;
+  failSafeFired?: boolean;
+  iframeFallbackFired?: boolean;
+};
+
+function readQueryFlag(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    return new URLSearchParams(window.location.search).get("motion-qa") === "1";
+  } catch {
+    return false;
+  }
+}
+
+function detectIframe(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    return window.self !== window.top;
+  } catch {
+    // Cross-origin parent → access throws → we ARE in a sandboxed iframe.
+    return true;
+  }
+}
+
+function countReveals() {
+  if (typeof document === "undefined") return { total: 0, visible: 0 };
+  const els = document.querySelectorAll(".reveal, .reveal-stagger, .section-enter");
+  let visible = 0;
+  els.forEach((el) => {
+    if (el.classList.contains("is-visible")) visible += 1;
+  });
+  return { total: els.length, visible };
+}
+
+/**
+ * Best-effort detection that the `.reveal` entrance keyframes are loaded.
+ * We don't iterate every stylesheet (many are cross-origin in preview);
+ * instead we read the computed `transition-property` of a probe element
+ * carrying `.reveal`. If CSS loaded, `transition-property` will include
+ * `opacity` / `transform`. If CSS failed to load, it'll be `all` or `none`.
+ */
+function probeRevealCssLoaded(): boolean {
+  if (typeof document === "undefined") return false;
+  const probe = document.createElement("div");
+  probe.className = "reveal";
+  probe.style.position = "fixed";
+  probe.style.left = "-9999px";
+  probe.style.top = "-9999px";
+  probe.style.pointerEvents = "none";
+  probe.setAttribute("aria-hidden", "true");
+  document.body.appendChild(probe);
+  try {
+    const cs = getComputedStyle(probe);
+    const props = cs.transitionProperty || "";
+    return /opacity/.test(props) && /transform/.test(props);
+  } finally {
+    probe.remove();
+  }
+}
+
+export function MotionQaPanel() {
+  const [active, setActive] = useState(false);
+  const [tick, setTick] = useState(0);
+
+  useEffect(() => {
+    setActive(readQueryFlag());
+  }, []);
+
+  useEffect(() => {
+    if (!active) return;
+    const id = window.setInterval(() => setTick((n) => n + 1), 500);
+    return () => window.clearInterval(id);
+  }, [active]);
+
+  if (!active) return null;
+
+  const t = (window as unknown as { __yesRevealTelemetry?: Telemetry }).__yesRevealTelemetry;
+  const counts = countReveals();
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const inIframe = detectIframe();
+  const cssLoaded = probeRevealCssLoaded();
+  const scrollDebugClasses = Array.from(document.documentElement.classList)
+    .filter((c) => c.startsWith("scroll-debug-"));
+
+  const ioFired = t?.ioFired === true;
+  const failSafeFired = t?.failSafeFired === true;
+  const hidden = counts.total - counts.visible;
+
+  // One-shot console report so devs can grep without opening the panel.
+  if (tick === 0) {
+    // eslint-disable-next-line no-console
+    console.info("[motion-qa] active", {
+      total: counts.total,
+      visible: counts.visible,
+      hidden,
+      ioFired,
+      failSafeFired,
+      reducedMotion: reduced,
+      inIframe,
+      cssLoaded,
+      scrollDebugClasses,
+      telemetry: t,
+    });
+  }
+
+  const Row = ({ k, v, ok }: { k: string; v: string | number; ok?: boolean | null }) => (
+    <div style={{ display: "flex", justifyContent: "space-between", gap: 8 }}>
+      <span style={{ opacity: 0.75 }}>{k}</span>
+      <span style={{ color: ok === false ? "#ff8a8a" : ok === true ? "#a6e3a1" : "var(--ivory)" }}>
+        {String(v)}
+      </span>
+    </div>
+  );
+
+  return (
+    <div
+      role="status"
+      aria-live="polite"
+      data-motion-qa="1"
+      style={{
+        position: "fixed",
+        right: 8,
+        bottom: 8,
+        zIndex: 99999,
+        width: 240,
+        padding: 10,
+        background: "rgba(20,20,20,0.92)",
+        color: "var(--ivory)",
+        font: "600 11px/1.35 ui-monospace,SFMono-Regular,Menlo,monospace",
+        border: "1px solid rgba(201,169,106,0.55)",
+        borderRadius: 6,
+        boxShadow: "0 6px 20px rgba(0,0,0,0.4)",
+        pointerEvents: "auto",
+        display: "grid",
+        gap: 4,
+      }}
+    >
+      <div style={{ color: "var(--gold)", marginBottom: 2 }}>motion-qa · live</div>
+      <Row k="total" v={counts.total} />
+      <Row k="visible" v={counts.visible} ok={counts.total > 0 && counts.visible === counts.total} />
+      <Row k="hidden" v={hidden} ok={hidden === 0} />
+      <Row k="IO fired" v={ioFired ? "yes" : "no"} ok={ioFired} />
+      <Row k="fail-safe fired" v={failSafeFired ? "yes" : "no"} />
+      <Row k="reduced-motion" v={reduced ? "ON" : "off"} />
+      <Row k="iframe" v={inIframe ? "yes" : "no"} />
+      <Row k="reveal CSS" v={cssLoaded ? "loaded" : "missing"} ok={cssLoaded} />
+      <Row k="scroll-debug" v={scrollDebugClasses.length ? scrollDebugClasses.join(",") : "off"} />
+      {t && (
+        <div style={{ opacity: 0.75, paddingTop: 4, borderTop: "1px solid rgba(255,255,255,0.1)" }}>
+          reveal io/init/late: {t.reveal.io}/{t.reveal.sweepInitial}/{t.reveal.sweepDelayed}
+          <br />
+          section io/init/late: {t.sectionEnter.io}/{t.sectionEnter.sweepInitial}/{t.sectionEnter.sweepDelayed}
+        </div>
+      )}
+      <div style={{ opacity: 0.55, fontSize: 10, paddingTop: 4 }}>?motion-qa=1 · read-only</div>
+    </div>
+  );
+}
