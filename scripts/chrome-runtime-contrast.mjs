@@ -165,14 +165,19 @@ function extractPairs(file, surfaceMap) {
   // accepts anything between `className="..."` or `className={"..."}`.
   const CLASS_RE = /className\s*=\s*(?:\{?['"`])([^'"`]+)(?:['"`]\}?)/g;
   let m;
+  // Track the most recently seen explicit background so descendant
+  // classNames (icons, labels) inherit the correct surface — JSX nesting
+  // approximation. Reset to file default per match if a new bg appears.
+  let inheritedSurface = surfaceMap.surface;
+  let inheritedLabel = surfaceMap.surfaceLabel;
   while ((m = CLASS_RE.exec(src)) !== null) {
     const classStr = m[1];
 
     // Decide the surface for this className: if the same className contains
-    // a bg-[...] token, that bg becomes the local surface; otherwise we
-    // fall back to the file's dominant surface.
-    let localSurface = surfaceMap.surface;
-    let localLabel = surfaceMap.surfaceLabel;
+    // a bg-[...] token, that bg becomes the local surface AND the new
+    // inherited surface for following descendants until the next bg.
+    let localSurface = inheritedSurface;
+    let localLabel = inheritedLabel;
     BG_RE.lastIndex = 0;
     const bgMatch = BG_RE.exec(classStr);
     if (bgMatch) {
@@ -180,20 +185,28 @@ function extractPairs(file, surfaceMap) {
       const bgAlpha = bgMatch[2];
       const bgHex = TOKEN_HEX(bgToken);
       if (bgHex) {
-        // For background opacity we composite over the file's dominant surface.
         localSurface = bgAlpha
           ? composite(bgHex, Number(bgAlpha) / 100, surfaceMap.surface)
           : bgHex;
         localLabel = bgAlpha ? `${bgToken}/${bgAlpha} on ${surfaceMap.surfaceLabel}` : bgToken;
+        inheritedSurface = localSurface;
+        inheritedLabel = localLabel;
       }
     } else {
       // No local bg — check nested-surface hints (e.g. teal CTA pill).
+      let matchedNested = false;
       for (const ns of surfaceMap.nestedSurfaces || []) {
         if (ns.match.test(classStr)) {
           localSurface = ns.surface;
           localLabel = ns.label;
+          matchedNested = true;
           break;
         }
+      }
+      // Otherwise inherit from the most recent ancestor surface (JSX descent).
+      if (!matchedNested) {
+        localSurface = inheritedSurface;
+        localLabel = inheritedLabel;
       }
     }
 
