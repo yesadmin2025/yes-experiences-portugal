@@ -1,12 +1,10 @@
 import type { ReactNode } from "react";
-import { Link } from "@tanstack/react-router";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { ArrowRight } from "lucide-react";
 
 /**
  * FAQ — conversion support.
