@@ -24,15 +24,16 @@ import { resolve } from "node:path";
 
 const CSS = readFileSync(resolve(__dirname, "../styles.css"), "utf8");
 
+function escapeRe(s: string): string {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 function ruleBlock(selector: string): string {
   // Match an occurrence of `<selector> {...}` where the selector starts
   // at a line boundary (optionally indented) — this avoids accidentally
   // matching scoped variants like `.home-energy .reveal {` when we want
   // the canonical `.reveal {`. Returns the body of the first such block.
-  const re = new RegExp(
-    `(^|\\n)[\\t ]*${selector.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\$&")}`,
-    "m",
-  );
+  const re = new RegExp(`(^|\\n)[\\t ]*${escapeRe(selector)}`, "m");
   const m = re.exec(CSS);
   if (!m) return "";
   const idx = m.index + m[0].length - selector.length;
