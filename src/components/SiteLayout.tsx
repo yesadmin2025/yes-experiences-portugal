@@ -544,6 +544,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
       : { threshold: 0.02, rootMargin: "0px 0px -8% 0px" };
 
     const io = new IntersectionObserver((entries) => {
+      telemetry.markIoFired();
       entries.forEach((entry) => {
         const passed = entry.boundingClientRect.bottom <= 0;
         if (!entry.isIntersecting && !passed) return;
@@ -581,12 +582,15 @@ export function SiteLayout({ children }: { children: ReactNode }) {
     // FAIL-SAFE (1200ms): force any still-pending section-enter visible
     // so content never stays at opacity: 0 if IO failed to fire.
     const failSafe = window.setTimeout(() => {
+      let forced = 0;
       els.forEach((el) => {
         if (el.classList.contains("is-visible")) return;
         el.style.transition = "none";
         el.classList.add("is-visible");
         telemetry.log("sectionEnter", "sweepDelayed", describeReveal(el));
+        forced += 1;
       });
+      if (forced > 0) telemetry.markFailSafeFired();
     }, 1200);
 
     return () => {
