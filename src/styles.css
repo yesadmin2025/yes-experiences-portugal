@@ -285,16 +285,19 @@
     border-color: var(--color-border);
   }
   html {
-    scroll-behavior: smooth;
+    /* No global `scroll-behavior: smooth` — the JS anchor handler in
+       src/lib/smooth-anchor-scroll.ts is the single source of truth for
+       smooth scrolling, and it already respects prefers-reduced-motion.
+       Native CSS smooth-scroll on top would double-animate every
+       programmatic scroll (back/forward, focus, hashchange) and is the
+       main cause of the "fighting / snapping back" feel. */
     /* Anchor scrolls land below the fixed navbar so jumps to #section
        feel intentional, never "cut off". The three tiers mirror the
        Navbar height ramp (80 / 88 / 96px). Per-section scroll-mt-*
        utilities still win when finer control is needed. */
     scroll-padding-top: 5rem; /* 80px — mobile navbar */
     /* Belt-and-braces: prevent any descendant overflow from creating
-       horizontal scroll on mobile. The layout itself is already
-       constrained by container-x and 100vw guards, but a single
-       runaway image, table or marquee shouldn't break the page. */
+       horizontal scroll on mobile. */
     overflow-x: clip;
   }
   @media (min-width: 768px) {
@@ -302,9 +305,6 @@
   }
   @media (min-width: 1024px) {
     html { scroll-padding-top: 6rem; } /* 96px — desktop navbar */
-  }
-  @media (prefers-reduced-motion: reduce) {
-    html { scroll-behavior: auto; }
   }
   body {
     background-color: var(--color-background);
