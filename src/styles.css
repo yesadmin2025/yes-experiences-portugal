@@ -286,11 +286,21 @@
   }
   html {
     scroll-behavior: smooth;
+    /* Anchor scrolls land below the fixed navbar so jumps to #section
+       feel intentional, never "cut off". scroll-mt-* utilities still
+       win per-section when finer control is needed. */
+    scroll-padding-top: 5rem;
     /* Belt-and-braces: prevent any descendant overflow from creating
        horizontal scroll on mobile. The layout itself is already
        constrained by container-x and 100vw guards, but a single
        runaway image, table or marquee shouldn't break the page. */
     overflow-x: clip;
+  }
+  @media (min-width: 768px) {
+    html { scroll-padding-top: 6rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
   }
   body {
     background-color: var(--color-background);
