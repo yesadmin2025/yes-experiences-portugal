@@ -90,6 +90,12 @@ const DUPLICATE_BAND_EXEMPTIONS: { route: string; label: string; reason: string 
     reason:
       "Proposals is human-only and the hero CTA + closing CTA are both Talk to a Local by design (no self-serve path). Tracked: align with corporate consolidation.",
   },
+  {
+    route: "tours.$tourId.tsx",
+    label: "Reserve instantly",
+    reason:
+      "Tour detail uses the canonical commerce pattern: in-page primary CTA + sticky bottom CTA on mobile. Both render the same Reserve label by intent so the user always has a one-tap booking action visible on long pages.",
+  },
 ];
 
 function isExempt(route: string, label: string): boolean {
