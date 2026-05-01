@@ -125,8 +125,14 @@ function getRevealTelemetry(): RevealTelemetry {
       reveal: makeBucket(),
       sectionEnter: makeBucket(),
       byEntry: makeEntryBuckets(),
+      ioFired: false,
+      failSafeFired: false,
+      iframeFallbackFired: false,
       log: () => {},
       setTotal: () => {},
+      markIoFired: () => {},
+      markFailSafeFired: () => {},
+      markIframeFallbackFired: () => {},
       report: () => null,
       reset: () => {},
     };
@@ -142,6 +148,9 @@ function getRevealTelemetry(): RevealTelemetry {
     reveal: makeBucket(),
     sectionEnter: makeBucket(),
     byEntry: makeEntryBuckets(),
+    ioFired: false,
+    failSafeFired: false,
+    iframeFallbackFired: false,
     log(bucket, source, selector) {
       const b = state[bucket];
       b[source] += 1;
@@ -163,6 +172,15 @@ function getRevealTelemetry(): RevealTelemetry {
     },
     setTotal(bucket, total) {
       state[bucket].total = total;
+    },
+    markIoFired() {
+      state.ioFired = true;
+    },
+    markFailSafeFired() {
+      state.failSafeFired = true;
+    },
+    markIframeFallbackFired() {
+      state.iframeFallbackFired = true;
     },
     report() {
       const snapshot = {
