@@ -425,7 +425,9 @@ function HomePage() {
     };
 
     let raf = 0;
-    let lastWritten = window.location.hash;
+    let lastChosenId = "";
+    let lastWriteAt = 0;
+    const WRITE_THROTTLE_MS = 250;
 
     const compute = () => {
       raf = 0;
@@ -436,22 +438,16 @@ function HomePage() {
       const anchor = anchorOffsetPx();
       const viewportH = window.innerHeight;
 
-      // Find the section whose [top, bottom) range contains the anchor
-      // line. Fallback: the closest section above the anchor.
       let chosenId = "";
       let bestAboveDistance = Infinity;
 
       for (const el of targets) {
         const rect = el.getBoundingClientRect();
-        // Skip sections that are completely off-screen below.
         if (rect.top > viewportH) continue;
-        // Section currently under the anchor line — winner.
         if (rect.top <= anchor && rect.bottom > anchor) {
           chosenId = el.id;
           break;
         }
-        // Otherwise track the section whose top is closest to (but above)
-        // the anchor line, so we keep a sensible hash between sections.
         if (rect.top <= anchor) {
           const d = anchor - rect.top;
           if (d < bestAboveDistance) {
@@ -461,31 +457,36 @@ function HomePage() {
         }
       }
 
-      // Don't write a hash before the first tracked section comes into
-      // view (keeps the URL clean while the user is still on the hero).
+      // Above the first tracked section: clear the hash once.
       const firstRect = targets[0].getBoundingClientRect();
       if (firstRect.top > anchor) {
-        if (window.location.hash) {
+        if (window.location.hash && lastChosenId !== "") {
           window.history.replaceState(
             window.history.state,
             "",
             window.location.pathname + window.location.search,
           );
-          lastWritten = "";
+          lastChosenId = "";
+          lastWriteAt = performance.now();
         }
         return;
       }
 
-      const next = chosenId ? `#${chosenId}` : "";
-      if (next !== lastWritten && next !== window.location.hash) {
-        window.history.replaceState(
-          window.history.state,
-          "",
-          window.location.pathname + window.location.search + next,
-        );
-        lastWritten = next;
-      } else if (next !== lastWritten) {
-        lastWritten = next;
+      // Only write when the chosen section actually changes, and at most
+      // every WRITE_THROTTLE_MS so we never thrash history during scroll.
+      if (chosenId && chosenId !== lastChosenId) {
+        const now = performance.now();
+        if (now - lastWriteAt < WRITE_THROTTLE_MS) return;
+        const next = `#${chosenId}`;
+        if (next !== window.location.hash) {
+          window.history.replaceState(
+            window.history.state,
+            "",
+            window.location.pathname + window.location.search + next,
+          );
+        }
+        lastChosenId = chosenId;
+        lastWriteAt = now;
       }
     };
 
@@ -494,29 +495,20 @@ function HomePage() {
       raf = window.requestAnimationFrame(compute);
     };
 
-    // Triggers: scroll, resize, and any IO callback (covers lazy content
-    // shifting layout). IO uses many thresholds across the anchor band so
-    // we get callbacks at the right moments without needing a scroll
-    // listener at all on capable browsers — but we add a passive scroll
-    // listener too for buttery responsiveness during fast scrolls.
+    // IO is enough on its own — fires on every threshold crossing as the
+    // user scrolls. Passive scroll listener removed to cut per-frame work
+    // on mobile. Thresholds slimmed to [0, 1] for the same reason.
     const io = new IntersectionObserver(schedule, {
-      threshold: [0, 0.05, 0.15, 0.3, 0.5, 0.75, 1],
-      // Negative top margin = anchor band starts ~96–128px down.
-      // Negative bottom margin = ignore sections that are still mostly
-      // in the lower third of the viewport (gives the section above
-      // priority until the new one truly takes over).
+      threshold: [0, 1],
       rootMargin: "-96px 0px -55% 0px",
     });
     targets.forEach((el) => io.observe(el));
 
-    window.addEventListener("scroll", schedule, { passive: true });
     window.addEventListener("resize", schedule);
-    // First pass after mount.
     schedule();
 
     return () => {
       io.disconnect();
-      window.removeEventListener("scroll", schedule);
       window.removeEventListener("resize", schedule);
       if (raf) window.cancelAnimationFrame(raf);
     };
