@@ -3372,3 +3372,84 @@ html.motion-ready [data-motion].motion-in {
     opacity: 0.6;
   }
 }
+
+/* Narrative labels — soft Inter caps, tracked, gold-soft, with a thin
+   leader line. Two labels per slot fade in/out so the hero seems to
+   keep "discovering" choices. Positioned via inline left/top in the
+   component. */
+.hero-journey-labels {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  /* Sit above the SVG glow but still beneath the dark gradient on z[2]. */
+  z-index: 1;
+}
+
+.hero-journey-label {
+  position: absolute;
+  transform: translate(8px, -50%);
+  font-family: var(--font-sans, "Inter", system-ui, sans-serif);
+  font-size: 9.5px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--gold-soft);
+  white-space: nowrap;
+  text-shadow: 0 1px 6px rgba(15, 15, 15, 0.55);
+  opacity: 0;
+  /* Subtle leader dot before the word, matching ping color. */
+  padding-left: 10px;
+}
+.hero-journey-label::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 4px;
+  height: 1px;
+  background: var(--gold);
+  opacity: 0.7;
+  transform: translateY(-50%);
+}
+
+@media (min-width: 768px) {
+  .hero-journey-label { font-size: 11px; letter-spacing: 0.26em; }
+  .hero-journey-label::before { width: 8px; }
+}
+
+/* Each label-pair shares a slot; labels alternate visibility on a
+   ~10s cycle, offset per slot so they don't all rotate in unison. */
+@keyframes heroJourneyLabelA {
+  0%   { opacity: 0; transform: translate(4px, -50%); }
+  8%   { opacity: 1; transform: translate(8px, -50%); }
+  45%  { opacity: 1; transform: translate(8px, -50%); }
+  55%  { opacity: 0; transform: translate(12px, -50%); }
+  100% { opacity: 0; transform: translate(4px, -50%); }
+}
+@keyframes heroJourneyLabelB {
+  0%, 50%  { opacity: 0; transform: translate(4px, -50%); }
+  58%      { opacity: 1; transform: translate(8px, -50%); }
+  92%      { opacity: 1; transform: translate(8px, -50%); }
+  100%     { opacity: 0; transform: translate(12px, -50%); }
+}
+
+.hero-journey-label-1a { animation: heroJourneyLabelA 10s ease-in-out 2.0s infinite; }
+.hero-journey-label-1b { animation: heroJourneyLabelB 10s ease-in-out 2.0s infinite; }
+.hero-journey-label-2a { animation: heroJourneyLabelA 10s ease-in-out 3.0s infinite; }
+.hero-journey-label-2b { animation: heroJourneyLabelB 10s ease-in-out 3.0s infinite; }
+.hero-journey-label-3a { animation: heroJourneyLabelA 10s ease-in-out 4.0s infinite; }
+.hero-journey-label-3b { animation: heroJourneyLabelB 10s ease-in-out 4.0s infinite; }
+
+/* Mobile — keep labels but reduce density: only show slots 1 and 3
+   (the corners) so the headline area stays uncluttered. Slot 2 sits
+   right behind the headline on narrow viewports. */
+@media (max-width: 640px) {
+  .hero-journey-label { font-size: 8.5px; letter-spacing: 0.2em; }
+  .hero-journey-label-2a,
+  .hero-journey-label-2b { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-journey-label { animation: none; opacity: 0.85; }
+  .hero-journey-label[class*="-b"] { display: none; }
+}
