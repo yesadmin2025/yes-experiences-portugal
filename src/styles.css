@@ -2867,3 +2867,94 @@
   }
 }
 
+/* ───────────────────────────────────────────────────────────────────
+   UNIFIED CTA PATTERN — homepage + builder
+   A single hover/movement language across every primary CTA so the
+   site feels coherent. NOT scoped under .home-energy on purpose: it's
+   meant to live on the Builder screens too. Reduced-motion safe.
+
+   Apply by adding `cta-unified` to any <button> / <a> / <Link>:
+     - 220ms cubic-bezier ease (matches editorial motion language)
+     - subtle -2px lift on hover/focus-visible
+     - soft gold rim (1px) appears on hover
+     - warmer teal-tinted shadow on hover
+     - visible focus ring keeps A11y ≥ 4.5:1
+   The class layers on top of existing tailwind colours/sizes — it
+   does not change typography, padding or fill colour.
+   ─────────────────────────────────────────────────────────────── */
+@layer utilities {
+  .cta-unified {
+    transition:
+      transform 220ms cubic-bezier(0.22, 0.61, 0.36, 1),
+      box-shadow 280ms cubic-bezier(0.22, 0.61, 0.36, 1),
+      background-color 220ms ease,
+      border-color 220ms ease,
+      letter-spacing 280ms cubic-bezier(0.22, 0.61, 0.36, 1);
+    will-change: transform;
+  }
+  .cta-unified:hover,
+  .cta-unified:focus-visible {
+    transform: translateY(-2px);
+    box-shadow:
+      0 14px 32px -16px rgba(41, 91, 97, 0.5),
+      0 0 0 1px rgba(201, 169, 106, 0.4);
+  }
+  .cta-unified:active {
+    transform: translateY(0);
+    transition-duration: 120ms;
+  }
+  /* Arrow nudge — pairs with `<ArrowRight class="cta-unified-arrow">` or
+     any element matching `.cta-unified [data-arrow]`. Falls back to the
+     existing per-button group-hover rules so it never fights them. */
+  .cta-unified .cta-unified-arrow,
+  .cta-unified [data-arrow] {
+    transition: transform 220ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+  .cta-unified:hover .cta-unified-arrow,
+  .cta-unified:focus-visible .cta-unified-arrow,
+  .cta-unified:hover [data-arrow],
+  .cta-unified:focus-visible [data-arrow] {
+    transform: translateX(4px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cta-unified,
+    .cta-unified .cta-unified-arrow,
+    .cta-unified [data-arrow] {
+      transition: none !important;
+      transform: none !important;
+    }
+  }
+}
+
+/* ───────────────────────────────────────────────────────────────────
+   SECTION ENTRANCE — gradual, premium fade + rise on scroll.
+   Wrapper class `.section-enter` opts a section into a slightly larger
+   travel (18px → 0) and a calmer 520ms duration than the global
+   `.reveal` so big sections feel like chapters opening, not flickers.
+   Pairs with the existing IntersectionObserver in SiteLayout (it adds
+   `.is-visible` once the element crosses the threshold).
+   ─────────────────────────────────────────────────────────────── */
+@layer utilities {
+  .section-enter {
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+      opacity 520ms cubic-bezier(0.22, 0.61, 0.36, 1),
+      transform 520ms cubic-bezier(0.22, 0.61, 0.36, 1);
+    will-change: opacity, transform;
+  }
+  .section-enter.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .section-enter,
+    .section-enter.is-visible {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+    }
+  }
+}
+
