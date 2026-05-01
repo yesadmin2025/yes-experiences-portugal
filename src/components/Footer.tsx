@@ -59,7 +59,7 @@ export function Footer() {
         </div>
 
         {/* 4-column nav grid */}
-        <div className="mt-14 md:mt-16 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-12 md:gap-10">
+        <div className="mt-10 md:mt-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 md:gap-10">
           <FooterCol
             title="Experiences"
             links={[
