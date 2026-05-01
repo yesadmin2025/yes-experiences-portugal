@@ -1,0 +1,143 @@
+import * as React from "react";
+import { ArrowRight } from "lucide-react";
+import { Link, type LinkProps } from "@tanstack/react-router";
+import { cn } from "@/lib/utils";
+
+/**
+ * CtaButton — site-wide primary / ghost CTA, with the canonical arrow
+ * colour ramp locked in.
+ *
+ *   primary: solid --teal, ivory text, gold-soft → gold arrow on hover
+ *   ghost:   transparent w/ teal border, charcoal text, gold → gold-deep arrow on hover
+ *
+ * Both variants share spacing (px-7 py-3.5, min-h-[48px]), Inter 12.5/13px
+ * uppercase 0.18em, rounded-[2px], focus ring on --gold offset --ivory,
+ * subtle hover -1px lift, 300ms editorial easing, group/translate-x-1 on the arrow.
+ *
+ * `to` renders a TanStack <Link>; `href` renders an <a>. Pass `icon` to
+ * replace the trailing arrow (e.g. <MessageCircle/> for a "talk to us" CTA);
+ * pass `iconLeading` to render an icon BEFORE the label.
+ */
+
+type Variant = "primary" | "ghost";
+type Size = "md" | "sm";
+
+interface CommonProps {
+  variant?: Variant;
+  size?: Size;
+  /** Replace the trailing ArrowRight with a custom icon. Pass `null` to hide. */
+  icon?: React.ReactNode | null;
+  /** Render an icon BEFORE the label (used by "Talk to a Local" style CTAs). */
+  iconLeading?: React.ReactNode;
+  className?: string;
+  children: React.ReactNode;
+}
+
+type LinkCtaProps = CommonProps &
+  Omit<LinkProps, "children" | "className"> & {
+    to: LinkProps["to"];
+    href?: never;
+  };
+
+type AnchorCtaProps = CommonProps &
+  Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "children" | "className"> & {
+    href: string;
+    to?: never;
+  };
+
+export type CtaButtonProps = LinkCtaProps | AnchorCtaProps;
+
+const sizeClasses: Record<Size, string> = {
+  md:
+    "px-7 py-3.5 min-h-[48px] text-[12.5px] sm:text-[13px] tracking-[0.18em]",
+  sm:
+    "px-5 py-3 min-h-[44px] text-[12px] tracking-[0.16em]",
+};
+
+const baseClasses =
+  "he-glow he-sheen group inline-flex items-center justify-center gap-2.5 font-sans uppercase font-bold rounded-[2px] transition-all duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] hover:-translate-y-[1px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--ivory)]";
+
+const variantClasses: Record<Variant, string> = {
+  primary:
+    "bg-[color:var(--teal)] text-[color:var(--ivory)] hover:bg-[color:var(--teal-2)] he-cta-shift",
+  ghost:
+    "bg-transparent text-[color:var(--charcoal)] hover:bg-[color:var(--teal)]/[0.06]",
+};
+
+const variantStyle: Record<Variant, React.CSSProperties> = {
+  primary: {
+    border:
+      "1px solid color-mix(in oklab, var(--gold-deep) 55%, transparent)",
+    boxShadow:
+      "inset 0 0 0 1px color-mix(in oklab, var(--gold) 22%, transparent), 0 8px 22px -10px color-mix(in oklab, var(--charcoal-deep) 35%, transparent)",
+  },
+  ghost: {
+    border: "1px solid color-mix(in oklab, var(--teal) 55%, transparent)",
+  },
+};
+
+function arrowClasses(variant: Variant) {
+  return cn(
+    "transition-[transform,color] duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1",
+    variant === "primary"
+      ? "text-[color:var(--gold-soft)] group-hover:text-[color:var(--gold)]"
+      : "text-[color:var(--gold)] group-hover:text-[color:var(--gold-deep)]",
+  );
+}
+
+export function CtaButton(props: CtaButtonProps) {
+  const {
+    variant = "primary",
+    size = "md",
+    icon,
+    iconLeading,
+    className,
+    children,
+  } = props;
+
+  const arrowSize = variant === "primary" ? 14 : 12;
+  const trailing =
+    icon === null
+      ? null
+      : icon ?? (
+          <ArrowRight
+            size={arrowSize}
+            aria-hidden="true"
+            className={arrowClasses(variant)}
+          />
+        );
+
+  const content = (
+    <>
+      {iconLeading}
+      {children}
+      {trailing}
+    </>
+  );
+
+  const sharedClassName = cn(
+    baseClasses,
+    sizeClasses[size],
+    variantClasses[variant],
+    className,
+  );
+  const sharedStyle = variantStyle[variant];
+
+  if ("href" in props && props.href !== undefined) {
+    const { href, variant: _v, size: _s, icon: _i, iconLeading: _il, className: _c, children: _ch, ...rest } = props;
+    return (
+      <a href={href} className={sharedClassName} style={sharedStyle} {...rest}>
+        {content}
+      </a>
+    );
+  }
+
+  const { to, variant: _v, size: _s, icon: _i, iconLeading: _il, className: _c, children: _ch, ...rest } = props as LinkCtaProps;
+  return (
+    <Link to={to} className={sharedClassName} style={sharedStyle} {...(rest as object)}>
+      {content}
+    </Link>
+  );
+}
+
+export default CtaButton;
