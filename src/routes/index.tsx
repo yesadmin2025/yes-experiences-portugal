@@ -8,11 +8,15 @@ import heroImg from "@/assets/hero-coast.jpg";
 
 // Real Viator-sourced tour photography — every card maps to an actual
 // Signature tour. No stock or invented imagery.
+// Each Occasions card image is chosen to MATCH its theme:
+//  · Proposals    → quiet Arrábida viewpoint (intimate, private moment)
+//  · Celebrations → Arrábida wine lunch table (gathering, shared joy)
+//  · Corporate    → Cabo da Roca cliffs (premium, group-scale, non-religious)
+//  · Multi-day    → Tomar–Coimbra (multi-region journey, not a single beach)
+import imgArrabidaViewpoint from "@/assets/tours/arrabida-wine-allinclusive/viewpoint.jpg";
 import imgArrabidaWineLunch from "@/assets/tours/arrabida-wine-allinclusive/lunch.jpg";
-import imgTroiaBeach from "@/assets/tours/troia-comporta/beach.jpg";
-import imgFatimaNazare from "@/assets/tours/fatima-nazare-obidos/nazare.jpg";
-import imgSintraEstates from "@/assets/tours/sintra-cascais/estates.jpg";
-import imgAzeitaoWinery from "@/assets/tours/azeitao-cheese/winery.jpg";
+import imgSintraCaboDaRoca from "@/assets/tours/sintra-cascais/cabo-da-roca.jpg";
+import imgTomarCoimbra from "@/assets/tours/tomar-coimbra/hero.jpg";
 
 import {
   ArrowRight,
