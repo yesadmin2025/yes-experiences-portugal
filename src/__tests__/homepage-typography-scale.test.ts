@@ -119,8 +119,14 @@ describe("Homepage eyebrow labels — minimum legibility", () => {
       if (hasRamp) continue;
 
       eyebrowCount++;
-      expect(px, `eyebrow "${fragment}" px floor`).toBeGreaterThanOrEqual(10.5);
-      expect(tracking, `eyebrow "${fragment}" tracking floor`).toBeGreaterThanOrEqual(0.22);
+      if (tracking < 0.22 || px < 10.5) {
+        // Surface the full fragment so we can diagnose which call site
+        // is below the floor.
+        // eslint-disable-next-line no-console
+        console.error("[eyebrow-floor]", { fragment, px, tracking });
+      }
+      expect(px).toBeGreaterThanOrEqual(10.5);
+      expect(tracking).toBeGreaterThanOrEqual(0.22);
     }
     expect(eyebrowCount, "expected at least 2 enforceable eyebrows after filtering").toBeGreaterThanOrEqual(2);
   });
