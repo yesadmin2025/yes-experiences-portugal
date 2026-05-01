@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-05-01T09:11:32.828Z",
-  "filesScanned": 159,
+  "generatedAt": "2026-05-01T09:19:54.575Z",
+  "filesScanned": 162,
   "approvedPalette": {
     "teal": "#295B61",
     "teal-2": "#2A7C82",
@@ -18,10 +18,10 @@
     "#cccccc"
   ],
   "counts": {
-    "total": 173,
+    "total": 175,
     "approved": 49,
     "allowlisted": 31,
-    "mismatch": 93
+    "mismatch": 95
   },
   "findings": [
     {
@@ -850,6 +850,24 @@
       "raw": "#f8fafc",
       "normalized": "#f8fafc",
       "snippet": "color: \"#f8fafc\",",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/dev/MotionQaPanel.tsx",
+      "line": 133,
+      "col": 45,
+      "raw": "#ff8a8a",
+      "normalized": "#ff8a8a",
+      "snippet": "<span style={{ color: ok === false ? \"#ff8a8a\" : ok === true ? \"#a6e3a1\" : \"var(--ivory)\" }}>",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/dev/MotionQaPanel.tsx",
+      "line": 133,
+      "col": 71,
+      "raw": "#a6e3a1",
+      "normalized": "#a6e3a1",
+      "snippet": "<span style={{ color: ok === false ? \"#ff8a8a\" : ok === true ? \"#a6e3a1\" : \"var(--ivory)\" }}>",
       "status": "mismatch"
     },
     {

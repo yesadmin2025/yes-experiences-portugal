@@ -24,12 +24,19 @@ import { resolve } from "node:path";
 
 const CSS = readFileSync(resolve(__dirname, "../styles.css"), "utf8");
 
+function escapeRe(s: string): string {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 function ruleBlock(selector: string): string {
-  // Find the first occurrence of `<selector> {...}` and return the body.
-  // This is intentionally simple — we just need to assert declarations
-  // are present, not parse full CSS.
-  const idx = CSS.indexOf(selector);
-  if (idx < 0) return "";
+  // Match an occurrence of `<selector> {...}` where the selector starts
+  // at a line boundary (optionally indented) — this avoids accidentally
+  // matching scoped variants like `.home-energy .reveal {` when we want
+  // the canonical `.reveal {`. Returns the body of the first such block.
+  const re = new RegExp(`(^|\\n)[\\t ]*${escapeRe(selector)}`, "m");
+  const m = re.exec(CSS);
+  if (!m) return "";
+  const idx = m.index + m[0].length - selector.length;
   const open = CSS.indexOf("{", idx);
   if (open < 0) return "";
   let depth = 1;
