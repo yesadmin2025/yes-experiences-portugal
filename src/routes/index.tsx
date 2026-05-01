@@ -174,7 +174,7 @@ const groupsAndCelebrations = [
     to: "/multi-day",
     img: imgTomarCoimbra,
   },
-];
+] as const;
 
 
 /* ──────────────────────────────────────────────────────────────────
