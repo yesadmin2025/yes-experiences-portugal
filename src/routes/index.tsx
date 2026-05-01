@@ -463,7 +463,7 @@ function HomePage() {
           signature ("Whatever you have in mind, We say YES.") is rendered
           ONCE inside HERO_COPY.brandLine — no duplicate slogans. */}
       <section
-        className="relative min-h-[80svh] md:min-h-[94vh] flex items-end overflow-hidden"
+        className="relative min-h-[78svh] md:min-h-[94vh] flex items-end overflow-hidden"
       >
         <img
           src={heroImg}
@@ -472,11 +472,13 @@ function HomePage() {
           width={1920}
           height={1080}
         />
-        {/* Soft dark gradient — required by brief for any text-over-image. */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/85 via-[color:var(--charcoal-deep)]/45 to-[color:var(--charcoal-deep)]/40 md:from-[color:var(--charcoal-deep)]/80 md:via-[color:var(--charcoal-deep)]/35 md:to-[color:var(--charcoal-deep)]/30 pointer-events-none" />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(15,15,15,0.65)_0%,rgba(15,15,15,0.4)_35%,transparent_70%)] md:bg-[linear-gradient(90deg,rgba(15,15,15,0.6)_0%,rgba(15,15,15,0.32)_40%,transparent_72%)] pointer-events-none" />
+        {/* Soft dark gradient — required by brief for any text-over-image.
+            Mobile overlay deepened slightly to keep CTA + microcopy text
+            readable against the dark hero photo on small viewports. */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/92 via-[color:var(--charcoal-deep)]/55 to-[color:var(--charcoal-deep)]/42 md:from-[color:var(--charcoal-deep)]/80 md:via-[color:var(--charcoal-deep)]/35 md:to-[color:var(--charcoal-deep)]/30 pointer-events-none" />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(15,15,15,0.72)_0%,rgba(15,15,15,0.46)_38%,transparent_72%)] md:bg-[linear-gradient(90deg,rgba(15,15,15,0.6)_0%,rgba(15,15,15,0.32)_40%,transparent_72%)] pointer-events-none" />
 
-        <div className="container-x relative z-10 pb-14 md:pb-36 pt-32 md:pt-40">
+        <div className="container-x relative z-10 pb-10 md:pb-36 pt-20 md:pt-40">
           <div className="max-w-2xl md:max-w-3xl text-[color:var(--ivory)]">
             <span className="inline-flex items-center gap-2 sm:gap-3.5 max-w-full text-[10px] xs:text-[10.5px] sm:text-[12px] md:text-[13px] uppercase tracking-[0.16em] xs:tracking-[0.2em] sm:tracking-[0.26em] md:tracking-[0.3em] text-[color:var(--gold)] opacity-0 animate-[heroFade_0.8s_ease-out_0.1s_forwards]">
               <span aria-hidden="true" className="shrink-0">✦</span>
@@ -488,7 +490,7 @@ function HomePage() {
 
             <h1
               data-hero-field="headlineLine1 headlineLine2"
-              className="hero-h1 serif mt-5 md:mt-8 text-[2.05rem] sm:text-[2.7rem] md:text-[4rem] lg:text-[4.6rem] leading-[1.1] sm:leading-[1.04] md:leading-[1.0] tracking-[-0.02em] text-[color:var(--ivory)] text-left opacity-0 animate-[heroFade_0.9s_ease-out_0.25s_forwards] [text-shadow:0_2px_18px_rgba(0,0,0,0.35)]"
+              className="hero-h1 serif mt-4 md:mt-8 text-[2.05rem] sm:text-[2.7rem] md:text-[4rem] lg:text-[4.6rem] leading-[1.1] sm:leading-[1.04] md:leading-[1.0] tracking-[-0.02em] text-[color:var(--ivory)] text-left opacity-0 animate-[heroFade_0.9s_ease-out_0.25s_forwards] [text-shadow:0_2px_18px_rgba(0,0,0,0.45)]"
             >
               <span data-hero-field="headlineLine1" className="block font-medium tracking-[-0.018em]">
                 {HERO_COPY.headlineLine1}
@@ -503,7 +505,7 @@ function HomePage() {
 
             <p
               data-hero-field="subheadline"
-              className="mt-5 md:mt-7 text-[15.5px] md:text-[19px] text-[color:var(--ivory)]/95 max-w-md md:max-w-lg leading-[1.6] md:leading-[1.65] font-normal text-left opacity-0 animate-[heroFade_0.9s_ease-out_0.45s_forwards] [text-shadow:0_1px_8px_rgba(0,0,0,0.3)]"
+              className="mt-4 md:mt-7 text-[15px] md:text-[19px] text-[color:var(--ivory)] max-w-md md:max-w-lg leading-[1.55] md:leading-[1.65] font-normal text-left opacity-0 animate-[heroFade_0.9s_ease-out_0.45s_forwards] [text-shadow:0_1px_10px_rgba(0,0,0,0.45)]"
             >
               {HERO_COPY.subheadline}
             </p>
@@ -513,7 +515,7 @@ function HomePage() {
                 (→ /builder) leads. "Explore Signature Experiences" stays
                 visible as the calmer second path (→ /experiences).
                 Labels are byte-exact from HERO_COPY (e2e lock). */}
-            <div className="mt-8 md:mt-10 flex flex-col sm:flex-row gap-4 sm:gap-4 w-full max-w-sm sm:max-w-xl opacity-0 animate-[heroFade_0.9s_ease-out_0.65s_forwards]">
+            <div className="mt-6 md:mt-10 flex flex-col sm:flex-row gap-3 sm:gap-4 w-full max-w-sm sm:max-w-xl opacity-0 animate-[heroFade_0.9s_ease-out_0.65s_forwards]">
               <Link
                 to="/builder"
                 data-hero-field="primaryCta"
