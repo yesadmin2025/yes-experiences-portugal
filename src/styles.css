@@ -1523,7 +1523,8 @@
    `size={n}` still wins (lucide sets width/height inline). */
 svg.lucide {
   stroke-width: 2.1;
-}
+
+/* Hero motion neutralised (Patch 1, brand guardrails — no parallax,
    no autoplay drift). Keyframes kept as no-ops so existing
    `animate-[heroZoom...]` / `animate-[heroDrift...]` class refs in
    route files keep parsing until the per-page refactor (Patch 2)
