@@ -696,7 +696,7 @@ function HomePage() {
           FAQ closer, and the Final CTA. */}
       <section
         id="builder"
-        className="section-y-lg bg-[color:var(--sand)] border-b border-[color:var(--border)] scroll-mt-24 md:scroll-mt-28"
+        className="py-20 md:section-y-lg bg-[color:var(--sand)] border-b border-[color:var(--border)] scroll-mt-24 md:scroll-mt-28"
         aria-labelledby="studio-title"
       >
         <div className="container-x">
@@ -1275,7 +1275,7 @@ function HomePage() {
           labelled landmark with visible expandable answers. The wrapper
           section below carries the spacing class the lock checks; the
           inner FAQ component carries aria-labelledby="faq-title". */}
-      <section id="faq" className="py-20 md:py-24 scroll-mt-24 md:scroll-mt-28" aria-labelledby="faq-title">
+      <section id="faq" className="py-16 md:py-20 scroll-mt-24 md:scroll-mt-28" aria-labelledby="faq-title">
         <FAQ />
       </section>
 
