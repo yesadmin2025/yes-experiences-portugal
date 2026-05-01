@@ -105,7 +105,7 @@ const groupsAndCelebrations = [
     trust: "Planned end to end with our local team.",
     cta: "Plan a Proposal",
     to: "/proposals",
-    img: imgArrabidaWineLunch,
+    img: imgArrabidaViewpoint,
   },
   {
     id: "celebrations",
@@ -127,7 +127,7 @@ const groupsAndCelebrations = [
     trust: "Coordinated by a local host who knows how the day connects.",
     cta: "Plan a Celebration",
     to: "/proposals",
-    img: imgSintraEstates,
+    img: imgArrabidaWineLunch,
   },
   {
     id: "corporate",
@@ -149,7 +149,7 @@ const groupsAndCelebrations = [
     trust: "Real driving times, real venues, real partners.",
     cta: "Plan a Group Experience",
     to: "/corporate",
-    img: imgFatimaNazare,
+    img: imgSintraCaboDaRoca,
   },
   {
     id: "multi-day",
@@ -171,7 +171,7 @@ const groupsAndCelebrations = [
     trust: "Designed in conversation with a local team.",
     cta: "Plan a Multi-Day Journey",
     to: "/multi-day",
-    img: imgTroiaBeach,
+    img: imgTomarCoimbra,
   },
 ];
 
