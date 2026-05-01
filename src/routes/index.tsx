@@ -923,7 +923,7 @@ function HomePage() {
               <span className="he-eyebrow-bar mb-4">Three ways in</span>
               <h2
                 id="paths-title"
-                className="serif mt-3 text-[1.85rem] md:text-[2.4rem] leading-[1.1] tracking-[-0.015em] text-[color:var(--charcoal)] font-semibold"
+                className="serif mt-3 text-[1.85rem] sm:text-[2.1rem] md:text-[2.4rem] leading-[1.12] md:leading-[1.1] tracking-[-0.015em] text-[color:var(--charcoal)] font-semibold"
               >
                 Three ways to shape your <span className="italic">Portugal.</span>
               </h2>
@@ -988,7 +988,7 @@ function HomePage() {
               </span>
               <h2
                 id="studio-title"
-                className="serif mt-3 text-[2.85rem] md:text-[4.15rem] leading-[0.98] tracking-[-0.02em] text-[color:var(--charcoal)] font-bold"
+                className="serif mt-3 text-[2.5rem] sm:text-[2.85rem] md:text-[4.15rem] leading-[1.02] md:leading-[0.98] tracking-[-0.02em] text-[color:var(--charcoal)] font-bold"
               >
                 Create it <span className="italic font-semibold">live.</span>
               </h2>
@@ -1329,7 +1329,7 @@ function HomePage() {
         <div className="container-x">
           <div className="reveal text-center max-w-2xl mx-auto mb-14 md:mb-20">
             <span className="he-eyebrow-bar mb-5">Groups &amp; celebrations</span>
-            <h2 id="groups-title" className="serif mt-3 text-[2.5rem] sm:text-[2.85rem] md:text-[4.2rem] leading-[1.02] md:leading-[1.0] tracking-[-0.02em] text-[color:var(--charcoal)] font-semibold">
+            <h2 id="groups-title" className="serif mt-3 text-[2.5rem] sm:text-[2.85rem] md:text-[4.15rem] leading-[1.02] md:leading-[1.0] tracking-[-0.02em] text-[color:var(--charcoal)] font-semibold">
               When the <span className="italic font-medium">occasion</span> is bigger.
             </h2>
             <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] leading-[1.6] max-w-md mx-auto">
@@ -1527,13 +1527,13 @@ function HomePage() {
 
         <div className="container-x relative">
           <div className="reveal max-w-xl mx-auto text-center">
-            <span className="he-rule-flank text-[10.5px] uppercase tracking-[0.28em] font-bold text-[color:var(--gold-soft)]">
+            <span className="he-rule-flank text-[11px] uppercase tracking-[0.28em] font-bold text-[color:var(--gold-soft)]">
               <MessageCircle size={12} aria-hidden="true" />
               Prefer a conversation?
             </span>
             <h2
               id="final-cta-title"
-              className="mt-5 text-[2.5rem] sm:text-[3rem] md:text-[3.6rem] leading-[1.04] md:leading-[1.02] tracking-[-0.02em] font-bold text-[color:var(--ivory)]"
+              className="mt-5 text-[2.5rem] sm:text-[2.85rem] md:text-[3.6rem] leading-[1.02] md:leading-[1.0] tracking-[-0.02em] font-bold text-[color:var(--ivory)]"
             >
               Ready to design your{" "}
               <span className="italic font-normal text-[color:var(--gold-soft)] serif">
