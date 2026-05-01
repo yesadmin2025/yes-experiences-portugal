@@ -85,24 +85,35 @@ describe("Homepage H2 — sub-section ramp", () => {
 describe("Homepage eyebrow labels — minimum legibility", () => {
   // .he-eyebrow-bar is the canonical utility (11px / 0.28em). Any
   // inline eyebrow on the homepage must clear the same threshold.
-  it("inline eyebrows on charcoal/ivory hit ≥11px and ≥0.28em tracking", () => {
+  it("inline eyebrows on charcoal/ivory hit ≥10.5px and ≥0.22em tracking", () => {
     // Match every uppercase eyebrow label that uses an inline size.
-    // We accept text-[Npx] where N >= 11 OR a higher value, paired with
-    // tracking-[Xem] where X >= 0.28.
+    // Skip CTA buttons (they share the uppercase + tracking pattern but
+    // also include button-only utilities like bg-[ / min-h-[ / border-).
     const HOMEPAGE_INLINE_EYEBROW = /text-\[(\d+(?:\.\d+)?)px\][^"]*uppercase[^"]*tracking-\[(\d+(?:\.\d+)?)em\]/g;
     const matches = [...src.matchAll(HOMEPAGE_INLINE_EYEBROW)];
     expect(matches.length, "expected at least one inline eyebrow on homepage").toBeGreaterThan(0);
 
+    let eyebrowCount = 0;
     for (const m of matches) {
+      const fragment = m[0];
+      // Filter out button/CTA-style declarations.
+      const isButton =
+        /\bbg-\[/.test(fragment) ||
+        /\bmin-h-\[/.test(fragment) ||
+        /\bborder\b/.test(fragment) ||
+        /\bpx-\d/.test(fragment);
+      if (isButton) continue;
+
       const px = parseFloat(m[1]);
       const tracking = parseFloat(m[2]);
-      // The hero eyebrow uses a smaller size + smaller tracking on
-      // very narrow screens — it has a documented xs:/sm:/md: ramp.
-      // We only enforce the floor on labels that DON'T have a ramp.
-      const hasRamp = m[0].includes("xs:text-[") || m[0].includes("sm:text-[");
+      // Skip labels with a documented xs:/sm: ramp (hero eyebrow).
+      const hasRamp = fragment.includes("xs:text-[") || fragment.includes("sm:text-[");
       if (hasRamp) continue;
-      expect(px, `eyebrow "${m[0].slice(0, 80)}…" px floor`).toBeGreaterThanOrEqual(10.5);
-      expect(tracking, `eyebrow "${m[0].slice(0, 80)}…" tracking floor`).toBeGreaterThanOrEqual(0.22);
+
+      eyebrowCount++;
+      expect(px, `eyebrow "${fragment.slice(0, 80)}…" px floor`).toBeGreaterThanOrEqual(10.5);
+      expect(tracking, `eyebrow "${fragment.slice(0, 80)}…" tracking floor`).toBeGreaterThanOrEqual(0.22);
     }
+    expect(eyebrowCount, "expected at least 2 enforceable eyebrows after filtering").toBeGreaterThanOrEqual(2);
   });
 });
