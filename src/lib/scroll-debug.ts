@@ -290,6 +290,10 @@ export function applyScrollDebugClasses(flags: ScrollDebugFlags) {
     "scroll-debug-studio-static",
     flags.disableMobileStudioMotion,
   );
+  document.documentElement.classList.toggle(
+    "scroll-debug-static-carousels",
+    flags.staticMobileCarousels,
+  );
 }
 
 installScrollDebugInstrumentation();
