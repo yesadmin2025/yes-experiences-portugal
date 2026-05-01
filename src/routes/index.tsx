@@ -988,7 +988,7 @@ function HomePage() {
               </span>
               <h2
                 id="studio-title"
-                className="serif mt-3 text-[2.85rem] md:text-[4.15rem] leading-[0.98] tracking-[-0.02em] text-[color:var(--charcoal)] font-bold"
+                className="serif mt-3 text-[2.5rem] sm:text-[2.85rem] md:text-[4.15rem] leading-[1.02] md:leading-[0.98] tracking-[-0.02em] text-[color:var(--charcoal)] font-bold"
               >
                 Create it <span className="italic font-semibold">live.</span>
               </h2>
@@ -1527,13 +1527,13 @@ function HomePage() {
 
         <div className="container-x relative">
           <div className="reveal max-w-xl mx-auto text-center">
-            <span className="he-rule-flank text-[10.5px] uppercase tracking-[0.28em] font-bold text-[color:var(--gold-soft)]">
+            <span className="he-rule-flank text-[11px] uppercase tracking-[0.28em] font-bold text-[color:var(--gold-soft)]">
               <MessageCircle size={12} aria-hidden="true" />
               Prefer a conversation?
             </span>
             <h2
               id="final-cta-title"
-              className="mt-5 text-[2.5rem] sm:text-[3rem] md:text-[3.6rem] leading-[1.04] md:leading-[1.02] tracking-[-0.02em] font-bold text-[color:var(--ivory)]"
+              className="mt-5 text-[2.5rem] sm:text-[2.85rem] md:text-[3.6rem] leading-[1.02] md:leading-[1.0] tracking-[-0.02em] font-bold text-[color:var(--ivory)]"
             >
               Ready to design your{" "}
               <span className="italic font-normal text-[color:var(--gold-soft)] serif">
