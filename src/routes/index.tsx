@@ -300,6 +300,7 @@ function HomePage() {
   // triggered by clicks on in-page anchors that point to a tracked id).
   useEffect(() => {
     if (typeof window === "undefined") return;
+    if (getScrollDebugFlags().disableHashSync) return;
 
     const resolveTarget = (raw: string): HTMLElement | null => {
       if (!raw) return null;
@@ -409,6 +410,7 @@ function HomePage() {
   // none does (between sections), the section closest above wins.
   useEffect(() => {
     if (typeof window === "undefined") return;
+    if (getScrollDebugFlags().disableHashSync) return;
     if (typeof IntersectionObserver === "undefined") return;
 
     const targets = TRACKED_IDS.map((id) =>
@@ -523,6 +525,7 @@ function HomePage() {
   // stays "everyday", never woozy.
   useEffect(() => {
     if (typeof window === "undefined") return;
+    if (getScrollDebugFlags().disableMobileStudioMotion && window.innerWidth < 768) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const els = Array.from(
