@@ -56,12 +56,15 @@ export function HeroJourneyOverlay() {
         </defs>
 
         {/* Faint base path — always visible so the route reads even before
-            the animated overlay completes its draw. */}
+            the animated overlay completes its draw. Path traces the upper
+            band of the hero so it sits above the dark gradient peak and
+            stays visible behind/above the headline area without blocking
+            text contrast. */}
         <path
-          d="M -20 600 C 180 540, 340 460, 520 470 S 820 540, 980 420 1180 260 1240 200"
+          d="M -20 220 C 180 160, 340 120, 520 180 S 820 320, 980 240 1180 120 1240 80"
           stroke="var(--ivory)"
-          strokeOpacity="0.10"
-          strokeWidth="1.25"
+          strokeOpacity="0.14"
+          strokeWidth="1.4"
           fill="none"
           strokeLinecap="round"
           strokeDasharray="2 10"
@@ -70,9 +73,9 @@ export function HeroJourneyOverlay() {
         {/* Animated dashed route line — slowly draws in, then idles */}
         <path
           className="hero-journey-route"
-          d="M -20 600 C 180 540, 340 460, 520 470 S 820 540, 980 420 1180 260 1240 200"
+          d="M -20 220 C 180 160, 340 120, 520 180 S 820 320, 980 240 1180 120 1240 80"
           stroke="url(#heroRouteGrad)"
-          strokeWidth="1.75"
+          strokeWidth="2"
           fill="none"
           strokeLinecap="round"
           strokeDasharray="6 14"
@@ -82,22 +85,22 @@ export function HeroJourneyOverlay() {
             the path on a long, calm loop. Gives the "being built right
             now" feel without flashy motion. */}
         <g className="hero-journey-studio">
-          <circle r="34" fill="url(#heroRouteHighlight)" />
+          <circle r="38" fill="url(#heroRouteHighlight)" />
         </g>
 
         {/* Three location pings, staggered. Coordinates roughly match the
             inflection points of the route above. */}
         <g className="hero-journey-pings">
-          <g transform="translate(340 460)" className="hero-journey-ping hero-journey-ping-1">
-            <circle r="18" fill="url(#heroPingGrad)" className="hero-journey-ping-halo" />
-            <circle r="3.2" fill="var(--gold)" />
+          <g transform="translate(340 130)" className="hero-journey-ping hero-journey-ping-1">
+            <circle r="20" fill="url(#heroPingGrad)" className="hero-journey-ping-halo" />
+            <circle r="3.4" fill="var(--gold)" />
           </g>
-          <g transform="translate(720 500)" className="hero-journey-ping hero-journey-ping-2">
-            <circle r="18" fill="url(#heroPingGrad)" className="hero-journey-ping-halo" />
-            <circle r="3.2" fill="var(--gold)" />
+          <g transform="translate(720 280)" className="hero-journey-ping hero-journey-ping-2">
+            <circle r="20" fill="url(#heroPingGrad)" className="hero-journey-ping-halo" />
+            <circle r="3.4" fill="var(--gold)" />
           </g>
-          <g transform="translate(1040 380)" className="hero-journey-ping hero-journey-ping-3">
-            <circle r="18" fill="url(#heroPingGrad)" className="hero-journey-ping-halo" />
+          <g transform="translate(1040 200)" className="hero-journey-ping hero-journey-ping-3">
+            <circle r="20" fill="url(#heroPingGrad)" className="hero-journey-ping-halo" />
             <circle r="3.2" fill="var(--gold-soft)" />
           </g>
         </g>
