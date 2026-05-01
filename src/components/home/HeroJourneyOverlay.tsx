@@ -132,14 +132,14 @@ export function HeroJourneyOverlay() {
         </span>
 
         <span
-          className="hero-journey-label hero-journey-label-3a"
-          style={{ left: "80%", top: "25%" }}
+          className="hero-journey-label hero-journey-label-3a hero-journey-label-right"
+          style={{ right: "6%", top: "25%" }}
         >
           Hidden places
         </span>
         <span
-          className="hero-journey-label hero-journey-label-3b"
-          style={{ left: "80%", top: "25%" }}
+          className="hero-journey-label hero-journey-label-3b hero-journey-label-right"
+          style={{ right: "6%", top: "25%" }}
         >
           Group journey
         </span>
