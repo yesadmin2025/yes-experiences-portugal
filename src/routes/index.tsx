@@ -1071,11 +1071,11 @@ function HomePage() {
                         <Link
                           to="/tours/$tourId"
                           params={{ tourId: t.id }}
-                          className="inline-flex items-center justify-center gap-1.5 min-h-[44px] flex-1 px-4 text-[12px] uppercase tracking-[0.18em] font-semibold bg-[color:var(--teal)] text-[color:var(--ivory)] hover:bg-[color:var(--teal-2)] transition-colors rounded-[3px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2"
+                          className="he-glow he-sheen group/cta inline-flex items-center justify-center gap-1.5 min-h-[44px] flex-1 px-4 text-[12px] uppercase tracking-[0.18em] font-semibold bg-[color:var(--teal)] text-[color:var(--ivory)] hover:bg-[color:var(--teal-2)] transition-all duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] rounded-[3px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2"
                           aria-label={`Book ${t.title}`}
                         >
                           Book
-                          <ArrowRight size={13} />
+                          <ArrowRight size={13} className="transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover/cta:translate-x-1" />
                         </Link>
                         <Link
                           to="/tours/$tourId/tailor"
