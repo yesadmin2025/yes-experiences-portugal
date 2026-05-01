@@ -518,7 +518,7 @@ function HomePage() {
                 <span className="block">{HERO_COPY.primaryCta}</span>
                 <ArrowRight
                   size={16}
-                  className="shrink-0 transition-transform duration-300 group-hover:translate-x-1"
+                  className="shrink-0 transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1.5"
                   aria-hidden="true"
                 />
               </Link>
