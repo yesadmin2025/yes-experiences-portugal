@@ -127,7 +127,7 @@ const FAQS: { q: string; a: ReactNode }[] = [
   },
 ];
 
-const DEFAULT_OPEN = ["item-0", "item-1", "item-2"] as const;
+const DEFAULT_OPEN = "item-0";
 
 export function FAQ() {
   return (
@@ -142,9 +142,9 @@ export function FAQ() {
             Reassures before the questions even start. */}
         <div className="reveal max-w-3xl mx-auto text-center">
           <span className="eyebrow">Before you book</span>
-          <h2 id="faq-title" className="serif text-[2rem] md:text-[2.6rem] mt-4 leading-[1.12] tracking-[-0.015em] text-[color:var(--charcoal)]">
+          <h2 id="faq-title" className="serif text-[2.4rem] sm:text-[2.8rem] md:text-[4rem] mt-4 leading-[1.05] md:leading-[0.98] tracking-[-0.02em] text-[color:var(--charcoal)] font-medium">
             Still wondering{" "}
-            <span className="italic text-[color:var(--teal)]">how it works?</span>
+            <span className="italic font-normal text-[color:var(--teal)]">how it works?</span>
           </h2>
           <p className="mt-5 text-[15.5px] md:text-[16.5px] leading-[1.65] text-[color:var(--charcoal)] max-w-xl mx-auto">
             It's simpler than it looks — and you're never on your own.
@@ -155,8 +155,9 @@ export function FAQ() {
         {/* ── Questions ─────────────────────────────────────── */}
         <div className="reveal mt-10 md:mt-12 max-w-3xl mx-auto">
           <Accordion
-            type="multiple"
-            defaultValue={[...DEFAULT_OPEN]}
+            type="single"
+            collapsible
+            defaultValue={DEFAULT_OPEN}
             className="space-y-3"
           >
             {FAQS.map((item, i) => (
