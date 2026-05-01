@@ -1,6 +1,9 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
-import { ArrowRight, MessageCircle, Heart, Sparkles, Users } from "lucide-react";
+import { MessageCircle, Heart, Sparkles, Users } from "lucide-react";
+import { Eyebrow } from "@/components/ui/Eyebrow";
+import { SectionTitle } from "@/components/ui/SectionTitle";
+import { CtaButton } from "@/components/ui/CtaButton";
 import imgArrabidaWineLunch from "@/assets/tours/arrabida-wine-allinclusive/lunch.jpg";
 import imgSintraEstates from "@/assets/tours/sintra-cascais/estates.jpg";
 import imgTroiaBeach from "@/assets/tours/troia-comporta/beach.jpg";
@@ -75,32 +78,25 @@ function ProposalsPage() {
       {/* Hero */}
       <section className="pt-28 pb-14 bg-[color:var(--sand)] reveal">
         <div className="container-x max-w-3xl text-center">
-          <span className="eyebrow">Proposals & Celebrations</span>
-          <h1 className="font-display font-bold text-[2.4rem] md:text-[3.6rem] leading-[1.05] mt-5 text-[color:var(--charcoal)]">
+          <Eyebrow flank>Proposals &amp; Celebrations</Eyebrow>
+          <SectionTitle as="h1" size="anchor" spacing="loose">
             Moments worth{" "}
-            <span className="font-serif italic font-normal text-[color:var(--teal)]">
-              saying yes to.
-            </span>
-          </h1>
+            <SectionTitle.Em>saying yes to.</SectionTitle.Em>
+          </SectionTitle>
           <span className="gold-rule mt-6 mx-auto max-w-[80px]" aria-hidden="true" />
           <p className="mt-6 text-[1rem] md:text-[1.1rem] text-[color:var(--charcoal-soft)] leading-relaxed">
             A private moment, shaped with <span className="kw">care</span> — with local knowledge behind every detail.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
-            <Link
+            <CtaButton to="/contact" variant="primary">Plan a Proposal</CtaButton>
+            <CtaButton
               to="/contact"
-              className="group inline-flex items-center justify-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] px-7 py-3.5 text-sm tracking-wide transition-all duration-200 hover:-translate-y-[2px] min-h-[44px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--teal)]"
+              variant="ghost"
+              icon={null}
+              iconLeading={<MessageCircle size={14} aria-hidden="true" />}
             >
-              Plan a Proposal
-              <ArrowRight size={16} className="cta-arrow" />
-            </Link>
-            <Link
-              to="/contact"
-              className="inline-flex items-center justify-center gap-2 border border-[color:var(--charcoal)]/25 text-[color:var(--charcoal)] hover:border-[color:var(--teal)] hover:text-[color:var(--teal)] px-7 py-3.5 text-sm tracking-wide transition-colors min-h-[44px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--teal)]"
-            >
-              <MessageCircle size={16} />
               Talk to a Local
-            </Link>
+            </CtaButton>
           </div>
         </div>
       </section>
