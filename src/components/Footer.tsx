@@ -127,8 +127,8 @@ export function Footer() {
           >
             <p>© {new Date().getFullYear()} YES experiences Portugal. All rights reserved.</p>
             <p
-              className="tracking-[0.32em] uppercase text-[color:var(--gold)]"
-              style={{ fontWeight: 400 }}
+              className="tracking-[0.32em] uppercase text-[color:var(--gold-warm)]"
+              style={{ fontWeight: 500 }}
             >
               Designed in Portugal
             </p>
