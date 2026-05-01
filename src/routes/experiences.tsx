@@ -1,12 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
-import { ArrowRight, Clock, MapPin } from "lucide-react";
+import { Clock, MapPin } from "lucide-react";
 import { signatureTours } from "@/data/signatureTours";
 import { useImportedTourImages } from "@/hooks/use-imported-tour-images";
 import { ImageQualityToggle } from "@/components/ImageQualityToggle";
 import { ContrastAuditPanel } from "@/components/dev/ContrastAuditPanel";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { SectionTitle } from "@/components/ui/SectionTitle";
+import { CtaButton } from "@/components/ui/CtaButton";
 
 export const Route = createFileRoute("/experiences")({
   head: () => ({
@@ -123,23 +124,26 @@ function ExperiencesPage() {
                   {/* Dual CTAs — Book (primary) + Tailor (adjust inside
                       this Signature, never a different tour). */}
                   <div className="mt-5 flex flex-col xs:flex-row gap-2.5">
-                    <Link
+                    <CtaButton
                       to="/tours/$tourId"
                       params={{ tourId: t.id }}
-                      className="inline-flex items-center justify-center gap-1.5 min-h-[44px] flex-1 px-4 text-[12px] uppercase tracking-[0.18em] font-semibold bg-[color:var(--teal)] text-[color:var(--ivory)] hover:bg-[color:var(--teal-2)] transition-colors rounded-[3px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2"
+                      variant="primary"
+                      size="sm"
+                      className="flex-1"
                       aria-label={`Book ${t.title}`}
                     >
                       Book
-                      <ArrowRight size={13} />
-                    </Link>
-                    <Link
+                    </CtaButton>
+                    <CtaButton
                       to="/tours/$tourId/tailor"
                       params={{ tourId: t.id }}
-                      className="inline-flex items-center justify-center gap-1.5 min-h-[44px] flex-1 px-4 text-[12px] uppercase tracking-[0.18em] font-semibold border border-[color:var(--charcoal)]/25 text-[color:var(--charcoal)] hover:border-[color:var(--charcoal)] hover:bg-[color:var(--sand)] transition-colors rounded-[3px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2"
+                      variant="ghost"
+                      size="sm"
+                      className="flex-1"
                       aria-label={`Tailor ${t.title}`}
                     >
                       Tailor
-                    </Link>
+                    </CtaButton>
                   </div>
                 </article>
               );
@@ -168,13 +172,9 @@ function CtaStrip() {
               shaping it within what works best on the ground.
             </p>
           </div>
-          <Link
-            to="/builder"
-            className="btn-solid btn-solid--gold flex-shrink-0"
-          >
+          <CtaButton to="/builder" variant="ghostDark" className="flex-shrink-0">
             Start the Studio
-            <ArrowRight size={16} />
-          </Link>
+          </CtaButton>
         </div>
       </div>
     </section>
