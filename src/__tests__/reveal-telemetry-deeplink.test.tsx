@@ -301,6 +301,10 @@ describe("reveal telemetry — deep-link / fast-scroll attribution", () => {
     // And the delayed sweep must have done at least the work the
     // initial sweep didn't: finalClaimed - initialClaimed == sweepDelayed.
     expect(t.reveal.sweepDelayed).toBe(finalClaimed - initialClaimed);
+    // Critical regression guard: every reveal counted by the delayed
+    // sweep must also have `.is-visible` on the DOM node. Without this
+    // the safety net would log fixes it never actually applied.
+    els.forEach((el) => expect(el.classList.contains("is-visible")).toBe(true));
   });
 
   it("hashchange after mount flips telemetry.entry to 'hash'", () => {
