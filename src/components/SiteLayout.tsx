@@ -257,17 +257,26 @@ export function SiteLayout({ children }: { children: ReactNode }) {
     if (!els.length) return;
 
     const flags = getScrollDebugFlags();
-    const mobileRevealsDisabled =
-      flags.disableMobileReveals && window.matchMedia("(max-width: 767.98px)").matches;
+    const isMobile = window.matchMedia("(max-width: 767.98px)").matches;
+    const mobileRevealsDisabled = flags.disableMobileReveals && isMobile;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const revealDebug = flags.revealDebug;
     const telemetry = getRevealTelemetry();
     telemetry.setTotal("reveal", els.length);
 
+    // prefers-reduced-motion fallback: ensure content is ALWAYS visible
+    // even if any CSS/JS animation is blocked. We mark visible AND clear
+    // any inline transition delay so nothing keeps content at opacity:0.
     if (
       mobileRevealsDisabled ||
       typeof IntersectionObserver === "undefined" ||
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      reducedMotion
     ) {
-      els.forEach((el) => el.classList.add("is-visible"));
+      els.forEach((el) => {
+        el.style.transitionDelay = "0ms";
+        el.classList.add("is-visible");
+        if (revealDebug) flashDebug(el, "reduced-motion");
+      });
       return;
     }
 
@@ -302,29 +311,40 @@ export function SiteLayout({ children }: { children: ReactNode }) {
       }
       target.classList.add("is-visible");
       telemetry.log("reveal", source, describeReveal(target));
+      if (revealDebug) flashDebug(target, `reveal·${source}`);
     };
 
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          // Reveal when intersecting OR when the element has already
-          // scrolled past the viewport (bottom ≤ 0). On fast mobile
-          // flings the IO can skip the intersecting callback entirely;
-          // without this guard those items would stay invisible until
-          // the user scrolls back. Mirrors the .section-enter observer.
-          const passed = entry.boundingClientRect.bottom <= 0;
-          if (!entry.isIntersecting && !passed) return;
-          revealEl(entry.target as HTMLElement, "io");
-          io.unobserve(entry.target);
-        });
-      },
-      // Lower threshold + small negative bottom margin so reveals fire
-      // a touch earlier on tall mobile sections, reducing the "snap in"
-      // feel during quick scrolling.
-      { threshold: 0.08, rootMargin: "0px 0px -6% 0px" },
-    );
+    // Mobile-aware IO config: on narrow viewports tall sections take up
+    // most of the screen, so a tight threshold (0.08) means they only
+    // fire after 8% of a 1000px section is on-screen — feels late.
+    // Lower threshold + larger negative bottom margin on mobile so reveals
+    // fire as soon as the top edge starts to appear.
+    const ioOptions: IntersectionObserverInit = isMobile
+      ? { threshold: 0.01, rootMargin: "0px 0px -2% 0px" }
+      : { threshold: 0.08, rootMargin: "0px 0px -6% 0px" };
+
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        // Reveal when intersecting OR when the element has already
+        // scrolled past the viewport (bottom ≤ 0). On fast mobile
+        // flings the IO can skip the intersecting callback entirely;
+        // without this guard those items would stay invisible until
+        // the user scrolls back. Mirrors the .section-enter observer.
+        const passed = entry.boundingClientRect.bottom <= 0;
+        if (!entry.isIntersecting && !passed) return;
+        revealEl(entry.target as HTMLElement, "io");
+        io.unobserve(entry.target);
+      });
+    }, ioOptions);
 
     els.forEach((el) => io.observe(el));
+
+    if (revealDebug) {
+      // eslint-disable-next-line no-console
+      console.info(
+        `[reveal-debug] reveal observer: total=${els.length} mobile=${isMobile} threshold=${ioOptions.threshold} rootMargin="${ioOptions.rootMargin}"`,
+      );
+    }
 
     // Initial sweep: reveal anything already inside the viewport or already
     // scrolled past. Because `.is-visible` now also starts a keyframe, the
@@ -368,14 +388,18 @@ export function SiteLayout({ children }: { children: ReactNode }) {
     const els = document.querySelectorAll<HTMLElement>(".section-enter");
     if (!els.length) return;
 
+    const flags = getScrollDebugFlags();
+    const isMobile = window.matchMedia("(max-width: 767.98px)").matches;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const revealDebug = flags.revealDebug;
     const telemetry = getRevealTelemetry();
     telemetry.setTotal("sectionEnter", els.length);
 
-    if (
-      typeof IntersectionObserver === "undefined" ||
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    ) {
-      els.forEach((el) => el.classList.add("is-visible"));
+    if (typeof IntersectionObserver === "undefined" || reducedMotion) {
+      els.forEach((el) => {
+        el.classList.add("is-visible");
+        if (revealDebug) flashDebug(el, "section·reduced-motion");
+      });
       return;
     }
 
@@ -383,31 +407,32 @@ export function SiteLayout({ children }: { children: ReactNode }) {
       if (el.classList.contains("is-visible")) return;
       el.classList.add("is-visible");
       telemetry.log("sectionEnter", source, describeReveal(el));
+      if (revealDebug) flashDebug(el as HTMLElement, `section·${source}`);
     };
 
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          // Reveal both when the section is intersecting AND when it has
-          // already scrolled past (bottom ≤ 0). The latter handles fast
-          // fling-scroll on mobile where a tall section can leave the
-          // viewport before the first callback fires — without this
-          // guard the section would stay at opacity:0 forever.
-          const passed = entry.boundingClientRect.bottom <= 0;
-          if (!entry.isIntersecting && !passed) return;
-          markVisible(entry.target, "io");
-          io.unobserve(entry.target);
-        });
-      },
-      { threshold: 0.02, rootMargin: "0px 0px -8% 0px" },
-    );
+    // Fire even earlier on mobile.
+    const ioOptions: IntersectionObserverInit = isMobile
+      ? { threshold: 0.01, rootMargin: "0px 0px -2% 0px" }
+      : { threshold: 0.02, rootMargin: "0px 0px -8% 0px" };
+
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        const passed = entry.boundingClientRect.bottom <= 0;
+        if (!entry.isIntersecting && !passed) return;
+        markVisible(entry.target, "io");
+        io.unobserve(entry.target);
+      });
+    }, ioOptions);
 
     els.forEach((el) => io.observe(el));
 
-    // Initial + delayed sweep mirrors the reveal observer: on very fast
-    // mobile flings the IO can miss a section entirely. Mark anything
-    // already on-screen or scrolled past; CSS keyframes keep this animated
-    // instead of popping instantly visible on mobile.
+    if (revealDebug) {
+      // eslint-disable-next-line no-console
+      console.info(
+        `[reveal-debug] section-enter observer: total=${els.length} mobile=${isMobile} threshold=${ioOptions.threshold} rootMargin="${ioOptions.rootMargin}"`,
+      );
+    }
+
     const sweep = (source: "sweepInitial" | "sweepDelayed") => {
       els.forEach((el) => {
         if (el.classList.contains("is-visible")) return;
@@ -428,6 +453,58 @@ export function SiteLayout({ children }: { children: ReactNode }) {
     return () => {
       window.clearTimeout(t);
       io.disconnect();
+    };
+  }, []);
+
+  // Reveal debug overlay: when ?reveal-debug is on, mount a small fixed
+  // HUD that shows live counts, plus log hero CTA pulse status. Helps QA
+  // animations on mobile where dev tools console isn't visible.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const flags = getScrollDebugFlags();
+    if (!flags.revealDebug) return;
+
+    const hud = document.createElement("div");
+    hud.id = "yes-reveal-debug-hud";
+    hud.setAttribute("role", "status");
+    hud.setAttribute("aria-live", "polite");
+    hud.style.cssText = [
+      "position:fixed",
+      "left:8px",
+      "bottom:8px",
+      "z-index:99999",
+      "padding:8px 10px",
+      "background:rgba(20,20,20,0.88)",
+      "color:#FAF8F3",
+      "font:600 11px/1.35 ui-monospace,SFMono-Regular,Menlo,monospace",
+      "border:1px solid rgba(201,169,106,0.5)",
+      "border-radius:6px",
+      "box-shadow:0 4px 16px rgba(0,0,0,0.35)",
+      "pointer-events:auto",
+      "max-width:60vw",
+    ].join(";");
+    document.body.appendChild(hud);
+
+    const tick = () => {
+      const t = window.__yesRevealTelemetry;
+      if (!t) return;
+      const pulses = document.querySelectorAll(".hero-cta-arrow-pulse").length;
+      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      hud.innerHTML =
+        `<div style="color:#C9A96A">reveal-debug · ${t.entry}</div>` +
+        `<div>reveal ${t.reveal.io}/${t.reveal.sweepInitial}/${t.reveal.sweepDelayed} · pending ${t.reveal.pending}/${t.reveal.total}</div>` +
+        `<div>section ${t.sectionEnter.io}/${t.sectionEnter.sweepInitial}/${t.sectionEnter.sweepDelayed} · pending ${t.sectionEnter.pending}/${t.sectionEnter.total}</div>` +
+        `<div>hero pulses: ${pulses} · reduced-motion: ${reduced ? "ON" : "off"}</div>` +
+        `<div style="opacity:.7">io / sweepInit / sweepDelayed</div>`;
+    };
+    tick();
+    const interval = window.setInterval(tick, 500);
+    // eslint-disable-next-line no-console
+    console.info("[reveal-debug] HUD mounted. Add ?scroll-debug=reveal-debug or ?reveal-debug to URL.");
+
+    return () => {
+      window.clearInterval(interval);
+      hud.remove();
     };
   }, []);
 
