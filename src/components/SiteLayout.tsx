@@ -479,15 +479,21 @@ export function SiteLayout({ children }: { children: ReactNode }) {
     const t = window.setTimeout(() => sweep("sweepDelayed"), 600);
 
     // FAIL-SAFE (1200ms): if for any reason the IntersectionObserver
-    // never fires (sandboxed iframe, throttled tab, browser quirk, layout
-    // shift after observe), force every still-pending element visible so
-    // content is NEVER stuck at opacity: 0. We disable transitions inline
-    // so off-screen elements don't animate while invisible — they just
-    // appear as the user scrolls to them.
+    // never fires for elements that are ALREADY in or above the viewport
+    // (sandboxed iframe, throttled tab, browser quirk, layout shift after
+    // observe), force ONLY those visible. Elements still legitimately
+    // below the fold remain observed and animate when scrolled to —
+    // otherwise the fail-safe would defeat the entire reveal system on
+    // long pages.
     const failSafe = window.setTimeout(() => {
       let forced = 0;
+      const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
       els.forEach((el) => {
         if (el.classList.contains("is-visible")) return;
+        const rect = el.getBoundingClientRect();
+        // Only force-visible if the element is at or above the viewport
+        // bottom (i.e. should already be on-screen). Below-fold stays.
+        if (rect.top >= viewportHeight) return;
         el.style.transition = "none";
         el.style.transitionDelay = "0ms";
         el.classList.add("is-visible");
@@ -581,11 +587,16 @@ export function SiteLayout({ children }: { children: ReactNode }) {
     const t = window.setTimeout(() => sweep("sweepDelayed"), 600);
 
     // FAIL-SAFE (1200ms): force any still-pending section-enter visible
-    // so content never stays at opacity: 0 if IO failed to fire.
+    // ONLY if it's already at or above the viewport. Below-fold sections
+    // remain observed and animate when scrolled to — preserves the
+    // intended on-scroll motion on long pages.
     const failSafe = window.setTimeout(() => {
       let forced = 0;
+      const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
       els.forEach((el) => {
         if (el.classList.contains("is-visible")) return;
+        const rect = el.getBoundingClientRect();
+        if (rect.top >= viewportHeight) return;
         el.style.transition = "none";
         el.classList.add("is-visible");
         telemetry.log("sectionEnter", "sweepDelayed", describeReveal(el));

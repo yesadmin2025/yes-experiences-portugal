@@ -1273,7 +1273,11 @@ function HomePage() {
           labelled landmark with visible expandable answers. The wrapper
           section below carries the spacing class the lock checks; the
           inner FAQ component carries aria-labelledby="faq-title". */}
-      <section id="faq" className="section-y scroll-mt-24 md:scroll-mt-28" aria-labelledby="faq-title">
+      <section
+        id="faq"
+        className="he-section-rule section-enter section-y scroll-mt-24 md:scroll-mt-28 relative"
+        aria-labelledby="faq-title"
+      >
         <FAQ />
       </section>
 
