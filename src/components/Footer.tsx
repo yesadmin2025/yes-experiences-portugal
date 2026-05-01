@@ -114,7 +114,7 @@ export function Footer() {
         </div>
 
         {/* Bottom bar — copyright + tagline. Quiet, single line. */}
-        <div className="mt-16 md:mt-20 pt-8 border-t border-[color:var(--ivory)]/15">
+        <div className="mt-12 md:mt-14 pt-6 border-t border-[color:var(--gold)]/20">
           <div
             className="flex flex-col md:flex-row justify-between items-center gap-3 text-[12px] text-[color:var(--ivory)]/70"
             style={{ fontWeight: 350 }}
