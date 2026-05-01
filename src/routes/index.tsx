@@ -31,6 +31,7 @@ import {
 } from "lucide-react";
 import { PlatformBadge } from "@/components/PlatformBadge";
 import { StudioLivePreview } from "@/components/home/StudioLivePreview";
+import { HeroJourneyOverlay } from "@/components/home/HeroJourneyOverlay";
 import { getScrollDebugFlags, useScrollDebugFlags } from "@/lib/scroll-debug";
 
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
@@ -491,9 +492,14 @@ function HomePage() {
           width={1920}
           height={1080}
         />
+        {/* Animated journey overlay — communicates "your trip is being
+            shaped in real time" via a slowly-drawing route + location
+            pings. Sits above the image, beneath the dark gradients so
+            the headline contrast is preserved. */}
+        <HeroJourneyOverlay />
         {/* Soft dark gradient — required by brief for any text-over-image. */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/85 via-[color:var(--charcoal-deep)]/45 to-[color:var(--charcoal-deep)]/40 md:from-[color:var(--charcoal-deep)]/80 md:via-[color:var(--charcoal-deep)]/35 md:to-[color:var(--charcoal-deep)]/30 pointer-events-none" />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(15,15,15,0.65)_0%,rgba(15,15,15,0.4)_35%,transparent_70%)] md:bg-[linear-gradient(90deg,rgba(15,15,15,0.6)_0%,rgba(15,15,15,0.32)_40%,transparent_72%)] pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/85 via-[color:var(--charcoal-deep)]/45 to-[color:var(--charcoal-deep)]/40 md:from-[color:var(--charcoal-deep)]/80 md:via-[color:var(--charcoal-deep)]/35 md:to-[color:var(--charcoal-deep)]/30 pointer-events-none z-[2]" />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(15,15,15,0.65)_0%,rgba(15,15,15,0.4)_35%,transparent_70%)] md:bg-[linear-gradient(90deg,rgba(15,15,15,0.6)_0%,rgba(15,15,15,0.32)_40%,transparent_72%)] pointer-events-none z-[2]" />
 
         <div className="container-x relative z-10 pb-14 md:pb-36 pt-32 md:pt-40">
           <div className="max-w-2xl md:max-w-3xl text-[color:var(--ivory)]">

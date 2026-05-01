@@ -3248,3 +3248,126 @@ html.motion-ready [data-motion].motion-in {
   }
 }
 
+
+/* =====================================================================
+   Hero journey overlay — animated SVG route + location pings layered
+   above the hero image. Communicates "your Portugal experience is
+   being shaped in real time". Calm, slow, premium. Fully behind the
+   dark gradient so headline contrast is unaffected.
+   ===================================================================== */
+
+.hero-journey-overlay {
+  /* Keep the overlay subtle — gradient on top still reduces its
+     intensity, so we tune it for a faint, cinematic read. */
+  opacity: 0.78;
+  mix-blend-mode: screen;
+}
+
+/* Route line — draws in over ~5.5s, then idles. The dasharray on the
+   element provides the dotted look; we animate stroke-dashoffset on a
+   pseudo-layer by using a long dash pattern via animation. */
+.hero-journey-route {
+  stroke-dasharray: 1400;
+  stroke-dashoffset: 1400;
+  opacity: 0;
+  animation:
+    heroJourneyDraw 5.5s cubic-bezier(0.22, 0.61, 0.36, 1) 0.6s forwards,
+    heroJourneyDashIdle 18s linear 6.1s infinite;
+}
+
+@keyframes heroJourneyDraw {
+  0% {
+    stroke-dashoffset: 1400;
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.95;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0.95;
+  }
+}
+
+@keyframes heroJourneyDashIdle {
+  /* Gentle dash drift after the draw, ~1 cycle per 18s. Uses
+     stroke-dasharray on the inline SVG element to scroll the dotted
+     pattern subtly forward. */
+  from { stroke-dashoffset: 0; }
+  to   { stroke-dashoffset: -200; }
+}
+
+/* Studio highlight — soft glow that travels along the route on a
+   long, calm loop. Coordinates roughly trace the cubic path. */
+.hero-journey-studio {
+  opacity: 0;
+  animation:
+    heroJourneyStudioFade 1.2s ease-out 4.2s forwards,
+    heroJourneyStudioMove 14s cubic-bezier(0.45, 0, 0.55, 1) 4.2s infinite;
+}
+
+@keyframes heroJourneyStudioFade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes heroJourneyStudioMove {
+  0%   { transform: translate(80px, 580px); }
+  25%  { transform: translate(420px, 470px); }
+  50%  { transform: translate(720px, 500px); }
+  75%  { transform: translate(960px, 430px); }
+  100% { transform: translate(1180px, 240px); }
+}
+
+/* Location pings — sequential fade-in, then a calm pulsing halo. */
+.hero-journey-ping {
+  opacity: 0;
+  animation: heroJourneyPingIn 0.9s ease-out forwards;
+}
+.hero-journey-ping-1 { animation-delay: 1.6s; }
+.hero-journey-ping-2 { animation-delay: 2.6s; }
+.hero-journey-ping-3 { animation-delay: 3.6s; }
+
+@keyframes heroJourneyPingIn {
+  0%   { opacity: 0; transform-origin: center; }
+  100% { opacity: 1; }
+}
+
+.hero-journey-ping-halo {
+  transform-origin: center;
+  transform-box: fill-box;
+  animation: heroJourneyHalo 4.2s ease-in-out infinite;
+}
+.hero-journey-ping-1 .hero-journey-ping-halo { animation-delay: 2.0s; }
+.hero-journey-ping-2 .hero-journey-ping-halo { animation-delay: 3.0s; }
+.hero-journey-ping-3 .hero-journey-ping-halo { animation-delay: 4.0s; }
+
+@keyframes heroJourneyHalo {
+  0%, 100% { transform: scale(0.9); opacity: 0.55; }
+  50%      { transform: scale(1.35); opacity: 0.95; }
+}
+
+/* Mobile — slightly reduce opacity so the overlay never competes
+   with the headline on small screens. */
+@media (max-width: 640px) {
+  .hero-journey-overlay { opacity: 0.62; }
+  .hero-journey-studio  { display: none; } /* Save paint cost on phones */
+}
+
+/* Reduced motion — show the route + pings statically, kill all motion. */
+@media (prefers-reduced-motion: reduce) {
+  .hero-journey-route {
+    stroke-dashoffset: 0;
+    opacity: 0.85;
+    animation: none;
+  }
+  .hero-journey-studio { display: none; }
+  .hero-journey-ping {
+    opacity: 1;
+    animation: none;
+  }
+  .hero-journey-ping-halo {
+    animation: none;
+    opacity: 0.6;
+  }
+}
