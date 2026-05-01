@@ -1320,8 +1320,8 @@ function HomePage() {
                 border: "1px solid color-mix(in oklab, var(--gold-deep) 72%, transparent)",
                 boxShadow:
                   "0 1px 0 0 color-mix(in oklab, var(--gold) 30%, transparent) inset, " +
-                  "0 24px 60px -28px rgba(41, 91, 97, 0.45), " +
-                  "0 12px 28px -18px rgba(46, 46, 46, 0.18)",
+                  "0 24px 60px -28px color-mix(in oklab, var(--teal) 45%, transparent), " +
+                  "0 12px 28px -18px color-mix(in oklab, var(--charcoal) 22%, transparent)",
               }}
             >
               {/* Soft inner radial — adds depth without flattening teal */}
@@ -1330,8 +1330,8 @@ function HomePage() {
                 className="pointer-events-none absolute inset-0"
                 style={{
                   background:
-                    "radial-gradient(70% 90% at 90% 0%, rgba(201,169,106,0.16), transparent 60%), " +
-                    "radial-gradient(60% 80% at 5% 100%, rgba(0,0,0,0.22), transparent 65%)",
+                    "radial-gradient(70% 90% at 90% 0%, color-mix(in oklab, var(--gold) 16%, transparent), transparent 60%), " +
+                    "radial-gradient(60% 80% at 5% 100%, color-mix(in oklab, var(--charcoal-deep) 28%, transparent), transparent 65%)",
                 }}
               />
               {/* Gold top rule — short, centered, the editorial signature */}
@@ -1370,11 +1370,11 @@ function HomePage() {
                       border: "1px solid color-mix(in oklab, var(--gold-deep) 65%, transparent)",
                       boxShadow:
                         "inset 0 0 0 1px color-mix(in oklab, var(--gold) 25%, transparent), " +
-                        "0 8px 22px -10px rgba(0,0,0,0.45)",
+                        "0 8px 22px -10px color-mix(in oklab, var(--charcoal-deep) 45%, transparent)",
                     }}
                   >
                     Create Your Story
-                    <ArrowRight size={14} aria-hidden="true" className="text-[color:var(--gold)] transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1" />
+                    <ArrowRight size={14} aria-hidden="true" className="text-[color:var(--gold)] group-hover:text-[color:var(--gold-deep)] transition-[transform,color] duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1" />
                   </Link>
                   <Link
                     to="/contact"
@@ -1384,7 +1384,7 @@ function HomePage() {
                     }}
                   >
                     Talk to a Local
-                    <ArrowRight size={12} aria-hidden="true" className="text-[color:var(--gold-soft)] transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1" />
+                    <ArrowRight size={12} aria-hidden="true" className="text-[color:var(--gold-soft)] group-hover:text-[color:var(--gold)] transition-[transform,color] duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1" />
                   </Link>
                 </div>
                 <p className="font-serif mt-6 text-[13px] italic text-[color:var(--ivory)]/85">
