@@ -2768,6 +2768,14 @@ svg.lucide {
     }
     .home-energy .he-eyebrow-bar::before { width: 32px !important; }
     .home-energy .he-section-rule::before { width: 96px !important; }
+    /* Homepage motion-tuning overrides also disabled — content
+       appears immediately, no transform, no transition. */
+    .home-energy .reveal,
+    .home-energy .reveal-stagger,
+    .home-energy .section-enter {
+      transition: none !important;
+      transform: none !important;
+    }
   }
 }
 
