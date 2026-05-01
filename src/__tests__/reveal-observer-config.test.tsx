@@ -282,9 +282,12 @@ describe("reveal observers — mobile IO config", () => {
       // sliver of the element appears.
       expect(threshold).toBeLessThanOrEqual(0.02);
       // Mobile bottom margin must hold back the trigger enough that the
-      // animation is still visible to the human eye when the section enters.
+      // animation is still visible to the human eye when the section enters,
+      // but not so much that long sections (Occasions) catch the IO
+      // post-pass branch on fast scrolls. Tightened from -12..-22 after
+      // motion-QA showed -18% letting Occasions complete before visible.
       const bottomPct = bottomMarginPercent(io.options?.rootMargin);
-      expect(bottomPct).toBeLessThanOrEqual(-12);
+      expect(bottomPct).toBeLessThanOrEqual(-8);
       expect(bottomPct).toBeGreaterThanOrEqual(-22);
     }
   });
