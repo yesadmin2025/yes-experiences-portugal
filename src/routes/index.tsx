@@ -1279,9 +1279,7 @@ function HomePage() {
           labelled landmark with visible expandable answers. The wrapper
           section below carries the spacing class the lock checks; the
           inner FAQ component carries aria-labelledby="faq-title". */}
-      <div id="faq" className="scroll-mt-24 md:scroll-mt-28">
-        <FAQ />
-      </div>
+      <FAQ />
 
       {/* 8 — FINAL CTA — Talk to a local
           Distinct from the hero CTAs (Explore Signatures / Build) — this
