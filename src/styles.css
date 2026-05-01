@@ -1666,6 +1666,68 @@ svg.lucide {
 }
 
 /* ─────────────────────────────────────────────────────────────
+   HOMEPAGE MOTION — `[data-motion]` / `.motion-in`.
+
+   Single source of truth for visible scroll motion on the
+   homepage. Driven by `src/lib/home-motion.ts`.
+
+   Safety contract:
+     • Before JS boots, content is fully visible (no rule below
+       fires until `html.motion-ready` is added).
+     • Once `html.motion-ready` is set, untriggered elements
+       fade up from translateY(22px); triggered elements
+       (`.motion-in`) settle to translateY(0).
+     • `prefers-reduced-motion: reduce` disables the hidden
+       state entirely so users see content immediately.
+
+   Production values are intentionally clearly visible:
+     • translateY 22px on cards/headings
+     • duration 620ms with a soft, premium easing curve
+   ───────────────────────────────────────────────────────────── */
+html.motion-ready [data-motion] {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 620ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 620ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+html.motion-ready [data-motion].motion-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Optional per-element delay via `style="--motion-delay:120ms"` or
+   `data-motion-delay="120"` (consumed by component code). */
+html.motion-ready [data-motion][data-motion-delay] {
+  transition-delay: calc(var(--motion-delay, 0ms));
+}
+
+/* Variants — all share the same duration/easing, only the
+   start transform differs. Default (no variant) = fade-up. */
+html.motion-ready [data-motion="fade"] {
+  transform: none;
+}
+html.motion-ready [data-motion="fade-up"] {
+  transform: translateY(22px);
+}
+html.motion-ready [data-motion="fade-up-sm"] {
+  transform: translateY(14px);
+}
+html.motion-ready [data-motion].motion-in {
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.motion-ready [data-motion],
+  html.motion-ready [data-motion].motion-in {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
    EDITORIAL CARD — unified premium hover for every card on the
    homepage (decision cards, beyond-a-day cards, occasions cards,
    editorial tiles). Implements the brief's "cards must feel alive"
