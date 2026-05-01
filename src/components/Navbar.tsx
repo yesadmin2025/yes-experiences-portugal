@@ -1,7 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Menu, X, ArrowRight } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { Logo } from "@/components/Logo";
+import { CtaButton } from "@/components/ui/CtaButton";
 
 // Desktop nav — full editorial set, kept compact in tracking so all 8
 // items fit gracefully on a single row at lg+ widths.
@@ -74,16 +75,9 @@ export function Navbar() {
                 {n.label}
               </Link>
             ))}
-            <Link
-              to="/builder"
-              className="ml-2 group inline-flex items-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-white border border-[color:var(--gold)] hover:border-[color:var(--gold-soft)] px-5 py-3 text-[10.5px] tracking-[0.2em] uppercase transition-all duration-500 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
-            >
+            <CtaButton to="/builder" variant="primary" size="sm" className="ml-2">
               Design &amp; Secure
-              <ArrowRight
-                size={13}
-                className="group-hover:translate-x-0.5 transition-transform duration-300"
-              />
-            </Link>
+            </CtaButton>
           </nav>
 
           {/* Mobile menu button — sized as a square that mirrors the
@@ -119,14 +113,15 @@ export function Navbar() {
                 {n.label}
               </Link>
             ))}
-            <Link
+            <CtaButton
               to="/builder"
               onClick={() => setOpen(false)}
-              className="mt-3 inline-flex items-center justify-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-white border border-[color:var(--gold)] px-5 py-3.5 text-[11px] tracking-[0.22em] uppercase transition-colors"
+              variant="primary"
+              size="sm"
+              className="mt-3"
             >
               Design &amp; Secure Your Experience
-              <ArrowRight size={14} />
-            </Link>
+            </CtaButton>
           </div>
         </div>
       )}

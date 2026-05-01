@@ -1,7 +1,8 @@
-import { ArrowRight, Check, MessageCircle } from "lucide-react";
+import { Check, MessageCircle } from "lucide-react";
 import { fmtMinutes, type RouteUI, type RoutedStopUI, builderWaHref } from "./types";
 import type { BuilderImageRef } from "@/hooks/useBuilderImages";
 import { BuilderImage } from "./BuilderImage";
+import { CtaButton } from "@/components/ui/CtaButton";
 
 interface Props {
   route: RouteUI;
@@ -137,26 +138,28 @@ export function ReviewScreen({ route, stops, guests, narrative, reviewThumbs, on
               </ul>
             </div>
 
-            <button
+            <CtaButton
               type="button"
               onClick={onConfirm}
-              className="inline-flex w-full items-center justify-center gap-2 rounded-[2px] bg-[color:var(--charcoal)] px-7 py-4 min-h-[52px] text-[12.5px] uppercase tracking-[0.22em] font-bold text-[color:var(--ivory)] transition-all duration-200 hover:-translate-y-[1px] hover:bg-[color:var(--teal)] shadow-[0_14px_28px_-14px_rgba(46,46,46,0.55)]"
+              variant="primary"
+              className="w-full"
             >
               Confirm your experience
-              <ArrowRight size={14} />
-            </button>
+            </CtaButton>
 
-            <a
+            <CtaButton
               href={builderWaHref(
                 `Hi! I'd like to talk to a local before confirming this experience: ${route.region.label}, ${stops.length} stops, ${guests} guest${guests > 1 ? "s" : ""}.`,
               )}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex w-full items-center justify-center gap-2 rounded-[2px] border border-[color:var(--charcoal)]/20 px-6 py-3.5 min-h-[48px] text-[12px] uppercase tracking-[0.2em] font-bold text-[color:var(--charcoal)] transition-colors duration-200 hover:border-[color:var(--charcoal)]/45"
+              variant="ghost"
+              className="w-full"
+              icon={null}
+              iconLeading={<MessageCircle size={14} strokeWidth={1.75} aria-hidden="true" />}
             >
-              <MessageCircle size={14} strokeWidth={1.75} />
               Talk to a local before confirming
-            </a>
+            </CtaButton>
 
             <button
               type="button"

@@ -1,5 +1,6 @@
-import { ArrowRight, Clock, Minus, Plus, Users } from "lucide-react";
+import { Clock, Minus, Plus, Users } from "lucide-react";
 import { fmtMinutes } from "./types";
+import { CtaButton } from "@/components/ui/CtaButton";
 
 interface Props {
   totalMinutes: number;
@@ -77,20 +78,16 @@ export function StickyBar({
           </span>
         </div>
 
-        <button
+        <CtaButton
           type="button"
           onClick={onConfirm}
           disabled={disabled}
-          className={[
-            "cta-unified shrink-0 inline-flex items-center justify-center gap-1.5 px-3.5 sm:px-7 py-3 min-h-[48px] rounded-[2px] text-[11px] sm:text-[12px] uppercase tracking-[0.18em] sm:tracking-[0.2em] font-bold",
-            disabled
-              ? "bg-[color:var(--charcoal)]/15 text-[color:var(--charcoal)]/40 cursor-not-allowed"
-              : "bg-[color:var(--charcoal)] text-[color:var(--ivory)] hover:bg-[color:var(--teal)] shadow-[0_12px_24px_-14px_rgba(46,46,46,0.55)]",
-          ].join(" ")}
+          variant="primary"
+          size="sm"
+          className="shrink-0 px-3.5 sm:px-7"
         >
           {ctaLabel}
-          <ArrowRight size={12} className="cta-unified-arrow" />
-        </button>
+        </CtaButton>
       </div>
     </div>
   );

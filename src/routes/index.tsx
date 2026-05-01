@@ -174,7 +174,7 @@ const groupsAndCelebrations = [
     to: "/multi-day",
     img: imgTomarCoimbra,
   },
-];
+] as const;
 
 
 /* ──────────────────────────────────────────────────────────────────
@@ -804,13 +804,9 @@ function HomePage() {
               </ol>
 
               <div className="mt-8 flex flex-wrap gap-x-5 gap-y-4">
-                <Link
-                  to="/builder"
-                  className="he-glow he-sheen he-cta-shift group inline-flex items-center gap-2.5 sm:gap-2 bg-[color:var(--teal)] text-[color:var(--ivory)] border border-[color:var(--gold)]/55 px-6 sm:px-7 py-3.5 min-h-[48px] sm:min-h-[44px] text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold hover:bg-[color:var(--teal-2)] hover:border-[color:var(--gold)]/78 shadow-[0_8px_22px_-10px_rgba(41,91,97,0.65)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2"
-                >
+                <CtaButton to="/builder" variant="primary">
                   Open the Studio
-                  <ArrowRight size={14} className="transition-transform duration-200 group-hover:translate-x-1" />
-                </Link>
+                </CtaButton>
               </div>
 
               {/* Starting-point microcopy — sits just under the CTA so
@@ -1073,23 +1069,26 @@ function HomePage() {
                           = adjustments INSIDE one Signature, never a
                           replacement for the Signature itself. */}
                       <div className="mt-auto flex flex-col xs:flex-row gap-2.5 pt-1">
-                        <Link
+                        <CtaButton
                           to="/tours/$tourId"
                           params={{ tourId: t.id }}
-                          className="he-glow he-sheen group/cta inline-flex items-center justify-center gap-1.5 min-h-[44px] flex-1 px-4 text-[12px] uppercase tracking-[0.18em] font-semibold bg-[color:var(--teal)] text-[color:var(--ivory)] hover:bg-[color:var(--teal-2)] transition-all duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] rounded-[3px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2"
+                          variant="primary"
+                          size="sm"
+                          className="flex-1"
                           aria-label={`Book ${t.title}`}
                         >
                           Book
-                          <ArrowRight size={13} className="transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover/cta:translate-x-1" />
-                        </Link>
-                        <Link
+                        </CtaButton>
+                        <CtaButton
                           to="/tours/$tourId/tailor"
                           params={{ tourId: t.id }}
-                          className="group/tailor inline-flex items-center justify-center gap-1.5 min-h-[44px] flex-1 px-4 text-[12px] uppercase tracking-[0.18em] font-semibold border border-[color:var(--charcoal)]/25 text-[color:var(--charcoal)] hover:border-[color:var(--charcoal)] hover:bg-[color:var(--sand)] transition-all duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] rounded-[3px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2"
+                          variant="ghost"
+                          size="sm"
+                          className="flex-1"
                           aria-label={`Tailor ${t.title}`}
                         >
                           Tailor
-                        </Link>
+                        </CtaButton>
                       </div>
                     </div>
                   </article>
@@ -1104,13 +1103,9 @@ function HomePage() {
           </p>
 
           <div className="mt-12 md:mt-14 text-center">
-            <Link
-              to="/experiences"
-              className="group inline-flex items-center gap-2.5 sm:gap-2 min-h-[44px] px-1 text-[12.5px] sm:text-[13px] uppercase tracking-[0.16em] sm:tracking-[0.18em] font-semibold text-[color:var(--charcoal)] border-b-2 border-[color:var(--charcoal)]/40 pb-1 hover:border-[color:var(--charcoal)] transition-colors"
-            >
+            <CtaButton to="/experiences" variant="ghost" size="sm">
               See every Signature
-              <ArrowRight size={14} className="transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1" />
-            </Link>
+            </CtaButton>
           </div>
         </div>
       </section>
@@ -1252,17 +1247,13 @@ function HomePage() {
                         </>
                       );
                     })()}
-                    <Link
+                    <CtaButton
                       to={m.to}
-                      className="he-glow he-sheen he-cta-shift mt-7 md:mt-6 inline-flex items-center justify-center gap-2.5 sm:gap-2 self-start bg-[color:var(--teal)] text-[color:var(--ivory)] border border-[color:var(--gold)]/55 px-6 sm:px-7 py-3.5 min-h-[48px] sm:min-h-[44px] text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold transition-colors duration-200 hover:bg-[color:var(--teal-2)] hover:text-[color:var(--ivory)] hover:border-[color:var(--gold)]/78 active:bg-[color:var(--charcoal)] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-[color:var(--sand)] shadow-[0_8px_22px_-10px_rgba(41,91,97,0.65)]"
+                      variant="primary"
+                      className="mt-7 md:mt-6 self-start"
                     >
                       {m.cta}
-                      <ArrowRight
-                        size={14}
-                        aria-hidden="true"
-                        className="transition-transform duration-200 group-hover:translate-x-0.5"
-                      />
-                    </Link>
+                    </CtaButton>
                     <p className="mt-3 text-[11.5px] leading-[1.55] text-[color:var(--charcoal-soft)]/85 font-normal">
                       {m.trust}
                     </p>

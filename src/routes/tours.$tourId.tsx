@@ -4,7 +4,6 @@ import {
   Clock,
   MapPin,
   ArrowLeft,
-  ArrowRight,
   Check,
   Sparkles,
   Info,
@@ -27,6 +26,7 @@ import { SimpleTailorForm } from "@/components/SimpleTailorForm";
 import { useImportedTourImages } from "@/hooks/use-imported-tour-images";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { SectionTitle } from "@/components/ui/SectionTitle";
+import { CtaButton } from "@/components/ui/CtaButton";
 
 export const Route = createFileRoute("/tours/$tourId")({
   loader: ({ params }) => {
@@ -763,19 +763,20 @@ function FinalCta({ tour }: { tour: SignatureTour }) {
         </p>
 
         <div className="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
-          <a
+          <CtaButton
             href="#tailor"
-            className="inline-flex items-center justify-center gap-2 bg-[color:var(--gold)] hover:bg-[color:var(--gold-soft)] text-[color:var(--charcoal)] px-7 py-4 text-sm tracking-wide transition-all min-h-[52px]"
+            variant="primary"
+            iconLeading={<Sparkles size={14} aria-hidden="true" />}
           >
-            <Sparkles size={14} /> Reserve instantly
-          </a>
-          <Link
+            Reserve instantly
+          </CtaButton>
+          <CtaButton
             to="/tours/$tourId/tailor"
             params={{ tourId: tour.id }}
-            className="inline-flex items-center justify-center gap-2 border border-[color:var(--ivory)]/40 hover:border-[color:var(--gold)] text-[color:var(--ivory)] px-7 py-4 text-sm tracking-wide transition-all min-h-[52px]"
+            variant="ghostDark"
           >
-            Tailor this Signature <ArrowRight size={14} />
-          </Link>
+            Tailor this Signature
+          </CtaButton>
         </div>
 
         <p className="mt-5 text-[11px] uppercase tracking-[0.24em] text-[color:var(--ivory)]/65">

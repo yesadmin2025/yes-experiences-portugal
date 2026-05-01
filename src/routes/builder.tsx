@@ -1,11 +1,12 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ArrowRight, Loader2, Map as MapIcon, Sparkles, X } from "lucide-react";
+import { Loader2, Map as MapIcon, Sparkles, X } from "lucide-react";
 import { SiteLayout } from "@/components/SiteLayout";
 import { generateBuilderRoute, narrateBuilderRoute } from "@/server/builderEngine.functions";
 import { supabase } from "@/integrations/supabase/client";
 import { EmbeddedCheckoutProvider, EmbeddedCheckout } from "@stripe/react-stripe-js";
 import { getStripe, getStripeEnvironment } from "@/lib/stripe";
+import { CtaButton } from "@/components/ui/CtaButton";
 
 import { EntryScreen } from "@/components/builder/EntryScreen";
 import { PredictiveMoment } from "@/components/builder/PredictiveMoment";
@@ -695,15 +696,15 @@ function LiveBuilder({
 
         {/* Review CTA — full-width above sticky bar */}
         <div className="mt-8 flex justify-end">
-          <button
+          <CtaButton
             type="button"
             onClick={onReview}
             disabled={!route.feasible || stops.length === 0}
-            className="inline-flex items-center gap-2 rounded-[2px] bg-[color:var(--teal)] text-[color:var(--ivory)] border border-[color:var(--gold)]/55 px-6 py-3 text-[12px] uppercase tracking-[0.2em] font-bold transition-colors duration-200 hover:bg-[color:var(--teal-2)] hover:border-[color:var(--gold)]/78 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--ivory)] disabled:opacity-40 shadow-[0_8px_22px_-10px_rgba(41,91,97,0.55)]"
+            variant="primary"
+            size="sm"
           >
             Review experience
-            <ArrowRight size={13} />
-          </button>
+          </CtaButton>
         </div>
       </section>
 

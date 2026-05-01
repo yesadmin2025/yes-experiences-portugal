@@ -261,7 +261,7 @@ export function MobileStickyCTA() {
               </span>
               <ArrowRight
                 size={14}
-                className="text-[color:var(--teal)] group-hover:translate-x-0.5 transition-transform"
+                className="text-[color:var(--gold)] group-hover:text-[color:var(--gold-deep)] group-hover:translate-x-0.5 transition-[color,transform]"
               />
             </Link>
 
@@ -285,7 +285,7 @@ export function MobileStickyCTA() {
               </span>
               <ArrowRight
                 size={14}
-                className="text-white group-hover:translate-x-0.5 transition-transform"
+                className="text-[color:var(--gold-soft)] group-hover:text-[color:var(--gold)] group-hover:translate-x-0.5 transition-[color,transform]"
               />
             </Link>
           </div>
@@ -356,7 +356,7 @@ export function MobileStickyCTA() {
               <ArrowRight
                 size={13}
                 className={[
-                  "transition-transform duration-300",
+                  "text-[color:var(--gold-soft)] transition-[color,transform] duration-300",
                   sheetOpen ? "-rotate-90" : "group-hover:translate-x-0.5",
                 ].join(" ")}
               />

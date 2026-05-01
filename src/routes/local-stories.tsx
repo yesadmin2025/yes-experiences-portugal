@@ -1,12 +1,12 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
-import { ArrowRight } from "lucide-react";
 import editCoastal from "@/assets/edit-coastal-road.jpg";
 import editWinery from "@/assets/edit-winery.jpg";
 import editMarket from "@/assets/edit-market.jpg";
 import editViewpoint from "@/assets/edit-viewpoint.jpg";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { SectionTitle } from "@/components/ui/SectionTitle";
+import { CtaButton } from "@/components/ui/CtaButton";
 
 export const Route = createFileRoute("/local-stories")({
   head: () => ({
@@ -99,13 +99,9 @@ function Page() {
           </div>
 
           <div className="reveal mt-20 text-center">
-            <Link
-              to="/builder"
-              className="inline-flex items-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-white border border-[color:var(--gold)]/60 hover:border-[color:var(--gold)] px-8 py-4 text-sm uppercase tracking-[0.18em] transition-all duration-500 hover:-translate-y-0.5"
-            >
+            <CtaButton to="/builder" variant="primary">
               Design &amp; Secure Your Experience
-              <ArrowRight size={15} />
-            </Link>
+            </CtaButton>
           </div>
         </div>
       </section>
