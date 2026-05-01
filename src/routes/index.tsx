@@ -688,7 +688,7 @@ function HomePage() {
 
         <div className="container-x relative z-10 pb-14 md:pb-36 pt-32 md:pt-40">
           <div className="max-w-3xl text-[color:var(--ivory)]">
-            <span className="inline-flex items-center gap-2 sm:gap-3.5 max-w-full text-[9.5px] xs:text-[10.5px] sm:text-[12px] md:text-[13px] uppercase tracking-[0.12em] xs:tracking-[0.16em] sm:tracking-[0.26em] md:tracking-[0.3em] text-[color:var(--gold)] opacity-0 animate-[heroFade_1.1s_ease-out_0.3s_forwards]">
+            <span className="inline-flex items-center gap-2 sm:gap-3.5 max-w-full text-[10px] xs:text-[10.5px] sm:text-[12px] md:text-[13px] uppercase tracking-[0.16em] xs:tracking-[0.2em] sm:tracking-[0.26em] md:tracking-[0.3em] text-[color:var(--gold)] opacity-0 animate-[heroFade_1.1s_ease-out_0.3s_forwards]">
               <span aria-hidden="true" className="shrink-0">✦</span>
               <span data-hero-field="eyebrow" className="whitespace-nowrap truncate">
                 {HERO_COPY.eyebrow}
@@ -1059,7 +1059,7 @@ function HomePage() {
             <span className="he-eyebrow-bar mb-5">Why YES</span>
             <h2
               id="why-yes-title"
-              className="serif mt-3 text-[2.55rem] md:text-[4.15rem] leading-[1.0] tracking-[-0.02em] text-[color:var(--charcoal)] font-semibold text-balance"
+              className="serif mt-3 text-[2.5rem] sm:text-[2.85rem] md:text-[4.15rem] leading-[1.02] md:leading-[1.0] tracking-[-0.02em] text-[color:var(--charcoal)] font-semibold text-balance"
             >
               Portugal isn't experienced the{" "}
               <span className="italic">same way</span> by everyone.
@@ -1167,7 +1167,7 @@ function HomePage() {
         <div className="container-x">
           <div className="reveal text-center max-w-2xl mx-auto mb-12 md:mb-16">
             <span className="he-eyebrow-bar mb-5">Signature experiences</span>
-            <h2 id="signatures-title" className="serif mt-3 text-[2.55rem] md:text-[4.15rem] leading-[1.0] tracking-[-0.02em] text-[color:var(--charcoal)] font-semibold">
+            <h2 id="signatures-title" className="serif mt-3 text-[2.5rem] sm:text-[2.85rem] md:text-[4.15rem] leading-[1.02] md:leading-[1.0] tracking-[-0.02em] text-[color:var(--charcoal)] font-semibold">
               Days <span className="italic">already designed.</span>
             </h2>
             <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] leading-[1.65] max-w-md mx-auto">
@@ -1329,7 +1329,7 @@ function HomePage() {
         <div className="container-x">
           <div className="reveal text-center max-w-2xl mx-auto mb-14 md:mb-20">
             <span className="he-eyebrow-bar mb-5">Groups &amp; celebrations</span>
-            <h2 id="groups-title" className="serif mt-3 text-[2.6rem] md:text-[4.2rem] leading-[1.0] tracking-[-0.02em] text-[color:var(--charcoal)] font-semibold">
+            <h2 id="groups-title" className="serif mt-3 text-[2.5rem] sm:text-[2.85rem] md:text-[4.2rem] leading-[1.02] md:leading-[1.0] tracking-[-0.02em] text-[color:var(--charcoal)] font-semibold">
               When the <span className="italic font-medium">occasion</span> is bigger.
             </h2>
             <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] leading-[1.6] max-w-md mx-auto">
@@ -1411,7 +1411,7 @@ function HomePage() {
                         "var(--charcoal)";
                       return (
                         <>
-                          <span className="inline-flex items-center gap-2.5 text-[11px] md:text-[10.5px] uppercase tracking-[0.28em] md:tracking-[0.32em] font-bold text-[color:var(--charcoal)]">
+                          <span className="inline-flex items-center gap-2.5 text-[10.5px] md:text-[10.5px] uppercase tracking-[0.28em] md:tracking-[0.32em] font-bold text-[color:var(--charcoal)]">
                             <span aria-hidden="true" className="inline-block h-[6px] w-[6px] rounded-full" style={{ backgroundColor: accent }} />
                             {m.eyebrow}
                           </span>
@@ -1424,7 +1424,7 @@ function HomePage() {
                           <p className="he-pull mt-6 md:mt-5 serif italic text-[16.5px] md:text-[17px] leading-[1.45] text-[color:var(--charcoal)] font-semibold" style={{ borderLeftColor: accent }}>
                             {m.pull}
                           </p>
-                          <p className="mt-6 md:mt-5 inline-flex items-center gap-2.5 text-[11px] md:text-[10.5px] uppercase tracking-[0.22em] md:tracking-[0.24em] font-bold text-[color:var(--charcoal)]">
+                          <p className="mt-6 md:mt-5 inline-flex items-center gap-2.5 text-[10.5px] md:text-[10.5px] uppercase tracking-[0.24em] md:tracking-[0.28em] font-bold text-[color:var(--charcoal)]">
                             <span aria-hidden="true" className="inline-block h-[6px] w-[6px] rounded-full" style={{ backgroundColor: accent }} />
                             {m.detail}
                           </p>
@@ -1456,7 +1456,7 @@ function HomePage() {
                     })()}
                     <Link
                       to={m.to}
-                      className="he-glow he-sheen he-cta-shift mt-7 md:mt-6 inline-flex items-center justify-center gap-2.5 sm:gap-2 self-start bg-[color:var(--teal)] text-[color:var(--ivory)] border border-[color:var(--gold)]/55 px-7 sm:px-7 py-3.5 min-h-[48px] sm:min-h-[44px] text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold transition-colors duration-200 hover:bg-[color:var(--teal-2)] hover:text-[color:var(--ivory)] hover:border-[color:var(--gold)]/78 active:bg-[color:var(--charcoal)] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-[color:var(--sand)] shadow-[0_8px_22px_-10px_rgba(41,91,97,0.65)]"
+                      className="he-glow he-sheen he-cta-shift mt-7 md:mt-6 inline-flex items-center justify-center gap-2.5 sm:gap-2 self-start bg-[color:var(--teal)] text-[color:var(--ivory)] border border-[color:var(--gold)]/55 px-6 sm:px-7 py-3.5 min-h-[48px] sm:min-h-[44px] text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold transition-colors duration-200 hover:bg-[color:var(--teal-2)] hover:text-[color:var(--ivory)] hover:border-[color:var(--gold)]/78 active:bg-[color:var(--charcoal)] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-[color:var(--sand)] shadow-[0_8px_22px_-10px_rgba(41,91,97,0.65)]"
                     >
                       {m.cta}
                       <ArrowRight
@@ -1533,14 +1533,14 @@ function HomePage() {
             </span>
             <h2
               id="final-cta-title"
-              className="mt-5 text-[2.4rem] md:text-[3.6rem] leading-[1.02] tracking-[-0.02em] font-bold text-[color:var(--ivory)]"
+              className="mt-5 text-[2.5rem] sm:text-[3rem] md:text-[3.6rem] leading-[1.04] md:leading-[1.02] tracking-[-0.02em] font-bold text-[color:var(--ivory)]"
             >
               Ready to design your{" "}
               <span className="italic font-normal text-[color:var(--gold-soft)] serif">
                 Portugal?
               </span>
             </h2>
-            <p className="mt-5 text-[15px] md:text-[17px] leading-[1.7] text-[color:var(--ivory)]/90">
+            <p className="mt-5 text-[15.5px] md:text-[17px] leading-[1.7] text-[color:var(--ivory)]/90">
               Start in the Studio. Explore Signatures. Or talk to a local — your
               journey, your way.
             </p>
