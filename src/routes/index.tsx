@@ -934,9 +934,9 @@ function HomePage() {
             ))}
           </ul>
 
-          <p className="reveal mt-10 md:mt-12 text-center inline-flex flex-wrap w-full items-center justify-center gap-x-2 gap-y-1 px-4 text-[10.5px] xs:text-[11.5px] sm:text-[12px] uppercase tracking-[0.18em] xs:tracking-[0.22em] sm:tracking-[0.28em] text-[color:var(--teal)]">
-            <MessageCircle size={13} aria-hidden="true" className="shrink-0" />
-            <span className="text-balance">A local is always one message away</span>
+          <p className="reveal mt-10 md:mt-12 text-center inline-flex flex-wrap w-full items-center justify-center gap-x-2 gap-y-1 px-4 text-[14px] md:text-[15px] leading-[1.6] tracking-[0.005em] text-[color:var(--charcoal-soft)]">
+            <MessageCircle size={14} aria-hidden="true" className="shrink-0 text-[color:var(--teal)]" />
+            <span className="text-balance">Need help shaping it? <span className="text-[color:var(--charcoal)]">A local is one message away.</span></span>
           </p>
         </div>
       </section>

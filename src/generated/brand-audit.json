@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-01T02:52:51.421Z",
+  "generatedAt": "2026-05-01T02:54:35.802Z",
   "filesScanned": 145,
   "approvedPalette": {
     "teal": "#295B61",
@@ -18,10 +18,10 @@
     "#cccccc"
   ],
   "counts": {
-    "total": 160,
+    "total": 161,
     "approved": 41,
     "allowlisted": 29,
-    "mismatch": 90
+    "mismatch": 91
   },
   "findings": [
     {
@@ -1422,6 +1422,15 @@
     {
       "file": "src/tailwind.config.lov.json",
       "line": 314,
+      "col": 21,
+      "raw": "#B89452",
+      "normalized": "#b89452",
+      "snippet": "\"gold-deep\": \"#B89452\",",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/tailwind.config.lov.json",
+      "line": 316,
       "col": 18,
       "raw": "#2A7C82",
       "normalized": "#2a7c82",
@@ -1430,7 +1439,7 @@
     },
     {
       "file": "src/tailwind.config.lov.json",
-      "line": 315,
+      "line": 317,
       "col": 17,
       "raw": "#FAF8F3",
       "normalized": "#faf8f3",
@@ -1439,7 +1448,7 @@
     },
     {
       "file": "src/tailwind.config.lov.json",
-      "line": 316,
+      "line": 318,
       "col": 16,
       "raw": "#F4EFE7",
       "normalized": "#f4efe7",
@@ -1448,7 +1457,7 @@
     },
     {
       "file": "src/tailwind.config.lov.json",
-      "line": 317,
+      "line": 319,
       "col": 20,
       "raw": "#2E2E2E",
       "normalized": "#2e2e2e",
@@ -1457,7 +1466,7 @@
     },
     {
       "file": "src/tailwind.config.lov.json",
-      "line": 319,
+      "line": 321,
       "col": 25,
       "raw": "#1F1F1F",
       "normalized": "#1f1f1f",
