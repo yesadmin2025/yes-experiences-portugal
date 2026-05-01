@@ -651,13 +651,27 @@ describe("reveal observers — sequenced firing on mobile", () => {
       placeBelowFold(el, i);
     });
 
-    // Fire every still-observed target on every observer instance.
-    // (The mount-time sweep may have already unobserved most/all
-    // targets when their default JSDOM rect overlapped the viewport;
-    // that's fine — our leak guarantee is about the END state.)
-    // We snapshot `targets` first because firing causes synchronous
-    // unobserve() calls that mutate the live Set.
+    // Re-observe every tracked element on its original observer so we
+    // can simulate "scrolled into view" via IO. (The mount-time sweep
+    // already unobserved them on JSDOM's default 0,0 rect, but the
+    // observer instances themselves are still alive — that's exactly
+    // the long-session shape the leak guarantee covers.)
+    for (const io of FakeIO.instances) {
+      for (const target of io.observedHistory) {
+        if (document.contains(target)) io.observe(target);
+      }
+    }
 
+    // Sanity: every observer is now actively watching at least one
+    // element again, so a leaked target after firing would be a real bug.
+    expect(
+      FakeIO.instances.every((io) => io.targets.size > 0),
+      "expected every observer to have at least one re-observed target",
+    ).toBe(true);
+
+    // Fire every observed target as isIntersecting=true. We snapshot
+    // `targets` first because firing causes synchronous unobserve()
+    // calls that mutate the live Set.
     for (const io of FakeIO.instances) {
       const snapshot = Array.from(io.targets);
       io.fire(
