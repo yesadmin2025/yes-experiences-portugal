@@ -463,7 +463,7 @@ function HomePage() {
           signature ("Whatever you have in mind, We say YES.") is rendered
           ONCE inside HERO_COPY.brandLine — no duplicate slogans. */}
       <section
-        className="relative min-h-[78svh] md:min-h-[94vh] flex items-end overflow-hidden"
+        className="relative min-h-[72svh] md:min-h-[94vh] flex items-end overflow-hidden"
       >
         <img
           src={heroImg}
@@ -478,7 +478,7 @@ function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/92 via-[color:var(--charcoal-deep)]/55 to-[color:var(--charcoal-deep)]/42 md:from-[color:var(--charcoal-deep)]/80 md:via-[color:var(--charcoal-deep)]/35 md:to-[color:var(--charcoal-deep)]/30 pointer-events-none" />
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(15,15,15,0.72)_0%,rgba(15,15,15,0.46)_38%,transparent_72%)] md:bg-[linear-gradient(90deg,rgba(15,15,15,0.6)_0%,rgba(15,15,15,0.32)_40%,transparent_72%)] pointer-events-none" />
 
-        <div className="container-x relative z-10 pb-10 md:pb-36 pt-20 md:pt-40">
+        <div className="container-x relative z-10 pb-8 md:pb-36 pt-16 md:pt-40">
           <div className="max-w-2xl md:max-w-3xl text-[color:var(--ivory)]">
             <span className="inline-flex items-center gap-2 sm:gap-3.5 max-w-full text-[10px] xs:text-[10.5px] sm:text-[12px] md:text-[13px] uppercase tracking-[0.16em] xs:tracking-[0.2em] sm:tracking-[0.26em] md:tracking-[0.3em] text-[color:var(--gold)] opacity-0 animate-[heroFade_0.8s_ease-out_0.1s_forwards]">
               <span aria-hidden="true" className="shrink-0">✦</span>
