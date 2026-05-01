@@ -359,7 +359,7 @@ function HomePage() {
             : (el.closest("section") ?? el);
           scope
             .querySelectorAll<HTMLElement>(
-              ".reveal:not(.is-visible), .reveal-stagger:not(.is-visible)",
+              ".reveal:not(.is-visible), .reveal-stagger:not(.is-visible), .section-enter:not(.is-visible)",
             )
             .forEach((node) => node.classList.add("is-visible"));
 
