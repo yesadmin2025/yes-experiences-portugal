@@ -2,3 +2,6 @@ project_id = "kqygnqetygcvkaauwbji"
 
 [functions.create-builder-checkout]
 verify_jwt = false
+
+[functions.analyze-builder-references]
+verify_jwt = false
