@@ -49,6 +49,7 @@ const EMPTY_FLAGS: ScrollDebugFlags = {
   disableMobileReveals: false,
   staticMobileCarousels: false,
   disableMobileStudioMotion: false,
+  revealDebug: false,
 };
 
 function tokensFromUrl(win: Window): Set<string> {
