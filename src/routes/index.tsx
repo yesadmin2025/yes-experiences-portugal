@@ -921,7 +921,7 @@ function HomePage() {
                 <span className="mt-4 text-[10.5px] uppercase tracking-[0.28em] font-semibold text-[color:var(--charcoal-soft)]">
                   {b.label}
                 </span>
-                <h3 className="serif mt-2.5 text-[1.4rem] md:text-[1.7rem] leading-[1.2] text-[color:var(--charcoal)] font-medium">
+                <h3 className="serif mt-2.5 text-[1.4rem] md:text-[1.8rem] leading-[1.2] md:leading-[1.18] text-[color:var(--charcoal)] font-medium">
                   {b.title}
                 </h3>
                 <p className="mt-3 text-[14px] md:text-[15px] text-[color:var(--charcoal-soft)] leading-[1.6]">
@@ -995,20 +995,20 @@ function HomePage() {
                       a short list of REAL highlights pulled from the
                       Viator-sourced catalog. No invented copy. */}
                   <article
-                    className="group relative flex flex-col h-full overflow-hidden rounded-[6px] border border-[color:var(--border)] bg-[color:var(--ivory)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-[color:var(--charcoal)]/30 hover:shadow-[0_14px_30px_-14px_rgba(46,46,46,0.28)]"
+                    className="he-card-lift group relative flex flex-col h-full overflow-hidden rounded-[6px] border border-[color:var(--border)] bg-[color:var(--ivory)] transition-all duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] hover:border-[color:var(--charcoal)]/30 hover:shadow-[0_18px_40px_-22px_rgba(46,46,46,0.32)]"
                   >
                     {/* Cover — clickable to detail page */}
                     <Link
                       to="/tours/$tourId"
                       params={{ tourId: t.id }}
-                      className="relative block aspect-[4/5] overflow-hidden bg-[color:var(--card)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2"
+                      className="he-image-cinema he-image-rise relative block aspect-[4/5] overflow-hidden bg-[color:var(--card)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2"
                       aria-label={`Open ${t.title}`}
                     >
                       <img
                         src={t.img}
                         alt={t.title}
                         loading="lazy"
-                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-[600ms] ease-out group-hover:scale-[1.03]"
+                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-[700ms] ease-out group-hover:scale-[1.05]"
                       />
                       <div
                         aria-hidden="true"
@@ -1030,7 +1030,7 @@ function HomePage() {
                       </div>
                       {/* Bottom: real title + real duration */}
                       <div className="absolute inset-x-0 bottom-0 p-5 md:p-6 text-white">
-                        <h3 className="serif text-[1.3rem] md:text-[1.4rem] leading-[1.18] text-white text-balance">
+                        <h3 className="serif text-[1.35rem] md:text-[1.5rem] leading-[1.18] text-white text-balance">
                           {t.title}
                         </h3>
                         <span className="mt-2 inline-block text-[11px] uppercase tracking-[0.22em] text-white/85">
@@ -1071,16 +1071,16 @@ function HomePage() {
                         <Link
                           to="/tours/$tourId"
                           params={{ tourId: t.id }}
-                          className="inline-flex items-center justify-center gap-1.5 min-h-[44px] flex-1 px-4 text-[12px] uppercase tracking-[0.18em] font-semibold bg-[color:var(--teal)] text-[color:var(--ivory)] hover:bg-[color:var(--teal-2)] transition-colors rounded-[3px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2"
+                          className="he-glow he-sheen group/cta inline-flex items-center justify-center gap-1.5 min-h-[44px] flex-1 px-4 text-[12px] uppercase tracking-[0.18em] font-semibold bg-[color:var(--teal)] text-[color:var(--ivory)] hover:bg-[color:var(--teal-2)] transition-all duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] rounded-[3px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2"
                           aria-label={`Book ${t.title}`}
                         >
                           Book
-                          <ArrowRight size={13} />
+                          <ArrowRight size={13} className="transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover/cta:translate-x-1" />
                         </Link>
                         <Link
                           to="/tours/$tourId/tailor"
                           params={{ tourId: t.id }}
-                          className="inline-flex items-center justify-center gap-1.5 min-h-[44px] flex-1 px-4 text-[12px] uppercase tracking-[0.18em] font-semibold border border-[color:var(--charcoal)]/25 text-[color:var(--charcoal)] hover:border-[color:var(--charcoal)] hover:bg-[color:var(--sand)] transition-colors rounded-[3px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2"
+                          className="group/tailor inline-flex items-center justify-center gap-1.5 min-h-[44px] flex-1 px-4 text-[12px] uppercase tracking-[0.18em] font-semibold border border-[color:var(--charcoal)]/25 text-[color:var(--charcoal)] hover:border-[color:var(--charcoal)] hover:bg-[color:var(--sand)] transition-all duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] rounded-[3px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2"
                           aria-label={`Tailor ${t.title}`}
                         >
                           Tailor
@@ -1101,10 +1101,10 @@ function HomePage() {
           <div className="mt-12 md:mt-14 text-center">
             <Link
               to="/experiences"
-              className="inline-flex items-center gap-2.5 sm:gap-2 min-h-[44px] px-1 text-[12.5px] sm:text-[13px] uppercase tracking-[0.16em] sm:tracking-[0.18em] font-semibold text-[color:var(--charcoal)] border-b-2 border-[color:var(--charcoal)]/40 pb-1 hover:border-[color:var(--charcoal)] transition-colors"
+              className="group inline-flex items-center gap-2.5 sm:gap-2 min-h-[44px] px-1 text-[12.5px] sm:text-[13px] uppercase tracking-[0.16em] sm:tracking-[0.18em] font-semibold text-[color:var(--charcoal)] border-b-2 border-[color:var(--charcoal)]/40 pb-1 hover:border-[color:var(--charcoal)] transition-colors"
             >
               See every Signature
-              <ArrowRight size={14} />
+              <ArrowRight size={14} className="transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1" />
             </Link>
           </div>
         </div>
@@ -1344,10 +1344,10 @@ function HomePage() {
                   <MessageCircle size={12} aria-hidden="true" />
                   Prefer a conversation?
                 </span>
-                <h2
-                  id="final-cta-title"
-                  className="mt-5 text-[2rem] sm:text-[2.4rem] md:text-[3.2rem] leading-[1.1] md:leading-[1.02] tracking-[-0.016em] font-medium text-[color:var(--ivory)]"
-                >
+              <h2
+                id="final-cta-title"
+                className="mt-5 text-[2rem] sm:text-[2.4rem] md:text-[3.2rem] leading-[1.1] md:leading-[1.02] tracking-[-0.016em] font-medium text-[color:var(--ivory)]"
+              >
                   Ready to design your{" "}
                   <span className="italic font-normal text-[color:var(--gold-soft)] serif">
                     Portugal?
@@ -1359,7 +1359,7 @@ function HomePage() {
                 <div className="mt-9 flex flex-col sm:flex-row gap-y-4 gap-x-4 justify-center items-stretch sm:items-center">
                   <Link
                     to="/builder"
-                    className="he-glow he-sheen he-cta-shift group inline-flex items-center justify-center gap-2.5 bg-[color:var(--ivory)] text-[color:var(--charcoal-deep)] px-7 py-3.5 min-h-[48px] text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold rounded-[2px] transition-all duration-200 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--teal)]"
+                    className="he-glow he-sheen he-cta-shift group inline-flex items-center justify-center gap-2.5 bg-[color:var(--ivory)] text-[color:var(--charcoal-deep)] px-7 py-3.5 min-h-[48px] text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold rounded-[2px] transition-all duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] hover:bg-white hover:-translate-y-[1px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--teal)]"
                     style={{
                       border: "1px solid color-mix(in oklab, var(--gold-deep) 65%, transparent)",
                       boxShadow:
@@ -1367,18 +1367,18 @@ function HomePage() {
                         "0 8px 22px -10px rgba(0,0,0,0.45)",
                     }}
                   >
-                    <ArrowRight size={14} aria-hidden="true" className="transition-transform duration-200 group-hover:translate-x-0.5" />
                     Create Your Story
+                    <ArrowRight size={14} aria-hidden="true" className="transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1" />
                   </Link>
                   <Link
                     to="/contact"
-                    className="group inline-flex items-center justify-center gap-2 px-7 py-3.5 min-h-[48px] text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold rounded-[2px] text-[color:var(--ivory)] transition-all duration-200 hover:bg-[color:var(--ivory)]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--teal)]"
+                    className="he-glow he-sheen group inline-flex items-center justify-center gap-2 px-7 py-3.5 min-h-[48px] text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold rounded-[2px] text-[color:var(--ivory)] transition-all duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] hover:bg-[color:var(--ivory)]/10 hover:-translate-y-[1px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--teal)]"
                     style={{
                       border: "1px solid color-mix(in oklab, var(--gold) 65%, transparent)",
                     }}
                   >
                     Talk to a Local
-                    <ArrowRight size={12} aria-hidden="true" className="transition-transform duration-200 group-hover:translate-x-0.5" />
+                    <ArrowRight size={12} aria-hidden="true" className="transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1" />
                   </Link>
                 </div>
                 <p className="mt-6 text-[13px] italic text-[color:var(--ivory)]/85">
