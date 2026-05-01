@@ -1292,3 +1292,120 @@ describe("FakeIO.observe — explicit 'classList missing' contract", () => {
   });
 });
 
+describe("FakeIO — parallel instances are isolated under degenerate inputs", () => {
+  // Multiple FakeIO observers can be active at the same time (e.g. the
+  // reveal observer + the section-enter observer). A degenerate observe()
+  // on ONE instance must never leak into another instance's `kind`,
+  // tracking sets, or static lookup helpers.
+
+  function makeElLocal(...classes: string[]): HTMLElement {
+    const el = document.createElement("div");
+    for (const c of classes) el.classList.add(c);
+    return el;
+  }
+
+  it("a classList-less observe on one instance leaves siblings untouched", () => {
+    FakeIO.reset();
+    const ioReveal = new FakeIO(() => {});
+    const ioSection = new FakeIO(() => {});
+    const ioOther = new FakeIO(() => {});
+
+    // Classify the first two with real elements.
+    ioReveal.observe(makeElLocal("reveal"));
+    ioSection.observe(makeElLocal("section-enter"));
+    expect(ioReveal.kind).toBe("reveal");
+    expect(ioSection.kind).toBe("section-enter");
+    expect(ioOther.kind).toBe("other");
+
+    // Now hammer ioOther with classList-less garbage. Siblings must not move.
+    expect(() => {
+      ioOther.observe({ classList: undefined } as unknown as Element);
+      ioOther.observe({ classList: undefined } as unknown as Element);
+      ioOther.observe(null as unknown as Element);
+    }).not.toThrow();
+
+    expect(ioReveal.kind).toBe("reveal");
+    expect(ioSection.kind).toBe("section-enter");
+    expect(ioOther.kind).toBe("other");
+
+    // Tracking sets are isolated per instance.
+    expect(ioReveal.pendingTargets.size).toBe(1);
+    expect(ioSection.pendingTargets.size).toBe(1);
+    expect(ioOther.pendingTargets.size).toBe(0);
+  });
+
+  it("interleaved bad+good observes across 4 instances classify each independently", () => {
+    FakeIO.reset();
+    const a = new FakeIO(() => {}); // will become reveal
+    const b = new FakeIO(() => {}); // will become section-enter
+    const c = new FakeIO(() => {}); // will stay other
+    const d = new FakeIO(() => {}); // will become reveal via reveal-stagger
+
+    // Round 1: degenerate observes on all four — no kind should change.
+    a.observe({ classList: undefined } as unknown as Element);
+    b.observe(null as unknown as Element);
+    c.observe(undefined as unknown as Element);
+    d.observe({} as unknown as Element);
+    for (const io of [a, b, c, d]) expect(io.kind).toBe("other");
+
+    // Round 2: real classifying observes interleaved with more garbage.
+    a.observe(makeElLocal("reveal"));
+    b.observe({ classList: undefined } as unknown as Element);
+    c.observe({ classList: null } as unknown as Element);
+    d.observe(makeElLocal("reveal-stagger"));
+    b.observe(makeElLocal("section-enter"));
+    a.observe({ classList: undefined } as unknown as Element); // post-classification noise
+
+    expect(a.kind).toBe("reveal");
+    expect(b.kind).toBe("section-enter");
+    expect(c.kind).toBe("other");
+    expect(d.kind).toBe("reveal");
+
+    // Round 3: more cross-talk attempts — none should leak.
+    c.observe({ classList: undefined } as unknown as Element);
+    a.observe(makeElLocal("section-enter")); // must NOT flip a → section-enter
+    b.observe(makeElLocal("reveal")); // must NOT flip b → reveal
+
+    expect(a.kind).toBe("reveal");
+    expect(b.kind).toBe("section-enter");
+    expect(c.kind).toBe("other");
+    expect(d.kind).toBe("reveal");
+
+    // Static partitioning reflects per-instance state, not cross-talk.
+    expect(FakeIO.allOf("reveal")).toEqual([a, d]);
+    expect(FakeIO.allOf("section-enter")).toEqual([b]);
+    expect(FakeIO.allOf("other")).toEqual([c]);
+  });
+
+  it("8 parallel instances: pendingTargets stay isolated under mixed garbage", () => {
+    FakeIO.reset();
+    const ios = Array.from({ length: 8 }, () => new FakeIO(() => {}));
+
+    // Every instance gets one real reveal element + a flurry of bad observes.
+    const realEls = ios.map(() => makeElLocal("reveal"));
+    ios.forEach((io, i) => {
+      io.observe({ classList: undefined } as unknown as Element);
+      io.observe(realEls[i]);
+      io.observe(null as unknown as Element);
+      io.observe({ classList: undefined } as unknown as Element);
+    });
+
+    for (let i = 0; i < ios.length; i++) {
+      const io = ios[i];
+      expect(io.kind).toBe("reveal");
+      // Exactly the one real element this instance was given — no bleed-over.
+      expect(io.pendingTargets.size).toBe(1);
+      expect(io.pendingTargets.has(realEls[i])).toBe(true);
+      // And no other instance's element leaked into this one.
+      for (let j = 0; j < ios.length; j++) {
+        if (j === i) continue;
+        expect(io.pendingTargets.has(realEls[j])).toBe(false);
+      }
+    }
+
+    expect(FakeIO.allOf("reveal")).toHaveLength(8);
+    expect(FakeIO.allOf("section-enter")).toHaveLength(0);
+    expect(FakeIO.allOf("other")).toHaveLength(0);
+  });
+});
+
