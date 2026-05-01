@@ -700,7 +700,7 @@ function HomePage() {
           FAQ closer, and the Final CTA. */}
       <section
         id="builder"
-        className="py-20 md:section-y-lg bg-[color:var(--sand)] border-b border-[color:var(--border)] scroll-mt-24 md:scroll-mt-28"
+        className="he-section-rule reveal py-20 md:section-y-lg bg-[color:var(--sand)] border-b border-[color:var(--border)] scroll-mt-24 md:scroll-mt-28"
         aria-labelledby="studio-title"
       >
         <div className="container-x">
