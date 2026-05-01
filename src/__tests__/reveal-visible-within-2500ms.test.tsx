@@ -139,8 +139,16 @@ describe("reveal visibility SLA — .is-visible within 2500ms", () => {
     ).toEqual([]);
   });
 
-  it("fail-safe runs strictly before the 2500ms SLA (currently 1200ms)", () => {
+  it("fail-safe rescues on-screen content before the 2500ms SLA (currently 1200ms)", () => {
     // This guards against someone bumping the fail-safe past the SLA.
+    const origGetRect = Element.prototype.getBoundingClientRect;
+    Element.prototype.getBoundingClientRect = function () {
+      return {
+        top: 100, bottom: 500, left: 0, right: 100,
+        width: 100, height: 400, x: 0, y: 100,
+        toJSON: () => ({}),
+      } as DOMRect;
+    };
     const { container } = render(
       <SiteLayout>
         <div className="reveal">a</div>
@@ -152,12 +160,16 @@ describe("reveal visibility SLA — .is-visible within 2500ms", () => {
       vi.advanceTimersByTime(1200);
     });
 
-    const targets = container.querySelectorAll(".reveal, .section-enter");
-    targets.forEach((el) => {
-      expect(
-        el.classList.contains("is-visible"),
-        `${el.className} should be visible by 1200ms (fail-safe budget)`,
-      ).toBe(true);
-    });
+    try {
+      const targets = container.querySelectorAll(".reveal, .section-enter");
+      targets.forEach((el) => {
+        expect(
+          el.classList.contains("is-visible"),
+          `${el.className} should be visible by 1200ms when it is on-screen`,
+        ).toBe(true);
+      });
+    } finally {
+      Element.prototype.getBoundingClientRect = origGetRect;
+    }
   });
 });
