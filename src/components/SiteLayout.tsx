@@ -54,12 +54,21 @@ type RevealTelemetry = {
   reveal: RevealBucket;
   sectionEnter: RevealBucket;
   byEntry: Record<RevealEntry, { reveal: RevealEntryBucket; sectionEnter: RevealEntryBucket }>;
+  /** True once any IntersectionObserver has fired at least one entry. */
+  ioFired: boolean;
+  /** True once the 1200ms fail-safe forced visibility on at least one element. */
+  failSafeFired: boolean;
+  /** True once the iframe-aware safety pass forced visibility (iframe only). */
+  iframeFallbackFired: boolean;
   log: (
     bucket: "reveal" | "sectionEnter",
     source: RevealSource,
     selector?: string,
   ) => void;
   setTotal: (bucket: "reveal" | "sectionEnter", total: number) => void;
+  markIoFired: () => void;
+  markFailSafeFired: () => void;
+  markIframeFallbackFired: () => void;
   report: () => unknown;
   reset: () => void;
 };
