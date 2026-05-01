@@ -469,7 +469,7 @@ describe("reveal observers — sequenced firing on mobile", () => {
     // Locate the reveal observer (the one watching `.reveal` targets,
     // not `.section-enter`).
     const revealIO = FakeIO.instances.find((io) =>
-      Array.from(io.targets).some((t) =>
+      Array.from(io.observedHistory).some((t) =>
         (t as Element).classList.contains("reveal"),
       ),
     );
