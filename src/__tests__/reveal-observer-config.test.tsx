@@ -66,12 +66,14 @@ import { SiteLayout } from "@/components/SiteLayout";
 //
 type FakeIOKind = "reveal" | "section-enter" | "other";
 
-function classifyTarget(el: Element): FakeIOKind {
-  if (el.classList.contains("section-enter")) return "section-enter";
-  if (
-    el.classList.contains("reveal") ||
-    el.classList.contains("reveal-stagger")
-  ) {
+function classifyTarget(el: Element | null | undefined): FakeIOKind {
+  // Defensive: a target without a real classList (null, undefined, or a
+  // detached/foreign object) cannot be classified — treat as "other" so
+  // the observer never throws during classification.
+  const cl = (el as Element | null | undefined)?.classList;
+  if (!cl || typeof cl.contains !== "function") return "other";
+  if (cl.contains("section-enter")) return "section-enter";
+  if (cl.contains("reveal") || cl.contains("reveal-stagger")) {
     return "reveal";
   }
   return "other";
@@ -96,9 +98,15 @@ class FakeIO {
     FakeIO.instances.push(this);
   }
 
-  observe(target: Element) {
-    this.pendingTargets.add(target);
-    this.observedTargets.add(target);
+  observe(target: Element | null | undefined) {
+    // Mirror the real IntersectionObserver behavior loosely: a missing
+    // target is a no-op for tracking purposes and must never throw, so
+    // classification can stay decoupled from the caller passing pristine
+    // DOM nodes. Real Element targets are tracked as before.
+    if (target && typeof (target as Element).classList !== "undefined") {
+      this.pendingTargets.add(target as Element);
+      this.observedTargets.add(target as Element);
+    }
     if (this.kind === "other") {
       const detected = classifyTarget(target);
       if (detected !== "other") this.kind = detected;
