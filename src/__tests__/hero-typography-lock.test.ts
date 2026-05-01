@@ -177,11 +177,7 @@ function tryExtractBareHeroCta(scope: string): string | null {
       i++;
     }
   }
-  throw new Error(
-    `Bare .hero-cta-button rule not found${
-      inMediaMin != null ? ` inside @media min-width:${inMediaMin}px` : ""
-    }`,
-  );
+  return null;
 }
 
 /* ─────────────────────────────────────────────────────────────────
