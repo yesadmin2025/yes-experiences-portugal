@@ -55,7 +55,10 @@ export function installIframeFooterGuard(
     userInputWindowMs = 600,
   } = options;
 
-  let lastUserInputAt = 0;
+  // -Infinity so we don't accidentally treat install-time as "recent
+  // user input" under faked timers / SSR-like clocks where
+  // performance.now() can be 0.
+  let lastUserInputAt = -Infinity;
   let lastY = win.scrollY;
   let lastSafeY = win.scrollY;
 
