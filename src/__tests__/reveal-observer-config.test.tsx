@@ -552,14 +552,8 @@ describe("reveal observers — sequenced firing on mobile", () => {
       placeBelowFold(el, i);
     });
 
-    // Locate the reveal observer (the one watching `.reveal` targets,
-    // not `.section-enter`).
-    const revealIO = FakeIO.instances.find((io) =>
-      Array.from(io.observedHistory).some((t) =>
-        (t as Element).classList.contains("reveal"),
-      ),
-    );
-    expect(revealIO).toBeDefined();
+    // Locate the reveal observer via the explicit static helper.
+    const revealIO = FakeIO.reveal();
 
     // Sequenced fire: deliver one isIntersecting=true entry at a time
     // and assert the running state.
