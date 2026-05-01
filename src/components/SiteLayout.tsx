@@ -32,7 +32,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
   // every section across the page breathes at the same pace.
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const els = document.querySelectorAll<HTMLElement>(".reveal, .reveal-stagger, .section-enter");
+    const els = document.querySelectorAll<HTMLElement>(".reveal, .reveal-stagger");
     if (!els.length) return;
 
     const flags = getScrollDebugFlags();
@@ -85,6 +85,42 @@ export function SiteLayout({ children }: { children: ReactNode }) {
         });
       },
       { threshold: 0.14, rootMargin: "0px" },
+    );
+
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, []);
+
+  // Dedicated observer for `.section-enter` wrappers. Fires earlier than
+  // the staggered-reveal observer above (rootMargin -8% bottom, very low
+  // threshold) so tall sections in narrow mobile viewports begin their
+  // calm fade-in as soon as the top edge appears, instead of waiting for
+  // 14% of a 1000px+ section to be on screen — that delay was the main
+  // cause of "section snaps in late" on mobile scroll. Opacity-only on
+  // the CSS side ensures this never duplicates the inner reveals'
+  // translateY rhythm.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const els = document.querySelectorAll<HTMLElement>(".section-enter");
+    if (!els.length) return;
+
+    if (
+      typeof IntersectionObserver === "undefined" ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      els.forEach((el) => el.classList.add("is-visible"));
+      return;
+    }
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("is-visible");
+          io.unobserve(entry.target);
+        });
+      },
+      { threshold: 0.02, rootMargin: "0px 0px -8% 0px" },
     );
 
     els.forEach((el) => io.observe(el));
