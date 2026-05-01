@@ -115,7 +115,13 @@ export function SiteLayout({ children }: { children: ReactNode }) {
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
+          // Reveal both when the section is intersecting AND when it has
+          // already scrolled past (bottom ≤ 0). The latter handles fast
+          // fling-scroll on mobile where a tall section can leave the
+          // viewport before the first callback fires — without this
+          // guard the section would stay at opacity:0 forever.
+          const passed = entry.boundingClientRect.bottom <= 0;
+          if (!entry.isIntersecting && !passed) return;
           entry.target.classList.add("is-visible");
           io.unobserve(entry.target);
         });
