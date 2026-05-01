@@ -599,5 +599,100 @@ describe("reveal observers — sequenced firing on mobile", () => {
       expect(el.classList.contains("is-visible")).toBe(true),
     );
   });
+
+  it("no observer leaks: every target is unobserved after a full sweep of fires", () => {
+    // Mounts a wide mix (8 reveals + 4 section-enter wrappers, some
+    // nested) on mobile, fires every IO entry as isIntersecting=true,
+    // then asserts that NO FakeIO instance still has any element in
+    // its `targets` set. This catches regressions where the observer
+    // forgets to call `unobserve()` on a code path (e.g. only the
+    // `isIntersecting` branch does it but the `passed-the-fold`
+    // branch doesn't), which would slowly leak observed nodes on a
+    // long mobile scroll session.
+    vi.stubGlobal(
+      "matchMedia",
+      makeMatchMedia({
+        "(max-width: 767.98px)": true,
+        "(prefers-reduced-motion: reduce)": false,
+      }),
+    );
+
+    render(
+      <SiteLayout>
+        <section className="section-enter">
+          <div className="reveal" />
+          <div className="reveal-stagger" />
+        </section>
+        <section className="section-enter">
+          <div className="reveal" />
+          <div className="reveal-stagger" />
+        </section>
+        <section className="section-enter">
+          <div className="reveal" />
+          <div className="reveal-stagger" />
+        </section>
+        <section className="section-enter">
+          <div className="reveal" />
+          <div className="reveal-stagger" />
+        </section>
+      </SiteLayout>,
+    );
+
+    // Reset whatever the mount-time sweep already did so we can drive
+    // a clean "all-below-the-fold → all-fire" scenario.
+    const allTracked = Array.from(
+      document.querySelectorAll<HTMLElement>(
+        ".reveal, .reveal-stagger, .section-enter",
+      ),
+    );
+    expect(allTracked.length).toBe(12);
+    allTracked.forEach((el, i) => {
+      el.classList.remove("is-visible");
+      placeBelowFold(el, i);
+    });
+
+    // Fire every still-observed target on every observer instance.
+    // We snapshot `targets` first because firing causes synchronous
+    // unobserve() calls that mutate the live Set.
+    const beforeCounts = FakeIO.instances.map((io) => io.targets.size);
+    expect(beforeCounts.every((n) => n > 0)).toBe(true);
+
+    for (const io of FakeIO.instances) {
+      const snapshot = Array.from(io.targets);
+      io.fire(
+        snapshot.map((target) => ({
+          target,
+          isIntersecting: true,
+          intersectionRatio: 0.1,
+          boundingClientRect: {
+            top: 100,
+            bottom: 600,
+            left: 0,
+            right: 360,
+            width: 360,
+            height: 500,
+            x: 0,
+            y: 100,
+            toJSON: () => ({}),
+          } as DOMRectReadOnly,
+        })),
+      );
+    }
+
+    // Hard assertion: no leaks. Every observer must have an empty
+    // targets set after firing all its entries.
+    for (const io of FakeIO.instances) {
+      expect(
+        io.targets.size,
+        `observer with rootMargin="${io.options?.rootMargin}" leaked ${io.targets.size} target(s)`,
+      ).toBe(0);
+    }
+
+    // Sanity: every tracked element ended up visible — we didn't
+    // accidentally also disconnect before doing the work.
+    allTracked.forEach((el) =>
+      expect(el.classList.contains("is-visible")).toBe(true),
+    );
+  });
 });
 
