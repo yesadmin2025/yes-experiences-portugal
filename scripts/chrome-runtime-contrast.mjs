@@ -188,11 +188,33 @@ function extractPairs(file, surfaceMap) {
       }
     } else {
       // No local bg — check nested-surface hints (e.g. teal CTA pill).
+      let matched = false;
       for (const ns of surfaceMap.nestedSurfaces || []) {
         if (ns.match.test(classStr)) {
           localSurface = ns.surface;
           localLabel = ns.label;
+          matched = true;
           break;
+        }
+      }
+      // Otherwise, look up the JSX tree: scan backward in the source from
+      // this className's offset to the nearest preceding className that
+      // declares a bg-[token]. This approximates ancestor inheritance for
+      // simple parent>child structures (matching surface to its true parent).
+      if (!matched) {
+        const offset = m.index;
+        const before = src.slice(Math.max(0, offset - 4000), offset);
+        const ancestorRe = /className\s*=\s*(?:\{?['"`])([^'"`]*bg-\[color:var\(--([a-z0-9-]+)\)\][^'"`]*)(?:['"`]\}?)/g;
+        let am;
+        let lastAncestor = null;
+        while ((am = ancestorRe.exec(before)) !== null) lastAncestor = am;
+        if (lastAncestor) {
+          const token = lastAncestor[2];
+          const hex = TOKEN_HEX(token);
+          if (hex) {
+            localSurface = hex;
+            localLabel = token;
+          }
         }
       }
     }
