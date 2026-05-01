@@ -550,7 +550,9 @@ export function SiteLayout({ children }: { children: ReactNode }) {
         if (el.classList.contains("is-visible")) return;
         const rect = el.getBoundingClientRect();
         const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
-        if (rect.top < viewportHeight && rect.bottom > 0) {
+        const inViewport = rect.top < viewportHeight && rect.bottom > 0;
+        const meaningfullyVisible = rect.top < viewportHeight * 0.58;
+        if (inViewport && (telemetry.entry !== "cold" || meaningfullyVisible)) {
           revealEl(el, source);
           io.unobserve(el);
         } else if (rect.bottom <= 0) {
@@ -579,7 +581,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
         const rect = el.getBoundingClientRect();
         // Only force-visible if the element is at or above the viewport
         // bottom (i.e. should already be on-screen). Below-fold stays.
-        if (rect.top >= viewportHeight) return;
+        if (rect.top >= viewportHeight || (telemetry.entry === "cold" && rect.top > viewportHeight * 0.72)) return;
         el.style.transition = "none";
         el.style.transitionDelay = "0ms";
         el.classList.add("is-visible");
