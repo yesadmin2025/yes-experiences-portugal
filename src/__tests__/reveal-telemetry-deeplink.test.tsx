@@ -195,6 +195,11 @@ describe("reveal telemetry — deep-link / fast-scroll attribution", () => {
     // byEntry.cold mirrors the totals.
     const cold = t.byEntry.cold.reveal;
     expect(cold.io + cold.sweepInitial).toBe(3);
+    // DOM side-effect: every reveal counted in telemetry must also have
+    // had `.is-visible` applied — i.e. the class actually flips, not
+    // just the counter. This guards against a future regression where
+    // telemetry logs but the class flip is dropped.
+    els.forEach((el) => expect(el.classList.contains("is-visible")).toBe(true));
   });
 
   it("hash deep-link entry: telemetry.entry === 'hash' and byEntry.hash receives the reveals", () => {
@@ -226,6 +231,8 @@ describe("reveal telemetry — deep-link / fast-scroll attribution", () => {
     expect(cold.io + cold.sweepInitial + cold.sweepDelayed).toBe(0);
     const restore = t.byEntry["scroll-restore"].reveal;
     expect(restore.io + restore.sweepInitial + restore.sweepDelayed).toBe(0);
+    // Class-flip side-effect: every reveal must carry `.is-visible`.
+    els.forEach((el) => expect(el.classList.contains("is-visible")).toBe(true));
   });
 
   it("scroll-restore entry: non-zero initial scrollY without hash → entry === 'scroll-restore'", () => {
@@ -258,6 +265,9 @@ describe("reveal telemetry — deep-link / fast-scroll attribution", () => {
     // Both should be claimed by IO via the `passed` fallback branch.
     expect(t.reveal.io + t.reveal.sweepInitial).toBe(2);
     expect(t.reveal.pending).toBe(0);
+    // Class flip must follow the counter — telemetry without the
+    // class change would leave the user staring at opacity:0 sections.
+    els.forEach((el) => expect(el.classList.contains("is-visible")).toBe(true));
 
     // The 250ms safety-net sweep should find nothing left to claim.
     act(() => {
@@ -291,6 +301,10 @@ describe("reveal telemetry — deep-link / fast-scroll attribution", () => {
     // And the delayed sweep must have done at least the work the
     // initial sweep didn't: finalClaimed - initialClaimed == sweepDelayed.
     expect(t.reveal.sweepDelayed).toBe(finalClaimed - initialClaimed);
+    // Critical regression guard: every reveal counted by the delayed
+    // sweep must also have `.is-visible` on the DOM node. Without this
+    // the safety net would log fixes it never actually applied.
+    els.forEach((el) => expect(el.classList.contains("is-visible")).toBe(true));
   });
 
   it("hashchange after mount flips telemetry.entry to 'hash'", () => {
