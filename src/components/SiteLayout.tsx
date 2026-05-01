@@ -12,6 +12,138 @@ import {
   reportScrollDebug,
 } from "@/lib/scroll-debug";
 
+// Reveal telemetry: tracks how every `.reveal` / `.reveal-stagger` /
+// `.section-enter` element actually gets shown — by IntersectionObserver,
+// by the initial mount sweep, or by the delayed (250ms) safety-net sweep.
+// Helps diagnose "section stays invisible during fast mobile scroll".
+// • If `pending > 0` after ~1s → IO genuinely missed an element.
+// • If `sweepDelayed` is large on mobile → IO fires too late; tune
+//   rootMargin/threshold.
+// • If `sweepInitial` dominates → most reveals were already on-screen at
+//   mount (deep-link, refresh mid-page, or fast fling before first frame).
+// Counters are always collected (cheap); console logging only happens
+// when ?scroll-debug is active. Inspect via `window.__yesRevealTelemetry.report()`.
+type RevealSource = "io" | "sweepInitial" | "sweepDelayed";
+type RevealBucket = {
+  total: number;
+  io: number;
+  sweepInitial: number;
+  sweepDelayed: number;
+  readonly pending: number;
+};
+type RevealTelemetry = {
+  reveal: RevealBucket;
+  sectionEnter: RevealBucket;
+  log: (
+    bucket: "reveal" | "sectionEnter",
+    source: RevealSource,
+    selector?: string,
+  ) => void;
+  setTotal: (bucket: "reveal" | "sectionEnter", total: number) => void;
+  report: () => unknown;
+  reset: () => void;
+};
+
+declare global {
+  interface Window {
+    __yesRevealTelemetry?: RevealTelemetry;
+  }
+}
+
+function makeBucket(): RevealBucket {
+  return {
+    total: 0,
+    io: 0,
+    sweepInitial: 0,
+    sweepDelayed: 0,
+    get pending() {
+      return Math.max(0, this.total - this.io - this.sweepInitial - this.sweepDelayed);
+    },
+  };
+}
+
+function getRevealTelemetry(): RevealTelemetry {
+  if (typeof window === "undefined") {
+    // SSR: return a no-op shim so call sites stay simple.
+    return {
+      reveal: makeBucket(),
+      sectionEnter: makeBucket(),
+      log: () => {},
+      setTotal: () => {},
+      report: () => null,
+      reset: () => {},
+    };
+  }
+  if (window.__yesRevealTelemetry) return window.__yesRevealTelemetry;
+
+  const debug = getScrollDebugFlags(window).enabled;
+  const state: RevealTelemetry = {
+    reveal: makeBucket(),
+    sectionEnter: makeBucket(),
+    log(bucket, source, selector) {
+      const b = state[bucket];
+      b[source] += 1;
+      if (debug) {
+        // eslint-disable-next-line no-console
+        console.debug(
+          `[reveal-telemetry] ${bucket} via ${source}`,
+          selector ?? "",
+          {
+            total: b.total,
+            io: b.io,
+            sweepInitial: b.sweepInitial,
+            sweepDelayed: b.sweepDelayed,
+            pending: b.pending,
+          },
+        );
+      }
+    },
+    setTotal(bucket, total) {
+      state[bucket].total = total;
+    },
+    report() {
+      const snapshot = {
+        reveal: {
+          total: state.reveal.total,
+          io: state.reveal.io,
+          sweepInitial: state.reveal.sweepInitial,
+          sweepDelayed: state.reveal.sweepDelayed,
+          pending: state.reveal.pending,
+        },
+        sectionEnter: {
+          total: state.sectionEnter.total,
+          io: state.sectionEnter.io,
+          sweepInitial: state.sectionEnter.sweepInitial,
+          sweepDelayed: state.sectionEnter.sweepDelayed,
+          pending: state.sectionEnter.pending,
+        },
+      };
+      // eslint-disable-next-line no-console
+      console.table([
+        { bucket: "reveal", ...snapshot.reveal },
+        { bucket: "sectionEnter", ...snapshot.sectionEnter },
+      ]);
+      return snapshot;
+    },
+    reset() {
+      state.reveal = makeBucket();
+      state.sectionEnter = makeBucket();
+    },
+  };
+  window.__yesRevealTelemetry = state;
+  return state;
+}
+
+function describeReveal(el: Element): string {
+  const tag = el.tagName.toLowerCase();
+  const id = el.id ? `#${el.id}` : "";
+  const cls =
+    typeof el.className === "string"
+      ? el.className.split(/\s+/).filter(Boolean).slice(0, 2).map((c) => `.${c}`).join("")
+      : "";
+  return `${tag}${id}${cls}`;
+}
+
 export function SiteLayout({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -38,6 +170,8 @@ export function SiteLayout({ children }: { children: ReactNode }) {
     const flags = getScrollDebugFlags();
     const mobileRevealsDisabled =
       flags.disableMobileReveals && window.matchMedia("(max-width: 767.98px)").matches;
+    const telemetry = getRevealTelemetry();
+    telemetry.setTotal("reveal", els.length);
 
     if (
       mobileRevealsDisabled ||
@@ -69,7 +203,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
       items.forEach((el, i) => indexByEl.set(el, Math.min(i, MAX_STEPS)));
     });
 
-    const revealEl = (target: HTMLElement) => {
+    const revealEl = (target: HTMLElement, source: RevealSource) => {
       if (target.classList.contains("is-visible")) return;
       // Only apply our cadence when no inline delay is already set, so
       // route-level overrides still win.
@@ -78,6 +212,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
         target.style.transitionDelay = `${idx * STAGGER_MS}ms`;
       }
       target.classList.add("is-visible");
+      telemetry.log("reveal", source, describeReveal(target));
     };
 
     const io = new IntersectionObserver(
@@ -90,7 +225,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
           // the user scrolls back. Mirrors the .section-enter observer.
           const passed = entry.boundingClientRect.bottom <= 0;
           if (!entry.isIntersecting && !passed) return;
-          revealEl(entry.target as HTMLElement);
+          revealEl(entry.target as HTMLElement, "io");
           io.unobserve(entry.target);
         });
       },
@@ -105,21 +240,21 @@ export function SiteLayout({ children }: { children: ReactNode }) {
     // Initial sweep: any reveal already on-screen at mount (e.g. after
     // a deep-link / refresh near the bottom of the page, or after a
     // very fast scroll before the IO has reported) is shown right away.
-    const sweep = () => {
+    const sweep = (source: "sweepInitial" | "sweepDelayed") => {
       const vh = window.innerHeight || 0;
       els.forEach((el) => {
         if (el.classList.contains("is-visible")) return;
         const rect = el.getBoundingClientRect();
         if (rect.bottom <= 0 || rect.top < vh * 0.95) {
-          revealEl(el);
+          revealEl(el, source);
           io.unobserve(el);
         }
       });
     };
-    sweep();
+    sweep("sweepInitial");
     // Safety net for extreme fling scrolls: re-sweep once shortly after
     // mount to catch anything the IO missed during the first frame.
-    const t = window.setTimeout(sweep, 250);
+    const t = window.setTimeout(() => sweep("sweepDelayed"), 250);
 
     return () => {
       window.clearTimeout(t);
@@ -140,6 +275,9 @@ export function SiteLayout({ children }: { children: ReactNode }) {
     const els = document.querySelectorAll<HTMLElement>(".section-enter");
     if (!els.length) return;
 
+    const telemetry = getRevealTelemetry();
+    telemetry.setTotal("sectionEnter", els.length);
+
     if (
       typeof IntersectionObserver === "undefined" ||
       window.matchMedia("(prefers-reduced-motion: reduce)").matches
@@ -147,6 +285,12 @@ export function SiteLayout({ children }: { children: ReactNode }) {
       els.forEach((el) => el.classList.add("is-visible"));
       return;
     }
+
+    const markVisible = (el: Element, source: RevealSource) => {
+      if (el.classList.contains("is-visible")) return;
+      el.classList.add("is-visible");
+      telemetry.log("sectionEnter", source, describeReveal(el));
+    };
 
     const io = new IntersectionObserver(
       (entries) => {
@@ -158,7 +302,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
           // guard the section would stay at opacity:0 forever.
           const passed = entry.boundingClientRect.bottom <= 0;
           if (!entry.isIntersecting && !passed) return;
-          entry.target.classList.add("is-visible");
+          markVisible(entry.target, "io");
           io.unobserve(entry.target);
         });
       },
@@ -171,19 +315,19 @@ export function SiteLayout({ children }: { children: ReactNode }) {
     // mobile flings the IO can miss a section entirely. Force-show any
     // wrapper already on-screen (or scrolled past) at mount, then
     // re-check shortly after to catch anything still pending.
-    const sweep = () => {
+    const sweep = (source: "sweepInitial" | "sweepDelayed") => {
       const vh = window.innerHeight || 0;
       els.forEach((el) => {
         if (el.classList.contains("is-visible")) return;
         const rect = el.getBoundingClientRect();
         if (rect.bottom <= 0 || rect.top < vh * 0.98) {
-          el.classList.add("is-visible");
+          markVisible(el, source);
           io.unobserve(el);
         }
       });
     };
-    sweep();
-    const t = window.setTimeout(sweep, 250);
+    sweep("sweepInitial");
+    const t = window.setTimeout(() => sweep("sweepDelayed"), 250);
 
     return () => {
       window.clearTimeout(t);
