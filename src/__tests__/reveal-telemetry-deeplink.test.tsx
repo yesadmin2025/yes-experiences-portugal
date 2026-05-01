@@ -265,6 +265,9 @@ describe("reveal telemetry — deep-link / fast-scroll attribution", () => {
     // Both should be claimed by IO via the `passed` fallback branch.
     expect(t.reveal.io + t.reveal.sweepInitial).toBe(2);
     expect(t.reveal.pending).toBe(0);
+    // Class flip must follow the counter — telemetry without the
+    // class change would leave the user staring at opacity:0 sections.
+    els.forEach((el) => expect(el.classList.contains("is-visible")).toBe(true));
 
     // The 250ms safety-net sweep should find nothing left to claim.
     act(() => {
