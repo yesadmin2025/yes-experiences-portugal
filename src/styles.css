@@ -3073,12 +3073,14 @@ svg.lucide {
   }
   .section-enter.is-visible {
     opacity: 1;
+    animation: siteSectionFadeIn 460ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
   }
   @media (prefers-reduced-motion: reduce) {
     .section-enter,
     .section-enter.is-visible {
       opacity: 1 !important;
       transition: none !important;
+      animation: none !important;
     }
   }
 }
