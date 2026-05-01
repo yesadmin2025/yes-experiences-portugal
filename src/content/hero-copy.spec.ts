@@ -13,14 +13,14 @@
  *  - Real-time human guidance always available
  */
 export const HERO_COPY_SPEC = {
-  eyebrow: "PRIVATE · BY LOCALS · ANY OCCASION",
-  headlineLine1: "Portugal is the stage.",
-  headlineLine2: "You write the story.",
+  eyebrow: "PRIVATE · LOCAL · INSTANTLY YOURS",
+  headlineLine1: "Your Portugal story",
+  headlineLine2: "starts here.",
   subheadline:
-    "Designed by you, at your rhythm — for a private day, a celebration or a full journey, guided by local knowledge.",
+    "Choose the places, pace and moments that feel right — from private days to celebrations, groups and full journeys. Guided by local knowledge. Confirmed instantly.",
   primaryCta: "Create Your Story",
   secondaryCta: "Explore Signature Experiences",
-  microcopy: "Instant confirmation. No forms. No waiting.",
+  microcopy: "No forms. No waiting. Real-time guidance if you want it.",
 } as const;
 
 export type HeroSpecKey = keyof typeof HERO_COPY_SPEC;
