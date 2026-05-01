@@ -43,9 +43,10 @@ const FLEXIBLE = [
  * one clean editorial layout, surfaces trust, and offers a final call to
  * either confirm (Stripe) or talk to a local first (WhatsApp).
  */
-export function ReviewScreen({ route, stops, guests, narrative, reviewThumbs, onConfirm, onBack }: Props) {
+export function ReviewScreen({ route, stops, guests, narrative, reviewThumbs, onConfirm, onBack, onToneReady }: Props) {
   const thumbs = (reviewThumbs ?? []).slice(0, 4);
   const totalEur = route.pricePerPersonEur * guests;
+  const sessionId = useBuilderSessionId();
 
   return (
     <section className="bg-[color:var(--ivory)] text-[color:var(--charcoal)]">
