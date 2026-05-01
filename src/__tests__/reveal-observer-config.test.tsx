@@ -390,3 +390,206 @@ describe("reveal observers — accept array thresholds at runtime", () => {
   });
 });
 
+// ------------------------------------------------------------------
+// Sequenced IO firing — many sections on mobile.
+//
+// Mounts a realistic-ish page (5 `.reveal` cards + 3 `.section-enter`
+// wrappers), then fires IntersectionObserver entries one at a time, in
+// document order, asserting that:
+//   • before any IO fire, NO element has `is-visible` (sweep didn't
+//     mistakenly mark them — their rects say they're below the fold);
+//   • after firing entry i, ONLY elements 0…i have `is-visible`;
+//   • the final state has every element visible AND each one is
+//     unobserved (observer.targets no longer contains it), so we don't
+//     leak observers on long pages.
+// ------------------------------------------------------------------
+
+/** Place an element well below the fold so the initial sweep skips it. */
+function placeBelowFold(el: Element, slot: number) {
+  const VH = 800;
+  const top = VH + 200 + slot * 600;
+  (el as HTMLElement).getBoundingClientRect = () =>
+    ({
+      top,
+      bottom: top + 500,
+      left: 0,
+      right: 360,
+      width: 360,
+      height: 500,
+      x: 0,
+      y: top,
+      toJSON: () => ({}),
+    }) as DOMRect;
+}
+
+describe("reveal observers — sequenced firing on mobile", () => {
+  it("each .reveal gains is-visible only when its IO entry fires, in order", async () => {
+    vi.stubGlobal(
+      "matchMedia",
+      makeMatchMedia({
+        "(max-width: 767.98px)": true,
+        "(prefers-reduced-motion: reduce)": false,
+      }),
+    );
+
+    const { container } = render(
+      <SiteLayout>
+        <div className="reveal" data-idx="0" />
+        <div className="reveal" data-idx="1" />
+        <div className="reveal" data-idx="2" />
+        <div className="reveal" data-idx="3" />
+        <div className="reveal" data-idx="4" />
+      </SiteLayout>,
+    );
+    expect(container).toBeTruthy();
+
+    const els = Array.from(
+      document.querySelectorAll<HTMLElement>(".reveal"),
+    );
+    expect(els.length).toBe(5);
+
+    // Park them all below the fold so the initial sweep doesn't claim
+    // any element. Note: the sweep already ran on mount with the default
+    // (0,0,0,0) rect, which technically counts as "in viewport" — so we
+    // first force-clear is-visible on every element and re-stub the
+    // rects to simulate a fresh "all below the fold" state.
+    els.forEach((el, i) => {
+      el.classList.remove("is-visible");
+      placeBelowFold(el, i);
+    });
+
+    // Locate the reveal observer (the one watching `.reveal` targets,
+    // not `.section-enter`).
+    const revealIO = FakeIO.instances.find((io) =>
+      Array.from(io.targets).some((t) =>
+        (t as Element).classList.contains("reveal"),
+      ),
+    );
+    expect(revealIO).toBeDefined();
+
+    // Sequenced fire: deliver one isIntersecting=true entry at a time
+    // and assert the running state.
+    for (let i = 0; i < els.length; i++) {
+      revealIO!.fire([
+        {
+          target: els[i],
+          isIntersecting: true,
+          intersectionRatio: 0.1,
+          boundingClientRect: {
+            top: 100,
+            bottom: 600,
+            left: 0,
+            right: 360,
+            width: 360,
+            height: 500,
+            x: 0,
+            y: 100,
+            toJSON: () => ({}),
+          } as DOMRectReadOnly,
+        },
+      ]);
+
+      // Every element up to and including i must be visible.
+      for (let j = 0; j <= i; j++) {
+        expect(
+          els[j].classList.contains("is-visible"),
+          `element ${j} should be visible after firing ${i}`,
+        ).toBe(true);
+      }
+      // Every element strictly after i must NOT be visible yet.
+      for (let j = i + 1; j < els.length; j++) {
+        expect(
+          els[j].classList.contains("is-visible"),
+          `element ${j} should NOT be visible yet (only ${i} fired)`,
+        ).toBe(false);
+      }
+    }
+
+    // After all fires, every revealed target must have been unobserved
+    // (no leaks on a long page with many sections).
+    for (const el of els) {
+      expect(revealIO!.targets.has(el)).toBe(false);
+    }
+  });
+
+  it("`.section-enter` wrappers also reveal in firing order, independent of `.reveal`", () => {
+    vi.stubGlobal(
+      "matchMedia",
+      makeMatchMedia({
+        "(max-width: 767.98px)": true,
+        "(prefers-reduced-motion: reduce)": false,
+      }),
+    );
+
+    render(
+      <SiteLayout>
+        <section className="section-enter" data-idx="s0">
+          <div className="reveal" data-idx="r0" />
+        </section>
+        <section className="section-enter" data-idx="s1">
+          <div className="reveal" data-idx="r1" />
+        </section>
+        <section className="section-enter" data-idx="s2">
+          <div className="reveal" data-idx="r2" />
+        </section>
+      </SiteLayout>,
+    );
+
+    const sections = Array.from(
+      document.querySelectorAll<HTMLElement>(".section-enter"),
+    );
+    expect(sections.length).toBe(3);
+
+    // Reset post-mount sweep + park below the fold.
+    sections.forEach((el, i) => {
+      el.classList.remove("is-visible");
+      placeBelowFold(el, i);
+    });
+
+    // Find the section-enter observer specifically.
+    const sectionIO = FakeIO.instances.find((io) =>
+      Array.from(io.targets).some((t) =>
+        (t as Element).classList.contains("section-enter"),
+      ),
+    );
+    expect(sectionIO).toBeDefined();
+
+    // Fire only s0 and s2 (skip s1) — middle stays invisible until its
+    // own entry arrives. This proves visibility isn't a side-effect of
+    // earlier or later fires bleeding across siblings.
+    sectionIO!.fire([
+      {
+        target: sections[0],
+        isIntersecting: true,
+        boundingClientRect: { top: 50, bottom: 550 } as DOMRectReadOnly,
+      },
+    ]);
+    expect(sections[0].classList.contains("is-visible")).toBe(true);
+    expect(sections[1].classList.contains("is-visible")).toBe(false);
+    expect(sections[2].classList.contains("is-visible")).toBe(false);
+
+    sectionIO!.fire([
+      {
+        target: sections[2],
+        isIntersecting: true,
+        boundingClientRect: { top: 50, bottom: 550 } as DOMRectReadOnly,
+      },
+    ]);
+    expect(sections[1].classList.contains("is-visible")).toBe(false);
+    expect(sections[2].classList.contains("is-visible")).toBe(true);
+
+    // Now fire the middle one and confirm it joins the visible set
+    // without disturbing the others.
+    sectionIO!.fire([
+      {
+        target: sections[1],
+        isIntersecting: true,
+        boundingClientRect: { top: 50, bottom: 550 } as DOMRectReadOnly,
+      },
+    ]);
+    sections.forEach((el) =>
+      expect(el.classList.contains("is-visible")).toBe(true),
+    );
+  });
+});
+
