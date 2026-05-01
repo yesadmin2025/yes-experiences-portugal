@@ -128,6 +128,20 @@ export function MotionQaPanel() {
   const ioFired = t?.ioFired === true;
   const failSafeFired = t?.failSafeFired === true;
   const hidden = counts.total - counts.visible;
+  const visibleTest = readVisibleTestFlag();
+  const sections = [
+    "Trust strip",
+    "Three Ways / Studio",
+    "Why YES",
+    "Signature Experiences",
+    "Occasions / Groups",
+    "FAQ",
+    "Final CTA / Footer",
+  ].map((name) => {
+    const hits = (t?.timings ?? []).filter((x) => x.section === name);
+    const first = hits[0];
+    return { name, first, hits };
+  });
 
   // One-shot console report so devs can grep without opening the panel.
   if (tick === 0) {
@@ -141,6 +155,7 @@ export function MotionQaPanel() {
       reducedMotion: reduced,
       inIframe,
       cssLoaded,
+      visibleTest,
       scrollDebugClasses,
       telemetry: t,
     });
@@ -165,7 +180,9 @@ export function MotionQaPanel() {
         right: 8,
         bottom: 8,
         zIndex: 99999,
-        width: 240,
+        width: 320,
+        maxHeight: "72vh",
+        overflow: "auto",
         padding: 10,
         background: "rgba(20,20,20,0.92)",
         color: "var(--ivory)",
@@ -187,12 +204,30 @@ export function MotionQaPanel() {
       <Row k="reduced-motion" v={reduced ? "ON" : "off"} />
       <Row k="iframe" v={inIframe ? "yes" : "no"} />
       <Row k="reveal CSS" v={cssLoaded ? "loaded" : "missing"} ok={cssLoaded} />
+      <Row k="visible-test" v={visibleTest ? "ON" : "off"} />
       <Row k="scroll-debug" v={scrollDebugClasses.length ? scrollDebugClasses.join(",") : "off"} />
       {t && (
         <div style={{ opacity: 0.75, paddingTop: 4, borderTop: "1px solid rgba(255,255,255,0.1)" }}>
           reveal io/init/late: {t.reveal.io}/{t.reveal.sweepInitial}/{t.reveal.sweepDelayed}
           <br />
           section io/init/late: {t.sectionEnter.io}/{t.sectionEnter.sweepInitial}/{t.sectionEnter.sweepDelayed}
+        </div>
+      )}
+      {t && (
+        <div style={{ opacity: 0.86, paddingTop: 4, borderTop: "1px solid rgba(255,255,255,0.1)", display: "grid", gap: 3 }}>
+          {sections.map(({ name, first, hits }) => (
+            <div key={name}>
+              <span style={{ color: "var(--gold)" }}>{name}</span>{" "}
+              {first ? (
+                <span style={{ color: first.realisticallyVisible ? "#a6e3a1" : "#ffcf8a" }}>
+                  {first.source} · {first.atMs}ms · {first.fold} · {first.durationMs}+{first.delayMs}ms · {first.realisticallyVisible ? "seen" : first.note}
+                  {hits.length > 1 ? ` · ${hits.length} nodes` : ""}
+                </span>
+              ) : (
+                <span style={{ color: "#ff8a8a" }}>pending</span>
+              )}
+            </div>
+          ))}
         </div>
       )}
       <div style={{ opacity: 0.55, fontSize: 10, paddingTop: 4 }}>?motion-qa=1 · read-only</div>
