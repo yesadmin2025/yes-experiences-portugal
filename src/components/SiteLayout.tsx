@@ -166,7 +166,29 @@ export function SiteLayout({ children }: { children: ReactNode }) {
     );
 
     els.forEach((el) => io.observe(el));
-    return () => io.disconnect();
+
+    // Initial + delayed sweep mirrors the reveal observer: on very fast
+    // mobile flings the IO can miss a section entirely. Force-show any
+    // wrapper already on-screen (or scrolled past) at mount, then
+    // re-check shortly after to catch anything still pending.
+    const sweep = () => {
+      const vh = window.innerHeight || 0;
+      els.forEach((el) => {
+        if (el.classList.contains("is-visible")) return;
+        const rect = el.getBoundingClientRect();
+        if (rect.bottom <= 0 || rect.top < vh * 0.98) {
+          el.classList.add("is-visible");
+          io.unobserve(el);
+        }
+      });
+    };
+    sweep();
+    const t = window.setTimeout(sweep, 250);
+
+    return () => {
+      window.clearTimeout(t);
+      io.disconnect();
+    };
   }, []);
 
   return (
