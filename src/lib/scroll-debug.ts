@@ -69,7 +69,14 @@ export function getScrollDebugFlags(
 ): ScrollDebugFlags {
   if (!win) return EMPTY_FLAGS;
   const params = new URLSearchParams(win.location.search);
-  if (!params.has("scroll-debug")) return EMPTY_FLAGS;
+  // Standalone shortcut: ?reveal-debug enables reveal debug without
+  // pulling in the rest of the scroll-debug instrumentation.
+  const standaloneRevealDebug = params.has("reveal-debug");
+  if (!params.has("scroll-debug") && !standaloneRevealDebug) {
+    return standaloneRevealDebug
+      ? { ...EMPTY_FLAGS, enabled: true, revealDebug: true }
+      : EMPTY_FLAGS;
+  }
   const tokens = tokensFromUrl(win);
   const all = tokens.has("all");
   return {
@@ -79,6 +86,8 @@ export function getScrollDebugFlags(
     disableMobileReveals: all || tokens.has("reveals-off") || tokens.has("no-mobile-reveals"),
     staticMobileCarousels: all || tokens.has("carousels-off") || tokens.has("static-carousels"),
     disableMobileStudioMotion: all || tokens.has("studio-static") || tokens.has("no-studio-motion"),
+    revealDebug:
+      standaloneRevealDebug || tokens.has("reveal-debug") || tokens.has("debug-reveals"),
   };
 }
 
