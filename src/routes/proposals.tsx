@@ -142,7 +142,6 @@ function ProposalsPage() {
                     {b.cta}
                     <span aria-hidden="true" className="text-[color:var(--gold)] group-hover:text-[color:var(--gold-deep)] transition-colors">→</span>
                   </Link>
-                  </Link>
                 </div>
               </article>
             );
