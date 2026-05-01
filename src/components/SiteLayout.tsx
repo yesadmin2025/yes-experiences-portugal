@@ -509,7 +509,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
         target.style.transitionDelay = `${idx * STAGGER_MS}ms`;
       }
       target.classList.add("is-visible");
-      telemetry.log("reveal", source, describeReveal(target));
+      telemetry.log("reveal", source, target, describeReveal(target));
       if (revealDebug) flashDebug(target, `reveal·${source}`);
     };
 
@@ -583,7 +583,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
         el.style.transition = "none";
         el.style.transitionDelay = "0ms";
         el.classList.add("is-visible");
-        telemetry.log("reveal", "sweepDelayed", describeReveal(el));
+        telemetry.log("reveal", "sweepDelayed", el, describeReveal(el));
         forced += 1;
       });
       if (forced > 0) telemetry.markFailSafeFired();
@@ -627,7 +627,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
     const markVisible = (el: Element, source: RevealSource) => {
       if (el.classList.contains("is-visible")) return;
       el.classList.add("is-visible");
-      telemetry.log("sectionEnter", source, describeReveal(el));
+      telemetry.log("sectionEnter", source, el as HTMLElement, describeReveal(el));
       if (revealDebug) flashDebug(el as HTMLElement, `section·${source}`);
     };
 
@@ -685,7 +685,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
         if (rect.top >= viewportHeight) return;
         el.style.transition = "none";
         el.classList.add("is-visible");
-        telemetry.log("sectionEnter", "sweepDelayed", describeReveal(el));
+        telemetry.log("sectionEnter", "sweepDelayed", el, describeReveal(el));
         forced += 1;
       });
       if (forced > 0) telemetry.markFailSafeFired();
