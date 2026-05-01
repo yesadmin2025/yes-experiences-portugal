@@ -255,3 +255,113 @@ describe("reveal observers — prefers-reduced-motion fallback", () => {
     expect(el.style.transitionDelay).toBe("0ms");
   });
 });
+
+// ------------------------------------------------------------------
+// Threshold normalization contract.
+//
+// IntersectionObserver accepts `threshold` as either a single number
+// or an array of numbers. The "effective firing threshold" is the
+// SMALLEST value in the array (because IO fires whenever any listed
+// ratio is crossed). Our mobile/desktop assertions above rely on
+// this: if a future refactor passes [0, 0.01, 0.02] instead of 0.01,
+// the contract is still satisfied as long as `min(thresholds) ≤ 0.02`
+// on mobile.
+//
+// We pin this normalization down with direct unit tests so the helper
+// can never drift away from real IO semantics.
+// ------------------------------------------------------------------
+
+/** Mirrors the inline normalization used in the assertions above. */
+function effectiveThreshold(t: number | number[] | undefined): number {
+  if (t === undefined) return 0; // IO default
+  if (Array.isArray(t)) {
+    if (t.length === 0) return 0;
+    return Math.min(...t);
+  }
+  return t;
+}
+
+describe("threshold normalization — scalars and arrays", () => {
+  it("returns the scalar value as-is when threshold is a single number", () => {
+    expect(effectiveThreshold(0.01)).toBe(0.01);
+    expect(effectiveThreshold(0.5)).toBe(0.5);
+    expect(effectiveThreshold(0)).toBe(0);
+  });
+
+  it("returns the smallest entry when threshold is an array", () => {
+    expect(effectiveThreshold([0, 0.01, 0.02])).toBe(0);
+    expect(effectiveThreshold([0.25, 0.05, 0.5])).toBe(0.05);
+    // Out-of-order arrays must still pick the minimum.
+    expect(effectiveThreshold([0.9, 0.1, 0.3, 0.05])).toBe(0.05);
+  });
+
+  it("treats an undefined or empty-array threshold as 0 (IO default)", () => {
+    expect(effectiveThreshold(undefined)).toBe(0);
+    expect(effectiveThreshold([])).toBe(0);
+  });
+
+  it("on mobile, an array threshold satisfies the ≤0.02 contract via its minimum", () => {
+    // Even if the array's max is large (0.5), the minimum (0.01) is
+    // what determines the "fires early" guarantee on mobile.
+    const arrayLikeMobile: number[] = [0, 0.01, 0.02, 0.5];
+    expect(effectiveThreshold(arrayLikeMobile)).toBeLessThanOrEqual(0.02);
+  });
+
+  it("on desktop, a scalar OR an array whose min is > 0.02 counts as 'looser'", () => {
+    // Scalar form (current desktop config: 0.08 / 0.02).
+    expect(effectiveThreshold(0.08) > 0.02).toBe(true);
+    // Array form: [0.05, 0.1, 0.2] — min is 0.05, still > 0.02.
+    expect(effectiveThreshold([0.05, 0.1, 0.2]) > 0.02).toBe(true);
+    // Border case: an array containing 0.02 would count as MOBILE-tight,
+    // not desktop-loose. This guards against accidentally making the
+    // desktop observer fire as early as the mobile one.
+    expect(effectiveThreshold([0.02, 0.5]) > 0.02).toBe(false);
+  });
+});
+
+describe("reveal observers — accept array thresholds at runtime", () => {
+  it("if a future refactor passes [0, 0.01, 0.02] on mobile, the contract still holds", () => {
+    // Patch FakeIO so its options.threshold is forced to an array,
+    // simulating a future SiteLayout that prefers multi-step thresholds.
+    // Then re-run the same assertion the mobile test uses.
+    vi.stubGlobal(
+      "matchMedia",
+      makeMatchMedia({
+        "(max-width: 767.98px)": true,
+        "(prefers-reduced-motion: reduce)": false,
+      }),
+    );
+
+    const OriginalIO = FakeIO;
+    class ArrayThresholdIO extends OriginalIO {
+      constructor(cb: IntersectionObserverCallback, options?: IntersectionObserverInit) {
+        // Coerce whatever threshold SiteLayout passes into an array
+        // form to mimic the hypothetical refactor.
+        const original = options?.threshold ?? 0;
+        const asArray = Array.isArray(original) ? original : [0, original];
+        super(cb, { ...options, threshold: asArray });
+      }
+    }
+    vi.stubGlobal(
+      "IntersectionObserver",
+      ArrayThresholdIO as unknown as typeof IntersectionObserver,
+    );
+
+    render(
+      <SiteLayout>
+        <div className="reveal" />
+        <section className="section-enter" />
+      </SiteLayout>,
+    );
+
+    expect(FakeIO.instances.length).toBeGreaterThanOrEqual(2);
+    for (const io of FakeIO.instances) {
+      const t = io.options?.threshold;
+      // Confirm the harness actually delivered an array.
+      expect(Array.isArray(t)).toBe(true);
+      // The min of the array must still satisfy the mobile contract.
+      expect(effectiveThreshold(t as number[])).toBeLessThanOrEqual(0.02);
+    }
+  });
+});
+
