@@ -1374,7 +1374,7 @@ function HomePage() {
                     }}
                   >
                     Create Your Story
-                    <ArrowRight size={14} aria-hidden="true" className="text-[color:var(--gold)] transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1" />
+                    <ArrowRight size={14} aria-hidden="true" className="text-[color:var(--gold)] group-hover:text-[color:var(--gold-deep)] transition-[transform,color] duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1" />
                   </Link>
                   <Link
                     to="/contact"
@@ -1384,7 +1384,7 @@ function HomePage() {
                     }}
                   >
                     Talk to a Local
-                    <ArrowRight size={12} aria-hidden="true" className="text-[color:var(--gold-soft)] transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1" />
+                    <ArrowRight size={12} aria-hidden="true" className="text-[color:var(--gold-soft)] group-hover:text-[color:var(--gold)] transition-[transform,color] duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1" />
                   </Link>
                 </div>
                 <p className="font-serif mt-6 text-[13px] italic text-[color:var(--ivory)]/85">
