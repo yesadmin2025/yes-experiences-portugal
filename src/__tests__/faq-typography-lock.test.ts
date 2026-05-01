@@ -7,12 +7,13 @@
  * but any *value* drift (e.g. text-[2rem] → text-[1.9rem], leading-[1.12]
  * → leading-[1.1], py-4 → py-3) will fail loudly.
  *
- * Locked values (post-Phase 3):
+ * Locked values (post-Phase 3, FAQ enlarged Nov 2026):
  *
- *   #faq-title h2
- *     · text-[2rem]  md:text-[2.6rem]
- *     · leading-[1.12]  tracking-[-0.015em]
- *     · text-[color:var(--charcoal)]
+ *   #faq-title h2 — intentionally larger than the other section H2s
+ *   so it reads as the closing anchor before the CTA card.
+ *     · text-[2.4rem]  sm:text-[2.8rem]  md:text-[4rem]
+ *     · leading-[1.05]  md:leading-[0.98]  tracking-[-0.02em]
+ *     · text-[color:var(--charcoal)]  font-medium
  *
  *   AccordionTrigger
  *     · text-[15px]  md:text-[17px]
@@ -90,11 +91,14 @@ describe("FAQ #faq-title — locked typography (order-independent)", () => {
     expectAllTokens(
       FAQ_TITLE,
       [
-        "text-[2rem]",
-        "md:text-[2.6rem]",
-        "leading-[1.12]",
-        "tracking-[-0.015em]",
+        "text-[2.4rem]",
+        "sm:text-[2.8rem]",
+        "md:text-[4rem]",
+        "leading-[1.05]",
+        "md:leading-[0.98]",
+        "tracking-[-0.02em]",
         "text-[color:var(--charcoal)]",
+        "font-medium",
       ],
       "h2#faq-title",
     );
@@ -103,6 +107,12 @@ describe("FAQ #faq-title — locked typography (order-independent)", () => {
   it("does NOT silently regress to the pre-Phase-3 4xl/5xl ramp", () => {
     expect(FAQ_TITLE.has("text-4xl")).toBe(false);
     expect(FAQ_TITLE.has("md:text-5xl")).toBe(false);
+  });
+
+  it("FAQ headline is larger than the other major section H2s", () => {
+    // Other major sections cap at md:text-[3.6rem]; FAQ must exceed that.
+    expect(FAQ_TITLE.has("md:text-[4rem]")).toBe(true);
+    expect(FAQ_TITLE.has("md:text-[3.6rem]")).toBe(false);
   });
 });
 
