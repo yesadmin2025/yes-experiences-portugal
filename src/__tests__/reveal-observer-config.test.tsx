@@ -45,6 +45,13 @@ class FakeIO {
   callback: IntersectionObserverCallback;
   options?: IntersectionObserverInit;
   targets = new Set<Element>();
+  /**
+   * Tracks every element ever observed by this observer, even after
+   * `unobserve()` removes it. Used by the sequenced-firing tests to
+   * identify which observer (reveal vs section-enter) is which AFTER
+   * the initial sweep has already unobserved everything on mount.
+   */
+  observedHistory = new Set<Element>();
   constructor(cb: IntersectionObserverCallback, options?: IntersectionObserverInit) {
     this.callback = cb;
     this.options = options;
@@ -52,6 +59,7 @@ class FakeIO {
   }
   observe(target: Element) {
     this.targets.add(target);
+    this.observedHistory.add(target);
   }
   unobserve(target: Element) {
     this.targets.delete(target);
