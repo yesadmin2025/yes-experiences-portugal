@@ -32,7 +32,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
   // every section across the page breathes at the same pace.
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const els = document.querySelectorAll<HTMLElement>(".reveal, .reveal-stagger, .section-enter");
+    const els = document.querySelectorAll<HTMLElement>(".reveal, .reveal-stagger");
     if (!els.length) return;
 
     const flags = getScrollDebugFlags();
