@@ -5,6 +5,7 @@ import { FloatingActions } from "./FloatingActions";
 import { WhatsAppFab } from "./WhatsAppFab";
 import { MobileStickyCTA } from "./MobileStickyCTA";
 import { PostHeroAnnouncer } from "./PostHeroAnnouncer";
+import { installSmoothAnchorScroll } from "@/lib/smooth-anchor-scroll";
 
 export function SiteLayout({ children }: { children: ReactNode }) {
   // Reveal-on-scroll with a consistent, calm stagger rhythm.
