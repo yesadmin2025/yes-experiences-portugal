@@ -715,7 +715,7 @@ function HomePage() {
                 id="paths-title"
                 className="serif mt-3 text-[1.7rem] sm:text-[1.95rem] md:text-[2.4rem] leading-[1.18] md:leading-[1.1] tracking-[-0.012em] text-[color:var(--charcoal)] font-medium"
               >
-                Three ways to <span className="italic">begin.</span>
+                Three ways to <span className="italic font-normal text-[color:var(--teal)]">begin.</span>
               </h2>
               <p className="mt-4 text-[14.5px] md:text-[15.5px] text-[color:var(--charcoal-soft)] leading-[1.6] max-w-md mx-auto">
                 Choose a ready-made Signature, tailor the details, or build from scratch.
@@ -783,7 +783,7 @@ function HomePage() {
                 id="studio-title"
                 className="serif mt-3 text-[2rem] sm:text-[2.4rem] md:text-[3.6rem] leading-[1.1] md:leading-[1.0] tracking-[-0.018em] text-[color:var(--charcoal)] font-medium"
               >
-                Create it <span className="italic font-normal">live.</span>
+                Create it <span className="italic font-normal text-[color:var(--teal)]">live.</span>
               </h2>
               <p className="mt-5 text-[14.5px] md:text-[16px] text-[color:var(--charcoal-soft)] leading-[1.7] max-w-md font-normal">
                 Choose your <span className="kw">mood</span>, rhythm and intention. Watch your private experience take shape in <span className="kw">real time</span>.
@@ -854,7 +854,7 @@ function HomePage() {
               id="why-yes-title"
               className="serif mt-3 text-[2rem] sm:text-[2.4rem] md:text-[3.6rem] leading-[1.1] md:leading-[1.0] tracking-[-0.018em] text-[color:var(--charcoal)] font-medium text-balance"
             >
-              Portugal feels different to <span className="italic">everyone.</span>
+              Portugal feels different to <span className="italic font-normal text-[color:var(--teal)]">everyone.</span>
             </h2>
             <p className="mt-5 text-[14.5px] md:text-[16px] text-[color:var(--charcoal-soft)] leading-[1.7] max-w-xl mx-auto">
               That's why YES lets you choose, shape and book private experiences around your <span className="kw">rhythm</span>, occasion and intention.
