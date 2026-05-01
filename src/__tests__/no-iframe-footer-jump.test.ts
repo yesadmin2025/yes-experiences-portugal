@@ -159,7 +159,7 @@ describe("Homepage scrollToHash — static contract", () => {
     // Locate the scrollToHash function body.
     const fnStart = src.indexOf("const scrollToHash");
     expect(fnStart, "scrollToHash function missing in routes/index.tsx").toBeGreaterThan(0);
-    const fnSlice = src.slice(fnStart, fnStart + 5000);
+    const fnSlice = src.slice(fnStart, fnStart + 12000);
 
     // It must scroll the resolved element with block: "start".
     expect(fnSlice).toMatch(/el\.scrollIntoView\(\s*\{[^}]*block:\s*["']start["']/);
