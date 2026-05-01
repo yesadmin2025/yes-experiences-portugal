@@ -121,8 +121,10 @@
   --space-8: 72px;
   --space-9: 96px;
 
-  /* Section rhythm aligned with the new scale. */
-  --section-gap-mobile: 48px;
+  /* Section rhythm aligned with the new scale.
+     Mobile bumped 48 → 64px so adjacent sections breathe (target band
+     56–72px). Desktop unchanged. */
+  --section-gap-mobile: 64px;
   --section-gap-desktop: 96px;
 
   /* Editorial shadows — softer, warmer than the legacy teal-tinted set. */
@@ -552,15 +554,17 @@
     content: "";
     width: 28px;
     height: 1px;
-    background: var(--gold);
+    /* Warmer rim — was --gold (#C9A96A) which sometimes reads grey-on-ivory.
+       --gold-deep (#B89452) keeps the rule visible without going yellow. */
+    background: var(--gold-deep);
   }
   .gold-divider {
     height: 1px;
     background: linear-gradient(
       to right,
       transparent,
-      var(--gold) 20%,
-      var(--gold) 80%,
+      var(--gold-deep) 20%,
+      var(--gold-deep) 80%,
       transparent
     );
   }
@@ -588,10 +592,19 @@
      pin the sans family + readable line-height. Use mt-* for vertical
      spacing — the scale never bakes in margins.
      ───────────────────────────────────────────────────────────── */
+  /* Typography v3 — all headlines use Montserrat (--font-display).
+     Georgia (--font-serif) appears ONLY for inline italic emphasis
+     inside headlines, handled by the base h1/h2/h3 em rules above.
+     Mobile sizes are tuned by the proportional refinement pass:
+       .t-display 36px (32–36 hero band)
+       .t-h1      32px (Builder / anchor — 30–34 band)
+       .t-h2      ~28.5px (other section titles — 28–32 band)
+       .t-h3      ~23.5px (cards — 22–26 band) */
   .t-display {
-    font-family: var(--font-serif);
-    font-size: 2.75rem;
-    line-height: 1.04;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 2.25rem;
+    line-height: 1.06;
     letter-spacing: -0.022em;
   }
   @media (min-width: 768px) {
@@ -606,38 +619,41 @@
     }
   }
   .t-h1 {
-    font-family: var(--font-serif);
-    font-size: 2.125rem; /* 34px mobile */
-    line-height: 1.08;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 2rem;
+    line-height: 1.1;
     letter-spacing: -0.018em;
   }
   @media (min-width: 768px) {
     .t-h1 {
-      font-size: 3.75rem; /* 60px tablet+ */
+      font-size: 3.75rem;
       line-height: 1.04;
     }
   }
   .t-h2 {
-    font-family: var(--font-serif);
-    font-size: 1.625rem; /* 26px mobile */
-    line-height: 1.15;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.78rem;
+    line-height: 1.18;
     letter-spacing: -0.014em;
   }
   @media (min-width: 768px) {
     .t-h2 {
-      font-size: 2.25rem; /* 36px tablet+ */
+      font-size: 2.25rem;
       line-height: 1.1;
     }
   }
   .t-h3 {
-    font-family: var(--font-serif);
-    font-size: 1.375rem; /* 22px mobile */
-    line-height: 1.2;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.47rem;
+    line-height: 1.22;
     letter-spacing: -0.012em;
   }
   @media (min-width: 768px) {
     .t-h3 {
-      font-size: 1.75rem; /* 28px tablet+ */
+      font-size: 1.75rem;
       line-height: 1.18;
     }
   }
