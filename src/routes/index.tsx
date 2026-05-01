@@ -980,7 +980,7 @@ function HomePage() {
               scrollDebug.staticMobileCarousels
                 ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
                 : "flex sm:grid sm:grid-cols-2 lg:grid-cols-4 -mx-5 px-5 sm:mx-0 sm:px-0 overflow-x-auto sm:overflow-visible overscroll-x-contain sm:overscroll-auto [contain:layout_paint] sm:[contain:none] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden",
-              "gap-5 md:gap-7 list-none p-0",
+              "he-stagger gap-5 md:gap-7 list-none p-0",
             ].join(" ")}
             aria-label="Signature experiences"
           >
@@ -990,8 +990,8 @@ function HomePage() {
                   key={t.id}
                   className={
                     scrollDebug.staticMobileCarousels
-                      ? "w-full"
-                      : "shrink-0 w-[84vw] sm:w-auto sm:shrink"
+                      ? "reveal-stagger w-full"
+                      : "reveal-stagger shrink-0 w-[84vw] sm:w-auto sm:shrink"
                   }
                 >
                   {/* Card is a structured composition (NOT a single link) so
@@ -1359,7 +1359,7 @@ function HomePage() {
                 <p className="mt-5 text-[14.5px] md:text-[16px] text-[color:var(--charcoal-soft)] leading-[1.7] max-w-md mx-auto">
                   Start in the Studio, explore a Signature, or talk to a local.
                 </p>
-                <div className="mt-9 flex flex-col sm:flex-row gap-y-4 gap-x-4 justify-center items-stretch sm:items-center">
+                <div className="reveal-stagger mt-9 flex flex-col sm:flex-row gap-y-4 gap-x-4 justify-center items-stretch sm:items-center">
                   <CtaButton to="/builder" variant="primary">
                     Create Your Story
                   </CtaButton>
