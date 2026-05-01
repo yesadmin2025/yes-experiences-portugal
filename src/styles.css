@@ -2778,6 +2778,16 @@
   will-change: stroke-dashoffset;
 }
 
+@media (max-width: 767.98px) {
+  html.scroll-debug-studio-static .studio-live *,
+  html.scroll-debug-studio-static .studio-live svg path,
+  html.scroll-debug-studio-static .studio-live svg g {
+    animation: none !important;
+    transition: none !important;
+    will-change: auto !important;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .slv-pulse { animation: none !important; }
   .studio-live *,
