@@ -6,6 +6,7 @@ import { WhatsAppFab } from "./WhatsAppFab";
 import { MobileStickyCTA } from "./MobileStickyCTA";
 import { PostHeroAnnouncer } from "./PostHeroAnnouncer";
 import { QaPanel } from "./dev/QaPanel";
+import { MotionQaPanel } from "./dev/MotionQaPanel";
 import { installSmoothAnchorScroll } from "@/lib/smooth-anchor-scroll";
 import {
   applyScrollDebugClasses,
