@@ -666,19 +666,19 @@ function HomePage() {
                 aria-label="Rated 5 out of 5 stars"
               >
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={15} fill="currentColor" strokeWidth={0} aria-hidden="true" focusable="false" />
+                  <Star key={i} size={14} fill="currentColor" strokeWidth={0} aria-hidden="true" focusable="false" />
                 ))}
               </p>
-              <p className="serif text-[1.35rem] md:text-[1.55rem] text-[color:var(--charcoal)] leading-[1.2]">
+              <p className="serif text-[1.15rem] md:text-[1.35rem] text-[color:var(--charcoal)] leading-[1.25] font-normal">
                 700+ <span className="italic">five-star reviews</span>
                 <span className="hidden md:inline text-[color:var(--charcoal-soft)]"> · </span>
-                <span className="block md:inline text-[12px] md:text-[13px] uppercase tracking-[0.22em] font-semibold text-[color:var(--charcoal)] md:ml-1 mt-1 md:mt-0">
-                  Private locals · designed in Portugal
+                <span className="block md:inline text-[10.5px] md:text-[11.5px] uppercase tracking-[0.28em] font-semibold text-[color:var(--charcoal-soft)] md:ml-1 mt-1.5 md:mt-0">
+                  Private · Local · Designed in Portugal
                 </span>
               </p>
             </div>
             <ul
-              className="flex flex-wrap items-center justify-center md:justify-end gap-x-7 gap-y-3 md:gap-x-9 list-none p-0 h-7 md:h-8"
+              className="flex flex-wrap items-center justify-center md:justify-end gap-x-6 gap-y-3 md:gap-x-8 list-none p-0 h-6 md:h-7 opacity-90"
               aria-label="Featured on Google, Tripadvisor, Viator, GetYourGuide and Trustpilot"
             >
               {(["google", "tripadvisor", "viator", "getyourguide", "trustpilot"] as const).map((p) => (
