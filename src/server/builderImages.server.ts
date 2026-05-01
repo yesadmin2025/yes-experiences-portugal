@@ -38,7 +38,7 @@ const VIATOR_IMG_RE =
   /https?:\/\/[^"'\s]*?(?:viator|tripadvisor|cloudfront)[^"'\s]*?\.(?:jpe?g|png|webp)(?:\?[^"'\s]*)?/gi;
 
 /** Extracts likely tour photo URLs from a Viator page's raw HTML. */
-function extractImageUrlsFromHtml(html: string): string[] {
+export function extractImageUrlsFromHtml(html: string): string[] {
   const matches = html.match(VIATOR_IMG_RE) ?? [];
   // De-dupe, drop tiny thumbnails (Viator uses /__small/ /__thumb/ paths).
   const seen = new Set<string>();
