@@ -178,25 +178,6 @@ export function FAQ() {
           </Accordion>
         </div>
 
-        {/* ── Closing micro-section ─────────────────────────────
-            "Not sure yet?" → Talk to a Local. Quiet, human, never
-            pushy. The primary CTA goes to /contact (per brand rules,
-            WhatsApp stays as optional support, never primary). */}
-        <div className="reveal mt-12 md:mt-14 max-w-md mx-auto text-center">
-          <p className="text-[10.5px] uppercase tracking-[0.28em] font-semibold text-[color:var(--charcoal)]">
-            Not sure yet?
-          </p>
-          <Link
-            to="/contact"
-            className="group mt-5 inline-flex items-center justify-center gap-2 min-h-[48px] px-7 py-3.5 text-[12.5px] uppercase tracking-[0.18em] font-bold bg-[color:var(--teal)] text-[color:var(--ivory)] border border-[color:color-mix(in_oklab,var(--gold)_60%,transparent)] hover:bg-[color:var(--teal-2)] hover:border-[color:color-mix(in_oklab,var(--gold)_85%,transparent)] hover:-translate-y-0.5 transition-all duration-200 ease-[cubic-bezier(0.22,0.61,0.36,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--ivory)] shadow-[0_8px_22px_-10px_rgba(41,91,97,0.55)] active:translate-y-0"
-          >
-            Talk to a Local
-            <ArrowRight size={14} aria-hidden="true" className="text-[color:var(--gold-soft)] transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1" />
-          </Link>
-          <p className="mt-4 text-[13px] italic leading-[1.55] text-[color:var(--charcoal-soft)]">
-            We'll help you shape it — no pressure.
-          </p>
-        </div>
       </div>
     </section>
   );
