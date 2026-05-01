@@ -36,6 +36,20 @@ import {
 // when ?scroll-debug is active. Inspect via `window.__yesRevealTelemetry.report()`.
 type RevealSource = "io" | "sweepInitial" | "sweepDelayed";
 type RevealEntry = "cold" | "hash" | "scroll-restore";
+type RevealSectionTiming = {
+  section: string;
+  selector: string;
+  source: RevealSource;
+  atMs: number;
+  top: number;
+  bottom: number;
+  viewportHeight: number;
+  fold: "above" | "inside" | "below";
+  durationMs: number;
+  delayMs: number;
+  realisticallyVisible: boolean;
+  note: string;
+};
 type RevealBucket = {
   total: number;
   io: number;
@@ -64,12 +78,14 @@ type RevealTelemetry = {
   log: (
     bucket: "reveal" | "sectionEnter",
     source: RevealSource,
+    target?: HTMLElement,
     selector?: string,
   ) => void;
   setTotal: (bucket: "reveal" | "sectionEnter", total: number) => void;
   markIoFired: () => void;
   markFailSafeFired: () => void;
   markIframeFallbackFired: () => void;
+  timings: RevealSectionTiming[];
   report: () => unknown;
   reset: () => void;
 };
