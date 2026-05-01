@@ -116,18 +116,13 @@ afterEach(() => {
 });
 
 /**
- * Find the FakeIO that observes elements matching the given selector.
- * SiteLayout creates the reveal observer first, then the section-enter
- * observer — but we resolve by membership rather than by index so the
- * test stays robust if the order ever flips.
+ * In JSDOM every element returns a default rect of (0,0,0,0). The
+ * initial sweep in SiteLayout treats this as "above the fold"
+ * (`rect.top < vh * 0.95`) and immediately reveals + unobserves every
+ * element. So tests don't need to fire IO entries — the sweepInitial
+ * counter does the work, and we just assert `io + sweepInitial ==
+ * total` (which holds whether the work was done by IO or by sweep).
  */
-function ioFor(selector: string): FakeIO {
-  const target = document.querySelector(selector);
-  if (!target) throw new Error(`No element matches ${selector}`);
-  const io = FakeIO.instances.find((inst) => inst.targets.has(target));
-  if (!io) throw new Error(`No FakeIO observes ${selector}`);
-  return io;
-}
 
 describe("reveal class coverage — .reveal / .reveal-stagger / .section-enter", () => {
   it(".reveal: each element gets .is-visible and lands in the `reveal` bucket", () => {
