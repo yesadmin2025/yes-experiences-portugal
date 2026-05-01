@@ -92,7 +92,7 @@ const variantStyle: Record<Variant, React.CSSProperties> = {
 
 function arrowClasses(variant: Variant) {
   return cn(
-    "transition-[transform,color] duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1",
+    "transition-[transform,color] duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1.5 group-focus-visible:translate-x-1.5",
     variant === "primary"
       ? "text-[color:var(--gold-soft)] group-hover:text-[color:var(--gold)]"
       : variant === "ghostDark"
