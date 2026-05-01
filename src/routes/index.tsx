@@ -404,120 +404,12 @@ function HomePage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Effect 2 — hash sync as the user scrolls. Per-section observer with
-  // a thin "anchor band" near the top of the viewport. The chosen
-  // section is whichever one currently *contains* the anchor line; if
-  // none does (between sections), the section closest above wins.
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (getScrollDebugFlags().disableHashSync) return;
-    if (typeof IntersectionObserver === "undefined") return;
-
-    const targets = TRACKED_IDS.map((id) =>
-      document.getElementById(id),
-    ).filter((el): el is HTMLElement => !!el);
-    if (!targets.length) return;
-
-    // Anchor line: just below the fixed navbar. Tuned per breakpoint so
-    // it always sits a comfortable distance under the chrome on phones,
-    // tablets and desktop — matching the scroll-mt offsets on sections.
-    const anchorOffsetPx = () => {
-      const w = window.innerWidth;
-      if (w < 768) return 96; // mobile navbar ~64px + breathing room
-      if (w < 1280) return 112; // tablet
-      return 128; // desktop
-    };
-
-    let raf = 0;
-    let lastChosenId = "";
-    let lastWriteAt = 0;
-    const WRITE_THROTTLE_MS = 250;
-
-    const compute = () => {
-      raf = 0;
-      const lockUntil =
-        ((window as unknown as Record<string, number>)[getLockKey()] ?? 0);
-      if (performance.now() < lockUntil) return;
-
-      const anchor = anchorOffsetPx();
-      const viewportH = window.innerHeight;
-
-      let chosenId = "";
-      let bestAboveDistance = Infinity;
-
-      for (const el of targets) {
-        const rect = el.getBoundingClientRect();
-        if (rect.top > viewportH) continue;
-        if (rect.top <= anchor && rect.bottom > anchor) {
-          chosenId = el.id;
-          break;
-        }
-        if (rect.top <= anchor) {
-          const d = anchor - rect.top;
-          if (d < bestAboveDistance) {
-            bestAboveDistance = d;
-            chosenId = el.id;
-          }
-        }
-      }
-
-      // Above the first tracked section: clear the hash once.
-      const firstRect = targets[0].getBoundingClientRect();
-      if (firstRect.top > anchor) {
-        if (window.location.hash && lastChosenId !== "") {
-          window.history.replaceState(
-            window.history.state,
-            "",
-            window.location.pathname + window.location.search,
-          );
-          lastChosenId = "";
-          lastWriteAt = performance.now();
-        }
-        return;
-      }
-
-      // Only write when the chosen section actually changes, and at most
-      // every WRITE_THROTTLE_MS so we never thrash history during scroll.
-      if (chosenId && chosenId !== lastChosenId) {
-        const now = performance.now();
-        if (now - lastWriteAt < WRITE_THROTTLE_MS) return;
-        const next = `#${chosenId}`;
-        if (next !== window.location.hash) {
-          window.history.replaceState(
-            window.history.state,
-            "",
-            window.location.pathname + window.location.search + next,
-          );
-        }
-        lastChosenId = chosenId;
-        lastWriteAt = now;
-      }
-    };
-
-    const schedule = () => {
-      if (raf) return;
-      raf = window.requestAnimationFrame(compute);
-    };
-
-    // IO is enough on its own — fires on every threshold crossing as the
-    // user scrolls. Passive scroll listener removed to cut per-frame work
-    // on mobile. Thresholds slimmed to [0, 1] for the same reason.
-    const io = new IntersectionObserver(schedule, {
-      threshold: [0, 1],
-      rootMargin: "-96px 0px -55% 0px",
-    });
-    targets.forEach((el) => io.observe(el));
-
-    window.addEventListener("resize", schedule);
-    schedule();
-
-    return () => {
-      io.disconnect();
-      window.removeEventListener("resize", schedule);
-      if (raf) window.cancelAnimationFrame(raf);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // Effect 2 — REMOVED PERMANENTLY.
+  // Previously synced the URL hash to the currently visible section as the
+  // user scrolled. This was identified as a likely contributor to scroll
+  // instability (rAF + IO + history.replaceState during native scroll). It
+  // is intentionally not replaced. Anchor link clicks still work via
+  // Effect 1 + the global smooth-anchor-scroll handler.
 
   // Effect 3 — homepage-only parallax driver. Writes `--parallax-y` to
   // every `.he-parallax` / `.he-parallax-counter` element via rAF on
