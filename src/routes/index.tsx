@@ -785,12 +785,12 @@ function HomePage() {
               </span>
               <h2
                 id="studio-title"
-                className="serif mt-3 text-[2.5rem] sm:text-[2.85rem] md:text-[4.15rem] leading-[1.02] md:leading-[0.98] tracking-[-0.02em] text-[color:var(--charcoal)] font-bold"
+                className="serif mt-3 text-[2rem] sm:text-[2.4rem] md:text-[3.6rem] leading-[1.1] md:leading-[1.0] tracking-[-0.018em] text-[color:var(--charcoal)] font-medium"
               >
-                Create it <span className="italic font-semibold">live.</span>
+                Create it <span className="italic font-normal">live.</span>
               </h2>
-              <p className="mt-6 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] leading-[1.7] max-w-md">
-                Choose your <span className="kw">mood</span>, <span className="kw">rhythm</span> and <span className="kw">intention</span>. Watch your private Portugal experience take shape in real time — with local guidance whenever you want it.
+              <p className="mt-5 text-[14.5px] md:text-[16px] text-[color:var(--charcoal-soft)] leading-[1.7] max-w-md font-normal">
+                Choose your <span className="kw">mood</span>, rhythm and intention. Watch your private experience take shape in <span className="kw">real time</span>.
               </p>
 
               {/* Three Studio inputs — small index, signposts the
@@ -827,9 +827,9 @@ function HomePage() {
 
               {/* Reassurance line — three short reassurances. "A local is
                   one message away" matches the approved brief copy. */}
-              <p className="mt-3 inline-flex items-start gap-2 text-[12.5px] md:text-[13px] leading-[1.6] text-[color:var(--charcoal)] max-w-md">
+              <p className="mt-3 inline-flex items-start gap-2 text-[12.5px] md:text-[13px] leading-[1.6] text-[color:var(--charcoal-soft)] max-w-md">
                 <MessageCircle size={13} aria-hidden="true" className="mt-[3px] shrink-0 text-[color:var(--teal)]" />
-                <span>About a minute. No form. <span className="font-semibold">A local is one message away.</span></span>
+                <span>About a minute. No form. <span className="font-medium text-[color:var(--charcoal)]">A local is one message away.</span></span>
               </p>
             </div>
 
