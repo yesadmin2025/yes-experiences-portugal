@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
-import { ArrowRight, Clock, MapPin } from "lucide-react";
+import { Clock, MapPin } from "lucide-react";
 import { signatureTours } from "@/data/signatureTours";
 import { useImportedTourImages } from "@/hooks/use-imported-tour-images";
 import { ImageQualityToggle } from "@/components/ImageQualityToggle";
@@ -48,14 +48,13 @@ function DayToursPage() {
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {dayTours.map((t) => (
-            <Link
-              key={t.id}
-              to="/tours/$tourId"
-              params={{ tourId: t.id }}
-              className="group flex flex-col text-left"
-              aria-label={`Open ${t.title}`}
-            >
-              <div className="lift-layer-sm relative aspect-[4/5] overflow-hidden mb-5 shadow-[0_10px_30px_-20px_rgba(46,46,46,0.25)] group-hover:shadow-[0_28px_55px_-22px_rgba(41,91,97,0.3)]">
+            <article key={t.id} className="group flex flex-col text-left" aria-label={t.title}>
+              <Link
+                to="/tours/$tourId"
+                params={{ tourId: t.id }}
+                className="lift-layer-sm relative aspect-[4/5] overflow-hidden mb-5 shadow-[0_10px_30px_-20px_rgba(46,46,46,0.25)] group-hover:shadow-[0_28px_55px_-22px_rgba(41,91,97,0.3)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2"
+                aria-label={`Open ${t.title}`}
+              >
                 <img
                   {...resolveImg(t, "lg")}
                   alt={t.title}
@@ -66,14 +65,18 @@ function DayToursPage() {
                 <span className="absolute top-4 right-4 text-[10px] uppercase tracking-[0.22em] bg-[color:var(--gold)]/95 text-[color:var(--charcoal)] px-3 py-1.5">
                   Tailored Signature
                 </span>
-              </div>
+              </Link>
 
               <p className="text-xs uppercase tracking-[0.3em] text-[color:var(--gold)]">
                 {t.region}
               </p>
-              <h3 className="serif text-2xl mt-2 group-hover:text-[color:var(--teal)] transition-colors">
+              <Link
+                to="/tours/$tourId"
+                params={{ tourId: t.id }}
+                className="serif text-2xl mt-2 text-[color:var(--charcoal)] hover:text-[color:var(--teal)] transition-colors focus-visible:outline-none focus-visible:underline"
+              >
                 {t.title}
-              </h3>
+              </Link>
 
               <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs uppercase tracking-[0.2em] text-[color:var(--charcoal-soft)]">
                 <span className="flex items-center gap-1.5">
@@ -98,7 +101,7 @@ function DayToursPage() {
               >
                 View experience &amp; reserve
               </CtaButton>
-            </Link>
+            </article>
           ))}
           </div>
         </div>
