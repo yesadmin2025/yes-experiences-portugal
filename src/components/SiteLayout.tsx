@@ -281,6 +281,7 @@ function getRevealTelemetry(): RevealTelemetry {
       state.reveal = makeBucket();
       state.sectionEnter = makeBucket();
       state.byEntry = makeEntryBuckets();
+      state.timings = [];
     },
   };
   window.__yesRevealTelemetry = state;
@@ -368,6 +369,14 @@ function flashDebug(el: HTMLElement, label: string) {
 }
 
 export function SiteLayout({ children }: { children: ReactNode }) {
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    window.__yesMotionStartedAt = performance.now();
+    const visibleTest = new URLSearchParams(window.location.search).get("motion-visible-test") === "1";
+    document.documentElement.classList.toggle("motion-visible-test", visibleTest);
+    return () => document.documentElement.classList.remove("motion-visible-test");
+  }, []);
+
   useEffect(() => {
     if (typeof window === "undefined") return;
     const flags = getScrollDebugFlags();
