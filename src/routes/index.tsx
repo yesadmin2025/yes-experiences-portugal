@@ -995,20 +995,20 @@ function HomePage() {
                       a short list of REAL highlights pulled from the
                       Viator-sourced catalog. No invented copy. */}
                   <article
-                    className="group relative flex flex-col h-full overflow-hidden rounded-[6px] border border-[color:var(--border)] bg-[color:var(--ivory)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-[color:var(--charcoal)]/30 hover:shadow-[0_14px_30px_-14px_rgba(46,46,46,0.28)]"
+                    className="he-card-lift group relative flex flex-col h-full overflow-hidden rounded-[6px] border border-[color:var(--border)] bg-[color:var(--ivory)] transition-all duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] hover:border-[color:var(--charcoal)]/30 hover:shadow-[0_18px_40px_-22px_rgba(46,46,46,0.32)]"
                   >
                     {/* Cover — clickable to detail page */}
                     <Link
                       to="/tours/$tourId"
                       params={{ tourId: t.id }}
-                      className="relative block aspect-[4/5] overflow-hidden bg-[color:var(--card)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2"
+                      className="he-image-cinema he-image-rise relative block aspect-[4/5] overflow-hidden bg-[color:var(--card)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--teal)] focus-visible:ring-offset-2"
                       aria-label={`Open ${t.title}`}
                     >
                       <img
                         src={t.img}
                         alt={t.title}
                         loading="lazy"
-                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-[600ms] ease-out group-hover:scale-[1.03]"
+                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-[700ms] ease-out group-hover:scale-[1.05]"
                       />
                       <div
                         aria-hidden="true"
