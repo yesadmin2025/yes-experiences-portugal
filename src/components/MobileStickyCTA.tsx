@@ -92,8 +92,6 @@ export function MobileStickyCTA() {
     mediaQuery: "(max-width: 1023.98px)",
   });
 
-  if (scrollDebug.disableStickyCta) return null;
-
   // Submit-lock for the choice links — prevents double-taps from firing
   // two navigations / two analytics events.
   const [submitting, setSubmitting] = useState(false);
@@ -181,6 +179,8 @@ export function MobileStickyCTA() {
       setSubmitting(true);
       trackIntent(buildDetail(cta));
     };
+
+  if (scrollDebug.disableStickyCta) return null;
 
   return (
     <>
