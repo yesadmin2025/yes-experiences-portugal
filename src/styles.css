@@ -554,15 +554,17 @@
     content: "";
     width: 28px;
     height: 1px;
-    background: var(--gold);
+    /* Warmer rim — was --gold (#C9A96A) which sometimes reads grey-on-ivory.
+       --gold-deep (#B89452) keeps the rule visible without going yellow. */
+    background: var(--gold-deep);
   }
   .gold-divider {
     height: 1px;
     background: linear-gradient(
       to right,
       transparent,
-      var(--gold) 20%,
-      var(--gold) 80%,
+      var(--gold-deep) 20%,
+      var(--gold-deep) 80%,
       transparent
     );
   }
