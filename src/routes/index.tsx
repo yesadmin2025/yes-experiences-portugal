@@ -712,47 +712,50 @@ function HomePage() {
               stacked on mobile. No images, no large surfaces; numbered
               labels + a one-line definition each. Establishes the
               vocabulary used everywhere downstream. */}
-          <div className="reveal max-w-5xl mx-auto mb-12 md:mb-16">
+          <div className="reveal max-w-5xl mx-auto mb-10 md:mb-14">
             <div className="text-center">
               <span className="he-eyebrow-bar mb-4">Three ways in</span>
               <h2
                 id="paths-title"
-                className="serif mt-3 text-[1.85rem] sm:text-[2.1rem] md:text-[2.4rem] leading-[1.12] md:leading-[1.1] tracking-[-0.015em] text-[color:var(--charcoal)] font-semibold"
+                className="serif mt-3 text-[1.7rem] sm:text-[1.95rem] md:text-[2.4rem] leading-[1.18] md:leading-[1.1] tracking-[-0.012em] text-[color:var(--charcoal)] font-medium"
               >
-                Three ways to shape your <span className="italic">Portugal.</span>
+                Three ways to <span className="italic">begin.</span>
               </h2>
+              <p className="mt-4 text-[14.5px] md:text-[15.5px] text-[color:var(--charcoal-soft)] leading-[1.6] max-w-md mx-auto">
+                Choose a ready-made Signature, tailor the details, or build from scratch.
+              </p>
             </div>
             <ol
-              className="he-stagger mt-8 md:mt-10 grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5 list-none p-0"
+              className="he-stagger mt-7 md:mt-9 grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 list-none p-0"
               aria-label="Three paths to shape your Portugal experience"
             >
               {[
                 {
                   num: "01",
                   label: "Signature",
-                  body: "Ready-to-book private experiences, designed by locals.",
+                  body: "Ready-to-book private experiences.",
                 },
                 {
                   num: "02",
                   label: "Tailored",
-                  body: "Adjust selected details inside a Signature experience.",
+                  body: "Adjust selected details inside a Signature.",
                 },
                 {
                   num: "03",
                   label: "Studio",
-                  body: "Create your experience from scratch, in real time.",
+                  body: "Create from scratch in real time.",
                 },
               ].map((p) => (
                 <li
                   key={p.num}
-                  className="reveal-stagger relative flex items-start gap-4 rounded-[6px] border border-[#E7DDD0] bg-[color:var(--ivory)] px-5 py-4 md:px-5 md:py-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-[color:var(--gold)]/55"
+                  className="reveal-stagger relative flex items-start gap-3.5 rounded-[6px] border border-[#EAE2D6] bg-[color:var(--ivory)] px-4 py-3.5 md:px-5 md:py-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-[color:var(--gold)]/45"
                 >
-                  <span className="he-num shrink-0 text-[color:var(--gold)]">{p.num}</span>
+                  <span className="shrink-0 serif text-[1.5rem] md:text-[1.7rem] leading-none text-[color:var(--gold)] font-light tabular-nums">{p.num}</span>
                   <div className="flex flex-col">
-                    <span className="text-[11px] uppercase tracking-[0.28em] font-bold text-[color:var(--charcoal)]">
+                    <span className="text-[10.5px] uppercase tracking-[0.22em] font-semibold text-[color:var(--charcoal)]">
                       {p.label}
                     </span>
-                    <p className="mt-1.5 text-[13.5px] md:text-[14px] leading-[1.55] text-[color:var(--charcoal)]">
+                    <p className="mt-1 text-[13px] md:text-[13.5px] leading-[1.5] text-[color:var(--charcoal-soft)]">
                       {p.body}
                     </p>
                   </div>
