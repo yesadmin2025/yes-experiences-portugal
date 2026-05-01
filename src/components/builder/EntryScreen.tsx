@@ -51,7 +51,7 @@ export function EntryScreen({ onStart }: Props) {
       </svg>
 
       <div className="container-x relative z-10 grid min-h-[78svh] place-items-center py-16 md:py-24">
-        <div className="max-w-2xl text-center">
+        <div className="section-enter max-w-2xl text-center">
           <span className="inline-flex items-center gap-2 text-[10.5px] uppercase tracking-[0.28em] font-semibold text-[color:var(--gold)]">
             <Sparkles size={12} aria-hidden="true" />
             Experience studio
@@ -72,15 +72,15 @@ export function EntryScreen({ onStart }: Props) {
             <button
               type="button"
               onClick={onStart}
-              className="group inline-flex items-center justify-center gap-2 px-7 py-4 min-h-[52px] rounded-[2px] bg-[color:var(--charcoal)] text-[color:var(--ivory)] text-[12.5px] uppercase tracking-[0.22em] font-bold transition-all duration-200 hover:-translate-y-[2px] hover:bg-[color:var(--teal)] shadow-[0_14px_32px_-16px_rgba(46,46,46,0.55)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--gold)]"
+              className="cta-unified group inline-flex items-center justify-center gap-2 px-7 py-4 min-h-[52px] rounded-[2px] bg-[color:var(--charcoal)] text-[color:var(--ivory)] text-[12.5px] uppercase tracking-[0.22em] font-bold hover:bg-[color:var(--teal)] shadow-[0_14px_32px_-16px_rgba(46,46,46,0.55)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--gold)]"
             >
               Start building
-              <ArrowRight size={14} className="transition-transform duration-200 group-hover:translate-x-0.5" />
+              <ArrowRight size={14} className="cta-unified-arrow" />
             </button>
 
             <Link
               to="/experiences"
-              className="inline-flex items-center justify-center gap-2 px-6 py-4 min-h-[52px] rounded-[2px] border border-[color:var(--charcoal)]/20 bg-transparent text-[12.5px] uppercase tracking-[0.22em] font-bold text-[color:var(--charcoal)] transition-colors duration-200 hover:border-[color:var(--charcoal)]/45"
+              className="cta-unified inline-flex items-center justify-center gap-2 px-6 py-4 min-h-[52px] rounded-[2px] border border-[color:var(--charcoal)]/20 bg-transparent text-[12.5px] uppercase tracking-[0.22em] font-bold text-[color:var(--charcoal)] hover:border-[color:var(--charcoal)]/45"
             >
               Start from a signature
             </Link>

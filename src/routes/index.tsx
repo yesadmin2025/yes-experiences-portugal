@@ -8,11 +8,15 @@ import heroImg from "@/assets/hero-coast.jpg";
 
 // Real Viator-sourced tour photography — every card maps to an actual
 // Signature tour. No stock or invented imagery.
+// Each Occasions card image is chosen to MATCH its theme:
+//  · Proposals    → quiet Arrábida viewpoint (intimate, private moment)
+//  · Celebrations → Arrábida wine lunch table (gathering, shared joy)
+//  · Corporate    → Cabo da Roca cliffs (premium, group-scale, non-religious)
+//  · Multi-day    → Tomar–Coimbra (multi-region journey, not a single beach)
+import imgArrabidaViewpoint from "@/assets/tours/arrabida-wine-allinclusive/viewpoint.jpg";
 import imgArrabidaWineLunch from "@/assets/tours/arrabida-wine-allinclusive/lunch.jpg";
-import imgTroiaBeach from "@/assets/tours/troia-comporta/beach.jpg";
-import imgFatimaNazare from "@/assets/tours/fatima-nazare-obidos/nazare.jpg";
-import imgSintraEstates from "@/assets/tours/sintra-cascais/estates.jpg";
-import imgAzeitaoWinery from "@/assets/tours/azeitao-cheese/winery.jpg";
+import imgSintraCaboDaRoca from "@/assets/tours/sintra-cascais/cabo-da-roca.jpg";
+import imgTomarCoimbra from "@/assets/tours/tomar-coimbra/hero.jpg";
 
 import {
   ArrowRight,
@@ -101,7 +105,7 @@ const groupsAndCelebrations = [
     trust: "Planned end to end with our local team.",
     cta: "Plan a Proposal",
     to: "/proposals",
-    img: imgArrabidaWineLunch,
+    img: imgArrabidaViewpoint,
   },
   {
     id: "celebrations",
@@ -123,7 +127,7 @@ const groupsAndCelebrations = [
     trust: "Coordinated by a local host who knows how the day connects.",
     cta: "Plan a Celebration",
     to: "/proposals",
-    img: imgSintraEstates,
+    img: imgArrabidaWineLunch,
   },
   {
     id: "corporate",
@@ -145,7 +149,7 @@ const groupsAndCelebrations = [
     trust: "Real driving times, real venues, real partners.",
     cta: "Plan a Group Experience",
     to: "/corporate",
-    img: imgFatimaNazare,
+    img: imgSintraCaboDaRoca,
   },
   {
     id: "multi-day",
@@ -167,7 +171,7 @@ const groupsAndCelebrations = [
     trust: "Designed in conversation with a local team.",
     cta: "Plan a Multi-Day Journey",
     to: "/multi-day",
-    img: imgTroiaBeach,
+    img: imgTomarCoimbra,
   },
 ];
 
@@ -840,7 +844,7 @@ function HomePage() {
           away" reassurance. */}
       <section
         id="why-yes"
-        className="section-y bg-[color:var(--ivory)] border-b border-[color:var(--border)] scroll-mt-24 md:scroll-mt-28"
+        className="section-enter section-y bg-[color:var(--ivory)] border-b border-[color:var(--border)] scroll-mt-24 md:scroll-mt-28"
         aria-labelledby="why-yes-title"
       >
         <div className="container-x">
@@ -949,7 +953,7 @@ function HomePage() {
           repeated labels. */}
       <section
         id="signatures"
-        className="section-y bg-[color:var(--ivory)] border-b border-[color:var(--border)] scroll-mt-24 md:scroll-mt-28"
+        className="section-enter section-y bg-[color:var(--ivory)] border-b border-[color:var(--border)] scroll-mt-24 md:scroll-mt-28"
         aria-labelledby="signatures-title"
       >
         <div className="container-x">
@@ -1116,7 +1120,7 @@ function HomePage() {
           occasion" path lives together with clear hierarchy. */}
       <section
         id="occasions"
-        className="section-y bg-[color:var(--sand)] border-b border-[color:var(--border)] scroll-mt-24 md:scroll-mt-28"
+        className="section-enter section-y bg-[color:var(--sand)] border-b border-[color:var(--border)] scroll-mt-24 md:scroll-mt-28"
         aria-labelledby="groups-title"
       >
         <div className="container-x">
