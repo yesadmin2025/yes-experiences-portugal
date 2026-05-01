@@ -87,9 +87,8 @@ const groupsAndCelebrations = [
     title: "A private moment, shaped with care.",
     line: (
       <>
-        From the setting to the timing, we help shape the moment{" "}
-        <span className="kw">discreetly</span>, with local knowledge behind
-        every detail.
+        From location to timing, we plan the details{" "}
+        <span className="kw">discreetly</span> with local knowledge.
       </>
     ),
     pull: "Designed for the moment, not the template.",
@@ -97,10 +96,9 @@ const groupsAndCelebrations = [
     handles: [
       "Location scouting",
       "Timing optimisation",
-      "Surprise logistics",
       "Full discretion",
     ],
-    trust: "Planned end to end with our local team — every detail confirmed before the day.",
+    trust: "Planned end to end with our local team.",
     cta: "Plan a Proposal",
     to: "/proposals",
     img: imgArrabidaWineLunch,
@@ -111,9 +109,8 @@ const groupsAndCelebrations = [
     title: "For days worth remembering.",
     line: (
       <>
-        Birthdays, anniversaries, honeymoons or family moments — shaped around{" "}
-        <span className="kw">your rhythm</span>, your people and the way you
-        want to feel Portugal.
+        Birthdays, anniversaries and family moments shaped around{" "}
+        <span className="kw">your people</span> and pace.
       </>
     ),
     pull: "Your people, your pace, your Portugal.",
@@ -121,10 +118,9 @@ const groupsAndCelebrations = [
     handles: [
       "Group coordination",
       "Multi-activity planning",
-      "Flexible scheduling",
       "Personal touches",
     ],
-    trust: "Coordinated by a local host who knows how each piece of the day connects.",
+    trust: "Coordinated by a local host who knows how the day connects.",
     cta: "Plan a Celebration",
     to: "/proposals",
     img: imgSintraEstates,
@@ -135,20 +131,18 @@ const groupsAndCelebrations = [
     title: "Private group days, without the generic formula.",
     line: (
       <>
-        For teams, incentives and private groups, we combine local experiences,
-        timing, transport and logistics into a day that feels{" "}
-        <span className="kw">effortless</span>.
+        Local experiences, transport and timing coordinated into one{" "}
+        <span className="kw">effortless</span> day.
       </>
     ),
     pull: "End to end, handled by a local team.",
     detail: "Up to 30 pax · invoice & DMC support",
     handles: [
       "Full logistics management",
-      "Group experience design",
       "Transport coordination",
       "Invoice & DMC support",
     ],
-    trust: "Real driving times, real venues, real partners — we handle the moving parts on the ground.",
+    trust: "Real driving times, real venues, real partners.",
     cta: "Plan a Group Experience",
     to: "/corporate",
     img: imgFatimaNazare,
@@ -159,20 +153,18 @@ const groupsAndCelebrations = [
     title: "More than one day. One coherent journey.",
     line: (
       <>
-        Build Portugal across regions with realistic timing, local flow and{" "}
-        <span className="kw">support</span> from people who know how each day
-        should connect.
+        Build Portugal across regions with realistic timing and{" "}
+        <span className="kw">local flow</span>.
       </>
     ),
     pull: "More than a day. A real journey.",
     detail: "2–7 days · local-designed",
     handles: [
       "Route planning across regions",
-      "Real driving times",
       "Curated overnight stops",
       "Daily local support",
     ],
-    trust: "Designed in conversation with a local team — never a copy-paste itinerary.",
+    trust: "Designed in conversation with a local team.",
     cta: "Plan a Multi-Day Journey",
     to: "/multi-day",
     img: imgTroiaBeach,
@@ -492,14 +484,14 @@ function HomePage() {
 
             <h1
               data-hero-field="headlineLine1 headlineLine2"
-              className="hero-h1 serif mt-5 md:mt-8 text-[1.85rem] sm:text-[2.7rem] md:text-[4rem] lg:text-[4.6rem] leading-[1.08] sm:leading-[1.04] md:leading-[1.02] tracking-[-0.018em] text-[color:var(--ivory)] text-left opacity-0 animate-[heroFade_0.9s_ease-out_0.25s_forwards] [text-shadow:0_2px_18px_rgba(0,0,0,0.35)]"
+              className="hero-h1 serif mt-5 md:mt-8 text-[2.05rem] sm:text-[2.7rem] md:text-[4rem] lg:text-[4.6rem] leading-[1.12] sm:leading-[1.06] md:leading-[1.02] tracking-[-0.018em] text-[color:var(--ivory)] text-left opacity-0 animate-[heroFade_0.9s_ease-out_0.25s_forwards] [text-shadow:0_2px_18px_rgba(0,0,0,0.35)]"
             >
-              <span data-hero-field="headlineLine1" className="block">
+              <span data-hero-field="headlineLine1" className="block font-medium">
                 {HERO_COPY.headlineLine1}
               </span>
               <span
                 data-hero-field="headlineLine2"
-                className="block italic font-medium text-[color:var(--gold-soft)] mt-0.5 md:mt-1 text-[1.85rem] sm:text-[2.7rem] md:text-[4rem] lg:text-[4.6rem] tracking-[-0.022em] leading-[1.08] sm:leading-[1.04] md:leading-[1.02]"
+                className="block italic font-normal text-[color:var(--gold-soft)] mt-0.5 md:mt-1 text-[2.05rem] sm:text-[2.7rem] md:text-[4rem] lg:text-[4.6rem] tracking-[-0.022em] leading-[1.12] sm:leading-[1.06] md:leading-[1.02]"
               >
                 {HERO_COPY.headlineLine2}
               </span>
@@ -507,7 +499,7 @@ function HomePage() {
 
             <p
               data-hero-field="subheadline"
-              className="mt-5 md:mt-7 text-[16.5px] md:text-[20px] text-[color:var(--ivory)]/95 max-w-md md:max-w-lg leading-[1.6] md:leading-[1.7] font-light text-left opacity-0 animate-[heroFade_0.9s_ease-out_0.45s_forwards] [text-shadow:0_1px_8px_rgba(0,0,0,0.3)]"
+              className="mt-5 md:mt-7 text-[15.5px] md:text-[19px] text-[color:var(--ivory)]/92 max-w-md md:max-w-lg leading-[1.65] md:leading-[1.7] font-light text-left opacity-0 animate-[heroFade_0.9s_ease-out_0.45s_forwards] [text-shadow:0_1px_8px_rgba(0,0,0,0.3)]"
             >
               {HERO_COPY.subheadline}
             </p>
@@ -666,19 +658,19 @@ function HomePage() {
                 aria-label="Rated 5 out of 5 stars"
               >
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={15} fill="currentColor" strokeWidth={0} aria-hidden="true" focusable="false" />
+                  <Star key={i} size={14} fill="currentColor" strokeWidth={0} aria-hidden="true" focusable="false" />
                 ))}
               </p>
-              <p className="serif text-[1.35rem] md:text-[1.55rem] text-[color:var(--charcoal)] leading-[1.2]">
+              <p className="serif text-[1.15rem] md:text-[1.35rem] text-[color:var(--charcoal)] leading-[1.25] font-normal">
                 700+ <span className="italic">five-star reviews</span>
                 <span className="hidden md:inline text-[color:var(--charcoal-soft)]"> · </span>
-                <span className="block md:inline text-[12px] md:text-[13px] uppercase tracking-[0.22em] font-semibold text-[color:var(--charcoal)] md:ml-1 mt-1 md:mt-0">
-                  Private locals · designed in Portugal
+                <span className="block md:inline text-[10.5px] md:text-[11.5px] uppercase tracking-[0.28em] font-semibold text-[color:var(--charcoal-soft)] md:ml-1 mt-1.5 md:mt-0">
+                  Private · Local · Designed in Portugal
                 </span>
               </p>
             </div>
             <ul
-              className="flex flex-wrap items-center justify-center md:justify-end gap-x-7 gap-y-3 md:gap-x-9 list-none p-0 h-7 md:h-8"
+              className="flex flex-wrap items-center justify-center md:justify-end gap-x-6 gap-y-3 md:gap-x-8 list-none p-0 h-6 md:h-7 opacity-90"
               aria-label="Featured on Google, Tripadvisor, Viator, GetYourGuide and Trustpilot"
             >
               {(["google", "tripadvisor", "viator", "getyourguide", "trustpilot"] as const).map((p) => (
@@ -704,7 +696,7 @@ function HomePage() {
           FAQ closer, and the Final CTA. */}
       <section
         id="builder"
-        className="section-y-lg bg-[color:var(--sand)] border-b border-[color:var(--border)] scroll-mt-24 md:scroll-mt-28"
+        className="py-20 md:section-y-lg bg-[color:var(--sand)] border-b border-[color:var(--border)] scroll-mt-24 md:scroll-mt-28"
         aria-labelledby="studio-title"
       >
         <div className="container-x">
@@ -712,47 +704,50 @@ function HomePage() {
               stacked on mobile. No images, no large surfaces; numbered
               labels + a one-line definition each. Establishes the
               vocabulary used everywhere downstream. */}
-          <div className="reveal max-w-5xl mx-auto mb-12 md:mb-16">
+          <div className="reveal max-w-5xl mx-auto mb-10 md:mb-14">
             <div className="text-center">
               <span className="he-eyebrow-bar mb-4">Three ways in</span>
               <h2
                 id="paths-title"
-                className="serif mt-3 text-[1.85rem] sm:text-[2.1rem] md:text-[2.4rem] leading-[1.12] md:leading-[1.1] tracking-[-0.015em] text-[color:var(--charcoal)] font-semibold"
+                className="serif mt-3 text-[1.7rem] sm:text-[1.95rem] md:text-[2.4rem] leading-[1.18] md:leading-[1.1] tracking-[-0.012em] text-[color:var(--charcoal)] font-medium"
               >
-                Three ways to shape your <span className="italic">Portugal.</span>
+                Three ways to <span className="italic">begin.</span>
               </h2>
+              <p className="mt-4 text-[14.5px] md:text-[15.5px] text-[color:var(--charcoal-soft)] leading-[1.6] max-w-md mx-auto">
+                Choose a ready-made Signature, tailor the details, or build from scratch.
+              </p>
             </div>
             <ol
-              className="he-stagger mt-8 md:mt-10 grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5 list-none p-0"
+              className="he-stagger mt-7 md:mt-9 grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 list-none p-0"
               aria-label="Three paths to shape your Portugal experience"
             >
               {[
                 {
                   num: "01",
                   label: "Signature",
-                  body: "Ready-to-book private experiences, designed by locals.",
+                  body: "Ready-to-book private experiences.",
                 },
                 {
                   num: "02",
                   label: "Tailored",
-                  body: "Adjust selected details inside a Signature experience.",
+                  body: "Adjust selected details inside a Signature.",
                 },
                 {
                   num: "03",
                   label: "Studio",
-                  body: "Create your experience from scratch, in real time.",
+                  body: "Create from scratch in real time.",
                 },
               ].map((p) => (
                 <li
                   key={p.num}
-                  className="reveal-stagger relative flex items-start gap-4 rounded-[6px] border border-[#E7DDD0] bg-[color:var(--ivory)] px-5 py-4 md:px-5 md:py-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-[color:var(--gold)]/55"
+                  className="reveal-stagger relative flex items-start gap-3.5 rounded-[6px] border border-[#EAE2D6] bg-[color:var(--ivory)] px-4 py-3.5 md:px-5 md:py-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-[color:var(--gold)]/45"
                 >
-                  <span className="he-num shrink-0 text-[color:var(--gold)]">{p.num}</span>
+                  <span className="shrink-0 serif text-[1.5rem] md:text-[1.7rem] leading-none text-[color:var(--gold)] font-light tabular-nums">{p.num}</span>
                   <div className="flex flex-col">
-                    <span className="text-[11px] uppercase tracking-[0.28em] font-bold text-[color:var(--charcoal)]">
+                    <span className="text-[10.5px] uppercase tracking-[0.22em] font-semibold text-[color:var(--charcoal)]">
                       {p.label}
                     </span>
-                    <p className="mt-1.5 text-[13.5px] md:text-[14px] leading-[1.55] text-[color:var(--charcoal)]">
+                    <p className="mt-1 text-[13px] md:text-[13.5px] leading-[1.5] text-[color:var(--charcoal-soft)]">
                       {p.body}
                     </p>
                   </div>
@@ -782,12 +777,12 @@ function HomePage() {
               </span>
               <h2
                 id="studio-title"
-                className="serif mt-3 text-[2.5rem] sm:text-[2.85rem] md:text-[4.15rem] leading-[1.02] md:leading-[0.98] tracking-[-0.02em] text-[color:var(--charcoal)] font-bold"
+                className="serif mt-3 text-[2rem] sm:text-[2.4rem] md:text-[3.6rem] leading-[1.1] md:leading-[1.0] tracking-[-0.018em] text-[color:var(--charcoal)] font-medium"
               >
-                Create it <span className="italic font-semibold">live.</span>
+                Create it <span className="italic font-normal">live.</span>
               </h2>
-              <p className="mt-6 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] leading-[1.7] max-w-md">
-                Choose your <span className="kw">mood</span>, <span className="kw">rhythm</span> and <span className="kw">intention</span>. Watch your private Portugal experience take shape in real time — with local guidance whenever you want it.
+              <p className="mt-5 text-[14.5px] md:text-[16px] text-[color:var(--charcoal-soft)] leading-[1.7] max-w-md font-normal">
+                Choose your <span className="kw">mood</span>, rhythm and intention. Watch your private experience take shape in <span className="kw">real time</span>.
               </p>
 
               {/* Three Studio inputs — small index, signposts the
@@ -824,9 +819,9 @@ function HomePage() {
 
               {/* Reassurance line — three short reassurances. "A local is
                   one message away" matches the approved brief copy. */}
-              <p className="mt-3 inline-flex items-start gap-2 text-[12.5px] md:text-[13px] leading-[1.6] text-[color:var(--charcoal)] max-w-md">
+              <p className="mt-3 inline-flex items-start gap-2 text-[12.5px] md:text-[13px] leading-[1.6] text-[color:var(--charcoal-soft)] max-w-md">
                 <MessageCircle size={13} aria-hidden="true" className="mt-[3px] shrink-0 text-[color:var(--teal)]" />
-                <span>About a minute. No form. <span className="font-semibold">A local is one message away.</span></span>
+                <span>About a minute. No form. <span className="font-medium text-[color:var(--charcoal)]">A local is one message away.</span></span>
               </p>
             </div>
 
@@ -849,48 +844,47 @@ function HomePage() {
         aria-labelledby="why-yes-title"
       >
         <div className="container-x">
-          <div className="reveal max-w-2xl mx-auto text-center mb-12 md:mb-16">
+          <div className="reveal max-w-2xl mx-auto text-center mb-10 md:mb-14">
             <span className="he-eyebrow-bar mb-5">Why YES</span>
             <h2
               id="why-yes-title"
-              className="serif mt-3 text-[2.5rem] sm:text-[2.85rem] md:text-[4.15rem] leading-[1.02] md:leading-[1.0] tracking-[-0.02em] text-[color:var(--charcoal)] font-semibold text-balance"
+              className="serif mt-3 text-[2rem] sm:text-[2.4rem] md:text-[3.6rem] leading-[1.1] md:leading-[1.02] tracking-[-0.016em] text-[color:var(--charcoal)] font-medium text-balance"
             >
-              Portugal isn't experienced the{" "}
-              <span className="italic">same way</span> by everyone.
+              Portugal feels different to <span className="italic">everyone.</span>
             </h2>
-            <p className="mt-6 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] leading-[1.7] max-w-xl mx-auto">
-              That's why YES changed the way people <span className="kw">choose</span>, <span className="kw">shape</span> and <span className="kw">book</span> private experiences in Portugal.
+            <p className="mt-5 text-[14.5px] md:text-[16px] text-[color:var(--charcoal-soft)] leading-[1.7] max-w-xl mx-auto">
+              That's why YES lets you choose, shape and book private experiences around your <span className="kw">rhythm</span>, occasion and intention.
             </p>
-            <span aria-hidden="true" className="gold-rule mt-9 md:mt-10 mx-auto block max-w-[3.5rem]" />
+            <span aria-hidden="true" className="gold-rule mt-8 md:mt-9 mx-auto block max-w-[3rem]" />
           </div>
 
           {/* 4-card editorial grid (consolidated from 5). 2-col desktop,
               stacked mobile. Each card: number, icon, label, serif
               headline, body, strategic phrase. */}
-          <ul className="he-stagger max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6 list-none p-0">
+          <ul className="he-stagger max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5 list-none p-0">
             {[
               {
                 Icon: Feather,
                 num: "01",
                 label: "You decide",
                 title: (<>You shape the <span className="italic">story.</span></>),
-                body: (<>Choose the <span className="kw">rhythm</span>, the places, the people, the occasion and the feeling you want to take home.</>),
+                body: (<>Choose the rhythm, places and feeling you want to take home.</>),
                 pull: "Designed around you, not a template.",
               },
               {
                 Icon: Compass,
                 num: "02",
                 label: "Local from the start",
-                title: (<>Real local <span className="italic">knowledge</span> guides everything.</>),
-                body: (<>From iconic places to <span className="kw">hidden gems</span>, each route is shaped with timing, proximity and insight that only comes from living it.</>),
+                title: (<>Local <span className="italic">from the start.</span></>),
+                body: (<>Real <span className="kw">local knowledge</span> guides the route, timing and hidden details.</>),
                 pull: "Locals on the ground, not call-centres.",
               },
               {
                 Icon: Sparkles,
                 num: "03",
                 label: "Any occasion",
-                title: (<>For any <span className="italic">occasion.</span></>),
-                body: (<>Portugal can be a private day, a <span className="kw">proposal</span>, a <span className="kw">celebration</span>, a corporate moment or a full journey. The experience changes because the intention changes.</>),
+                title: (<>Any <span className="italic">occasion.</span></>),
+                body: (<>Private days, proposals, celebrations, corporate moments or full journeys.</>),
                 pull: "The intention shapes the day.",
               },
               {
@@ -898,42 +892,42 @@ function HomePage() {
                 num: "04",
                 label: "Three ways to shape it",
                 title: (<>Three ways to <span className="italic">shape it.</span></>),
-                body: (<>Start from a <span className="kw">Signature</span>, tailor selected details, or build from scratch in the <span className="kw">Studio</span>. Your experience takes shape in the way that fits you.</>),
-                pull: "Choose, tailor, or build — your call.",
+                body: (<>Start with a Signature, tailor details, or build from scratch in the Studio.</>),
+                pull: "Choose, tailor, or build.",
               },
             ].map((b) => (
               <li
                 key={b.num}
-                className="reveal-stagger he-card-lift group relative flex flex-col rounded-[6px] border border-[#E7DDD0] bg-[color:var(--ivory)] p-7 md:p-9 shadow-[0_1px_2px_rgba(46,46,46,0.04)] overflow-hidden"
+                className="reveal-stagger he-card-lift group relative flex flex-col rounded-[6px] border border-[#EAE2D6] bg-[color:var(--ivory)] p-6 md:p-8 shadow-[0_1px_2px_rgba(46,46,46,0.04)] overflow-hidden"
               >
                 <span aria-hidden="true" className="gold-rule absolute left-0 top-0" />
                 <span
                   aria-hidden="true"
-                  className="pointer-events-none absolute left-0 bottom-0 h-px w-full origin-left scale-x-0 bg-[color:var(--gold)]/60 transition-transform duration-500 ease-out group-hover:scale-x-100"
+                  className="pointer-events-none absolute left-0 bottom-0 h-px w-full origin-left scale-x-0 bg-[color:var(--gold)]/55 transition-transform duration-500 ease-out group-hover:scale-x-100"
                 />
                 <div className="flex items-start justify-between gap-4 pr-1">
-                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--gold)]/35 bg-[color:var(--ivory)] transition-all duration-300 group-hover:border-[color:var(--gold)]/70 group-hover:scale-[1.06]">
+                  <span className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[color:var(--gold)]/30 bg-[color:var(--ivory)] transition-all duration-300 group-hover:border-[color:var(--gold)]/60 group-hover:scale-[1.05]">
                     <b.Icon
-                      size={18}
+                      size={16}
                       strokeWidth={1.5}
                       aria-hidden="true"
                       className="text-[color:var(--teal)] transition-transform duration-300 ease-out group-hover:translate-x-0.5"
                     />
                   </span>
-                  <span className="he-num">
+                  <span className="serif text-[1.9rem] md:text-[2.1rem] leading-none text-[color:var(--gold)] font-light tabular-nums">
                     {b.num}
                   </span>
                 </div>
-                <span className="mt-5 text-[10.5px] uppercase tracking-[0.32em] font-semibold text-[color:var(--charcoal)]">
+                <span className="mt-4 text-[10.5px] uppercase tracking-[0.28em] font-semibold text-[color:var(--charcoal-soft)]">
                   {b.label}
                 </span>
-                <h3 className="serif mt-3 text-[1.6rem] md:text-[1.95rem] leading-[1.18] text-[color:var(--charcoal)] font-semibold">
+                <h3 className="serif mt-2.5 text-[1.4rem] md:text-[1.7rem] leading-[1.2] text-[color:var(--charcoal)] font-medium">
                   {b.title}
                 </h3>
-                <p className="mt-3.5 text-[15px] md:text-[15.5px] text-[color:var(--charcoal)] leading-[1.65]">
+                <p className="mt-3 text-[14px] md:text-[15px] text-[color:var(--charcoal-soft)] leading-[1.6]">
                   {b.body}
                 </p>
-                <p className="he-pull mt-5 serif italic text-[15px] md:text-[16px] leading-[1.45] text-[color:var(--charcoal)]">
+                <p className="he-pull mt-4 serif italic text-[14px] md:text-[15px] leading-[1.45] text-[color:var(--charcoal)]">
                   {b.pull}
                 </p>
               </li>
@@ -959,13 +953,13 @@ function HomePage() {
         aria-labelledby="signatures-title"
       >
         <div className="container-x">
-          <div className="reveal text-center max-w-2xl mx-auto mb-12 md:mb-16">
+          <div className="reveal text-center max-w-2xl mx-auto mb-10 md:mb-14">
             <span className="he-eyebrow-bar mb-5">Signature experiences</span>
-            <h2 id="signatures-title" className="serif mt-3 text-[2.5rem] sm:text-[2.85rem] md:text-[4.15rem] leading-[1.02] md:leading-[1.0] tracking-[-0.02em] text-[color:var(--charcoal)] font-semibold">
-              Days <span className="italic">already designed.</span>
+            <h2 id="signatures-title" className="serif mt-3 text-[2rem] sm:text-[2.4rem] md:text-[3.6rem] leading-[1.1] md:leading-[1.0] tracking-[-0.016em] text-[color:var(--charcoal)] font-medium">
+              Signature days, <span className="italic">ready when you are.</span>
             </h2>
-            <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] leading-[1.65] max-w-md mx-auto">
-              Confirm a Signature as it ships, or tailor a few details inside.
+            <p className="mt-4 text-[14.5px] md:text-[16px] text-[color:var(--charcoal-soft)] leading-[1.65] max-w-md mx-auto">
+              Book a Signature as it is, or tailor selected details.
             </p>
           </div>
 
@@ -1126,13 +1120,13 @@ function HomePage() {
         aria-labelledby="groups-title"
       >
         <div className="container-x">
-          <div className="reveal text-center max-w-2xl mx-auto mb-14 md:mb-20">
+          <div className="reveal text-center max-w-2xl mx-auto mb-12 md:mb-16">
             <span className="he-eyebrow-bar mb-5">Groups &amp; celebrations</span>
-            <h2 id="groups-title" className="serif mt-3 text-[2.5rem] sm:text-[2.85rem] md:text-[4.15rem] leading-[1.02] md:leading-[1.0] tracking-[-0.02em] text-[color:var(--charcoal)] font-semibold">
-              When the <span className="italic font-medium">occasion</span> is bigger.
+            <h2 id="groups-title" className="serif mt-3 text-[2rem] sm:text-[2.4rem] md:text-[3.6rem] leading-[1.1] md:leading-[1.0] tracking-[-0.016em] text-[color:var(--charcoal)] font-medium">
+              For moments bigger than a <span className="italic">tour.</span>
             </h2>
-            <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] leading-[1.6] max-w-md mx-auto">
-              <strong className="font-semibold">Proposals</strong>, private <strong className="font-semibold">celebrations</strong>, <strong className="font-semibold">corporate groups</strong> and <strong className="font-semibold">multi-day journeys</strong> — quietly planned by a local team.
+            <p className="mt-4 text-[14.5px] md:text-[16px] text-[color:var(--charcoal-soft)] leading-[1.65] max-w-md mx-auto">
+              Proposals, celebrations, corporate groups and multi-day journeys — shaped with local care.
             </p>
           </div>
 
@@ -1141,7 +1135,7 @@ function HomePage() {
               animated category label, soft gold divider, bold serif
               headline, body with one highlighted phrase, italic pull
               line, gold detail line, CTA with arrow nudge. */}
-          <div className="max-w-6xl mx-auto flex flex-col gap-20 md:gap-24">
+          <div className="max-w-6xl mx-auto flex flex-col gap-14 md:gap-20">
             {groupsAndCelebrations.map((m, i) => {
               const reverse = i % 2 === 1;
               return (
@@ -1210,20 +1204,20 @@ function HomePage() {
                         "var(--charcoal)";
                       return (
                         <>
-                          <span className="inline-flex items-center gap-2.5 text-[10.5px] md:text-[10.5px] uppercase tracking-[0.28em] md:tracking-[0.32em] font-bold text-[color:var(--charcoal)]">
+                          <span className="inline-flex items-center gap-2.5 text-[10.5px] md:text-[10.5px] uppercase tracking-[0.24em] md:tracking-[0.3em] font-semibold text-[color:var(--charcoal-soft)]">
                             <span aria-hidden="true" className="inline-block h-[6px] w-[6px] rounded-full" style={{ backgroundColor: accent }} />
                             {m.eyebrow}
                           </span>
-                          <h3 className="serif mt-4 md:mt-3 text-[2.2rem] md:text-[2.85rem] leading-[1.04] md:leading-[1.04] tracking-[-0.02em] text-[color:var(--charcoal)] font-semibold">
+                          <h3 className="serif mt-3 text-[1.75rem] md:text-[2.4rem] leading-[1.12] md:leading-[1.06] tracking-[-0.014em] text-[color:var(--charcoal)] font-medium">
                             {m.title}
                           </h3>
-                          <p className="mt-5 md:mt-4 text-[16px] md:text-[16.5px] leading-[1.65] md:leading-[1.7] text-[color:var(--charcoal)]">
+                          <p className="mt-4 md:mt-4 text-[14.5px] md:text-[16px] leading-[1.65] md:leading-[1.7] text-[color:var(--charcoal-soft)]">
                             {m.line}
                           </p>
-                          <p className="he-pull mt-6 md:mt-5 serif italic text-[16.5px] md:text-[17px] leading-[1.45] text-[color:var(--charcoal)] font-semibold" style={{ borderLeftColor: accent }}>
+                          <p className="he-pull mt-5 md:mt-5 serif italic text-[15px] md:text-[16.5px] leading-[1.45] text-[color:var(--charcoal)] font-normal" style={{ borderLeftColor: accent }}>
                             {m.pull}
                           </p>
-                          <p className="mt-6 md:mt-5 inline-flex items-center gap-2.5 text-[10.5px] md:text-[10.5px] uppercase tracking-[0.24em] md:tracking-[0.28em] font-bold text-[color:var(--charcoal)]">
+                          <p className="mt-5 md:mt-5 inline-flex items-center gap-2.5 text-[10.5px] md:text-[10.5px] uppercase tracking-[0.22em] md:tracking-[0.26em] font-semibold text-[color:var(--charcoal-soft)]">
                             <span aria-hidden="true" className="inline-block h-[6px] w-[6px] rounded-full" style={{ backgroundColor: accent }} />
                             {m.detail}
                           </p>
@@ -1281,7 +1275,7 @@ function HomePage() {
           labelled landmark with visible expandable answers. The wrapper
           section below carries the spacing class the lock checks; the
           inner FAQ component carries aria-labelledby="faq-title". */}
-      <section id="faq" className="py-20 md:py-24 scroll-mt-24 md:scroll-mt-28" aria-labelledby="faq-title">
+      <section id="faq" className="py-16 md:py-20 scroll-mt-24 md:scroll-mt-28" aria-labelledby="faq-title">
         <FAQ />
       </section>
 
@@ -1332,7 +1326,7 @@ function HomePage() {
             </span>
             <h2
               id="final-cta-title"
-              className="mt-5 text-[2.5rem] sm:text-[2.85rem] md:text-[3.6rem] leading-[1.02] md:leading-[1.0] tracking-[-0.02em] font-bold text-[color:var(--ivory)]"
+              className="mt-5 text-[2rem] sm:text-[2.4rem] md:text-[3.2rem] leading-[1.1] md:leading-[1.02] tracking-[-0.016em] font-medium text-[color:var(--ivory)]"
             >
               Ready to design your{" "}
               <span className="italic font-normal text-[color:var(--gold-soft)] serif">
