@@ -92,33 +92,37 @@ function readDecl(
 }
 
 /**
- * Find an `@media (min-width: <px>px) { ... }` block via brace
- * counting (regex can't reliably balance nested rules).
+ * Find ALL `@media (min-width: <px>px) { ... }` blocks via brace
+ * counting (regex can't reliably balance nested rules). Returns each
+ * block's body, in source order.
  */
-function findMediaBlock(minWidthPx: number): string {
+function findAllMediaBlocks(minWidthPx: number): string[] {
   const opener = new RegExp(
     `@media\\s*\\(\\s*min-width:\\s*${minWidthPx}px\\s*\\)\\s*\\{`,
+    "g",
   );
-  const m = stylesSrc.match(opener);
-  if (!m || m.index == null) {
+  const blocks: string[] = [];
+  let m: RegExpExecArray | null;
+  while ((m = opener.exec(stylesSrc)) !== null) {
+    const start = m.index + m[0].length;
+    let depth = 1;
+    let i = start;
+    while (i < stylesSrc.length && depth > 0) {
+      if (stylesSrc[i] === "{") depth++;
+      else if (stylesSrc[i] === "}") depth--;
+      if (depth === 0) {
+        blocks.push(stylesSrc.slice(start, i));
+        break;
+      }
+      i++;
+    }
+  }
+  if (blocks.length === 0) {
     throw new Error(
       `@media (min-width: ${minWidthPx}px) block not found`,
     );
   }
-  // Start counting from the `{` of the @media rule.
-  const start = m.index + m[0].length;
-  let depth = 1;
-  let i = start;
-  while (i < stylesSrc.length && depth > 0) {
-    const ch = stylesSrc[i];
-    if (ch === "{") depth++;
-    else if (ch === "}") depth--;
-    if (depth === 0) return stylesSrc.slice(start, i);
-    i++;
-  }
-  throw new Error(
-    `@media (min-width: ${minWidthPx}px) block is unbalanced`,
-  );
+  return blocks;
 }
 
 /**
@@ -127,12 +131,22 @@ function findMediaBlock(minWidthPx: number): string {
  * the search to inside a given `@media (min-width: <px>px)` block.
  */
 function extractHeroCtaRule(inMediaMin?: number): string {
-  const scope =
-    inMediaMin == null ? stylesSrc : findMediaBlock(inMediaMin);
+  const scopes =
+    inMediaMin == null ? [stylesSrc] : findAllMediaBlocks(inMediaMin);
 
-  // Walk every `.hero-cta-button` occurrence and pick the first one
-  // that is the BARE class — i.e. immediately followed by whitespace
-  // and `{`, never `.` or `>` (which would be a compound selector).
+  for (const scope of scopes) {
+    const body = tryExtractBareHeroCta(scope);
+    if (body != null) return body;
+  }
+  throw new Error(
+    `Bare .hero-cta-button rule not found${
+      inMediaMin != null ? ` inside any @media min-width:${inMediaMin}px` : ""
+    }`,
+  );
+}
+
+/** Returns the body of the bare `.hero-cta-button` rule in `scope`, or null. */
+function tryExtractBareHeroCta(scope: string): string | null {
   const re = /\.hero-cta-button(?=[\s{])/g;
   let m: RegExpExecArray | null;
   while ((m = re.exec(scope)) !== null) {
