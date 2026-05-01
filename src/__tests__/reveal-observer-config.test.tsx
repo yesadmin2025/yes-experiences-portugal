@@ -37,39 +37,86 @@ vi.mock("@/lib/smooth-anchor-scroll", () => ({
 import { SiteLayout } from "@/components/SiteLayout";
 
 // ------------------------------------------------------------------
-// Fake IntersectionObserver — captures (callback, options) per
-// instance so tests can assert on threshold / rootMargin.
+// Fake IntersectionObserver
 // ------------------------------------------------------------------
+//
+// Why this exists:
+//   The two SiteLayout effects (`.reveal/.reveal-stagger` and
+//   `.section-enter`) each spin up their own IntersectionObserver.
+//   In tests we need to (a) assert the threshold/rootMargin config of
+//   each one independently, and (b) drive intersection callbacks on
+//   the right observer for each scenario.
+//
+// Public test API:
+//   • `kind`               — "reveal" | "section-enter" | "other",
+//                            auto-detected the first time an element
+//                            of that kind is observed.
+//   • `pendingTargets`     — currently-observed elements (alias of
+//                            the live `targets` Set).
+//   • `observedTargets`    — every element ever observed, even after
+//                            `unobserve()` removes it.
+//   • `fire(entries)`      — deliver synthetic IO entries.
+//   • Static helpers:
+//       - `FakeIO.reveal()`  → the reveal observer (throws if missing).
+//       - `FakeIO.section()` → the section-enter observer.
+//       - `FakeIO.allOf(kind)` → every observer of a given kind.
+//   These names keep tests self-documenting: `FakeIO.reveal().fire(...)`
+//   reads as "the reveal observer fires" instead of "the first IO with
+//   a target whose className matches…".
+//
+type FakeIOKind = "reveal" | "section-enter" | "other";
+
+function classifyTarget(el: Element): FakeIOKind {
+  if (el.classList.contains("section-enter")) return "section-enter";
+  if (
+    el.classList.contains("reveal") ||
+    el.classList.contains("reveal-stagger")
+  ) {
+    return "reveal";
+  }
+  return "other";
+}
+
 class FakeIO {
   static instances: FakeIO[] = [];
+
   callback: IntersectionObserverCallback;
   options?: IntersectionObserverInit;
-  targets = new Set<Element>();
-  /**
-   * Tracks every element ever observed by this observer, even after
-   * `unobserve()` removes it. Used by the sequenced-firing tests to
-   * identify which observer (reveal vs section-enter) is which AFTER
-   * the initial sweep has already unobserved everything on mount.
-   */
-  observedHistory = new Set<Element>();
+
+  /** Live set: targets currently being watched (post-unobserve aware). */
+  readonly pendingTargets = new Set<Element>();
+  /** Append-only set: every element ever observed by this instance. */
+  readonly observedTargets = new Set<Element>();
+  /** Auto-detected on first observe; "other" until then. */
+  kind: FakeIOKind = "other";
+
   constructor(cb: IntersectionObserverCallback, options?: IntersectionObserverInit) {
     this.callback = cb;
     this.options = options;
     FakeIO.instances.push(this);
   }
+
   observe(target: Element) {
-    this.targets.add(target);
-    this.observedHistory.add(target);
+    this.pendingTargets.add(target);
+    this.observedTargets.add(target);
+    if (this.kind === "other") {
+      const detected = classifyTarget(target);
+      if (detected !== "other") this.kind = detected;
+    }
   }
+
   unobserve(target: Element) {
-    this.targets.delete(target);
+    this.pendingTargets.delete(target);
   }
+
   disconnect() {
-    this.targets.clear();
+    this.pendingTargets.clear();
   }
+
   takeRecords(): IntersectionObserverEntry[] {
     return [];
   }
+
   /** Deliver synthetic entries to this observer's callback. */
   fire(entries: Partial<IntersectionObserverEntry>[]) {
     const full = entries.map(
@@ -95,8 +142,47 @@ class FakeIO {
     );
     this.callback(full, this as unknown as IntersectionObserver);
   }
+
+  // ----- Backwards-compatible alias --------------------------------
+  // Some earlier tests in this file still reference `targets` directly;
+  // keep the alias so the diff stays small. Reads/mutations on either
+  // name affect the same underlying Set.
+  get targets(): Set<Element> {
+    return this.pendingTargets;
+  }
+  /** Deprecated: prefer `observedTargets`. */
+  get observedHistory(): Set<Element> {
+    return this.observedTargets;
+  }
+
+  // ----- Static lookup helpers -------------------------------------
   static reset() {
     FakeIO.instances = [];
+  }
+  static allOf(kind: FakeIOKind): FakeIO[] {
+    return FakeIO.instances.filter((io) => io.kind === kind);
+  }
+  /** The (single) reveal observer. Throws if not yet created. */
+  static reveal(): FakeIO {
+    const io = FakeIO.allOf("reveal")[0];
+    if (!io) {
+      throw new Error(
+        "FakeIO.reveal(): no reveal IntersectionObserver has been created yet — " +
+          "did the SiteLayout mount and observe a `.reveal` element?",
+      );
+    }
+    return io;
+  }
+  /** The (single) section-enter observer. Throws if not yet created. */
+  static section(): FakeIO {
+    const io = FakeIO.allOf("section-enter")[0];
+    if (!io) {
+      throw new Error(
+        "FakeIO.section(): no section-enter IntersectionObserver has been created yet — " +
+          "did the SiteLayout mount and observe a `.section-enter` element?",
+      );
+    }
+    return io;
   }
 }
 
@@ -466,19 +552,13 @@ describe("reveal observers — sequenced firing on mobile", () => {
       placeBelowFold(el, i);
     });
 
-    // Locate the reveal observer (the one watching `.reveal` targets,
-    // not `.section-enter`).
-    const revealIO = FakeIO.instances.find((io) =>
-      Array.from(io.observedHistory).some((t) =>
-        (t as Element).classList.contains("reveal"),
-      ),
-    );
-    expect(revealIO).toBeDefined();
+    // Locate the reveal observer via the explicit static helper.
+    const revealIO = FakeIO.reveal();
 
     // Sequenced fire: deliver one isIntersecting=true entry at a time
     // and assert the running state.
     for (let i = 0; i < els.length; i++) {
-      revealIO!.fire([
+      revealIO.fire([
         {
           target: els[i],
           isIntersecting: true,
@@ -516,7 +596,7 @@ describe("reveal observers — sequenced firing on mobile", () => {
     // After all fires, every revealed target must have been unobserved
     // (no leaks on a long page with many sections).
     for (const el of els) {
-      expect(revealIO!.targets.has(el)).toBe(false);
+      expect(revealIO.targets.has(el)).toBe(false);
     }
   });
 
@@ -555,17 +635,12 @@ describe("reveal observers — sequenced firing on mobile", () => {
     });
 
     // Find the section-enter observer specifically.
-    const sectionIO = FakeIO.instances.find((io) =>
-      Array.from(io.observedHistory).some((t) =>
-        (t as Element).classList.contains("section-enter"),
-      ),
-    );
-    expect(sectionIO).toBeDefined();
+    const sectionIO = FakeIO.section();
 
     // Fire only s0 and s2 (skip s1) — middle stays invisible until its
     // own entry arrives. This proves visibility isn't a side-effect of
     // earlier or later fires bleeding across siblings.
-    sectionIO!.fire([
+    sectionIO.fire([
       {
         target: sections[0],
         isIntersecting: true,
@@ -576,7 +651,7 @@ describe("reveal observers — sequenced firing on mobile", () => {
     expect(sections[1].classList.contains("is-visible")).toBe(false);
     expect(sections[2].classList.contains("is-visible")).toBe(false);
 
-    sectionIO!.fire([
+    sectionIO.fire([
       {
         target: sections[2],
         isIntersecting: true,
@@ -588,7 +663,7 @@ describe("reveal observers — sequenced firing on mobile", () => {
 
     // Now fire the middle one and confirm it joins the visible set
     // without disturbing the others.
-    sectionIO!.fire([
+    sectionIO.fire([
       {
         target: sections[1],
         isIntersecting: true,
@@ -657,7 +732,7 @@ describe("reveal observers — sequenced firing on mobile", () => {
     // observer instances themselves are still alive — that's exactly
     // the long-session shape the leak guarantee covers.)
     for (const io of FakeIO.instances) {
-      for (const target of io.observedHistory) {
+      for (const target of io.observedTargets) {
         if (document.contains(target)) io.observe(target);
       }
     }
@@ -750,19 +825,14 @@ describe("reveal observers — sequenced firing on mobile", () => {
       el.classList.remove("is-visible");
       placeBelowFold(el, i);
     });
-    const revealIO = FakeIO.instances.find((io) =>
-      Array.from(io.observedHistory).some((t) =>
-        (t as Element).classList.contains("reveal"),
-      ),
-    );
-    expect(revealIO).toBeDefined();
-    for (const el of els) revealIO!.observe(el);
-    expect(revealIO!.targets.size).toBe(6);
+    const revealIO = FakeIO.reveal();
+    for (const el of els) revealIO.observe(el);
+    expect(revealIO.targets.size).toBe(6);
 
     // Partial scroll: fire only the first 3 as isIntersecting=true.
     const visible = els.slice(0, 3);
     const stillBelow = els.slice(3);
-    revealIO!.fire(
+    revealIO.fire(
       visible.map((target) => ({
         target,
         isIntersecting: true,
@@ -784,22 +854,22 @@ describe("reveal observers — sequenced firing on mobile", () => {
     // Fired targets: visible + unobserved.
     for (const el of visible) {
       expect(el.classList.contains("is-visible")).toBe(true);
-      expect(revealIO!.targets.has(el)).toBe(false);
+      expect(revealIO.targets.has(el)).toBe(false);
     }
     // Still-below targets: invisible + still observed (will fire later).
     for (const el of stillBelow) {
       expect(el.classList.contains("is-visible")).toBe(false);
-      expect(revealIO!.targets.has(el)).toBe(true);
+      expect(revealIO.targets.has(el)).toBe(true);
     }
     // Live `targets` set must equal exactly the still-below subset —
     // no extras, no missing entries.
-    expect(revealIO!.targets.size).toBe(stillBelow.length);
-    expect(new Set(stillBelow)).toEqual(new Set(revealIO!.targets));
+    expect(revealIO.targets.size).toBe(stillBelow.length);
+    expect(new Set(stillBelow)).toEqual(new Set(revealIO.targets));
 
     // Continue scrolling: deliver the remaining 3. They should now
     // also flip to visible and the observer should be empty (clean
     // hand-off, no leak).
-    revealIO!.fire(
+    revealIO.fire(
       stillBelow.map((target) => ({
         target,
         isIntersecting: true,
@@ -820,7 +890,7 @@ describe("reveal observers — sequenced firing on mobile", () => {
     for (const el of stillBelow) {
       expect(el.classList.contains("is-visible")).toBe(true);
     }
-    expect(revealIO!.targets.size).toBe(0);
+    expect(revealIO.targets.size).toBe(0);
   });
 });
 
