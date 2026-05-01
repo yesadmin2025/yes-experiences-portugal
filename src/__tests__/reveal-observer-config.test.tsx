@@ -732,7 +732,7 @@ describe("reveal observers — sequenced firing on mobile", () => {
     // observer instances themselves are still alive — that's exactly
     // the long-session shape the leak guarantee covers.)
     for (const io of FakeIO.instances) {
-      for (const target of io.observedHistory) {
+      for (const target of io.observedTargets) {
         if (document.contains(target)) io.observe(target);
       }
     }
