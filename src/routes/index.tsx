@@ -1313,25 +1313,23 @@ function HomePage() {
               gold top rule and a soft warm shadow. Editorial radius. */}
           <div className="reveal mx-auto max-w-2xl">
             <div
-              className="relative overflow-hidden rounded-[6px] bg-[color:var(--teal)] text-[color:var(--ivory)] px-6 py-10 sm:px-10 sm:py-12 md:px-14 md:py-14 text-center"
+              className="relative overflow-hidden rounded-[6px] bg-[color:var(--ivory)] text-[color:var(--charcoal)] px-6 py-10 sm:px-10 sm:py-12 md:px-14 md:py-14 text-center"
               style={{
-                /* Stronger gold hairline (was 55% → 72%) so the rim reads
-                   as champagne jewelry, not a faint ghost line. */
-                border: "1px solid color-mix(in oklab, var(--gold-deep) 72%, transparent)",
+                border: "1px solid color-mix(in oklab, var(--gold-deep) 55%, transparent)",
                 boxShadow:
-                  "0 1px 0 0 color-mix(in oklab, var(--gold) 30%, transparent) inset, " +
-                  "0 24px 60px -28px color-mix(in oklab, var(--teal) 45%, transparent), " +
-                  "0 12px 28px -18px color-mix(in oklab, var(--charcoal) 22%, transparent)",
+                  "0 1px 0 0 color-mix(in oklab, var(--gold) 22%, transparent) inset, " +
+                  "0 24px 60px -28px color-mix(in oklab, var(--charcoal) 18%, transparent), " +
+                  "0 12px 28px -18px color-mix(in oklab, var(--charcoal-deep) 14%, transparent)",
               }}
             >
-              {/* Soft inner radial — adds depth without flattening teal */}
+              {/* Soft warm wash — ivory to sand for editorial depth */}
               <div
                 aria-hidden="true"
                 className="pointer-events-none absolute inset-0"
                 style={{
                   background:
-                    "radial-gradient(70% 90% at 90% 0%, color-mix(in oklab, var(--gold) 16%, transparent), transparent 60%), " +
-                    "radial-gradient(60% 80% at 5% 100%, color-mix(in oklab, var(--charcoal-deep) 28%, transparent), transparent 65%)",
+                    "radial-gradient(70% 90% at 90% 0%, color-mix(in oklab, var(--sand) 55%, transparent), transparent 60%), " +
+                    "radial-gradient(60% 80% at 5% 100%, color-mix(in oklab, var(--sand) 40%, transparent), transparent 65%)",
                 }}
               />
               {/* Gold top rule — short, centered, the editorial signature */}
@@ -1341,53 +1339,53 @@ function HomePage() {
                 style={{
                   background:
                     "linear-gradient(90deg, transparent, var(--gold-warm) 50%, transparent)",
-                  opacity: 0.95,
+                  opacity: 0.9,
                 }}
               />
 
               <div className="relative">
-                <span className="he-rule-flank font-sans text-[11px] uppercase tracking-[0.28em] font-semibold text-[color:var(--gold-soft)]">
+                <span className="he-rule-flank font-sans text-[11px] uppercase tracking-[0.28em] font-semibold text-[color:var(--teal)]">
                   <MessageCircle size={12} aria-hidden="true" />
                   Prefer a conversation?
                 </span>
               <h2
                 id="final-cta-title"
-                className="font-display mt-5 text-[2rem] sm:text-[2.4rem] md:text-[3.2rem] leading-[1.1] md:leading-[1.02] tracking-[-0.016em] font-bold text-[color:var(--ivory)]"
+                className="font-display mt-5 text-[2rem] sm:text-[2.4rem] md:text-[3.2rem] leading-[1.1] md:leading-[1.02] tracking-[-0.016em] font-bold text-[color:var(--charcoal)]"
               >
                   Ready to design your{" "}
-                  <span className="font-serif italic font-normal text-[color:var(--gold-soft)]">
+                  <span className="font-serif italic font-normal text-[color:var(--teal)]">
                     Portugal?
                   </span>
                 </h2>
-                <p className="font-sans mt-5 text-[15.5px] md:text-[17px] leading-[1.7] text-[color:var(--ivory)]/95 max-w-md mx-auto">
+                <p className="font-sans mt-5 text-[15.5px] md:text-[17px] leading-[1.7] text-[color:var(--charcoal-soft)] max-w-md mx-auto">
                   Start in the Studio, explore a Signature, or talk to a local.
                 </p>
                 <div className="mt-9 flex flex-col sm:flex-row gap-y-4 gap-x-4 justify-center items-stretch sm:items-center">
                   <Link
                     to="/builder"
-                    className="he-glow he-sheen he-cta-shift group inline-flex items-center justify-center gap-2.5 bg-[color:var(--ivory)] text-[color:var(--charcoal-deep)] px-7 py-3.5 min-h-[48px] font-sans text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold rounded-[2px] transition-all duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] hover:bg-[color:var(--ivory)] hover:brightness-105 hover:-translate-y-[1px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--teal)]"
+                    className="he-glow he-sheen he-cta-shift group inline-flex items-center justify-center gap-2.5 bg-[color:var(--teal)] text-[color:var(--ivory)] px-7 py-3.5 min-h-[48px] font-sans text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold rounded-[2px] transition-all duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] hover:bg-[color:var(--teal-2)] hover:-translate-y-[1px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--ivory)]"
                     style={{
-                      border: "1px solid color-mix(in oklab, var(--gold-deep) 65%, transparent)",
+                      border: "1px solid color-mix(in oklab, var(--gold-deep) 55%, transparent)",
                       boxShadow:
-                        "inset 0 0 0 1px color-mix(in oklab, var(--gold) 25%, transparent), " +
-                        "0 8px 22px -10px color-mix(in oklab, var(--charcoal-deep) 45%, transparent)",
+                        "inset 0 0 0 1px color-mix(in oklab, var(--gold) 22%, transparent), " +
+                        "0 8px 22px -10px color-mix(in oklab, var(--charcoal-deep) 35%, transparent)",
                     }}
                   >
                     Create Your Story
-                    <ArrowRight size={14} aria-hidden="true" className="text-[color:var(--gold)] group-hover:text-[color:var(--gold-deep)] transition-[transform,color] duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1" />
+                    <ArrowRight size={14} aria-hidden="true" className="text-[color:var(--gold-soft)] group-hover:text-[color:var(--gold)] transition-[transform,color] duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1" />
                   </Link>
                   <Link
                     to="/contact"
-                    className="he-glow he-sheen group inline-flex items-center justify-center gap-2 px-7 py-3.5 min-h-[48px] font-sans text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold rounded-[2px] text-[color:var(--ivory)] transition-all duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] hover:bg-[color:var(--ivory)]/10 hover:-translate-y-[1px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--teal)]"
+                    className="he-glow he-sheen group inline-flex items-center justify-center gap-2 px-7 py-3.5 min-h-[48px] font-sans text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold rounded-[2px] text-[color:var(--charcoal)] bg-transparent transition-all duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] hover:bg-[color:var(--teal)]/[0.06] hover:-translate-y-[1px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--ivory)]"
                     style={{
-                      border: "1px solid color-mix(in oklab, var(--gold) 65%, transparent)",
+                      border: "1px solid color-mix(in oklab, var(--teal) 55%, transparent)",
                     }}
                   >
                     Talk to a Local
-                    <ArrowRight size={12} aria-hidden="true" className="text-[color:var(--gold-soft)] group-hover:text-[color:var(--gold)] transition-[transform,color] duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1" />
+                    <ArrowRight size={12} aria-hidden="true" className="text-[color:var(--gold)] group-hover:text-[color:var(--gold-deep)] transition-[transform,color] duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1" />
                   </Link>
                 </div>
-                <p className="font-serif mt-6 text-[13px] italic text-[color:var(--ivory)]/85">
+                <p className="font-serif mt-6 text-[13px] italic text-[color:var(--charcoal-soft)]">
                   Need help shaping it? A local is one message away.
                 </p>
               </div>
