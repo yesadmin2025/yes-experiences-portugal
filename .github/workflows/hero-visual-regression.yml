@@ -63,10 +63,18 @@ jobs:
         # CTA row reflows. The rhythm spec pins the gaps between
         # secondary CTA, microcopy, and the two-line signature.
         #
+        # The final-cta-arrow-colors spec extends the same contract to
+        # the homepage final-CTA card: it asserts via computed style
+        # that the primary arrow is --gold (→ --gold-deep on hover) and
+        # the ghost arrow is --gold-soft (→ --gold on hover), with
+        # focus rings always rendering --gold. Computed-style instead
+        # of pixel diff because tiny SVG arrows produce flaky pixel
+        # comparisons on CI.
+        #
         # Reporters (github + html + cta-parity-summary) are configured
         # in playwright.config.ts — do NOT add --reporter here, or the
         # per-viewport CTA parity step summary will be dropped.
-        run: bunx playwright test e2e/hero-visual-regression.spec.ts e2e/hero-cta-parity.spec.ts e2e/hero-cta-parity-tablet.spec.ts e2e/hero-mobile-rhythm.spec.ts
+        run: bunx playwright test e2e/hero-visual-regression.spec.ts e2e/hero-cta-parity.spec.ts e2e/hero-cta-parity-tablet.spec.ts e2e/hero-mobile-rhythm.spec.ts e2e/final-cta-arrow-colors.spec.ts
         env:
           CI: "true"
 
