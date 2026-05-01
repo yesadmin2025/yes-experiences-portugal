@@ -688,7 +688,7 @@ function HomePage() {
 
         <div className="container-x relative z-10 pb-14 md:pb-36 pt-32 md:pt-40">
           <div className="max-w-3xl text-[color:var(--ivory)]">
-            <span className="inline-flex items-center gap-2 sm:gap-3.5 max-w-full text-[10px] xs:text-[10.5px] sm:text-[12px] md:text-[13px] uppercase tracking-[0.16em] xs:tracking-[0.2em] sm:tracking-[0.26em] md:tracking-[0.3em] text-[color:var(--gold)] opacity-0 animate-[heroFade_1.1s_ease-out_0.3s_forwards]">
+            <span className="inline-flex items-center gap-2 sm:gap-3.5 max-w-full text-[10px] xs:text-[10.5px] sm:text-[12px] md:text-[13px] uppercase tracking-[0.16em] xs:tracking-[0.2em] sm:tracking-[0.26em] md:tracking-[0.3em] text-[color:var(--gold)] opacity-0 animate-[heroFade_0.8s_ease-out_0.1s_forwards]">
               <span aria-hidden="true" className="shrink-0">✦</span>
               <span data-hero-field="eyebrow" className="whitespace-nowrap truncate">
                 {HERO_COPY.eyebrow}
@@ -698,14 +698,14 @@ function HomePage() {
 
             <h1
               data-hero-field="headlineLine1 headlineLine2"
-              className="hero-h1 serif mt-7 md:mt-10 text-[2.05rem] sm:text-5xl md:text-7xl lg:text-[5.4rem] leading-[1.08] sm:leading-[1.04] md:leading-[0.96] tracking-[-0.012em] text-[color:var(--ivory)] text-left opacity-0 animate-[heroFade_1.4s_ease-out_0.6s_forwards] [text-shadow:0_2px_18px_rgba(0,0,0,0.35)]"
+              className="hero-h1 serif mt-6 md:mt-9 text-[1.95rem] sm:text-[2.95rem] md:text-[4.4rem] lg:text-[5.1rem] leading-[1.12] sm:leading-[1.06] md:leading-[1.0] tracking-[-0.014em] text-[color:var(--ivory)] text-left opacity-0 animate-[heroFade_0.9s_ease-out_0.25s_forwards] [text-shadow:0_2px_18px_rgba(0,0,0,0.35)]"
             >
               <span data-hero-field="headlineLine1" className="block">
                 {HERO_COPY.headlineLine1}
               </span>
               <span
                 data-hero-field="headlineLine2"
-                className="block italic font-medium text-[color:var(--gold-soft)] mt-1.5 md:mt-1 text-[2.2rem] sm:text-[3.4rem] md:text-[5rem] lg:text-[5.7rem] tracking-[-0.018em] leading-[1.05] md:leading-[0.96]"
+                className="block italic font-medium text-[color:var(--gold-soft)] mt-1 md:mt-1.5 text-[1.95rem] sm:text-[2.95rem] md:text-[4.4rem] lg:text-[5.1rem] tracking-[-0.018em] leading-[1.12] sm:leading-[1.06] md:leading-[1.0]"
               >
                 {HERO_COPY.headlineLine2}
               </span>
@@ -713,7 +713,7 @@ function HomePage() {
 
             <p
               data-hero-field="subheadline"
-              className="mt-8 md:mt-10 text-[17px] md:text-[22px] text-[color:var(--ivory)]/95 max-w-md md:max-w-lg leading-[1.6] md:leading-[1.75] font-light text-left opacity-0 animate-[heroFade_1.4s_ease-out_0.95s_forwards] [text-shadow:0_1px_8px_rgba(0,0,0,0.3)]"
+              className="mt-6 md:mt-8 text-[16.5px] md:text-[20px] text-[color:var(--ivory)]/95 max-w-md md:max-w-lg leading-[1.6] md:leading-[1.7] font-light text-left opacity-0 animate-[heroFade_0.9s_ease-out_0.45s_forwards] [text-shadow:0_1px_8px_rgba(0,0,0,0.3)]"
             >
               {HERO_COPY.subheadline}
             </p>
@@ -723,7 +723,7 @@ function HomePage() {
                 (→ /builder) leads. "Explore Signature Experiences" stays
                 visible as the calmer second path (→ /experiences).
                 Labels are byte-exact from HERO_COPY (e2e lock). */}
-            <div className="mt-12 md:mt-12 flex flex-col sm:flex-row gap-4 sm:gap-4 w-full max-w-sm sm:max-w-xl opacity-0 animate-[heroFade_1.4s_ease-out_1.25s_forwards]">
+            <div className="mt-10 md:mt-12 flex flex-col sm:flex-row gap-4 sm:gap-4 w-full max-w-sm sm:max-w-xl opacity-0 animate-[heroFade_0.9s_ease-out_0.65s_forwards]">
               <Link
                 to="/builder"
                 data-hero-field="primaryCta"
@@ -755,7 +755,7 @@ function HomePage() {
                 fragmented the hero CTA hierarchy. Local guidance is
                 still surfaced in the Studio reassurance line, the FAQ
                 closer, and the Final CTA secondary button. */}
-            <div className="hero-rhythm-cta-to-microcopy max-w-sm sm:max-w-xl mx-auto sm:mx-0 opacity-0 animate-[heroFade_1.4s_ease-out_1.5s_forwards]">
+            <div className="hero-rhythm-cta-to-microcopy max-w-sm sm:max-w-xl mx-auto sm:mx-0 opacity-0 animate-[heroFade_0.9s_ease-out_0.85s_forwards]">
               <p
                 data-hero-field="microcopy"
                 className="text-[14px] md:text-[14.5px] text-[color:var(--ivory)] leading-[1.65] md:leading-[1.7] font-normal tracking-[0.005em] text-center sm:text-left"
@@ -767,7 +767,7 @@ function HomePage() {
             {/* Brand signature — rendered ONCE (Patch 2A dedup).
                 The visible split is the only copy of the line; SRs read
                 it via aria-label on the wrapper. */}
-            <div className="hero-rhythm-microcopy-to-signature mb-2 md:mb-2 mt-8 md:mt-10 flex justify-center opacity-0 animate-[heroFade_1.4s_ease-out_1.75s_forwards]">
+            <div className="hero-rhythm-microcopy-to-signature mb-2 md:mb-2 mt-8 md:mt-10 flex justify-center opacity-0 animate-[heroFade_0.9s_ease-out_1.05s_forwards]">
               <div
                 data-hero-field="brandLine"
                 aria-label={HERO_COPY.brandLine}
