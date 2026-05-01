@@ -1128,13 +1128,13 @@ function HomePage() {
         aria-labelledby="groups-title"
       >
         <div className="container-x">
-          <div className="reveal text-center max-w-2xl mx-auto mb-14 md:mb-20">
+          <div className="reveal text-center max-w-2xl mx-auto mb-12 md:mb-16">
             <span className="he-eyebrow-bar mb-5">Groups &amp; celebrations</span>
-            <h2 id="groups-title" className="serif mt-3 text-[2.5rem] sm:text-[2.85rem] md:text-[4.15rem] leading-[1.02] md:leading-[1.0] tracking-[-0.02em] text-[color:var(--charcoal)] font-semibold">
-              When the <span className="italic font-medium">occasion</span> is bigger.
+            <h2 id="groups-title" className="serif mt-3 text-[2rem] sm:text-[2.4rem] md:text-[3.6rem] leading-[1.1] md:leading-[1.0] tracking-[-0.016em] text-[color:var(--charcoal)] font-medium">
+              For moments bigger than a <span className="italic">tour.</span>
             </h2>
-            <p className="mt-5 text-[15.5px] md:text-[17px] text-[color:var(--charcoal)] leading-[1.6] max-w-md mx-auto">
-              <strong className="font-semibold">Proposals</strong>, private <strong className="font-semibold">celebrations</strong>, <strong className="font-semibold">corporate groups</strong> and <strong className="font-semibold">multi-day journeys</strong> — quietly planned by a local team.
+            <p className="mt-4 text-[14.5px] md:text-[16px] text-[color:var(--charcoal-soft)] leading-[1.65] max-w-md mx-auto">
+              Proposals, celebrations, corporate groups and multi-day journeys — shaped with local care.
             </p>
           </div>
 
