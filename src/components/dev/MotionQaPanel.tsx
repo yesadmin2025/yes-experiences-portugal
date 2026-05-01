@@ -206,6 +206,20 @@ export function MotionQaPanel() {
       <Row k="reveal CSS" v={cssLoaded ? "loaded" : "missing"} ok={cssLoaded} />
       <Row k="visible-test" v={visibleTest ? "ON" : "off"} />
       <Row k="scroll-debug" v={scrollDebugClasses.length ? scrollDebugClasses.join(",") : "off"} />
+      {/* Home motion controller (data-motion) — single source of truth on the homepage. */}
+      {(() => {
+        const hm = (window as unknown as { __yesHomeMotion?: { total: number; triggered: number; pending: number; reducedMotion: boolean; ready: boolean; active: boolean } }).__yesHomeMotion;
+        if (!hm) return <Row k="data-motion" v="not active" ok={false} />;
+        return (
+          <>
+            <Row k="data-motion total" v={hm.total} />
+            <Row k="data-motion in" v={hm.triggered} ok={hm.total > 0 && hm.triggered === hm.total} />
+            <Row k="data-motion pending" v={hm.pending} ok={hm.pending === 0} />
+            <Row k="motion-ready" v={hm.ready ? "yes" : "no"} ok={hm.ready || hm.reducedMotion} />
+            <Row k="controller" v={hm.active ? "active" : "off"} ok={hm.active} />
+          </>
+        );
+      })()}
       {t && (
         <div style={{ opacity: 0.75, paddingTop: 4, borderTop: "1px solid rgba(255,255,255,0.1)" }}>
           reveal io/init/late: {t.reveal.io}/{t.reveal.sweepInitial}/{t.reveal.sweepDelayed}
