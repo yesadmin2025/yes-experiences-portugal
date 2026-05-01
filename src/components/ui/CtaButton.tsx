@@ -19,7 +19,7 @@ import { cn } from "@/lib/utils";
  * pass `iconLeading` to render an icon BEFORE the label.
  */
 
-type Variant = "primary" | "ghost";
+type Variant = "primary" | "ghost" | "ghostDark";
 type Size = "md" | "sm";
 
 interface CommonProps {
@@ -62,6 +62,8 @@ const variantClasses: Record<Variant, string> = {
     "bg-[color:var(--teal)] text-[color:var(--ivory)] hover:bg-[color:var(--teal-2)] he-cta-shift",
   ghost:
     "bg-transparent text-[color:var(--charcoal)] hover:bg-[color:var(--teal)]/[0.06]",
+  ghostDark:
+    "bg-transparent text-[color:var(--ivory)] hover:bg-[color:var(--ivory)]/[0.08]",
 };
 
 const variantStyle: Record<Variant, React.CSSProperties> = {
@@ -74,6 +76,11 @@ const variantStyle: Record<Variant, React.CSSProperties> = {
   ghost: {
     border: "1px solid color-mix(in oklab, var(--teal) 55%, transparent)",
   },
+  ghostDark: {
+    border: "1px solid color-mix(in oklab, var(--gold) 62%, transparent)",
+    boxShadow:
+      "inset 0 0 0 1px color-mix(in oklab, var(--ivory) 10%, transparent), 0 8px 22px -14px color-mix(in oklab, var(--charcoal-deep) 55%, transparent)",
+  },
 };
 
 function arrowClasses(variant: Variant) {
@@ -81,7 +88,9 @@ function arrowClasses(variant: Variant) {
     "transition-[transform,color] duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1",
     variant === "primary"
       ? "text-[color:var(--gold-soft)] group-hover:text-[color:var(--gold)]"
-      : "text-[color:var(--gold)] group-hover:text-[color:var(--gold-deep)]",
+      : variant === "ghostDark"
+        ? "text-[color:var(--gold-soft)] group-hover:text-[color:var(--gold)]"
+        : "text-[color:var(--gold)] group-hover:text-[color:var(--gold-deep)]",
   );
 }
 
