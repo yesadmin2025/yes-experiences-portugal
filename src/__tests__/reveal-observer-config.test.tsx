@@ -558,7 +558,7 @@ describe("reveal observers — sequenced firing on mobile", () => {
     // Sequenced fire: deliver one isIntersecting=true entry at a time
     // and assert the running state.
     for (let i = 0; i < els.length; i++) {
-      revealIO!.fire([
+      revealIO.fire([
         {
           target: els[i],
           isIntersecting: true,
@@ -596,7 +596,7 @@ describe("reveal observers — sequenced firing on mobile", () => {
     // After all fires, every revealed target must have been unobserved
     // (no leaks on a long page with many sections).
     for (const el of els) {
-      expect(revealIO!.targets.has(el)).toBe(false);
+      expect(revealIO.targets.has(el)).toBe(false);
     }
   });
 
@@ -836,13 +836,13 @@ describe("reveal observers — sequenced firing on mobile", () => {
       ),
     );
     expect(revealIO).toBeDefined();
-    for (const el of els) revealIO!.observe(el);
-    expect(revealIO!.targets.size).toBe(6);
+    for (const el of els) revealIO.observe(el);
+    expect(revealIO.targets.size).toBe(6);
 
     // Partial scroll: fire only the first 3 as isIntersecting=true.
     const visible = els.slice(0, 3);
     const stillBelow = els.slice(3);
-    revealIO!.fire(
+    revealIO.fire(
       visible.map((target) => ({
         target,
         isIntersecting: true,
@@ -864,22 +864,22 @@ describe("reveal observers — sequenced firing on mobile", () => {
     // Fired targets: visible + unobserved.
     for (const el of visible) {
       expect(el.classList.contains("is-visible")).toBe(true);
-      expect(revealIO!.targets.has(el)).toBe(false);
+      expect(revealIO.targets.has(el)).toBe(false);
     }
     // Still-below targets: invisible + still observed (will fire later).
     for (const el of stillBelow) {
       expect(el.classList.contains("is-visible")).toBe(false);
-      expect(revealIO!.targets.has(el)).toBe(true);
+      expect(revealIO.targets.has(el)).toBe(true);
     }
     // Live `targets` set must equal exactly the still-below subset —
     // no extras, no missing entries.
-    expect(revealIO!.targets.size).toBe(stillBelow.length);
-    expect(new Set(stillBelow)).toEqual(new Set(revealIO!.targets));
+    expect(revealIO.targets.size).toBe(stillBelow.length);
+    expect(new Set(stillBelow)).toEqual(new Set(revealIO.targets));
 
     // Continue scrolling: deliver the remaining 3. They should now
     // also flip to visible and the observer should be empty (clean
     // hand-off, no leak).
-    revealIO!.fire(
+    revealIO.fire(
       stillBelow.map((target) => ({
         target,
         isIntersecting: true,
@@ -900,7 +900,7 @@ describe("reveal observers — sequenced firing on mobile", () => {
     for (const el of stillBelow) {
       expect(el.classList.contains("is-visible")).toBe(true);
     }
-    expect(revealIO!.targets.size).toBe(0);
+    expect(revealIO.targets.size).toBe(0);
   });
 });
 
