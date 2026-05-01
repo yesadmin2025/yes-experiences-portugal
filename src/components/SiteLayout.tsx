@@ -662,7 +662,9 @@ export function SiteLayout({ children }: { children: ReactNode }) {
         if (el.classList.contains("is-visible")) return;
         const rect = el.getBoundingClientRect();
         const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
-        if (rect.top < viewportHeight && rect.bottom > 0) {
+        const inViewport = rect.top < viewportHeight && rect.bottom > 0;
+        const meaningfullyVisible = rect.top < viewportHeight * 0.58;
+        if (inViewport && (telemetry.entry !== "cold" || meaningfullyVisible)) {
           markVisible(el, source);
           io.unobserve(el);
         } else if (rect.bottom <= 0) {
@@ -684,7 +686,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
       els.forEach((el) => {
         if (el.classList.contains("is-visible")) return;
         const rect = el.getBoundingClientRect();
-        if (rect.top >= viewportHeight) return;
+        if (rect.top >= viewportHeight || (telemetry.entry === "cold" && rect.top > viewportHeight * 0.72)) return;
         el.style.transition = "none";
         el.classList.add("is-visible");
         telemetry.log("sectionEnter", "sweepDelayed", el, describeReveal(el));
