@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
 import { MessageCircle, Heart, Sparkles, Users } from "lucide-react";
 import { Eyebrow } from "@/components/ui/Eyebrow";
@@ -121,14 +121,11 @@ function ProposalsPage() {
                   />
                 </div>
                 <div>
-                  <div className="inline-flex items-center gap-2 text-[color:var(--gold)]">
-                    <Icon size={16} strokeWidth={1.8} />
-                    <span className="eyebrow">{b.eyebrow}</span>
-                  </div>
+                  <Eyebrow icon={<Icon strokeWidth={1.8} />}>{b.eyebrow}</Eyebrow>
                   <span className="gold-rule mt-4 max-w-[64px]" aria-hidden="true" />
-                  <h2 className="font-display font-bold text-[1.85rem] md:text-[2.35rem] leading-[1.1] mt-4 text-[color:var(--charcoal)]">
+                  <SectionTitle size="compact" spacing="loose">
                     {b.title}
-                  </h2>
+                  </SectionTitle>
                   <p className="mt-4 font-serif italic text-[1.1rem] md:text-[1.2rem] text-[color:var(--teal)] leading-snug">
                     {b.emotional}
                   </p>
@@ -143,7 +140,8 @@ function ProposalsPage() {
                     className="group mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--teal)] hover:text-[color:var(--teal-2)] transition-colors min-h-[44px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--teal)]"
                   >
                     {b.cta}
-                    <ArrowRight size={14} className="cta-arrow" />
+                    <span aria-hidden="true" className="text-[color:var(--gold)] group-hover:text-[color:var(--gold-deep)] transition-colors">→</span>
+                  </Link>
                   </Link>
                 </div>
               </article>
