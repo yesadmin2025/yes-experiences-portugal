@@ -134,7 +134,8 @@ describe("reveal class coverage — .reveal / .reveal-stagger / .section-enter",
     const els = Array.from(document.querySelectorAll<HTMLElement>(".reveal"));
     expect(els).toHaveLength(3);
 
-    act(() => ioFor(".reveal").fireAllVisible());
+    // Initial sweep claims everything synchronously (default JSDOM
+    // rect = 0,0,0,0 satisfies the on-screen check).
 
     const t = window.__yesRevealTelemetry!;
     expect(t.reveal.total).toBe(3);
