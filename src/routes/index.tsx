@@ -723,7 +723,7 @@ function HomePage() {
                 (→ /builder) leads. "Explore Signature Experiences" stays
                 visible as the calmer second path (→ /experiences).
                 Labels are byte-exact from HERO_COPY (e2e lock). */}
-            <div className="mt-12 md:mt-12 flex flex-col sm:flex-row gap-4 sm:gap-4 w-full max-w-sm sm:max-w-xl opacity-0 animate-[heroFade_1.4s_ease-out_1.25s_forwards]">
+            <div className="mt-10 md:mt-12 flex flex-col sm:flex-row gap-4 sm:gap-4 w-full max-w-sm sm:max-w-xl opacity-0 animate-[heroFade_0.9s_ease-out_0.65s_forwards]">
               <Link
                 to="/builder"
                 data-hero-field="primaryCta"
