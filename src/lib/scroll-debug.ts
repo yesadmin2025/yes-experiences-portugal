@@ -23,6 +23,13 @@ export type ScrollDebugFlags = {
   disableMobileReveals: boolean;
   staticMobileCarousels: boolean;
   disableMobileStudioMotion: boolean;
+  /**
+   * Reveal debug overlay: when ?scroll-debug=reveal-debug (or ?reveal-debug)
+   * is in the URL, every IntersectionObserver/sweep trigger logs to the
+   * console and flashes a visible outline + label badge on the affected
+   * element. Useful on mobile where the dev tools console isn't visible.
+   */
+  revealDebug: boolean;
 };
 
 declare global {
