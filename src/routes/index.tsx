@@ -755,7 +755,7 @@ function HomePage() {
                 fragmented the hero CTA hierarchy. Local guidance is
                 still surfaced in the Studio reassurance line, the FAQ
                 closer, and the Final CTA secondary button. */}
-            <div className="hero-rhythm-cta-to-microcopy max-w-sm sm:max-w-xl mx-auto sm:mx-0 opacity-0 animate-[heroFade_1.4s_ease-out_1.5s_forwards]">
+            <div className="hero-rhythm-cta-to-microcopy max-w-sm sm:max-w-xl mx-auto sm:mx-0 opacity-0 animate-[heroFade_0.9s_ease-out_0.85s_forwards]">
               <p
                 data-hero-field="microcopy"
                 className="text-[14px] md:text-[14.5px] text-[color:var(--ivory)] leading-[1.65] md:leading-[1.7] font-normal tracking-[0.005em] text-center sm:text-left"
