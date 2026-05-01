@@ -710,7 +710,7 @@ function HomePage() {
               vocabulary used everywhere downstream. */}
           <div className="reveal max-w-5xl mx-auto mb-10 md:mb-14">
             <div className="text-center">
-              <span className="he-eyebrow-bar mb-4">Three ways in</span>
+              <span className="he-eyebrow-bar mb-5">Three ways in</span>
               <h2
                 id="paths-title"
                 className="serif mt-3 text-[1.7rem] sm:text-[1.95rem] md:text-[2.4rem] leading-[1.18] md:leading-[1.1] tracking-[-0.012em] text-[color:var(--charcoal)] font-medium"
@@ -775,7 +775,7 @@ function HomePage() {
                 device. On desktop the rail returns to the left so the
                 reading flow stays natural. */}
             <div className="reveal lg:col-span-5 lg:order-1 order-1">
-              <span className="he-eyebrow-bar mb-4">
+              <span className="he-eyebrow-bar mb-5">
                 <span className="live-dot" aria-hidden="true" />
                 Experience Studio
               </span>
@@ -1344,8 +1344,8 @@ function HomePage() {
               />
 
               <div className="relative">
-                <span className="he-eyebrow-bar mb-4">
-                  <MessageCircle size={12} aria-hidden="true" />
+                <span className="he-eyebrow-bar mb-5">
+                  <MessageCircle aria-hidden="true" />
                   Prefer a conversation
                 </span>
               <h2
