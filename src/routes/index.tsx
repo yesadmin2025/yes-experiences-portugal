@@ -1087,7 +1087,6 @@ function HomePage() {
               list-none p-0
               -mx-5 px-5 sm:mx-0 sm:px-0
               overflow-x-auto sm:overflow-visible
-              snap-x snap-proximity sm:snap-none
               overscroll-x-contain sm:overscroll-auto
               [contain:layout_paint] sm:[contain:none]
               [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden
@@ -1098,7 +1097,7 @@ function HomePage() {
               return (
                 <li
                   key={t.id}
-                  className="snap-center shrink-0 w-[84vw] sm:w-auto sm:shrink"
+                  className="shrink-0 w-[84vw] sm:w-auto sm:shrink"
                 >
                   {/* Card is a structured composition (NOT a single link) so
                       we can expose two distinct CTAs — Book + Tailor — and
