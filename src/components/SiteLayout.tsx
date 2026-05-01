@@ -326,24 +326,26 @@ export function SiteLayout({ children }: { children: ReactNode }) {
 
     els.forEach((el) => io.observe(el));
 
-    // Initial sweep: any reveal already on-screen at mount (e.g. after
-    // a deep-link / refresh near the bottom of the page, or after a
-    // very fast scroll before the IO has reported) is shown right away.
+    // Initial sweep: ONLY reveal items already scrolled past (bottom ≤ 0)
+    // — items still in or near the viewport must keep their opacity:0
+    // start state so the IO transition is actually perceived. Mobile
+    // viewports (~600px tall) used to lose the entrance animation
+    // because `rect.top < vh * 0.95` flagged most on-screen sections
+    // as "already visible" and they popped in without a fade.
     const sweep = (source: "sweepInitial" | "sweepDelayed") => {
-      const vh = window.innerHeight || 0;
       els.forEach((el) => {
         if (el.classList.contains("is-visible")) return;
         const rect = el.getBoundingClientRect();
-        if (rect.bottom <= 0 || rect.top < vh * 0.95) {
+        if (rect.bottom <= 0) {
           revealEl(el, source);
           io.unobserve(el);
         }
       });
     };
     sweep("sweepInitial");
-    // Safety net for extreme fling scrolls: re-sweep once shortly after
-    // mount to catch anything the IO missed during the first frame.
-    const t = window.setTimeout(() => sweep("sweepDelayed"), 250);
+    // Safety net: re-sweep once shortly after mount in case the IO
+    // missed something during the first frame on extreme fling scrolls.
+    const t = window.setTimeout(() => sweep("sweepDelayed"), 600);
 
     return () => {
       window.clearTimeout(t);
