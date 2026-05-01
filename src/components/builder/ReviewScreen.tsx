@@ -109,6 +109,13 @@ export function ReviewScreen({ route, stops, guests, narrative, reviewThumbs, on
               <Block title="What's included" items={INCLUDED} />
               <Block title="What can still change" items={FLEXIBLE} muted />
             </div>
+
+            {sessionId && (
+              <ReferenceUploader
+                sessionId={sessionId}
+                onToneReady={onToneReady}
+              />
+            )}
           </div>
 
           {/* Right: trust + price + CTAs */}
