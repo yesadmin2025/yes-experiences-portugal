@@ -1346,26 +1346,26 @@ function HomePage() {
               />
 
               <div className="relative">
-                <span className="he-rule-flank text-[11px] uppercase tracking-[0.28em] font-bold text-[color:var(--gold-soft)]">
+                <span className="he-rule-flank font-sans text-[11px] uppercase tracking-[0.28em] font-semibold text-[color:var(--gold-soft)]">
                   <MessageCircle size={12} aria-hidden="true" />
                   Prefer a conversation?
                 </span>
               <h2
                 id="final-cta-title"
-                className="mt-5 text-[2rem] sm:text-[2.4rem] md:text-[3.2rem] leading-[1.1] md:leading-[1.02] tracking-[-0.016em] font-bold text-[color:var(--ivory)]"
+                className="font-display mt-5 text-[2rem] sm:text-[2.4rem] md:text-[3.2rem] leading-[1.1] md:leading-[1.02] tracking-[-0.016em] font-bold text-[color:var(--ivory)]"
               >
                   Ready to design your{" "}
-                  <span className="italic font-normal text-[color:var(--gold-soft)] serif">
+                  <span className="font-serif italic font-normal text-[color:var(--gold-soft)]">
                     Portugal?
                   </span>
                 </h2>
-                <p className="mt-5 text-[15.5px] md:text-[17px] leading-[1.7] text-[color:var(--ivory)]/90 max-w-md mx-auto">
+                <p className="font-sans mt-5 text-[15.5px] md:text-[17px] leading-[1.7] text-[color:var(--ivory)]/95 max-w-md mx-auto">
                   Start in the Studio, explore a Signature, or talk to a local.
                 </p>
                 <div className="mt-9 flex flex-col sm:flex-row gap-y-4 gap-x-4 justify-center items-stretch sm:items-center">
                   <Link
                     to="/builder"
-                    className="he-glow he-sheen he-cta-shift group inline-flex items-center justify-center gap-2.5 bg-[color:var(--ivory)] text-[color:var(--charcoal-deep)] px-7 py-3.5 min-h-[48px] text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold rounded-[2px] transition-all duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] hover:bg-[color:var(--ivory)] hover:brightness-105 hover:-translate-y-[1px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--teal)]"
+                    className="he-glow he-sheen he-cta-shift group inline-flex items-center justify-center gap-2.5 bg-[color:var(--ivory)] text-[color:var(--charcoal-deep)] px-7 py-3.5 min-h-[48px] font-sans text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold rounded-[2px] transition-all duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] hover:bg-[color:var(--ivory)] hover:brightness-105 hover:-translate-y-[1px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--teal)]"
                     style={{
                       border: "1px solid color-mix(in oklab, var(--gold-deep) 65%, transparent)",
                       boxShadow:
@@ -1374,20 +1374,20 @@ function HomePage() {
                     }}
                   >
                     Create Your Story
-                    <ArrowRight size={14} aria-hidden="true" className="transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1" />
+                    <ArrowRight size={14} aria-hidden="true" className="text-[color:var(--gold)] transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1" />
                   </Link>
                   <Link
                     to="/contact"
-                    className="he-glow he-sheen group inline-flex items-center justify-center gap-2 px-7 py-3.5 min-h-[48px] text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold rounded-[2px] text-[color:var(--ivory)] transition-all duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] hover:bg-[color:var(--ivory)]/10 hover:-translate-y-[1px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--teal)]"
+                    className="he-glow he-sheen group inline-flex items-center justify-center gap-2 px-7 py-3.5 min-h-[48px] font-sans text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold rounded-[2px] text-[color:var(--ivory)] transition-all duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] hover:bg-[color:var(--ivory)]/10 hover:-translate-y-[1px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--teal)]"
                     style={{
                       border: "1px solid color-mix(in oklab, var(--gold) 65%, transparent)",
                     }}
                   >
                     Talk to a Local
-                    <ArrowRight size={12} aria-hidden="true" className="transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1" />
+                    <ArrowRight size={12} aria-hidden="true" className="text-[color:var(--gold-soft)] transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1" />
                   </Link>
                 </div>
-                <p className="mt-6 text-[13px] italic text-[color:var(--ivory)]/85">
+                <p className="font-serif mt-6 text-[13px] italic text-[color:var(--ivory)]/85">
                   Need help shaping it? A local is one message away.
                 </p>
               </div>
