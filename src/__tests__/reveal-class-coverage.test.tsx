@@ -346,4 +346,153 @@ describe("reveal class coverage — .reveal / .reveal-stagger / .section-enter",
       }
     },
   );
+
+  /**
+   * Telemetry / DOM reset guarantee.
+   *
+   * Goal: prove that the per-test reset machinery (beforeEach +
+   * afterEach + cleanup) leaves a pristine slate between scenarios:
+   *   - `window.__yesRevealTelemetry` is wiped (deleted), so a fresh
+   *     mount starts at zero — counters never leak from a previous run.
+   *   - The DOM is fully cleaned: no `.reveal`, `.reveal-stagger`, or
+   *     `.section-enter` nodes survive, so no stale `.is-visible`
+   *     flags can be observed by the next scenario.
+   *   - Re-rendering after reset reproduces the same fully-claimed
+   *     end state (parity with the first run) — the telemetry object
+   *     is recreated, not reused.
+   *
+   * This test runs three back-to-back scenarios inside a single `it`
+   * to exercise reset *between* render/cleanup cycles within one test,
+   * complementing the implicit reset that `beforeEach` provides
+   * across tests.
+   */
+  it("reset: telemetry + .is-visible flags return to a clean state before each new scenario", () => {
+    type Telemetry = NonNullable<typeof window.__yesRevealTelemetry>;
+    const ZERO_BUCKET = {
+      total: 0,
+      io: 0,
+      sweepInitial: 0,
+      sweepDelayed: 0,
+      pending: 0,
+    } as const;
+
+    const expectCleanSlate = (label: string) => {
+      // Telemetry global must be absent (deleted by beforeEach OR by
+      // our manual reset below) — not merely zeroed-in-place.
+      expect(
+        (window as unknown as { __yesRevealTelemetry?: unknown })
+          .__yesRevealTelemetry,
+        `${label}: telemetry global should be absent before mount`,
+      ).toBeUndefined();
+      // No animated nodes should linger in the DOM from a prior run.
+      expect(
+        document.querySelectorAll(".reveal, .reveal-stagger, .section-enter")
+          .length,
+        `${label}: DOM should have no animated nodes pre-mount`,
+      ).toBe(0);
+      // And of course no stray `.is-visible` flags anywhere.
+      expect(
+        document.querySelectorAll(".is-visible").length,
+        `${label}: DOM should have no .is-visible flags pre-mount`,
+      ).toBe(0);
+    };
+
+    const expectFullyClaimed = (
+      t: Telemetry,
+      revealCount: number,
+      sectionCount: number,
+      label: string,
+    ) => {
+      expect(t.reveal.total, `${label}: reveal total`).toBe(revealCount);
+      expect(
+        t.reveal.io + t.reveal.sweepInitial + t.reveal.sweepDelayed,
+        `${label}: reveal claimed sum`,
+      ).toBe(revealCount);
+      expect(t.reveal.pending, `${label}: reveal pending`).toBe(0);
+      expect(t.sectionEnter.total, `${label}: section total`).toBe(sectionCount);
+      expect(
+        t.sectionEnter.io +
+          t.sectionEnter.sweepInitial +
+          t.sectionEnter.sweepDelayed,
+        `${label}: section claimed sum`,
+      ).toBe(sectionCount);
+      expect(t.sectionEnter.pending, `${label}: section pending`).toBe(0);
+    };
+
+    // ------------------------------------------------------------------
+    // Scenario A — first mount. Confirms a clean baseline and full claim.
+    // ------------------------------------------------------------------
+    expectCleanSlate("scenario A");
+    const { unmount: unmountA } = render(
+      <SiteLayout>
+        <div className="reveal" data-scenario="A" />
+        <div className="reveal" data-scenario="A" />
+        <section className="section-enter" data-scenario="A" />
+      </SiteLayout>,
+    );
+    const tA = window.__yesRevealTelemetry!;
+    expectFullyClaimed(tA, 2, 1, "scenario A");
+    document
+      .querySelectorAll<HTMLElement>(".reveal, .section-enter")
+      .forEach((el) =>
+        expect(el.classList.contains("is-visible")).toBe(true),
+      );
+
+    // Manual mid-test reset — same shape as beforeEach. This is the
+    // moment the test is really about: between scenarios, both the DOM
+    // and the telemetry global must come back to zero.
+    unmountA();
+    cleanup();
+    delete (window as unknown as { __yesRevealTelemetry?: unknown })
+      .__yesRevealTelemetry;
+    FakeIO.reset();
+
+    // ------------------------------------------------------------------
+    // Scenario B — second mount. Counters must NOT carry over from A;
+    // they must start at zero and reflect only B's nodes.
+    // ------------------------------------------------------------------
+    expectCleanSlate("scenario B");
+    const { unmount: unmountB } = render(
+      <SiteLayout>
+        <div className="reveal-stagger" data-scenario="B" />
+        <section className="section-enter" data-scenario="B" />
+        <section className="section-enter" data-scenario="B" />
+      </SiteLayout>,
+    );
+    const tB = window.__yesRevealTelemetry!;
+    // Identity check: a brand-new telemetry object, not A's mutated
+    // back to zero — proves the reset deleted, not just zeroed.
+    expect(tB).not.toBe(tA);
+    // Bucket totals reflect B's tree only (1 stagger + 2 sections),
+    // never A's 2+1.
+    expectFullyClaimed(tB, 1, 2, "scenario B");
+    document
+      .querySelectorAll<HTMLElement>(".reveal-stagger, .section-enter")
+      .forEach((el) =>
+        expect(el.classList.contains("is-visible")).toBe(true),
+      );
+
+    // Reset again before the final scenario.
+    unmountB();
+    cleanup();
+    delete (window as unknown as { __yesRevealTelemetry?: unknown })
+      .__yesRevealTelemetry;
+    FakeIO.reset();
+
+    // ------------------------------------------------------------------
+    // Scenario C — empty tree. With zero animated nodes, the telemetry
+    // object must still be created (SiteLayout always installs it),
+    // every bucket must be exactly zero, and no `.is-visible` flag may
+    // exist anywhere — a strict baseline that catches "ghost" leakage
+    // from earlier scenarios.
+    // ------------------------------------------------------------------
+    expectCleanSlate("scenario C");
+    render(<SiteLayout>{null}</SiteLayout>);
+    const tC = window.__yesRevealTelemetry!;
+    expect(tC).not.toBe(tA);
+    expect(tC).not.toBe(tB);
+    expect(tC.reveal).toEqual(ZERO_BUCKET);
+    expect(tC.sectionEnter).toEqual(ZERO_BUCKET);
+    expect(document.querySelectorAll(".is-visible").length).toBe(0);
+  });
 });
