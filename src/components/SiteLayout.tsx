@@ -292,6 +292,46 @@ export function SiteLayout({ children }: { children: ReactNode }) {
   // than getting clipped under it. Reduced-motion safe.
   useEffect(() => installSmoothAnchorScroll(), []);
 
+  // Manual replay hook: visit any URL with `#replay-reveals` (or call
+  // `window.replayReveals()` from the console) to clear `.is-visible`
+  // on every reveal element and let the IntersectionObserver re-fire
+  // entrance animations from scratch. Useful for QA / demos.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const replay = () => {
+      const sel = ".reveal, .reveal-stagger, .section-enter";
+      const els = document.querySelectorAll<HTMLElement>(sel);
+      els.forEach((el) => {
+        el.classList.remove("is-visible");
+        el.style.transitionDelay = "";
+      });
+      // force reflow so the next class add re-triggers the transition
+      void document.body.offsetHeight;
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          els.forEach((el) => {
+            const r = el.getBoundingClientRect();
+            if (r.top < window.innerHeight && r.bottom > 0) {
+              el.classList.add("is-visible");
+            }
+          });
+          // eslint-disable-next-line no-console
+          console.info(`[replay-reveals] retriggered ${els.length} elements`);
+        });
+      });
+    };
+    (window as unknown as { replayReveals?: () => void }).replayReveals = replay;
+    const onHash = () => {
+      if (window.location.hash === "#replay-reveals") replay();
+    };
+    if (window.location.hash === "#replay-reveals") {
+      // run after first paint
+      requestAnimationFrame(replay);
+    }
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
+  }, []);
+
   // Reveal-on-scroll with a consistent, calm stagger rhythm.
   // Siblings sharing a parent reveal sequentially at a fixed cadence so
   // every section across the page breathes at the same pace.
