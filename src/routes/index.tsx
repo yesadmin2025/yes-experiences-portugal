@@ -1370,7 +1370,7 @@ function HomePage() {
                       border: "1px solid color-mix(in oklab, var(--gold-deep) 65%, transparent)",
                       boxShadow:
                         "inset 0 0 0 1px color-mix(in oklab, var(--gold) 25%, transparent), " +
-                        "0 8px 22px -10px rgba(0,0,0,0.45)",
+                        "0 8px 22px -10px color-mix(in oklab, var(--charcoal-deep) 45%, transparent)",
                     }}
                   >
                     Create Your Story
