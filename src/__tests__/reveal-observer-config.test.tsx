@@ -1031,5 +1031,88 @@ describe("FakeIO.kind — auto-classification on first observe", () => {
     // Total instance count is what we created — no phantom observers.
     expect(FakeIO.instances).toHaveLength(6);
   });
+
+  it("kind is immutable after the first classifying observe — exhaustive matrix", () => {
+    // For every "first kind" we lock in, run a long sequence of subsequent
+    // observes covering every other class combination and assert that the
+    // kind never drifts. This guards the contract that classification
+    // happens exactly once, on the first non-"other" observe.
+
+    function makeElLocal(...classes: string[]): HTMLElement {
+      const el = document.createElement("div");
+      for (const c of classes) el.classList.add(c);
+      return el;
+    }
+
+    // The "intruder" sequence — every variant of class soup we can throw at
+    // an already-classified observer. None of these should mutate `kind`.
+    const intruders: string[][] = [
+      ["section-enter"],
+      ["reveal"],
+      ["reveal-stagger"],
+      ["reveal", "section-enter"],
+      ["reveal-stagger", "section-enter"],
+      ["reveal", "reveal-stagger"],
+      ["not-tracked"],
+      ["foo", "bar"],
+      [], // no classes
+      ["section-enter", "extra"],
+      ["reveal", "extra"],
+    ];
+
+    // Case 1: first observe = .reveal → locked as "reveal"
+    {
+      const io = new FakeIO(() => {});
+      io.observe(makeElLocal("reveal"));
+      expect(io.kind).toBe("reveal");
+      for (const classes of intruders) {
+        io.observe(makeElLocal(...classes));
+        expect(io.kind).toBe("reveal");
+      }
+    }
+
+    // Case 2: first observe = .reveal-stagger → locked as "reveal"
+    {
+      const io = new FakeIO(() => {});
+      io.observe(makeElLocal("reveal-stagger"));
+      expect(io.kind).toBe("reveal");
+      for (const classes of intruders) {
+        io.observe(makeElLocal(...classes));
+        expect(io.kind).toBe("reveal");
+      }
+    }
+
+    // Case 3: first observe = .section-enter → locked as "section-enter"
+    {
+      const io = new FakeIO(() => {});
+      io.observe(makeElLocal("section-enter"));
+      expect(io.kind).toBe("section-enter");
+      for (const classes of intruders) {
+        io.observe(makeElLocal(...classes));
+        expect(io.kind).toBe("section-enter");
+      }
+    }
+
+    // Case 4: "other" is NOT locked — it's the pre-classification default,
+    // so the first tracked element it sees DOES upgrade it. After that
+    // upgrade, it must stay locked. Verify both halves of the contract.
+    {
+      const io = new FakeIO(() => {});
+      io.observe(makeElLocal("not-tracked"));
+      io.observe(makeElLocal("foo"));
+      io.observe(makeElLocal()); // still no tracked class
+      expect(io.kind).toBe("other");
+
+      // First tracked class observed → upgrades to "reveal" and locks.
+      io.observe(makeElLocal("reveal"));
+      expect(io.kind).toBe("reveal");
+
+      // From here on, nothing must flip it back or sideways.
+      for (const classes of intruders) {
+        io.observe(makeElLocal(...classes));
+        expect(io.kind).toBe("reveal");
+      }
+    }
+  });
 });
 
