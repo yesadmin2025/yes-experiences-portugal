@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-05-01T05:11:42.694Z",
-  "filesScanned": 150,
+  "generatedAt": "2026-05-01T05:16:14.630Z",
+  "filesScanned": 151,
   "approvedPalette": {
     "teal": "#295B61",
     "teal-2": "#2A7C82",
@@ -18,12 +18,93 @@
     "#cccccc"
   ],
   "counts": {
-    "total": 163,
-    "approved": 42,
-    "allowlisted": 29,
-    "mismatch": 92
+    "total": 172,
+    "approved": 49,
+    "allowlisted": 30,
+    "mismatch": 93
   },
   "findings": [
+    {
+      "file": "src/__tests__/homepage-contrast.test.ts",
+      "line": 22,
+      "col": 10,
+      "raw": "#295B61",
+      "normalized": "#295b61",
+      "snippet": "teal: \"#295B61\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/__tests__/homepage-contrast.test.ts",
+      "line": 23,
+      "col": 10,
+      "raw": "#C9A96A",
+      "normalized": "#c9a96a",
+      "snippet": "gold: \"#C9A96A\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/__tests__/homepage-contrast.test.ts",
+      "line": 24,
+      "col": 14,
+      "raw": "#E1CFA6",
+      "normalized": "#e1cfa6",
+      "snippet": "goldSoft: \"#E1CFA6\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/__tests__/homepage-contrast.test.ts",
+      "line": 25,
+      "col": 11,
+      "raw": "#FAF8F3",
+      "normalized": "#faf8f3",
+      "snippet": "ivory: \"#FAF8F3\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/__tests__/homepage-contrast.test.ts",
+      "line": 26,
+      "col": 10,
+      "raw": "#F4EFE7",
+      "normalized": "#f4efe7",
+      "snippet": "sand: \"#F4EFE7\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/__tests__/homepage-contrast.test.ts",
+      "line": 27,
+      "col": 14,
+      "raw": "#2E2E2E",
+      "normalized": "#2e2e2e",
+      "snippet": "charcoal: \"#2E2E2E\",",
+      "status": "approved"
+    },
+    {
+      "file": "src/__tests__/homepage-contrast.test.ts",
+      "line": 28,
+      "col": 18,
+      "raw": "#555555",
+      "normalized": "#555555",
+      "snippet": "charcoalSoft: \"#555555\",",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/__tests__/homepage-contrast.test.ts",
+      "line": 29,
+      "col": 18,
+      "raw": "#1F1F1F",
+      "normalized": "#1f1f1f",
+      "snippet": "charcoalDeep: \"#1F1F1F\",",
+      "status": "allowlisted"
+    },
+    {
+      "file": "src/__tests__/homepage-contrast.test.ts",
+      "line": 98,
+      "col": 12,
+      "raw": "#C9A96A",
+      "normalized": "#c9a96a",
+      "snippet": "// Gold (#C9A96A) must NEVER be used as text on ivory/sand: it's",
+      "status": "approved"
+    },
     {
       "file": "src/__tests__/typography-regression.test.ts",
       "line": 323,
