@@ -3,6 +3,7 @@ import { useEffect } from "react";
 
 import { SiteLayout } from "@/components/SiteLayout";
 import { FAQ } from "@/components/FAQ";
+import { CtaButton } from "@/components/ui/CtaButton";
 
 import heroImg from "@/assets/hero-coast.jpg";
 
@@ -1361,29 +1362,12 @@ function HomePage() {
                   Start in the Studio, explore a Signature, or talk to a local.
                 </p>
                 <div className="mt-9 flex flex-col sm:flex-row gap-y-4 gap-x-4 justify-center items-stretch sm:items-center">
-                  <Link
-                    to="/builder"
-                    className="he-glow he-sheen he-cta-shift group inline-flex items-center justify-center gap-2.5 bg-[color:var(--teal)] text-[color:var(--ivory)] px-7 py-3.5 min-h-[48px] font-sans text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold rounded-[2px] transition-all duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] hover:bg-[color:var(--teal-2)] hover:-translate-y-[1px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--ivory)]"
-                    style={{
-                      border: "1px solid color-mix(in oklab, var(--gold-deep) 55%, transparent)",
-                      boxShadow:
-                        "inset 0 0 0 1px color-mix(in oklab, var(--gold) 22%, transparent), " +
-                        "0 8px 22px -10px color-mix(in oklab, var(--charcoal-deep) 35%, transparent)",
-                    }}
-                  >
+                  <CtaButton to="/builder" variant="primary">
                     Create Your Story
-                    <ArrowRight size={14} aria-hidden="true" className="text-[color:var(--gold-soft)] group-hover:text-[color:var(--gold)] transition-[transform,color] duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1" />
-                  </Link>
-                  <Link
-                    to="/contact"
-                    className="he-glow he-sheen group inline-flex items-center justify-center gap-2 px-7 py-3.5 min-h-[48px] font-sans text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold rounded-[2px] text-[color:var(--charcoal)] bg-transparent transition-all duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] hover:bg-[color:var(--teal)]/[0.06] hover:-translate-y-[1px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--ivory)]"
-                    style={{
-                      border: "1px solid color-mix(in oklab, var(--teal) 55%, transparent)",
-                    }}
-                  >
+                  </CtaButton>
+                  <CtaButton to="/contact" variant="ghost">
                     Talk to a Local
-                    <ArrowRight size={12} aria-hidden="true" className="text-[color:var(--gold)] group-hover:text-[color:var(--gold-deep)] transition-[transform,color] duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1" />
-                  </Link>
+                  </CtaButton>
                 </div>
                 <p className="serif mt-6 text-[13px] italic text-[color:var(--charcoal-soft)]">
                   Need help shaping it? A local is one message away.
