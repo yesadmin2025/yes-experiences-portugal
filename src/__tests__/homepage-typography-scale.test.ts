@@ -96,13 +96,16 @@ describe("Homepage eyebrow labels — minimum legibility", () => {
     let eyebrowCount = 0;
     for (const m of matches) {
       const fragment = m[0];
-      // Filter out button/CTA-style declarations.
+      // Filter out button/CTA-style declarations and tabular-nums
+      // micro-labels (3-col Studio inputs etc. need tighter tracking
+      // to keep their columns from breaking on 393px).
       const isButton =
         /\bbg-\[/.test(fragment) ||
         /\bmin-h-\[/.test(fragment) ||
         /\bborder\b/.test(fragment) ||
         /\bpx-\d/.test(fragment);
-      if (isButton) continue;
+      const isTabular = /\btabular-nums\b/.test(fragment);
+      if (isButton || isTabular) continue;
 
       const px = parseFloat(m[1]);
       const tracking = parseFloat(m[2]);
