@@ -220,7 +220,7 @@ export function SignatureCarousel({ items, autoplayMs = DEFAULT_AUTOPLAY_MS }: P
           rubber-banding when the user swipes past the last card. */}
       <div
         ref={trackRef}
-        className="flex gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-2 -mx-5 px-5 md:-mx-8 md:px-8 overscroll-x-contain [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+        className="flex gap-4 md:gap-6 overflow-x-auto snap-x snap-proximity scroll-smooth pb-2 -mx-5 px-5 md:-mx-8 md:px-8 overscroll-x-contain [contain:layout_paint] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
         style={{ scrollPaddingLeft: "1.25rem" }}
         role="region"
         aria-roledescription="carousel"

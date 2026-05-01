@@ -1175,10 +1175,14 @@ function HomePage() {
             </p>
           </div>
 
-          {/* Mobile: full-bleed editorial cover carousel (scroll-snap, no
-              autoplay — site-wide forbidden). Each card is 84vw so the
-              next card peeks. Tablet+: keeps the calm 2/4-col grid.
-              Same card markup; layout is the only thing that changes. */}
+          {/* Mobile: full-bleed editorial cover carousel. Uses
+              snap-proximity (NOT mandatory) so the horizontal strip
+              never grabs vertical page scroll near snap points — that
+              was the main source of "jumpy" feel on Android. Each card
+              is 84vw so the next card peeks. `overscroll-x-contain`
+              + `[contain:layout_paint]` isolate the strip from the
+              page so its own scroll never reflows neighbours.
+              Tablet+: keeps the calm 2/4-col grid. */}
           <ul
             className="
               flex sm:grid sm:grid-cols-2 lg:grid-cols-4
@@ -1186,7 +1190,9 @@ function HomePage() {
               list-none p-0
               -mx-5 px-5 sm:mx-0 sm:px-0
               overflow-x-auto sm:overflow-visible
-              snap-x snap-mandatory sm:snap-none
+              snap-x snap-proximity sm:snap-none
+              overscroll-x-contain sm:overscroll-auto
+              [contain:layout_paint] sm:[contain:none]
               [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden
             "
             aria-label="Signature experiences"
