@@ -62,6 +62,31 @@ class FakeIO {
   takeRecords(): IntersectionObserverEntry[] {
     return [];
   }
+  /** Deliver synthetic entries to this observer's callback. */
+  fire(entries: Partial<IntersectionObserverEntry>[]) {
+    const full = entries.map(
+      (e) =>
+        ({
+          isIntersecting: false,
+          intersectionRatio: 0,
+          time: 0,
+          rootBounds: null,
+          intersectionRect: {
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            width: 0,
+            height: 0,
+            x: 0,
+            y: 0,
+            toJSON: () => ({}),
+          } as DOMRectReadOnly,
+          ...e,
+        }) as IntersectionObserverEntry,
+    );
+    this.callback(full, this as unknown as IntersectionObserver);
+  }
   static reset() {
     FakeIO.instances = [];
   }
