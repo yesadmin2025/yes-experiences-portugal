@@ -66,12 +66,14 @@ import { SiteLayout } from "@/components/SiteLayout";
 //
 type FakeIOKind = "reveal" | "section-enter" | "other";
 
-function classifyTarget(el: Element): FakeIOKind {
-  if (el.classList.contains("section-enter")) return "section-enter";
-  if (
-    el.classList.contains("reveal") ||
-    el.classList.contains("reveal-stagger")
-  ) {
+function classifyTarget(el: Element | null | undefined): FakeIOKind {
+  // Defensive: a target without a real classList (null, undefined, or a
+  // detached/foreign object) cannot be classified — treat as "other" so
+  // the observer never throws during classification.
+  const cl = (el as Element | null | undefined)?.classList;
+  if (!cl || typeof cl.contains !== "function") return "other";
+  if (cl.contains("section-enter")) return "section-enter";
+  if (cl.contains("reveal") || cl.contains("reveal-stagger")) {
     return "reveal";
   }
   return "other";
@@ -96,9 +98,16 @@ class FakeIO {
     FakeIO.instances.push(this);
   }
 
-  observe(target: Element) {
-    this.pendingTargets.add(target);
-    this.observedTargets.add(target);
+  observe(target: Element | null | undefined) {
+    // Mirror the real IntersectionObserver behavior loosely: a missing or
+    // malformed target is a no-op and must never throw. Only real Elements
+    // (with a usable classList API) are tracked.
+    const cl = (target as Element | null | undefined)?.classList;
+    const isRealElement = !!target && !!cl && typeof cl.contains === "function";
+    if (isRealElement) {
+      this.pendingTargets.add(target as Element);
+      this.observedTargets.add(target as Element);
+    }
     if (this.kind === "other") {
       const detected = classifyTarget(target);
       if (detected !== "other") this.kind = detected;
@@ -1113,6 +1122,100 @@ describe("FakeIO.kind — auto-classification on first observe", () => {
         expect(io.kind).toBe("reveal");
       }
     }
+  });
+});
+
+describe("FakeIO.observe — defensive classification (null / undefined / no classList)", () => {
+  // These tests pin down the contract that observe() must NEVER throw and
+  // must NEVER mis-classify when handed degenerate inputs. Real production
+  // code paths only ever pass real Elements, but the test utility is shared
+  // and needs to fail loudly only on logic bugs — not on shape mismatches.
+
+  function makeElLocal(...classes: string[]): HTMLElement {
+    const el = document.createElement("div");
+    for (const c of classes) el.classList.add(c);
+    return el;
+  }
+
+  it("observe(null) does not throw and leaves kind as 'other'", () => {
+    const io = new FakeIO(() => {});
+    expect(() => io.observe(null as unknown as Element)).not.toThrow();
+    expect(io.kind).toBe("other");
+    expect(io.pendingTargets.size).toBe(0);
+    expect(io.observedTargets.size).toBe(0);
+  });
+
+  it("observe(undefined) does not throw and leaves kind as 'other'", () => {
+    const io = new FakeIO(() => {});
+    expect(() => io.observe(undefined as unknown as Element)).not.toThrow();
+    expect(io.kind).toBe("other");
+    expect(io.pendingTargets.size).toBe(0);
+  });
+
+  it("observe(object without classList) does not throw and stays 'other'", () => {
+    const io = new FakeIO(() => {});
+    const fake = {} as unknown as Element;
+    expect(() => io.observe(fake)).not.toThrow();
+    expect(io.kind).toBe("other");
+    expect(io.pendingTargets.size).toBe(0);
+  });
+
+  it("observe(object with non-function classList.contains) is treated as 'other'", () => {
+    const io = new FakeIO(() => {});
+    // Some foreign objects expose a classList-shaped property without the
+    // proper API — must not crash.
+    const fake = { classList: { contains: "not-a-function" } } as unknown as Element;
+    expect(() => io.observe(fake)).not.toThrow();
+    expect(io.kind).toBe("other");
+    expect(io.pendingTargets.size).toBe(0);
+  });
+
+  it("nullish observes BEFORE a valid one do not poison classification", () => {
+    const io = new FakeIO(() => {});
+    io.observe(null as unknown as Element);
+    io.observe(undefined as unknown as Element);
+    io.observe({} as unknown as Element);
+    expect(io.kind).toBe("other");
+
+    // The first VALID tracked element still sets the kind.
+    io.observe(makeElLocal("reveal"));
+    expect(io.kind).toBe("reveal");
+    expect(io.pendingTargets.size).toBe(1);
+  });
+
+  it("nullish observes AFTER classification do not change the kind", () => {
+    const io = new FakeIO(() => {});
+    io.observe(makeElLocal("section-enter"));
+    expect(io.kind).toBe("section-enter");
+
+    io.observe(null as unknown as Element);
+    io.observe(undefined as unknown as Element);
+    io.observe({} as unknown as Element);
+    io.observe({ classList: null } as unknown as Element);
+
+    expect(io.kind).toBe("section-enter");
+    // Only the one real element ever made it into the tracking sets.
+    expect(io.pendingTargets.size).toBe(1);
+    expect(io.observedTargets.size).toBe(1);
+  });
+
+  it("classifyTarget-like edge cases do not break batched observes across instances", () => {
+    FakeIO.reset();
+    const ioA = new FakeIO(() => {});
+    const ioB = new FakeIO(() => {});
+
+    ioA.observe(null as unknown as Element);
+    ioB.observe(undefined as unknown as Element);
+    ioA.observe(makeElLocal("reveal-stagger"));
+    ioB.observe(makeElLocal("section-enter"));
+    ioA.observe(null as unknown as Element);
+    ioB.observe({} as unknown as Element);
+
+    expect(ioA.kind).toBe("reveal");
+    expect(ioB.kind).toBe("section-enter");
+    expect(FakeIO.allOf("reveal")).toEqual([ioA]);
+    expect(FakeIO.allOf("section-enter")).toEqual([ioB]);
+    expect(FakeIO.allOf("other")).toEqual([]);
   });
 });
 
