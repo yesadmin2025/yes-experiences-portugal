@@ -126,16 +126,18 @@ export function installScrollDebugInstrumentation(
   win: Window | undefined = typeof window !== "undefined" ? window : undefined,
 ) {
   if (!win || win.__yesScrollDebug || !getScrollDebugFlags(win).enabled) return;
+  const eventTargetCtor = (win as Window & typeof globalThis).EventTarget;
+  if (!eventTargetCtor) return;
 
   const listeners: ListenerRecord[] = [];
   const observers: ObserverRecord[] = [];
   let nextListenerId = 1;
   let nextObserverId = 1;
 
-  const originalAdd = win.EventTarget.prototype.addEventListener;
-  const originalRemove = win.EventTarget.prototype.removeEventListener;
+  const originalAdd = eventTargetCtor.prototype.addEventListener;
+  const originalRemove = eventTargetCtor.prototype.removeEventListener;
 
-  win.EventTarget.prototype.addEventListener = function addEventListenerDebug(
+  eventTargetCtor.prototype.addEventListener = function addEventListenerDebug(
     type: string,
     listener: EventListenerOrEventListenerObject | null,
     options?: boolean | AddEventListenerOptions,
@@ -152,7 +154,7 @@ export function installScrollDebugInstrumentation(
     return originalAdd.call(this, type, listener, options);
   };
 
-  win.EventTarget.prototype.removeEventListener = function removeEventListenerDebug(
+  eventTargetCtor.prototype.removeEventListener = function removeEventListenerDebug(
     type: string,
     listener: EventListenerOrEventListenerObject | null,
     options?: boolean | EventListenerOptions,
@@ -166,7 +168,7 @@ export function installScrollDebugInstrumentation(
   };
 
   if ("IntersectionObserver" in win) {
-    const OriginalIntersectionObserver = win.IntersectionObserver;
+    const OriginalIntersectionObserver = win.IntersectionObserver as typeof IntersectionObserver;
     const WrappedIntersectionObserver = function (
       this: IntersectionObserver,
       callback: IntersectionObserverCallback,
