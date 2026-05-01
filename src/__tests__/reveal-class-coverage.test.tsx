@@ -232,4 +232,118 @@ describe("reveal class coverage — .reveal / .reveal-stagger / .section-enter",
       t.sectionEnter.sweepDelayed;
     expect(totalClaimed).toBe(reveals.length + sections.length);
   });
+
+  it(
+    "IO never fires + initial sweep misses → sweepDelayed alone applies .is-visible and updates counters",
+    () => {
+      // Goal: prove the 250ms safety-net is functional in isolation.
+      //
+      // Setup recipe:
+      //   1. Override Element.prototype.getBoundingClientRect so the
+      //      INITIAL sweep sees rects firmly below the fold (skip), and
+      //      the DELAYED sweep sees rects "scrolled past" (claim).
+      //   2. The fake IntersectionObserver never fires — it's a no-op.
+      //   3. Use fake timers so we can advance to the 250ms tick on
+      //      demand and assert state both before and after.
+      vi.useFakeTimers();
+
+      let phase: "initial" | "delayed" = "initial";
+      const realRect = Element.prototype.getBoundingClientRect;
+      Element.prototype.getBoundingClientRect = function () {
+        // Only redirect rects for animated nodes — leave everything else
+        // alone so React/JSDOM internals stay sane.
+        const isAnimated =
+          this instanceof Element &&
+          (this.classList.contains("reveal") ||
+            this.classList.contains("reveal-stagger") ||
+            this.classList.contains("section-enter"));
+        if (!isAnimated) return realRect.call(this);
+        if (phase === "initial") {
+          // Below the fold: top > vh*0.95 AND bottom > 0 → sweep skips.
+          return {
+            top: VH + 200,
+            bottom: VH + 400,
+            left: 0,
+            right: 100,
+            width: 100,
+            height: 200,
+            x: 0,
+            y: VH + 200,
+            toJSON: () => ({}),
+          } as DOMRect;
+        }
+        // Scrolled past: bottom <= 0 → delayed sweep claims it.
+        return {
+          top: -400,
+          bottom: -200,
+          left: 0,
+          right: 100,
+          width: 100,
+          height: 200,
+          x: 0,
+          y: -400,
+          toJSON: () => ({}),
+        } as DOMRect;
+      };
+
+      try {
+        render(
+          <SiteLayout>
+            <div className="reveal" />
+            <div className="reveal-stagger" />
+            <section className="section-enter" />
+          </SiteLayout>,
+        );
+
+        const reveal = document.querySelector<HTMLElement>(".reveal")!;
+        const stagger = document.querySelector<HTMLElement>(".reveal-stagger")!;
+        const section = document.querySelector<HTMLElement>(".section-enter")!;
+        const t = window.__yesRevealTelemetry!;
+
+        // Phase 1 — immediately after mount: initial sweeps ran but saw
+        // below-the-fold rects and skipped. IO never fires. Nothing
+        // should be visible yet, and every counter should be zero.
+        expect(reveal.classList.contains("is-visible")).toBe(false);
+        expect(stagger.classList.contains("is-visible")).toBe(false);
+        expect(section.classList.contains("is-visible")).toBe(false);
+        expect(t.reveal.io).toBe(0);
+        expect(t.reveal.sweepInitial).toBe(0);
+        expect(t.reveal.sweepDelayed).toBe(0);
+        expect(t.sectionEnter.io).toBe(0);
+        expect(t.sectionEnter.sweepInitial).toBe(0);
+        expect(t.sectionEnter.sweepDelayed).toBe(0);
+        // Totals were registered by setTotal regardless of sweep result.
+        expect(t.reveal.total).toBe(2);
+        expect(t.sectionEnter.total).toBe(1);
+        // Pending = total - claimed → still all unclaimed at this point.
+        expect(t.reveal.pending).toBe(2);
+        expect(t.sectionEnter.pending).toBe(1);
+
+        // Phase 2 — advance past 250ms. The delayed sweep now sees
+        // "scrolled past" rects and must claim every element.
+        phase = "delayed";
+        vi.advanceTimersByTime(300);
+
+        // Class-flip side-effect must have happened on every node.
+        expect(reveal.classList.contains("is-visible")).toBe(true);
+        expect(stagger.classList.contains("is-visible")).toBe(true);
+        expect(section.classList.contains("is-visible")).toBe(true);
+
+        // Every claim must be attributed to sweepDelayed — IO and
+        // sweepInitial stay at zero (proving the delayed sweep, alone,
+        // did the work).
+        expect(t.reveal.io).toBe(0);
+        expect(t.reveal.sweepInitial).toBe(0);
+        expect(t.reveal.sweepDelayed).toBe(2);
+        expect(t.reveal.pending).toBe(0);
+
+        expect(t.sectionEnter.io).toBe(0);
+        expect(t.sectionEnter.sweepInitial).toBe(0);
+        expect(t.sectionEnter.sweepDelayed).toBe(1);
+        expect(t.sectionEnter.pending).toBe(0);
+      } finally {
+        Element.prototype.getBoundingClientRect = realRect;
+      }
+    },
+  );
 });
