@@ -1313,11 +1313,13 @@ function HomePage() {
               gold top rule and a soft warm shadow. Editorial radius. */}
           <div className="reveal mx-auto max-w-2xl">
             <div
-              className="relative overflow-hidden rounded-[6px] bg-[color:var(--teal)] text-[color:var(--ivory)] px-6 py-12 sm:px-10 sm:py-14 md:px-14 md:py-16 text-center"
+              className="relative overflow-hidden rounded-[6px] bg-[color:var(--teal)] text-[color:var(--ivory)] px-6 py-10 sm:px-10 sm:py-12 md:px-14 md:py-14 text-center"
               style={{
-                border: "1px solid color-mix(in oklab, var(--gold-deep) 55%, transparent)",
+                /* Stronger gold hairline (was 55% → 72%) so the rim reads
+                   as champagne jewelry, not a faint ghost line. */
+                border: "1px solid color-mix(in oklab, var(--gold-deep) 72%, transparent)",
                 boxShadow:
-                  "0 1px 0 0 color-mix(in oklab, var(--gold) 25%, transparent) inset, " +
+                  "0 1px 0 0 color-mix(in oklab, var(--gold) 30%, transparent) inset, " +
                   "0 24px 60px -28px rgba(41, 91, 97, 0.45), " +
                   "0 12px 28px -18px rgba(46, 46, 46, 0.18)",
               }}
@@ -1338,8 +1340,8 @@ function HomePage() {
                 className="absolute top-0 left-1/2 -translate-x-1/2 h-px w-24 md:w-32"
                 style={{
                   background:
-                    "linear-gradient(90deg, transparent, var(--gold) 50%, transparent)",
-                  opacity: 0.85,
+                    "linear-gradient(90deg, transparent, var(--gold-warm) 50%, transparent)",
+                  opacity: 0.95,
                 }}
               />
 
@@ -1350,7 +1352,7 @@ function HomePage() {
                 </span>
               <h2
                 id="final-cta-title"
-                className="mt-5 text-[2rem] sm:text-[2.4rem] md:text-[3.2rem] leading-[1.1] md:leading-[1.02] tracking-[-0.016em] font-medium text-[color:var(--ivory)]"
+                className="mt-5 text-[2rem] sm:text-[2.4rem] md:text-[3.2rem] leading-[1.1] md:leading-[1.02] tracking-[-0.016em] font-bold text-[color:var(--ivory)]"
               >
                   Ready to design your{" "}
                   <span className="italic font-normal text-[color:var(--gold-soft)] serif">

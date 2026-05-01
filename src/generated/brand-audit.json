@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-01T04:07:04.848Z",
+  "generatedAt": "2026-05-01T04:12:25.938Z",
   "filesScanned": 147,
   "approvedPalette": {
     "teal": "#295B61",
@@ -18,10 +18,10 @@
     "#cccccc"
   ],
   "counts": {
-    "total": 161,
-    "approved": 41,
+    "total": 163,
+    "approved": 42,
     "allowlisted": 29,
-    "mismatch": 91
+    "mismatch": 92
   },
   "findings": [
     {
@@ -1169,7 +1169,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 150,
+      "line": 152,
       "col": 11,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -1178,7 +1178,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 152,
+      "line": 154,
       "col": 14,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -1187,7 +1187,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 163,
+      "line": 165,
       "col": 29,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -1196,7 +1196,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 285,
+      "line": 287,
       "col": 11,
       "raw": "#1f1f1f",
       "normalized": "#1f1f1f",
@@ -1205,7 +1205,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 337,
+      "line": 339,
       "col": 66,
       "raw": "#555",
       "normalized": "#555555",
@@ -1214,7 +1214,25 @@
     },
     {
       "file": "src/styles.css",
-      "line": 868,
+      "line": 557,
+      "col": 33,
+      "raw": "#C9A96A",
+      "normalized": "#c9a96a",
+      "snippet": "/* Warmer rim — was --gold (#C9A96A) which sometimes reads grey-on-ivory.",
+      "status": "approved"
+    },
+    {
+      "file": "src/styles.css",
+      "line": 558,
+      "col": 21,
+      "raw": "#B89452",
+      "normalized": "#b89452",
+      "snippet": "--gold-deep (#B89452) keeps the rule visible without going yellow. */",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/styles.css",
+      "line": 884,
       "col": 12,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -1223,7 +1241,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 1055,
+      "line": 1071,
       "col": 12,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -1232,7 +1250,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 1308,
+      "line": 1324,
       "col": 12,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -1241,7 +1259,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 2037,
+      "line": 2053,
       "col": 23,
       "raw": "#000",
       "normalized": "#000000",
@@ -1250,7 +1268,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 2368,
+      "line": 2384,
       "col": 41,
       "raw": "#000",
       "normalized": "#000000",
@@ -1259,7 +1277,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 2368,
+      "line": 2384,
       "col": 47,
       "raw": "#000",
       "normalized": "#000000",
@@ -1268,7 +1286,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 2684,
+      "line": 2700,
       "col": 7,
       "raw": "#555",
       "normalized": "#555555",
