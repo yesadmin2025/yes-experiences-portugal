@@ -516,11 +516,11 @@
      never change the button geometry or arrow alignment. */
   .hero-cta-button {
     height: 72px;
-    padding: 18px 48px 18px 24px;
-    font-size: 11px; /* +0.25px — still calm, slightly more solid */
+    padding: 18px 26px 18px 24px;
+    font-size: 11px;
     line-height: 1.25;
-    font-weight: 680; /* 650 → 680 — premium, weight-anchored */
-    letter-spacing: 0.085em; /* 0.12em → 0.085em — buttons read as a single, solid label */
+    font-weight: 680;
+    letter-spacing: 0.085em;
     text-transform: uppercase;
     font-family: var(--font-sans);
     font-feature-settings: "ss01", "cv11", "cpsp";
@@ -536,7 +536,7 @@
   @media (min-width: 768px) {
     .hero-cta-button {
       height: 70px;
-      padding: 18px 48px 18px 24px;
+      padding: 18px 28px 18px 26px;
       font-size: 11.5px;
       line-height: 1.25;
       letter-spacing: 0.09em;
