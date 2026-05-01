@@ -436,12 +436,8 @@ export function SiteLayout({ children }: { children: ReactNode }) {
       : { threshold: 0.08, rootMargin: "0px 0px -6% 0px" };
 
     const io = new IntersectionObserver((entries) => {
+      telemetry.markIoFired();
       entries.forEach((entry) => {
-        // Reveal when intersecting OR when the element has already
-        // scrolled past the viewport (bottom ≤ 0). On fast mobile
-        // flings the IO can skip the intersecting callback entirely;
-        // without this guard those items would stay invisible until
-        // the user scrolls back. Mirrors the .section-enter observer.
         const passed = entry.boundingClientRect.bottom <= 0;
         if (!entry.isIntersecting && !passed) return;
         revealEl(entry.target as HTMLElement, "io");
@@ -488,13 +484,16 @@ export function SiteLayout({ children }: { children: ReactNode }) {
     // so off-screen elements don't animate while invisible — they just
     // appear as the user scrolls to them.
     const failSafe = window.setTimeout(() => {
+      let forced = 0;
       els.forEach((el) => {
         if (el.classList.contains("is-visible")) return;
         el.style.transition = "none";
         el.style.transitionDelay = "0ms";
         el.classList.add("is-visible");
         telemetry.log("reveal", "sweepDelayed", describeReveal(el));
+        forced += 1;
       });
+      if (forced > 0) telemetry.markFailSafeFired();
     }, 1200);
 
     return () => {
