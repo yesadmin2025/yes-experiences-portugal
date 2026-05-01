@@ -310,171 +310,77 @@ function HomePage() {
 
     let cancelled = false;
     let timer = 0;
-    // Outstanding cleanup callbacks scheduled by the most recent
-    // scrollToHash() call (image listeners, settle timers, etc.).
-    // Replaced on every new call so we don't leak handlers when the
-    // user changes hashes quickly.
-    let cleanupRescroll: (() => void) | null = null;
 
+    // Single, simple deep-link handler.
+    //
+    // Previous version stacked three smooth-scroll systems (CSS
+    // scroll-behavior + global anchor handler + scrollIntoView here)
+    // plus corrective re-scrolls at 500ms / 1400ms / on every img.load /
+    // on document.fonts.ready. That caused the page to snap back after
+    // the user started scrolling.
+    //
+    // Now: one smooth scroll, no corrections. The global
+    // installSmoothAnchorScroll handler (SiteLayout) covers click-driven
+    // jumps with the proper navbar offset; this effect only handles
+    // initial mount + hashchange (programmatic). We poll briefly for the
+    // target to exist (lazy chunks/images), do ONE scroll, and stop.
     const scrollToHash = (rawHash: string, smooth: boolean) => {
-      // Lock for ~1100ms — long enough for browsers' native smooth scroll
-      // (~600–900ms on long pages) plus a safety buffer.
+      // Lock the scroll-spy briefly so it doesn't fight us during the
+      // initial smooth scroll.
       (window as unknown as Record<string, number>)[getLockKey()] =
-        performance.now() + 1100;
-
-      // Tear down any rescroll listeners from a previous deep-link.
-      if (cleanupRescroll) {
-        cleanupRescroll();
-        cleanupRescroll = null;
-      }
+        performance.now() + 900;
 
       let tries = 0;
       const tick = () => {
         if (cancelled) return;
         const el = resolveTarget(rawHash);
         if (el) {
-          // -- 1. Initial scroll ---------------------------------------
-          const doScroll = (behavior: ScrollBehavior) => {
-            // Re-arm the lock right before each scroll so the observer
-            // doesn't fight us mid-correction.
-            (window as unknown as Record<string, number>)[getLockKey()] =
-              performance.now() + 1100;
-            el.scrollIntoView({ behavior, block: "start" });
-          };
-          doScroll(smooth ? "smooth" : "auto");
+          const reduce =
+            window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+          // Compute target with navbar offset so we land cleanly under the
+          // fixed header instead of clipping under it.
+          const navOffset =
+            window.innerWidth >= 1024 ? 96 : window.innerWidth >= 768 ? 88 : 80;
+          const scrollMt =
+            parseFloat(window.getComputedStyle(el).scrollMarginTop || "0") || 0;
+          const offset = Math.max(scrollMt, navOffset);
+          const top = el.getBoundingClientRect().top + window.scrollY - offset;
+          window.scrollTo({
+            top: Math.max(0, top),
+            behavior: smooth && !reduce ? "smooth" : "auto",
+          });
 
-          // -- 2. Force-reveal ----------------------------------------
-          // Without this, deep-linking can race the IntersectionObserver
-          // in SiteLayout and leave the eyebrow + headline + subhead at
-          // opacity:0 (they sit at the top of the viewport and never
-          // trigger the observer's enter callback because they were
-          // already in-view when it started watching). Belt-and-braces:
-          // multiple passes catch late layout shifts.
-          const forceReveal = () => {
-            const scope: ParentNode = el.querySelector(
-              ".reveal, .reveal-stagger",
+          // Force-reveal the section once so deep-linked anchors don't
+          // land on opacity:0 content (IO race on mount). Transform/opacity
+          // only — no layout shift.
+          const scope: ParentNode = el.querySelector(
+            ".reveal, .reveal-stagger",
+          )
+            ? el
+            : (el.closest("section") ?? el);
+          scope
+            .querySelectorAll<HTMLElement>(
+              ".reveal:not(.is-visible), .reveal-stagger:not(.is-visible)",
             )
-              ? el
-              : (el.closest("section") ?? el);
-            scope
-              .querySelectorAll<HTMLElement>(
-                ".reveal:not(.is-visible), .reveal-stagger:not(.is-visible)",
-              )
-              .forEach((node) => node.classList.add("is-visible"));
-          };
-          forceReveal();
-          const t1 = window.setTimeout(forceReveal, 250);
-          const t2 = window.setTimeout(forceReveal, 800);
+            .forEach((node) => node.classList.add("is-visible"));
 
-          // -- 3. Corrective re-scroll --------------------------------
-          // After the initial scroll, the section's top can still drift
-          // because of (a) lazy images decoding, (b) web fonts settling
-          // and reflowing headlines, (c) reveal transforms releasing
-          // their translateY, (d) homepage parallax classes adjusting.
-          // Re-run scrollIntoView a few times so the user always lands
-          // on the section's true top, even if hydration was slow.
-          //
-          // We use "auto" behavior for these corrections so the page
-          // doesn't visibly bounce — only the smooth initial scroll is
-          // perceived.
-          const scope: ParentNode =
-            el.closest("section") ?? el.parentElement ?? document.body;
-          const scopedImages = Array.from(
-            (scope as HTMLElement).querySelectorAll("img"),
-          );
-
-          let rescrollDone = false;
-          let imageRescrollLeft = 2; // throttle: only re-scroll on the
-          // first few image loads so a long carousel doesn't keep
-          // jumping after the user starts interacting.
-          const rescroll = (reason: "settle" | "image" | "fonts") => {
-            if (rescrollDone || cancelled) return;
-            // Only re-scroll if the section's top has drifted by more
-            // than a few px from where the user should be, OR if it's
-            // the first short-delay correction.
-            const target = resolveTarget(rawHash);
-            if (!target) return;
-            const rect = target.getBoundingClientRect();
-            const navOffset = window.innerWidth < 768 ? 64 : 80;
-            const drift = Math.abs(rect.top - navOffset);
-            if (reason === "settle" || drift > 6) {
-              doScroll("auto");
-            }
-            if (reason === "image") {
-              imageRescrollLeft -= 1;
-            }
-          };
-
-          // Short settle pass — catches reveal transforms releasing.
-          const settleTimer = window.setTimeout(
-            () => rescroll("settle"),
-            500,
-          );
-          // Final settle pass — catches anything slow.
-          const finalTimer = window.setTimeout(() => {
-            rescroll("settle");
-            rescrollDone = true;
-          }, 1400);
-
-          // Image loaders: only watch ones not yet complete; re-run
-          // scroll when they finish, but cap the count.
-          const onImgLoad = () => {
-            if (imageRescrollLeft <= 0) return;
-            rescroll("image");
-          };
-          const watchedImages: HTMLImageElement[] = [];
-          for (const img of scopedImages) {
-            if (!img.complete) {
-              img.addEventListener("load", onImgLoad, { once: true });
-              img.addEventListener("error", onImgLoad, { once: true });
-              watchedImages.push(img);
-            }
-          }
-
-          // Fonts: re-run once when web fonts are ready (headline
-          // reflow can shift the section by a few px).
-          const fonts = (
-            document as Document & {
-              fonts?: { ready?: Promise<unknown> };
-            }
-          ).fonts;
-          if (fonts?.ready && typeof fonts.ready.then === "function") {
-            fonts.ready.then(() => rescroll("fonts")).catch(() => {});
-          }
-
-          cleanupRescroll = () => {
-            window.clearTimeout(t1);
-            window.clearTimeout(t2);
-            window.clearTimeout(settleTimer);
-            window.clearTimeout(finalTimer);
-            for (const img of watchedImages) {
-              img.removeEventListener("load", onImgLoad);
-              img.removeEventListener("error", onImgLoad);
-            }
-          };
-
-          // -- 4. URL canonicalisation --------------------------------
-          // Normalise the URL to the canonical id (e.g. #proposal → #occasions)
+          // Canonicalise URL hash.
           const canonical =
             HASH_ALIASES[rawHash.toLowerCase()] ?? rawHash.toLowerCase();
           if (canonical && `#${canonical}` !== window.location.hash) {
             window.history.replaceState(
               window.history.state,
               "",
-              window.location.pathname +
-                window.location.search +
-                `#${canonical}`,
+              window.location.pathname + window.location.search + `#${canonical}`,
             );
           }
           return;
         }
-        // Section not in DOM yet (images loading, lazy chunk). Poll up to
-        // ~1.6s — enough for hero image + above-the-fold paint.
+        // Section not in DOM yet (lazy chunk). Poll briefly.
         if (++tries < 20) {
           timer = window.setTimeout(tick, 80);
         }
       };
-      // Wait one frame so layout settles, then start trying.
       timer = window.setTimeout(tick, 60);
     };
 
@@ -491,7 +397,6 @@ function HomePage() {
       cancelled = true;
       window.removeEventListener("hashchange", onHashChange);
       if (timer) window.clearTimeout(timer);
-      if (cleanupRescroll) cleanupRescroll();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -520,7 +425,9 @@ function HomePage() {
     };
 
     let raf = 0;
-    let lastWritten = window.location.hash;
+    let lastChosenId = "";
+    let lastWriteAt = 0;
+    const WRITE_THROTTLE_MS = 250;
 
     const compute = () => {
       raf = 0;
@@ -531,22 +438,16 @@ function HomePage() {
       const anchor = anchorOffsetPx();
       const viewportH = window.innerHeight;
 
-      // Find the section whose [top, bottom) range contains the anchor
-      // line. Fallback: the closest section above the anchor.
       let chosenId = "";
       let bestAboveDistance = Infinity;
 
       for (const el of targets) {
         const rect = el.getBoundingClientRect();
-        // Skip sections that are completely off-screen below.
         if (rect.top > viewportH) continue;
-        // Section currently under the anchor line — winner.
         if (rect.top <= anchor && rect.bottom > anchor) {
           chosenId = el.id;
           break;
         }
-        // Otherwise track the section whose top is closest to (but above)
-        // the anchor line, so we keep a sensible hash between sections.
         if (rect.top <= anchor) {
           const d = anchor - rect.top;
           if (d < bestAboveDistance) {
@@ -556,31 +457,36 @@ function HomePage() {
         }
       }
 
-      // Don't write a hash before the first tracked section comes into
-      // view (keeps the URL clean while the user is still on the hero).
+      // Above the first tracked section: clear the hash once.
       const firstRect = targets[0].getBoundingClientRect();
       if (firstRect.top > anchor) {
-        if (window.location.hash) {
+        if (window.location.hash && lastChosenId !== "") {
           window.history.replaceState(
             window.history.state,
             "",
             window.location.pathname + window.location.search,
           );
-          lastWritten = "";
+          lastChosenId = "";
+          lastWriteAt = performance.now();
         }
         return;
       }
 
-      const next = chosenId ? `#${chosenId}` : "";
-      if (next !== lastWritten && next !== window.location.hash) {
-        window.history.replaceState(
-          window.history.state,
-          "",
-          window.location.pathname + window.location.search + next,
-        );
-        lastWritten = next;
-      } else if (next !== lastWritten) {
-        lastWritten = next;
+      // Only write when the chosen section actually changes, and at most
+      // every WRITE_THROTTLE_MS so we never thrash history during scroll.
+      if (chosenId && chosenId !== lastChosenId) {
+        const now = performance.now();
+        if (now - lastWriteAt < WRITE_THROTTLE_MS) return;
+        const next = `#${chosenId}`;
+        if (next !== window.location.hash) {
+          window.history.replaceState(
+            window.history.state,
+            "",
+            window.location.pathname + window.location.search + next,
+          );
+        }
+        lastChosenId = chosenId;
+        lastWriteAt = now;
       }
     };
 
@@ -589,29 +495,20 @@ function HomePage() {
       raf = window.requestAnimationFrame(compute);
     };
 
-    // Triggers: scroll, resize, and any IO callback (covers lazy content
-    // shifting layout). IO uses many thresholds across the anchor band so
-    // we get callbacks at the right moments without needing a scroll
-    // listener at all on capable browsers — but we add a passive scroll
-    // listener too for buttery responsiveness during fast scrolls.
+    // IO is enough on its own — fires on every threshold crossing as the
+    // user scrolls. Passive scroll listener removed to cut per-frame work
+    // on mobile. Thresholds slimmed to [0, 1] for the same reason.
     const io = new IntersectionObserver(schedule, {
-      threshold: [0, 0.05, 0.15, 0.3, 0.5, 0.75, 1],
-      // Negative top margin = anchor band starts ~96–128px down.
-      // Negative bottom margin = ignore sections that are still mostly
-      // in the lower third of the viewport (gives the section above
-      // priority until the new one truly takes over).
+      threshold: [0, 1],
       rootMargin: "-96px 0px -55% 0px",
     });
     targets.forEach((el) => io.observe(el));
 
-    window.addEventListener("scroll", schedule, { passive: true });
     window.addEventListener("resize", schedule);
-    // First pass after mount.
     schedule();
 
     return () => {
       io.disconnect();
-      window.removeEventListener("scroll", schedule);
       window.removeEventListener("resize", schedule);
       if (raf) window.cancelAnimationFrame(raf);
     };
@@ -673,7 +570,7 @@ function HomePage() {
           signature ("Whatever you have in mind, We say YES.") is rendered
           ONCE inside HERO_COPY.brandLine — no duplicate slogans. */}
       <section
-        className="relative min-h-[80vh] md:min-h-[94vh] flex items-end overflow-hidden"
+        className="relative min-h-[80svh] md:min-h-[94vh] flex items-end overflow-hidden"
       >
         <img
           src={heroImg}
@@ -1190,7 +1087,6 @@ function HomePage() {
               list-none p-0
               -mx-5 px-5 sm:mx-0 sm:px-0
               overflow-x-auto sm:overflow-visible
-              snap-x snap-proximity sm:snap-none
               overscroll-x-contain sm:overscroll-auto
               [contain:layout_paint] sm:[contain:none]
               [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden
@@ -1201,7 +1097,7 @@ function HomePage() {
               return (
                 <li
                   key={t.id}
-                  className="snap-center shrink-0 w-[84vw] sm:w-auto sm:shrink"
+                  className="shrink-0 w-[84vw] sm:w-auto sm:shrink"
                 >
                   {/* Card is a structured composition (NOT a single link) so
                       we can expose two distinct CTAs — Book + Tailor — and

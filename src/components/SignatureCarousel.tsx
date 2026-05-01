@@ -60,15 +60,29 @@ export function SignatureCarousel({ items, autoplayMs = DEFAULT_AUTOPLAY_MS }: P
   // user can flip the preference and reload, which matches platform UX
   // conventions and avoids surprise autoplay if they change their mind
   // mid-session.
+  //
+  // Mobile (<lg / <1024px) → also disable autoplay. Per audit M2:
+  // automatic horizontal scroll on phones competes with vertical page
+  // scrolling and reads as "jumpy". On mobile the carousel only moves
+  // by user swipe.
   const [reduceMotion, setReduceMotion] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReduceMotion(mq.matches);
-    const handler = (e: MediaQueryListEvent) => setReduceMotion(e.matches);
-    mq.addEventListener?.("change", handler);
-    return () => mq.removeEventListener?.("change", handler);
+    const mqReduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const mqMobile = window.matchMedia("(max-width: 1023.98px)");
+    setReduceMotion(mqReduce.matches);
+    setIsMobile(mqMobile.matches);
+    const onReduce = (e: MediaQueryListEvent) => setReduceMotion(e.matches);
+    const onMobile = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mqReduce.addEventListener?.("change", onReduce);
+    mqMobile.addEventListener?.("change", onMobile);
+    return () => {
+      mqReduce.removeEventListener?.("change", onReduce);
+      mqMobile.removeEventListener?.("change", onMobile);
+    };
   }, []);
+  const autoplayDisabled = reduceMotion || isMobile;
 
   // ── Active-card tracking via scroll position ────────────────────────────
   // We use a rAF-throttled scroll listener instead of IntersectionObserver
@@ -187,7 +201,7 @@ export function SignatureCarousel({ items, autoplayMs = DEFAULT_AUTOPLAY_MS }: P
   // doubles as a subtle progress bar — the motion feels intentional.
   const [progress, setProgress] = useState(0);
   useEffect(() => {
-    if (reduceMotion || isPaused || items.length <= 1) {
+    if (autoplayDisabled || isPaused || items.length <= 1) {
       setProgress(0);
       return;
     }
@@ -209,7 +223,7 @@ export function SignatureCarousel({ items, autoplayMs = DEFAULT_AUTOPLAY_MS }: P
       cancelAnimationFrame(raf);
       setProgress(0);
     };
-  }, [reduceMotion, isPaused, activeIndex, items.length, autoplayMs, scrollToIndex]);
+  }, [autoplayDisabled, isPaused, activeIndex, items.length, autoplayMs, scrollToIndex]);
 
   return (
     <div className="relative" ref={rootRef}>
