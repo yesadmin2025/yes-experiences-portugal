@@ -65,7 +65,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
           io.unobserve(target);
         });
       },
-      { threshold: 0.14, rootMargin: "0px 0px -80px 0px" },
+      { threshold: 0.14, rootMargin: "0px" },
     );
 
     els.forEach((el) => io.observe(el));
