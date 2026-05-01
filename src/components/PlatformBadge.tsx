@@ -19,15 +19,15 @@ import trustpilotLogo from "@/assets/platform-trustpilot.svg";
 
 export type Platform = "google" | "tripadvisor" | "viator" | "getyourguide" | "trustpilot";
 
-// Per-mark optical scale relative to the container height. Wordmarks read
-// large at full height because they're wide; monograms need extra height
-// to feel balanced against them.
+// Per-mark optical scale relative to the container height. Tightened
+// for the refined trust strip — all marks now sit between 0.7 and 1.0
+// of the row height so no single mark dominates.
 const SOURCES: Record<Platform, { src: string; label: string; scale: number }> = {
-  google: { src: googleLogo, label: "Google", scale: 1 },
-  tripadvisor: { src: tripadvisorLogo, label: "Tripadvisor", scale: 1 },
-  viator: { src: viatorLogo, label: "Viator", scale: 0.6 },
-  getyourguide: { src: getyourguideLogo, label: "GetYourGuide", scale: 1 },
-  trustpilot: { src: trustpilotLogo, label: "Trustpilot", scale: 0.78 },
+  google: { src: googleLogo, label: "Google", scale: 0.92 },
+  tripadvisor: { src: tripadvisorLogo, label: "Tripadvisor", scale: 0.92 },
+  viator: { src: viatorLogo, label: "Viator", scale: 0.58 },
+  getyourguide: { src: getyourguideLogo, label: "GetYourGuide", scale: 0.92 },
+  trustpilot: { src: trustpilotLogo, label: "Trustpilot", scale: 0.72 },
 };
 
 // Monochrome treatment: strip color, lift midtones, and tone toward soft
@@ -57,7 +57,7 @@ export function PlatformBadge({
         height: `${scale * 100}%`,
         filter: MONO_FILTER,
         transition: "filter 600ms ease, opacity 600ms ease",
-        opacity: 0.85,
+        opacity: 0.7,
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.filter = MONO_FILTER_HOVER;
@@ -65,7 +65,7 @@ export function PlatformBadge({
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.filter = MONO_FILTER;
-        e.currentTarget.style.opacity = "0.85";
+        e.currentTarget.style.opacity = "0.7";
       }}
       className={`block w-auto object-contain select-none ${className}`}
       draggable={false}
