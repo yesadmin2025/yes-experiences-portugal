@@ -786,7 +786,7 @@ function CheckoutModal({
 
   return (
     <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/60 p-4">
-      <div className="relative w-full max-w-2xl max-h-[92vh] overflow-auto rounded-[2px] bg-[color:var(--ivory)] shadow-2xl">
+      <div className="relative w-full max-w-2xl max-h-[92vh] overflow-auto rounded-[2px] bg-[color:var(--ivory)] shadow-[0_28px_60px_-24px_rgba(46,46,46,0.55)]">
         <button
           type="button"
           onClick={onClose}
