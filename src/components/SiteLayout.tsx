@@ -407,18 +407,17 @@ export function SiteLayout({ children }: { children: ReactNode }) {
     // wrapper already on-screen (or scrolled past) at mount, then
     // re-check shortly after to catch anything still pending.
     const sweep = (source: "sweepInitial" | "sweepDelayed") => {
-      const vh = window.innerHeight || 0;
       els.forEach((el) => {
         if (el.classList.contains("is-visible")) return;
         const rect = el.getBoundingClientRect();
-        if (rect.bottom <= 0 || rect.top < vh * 0.98) {
+        if (rect.bottom <= 0) {
           markVisible(el, source);
           io.unobserve(el);
         }
       });
     };
     sweep("sweepInitial");
-    const t = window.setTimeout(() => sweep("sweepDelayed"), 250);
+    const t = window.setTimeout(() => sweep("sweepDelayed"), 600);
 
     return () => {
       window.clearTimeout(t);
