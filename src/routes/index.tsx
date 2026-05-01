@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { PlatformBadge } from "@/components/PlatformBadge";
 import { StudioLivePreview } from "@/components/home/StudioLivePreview";
+import { getScrollDebugFlags, useScrollDebugFlags } from "@/lib/scroll-debug";
 
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
 import { signatureTours, isValidTourId } from "@/data/signatureTours";
@@ -226,6 +227,7 @@ export const Route = createFileRoute("/")({
  * 8. Final CTA — Talk to a local
  * ════════════════════════════════════════════════════════════ */
 function HomePage() {
+  const scrollDebug = useScrollDebugFlags();
   // ── Hash navigation ────────────────────────────────────────────────
   // Two cooperating effects:
   //   1. Deep-link handler: on mount (and on subsequent hashchange via
