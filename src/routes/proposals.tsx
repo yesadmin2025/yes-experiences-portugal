@@ -135,13 +135,9 @@ function ProposalsPage() {
                   <div className="mt-5 pl-4 border-l-2 border-[color:var(--gold)] text-sm text-[color:var(--charcoal-soft)] leading-relaxed">
                     {b.local}
                   </div>
-                  <Link
-                    to="/contact"
-                    className="group mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--teal)] hover:text-[color:var(--teal-2)] transition-colors min-h-[44px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--teal)]"
-                  >
+                  <CtaButton to="/contact" variant="ghost" size="sm" className="mt-6">
                     {b.cta}
-                    <span aria-hidden="true" className="text-[color:var(--gold)] group-hover:text-[color:var(--gold-deep)] transition-colors">→</span>
-                  </Link>
+                  </CtaButton>
                 </div>
               </article>
             );
