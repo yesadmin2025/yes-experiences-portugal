@@ -650,7 +650,7 @@ function HomePage() {
           page (per "no repeated review sections" guardrail). */}
       <section
         id="reviews"
-        className="he-trust-rule bg-[color:var(--ivory)] border-b border-[color:var(--border)] section-y-sm scroll-mt-24 md:scroll-mt-28"
+        className="he-trust-rule section-enter bg-[color:var(--ivory)] border-b border-[color:var(--border)] section-y-sm scroll-mt-24 md:scroll-mt-28"
         aria-labelledby="trust-bar-title"
       >
         <h2 id="trust-bar-title" className="sr-only">
@@ -665,7 +665,7 @@ function HomePage() {
                 aria-label="Rated 5 out of 5 stars"
               >
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={14} fill="currentColor" strokeWidth={0} aria-hidden="true" focusable="false" />
+                  <Star key={i} className="he-trust-star" size={14} fill="currentColor" strokeWidth={0} aria-hidden="true" focusable="false" />
                 ))}
               </p>
               <p className="serif text-[1.15rem] md:text-[1.35rem] text-[color:var(--charcoal)] leading-[1.25] font-normal">
@@ -677,11 +677,11 @@ function HomePage() {
               </p>
             </div>
             <ul
-              className="flex flex-wrap items-center justify-center md:justify-end gap-x-6 gap-y-3 md:gap-x-8 list-none p-0 h-6 md:h-7 opacity-90"
+              className="he-stagger flex flex-wrap items-center justify-center md:justify-end gap-x-6 gap-y-3 md:gap-x-8 list-none p-0 h-6 md:h-7 opacity-90"
               aria-label="Featured on Google, Tripadvisor, Viator, GetYourGuide and Trustpilot"
             >
               {(["google", "tripadvisor", "viator", "getyourguide", "trustpilot"] as const).map((p) => (
-                <li key={p} className="h-full flex items-center">
+                <li key={p} className="reveal-stagger h-full flex items-center">
                   <PlatformBadge platform={p} />
                 </li>
               ))}
