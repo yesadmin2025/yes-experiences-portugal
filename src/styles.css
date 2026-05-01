@@ -1523,6 +1523,16 @@
   transform: translateY(0);
 }
 
+@media (max-width: 767.98px) {
+  html.scroll-debug-mobile-reveals-off .reveal,
+  html.scroll-debug-mobile-reveals-off .reveal-stagger {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    will-change: auto !important;
+  }
+}
+
 /* Layered lift — keep the reveal transform and the hover transform on
    different elements so they never fight. The outer node (.reveal /
    .reveal-stagger) owns the entrance transform + opacity. The inner
