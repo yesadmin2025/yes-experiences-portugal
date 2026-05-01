@@ -699,7 +699,7 @@ function LiveBuilder({
             type="button"
             onClick={onReview}
             disabled={!route.feasible || stops.length === 0}
-            className="inline-flex items-center gap-2 rounded-[2px] border border-[color:var(--charcoal)]/20 px-5 py-3 text-[12px] uppercase tracking-[0.2em] font-bold text-[color:var(--charcoal)] hover:border-[color:var(--charcoal)]/45 disabled:opacity-40"
+            className="inline-flex items-center gap-2 rounded-[2px] bg-[color:var(--teal)] text-[color:var(--ivory)] border border-[color:var(--gold)]/55 px-6 py-3 text-[12px] uppercase tracking-[0.2em] font-bold transition-colors duration-200 hover:bg-[color:var(--teal-2)] hover:border-[color:var(--gold)]/78 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--ivory)] disabled:opacity-40 shadow-[0_8px_22px_-10px_rgba(41,91,97,0.55)]"
           >
             Review experience
             <ArrowRight size={13} />
@@ -786,7 +786,7 @@ function CheckoutModal({
 
   return (
     <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/60 p-4">
-      <div className="relative w-full max-w-2xl max-h-[92vh] overflow-auto rounded-[2px] bg-[color:var(--ivory)] shadow-2xl">
+      <div className="relative w-full max-w-2xl max-h-[92vh] overflow-auto rounded-[2px] bg-[color:var(--ivory)] shadow-[0_28px_60px_-24px_rgba(46,46,46,0.55)]">
         <button
           type="button"
           onClick={onClose}

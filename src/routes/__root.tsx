@@ -4,6 +4,7 @@ import { Toaster } from "sonner";
 
 import appCss from "../styles.css?url";
 import { installResetBlankCheckFilter } from "@/lib/silence-reset-blank-check";
+import { installIframeFooterGuard } from "@/lib/iframe-footer-guard";
 
 /* ──────────────────────────────────────────────────────────────────
  * App readiness flag — sets `window.__APP_READY__ = true` and fires
@@ -161,9 +162,19 @@ function RootShell({ children }: { children: React.ReactNode }) {
   );
 }
 
+function useIframeFooterGuard() {
+  useEffect(() => {
+    // Pure no-op outside an iframe; only installs listeners when
+    // window.self !== window.top. Blocks programmatic "jump to footer"
+    // scrolls that some host preview harnesses fire spuriously.
+    return installIframeFooterGuard();
+  }, []);
+}
+
 function RootComponent() {
   useSilenceResetBlankCheck();
   useAppReadyFlag();
+  useIframeFooterGuard();
   return (
     <>
       <Outlet />
