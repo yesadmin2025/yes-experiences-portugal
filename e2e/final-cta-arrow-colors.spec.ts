@@ -235,17 +235,17 @@ test.describe("Final CTA arrow colors — primary vs ghost", () => {
 
     // Computed stroke paint matches the link's color exactly
     for (const stroke of primaryRest.pathStrokeComputed) {
-      expect.soft(stroke, "primary rest stroke = link color (gold)").toBe(ARROW_COLORS.gold);
+      expect.soft(stroke, "primary rest stroke = link color (gold-soft)").toBe(ARROW_COLORS.goldSoft);
     }
     for (const stroke of ghostRest.pathStrokeComputed) {
-      expect.soft(stroke, "ghost rest stroke = link color (gold-soft)").toBe(ARROW_COLORS.goldSoft);
+      expect.soft(stroke, "ghost rest stroke = link color (gold)").toBe(ARROW_COLORS.gold);
     }
 
     // ---------- HOVER ----------
     await primary.hover();
     const primaryHover = await probe(primary);
     for (const stroke of primaryHover.pathStrokeComputed) {
-      expect.soft(stroke, "primary hover stroke = gold-deep").toBe(ARROW_COLORS.goldDeep);
+      expect.soft(stroke, "primary hover stroke = gold").toBe(ARROW_COLORS.gold);
     }
     expect.soft(primaryHover.svgColor).toBe(primaryHover.linkColor);
 
@@ -255,7 +255,7 @@ test.describe("Final CTA arrow colors — primary vs ghost", () => {
     await ghost.hover();
     const ghostHover = await probe(ghost);
     for (const stroke of ghostHover.pathStrokeComputed) {
-      expect.soft(stroke, "ghost hover stroke = gold").toBe(ARROW_COLORS.gold);
+      expect.soft(stroke, "ghost hover stroke = gold-deep").toBe(ARROW_COLORS.goldDeep);
     }
     expect.soft(ghostHover.svgColor).toBe(ghostHover.linkColor);
 
@@ -265,14 +265,14 @@ test.describe("Final CTA arrow colors — primary vs ghost", () => {
     await primary.focus();
     const primaryFocus = await probe(primary);
     for (const stroke of primaryFocus.pathStrokeComputed) {
-      expect.soft(stroke, "primary focus stroke = gold (rest)").toBe(ARROW_COLORS.gold);
+      expect.soft(stroke, "primary focus stroke = gold-soft (rest)").toBe(ARROW_COLORS.goldSoft);
     }
     await primary.evaluate((el) => (el as HTMLElement).blur());
 
     await ghost.focus();
     const ghostFocus = await probe(ghost);
     for (const stroke of ghostFocus.pathStrokeComputed) {
-      expect.soft(stroke, "ghost focus stroke = gold-soft (rest)").toBe(ARROW_COLORS.goldSoft);
+      expect.soft(stroke, "ghost focus stroke = gold (rest)").toBe(ARROW_COLORS.gold);
     }
 
     // Final hard assertion: at no point did any path lose the
