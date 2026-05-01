@@ -161,8 +161,14 @@ describe("Homepage scrollToHash — static contract", () => {
     expect(fnStart, "scrollToHash function missing in routes/index.tsx").toBeGreaterThan(0);
     const fnSlice = src.slice(fnStart, fnStart + 12000);
 
-    // It must scroll the resolved element with block: "start".
-    expect(fnSlice).toMatch(/el\.scrollIntoView\(\s*\{[^}]*block:\s*["']start["']/);
+    // It must scroll using the resolved element's geometry — either
+    // `el.scrollIntoView({ block: "start" })` (legacy) or
+    // `window.scrollTo({ top: <derived from el.getBoundingClientRect> })`
+    // (current). Both are valid; what matters is that the scroll target
+    // is derived from the resolved element, never from document height.
+    expect(fnSlice).toMatch(
+      /el\.scrollIntoView\(\s*\{[^}]*block:\s*["']start["']|el\.getBoundingClientRect\(\)[\s\S]{0,200}window\.scrollTo/,
+    );
 
     // It must NOT call window.scrollTo with scrollHeight (that's the
     // exact pattern that produces a "jump to footer" regression).
