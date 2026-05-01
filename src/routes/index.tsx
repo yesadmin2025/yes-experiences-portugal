@@ -1346,7 +1346,7 @@ function HomePage() {
                 </span>
               <h2
                 id="final-cta-title"
-                className="serif mt-5 text-[2rem] sm:text-[2.4rem] md:text-[3.2rem] leading-[1.1] md:leading-[1.02] tracking-[-0.016em] font-medium text-[color:var(--ivory)]"
+                className="mt-5 text-[2rem] sm:text-[2.4rem] md:text-[3.2rem] leading-[1.1] md:leading-[1.02] tracking-[-0.016em] font-medium text-[color:var(--ivory)]"
               >
                   Ready to design your{" "}
                   <span className="italic font-normal text-[color:var(--gold-soft)] serif">
