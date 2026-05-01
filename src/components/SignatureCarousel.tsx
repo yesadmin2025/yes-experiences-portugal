@@ -201,7 +201,7 @@ export function SignatureCarousel({ items, autoplayMs = DEFAULT_AUTOPLAY_MS }: P
   // doubles as a subtle progress bar — the motion feels intentional.
   const [progress, setProgress] = useState(0);
   useEffect(() => {
-    if (reduceMotion || isPaused || items.length <= 1) {
+    if (autoplayDisabled || isPaused || items.length <= 1) {
       setProgress(0);
       return;
     }
@@ -223,7 +223,7 @@ export function SignatureCarousel({ items, autoplayMs = DEFAULT_AUTOPLAY_MS }: P
       cancelAnimationFrame(raf);
       setProgress(0);
     };
-  }, [reduceMotion, isPaused, activeIndex, items.length, autoplayMs, scrollToIndex]);
+  }, [autoplayDisabled, isPaused, activeIndex, items.length, autoplayMs, scrollToIndex]);
 
   return (
     <div className="relative" ref={rootRef}>
