@@ -72,7 +72,7 @@ export function getScrollDebugFlags(
   // Standalone shortcut: ?reveal-debug enables reveal debug without
   // pulling in the rest of the scroll-debug instrumentation.
   const standaloneRevealDebug = params.has("reveal-debug");
-  if (!params.has("scroll-debug") && !standaloneRevealDebug) {
+  if (!params.has("scroll-debug")) {
     return standaloneRevealDebug
       ? { ...EMPTY_FLAGS, enabled: true, revealDebug: true }
       : EMPTY_FLAGS;
