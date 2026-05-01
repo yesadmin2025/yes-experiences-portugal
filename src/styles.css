@@ -2213,6 +2213,8 @@
   .is-visible > .chapter-divider::after {
     transform: scaleX(1);
   }
+
+  /* "Live" pulse dot — paired with eyebrow text in the Builder section.
      Single soft pulse, kept subtle so it doesn't read as a notification. */
   .live-dot {
     position: relative;
