@@ -687,7 +687,7 @@ function HomePage() {
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(15,15,15,0.65)_0%,rgba(15,15,15,0.4)_35%,transparent_70%)] md:bg-[linear-gradient(90deg,rgba(15,15,15,0.6)_0%,rgba(15,15,15,0.32)_40%,transparent_72%)] pointer-events-none" />
 
         <div className="container-x relative z-10 pb-14 md:pb-36 pt-32 md:pt-40">
-          <div className="max-w-3xl text-[color:var(--ivory)]">
+          <div className="max-w-2xl md:max-w-3xl text-[color:var(--ivory)]">
             <span className="inline-flex items-center gap-2 sm:gap-3.5 max-w-full text-[10px] xs:text-[10.5px] sm:text-[12px] md:text-[13px] uppercase tracking-[0.16em] xs:tracking-[0.2em] sm:tracking-[0.26em] md:tracking-[0.3em] text-[color:var(--gold)] opacity-0 animate-[heroFade_0.8s_ease-out_0.1s_forwards]">
               <span aria-hidden="true" className="shrink-0">✦</span>
               <span data-hero-field="eyebrow" className="whitespace-nowrap truncate">
@@ -698,14 +698,14 @@ function HomePage() {
 
             <h1
               data-hero-field="headlineLine1 headlineLine2"
-              className="hero-h1 serif mt-6 md:mt-9 text-[1.95rem] sm:text-[2.95rem] md:text-[4.4rem] lg:text-[5.1rem] leading-[1.12] sm:leading-[1.06] md:leading-[1.0] tracking-[-0.014em] text-[color:var(--ivory)] text-left opacity-0 animate-[heroFade_0.9s_ease-out_0.25s_forwards] [text-shadow:0_2px_18px_rgba(0,0,0,0.35)]"
+              className="hero-h1 serif mt-5 md:mt-8 text-[1.85rem] sm:text-[2.7rem] md:text-[4rem] lg:text-[4.6rem] leading-[1.08] sm:leading-[1.04] md:leading-[1.02] tracking-[-0.018em] text-[color:var(--ivory)] text-left opacity-0 animate-[heroFade_0.9s_ease-out_0.25s_forwards] [text-shadow:0_2px_18px_rgba(0,0,0,0.35)]"
             >
               <span data-hero-field="headlineLine1" className="block">
                 {HERO_COPY.headlineLine1}
               </span>
               <span
                 data-hero-field="headlineLine2"
-                className="block italic font-medium text-[color:var(--gold-soft)] mt-1 md:mt-1.5 text-[1.95rem] sm:text-[2.95rem] md:text-[4.4rem] lg:text-[5.1rem] tracking-[-0.018em] leading-[1.12] sm:leading-[1.06] md:leading-[1.0]"
+                className="block italic font-medium text-[color:var(--gold-soft)] mt-0.5 md:mt-1 text-[1.85rem] sm:text-[2.7rem] md:text-[4rem] lg:text-[4.6rem] tracking-[-0.022em] leading-[1.08] sm:leading-[1.04] md:leading-[1.02]"
               >
                 {HERO_COPY.headlineLine2}
               </span>
@@ -713,10 +713,17 @@ function HomePage() {
 
             <p
               data-hero-field="subheadline"
-              className="mt-6 md:mt-8 text-[16.5px] md:text-[20px] text-[color:var(--ivory)]/95 max-w-md md:max-w-lg leading-[1.6] md:leading-[1.7] font-light text-left opacity-0 animate-[heroFade_0.9s_ease-out_0.45s_forwards] [text-shadow:0_1px_8px_rgba(0,0,0,0.3)]"
+              className="mt-5 md:mt-7 text-[16.5px] md:text-[20px] text-[color:var(--ivory)]/95 max-w-md md:max-w-lg leading-[1.6] md:leading-[1.7] font-light text-left opacity-0 animate-[heroFade_0.9s_ease-out_0.45s_forwards] [text-shadow:0_1px_8px_rgba(0,0,0,0.3)]"
             >
               {HERO_COPY.subheadline}
             </p>
+
+            {/* CTAs — exactly two, per brief.
+                Studio is the primary innovation, so "Create Your Story"
+                (→ /builder) leads. "Explore Signature Experiences" stays
+                visible as the calmer second path (→ /experiences).
+                Labels are byte-exact from HERO_COPY (e2e lock). */}
+            <div className="mt-8 md:mt-10 flex flex-col sm:flex-row gap-4 sm:gap-4 w-full max-w-sm sm:max-w-xl opacity-0 animate-[heroFade_0.9s_ease-out_0.65s_forwards]">
 
             {/* CTAs — exactly two, per brief.
                 Studio is the primary innovation, so "Create Your Story"
