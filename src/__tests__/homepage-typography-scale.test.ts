@@ -82,36 +82,21 @@ describe("Homepage H2 — sub-section ramp", () => {
   });
 });
 
-describe("Homepage eyebrow labels — minimum legibility", () => {
-  // .he-eyebrow-bar is the canonical utility (11px / 0.28em). Any
-  // inline eyebrow on the homepage must clear the same threshold.
-  it("inline eyebrows on charcoal/ivory hit ≥10.5px and ≥0.18em tracking", () => {
-    // Floor matches the smallest legibility-validated value used on
-    // the homepage today (the "what changes" reveal label at 393px).
-    // Stronger labels (≥0.28em) are enforced by visual review, not here.
-    const HOMEPAGE_INLINE_EYEBROW =
-      /text-\[(\d+(?:\.\d+)?)px\][^"]*uppercase[^"]*tracking-\[(\d+(?:\.\d+)?)em\]/g;
-    const matches = [...src.matchAll(HOMEPAGE_INLINE_EYEBROW)];
-    expect(matches.length).toBeGreaterThan(0);
-
-    let eyebrowCount = 0;
-    for (const m of matches) {
-      const fragment = m[0];
-      // Skip CTA/button-style declarations and tabular micro-labels.
-      const isButton =
-        /\bbg-\[/.test(fragment) ||
-        /\bmin-h-\[/.test(fragment) ||
-        /\bborder\b/.test(fragment) ||
-        /\bpx-\d/.test(fragment);
-      const isTabular = /\btabular-nums\b/.test(fragment);
-      if (isButton || isTabular) continue;
-
-      eyebrowCount++;
-      const px = parseFloat(m[1]);
-      const tracking = parseFloat(m[2]);
-      expect(px).toBeGreaterThanOrEqual(10.5);
-      expect(tracking).toBeGreaterThanOrEqual(0.18);
+describe("Homepage eyebrow labels — canonical utility usage", () => {
+  // The canonical eyebrow on the homepage is .he-eyebrow-bar
+  // (defined in styles.css: 11px, weight 700, tracking 0.28em).
+  // Each major section intro must use it.
+  it("every major section intro uses .he-eyebrow-bar", () => {
+    const requiredEyebrows = [
+      "Three ways in",
+      "Experience Studio",
+      "Why YES",
+      "Signature experiences",
+      "Groups",
+    ];
+    for (const label of requiredEyebrows) {
+      const re = new RegExp(`he-eyebrow-bar[^"]*"[^>]*>\\s*(?:<[^>]+>\\s*)?${label.replace(/&/g, "&amp;")}`);
+      expect(re.test(src), `missing .he-eyebrow-bar wrapper for "${label}"`).toBe(true);
     }
-    expect(eyebrowCount).toBeGreaterThanOrEqual(1);
   });
 });
