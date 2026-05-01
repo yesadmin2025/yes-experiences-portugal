@@ -195,6 +195,11 @@ describe("reveal telemetry — deep-link / fast-scroll attribution", () => {
     // byEntry.cold mirrors the totals.
     const cold = t.byEntry.cold.reveal;
     expect(cold.io + cold.sweepInitial).toBe(3);
+    // DOM side-effect: every reveal counted in telemetry must also have
+    // had `.is-visible` applied — i.e. the class actually flips, not
+    // just the counter. This guards against a future regression where
+    // telemetry logs but the class flip is dropped.
+    els.forEach((el) => expect(el.classList.contains("is-visible")).toBe(true));
   });
 
   it("hash deep-link entry: telemetry.entry === 'hash' and byEntry.hash receives the reveals", () => {
