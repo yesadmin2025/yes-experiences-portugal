@@ -30,6 +30,7 @@ interface CommonProps {
   /** Render an icon BEFORE the label (used by "Talk to a Local" style CTAs). */
   iconLeading?: React.ReactNode;
   className?: string;
+  onClick?: React.MouseEventHandler<HTMLAnchorElement | HTMLButtonElement>;
   children: React.ReactNode;
 }
 
