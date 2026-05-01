@@ -3257,9 +3257,10 @@ html.motion-ready [data-motion].motion-in {
    ===================================================================== */
 
 .hero-journey-overlay {
-  /* Keep the overlay subtle — gradient on top still reduces its
-     intensity, so we tune it for a faint, cinematic read. */
-  opacity: 0.78;
+  /* Slightly stronger so the route reads through the dark gradient
+     without competing with the headline. Screen blend keeps gold
+     against the coastal image. */
+  opacity: 0.92;
   mix-blend-mode: screen;
 }
 
@@ -3281,18 +3282,16 @@ html.motion-ready [data-motion].motion-in {
     opacity: 0;
   }
   10% {
-    opacity: 0.95;
+    opacity: 1;
   }
   100% {
     stroke-dashoffset: 0;
-    opacity: 0.95;
+    opacity: 1;
   }
 }
 
 @keyframes heroJourneyDashIdle {
-  /* Gentle dash drift after the draw, ~1 cycle per 18s. Uses
-     stroke-dasharray on the inline SVG element to scroll the dotted
-     pattern subtly forward. */
+  /* Gentle dash drift after the draw, ~1 cycle per 18s. */
   from { stroke-dashoffset: 0; }
   to   { stroke-dashoffset: -200; }
 }
@@ -3312,11 +3311,13 @@ html.motion-ready [data-motion].motion-in {
 }
 
 @keyframes heroJourneyStudioMove {
-  0%   { transform: translate(80px, 580px); }
-  25%  { transform: translate(420px, 470px); }
-  50%  { transform: translate(720px, 500px); }
-  75%  { transform: translate(960px, 430px); }
-  100% { transform: translate(1180px, 240px); }
+  /* Coordinates trace the new upper-band path
+     M -20 220 C 180 160, 340 120, 520 180 S 820 320, 980 240 1180 120 1240 80 */
+  0%   { transform: translate(60px, 200px); }
+  25%  { transform: translate(420px, 130px); }
+  50%  { transform: translate(720px, 280px); }
+  75%  { transform: translate(960px, 240px); }
+  100% { transform: translate(1180px, 110px); }
 }
 
 /* Location pings — sequential fade-in, then a calm pulsing halo. */
@@ -3344,14 +3345,14 @@ html.motion-ready [data-motion].motion-in {
 
 @keyframes heroJourneyHalo {
   0%, 100% { transform: scale(0.9); opacity: 0.55; }
-  50%      { transform: scale(1.35); opacity: 0.95; }
+  50%      { transform: scale(1.45); opacity: 1; }
 }
 
-/* Mobile — slightly reduce opacity so the overlay never competes
-   with the headline on small screens. */
+/* Mobile — keep overlay visible (the brief asks for it to feel alive
+   on mobile first). Studio glow stays — single SVG circle, near-zero
+   paint cost. */
 @media (max-width: 640px) {
-  .hero-journey-overlay { opacity: 0.62; }
-  .hero-journey-studio  { display: none; } /* Save paint cost on phones */
+  .hero-journey-overlay { opacity: 0.85; }
 }
 
 /* Reduced motion — show the route + pings statically, kill all motion. */
