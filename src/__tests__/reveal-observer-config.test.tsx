@@ -99,11 +99,12 @@ class FakeIO {
   }
 
   observe(target: Element | null | undefined) {
-    // Mirror the real IntersectionObserver behavior loosely: a missing
-    // target is a no-op for tracking purposes and must never throw, so
-    // classification can stay decoupled from the caller passing pristine
-    // DOM nodes. Real Element targets are tracked as before.
-    if (target && typeof (target as Element).classList !== "undefined") {
+    // Mirror the real IntersectionObserver behavior loosely: a missing or
+    // malformed target is a no-op and must never throw. Only real Elements
+    // (with a usable classList API) are tracked.
+    const cl = (target as Element | null | undefined)?.classList;
+    const isRealElement = !!target && !!cl && typeof cl.contains === "function";
+    if (isRealElement) {
       this.pendingTargets.add(target as Element);
       this.observedTargets.add(target as Element);
     }
