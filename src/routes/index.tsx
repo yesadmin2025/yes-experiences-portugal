@@ -570,7 +570,7 @@ function HomePage() {
           signature ("Whatever you have in mind, We say YES.") is rendered
           ONCE inside HERO_COPY.brandLine — no duplicate slogans. */}
       <section
-        className="relative min-h-[80vh] md:min-h-[94vh] flex items-end overflow-hidden"
+        className="relative min-h-[80svh] md:min-h-[94vh] flex items-end overflow-hidden"
       >
         <img
           src={heroImg}
