@@ -135,7 +135,7 @@ export function FAQ() {
   return (
     <section
       id="faq"
-      className="he-section-rule reveal py-16 md:py-20 bg-[color:var(--ivory)]"
+      className="he-section-rule is-visible py-16 md:py-20 bg-[color:var(--ivory)]"
       aria-labelledby="faq-title"
     >
       <div className="container-x">
