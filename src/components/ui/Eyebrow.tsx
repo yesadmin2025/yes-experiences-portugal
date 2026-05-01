@@ -24,15 +24,27 @@ export interface EyebrowProps
   flank?: boolean;
   /** Render a small green "live" dot before the label (Studio rail only). */
   live?: boolean;
+  /**
+   * Visual tone. Defaults to "onLight" (charcoal label on ivory/sand).
+   * Use "onDark" when the eyebrow sits over a dark image / hero overlay
+   * — the label switches to gold-soft for legibility while spacing,
+   * size and tracking stay identical.
+   */
+  tone?: "onLight" | "onDark";
   children: React.ReactNode;
 }
 
 export const Eyebrow = React.forwardRef<HTMLSpanElement, EyebrowProps>(
-  ({ icon, flank, live, className, children, ...rest }, ref) => {
+  ({ icon, flank, live, tone = "onLight", className, children, ...rest }, ref) => {
     return (
       <span
         ref={ref}
-        className={cn("he-eyebrow-bar", flank && "flank", className)}
+        className={cn(
+          "he-eyebrow-bar",
+          flank && "flank",
+          tone === "onDark" && "text-[color:var(--gold-soft)]",
+          className,
+        )}
         {...rest}
       >
         {live ? <span className="live-dot" aria-hidden="true" /> : null}
