@@ -668,7 +668,7 @@ function HomePage() {
               <p className="serif text-[1.15rem] md:text-[1.35rem] text-[color:var(--charcoal)] leading-[1.25] font-normal">
                 700+ <span className="italic">five-star reviews</span>
                 <span className="hidden md:inline text-[color:var(--charcoal-soft)]"> · </span>
-                <span className="block md:inline text-[10.5px] md:text-[11.5px] uppercase tracking-[0.28em] font-semibold text-[color:var(--charcoal-soft)] md:ml-1 mt-1.5 md:mt-0">
+                <span className="block md:inline text-[10.5px] md:text-[11.5px] uppercase tracking-[0.28em] font-semibold text-[color:var(--charcoal)] md:ml-1 mt-1.5 md:mt-0">
                   Private · Local · Designed in Portugal
                 </span>
               </p>
