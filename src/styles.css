@@ -2706,43 +2706,65 @@ svg.lucide {
   }
 
   /* ── Homepage motion visibility tuning ─────────────────────────
-     Slightly stronger lift + duration than the calm site-wide
-     defaults so the homepage actually reads as "alive" on mobile,
-     while non-homepage routes keep their refined ≤220ms motion.
-     Bounded by the approved homepage-energy override:
-       translateY 12–14px · 320–460ms · stagger 80–120ms.
-     `cubic-bezier(0.22, 1, 0.36, 1)` is the approved easing.
-     Only animates opacity + transform — never layout properties. */
+     Production homepage motion is deliberately more readable than the
+     site-wide default: 16–18px lift, ~520ms, visible card stagger.
+     The separate `?motion-visible-test=1` flag exaggerates these values
+     for QA only and never changes copy, layout, or scroll behaviour. */
+  @keyframes homeRevealIn {
+    from { opacity: 0; transform: translate3d(0, 18px, 0); }
+    to { opacity: 1; transform: translate3d(0, 0, 0); }
+  }
+  @keyframes homeVisibleTestRevealIn {
+    from { opacity: 0; transform: translate3d(0, 24px, 0); }
+    to { opacity: 1; transform: translate3d(0, 0, 0); }
+  }
   .home-energy .reveal {
-    transform: translateY(14px);
+    transform: translateY(18px);
     transition:
-      opacity 440ms cubic-bezier(0.22, 1, 0.36, 1),
-      transform 440ms cubic-bezier(0.22, 1, 0.36, 1);
+      opacity 520ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
   }
   .home-energy .reveal.is-visible {
     transform: translateY(0);
+    animation: homeRevealIn 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
   }
   .home-energy .reveal-stagger {
-    transform: translateY(12px);
+    transform: translateY(18px);
     transition:
-      opacity 420ms cubic-bezier(0.22, 1, 0.36, 1),
-      transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+      opacity 520ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
   }
   .home-energy .reveal-stagger.is-visible {
     transform: translateY(0);
+    animation: homeRevealIn 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
   }
   .home-energy .section-enter {
-    transition: opacity 460ms cubic-bezier(0.22, 1, 0.36, 1);
+    transition: opacity 520ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   /* Sharper homepage stagger rhythm (within 80–120ms band) so cards
      feel sequenced rather than dumping in together. */
-  .home-energy .he-stagger > .reveal-stagger:nth-child(1) { transition-delay:   0ms !important; }
-  .home-energy .he-stagger > .reveal-stagger:nth-child(2) { transition-delay: 120ms !important; }
-  .home-energy .he-stagger > .reveal-stagger:nth-child(3) { transition-delay: 240ms !important; }
-  .home-energy .he-stagger > .reveal-stagger:nth-child(4) { transition-delay: 360ms !important; }
-  .home-energy .he-stagger > .reveal-stagger:nth-child(5) { transition-delay: 480ms !important; }
-  .home-energy .he-stagger > .reveal-stagger:nth-child(6) { transition-delay: 600ms !important; }
+  .home-energy .he-stagger > .reveal-stagger:nth-child(1) { transition-delay:   0ms !important; animation-delay:   0ms !important; }
+  .home-energy .he-stagger > .reveal-stagger:nth-child(2) { transition-delay: 130ms !important; animation-delay: 130ms !important; }
+  .home-energy .he-stagger > .reveal-stagger:nth-child(3) { transition-delay: 260ms !important; animation-delay: 260ms !important; }
+  .home-energy .he-stagger > .reveal-stagger:nth-child(4) { transition-delay: 390ms !important; animation-delay: 390ms !important; }
+  .home-energy .he-stagger > .reveal-stagger:nth-child(5) { transition-delay: 520ms !important; animation-delay: 520ms !important; }
+  .home-energy .he-stagger > .reveal-stagger:nth-child(6) { transition-delay: 650ms !important; animation-delay: 650ms !important; }
+
+  html.motion-visible-test .home-energy .reveal,
+  html.motion-visible-test .home-energy .reveal-stagger {
+    transform: translateY(24px);
+    transition-duration: 700ms;
+  }
+  html.motion-visible-test .home-energy .reveal.is-visible,
+  html.motion-visible-test .home-energy .reveal-stagger.is-visible {
+    animation: homeVisibleTestRevealIn 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  html.motion-visible-test .home-energy .he-stagger > .reveal-stagger:nth-child(2) { transition-delay: 160ms !important; animation-delay: 160ms !important; }
+  html.motion-visible-test .home-energy .he-stagger > .reveal-stagger:nth-child(3) { transition-delay: 320ms !important; animation-delay: 320ms !important; }
+  html.motion-visible-test .home-energy .he-stagger > .reveal-stagger:nth-child(4) { transition-delay: 480ms !important; animation-delay: 480ms !important; }
+  html.motion-visible-test .home-energy .he-stagger > .reveal-stagger:nth-child(5) { transition-delay: 640ms !important; animation-delay: 640ms !important; }
+  html.motion-visible-test .home-energy .he-stagger > .reveal-stagger:nth-child(6) { transition-delay: 800ms !important; animation-delay: 800ms !important; }
 
   /* Disable everything for users who prefer reduced motion. */
   @media (prefers-reduced-motion: reduce) {
