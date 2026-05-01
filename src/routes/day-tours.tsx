@@ -6,6 +6,7 @@ import { useImportedTourImages } from "@/hooks/use-imported-tour-images";
 import { ImageQualityToggle } from "@/components/ImageQualityToggle";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { SectionTitle } from "@/components/ui/SectionTitle";
+import { CtaButton } from "@/components/ui/CtaButton";
 
 export const Route = createFileRoute("/day-tours")({
   head: () => ({
@@ -88,9 +89,15 @@ function DayToursPage() {
                 {t.blurb}
               </p>
 
-              <span className="tour-card-link mt-5">
-                View experience &amp; reserve <ArrowRight size={14} />
-              </span>
+              <CtaButton
+                to="/tours/$tourId"
+                params={{ tourId: t.id }}
+                variant="ghost"
+                size="sm"
+                className="mt-5 self-start"
+              >
+                View experience &amp; reserve
+              </CtaButton>
             </Link>
           ))}
           </div>
