@@ -56,54 +56,42 @@ async function readColor(svg: Locator): Promise<string> {
 }
 
 test.describe("Final CTA arrow colors — primary vs ghost", () => {
-  test("default (rest) state — primary=gold, ghost=gold-soft", async ({ page }) => {
+  test("default (rest) state — primary=gold-soft (on teal), ghost=gold (on ivory)", async ({ page }) => {
     await gotoFinalCta(page);
 
     const primary = page.locator("#final-cta a", { hasText: "Create Your Story" });
     const ghost   = page.locator("#final-cta a", { hasText: "Talk to a Local" });
 
-    // Move the pointer well outside both buttons so neither is in
-    // hover state when we read computed style.
     await page.mouse.move(0, 0);
 
     const primaryColor = await readColor(arrowOf(primary));
     const ghostColor   = await readColor(arrowOf(ghost));
 
-    expect.soft(primaryColor, "primary arrow rest = --gold").toBe(ARROW_COLORS.gold);
-    expect.soft(ghostColor,   "ghost arrow rest = --gold-soft").toBe(ARROW_COLORS.goldSoft);
+    expect.soft(primaryColor, "primary arrow rest = --gold-soft (on teal bg)").toBe(ARROW_COLORS.goldSoft);
+    expect.soft(ghostColor,   "ghost arrow rest = --gold (on ivory bg)").toBe(ARROW_COLORS.gold);
 
-    // Contract: the two arrows are NEVER the same color at rest. That
-    // visual hierarchy (full gold vs champagne) is what makes the
-    // primary read as primary on ivory and the ghost read as ghost on
-    // teal. If a refactor accidentally collapses both to the same
-    // token, this assertion catches it loudly.
     expect(primaryColor).not.toBe(ghostColor);
   });
 
-  test("hover state — primary deepens to gold-deep, ghost brightens to gold", async ({ page }) => {
+  test("hover state — primary brightens to gold, ghost deepens to gold-deep", async ({ page }) => {
     await gotoFinalCta(page);
 
     const primary = page.locator("#final-cta a", { hasText: "Create Your Story" });
     const ghost   = page.locator("#final-cta a", { hasText: "Talk to a Local" });
 
-    // PRIMARY HOVER
+    // PRIMARY HOVER (teal bg → arrow lifts gold-soft → gold)
     await primary.hover();
     const primaryHover = await readColor(arrowOf(primary));
-    expect.soft(primaryHover, "primary arrow hover = --gold-deep").toBe(ARROW_COLORS.goldDeep);
+    expect.soft(primaryHover, "primary arrow hover = --gold").toBe(ARROW_COLORS.gold);
 
-    // Move off so the next hover starts clean
     await page.mouse.move(0, 0);
     await page.waitForTimeout(50);
 
-    // GHOST HOVER
+    // GHOST HOVER (ivory bg → arrow drops gold → gold-deep)
     await ghost.hover();
     const ghostHover = await readColor(arrowOf(ghost));
-    expect.soft(ghostHover, "ghost arrow hover = --gold").toBe(ARROW_COLORS.gold);
+    expect.soft(ghostHover, "ghost arrow hover = --gold-deep").toBe(ARROW_COLORS.goldDeep);
 
-    // Contract: hover states must move arrows in OPPOSITE directions on
-    // the gold ramp — primary darkens (more weight on light bg), ghost
-    // brightens (more visibility on dark bg). They should never both
-    // resolve to the same color on hover.
     expect(primaryHover).not.toBe(ghostHover);
   });
 
@@ -113,30 +101,21 @@ test.describe("Final CTA arrow colors — primary vs ghost", () => {
     const primary = page.locator("#final-cta a", { hasText: "Create Your Story" });
     const ghost   = page.locator("#final-cta a", { hasText: "Talk to a Local" });
 
-    // PRIMARY FOCUS
     await primary.focus();
     const primaryFocus = await readColor(arrowOf(primary));
-    expect.soft(primaryFocus, "primary arrow focus retains --gold").toBe(ARROW_COLORS.gold);
+    expect.soft(primaryFocus, "primary arrow focus retains --gold-soft").toBe(ARROW_COLORS.goldSoft);
 
-    const primaryRing = await primary.evaluate((el) => {
-      const cs = getComputedStyle(el);
-      // focus-visible:ring-2 ring-[color:var(--gold)] renders as a
-      // box-shadow ring in Tailwind v4. We assert it contains the
-      // --gold rgb fingerprint, regardless of the offset/blur values.
-      return cs.boxShadow;
-    });
+    const primaryRing = await primary.evaluate((el) => getComputedStyle(el).boxShadow);
     expect.soft(
       primaryRing,
       "primary focus ring contains --gold (#C9A96A)",
     ).toMatch(/rgb\(\s*201\s*,\s*169\s*,\s*106\s*\)/);
 
-    // Reset focus before the next assertion
     await primary.evaluate((el) => (el as HTMLElement).blur());
 
-    // GHOST FOCUS
     await ghost.focus();
     const ghostFocus = await readColor(arrowOf(ghost));
-    expect.soft(ghostFocus, "ghost arrow focus retains --gold-soft").toBe(ARROW_COLORS.goldSoft);
+    expect.soft(ghostFocus, "ghost arrow focus retains --gold").toBe(ARROW_COLORS.gold);
 
     const ghostRing = await ghost.evaluate((el) => getComputedStyle(el).boxShadow);
     expect.soft(
