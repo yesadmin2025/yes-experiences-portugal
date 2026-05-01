@@ -217,6 +217,50 @@ function describeReveal(el: Element): string {
   return `${tag}${id}${cls}`;
 }
 
+/**
+ * Visual debug flash: outlines the element in gold and pins a small
+ * label badge for ~1.5s, so reveal triggers are visible on mobile
+ * without needing dev tools open. Idempotent + cheap.
+ */
+function flashDebug(el: HTMLElement, label: string) {
+  if (!el || el.dataset.revealDebugFlashed === "1") return;
+  el.dataset.revealDebugFlashed = "1";
+  const prevOutline = el.style.outline;
+  const prevOffset = el.style.outlineOffset;
+  const prevTransition = el.style.transition;
+  el.style.outline = "2px dashed #C9A96A";
+  el.style.outlineOffset = "2px";
+  el.style.transition = (prevTransition ? prevTransition + ", " : "") + "outline-color 600ms ease";
+
+  const badge = document.createElement("span");
+  badge.textContent = label;
+  badge.style.cssText = [
+    "position:absolute",
+    "top:0",
+    "left:0",
+    "z-index:99998",
+    "padding:2px 6px",
+    "background:#C9A96A",
+    "color:#2E2E2E",
+    "font:700 10px/1.2 ui-monospace,monospace",
+    "border-radius:0 0 4px 0",
+    "pointer-events:none",
+  ].join(";");
+  // Position the badge over the element using a wrapper anchor.
+  const rect = el.getBoundingClientRect();
+  badge.style.position = "fixed";
+  badge.style.top = `${Math.max(0, rect.top)}px`;
+  badge.style.left = `${Math.max(0, rect.left)}px`;
+  document.body.appendChild(badge);
+
+  window.setTimeout(() => {
+    el.style.outline = prevOutline;
+    el.style.outlineOffset = prevOffset;
+    el.style.transition = prevTransition;
+    badge.remove();
+  }, 1500);
+}
+
 export function SiteLayout({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (typeof window === "undefined") return;
