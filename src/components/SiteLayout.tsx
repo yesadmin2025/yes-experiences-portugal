@@ -519,8 +519,8 @@ export function SiteLayout({ children }: { children: ReactNode }) {
     // Lower threshold + larger negative bottom margin on mobile so reveals
     // fire as soon as the top edge starts to appear.
     const ioOptions: IntersectionObserverInit = isMobile
-      ? { threshold: 0.01, rootMargin: "0px 0px -2% 0px" }
-      : { threshold: 0.08, rootMargin: "0px 0px -6% 0px" };
+      ? { threshold: 0.01, rootMargin: "0px 0px -18% 0px" }
+      : { threshold: 0.04, rootMargin: "0px 0px -14% 0px" };
 
     const io = new IntersectionObserver((entries) => {
       telemetry.markIoFired();
@@ -635,8 +635,8 @@ export function SiteLayout({ children }: { children: ReactNode }) {
 
     // Fire even earlier on mobile.
     const ioOptions: IntersectionObserverInit = isMobile
-      ? { threshold: 0.01, rootMargin: "0px 0px -2% 0px" }
-      : { threshold: 0.02, rootMargin: "0px 0px -8% 0px" };
+      ? { threshold: 0.01, rootMargin: "0px 0px -18% 0px" }
+      : { threshold: 0.02, rootMargin: "0px 0px -14% 0px" };
 
     const io = new IntersectionObserver((entries) => {
       telemetry.markIoFired();
