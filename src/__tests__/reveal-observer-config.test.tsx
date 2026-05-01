@@ -37,39 +37,86 @@ vi.mock("@/lib/smooth-anchor-scroll", () => ({
 import { SiteLayout } from "@/components/SiteLayout";
 
 // ------------------------------------------------------------------
-// Fake IntersectionObserver — captures (callback, options) per
-// instance so tests can assert on threshold / rootMargin.
+// Fake IntersectionObserver
 // ------------------------------------------------------------------
+//
+// Why this exists:
+//   The two SiteLayout effects (`.reveal/.reveal-stagger` and
+//   `.section-enter`) each spin up their own IntersectionObserver.
+//   In tests we need to (a) assert the threshold/rootMargin config of
+//   each one independently, and (b) drive intersection callbacks on
+//   the right observer for each scenario.
+//
+// Public test API:
+//   • `kind`               — "reveal" | "section-enter" | "other",
+//                            auto-detected the first time an element
+//                            of that kind is observed.
+//   • `pendingTargets`     — currently-observed elements (alias of
+//                            the live `targets` Set).
+//   • `observedTargets`    — every element ever observed, even after
+//                            `unobserve()` removes it.
+//   • `fire(entries)`      — deliver synthetic IO entries.
+//   • Static helpers:
+//       - `FakeIO.reveal()`  → the reveal observer (throws if missing).
+//       - `FakeIO.section()` → the section-enter observer.
+//       - `FakeIO.allOf(kind)` → every observer of a given kind.
+//   These names keep tests self-documenting: `FakeIO.reveal().fire(...)`
+//   reads as "the reveal observer fires" instead of "the first IO with
+//   a target whose className matches…".
+//
+type FakeIOKind = "reveal" | "section-enter" | "other";
+
+function classifyTarget(el: Element): FakeIOKind {
+  if (el.classList.contains("section-enter")) return "section-enter";
+  if (
+    el.classList.contains("reveal") ||
+    el.classList.contains("reveal-stagger")
+  ) {
+    return "reveal";
+  }
+  return "other";
+}
+
 class FakeIO {
   static instances: FakeIO[] = [];
+
   callback: IntersectionObserverCallback;
   options?: IntersectionObserverInit;
-  targets = new Set<Element>();
-  /**
-   * Tracks every element ever observed by this observer, even after
-   * `unobserve()` removes it. Used by the sequenced-firing tests to
-   * identify which observer (reveal vs section-enter) is which AFTER
-   * the initial sweep has already unobserved everything on mount.
-   */
-  observedHistory = new Set<Element>();
+
+  /** Live set: targets currently being watched (post-unobserve aware). */
+  readonly pendingTargets = new Set<Element>();
+  /** Append-only set: every element ever observed by this instance. */
+  readonly observedTargets = new Set<Element>();
+  /** Auto-detected on first observe; "other" until then. */
+  kind: FakeIOKind = "other";
+
   constructor(cb: IntersectionObserverCallback, options?: IntersectionObserverInit) {
     this.callback = cb;
     this.options = options;
     FakeIO.instances.push(this);
   }
+
   observe(target: Element) {
-    this.targets.add(target);
-    this.observedHistory.add(target);
+    this.pendingTargets.add(target);
+    this.observedTargets.add(target);
+    if (this.kind === "other") {
+      const detected = classifyTarget(target);
+      if (detected !== "other") this.kind = detected;
+    }
   }
+
   unobserve(target: Element) {
-    this.targets.delete(target);
+    this.pendingTargets.delete(target);
   }
+
   disconnect() {
-    this.targets.clear();
+    this.pendingTargets.clear();
   }
+
   takeRecords(): IntersectionObserverEntry[] {
     return [];
   }
+
   /** Deliver synthetic entries to this observer's callback. */
   fire(entries: Partial<IntersectionObserverEntry>[]) {
     const full = entries.map(
@@ -95,8 +142,47 @@ class FakeIO {
     );
     this.callback(full, this as unknown as IntersectionObserver);
   }
+
+  // ----- Backwards-compatible alias --------------------------------
+  // Some earlier tests in this file still reference `targets` directly;
+  // keep the alias so the diff stays small. Reads/mutations on either
+  // name affect the same underlying Set.
+  get targets(): Set<Element> {
+    return this.pendingTargets;
+  }
+  /** Deprecated: prefer `observedTargets`. */
+  get observedHistory(): Set<Element> {
+    return this.observedTargets;
+  }
+
+  // ----- Static lookup helpers -------------------------------------
   static reset() {
     FakeIO.instances = [];
+  }
+  static allOf(kind: FakeIOKind): FakeIO[] {
+    return FakeIO.instances.filter((io) => io.kind === kind);
+  }
+  /** The (single) reveal observer. Throws if not yet created. */
+  static reveal(): FakeIO {
+    const io = FakeIO.allOf("reveal")[0];
+    if (!io) {
+      throw new Error(
+        "FakeIO.reveal(): no reveal IntersectionObserver has been created yet — " +
+          "did the SiteLayout mount and observe a `.reveal` element?",
+      );
+    }
+    return io;
+  }
+  /** The (single) section-enter observer. Throws if not yet created. */
+  static section(): FakeIO {
+    const io = FakeIO.allOf("section-enter")[0];
+    if (!io) {
+      throw new Error(
+        "FakeIO.section(): no section-enter IntersectionObserver has been created yet — " +
+          "did the SiteLayout mount and observe a `.section-enter` element?",
+      );
+    }
+    return io;
   }
 }
 
