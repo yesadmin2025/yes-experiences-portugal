@@ -685,10 +685,13 @@ export function SiteLayout({ children }: { children: ReactNode }) {
       if (revealDebug) flashDebug(el as HTMLElement, `section·${source}`);
     };
 
-    // Fire even earlier on mobile.
+    // Fire even earlier on mobile. Reduced from -18% to -10% on mobile
+    // so Occasions / Groups (a long section that often sits past mid-fold
+    // before triggering) starts its calm fade while still inside the
+    // viewport rather than catching the IO post-pass branch.
     const ioOptions: IntersectionObserverInit = isMobile
-      ? { threshold: 0.01, rootMargin: "0px 0px -18% 0px" }
-      : { threshold: 0.02, rootMargin: "0px 0px -14% 0px" };
+      ? { threshold: 0.01, rootMargin: "0px 0px -10% 0px" }
+      : { threshold: 0.02, rootMargin: "0px 0px -12% 0px" };
 
     const io = new IntersectionObserver((entries) => {
       telemetry.markIoFired();
