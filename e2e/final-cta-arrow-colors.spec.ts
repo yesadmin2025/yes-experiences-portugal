@@ -3,29 +3,24 @@ import { test, expect, type Locator, type Page } from "@playwright/test";
 /**
  * Final CTA arrow color contract — visual regression via computed style.
  *
- * The homepage final-CTA card has two buttons:
+ * The homepage final-CTA card lives on an ivory surface (re-aligned to
+ * the page's editorial system). Two buttons:
  *
- *   • Primary  ("Create Your Story") on ivory bg
- *       arrow color  : --gold       (#C9A96A) at rest
- *       arrow color  : --gold-deep  (#B89452) on hover
+ *   • Primary  ("Create Your Story")  — teal background
+ *       arrow color : --gold-soft (#E1CFA6) at rest
+ *       arrow color : --gold      (#C9A96A) on hover
  *
- *   • Ghost    ("Talk to a Local")   on teal bg
- *       arrow color  : --gold-soft  (#E1CFA6) at rest
- *       arrow color  : --gold       (#C9A96A) on hover
+ *   • Ghost    ("Talk to a Local")    — ivory background, teal border
+ *       arrow color : --gold      (#C9A96A) at rest
+ *       arrow color : --gold-deep (#B89452) on hover
  *
  *   Focus    (both): retains the rest-state arrow color, gains the
- *                    --gold focus ring (asserted via outline color).
+ *                    --gold focus ring (asserted via box-shadow).
  *
- * Why computed-style instead of pixel diff: Lucide arrows are 12–14px
- * SVGs and a 1-pixel screenshot diff threshold flaps on every CI run.
- * Reading `getComputedStyle(svg).color` resolves the CSS variable
- * deterministically and lets us assert *exact* RGB values, which is
- * the strongest possible regression check for the arrow color contract.
- *
- * The 8 brand tokens are locked in `src/lib/brand-tokens.ts` and the
- * extended palette (gold-deep / gold-soft / gold-warm / charcoal-deep)
- * is locked in `src/styles.css` :root. If those hex values ever
- * change, this spec must be updated in the same commit.
+ * Rationale for the asymmetry: arrows must read clearly against their
+ * background. On teal we lift to gold-soft (more luminance); on ivory
+ * we drop to gold/gold-deep (more weight). Hover always moves one step
+ * along the gold ramp toward higher contrast with the bg.
  */
 
 // Hex values straight from src/styles.css :root — must match exactly.
