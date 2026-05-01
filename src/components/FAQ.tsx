@@ -141,7 +141,7 @@ export function FAQ() {
             Approved copy — do not paraphrase without explicit ask.
             Reassures before the questions even start. */}
         <div className="reveal max-w-3xl mx-auto text-center">
-          <span className="eyebrow">Before you book</span>
+          <span className="he-eyebrow-bar flank">Before you book</span>
           <h2 id="faq-title" className="serif text-[2.4rem] sm:text-[2.8rem] md:text-[4rem] mt-4 leading-[1.05] md:leading-[0.98] tracking-[-0.02em] text-[color:var(--charcoal)] font-medium">
             Still wondering{" "}
             <span className="italic font-normal text-[color:var(--teal)]">how it works?</span>
