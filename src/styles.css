@@ -1306,16 +1306,20 @@
   .btn-solid--teal {
     background-color: var(--teal);
     color: #ffffff;
-    border-color: color-mix(in oklab, var(--gold) 35%, transparent);
+    /* Visible champagne hairline — was 35% (read as grey on small sizes).
+       Bumped to 60% with --gold-deep so the rim reads as gold, not beige. */
+    border-color: color-mix(in oklab, var(--gold-deep) 60%, transparent);
     box-shadow:
+      inset 0 0 0 1px color-mix(in oklab, var(--gold) 20%, transparent),
       0 6px 16px -8px rgba(41, 91, 97, 0.45),
       0 14px 30px -18px rgba(41, 91, 97, 0.35);
   }
   .btn-solid--teal:hover {
     background-color: var(--teal-2);
     transform: translate3d(0, -2px, 0);
-    border-color: color-mix(in oklab, var(--gold) 60%, transparent);
+    border-color: var(--gold);
     box-shadow:
+      inset 0 0 0 1px color-mix(in oklab, var(--gold) 45%, transparent),
       0 10px 22px -10px rgba(41, 91, 97, 0.55),
       0 22px 44px -22px rgba(201, 169, 106, 0.35);
   }
@@ -1356,18 +1360,22 @@
       0 14px 30px -14px rgba(201, 169, 106, 0.5);
   }
 
+  /* Light-surface secondary — charcoal type with a real champagne-gold
+     hairline. Hover lifts the rim to full --gold-deep and washes the
+     surface with a 5% gold tint so the accent feels alive but not loud. */
   .btn-solid--outline {
     background-color: transparent;
-    color: var(--teal);
-    border-color: color-mix(in oklab, var(--teal) 50%, transparent);
+    color: var(--charcoal-deep);
+    border-color: color-mix(in oklab, var(--gold-deep) 55%, transparent);
   }
   .btn-solid--outline:hover {
-    background-color: color-mix(in oklab, var(--teal) 8%, transparent);
-    border-color: var(--teal);
+    background-color: color-mix(in oklab, var(--gold) 6%, transparent);
+    color: var(--teal);
+    border-color: var(--gold-deep);
     transform: translate3d(0, -2px, 0);
     box-shadow:
-      0 10px 22px -14px rgba(41, 91, 97, 0.35),
-      0 0 0 1px color-mix(in oklab, var(--gold) 30%, transparent);
+      0 10px 22px -14px rgba(41, 91, 97, 0.25),
+      inset 0 0 0 1px color-mix(in oklab, var(--gold) 35%, transparent);
   }
   .btn-solid--outline:active {
     transform: translate3d(0, -1px, 0);
