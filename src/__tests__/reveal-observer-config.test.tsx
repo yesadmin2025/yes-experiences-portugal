@@ -640,7 +640,7 @@ describe("reveal observers — sequenced firing on mobile", () => {
     // Fire only s0 and s2 (skip s1) — middle stays invisible until its
     // own entry arrives. This proves visibility isn't a side-effect of
     // earlier or later fires bleeding across siblings.
-    sectionIO!.fire([
+    sectionIO.fire([
       {
         target: sections[0],
         isIntersecting: true,
@@ -651,7 +651,7 @@ describe("reveal observers — sequenced firing on mobile", () => {
     expect(sections[1].classList.contains("is-visible")).toBe(false);
     expect(sections[2].classList.contains("is-visible")).toBe(false);
 
-    sectionIO!.fire([
+    sectionIO.fire([
       {
         target: sections[2],
         isIntersecting: true,
@@ -663,7 +663,7 @@ describe("reveal observers — sequenced firing on mobile", () => {
 
     // Now fire the middle one and confirm it joins the visible set
     // without disturbing the others.
-    sectionIO!.fire([
+    sectionIO.fire([
       {
         target: sections[1],
         isIntersecting: true,
