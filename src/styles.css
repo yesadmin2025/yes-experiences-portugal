@@ -158,9 +158,9 @@
   --ring: var(--teal);
 
   /* Shared vertical rhythm — used by .section-y / -lg / -sm / -app */
-  --section-y: 5rem;
-  --section-y-lg: 6rem;
-  --section-y-sm: 3.5rem;
+  --section-y: 4rem;
+  --section-y-lg: 5rem;
+  --section-y-sm: 3rem;
   --section-y-app: 1.5rem; /* compact rhythm for interactive workspaces */
 
   /* ─────────────────────────────────────────────────────────────
