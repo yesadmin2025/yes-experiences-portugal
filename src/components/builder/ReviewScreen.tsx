@@ -3,6 +3,8 @@ import { fmtMinutes, type RouteUI, type RoutedStopUI, builderWaHref } from "./ty
 import type { BuilderImageRef } from "@/hooks/useBuilderImages";
 import { BuilderImage } from "./BuilderImage";
 import { CtaButton } from "@/components/ui/CtaButton";
+import { ReferenceUploader, type ToneResult } from "./ReferenceUploader";
+import { useBuilderSessionId } from "@/hooks/useBuilderSessionId";
 
 interface Props {
   route: RouteUI;
@@ -12,6 +14,7 @@ interface Props {
   reviewThumbs?: BuilderImageRef[];
   onConfirm: () => void;
   onBack: () => void;
+  onToneReady?: (tone: ToneResult) => void;
 }
 
 const TRUST_POINTS = [
