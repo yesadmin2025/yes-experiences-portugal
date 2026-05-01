@@ -23,14 +23,24 @@ const SOCIALS = [
 
 export function Footer() {
   return (
-    <footer className="bg-[color:var(--charcoal-deep)] text-[color:var(--ivory)]">
-      <div className="container-x py-20 md:py-24">
+    <footer className="relative bg-[color:var(--charcoal)] text-[color:var(--ivory)]">
+      {/* Thin champagne-gold top hairline — visual handoff from the
+          ivory final-CTA section into the footer. Decorative. */}
+      <div
+        aria-hidden="true"
+        className="absolute top-0 inset-x-0 h-px"
+        style={{
+          background:
+            "linear-gradient(90deg, transparent, color-mix(in oklab, var(--gold) 70%, transparent) 50%, transparent)",
+        }}
+      />
+      <div className="container-x py-14 md:py-16">
         {/* Brand row — logo + tagline. Sits above the column grid so
             the 4 nav columns can breathe at desktop. */}
         <div className="max-w-3xl">
           <Link
             to="/"
-            className="inline-block rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--charcoal-deep)]"
+            className="inline-block rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--charcoal)]"
             aria-label="YES experiences PORTUGAL — Home"
           >
             <Logo
@@ -49,7 +59,7 @@ export function Footer() {
         </div>
 
         {/* 4-column nav grid */}
-        <div className="mt-14 md:mt-16 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-12 md:gap-10">
+        <div className="mt-10 md:mt-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 md:gap-10">
           <FooterCol
             title="Experiences"
             links={[
@@ -93,7 +103,7 @@ export function Footer() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={label}
-                    className="inline-flex items-center justify-center h-11 w-11 rounded-sm border border-[color:var(--ivory)]/40 text-[color:var(--ivory)]/65 hover:text-[color:var(--gold)] hover:border-[color:var(--gold)]/70 hover:-translate-y-0.5 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--charcoal-deep)]"
+                    className="inline-flex items-center justify-center h-11 w-11 rounded-sm border border-[color:var(--ivory)]/40 text-[color:var(--ivory)]/65 hover:text-[color:var(--gold)] hover:border-[color:var(--gold)]/70 hover:-translate-y-0.5 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--charcoal)]"
                   >
                     <Icon size={18} strokeWidth={1.5} />
                   </a>
@@ -104,7 +114,7 @@ export function Footer() {
         </div>
 
         {/* Bottom bar — copyright + tagline. Quiet, single line. */}
-        <div className="mt-16 md:mt-20 pt-8 border-t border-[color:var(--ivory)]/15">
+        <div className="mt-12 md:mt-14 pt-6 border-t border-[color:var(--gold)]/20">
           <div
             className="flex flex-col md:flex-row justify-between items-center gap-3 text-[12px] text-[color:var(--ivory)]/70"
             style={{ fontWeight: 350 }}
