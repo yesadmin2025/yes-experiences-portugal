@@ -1285,77 +1285,107 @@ function HomePage() {
           one button. */}
       <section
         id="final-cta"
-        className="section-y relative overflow-hidden bg-[color:var(--teal)] text-[color:var(--ivory)] pb-20 md:pb-24 scroll-mt-24 md:scroll-mt-28"
+        className="section-y relative overflow-hidden bg-[color:var(--sand)] text-[color:var(--charcoal)] scroll-mt-24 md:scroll-mt-28"
         aria-labelledby="final-cta-title"
       >
-        {/* FINAL CTA — solid teal base with editorial texture so it
-            doesn't read as a flat block:
-              · radial gold glow top-right (very low opacity)
-              · subtle linear darken bottom-left for depth
-              · faint diagonal noise via SVG dataurl (≤4% opacity)
-            All decorative + aria-hidden. Reduced-motion safe (no
-            animation on the texture). */}
+        {/* Warm ivory→sand wash so the section reads as a chapter, not a
+            block. Decorative + aria-hidden. No animation. */}
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              "radial-gradient(60% 80% at 88% 10%, rgba(201,169,106,0.18), transparent 60%), " +
-              "radial-gradient(70% 90% at 10% 100%, rgba(0,0,0,0.28), transparent 65%)",
+              "radial-gradient(80% 60% at 50% 0%, color-mix(in oklab, var(--ivory) 92%, transparent), transparent 70%)",
           }}
-        />
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 opacity-[0.05] mix-blend-overlay"
-          style={{
-            backgroundImage:
-              "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>\")",
-          }}
-        />
-        {/* Soft gold hairline at the very top — editorial signature, not a banner */}
-        <div
-          aria-hidden="true"
-          className="absolute top-0 left-1/2 -translate-x-1/2 h-px w-32 md:w-48 bg-gradient-to-r from-transparent via-[color:var(--gold)]/70 to-transparent"
         />
 
         <div className="container-x relative">
-          <div className="reveal max-w-xl mx-auto text-center">
-            <span className="he-rule-flank text-[11px] uppercase tracking-[0.28em] font-bold text-[color:var(--gold-soft)]">
-              <MessageCircle size={12} aria-hidden="true" />
-              Prefer a conversation?
-            </span>
-            <h2
-              id="final-cta-title"
-              className="mt-5 text-[2rem] sm:text-[2.4rem] md:text-[3.2rem] leading-[1.1] md:leading-[1.02] tracking-[-0.016em] font-medium text-[color:var(--ivory)]"
+          {/* Chapter divider above the card — gold dot + flanking rules */}
+          <div className="reveal max-w-md mx-auto mb-10 md:mb-14" aria-hidden="true">
+            <div className="chapter-divider"><span className="dot" /></div>
+          </div>
+
+          {/* Final CTA card — deep teal with champagne-gold hairline,
+              gold top rule and a soft warm shadow. Editorial radius. */}
+          <div className="reveal mx-auto max-w-2xl">
+            <div
+              className="relative overflow-hidden rounded-[6px] bg-[color:var(--teal)] text-[color:var(--ivory)] px-6 py-12 sm:px-10 sm:py-14 md:px-14 md:py-16 text-center"
+              style={{
+                border: "1px solid color-mix(in oklab, var(--gold-deep) 55%, transparent)",
+                boxShadow:
+                  "0 1px 0 0 color-mix(in oklab, var(--gold) 25%, transparent) inset, " +
+                  "0 24px 60px -28px rgba(41, 91, 97, 0.45), " +
+                  "0 12px 28px -18px rgba(46, 46, 46, 0.18)",
+              }}
             >
-              Ready to design your{" "}
-              <span className="italic font-normal text-[color:var(--gold-soft)] serif">
-                Portugal?
-              </span>
-            </h2>
-            <p className="mt-5 text-[15.5px] md:text-[17px] leading-[1.7] text-[color:var(--ivory)]/90">
-              Start in the Studio. Explore Signatures. Or talk to a local — your
-              journey, your way.
-            </p>
-            <div className="mt-9 flex flex-col sm:flex-row gap-y-4 gap-x-4 justify-center items-stretch sm:items-center">
-              <Link
-                to="/builder"
-                className="he-glow he-sheen he-cta-shift group inline-flex items-center justify-center gap-2.5 bg-[color:var(--ivory)] text-[color:var(--charcoal)] px-7 py-3.5 min-h-[48px] text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold rounded-[2px] transition-colors duration-200 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--teal)] shadow-[0_8px_22px_-10px_rgba(0,0,0,0.5)]"
-              >
-                <ArrowRight size={14} aria-hidden="true" />
-                Create Your Story
-              </Link>
-              <Link
-                to="/contact"
-                className="group inline-flex items-center justify-center gap-2 px-7 py-3.5 min-h-[48px] text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold rounded-[2px] border-2 border-[color:var(--ivory)]/85 text-[color:var(--ivory)] transition-all duration-200 hover:bg-[color:var(--ivory)]/10 hover:border-[color:var(--ivory)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--teal)]"
-              >
-                Talk to a Local
-                <ArrowRight size={12} aria-hidden="true" className="transition-transform duration-200 group-hover:translate-x-0.5" />
-              </Link>
+              {/* Soft inner radial — adds depth without flattening teal */}
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0"
+                style={{
+                  background:
+                    "radial-gradient(70% 90% at 90% 0%, rgba(201,169,106,0.16), transparent 60%), " +
+                    "radial-gradient(60% 80% at 5% 100%, rgba(0,0,0,0.22), transparent 65%)",
+                }}
+              />
+              {/* Gold top rule — short, centered, the editorial signature */}
+              <div
+                aria-hidden="true"
+                className="absolute top-0 left-1/2 -translate-x-1/2 h-px w-24 md:w-32"
+                style={{
+                  background:
+                    "linear-gradient(90deg, transparent, var(--gold) 50%, transparent)",
+                  opacity: 0.85,
+                }}
+              />
+
+              <div className="relative">
+                <span className="he-rule-flank text-[11px] uppercase tracking-[0.28em] font-bold text-[color:var(--gold-soft)]">
+                  <MessageCircle size={12} aria-hidden="true" />
+                  Prefer a conversation?
+                </span>
+                <h2
+                  id="final-cta-title"
+                  className="mt-5 text-[2rem] sm:text-[2.4rem] md:text-[3.2rem] leading-[1.1] md:leading-[1.02] tracking-[-0.016em] font-medium text-[color:var(--ivory)]"
+                >
+                  Ready to design your{" "}
+                  <span className="italic font-normal text-[color:var(--gold-soft)] serif">
+                    Portugal?
+                  </span>
+                </h2>
+                <p className="mt-5 text-[15.5px] md:text-[17px] leading-[1.7] text-[color:var(--ivory)]/90 max-w-md mx-auto">
+                  Start in the Studio, explore a Signature, or talk to a local.
+                </p>
+                <div className="mt-9 flex flex-col sm:flex-row gap-y-4 gap-x-4 justify-center items-stretch sm:items-center">
+                  <Link
+                    to="/builder"
+                    className="he-glow he-sheen he-cta-shift group inline-flex items-center justify-center gap-2.5 bg-[color:var(--ivory)] text-[color:var(--charcoal-deep)] px-7 py-3.5 min-h-[48px] text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold rounded-[2px] transition-all duration-200 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--teal)]"
+                    style={{
+                      border: "1px solid color-mix(in oklab, var(--gold-deep) 65%, transparent)",
+                      boxShadow:
+                        "inset 0 0 0 1px color-mix(in oklab, var(--gold) 25%, transparent), " +
+                        "0 8px 22px -10px rgba(0,0,0,0.45)",
+                    }}
+                  >
+                    <ArrowRight size={14} aria-hidden="true" className="transition-transform duration-200 group-hover:translate-x-0.5" />
+                    Create Your Story
+                  </Link>
+                  <Link
+                    to="/contact"
+                    className="group inline-flex items-center justify-center gap-2 px-7 py-3.5 min-h-[48px] text-[12.5px] sm:text-[13px] uppercase tracking-[0.18em] font-bold rounded-[2px] text-[color:var(--ivory)] transition-all duration-200 hover:bg-[color:var(--ivory)]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--teal)]"
+                    style={{
+                      border: "1px solid color-mix(in oklab, var(--gold) 65%, transparent)",
+                    }}
+                  >
+                    Talk to a Local
+                    <ArrowRight size={12} aria-hidden="true" className="transition-transform duration-200 group-hover:translate-x-0.5" />
+                  </Link>
+                </div>
+                <p className="mt-6 text-[13px] italic text-[color:var(--ivory)]/85">
+                  Need help shaping it? A local is one message away.
+                </p>
+              </div>
             </div>
-            <p className="mt-6 text-[13px] italic text-[color:var(--ivory)]/85">
-              A local is one message away.
-            </p>
           </div>
         </div>
       </section>
