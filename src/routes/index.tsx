@@ -844,7 +844,7 @@ function HomePage() {
           away" reassurance. */}
       <section
         id="why-yes"
-        className="section-enter section-y bg-[color:var(--ivory)] border-b border-[color:var(--border)] scroll-mt-24 md:scroll-mt-28"
+        className="he-section-rule section-enter section-y bg-[color:var(--ivory)] border-b border-[color:var(--border)] scroll-mt-24 md:scroll-mt-28"
         aria-labelledby="why-yes-title"
       >
         <div className="container-x">
