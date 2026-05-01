@@ -1030,7 +1030,7 @@ function HomePage() {
                       </div>
                       {/* Bottom: real title + real duration */}
                       <div className="absolute inset-x-0 bottom-0 p-5 md:p-6 text-white">
-                        <h3 className="serif text-[1.3rem] md:text-[1.4rem] leading-[1.18] text-white text-balance">
+                        <h3 className="serif text-[1.35rem] md:text-[1.5rem] leading-[1.18] text-white text-balance">
                           {t.title}
                         </h3>
                         <span className="mt-2 inline-block text-[11px] uppercase tracking-[0.22em] text-white/85">
