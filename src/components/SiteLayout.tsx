@@ -93,6 +93,7 @@ type RevealTelemetry = {
 declare global {
   interface Window {
     __yesRevealTelemetry?: RevealTelemetry;
+    __yesMotionStartedAt?: number;
   }
 }
 
@@ -260,6 +261,32 @@ function describeReveal(el: Element): string {
       ? el.className.split(/\s+/).filter(Boolean).slice(0, 2).map((c) => `.${c}`).join("")
       : "";
   return `${tag}${id}${cls}`;
+}
+
+function sectionNameFor(el: HTMLElement): string {
+  const section = el.closest<HTMLElement>("section[id], [data-motion-section]");
+  if (!section) return "unsectioned";
+  const explicit = section.dataset.motionSection;
+  if (explicit) return explicit;
+  const id = section.id || "unsectioned";
+  const names: Record<string, string> = {
+    reviews: "Trust strip",
+    builder: "Three Ways / Studio",
+    studio: "Studio / Builder",
+    "why-yes": "Why YES",
+    signatures: "Signature Experiences",
+    occasions: "Occasions / Groups",
+    faq: "FAQ",
+    "final-cta": "Final CTA / Footer",
+  };
+  return names[id] ?? id;
+}
+
+function parseMs(value: string): number {
+  const first = value.split(",")[0]?.trim() ?? "0ms";
+  if (first.endsWith("ms")) return Number.parseFloat(first) || 0;
+  if (first.endsWith("s")) return (Number.parseFloat(first) || 0) * 1000;
+  return Number.parseFloat(first) || 0;
 }
 
 /**
