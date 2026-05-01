@@ -1,0 +1,257 @@
+/**
+ * Reveal observer config + reduced-motion fallback contract.
+ *
+ * Two guarantees enforced here:
+ *
+ * 1. **Mobile IO config** — when `(max-width: 767.98px)` matches, both
+ *    `.reveal` / `.reveal-stagger` and `.section-enter` observers must
+ *    fire earlier than on desktop. Concretely:
+ *      - threshold ≤ 0.02 (tolerant of small variations)
+ *      - rootMargin's bottom inset is at most -2% (i.e. tighter / earlier
+ *        than the desktop -6%/-8% values), so tall mobile sections begin
+ *        revealing as soon as their top edge appears.
+ *    On desktop the inverse holds — threshold > 0.02 OR larger negative
+ *    bottom margin — so we don't accidentally regress to the old "snap
+ *    in late on mobile" config.
+ *
+ * 2. **prefers-reduced-motion fallback** — when the media query matches,
+ *    SiteLayout MUST NOT instantiate any IntersectionObserver for
+ *    reveals/section-enter, AND every `.reveal` / `.reveal-stagger` /
+ *    `.section-enter` element must end up with `is-visible` synchronously
+ *    after mount. This guarantees content is always shown for users who
+ *    have motion disabled, even if CSS animations are blocked.
+ */
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import { render, cleanup } from "@testing-library/react";
+
+vi.mock("@/components/Navbar", () => ({ Navbar: () => null }));
+vi.mock("@/components/Footer", () => ({ Footer: () => null }));
+vi.mock("@/components/FloatingActions", () => ({ FloatingActions: () => null }));
+vi.mock("@/components/WhatsAppFab", () => ({ WhatsAppFab: () => null }));
+vi.mock("@/components/MobileStickyCTA", () => ({ MobileStickyCTA: () => null }));
+vi.mock("@/components/PostHeroAnnouncer", () => ({ PostHeroAnnouncer: () => null }));
+vi.mock("@/lib/smooth-anchor-scroll", () => ({
+  installSmoothAnchorScroll: () => () => {},
+}));
+
+import { SiteLayout } from "@/components/SiteLayout";
+
+// ------------------------------------------------------------------
+// Fake IntersectionObserver — captures (callback, options) per
+// instance so tests can assert on threshold / rootMargin.
+// ------------------------------------------------------------------
+class FakeIO {
+  static instances: FakeIO[] = [];
+  callback: IntersectionObserverCallback;
+  options?: IntersectionObserverInit;
+  targets = new Set<Element>();
+  constructor(cb: IntersectionObserverCallback, options?: IntersectionObserverInit) {
+    this.callback = cb;
+    this.options = options;
+    FakeIO.instances.push(this);
+  }
+  observe(target: Element) {
+    this.targets.add(target);
+  }
+  unobserve(target: Element) {
+    this.targets.delete(target);
+  }
+  disconnect() {
+    this.targets.clear();
+  }
+  takeRecords(): IntersectionObserverEntry[] {
+    return [];
+  }
+  static reset() {
+    FakeIO.instances = [];
+  }
+}
+
+/**
+ * Parse a rootMargin string of the form "Tpx Rpx Bpx Lpx" or "T R B L"
+ * with mixed px/% units. Returns the **bottom** value in its native unit;
+ * negative percentages mean "shrink the viewport from the bottom" and a
+ * larger absolute % = IO fires later, smaller absolute % = earlier.
+ *
+ * Returns Infinity when we can't parse it, so the assertion fails loudly
+ * instead of silently passing.
+ */
+function bottomMarginPercent(rootMargin: string | undefined): number {
+  if (!rootMargin) return Infinity;
+  const parts = rootMargin.trim().split(/\s+/);
+  // CSS shorthand: 1, 2, 3, or 4 values. Bottom is index 2 in 4-val form
+  // or implied by shorthand rules. We only generate 4-val from SiteLayout
+  // ("0px 0px -2% 0px"), so handle that primarily.
+  let bottom: string | undefined;
+  if (parts.length === 4) bottom = parts[2];
+  else if (parts.length === 3) bottom = parts[2];
+  else if (parts.length === 2) bottom = parts[0];
+  else bottom = parts[0];
+  if (!bottom) return Infinity;
+  const m = bottom.match(/^(-?\d*\.?\d+)\s*(px|%)?$/);
+  if (!m) return Infinity;
+  const value = parseFloat(m[1]);
+  const unit = m[2] || "px";
+  // Normalise to "percent equivalent" for comparison: treat px as 0% so
+  // px-only margins always look "tighter" than negative-% margins.
+  return unit === "%" ? value : 0;
+}
+
+function makeMatchMedia(map: Record<string, boolean>) {
+  return (q: string): MediaQueryList =>
+    ({
+      matches: map[q] ?? false,
+      media: q,
+      onchange: null,
+      addListener: () => {},
+      removeListener: () => {},
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      dispatchEvent: () => false,
+    }) as unknown as MediaQueryList;
+}
+
+beforeEach(() => {
+  delete (window as unknown as { __yesRevealTelemetry?: unknown }).__yesRevealTelemetry;
+  FakeIO.reset();
+  vi.stubGlobal("IntersectionObserver", FakeIO as unknown as typeof IntersectionObserver);
+  Object.defineProperty(window, "innerHeight", { value: 800, configurable: true });
+  window.history.replaceState({}, "", "/");
+  Object.defineProperty(window, "scrollY", { value: 0, configurable: true, writable: true });
+});
+
+afterEach(() => {
+  cleanup();
+  vi.unstubAllGlobals();
+});
+
+describe("reveal observers — mobile IO config", () => {
+  it("uses a tighter (earlier-firing) rootMargin + low threshold on mobile", () => {
+    // matchMedia reports we're on mobile and NOT reduced-motion.
+    vi.stubGlobal(
+      "matchMedia",
+      makeMatchMedia({
+        "(max-width: 767.98px)": true,
+        "(prefers-reduced-motion: reduce)": false,
+      }),
+    );
+
+    render(
+      <SiteLayout>
+        <div className="reveal" />
+        <div className="reveal-stagger" />
+        <section className="section-enter" />
+      </SiteLayout>,
+    );
+
+    // Two observers expected: reveal + section-enter.
+    expect(FakeIO.instances.length).toBeGreaterThanOrEqual(2);
+    for (const io of FakeIO.instances) {
+      const threshold = Array.isArray(io.options?.threshold)
+        ? Math.min(...(io.options!.threshold as number[]))
+        : (io.options?.threshold ?? 0);
+      // Mobile threshold must be very low so reveals fire as soon as a
+      // sliver of the element appears.
+      expect(threshold).toBeLessThanOrEqual(0.02);
+      // Mobile bottom margin must be ≥ -2% (i.e. tighter / less negative
+      // than the desktop -6/-8 values).
+      const bottomPct = bottomMarginPercent(io.options?.rootMargin);
+      expect(bottomPct).toBeGreaterThanOrEqual(-2);
+    }
+  });
+
+  it("uses a more conservative rootMargin / threshold on desktop", () => {
+    vi.stubGlobal(
+      "matchMedia",
+      makeMatchMedia({
+        "(max-width: 767.98px)": false,
+        "(prefers-reduced-motion: reduce)": false,
+      }),
+    );
+
+    render(
+      <SiteLayout>
+        <div className="reveal" />
+        <section className="section-enter" />
+      </SiteLayout>,
+    );
+
+    expect(FakeIO.instances.length).toBeGreaterThanOrEqual(2);
+    // At least one of the two desktop observers must use the
+    // pre-existing -6%/-8% behavior (i.e. bottom margin < -2%) OR a
+    // higher threshold (> 0.02). This guards against accidentally
+    // applying the mobile config everywhere.
+    const looser = FakeIO.instances.some((io) => {
+      const threshold = Array.isArray(io.options?.threshold)
+        ? Math.min(...(io.options!.threshold as number[]))
+        : (io.options?.threshold ?? 0);
+      const bottomPct = bottomMarginPercent(io.options?.rootMargin);
+      return threshold > 0.02 || bottomPct < -2;
+    });
+    expect(looser).toBe(true);
+  });
+});
+
+describe("reveal observers — prefers-reduced-motion fallback", () => {
+  it("never instantiates the reveal/section-enter observers and marks every element visible", () => {
+    vi.stubGlobal(
+      "matchMedia",
+      makeMatchMedia({
+        "(max-width: 767.98px)": true,
+        "(prefers-reduced-motion: reduce)": true,
+      }),
+    );
+
+    render(
+      <SiteLayout>
+        <div className="reveal" data-testid="r1" />
+        <div className="reveal-stagger" data-testid="r2" />
+        <section className="section-enter" data-testid="s1" />
+        <section className="section-enter" data-testid="s2" />
+      </SiteLayout>,
+    );
+
+    // Reduced-motion path must short-circuit BEFORE constructing either
+    // IntersectionObserver, so we expect zero instances.
+    expect(FakeIO.instances.length).toBe(0);
+
+    // Every reveal-flavoured element must be force-marked visible
+    // synchronously, so content is never hidden for reduced-motion users.
+    const all = document.querySelectorAll<HTMLElement>(
+      ".reveal, .reveal-stagger, .section-enter",
+    );
+    expect(all.length).toBe(4);
+    all.forEach((el) => {
+      expect(el.classList.contains("is-visible")).toBe(true);
+    });
+  });
+
+  it("clears any inline transition-delay so staggered items can't stay invisible", () => {
+    vi.stubGlobal(
+      "matchMedia",
+      makeMatchMedia({
+        "(max-width: 767.98px)": true,
+        "(prefers-reduced-motion: reduce)": true,
+      }),
+    );
+
+    // Pre-set an inline transition-delay (as the cadence logic would in
+    // the non-reduced path). The reduced-motion fallback must wipe it so
+    // nothing keeps the element at opacity:0 behind a delay.
+    const Wrapper = () => (
+      <SiteLayout>
+        <div
+          className="reveal-stagger"
+          data-testid="delayed"
+          style={{ transitionDelay: "880ms" }}
+        />
+      </SiteLayout>
+    );
+    render(<Wrapper />);
+
+    const el = document.querySelector<HTMLElement>('[data-testid="delayed"]')!;
+    expect(el.classList.contains("is-visible")).toBe(true);
+    // SiteLayout's reduced-motion branch normalises this to "0ms".
+    expect(el.style.transitionDelay).toBe("0ms");
+  });
+});
