@@ -69,26 +69,62 @@ export function SiteLayout({ children }: { children: ReactNode }) {
       items.forEach((el, i) => indexByEl.set(el, Math.min(i, MAX_STEPS)));
     });
 
+    const revealEl = (target: HTMLElement) => {
+      if (target.classList.contains("is-visible")) return;
+      // Only apply our cadence when no inline delay is already set, so
+      // route-level overrides still win.
+      if (target.classList.contains("reveal-stagger") && !target.style.transitionDelay) {
+        const idx = indexByEl.get(target) ?? 0;
+        target.style.transitionDelay = `${idx * STAGGER_MS}ms`;
+      }
+      target.classList.add("is-visible");
+    };
+
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          const target = entry.target as HTMLElement;
-          // Only apply our cadence when no inline delay is already set, so
-          // route-level overrides still win.
-          if (target.classList.contains("reveal-stagger") && !target.style.transitionDelay) {
-            const idx = indexByEl.get(target) ?? 0;
-            target.style.transitionDelay = `${idx * STAGGER_MS}ms`;
-          }
-          target.classList.add("is-visible");
-          io.unobserve(target);
+          // Reveal when intersecting OR when the element has already
+          // scrolled past the viewport (bottom ≤ 0). On fast mobile
+          // flings the IO can skip the intersecting callback entirely;
+          // without this guard those items would stay invisible until
+          // the user scrolls back. Mirrors the .section-enter observer.
+          const passed = entry.boundingClientRect.bottom <= 0;
+          if (!entry.isIntersecting && !passed) return;
+          revealEl(entry.target as HTMLElement);
+          io.unobserve(entry.target);
         });
       },
-      { threshold: 0.14, rootMargin: "0px" },
+      // Lower threshold + small negative bottom margin so reveals fire
+      // a touch earlier on tall mobile sections, reducing the "snap in"
+      // feel during quick scrolling.
+      { threshold: 0.08, rootMargin: "0px 0px -6% 0px" },
     );
 
     els.forEach((el) => io.observe(el));
-    return () => io.disconnect();
+
+    // Initial sweep: any reveal already on-screen at mount (e.g. after
+    // a deep-link / refresh near the bottom of the page, or after a
+    // very fast scroll before the IO has reported) is shown right away.
+    const sweep = () => {
+      const vh = window.innerHeight || 0;
+      els.forEach((el) => {
+        if (el.classList.contains("is-visible")) return;
+        const rect = el.getBoundingClientRect();
+        if (rect.bottom <= 0 || rect.top < vh * 0.95) {
+          revealEl(el);
+          io.unobserve(el);
+        }
+      });
+    };
+    sweep();
+    // Safety net for extreme fling scrolls: re-sweep once shortly after
+    // mount to catch anything the IO missed during the first frame.
+    const t = window.setTimeout(sweep, 250);
+
+    return () => {
+      window.clearTimeout(t);
+      io.disconnect();
+    };
   }, []);
 
   // Dedicated observer for `.section-enter` wrappers. Fires earlier than
@@ -130,7 +166,29 @@ export function SiteLayout({ children }: { children: ReactNode }) {
     );
 
     els.forEach((el) => io.observe(el));
-    return () => io.disconnect();
+
+    // Initial + delayed sweep mirrors the reveal observer: on very fast
+    // mobile flings the IO can miss a section entirely. Force-show any
+    // wrapper already on-screen (or scrolled past) at mount, then
+    // re-check shortly after to catch anything still pending.
+    const sweep = () => {
+      const vh = window.innerHeight || 0;
+      els.forEach((el) => {
+        if (el.classList.contains("is-visible")) return;
+        const rect = el.getBoundingClientRect();
+        if (rect.bottom <= 0 || rect.top < vh * 0.98) {
+          el.classList.add("is-visible");
+          io.unobserve(el);
+        }
+      });
+    };
+    sweep();
+    const t = window.setTimeout(sweep, 250);
+
+    return () => {
+      window.clearTimeout(t);
+      io.disconnect();
+    };
   }, []);
 
   return (
