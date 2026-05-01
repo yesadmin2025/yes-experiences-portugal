@@ -2588,11 +2588,16 @@ svg.lucide {
     );
     /* +~15% visibility — warmer gold, slightly higher opacity, longer rule. */
     opacity: 0.7;
-    transition: width 900ms cubic-bezier(0.22, 0.61, 0.36, 1);
+    transition: width 680ms cubic-bezier(0.22, 0.61, 0.36, 1);
   }
   .home-energy .he-section-rule.is-visible::before,
   .home-energy .is-visible .he-section-rule::before {
     width: min(140px, 28%);
+  }
+  html.motion-visible-test .home-energy .he-section-rule::before,
+  html.motion-visible-test .home-energy .he-trust-rule::before,
+  html.motion-visible-test .home-energy .gold-rule {
+    transition-duration: 800ms;
   }
 
   /* Stagger cadence — sharper than the calm site-wide rhythm. Up to 6
@@ -2662,6 +2667,10 @@ svg.lucide {
     box-shadow:
       0 18px 40px -18px rgba(41, 91, 97, 0.55),
       0 0 0 1px rgba(201, 169, 106, 0.4);
+  }
+  html.motion-visible-test .home-energy .he-sheen:hover svg,
+  html.motion-visible-test .home-energy .he-sheen:focus-visible svg {
+    transform: translateX(8px);
   }
 
   /* Distinct accent for each Group/Celebration eyebrow dot — creates
