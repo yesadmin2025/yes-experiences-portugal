@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-01T04:16:32.508Z",
+  "generatedAt": "2026-05-01T04:20:29.569Z",
   "filesScanned": 147,
   "approvedPalette": {
     "teal": "#295B61",
@@ -1047,7 +1047,7 @@
       "col": 114,
       "raw": "#EAE2D6",
       "normalized": "#eae2d6",
-      "snippet": "className=\"reveal-stagger he-card-lift group relative flex flex-col rounded-[6px] border border-[#EAE2D6] bg-[color:var(--ivory)] p-6 md:p-8 shadow-[0_1px_2px_r",
+      "snippet": "className=\"reveal-stagger he-card-lift group relative flex flex-col rounded-[6px] border border-[#EAE2D6] bg-[color:var(--ivory)] p-5 md:p-7 shadow-[0_1px_2px_r",
       "status": "mismatch"
     },
     {
