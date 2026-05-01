@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-01T09:49:01.901Z",
+  "generatedAt": "2026-05-01T09:59:40.780Z",
   "filesScanned": 162,
   "approvedPalette": {
     "teal": "#295B61",
@@ -18,10 +18,10 @@
     "#cccccc"
   ],
   "counts": {
-    "total": 175,
+    "total": 178,
     "approved": 49,
     "allowlisted": 31,
-    "mismatch": 95
+    "mismatch": 98
   },
   "findings": [
     {
@@ -854,7 +854,7 @@
     },
     {
       "file": "src/components/dev/MotionQaPanel.tsx",
-      "line": 133,
+      "line": 167,
       "col": 45,
       "raw": "#ff8a8a",
       "normalized": "#ff8a8a",
@@ -863,11 +863,38 @@
     },
     {
       "file": "src/components/dev/MotionQaPanel.tsx",
-      "line": 133,
+      "line": 167,
       "col": 71,
       "raw": "#a6e3a1",
       "normalized": "#a6e3a1",
       "snippet": "<span style={{ color: ok === false ? \"#ff8a8a\" : ok === true ? \"#a6e3a1\" : \"var(--ivory)\" }}>",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/dev/MotionQaPanel.tsx",
+      "line": 222,
+      "col": 69,
+      "raw": "#a6e3a1",
+      "normalized": "#a6e3a1",
+      "snippet": "<span style={{ color: first.realisticallyVisible ? \"#a6e3a1\" : \"#ffcf8a\" }}>",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/dev/MotionQaPanel.tsx",
+      "line": 222,
+      "col": 81,
+      "raw": "#ffcf8a",
+      "normalized": "#ffcf8a",
+      "snippet": "<span style={{ color: first.realisticallyVisible ? \"#a6e3a1\" : \"#ffcf8a\" }}>",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/dev/MotionQaPanel.tsx",
+      "line": 227,
+      "col": 40,
+      "raw": "#ff8a8a",
+      "normalized": "#ff8a8a",
+      "snippet": "<span style={{ color: \"#ff8a8a\" }}>pending</span>",
       "status": "mismatch"
     },
     {
@@ -1142,7 +1169,7 @@
     },
     {
       "file": "src/routes/index.tsx",
-      "line": 750,
+      "line": 751,
       "col": 108,
       "raw": "#EAE2D6",
       "normalized": "#eae2d6",
@@ -1151,7 +1178,7 @@
     },
     {
       "file": "src/routes/index.tsx",
-      "line": 904,
+      "line": 905,
       "col": 114,
       "raw": "#EAE2D6",
       "normalized": "#eae2d6",
@@ -1394,7 +1421,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 2855,
+      "line": 2908,
       "col": 7,
       "raw": "#555",
       "normalized": "#555555",
