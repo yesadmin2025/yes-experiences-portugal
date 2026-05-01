@@ -40,7 +40,7 @@ export function Footer() {
         <div className="max-w-3xl">
           <Link
             to="/"
-            className="inline-block rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--charcoal-deep)]"
+            className="inline-block rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--charcoal)]"
             aria-label="YES experiences PORTUGAL — Home"
           >
             <Logo
@@ -103,7 +103,7 @@ export function Footer() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={label}
-                    className="inline-flex items-center justify-center h-11 w-11 rounded-sm border border-[color:var(--ivory)]/40 text-[color:var(--ivory)]/65 hover:text-[color:var(--gold)] hover:border-[color:var(--gold)]/70 hover:-translate-y-0.5 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--charcoal-deep)]"
+                    className="inline-flex items-center justify-center h-11 w-11 rounded-sm border border-[color:var(--ivory)]/40 text-[color:var(--ivory)]/65 hover:text-[color:var(--gold)] hover:border-[color:var(--gold)]/70 hover:-translate-y-0.5 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--charcoal)]"
                   >
                     <Icon size={18} strokeWidth={1.5} />
                   </a>
