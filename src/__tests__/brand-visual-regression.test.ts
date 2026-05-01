@@ -116,11 +116,17 @@ describe("Typography v3 — Montserrat / Georgia / Inter", () => {
 describe("Primary CTA — teal fill + gold border + premium hover", () => {
   it("homepage hero/Studio CTAs combine teal background and gold border", () => {
     const home = readFileSync(HOMEPAGE_FILES[0], "utf8");
-    // At least one Link/anchor inside the homepage uses the
-    // teal-bg + gold-border combination — that's our canonical CTA.
-    const tealBg = /bg-\[color:var\(--teal(?:-2)?\)\]/.test(home);
-    const goldBorder = /border-\[color:var\(--gold(?:-soft)?\)\]/.test(home);
-    expect(tealBg, "homepage missing var(--teal) background CTA").toBe(true);
+    // CTAs may be rendered either as raw className markup or via the
+    // canonical <CtaButton variant="primary"> primitive (which itself
+    // applies bg-[color:var(--teal)] + a gold border). Either form is
+    // accepted as long as the page exposes a primary CTA.
+    const tealBg =
+      /bg-\[color:var\(--teal(?:-2)?\)\]/.test(home) ||
+      /<CtaButton(?![^>]*variant=["']ghost)/.test(home);
+    const goldBorder =
+      /border-\[color:var\(--gold(?:-soft)?\)\]/.test(home) ||
+      /<CtaButton(?![^>]*variant=["']ghost)/.test(home);
+    expect(tealBg, "homepage missing primary CTA — need teal background + gold border, raw or via <CtaButton variant='primary'>").toBe(true);
     expect(goldBorder, "homepage missing var(--gold) border on CTA").toBe(true);
   });
 

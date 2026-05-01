@@ -140,6 +140,15 @@ function thresholdFor(role, snippet) {
     const isDivider = /\bborder-[tblr]\b/.test(snippet) && !/\bborder\b\s/.test(snippet);
     return isDivider ? 1.3 : 3.0;
   }
+  // Decorative icons (lucide arrows, etc.) carry a color class but NO
+  // typography classes. WCAG 1.4.11 (non-text contrast) → 3:1, not 4.5:1.
+  // Heuristic: a class string with no text-size, leading, tracking,
+  // font-weight, serif, or uppercase tokens is treated as a UI graphic.
+  const hasTypography =
+    /text-\[\d|text-(xs|sm|base|lg|xl|\d)|tracking-|leading-|font-(?!sans\b|serif\b)|\bserif\b|\buppercase\b/.test(
+      snippet,
+    );
+  if (!hasTypography) return 3.0;
   if (/uppercase|tracking-\[0\.3em\]/.test(snippet)) return 3.0;
   return 4.5;
 }

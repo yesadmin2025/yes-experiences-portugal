@@ -117,10 +117,12 @@ describe("Per-page brand regression — palette", () => {
 // ─── CTA contract — teal fill + gold line ─────────────────────────────
 describe("Per-page brand regression — CTA contract", () => {
   // Either: explicit Tailwind arbitrary values pairing teal bg + gold
-  // border, or the canonical .cta-primary class.
+  // border, the canonical .cta-primary class, or a <CtaButton> primary
+  // (the canonical primitive which encapsulates the teal+gold contract).
   const TEAL_BG = /bg-\[color:var\(--teal\)\]/;
   const GOLD_BORDER = /border-\[color:var\(--gold\)\]/;
   const CTA_PRIMARY_CLASS = /\bcta-primary\b/;
+  const CTA_BUTTON_PRIMARY = /<CtaButton(?![^>]*variant=["']ghost)/;
 
   for (const page of PAGES) {
     if (!page.requiresPrimaryCta) continue;
@@ -128,9 +130,10 @@ describe("Per-page brand regression — CTA contract", () => {
       const src = readAll(page.files);
       const hasInline = TEAL_BG.test(src) && GOLD_BORDER.test(src);
       const hasUtility = CTA_PRIMARY_CLASS.test(src);
+      const hasPrimitive = CTA_BUTTON_PRIMARY.test(src);
       expect(
-        hasInline || hasUtility,
-        `${page.label}: missing primary CTA — need teal background + gold border`
+        hasInline || hasUtility || hasPrimitive,
+        `${page.label}: missing primary CTA — need teal background + gold border (raw, .cta-primary, or <CtaButton variant="primary">)`
       ).toBe(true);
     });
   }
