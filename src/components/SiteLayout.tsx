@@ -275,6 +275,9 @@ export function SiteLayout({ children }: { children: ReactNode }) {
     const els = document.querySelectorAll<HTMLElement>(".section-enter");
     if (!els.length) return;
 
+    const telemetry = getRevealTelemetry();
+    telemetry.setTotal("sectionEnter", els.length);
+
     if (
       typeof IntersectionObserver === "undefined" ||
       window.matchMedia("(prefers-reduced-motion: reduce)").matches
@@ -282,6 +285,12 @@ export function SiteLayout({ children }: { children: ReactNode }) {
       els.forEach((el) => el.classList.add("is-visible"));
       return;
     }
+
+    const markVisible = (el: Element, source: RevealSource) => {
+      if (el.classList.contains("is-visible")) return;
+      el.classList.add("is-visible");
+      telemetry.log("sectionEnter", source, describeReveal(el));
+    };
 
     const io = new IntersectionObserver(
       (entries) => {
@@ -293,7 +302,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
           // guard the section would stay at opacity:0 forever.
           const passed = entry.boundingClientRect.bottom <= 0;
           if (!entry.isIntersecting && !passed) return;
-          entry.target.classList.add("is-visible");
+          markVisible(entry.target, "io");
           io.unobserve(entry.target);
         });
       },
@@ -306,19 +315,19 @@ export function SiteLayout({ children }: { children: ReactNode }) {
     // mobile flings the IO can miss a section entirely. Force-show any
     // wrapper already on-screen (or scrolled past) at mount, then
     // re-check shortly after to catch anything still pending.
-    const sweep = () => {
+    const sweep = (source: "sweepInitial" | "sweepDelayed") => {
       const vh = window.innerHeight || 0;
       els.forEach((el) => {
         if (el.classList.contains("is-visible")) return;
         const rect = el.getBoundingClientRect();
         if (rect.bottom <= 0 || rect.top < vh * 0.98) {
-          el.classList.add("is-visible");
+          markVisible(el, source);
           io.unobserve(el);
         }
       });
     };
-    sweep();
-    const t = window.setTimeout(sweep, 250);
+    sweep("sweepInitial");
+    const t = window.setTimeout(() => sweep("sweepDelayed"), 250);
 
     return () => {
       window.clearTimeout(t);
