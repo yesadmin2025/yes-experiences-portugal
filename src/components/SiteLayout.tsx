@@ -587,11 +587,16 @@ export function SiteLayout({ children }: { children: ReactNode }) {
     const t = window.setTimeout(() => sweep("sweepDelayed"), 600);
 
     // FAIL-SAFE (1200ms): force any still-pending section-enter visible
-    // so content never stays at opacity: 0 if IO failed to fire.
+    // ONLY if it's already at or above the viewport. Below-fold sections
+    // remain observed and animate when scrolled to — preserves the
+    // intended on-scroll motion on long pages.
     const failSafe = window.setTimeout(() => {
       let forced = 0;
+      const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
       els.forEach((el) => {
         if (el.classList.contains("is-visible")) return;
+        const rect = el.getBoundingClientRect();
+        if (rect.top >= viewportHeight) return;
         el.style.transition = "none";
         el.classList.add("is-visible");
         telemetry.log("sectionEnter", "sweepDelayed", describeReveal(el));
