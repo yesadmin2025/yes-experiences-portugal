@@ -556,7 +556,7 @@ describe("reveal observers — sequenced firing on mobile", () => {
 
     // Find the section-enter observer specifically.
     const sectionIO = FakeIO.instances.find((io) =>
-      Array.from(io.targets).some((t) =>
+      Array.from(io.observedHistory).some((t) =>
         (t as Element).classList.contains("section-enter"),
       ),
     );
