@@ -75,13 +75,11 @@ function CorporatePage() {
       {/* Hero */}
       <section className="pt-28 pb-14 bg-[color:var(--sand)] reveal">
         <div className="container-x max-w-3xl text-center">
-          <span className="eyebrow">For Teams & Private Groups</span>
-          <h1 className="font-display font-bold text-[2.4rem] md:text-[3.6rem] leading-[1.05] mt-5 text-[color:var(--charcoal)]">
+          <Eyebrow flank>For Teams &amp; Private Groups</Eyebrow>
+          <SectionTitle as="h1" size="anchor" spacing="loose">
             Private group days,{" "}
-            <span className="font-serif italic font-normal text-[color:var(--teal)]">
-              without the generic formula.
-            </span>
-          </h1>
+            <SectionTitle.Em>without the generic formula.</SectionTitle.Em>
+          </SectionTitle>
           <span className="gold-rule mt-6 mx-auto max-w-[80px]" aria-hidden="true" />
           <p className="mt-6 text-[1rem] md:text-[1.1rem] text-[color:var(--charcoal-soft)] leading-relaxed">
             For teams, incentives and private groups, we combine local
@@ -89,20 +87,15 @@ function CorporatePage() {
             <span className="kw">effortless</span>.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
-            <Link
+            <CtaButton to="/contact" variant="primary">Plan a Group Experience</CtaButton>
+            <CtaButton
               to="/contact"
-              className="group inline-flex items-center justify-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] px-7 py-3.5 text-sm tracking-wide transition-all duration-200 hover:-translate-y-[2px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--teal)] min-h-[44px]"
+              variant="ghost"
+              icon={null}
+              iconLeading={<MessageCircle size={14} aria-hidden="true" />}
             >
-              Plan a Group Experience
-              <ArrowRight size={16} className="cta-arrow" />
-            </Link>
-            <Link
-              to="/contact"
-              className="inline-flex items-center justify-center gap-2 border border-[color:var(--charcoal)]/25 text-[color:var(--charcoal)] hover:border-[color:var(--teal)] hover:text-[color:var(--teal)] px-7 py-3.5 text-sm tracking-wide transition-colors min-h-[44px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--teal)]"
-            >
-              <MessageCircle size={16} />
               Talk to a Local
-            </Link>
+            </CtaButton>
           </div>
         </div>
       </section>
