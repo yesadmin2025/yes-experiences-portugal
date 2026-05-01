@@ -21,9 +21,19 @@ import {
 //   rootMargin/threshold.
 // • If `sweepInitial` dominates → most reveals were already on-screen at
 //   mount (deep-link, refresh mid-page, or fast fling before first frame).
+//
+// Entry-mode telemetry: every reveal is also tagged with the navigation
+// entry that produced this page load — `hash` (URL had #fragment),
+// `scroll-restore` (browser restored a non-zero scrollY without a hash —
+// e.g. back/forward cache), or `cold` (fresh top-of-page load). This lets
+// us answer: "for hash/deep-link entries, how many reveals are caught by
+// sweepInitial vs IO?" — exactly the case where the IO routinely misses
+// elements that are already past the fold at t=0.
+//
 // Counters are always collected (cheap); console logging only happens
 // when ?scroll-debug is active. Inspect via `window.__yesRevealTelemetry.report()`.
 type RevealSource = "io" | "sweepInitial" | "sweepDelayed";
+type RevealEntry = "cold" | "hash" | "scroll-restore";
 type RevealBucket = {
   total: number;
   io: number;
@@ -31,9 +41,18 @@ type RevealBucket = {
   sweepDelayed: number;
   readonly pending: number;
 };
+type RevealEntryBucket = {
+  io: number;
+  sweepInitial: number;
+  sweepDelayed: number;
+};
 type RevealTelemetry = {
+  entry: RevealEntry;
+  hash: string;
+  initialScrollY: number;
   reveal: RevealBucket;
   sectionEnter: RevealBucket;
+  byEntry: Record<RevealEntry, { reveal: RevealEntryBucket; sectionEnter: RevealEntryBucket }>;
   log: (
     bucket: "reveal" | "sectionEnter",
     source: RevealSource,
@@ -62,12 +81,40 @@ function makeBucket(): RevealBucket {
   };
 }
 
+function makeEntryBuckets(): RevealTelemetry["byEntry"] {
+  const empty = (): RevealEntryBucket => ({ io: 0, sweepInitial: 0, sweepDelayed: 0 });
+  return {
+    cold: { reveal: empty(), sectionEnter: empty() },
+    hash: { reveal: empty(), sectionEnter: empty() },
+    "scroll-restore": { reveal: empty(), sectionEnter: empty() },
+  };
+}
+
+function detectEntry(win: Window): { entry: RevealEntry; hash: string; initialScrollY: number } {
+  const hash = win.location.hash || "";
+  const initialScrollY = win.scrollY || win.pageYOffset || 0;
+  let entry: RevealEntry = "cold";
+  if (hash && hash !== "#") {
+    entry = "hash";
+  } else if (initialScrollY > 1) {
+    // Browser restored scroll position (e.g. bfcache, back/forward) without
+    // a hash. We bucket this separately because it produces the same
+    // "many reveals already past the fold" pattern as a hash entry.
+    entry = "scroll-restore";
+  }
+  return { entry, hash, initialScrollY };
+}
+
 function getRevealTelemetry(): RevealTelemetry {
   if (typeof window === "undefined") {
     // SSR: return a no-op shim so call sites stay simple.
     return {
+      entry: "cold",
+      hash: "",
+      initialScrollY: 0,
       reveal: makeBucket(),
       sectionEnter: makeBucket(),
+      byEntry: makeEntryBuckets(),
       log: () => {},
       setTotal: () => {},
       report: () => null,
@@ -77,16 +124,22 @@ function getRevealTelemetry(): RevealTelemetry {
   if (window.__yesRevealTelemetry) return window.__yesRevealTelemetry;
 
   const debug = getScrollDebugFlags(window).enabled;
+  const { entry, hash, initialScrollY } = detectEntry(window);
   const state: RevealTelemetry = {
+    entry,
+    hash,
+    initialScrollY,
     reveal: makeBucket(),
     sectionEnter: makeBucket(),
+    byEntry: makeEntryBuckets(),
     log(bucket, source, selector) {
       const b = state[bucket];
       b[source] += 1;
+      state.byEntry[state.entry][bucket][source] += 1;
       if (debug) {
         // eslint-disable-next-line no-console
         console.debug(
-          `[reveal-telemetry] ${bucket} via ${source}`,
+          `[reveal-telemetry] ${bucket} via ${source} (entry=${state.entry})`,
           selector ?? "",
           {
             total: b.total,
@@ -103,6 +156,9 @@ function getRevealTelemetry(): RevealTelemetry {
     },
     report() {
       const snapshot = {
+        entry: state.entry,
+        hash: state.hash,
+        initialScrollY: state.initialScrollY,
         reveal: {
           total: state.reveal.total,
           io: state.reveal.io,
@@ -117,17 +173,34 @@ function getRevealTelemetry(): RevealTelemetry {
           sweepDelayed: state.sectionEnter.sweepDelayed,
           pending: state.sectionEnter.pending,
         },
+        byEntry: state.byEntry,
       };
+      // eslint-disable-next-line no-console
+      console.groupCollapsed(
+        `[reveal-telemetry] entry=${state.entry}${state.hash ? ` ${state.hash}` : ""} y=${state.initialScrollY}`,
+      );
       // eslint-disable-next-line no-console
       console.table([
         { bucket: "reveal", ...snapshot.reveal },
         { bucket: "sectionEnter", ...snapshot.sectionEnter },
       ]);
+      // Per-entry breakdown highlights how hash/deep-link entries lean
+      // on sweepInitial vs IO compared to a cold top-of-page load.
+      const rows: Array<Record<string, unknown>> = [];
+      (["cold", "hash", "scroll-restore"] as RevealEntry[]).forEach((e) => {
+        rows.push({ entry: e, bucket: "reveal", ...state.byEntry[e].reveal });
+        rows.push({ entry: e, bucket: "sectionEnter", ...state.byEntry[e].sectionEnter });
+      });
+      // eslint-disable-next-line no-console
+      console.table(rows);
+      // eslint-disable-next-line no-console
+      console.groupEnd();
       return snapshot;
     },
     reset() {
       state.reveal = makeBucket();
       state.sectionEnter = makeBucket();
+      state.byEntry = makeEntryBuckets();
     },
   };
   window.__yesRevealTelemetry = state;
