@@ -36,6 +36,20 @@ import {
 // when ?scroll-debug is active. Inspect via `window.__yesRevealTelemetry.report()`.
 type RevealSource = "io" | "sweepInitial" | "sweepDelayed";
 type RevealEntry = "cold" | "hash" | "scroll-restore";
+type RevealSectionTiming = {
+  section: string;
+  selector: string;
+  source: RevealSource;
+  atMs: number;
+  top: number;
+  bottom: number;
+  viewportHeight: number;
+  fold: "above" | "inside" | "below";
+  durationMs: number;
+  delayMs: number;
+  realisticallyVisible: boolean;
+  note: string;
+};
 type RevealBucket = {
   total: number;
   io: number;
@@ -64,12 +78,14 @@ type RevealTelemetry = {
   log: (
     bucket: "reveal" | "sectionEnter",
     source: RevealSource,
+    target?: HTMLElement,
     selector?: string,
   ) => void;
   setTotal: (bucket: "reveal" | "sectionEnter", total: number) => void;
   markIoFired: () => void;
   markFailSafeFired: () => void;
   markIframeFallbackFired: () => void;
+  timings: RevealSectionTiming[];
   report: () => unknown;
   reset: () => void;
 };
@@ -77,6 +93,7 @@ type RevealTelemetry = {
 declare global {
   interface Window {
     __yesRevealTelemetry?: RevealTelemetry;
+    __yesMotionStartedAt?: number;
   }
 }
 
@@ -129,6 +146,7 @@ function getRevealTelemetry(): RevealTelemetry {
       ioFired: false,
       failSafeFired: false,
       iframeFallbackFired: false,
+      timings: [],
       log: () => {},
       setTotal: () => {},
       markIoFired: () => {},
@@ -152,10 +170,43 @@ function getRevealTelemetry(): RevealTelemetry {
     ioFired: false,
     failSafeFired: false,
     iframeFallbackFired: false,
-    log(bucket, source, selector) {
+    timings: [],
+    log(bucket, source, target, selector) {
       const b = state[bucket];
       b[source] += 1;
       state.byEntry[state.entry][bucket][source] += 1;
+      if (target) {
+        const rect = target.getBoundingClientRect();
+        const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+        const cs = window.getComputedStyle(target);
+        const fold = rect.bottom <= 0 ? "above" : rect.top >= viewportHeight ? "below" : "inside";
+        const delayMs = parseMs(cs.transitionDelay || "0ms") + parseMs(cs.animationDelay || "0ms");
+        const durationMs = Math.max(parseMs(cs.transitionDuration || "0ms"), parseMs(cs.animationDuration || "0ms"));
+        const atMs = Math.round(performance.now() - (window.__yesMotionStartedAt ?? 0));
+        const realisticallyVisible = fold === "inside" && source === "io" && atMs >= 120;
+        state.timings.push({
+          section: sectionNameFor(target),
+          selector: selector ?? describeReveal(target),
+          source,
+          atMs,
+          top: Math.round(rect.top),
+          bottom: Math.round(rect.bottom),
+          viewportHeight: Math.round(viewportHeight),
+          fold,
+          durationMs: Math.round(durationMs),
+          delayMs: Math.round(delayMs),
+          realisticallyVisible,
+          note: realisticallyVisible
+            ? "visible on scroll"
+            : fold === "below"
+              ? "triggered while still below fold"
+              : fold === "above"
+                ? "animation completed before visible"
+                : source === "io"
+                  ? "triggered immediately on/near first paint"
+                  : "fallback/sweep path",
+        });
+      }
       if (debug) {
         // eslint-disable-next-line no-console
         console.debug(
@@ -203,6 +254,7 @@ function getRevealTelemetry(): RevealTelemetry {
           pending: state.sectionEnter.pending,
         },
         byEntry: state.byEntry,
+        timings: state.timings,
       };
       // eslint-disable-next-line no-console
       console.groupCollapsed(
@@ -223,6 +275,8 @@ function getRevealTelemetry(): RevealTelemetry {
       // eslint-disable-next-line no-console
       console.table(rows);
       // eslint-disable-next-line no-console
+      console.table(state.timings);
+      // eslint-disable-next-line no-console
       console.groupEnd();
       return snapshot;
     },
@@ -230,6 +284,7 @@ function getRevealTelemetry(): RevealTelemetry {
       state.reveal = makeBucket();
       state.sectionEnter = makeBucket();
       state.byEntry = makeEntryBuckets();
+      state.timings = [];
     },
   };
   window.__yesRevealTelemetry = state;
@@ -244,6 +299,32 @@ function describeReveal(el: Element): string {
       ? el.className.split(/\s+/).filter(Boolean).slice(0, 2).map((c) => `.${c}`).join("")
       : "";
   return `${tag}${id}${cls}`;
+}
+
+function sectionNameFor(el: HTMLElement): string {
+  const section = el.closest<HTMLElement>("section[id], [data-motion-section]");
+  if (!section) return "unsectioned";
+  const explicit = section.dataset.motionSection;
+  if (explicit) return explicit;
+  const id = section.id || "unsectioned";
+  const names: Record<string, string> = {
+    reviews: "Trust strip",
+    builder: "Three Ways / Studio",
+    studio: "Studio / Builder",
+    "why-yes": "Why YES",
+    signatures: "Signature Experiences",
+    occasions: "Occasions / Groups",
+    faq: "FAQ",
+    "final-cta": "Final CTA / Footer",
+  };
+  return names[id] ?? id;
+}
+
+function parseMs(value: string): number {
+  const first = value.split(",")[0]?.trim() ?? "0ms";
+  if (first.endsWith("ms")) return Number.parseFloat(first) || 0;
+  if (first.endsWith("s")) return (Number.parseFloat(first) || 0) * 1000;
+  return Number.parseFloat(first) || 0;
 }
 
 /**
@@ -291,6 +372,14 @@ function flashDebug(el: HTMLElement, label: string) {
 }
 
 export function SiteLayout({ children }: { children: ReactNode }) {
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    window.__yesMotionStartedAt = performance.now();
+    const visibleTest = new URLSearchParams(window.location.search).get("motion-visible-test") === "1";
+    document.documentElement.classList.toggle("motion-visible-test", visibleTest);
+    return () => document.documentElement.classList.remove("motion-visible-test");
+  }, []);
+
   useEffect(() => {
     if (typeof window === "undefined") return;
     const flags = getScrollDebugFlags();
@@ -423,7 +512,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
         target.style.transitionDelay = `${idx * STAGGER_MS}ms`;
       }
       target.classList.add("is-visible");
-      telemetry.log("reveal", source, describeReveal(target));
+      telemetry.log("reveal", source, target, describeReveal(target));
       if (revealDebug) flashDebug(target, `reveal·${source}`);
     };
 
@@ -433,8 +522,8 @@ export function SiteLayout({ children }: { children: ReactNode }) {
     // Lower threshold + larger negative bottom margin on mobile so reveals
     // fire as soon as the top edge starts to appear.
     const ioOptions: IntersectionObserverInit = isMobile
-      ? { threshold: 0.01, rootMargin: "0px 0px -2% 0px" }
-      : { threshold: 0.08, rootMargin: "0px 0px -6% 0px" };
+      ? { threshold: 0.01, rootMargin: "0px 0px -18% 0px" }
+      : { threshold: 0.04, rootMargin: "0px 0px -14% 0px" };
 
     const io = new IntersectionObserver((entries) => {
       telemetry.markIoFired();
@@ -464,7 +553,9 @@ export function SiteLayout({ children }: { children: ReactNode }) {
         if (el.classList.contains("is-visible")) return;
         const rect = el.getBoundingClientRect();
         const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
-        if (rect.top < viewportHeight && rect.bottom > 0) {
+        const inViewport = rect.top < viewportHeight && rect.bottom > 0;
+        const meaningfullyVisible = rect.top < viewportHeight * 0.58;
+        if (inViewport && (telemetry.entry !== "cold" || meaningfullyVisible)) {
           revealEl(el, source);
           io.unobserve(el);
         } else if (rect.bottom <= 0) {
@@ -493,11 +584,11 @@ export function SiteLayout({ children }: { children: ReactNode }) {
         const rect = el.getBoundingClientRect();
         // Only force-visible if the element is at or above the viewport
         // bottom (i.e. should already be on-screen). Below-fold stays.
-        if (rect.top >= viewportHeight) return;
+        if (rect.top >= viewportHeight || (telemetry.entry === "cold" && rect.top > viewportHeight * 0.72)) return;
         el.style.transition = "none";
         el.style.transitionDelay = "0ms";
         el.classList.add("is-visible");
-        telemetry.log("reveal", "sweepDelayed", describeReveal(el));
+        telemetry.log("reveal", "sweepDelayed", el, describeReveal(el));
         forced += 1;
       });
       if (forced > 0) telemetry.markFailSafeFired();
@@ -541,14 +632,14 @@ export function SiteLayout({ children }: { children: ReactNode }) {
     const markVisible = (el: Element, source: RevealSource) => {
       if (el.classList.contains("is-visible")) return;
       el.classList.add("is-visible");
-      telemetry.log("sectionEnter", source, describeReveal(el));
+      telemetry.log("sectionEnter", source, el as HTMLElement, describeReveal(el));
       if (revealDebug) flashDebug(el as HTMLElement, `section·${source}`);
     };
 
     // Fire even earlier on mobile.
     const ioOptions: IntersectionObserverInit = isMobile
-      ? { threshold: 0.01, rootMargin: "0px 0px -2% 0px" }
-      : { threshold: 0.02, rootMargin: "0px 0px -8% 0px" };
+      ? { threshold: 0.01, rootMargin: "0px 0px -18% 0px" }
+      : { threshold: 0.02, rootMargin: "0px 0px -14% 0px" };
 
     const io = new IntersectionObserver((entries) => {
       telemetry.markIoFired();
@@ -574,7 +665,9 @@ export function SiteLayout({ children }: { children: ReactNode }) {
         if (el.classList.contains("is-visible")) return;
         const rect = el.getBoundingClientRect();
         const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
-        if (rect.top < viewportHeight && rect.bottom > 0) {
+        const inViewport = rect.top < viewportHeight && rect.bottom > 0;
+        const meaningfullyVisible = rect.top < viewportHeight * 0.58;
+        if (inViewport && (telemetry.entry !== "cold" || meaningfullyVisible)) {
           markVisible(el, source);
           io.unobserve(el);
         } else if (rect.bottom <= 0) {
@@ -596,10 +689,10 @@ export function SiteLayout({ children }: { children: ReactNode }) {
       els.forEach((el) => {
         if (el.classList.contains("is-visible")) return;
         const rect = el.getBoundingClientRect();
-        if (rect.top >= viewportHeight) return;
+        if (rect.top >= viewportHeight || (telemetry.entry === "cold" && rect.top > viewportHeight * 0.72)) return;
         el.style.transition = "none";
         el.classList.add("is-visible");
-        telemetry.log("sectionEnter", "sweepDelayed", describeReveal(el));
+        telemetry.log("sectionEnter", "sweepDelayed", el, describeReveal(el));
         forced += 1;
       });
       if (forced > 0) telemetry.markFailSafeFired();

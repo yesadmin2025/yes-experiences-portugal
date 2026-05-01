@@ -281,10 +281,11 @@ describe("reveal observers — mobile IO config", () => {
       // Mobile threshold must be very low so reveals fire as soon as a
       // sliver of the element appears.
       expect(threshold).toBeLessThanOrEqual(0.02);
-      // Mobile bottom margin must be ≥ -2% (i.e. tighter / less negative
-      // than the desktop -6/-8 values).
+      // Mobile bottom margin must hold back the trigger enough that the
+      // animation is still visible to the human eye when the section enters.
       const bottomPct = bottomMarginPercent(io.options?.rootMargin);
-      expect(bottomPct).toBeGreaterThanOrEqual(-2);
+      expect(bottomPct).toBeLessThanOrEqual(-12);
+      expect(bottomPct).toBeGreaterThanOrEqual(-22);
     }
   });
 

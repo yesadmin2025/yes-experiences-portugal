@@ -414,6 +414,7 @@ function HomePage() {
   // stays "everyday", never woozy.
   useEffect(() => {
     if (typeof window === "undefined") return;
+    if (window.innerWidth < 768) return;
     if (getScrollDebugFlags().disableMobileStudioMotion && window.innerWidth < 768) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
@@ -435,8 +436,8 @@ function HomePage() {
         // Normalised position: -1 (above viewport) → 0 (centred) → 1 (below).
         const center = rect.top + rect.height / 2;
         const t = (center - vh / 2) / vh; // ~ -1..1 across viewport
-        // Cap travel: ±18px on phones, ±28px on larger screens.
-        const cap = window.innerWidth < 768 ? 18 : 28;
+        // Cap travel on tablet/desktop only. Mobile parallax is disabled.
+        const cap = 28;
         const y = Math.max(-cap, Math.min(cap, t * cap * -1));
         el.style.setProperty("--parallax-y", `${y.toFixed(2)}px`);
       }
@@ -650,7 +651,7 @@ function HomePage() {
           page (per "no repeated review sections" guardrail). */}
       <section
         id="reviews"
-        className="he-trust-rule bg-[color:var(--ivory)] border-b border-[color:var(--border)] section-y-sm scroll-mt-24 md:scroll-mt-28"
+        className="he-trust-rule section-enter bg-[color:var(--ivory)] border-b border-[color:var(--border)] section-y-sm scroll-mt-24 md:scroll-mt-28"
         aria-labelledby="trust-bar-title"
       >
         <h2 id="trust-bar-title" className="sr-only">
@@ -665,7 +666,7 @@ function HomePage() {
                 aria-label="Rated 5 out of 5 stars"
               >
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={14} fill="currentColor" strokeWidth={0} aria-hidden="true" focusable="false" />
+                  <Star key={i} className="he-trust-star" size={14} fill="currentColor" strokeWidth={0} aria-hidden="true" focusable="false" />
                 ))}
               </p>
               <p className="serif text-[1.15rem] md:text-[1.35rem] text-[color:var(--charcoal)] leading-[1.25] font-normal">
@@ -677,11 +678,11 @@ function HomePage() {
               </p>
             </div>
             <ul
-              className="flex flex-wrap items-center justify-center md:justify-end gap-x-6 gap-y-3 md:gap-x-8 list-none p-0 h-6 md:h-7 opacity-90"
+              className="he-stagger flex flex-wrap items-center justify-center md:justify-end gap-x-6 gap-y-3 md:gap-x-8 list-none p-0 h-6 md:h-7 opacity-90"
               aria-label="Featured on Google, Tripadvisor, Viator, GetYourGuide and Trustpilot"
             >
               {(["google", "tripadvisor", "viator", "getyourguide", "trustpilot"] as const).map((p) => (
-                <li key={p} className="h-full flex items-center">
+                <li key={p} className="reveal-stagger h-full flex items-center">
                   <PlatformBadge platform={p} />
                 </li>
               ))}
@@ -979,7 +980,7 @@ function HomePage() {
               scrollDebug.staticMobileCarousels
                 ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
                 : "flex sm:grid sm:grid-cols-2 lg:grid-cols-4 -mx-5 px-5 sm:mx-0 sm:px-0 overflow-x-auto sm:overflow-visible overscroll-x-contain sm:overscroll-auto [contain:layout_paint] sm:[contain:none] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden",
-              "gap-5 md:gap-7 list-none p-0",
+              "he-stagger gap-5 md:gap-7 list-none p-0",
             ].join(" ")}
             aria-label="Signature experiences"
           >
@@ -989,8 +990,8 @@ function HomePage() {
                   key={t.id}
                   className={
                     scrollDebug.staticMobileCarousels
-                      ? "w-full"
-                      : "shrink-0 w-[84vw] sm:w-auto sm:shrink"
+                      ? "reveal-stagger w-full"
+                      : "reveal-stagger shrink-0 w-[84vw] sm:w-auto sm:shrink"
                   }
                 >
                   {/* Card is a structured composition (NOT a single link) so
@@ -1358,7 +1359,7 @@ function HomePage() {
                 <p className="mt-5 text-[14.5px] md:text-[16px] text-[color:var(--charcoal-soft)] leading-[1.7] max-w-md mx-auto">
                   Start in the Studio, explore a Signature, or talk to a local.
                 </p>
-                <div className="mt-9 flex flex-col sm:flex-row gap-y-4 gap-x-4 justify-center items-stretch sm:items-center">
+                <div className="reveal-stagger mt-9 flex flex-col sm:flex-row gap-y-4 gap-x-4 justify-center items-stretch sm:items-center">
                   <CtaButton to="/builder" variant="primary">
                     Create Your Story
                   </CtaButton>

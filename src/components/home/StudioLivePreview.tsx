@@ -54,9 +54,16 @@ export function StudioLivePreview() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const pathRef = useRef<SVGPathElement>(null);
   const [active, setActive] = useState(false);
+  const [visibleTest, setVisibleTest] = useState(false);
   const [pathLen, setPathLen] = useState(FALLBACK_LEN);
   const scrollDebug = useScrollDebugFlags();
   const renderedActive = active || scrollDebug.disableMobileStudioMotion;
+  const routeDuration = visibleTest ? 3000 : 2900;
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    setVisibleTest(new URLSearchParams(window.location.search).get("motion-visible-test") === "1");
+  }, []);
 
   // Measure path on mount — keeps animation accurate.
   useEffect(() => {
@@ -91,7 +98,7 @@ export function StudioLivePreview() {
           }
         }
       },
-      { threshold: 0.3 },
+      { threshold: 0.12, rootMargin: "0px 0px -12% 0px" },
     );
     io.observe(el);
     return () => io.disconnect();
@@ -202,7 +209,7 @@ export function StudioLivePreview() {
             filter="url(#slv-soft)"
             strokeDasharray={pathLen}
             strokeDashoffset={renderedActive ? 0 : pathLen}
-            style={{ transition: "stroke-dashoffset 2520ms cubic-bezier(0.22, 0.61, 0.36, 1)" }}
+            style={{ transition: `stroke-dashoffset ${routeDuration}ms cubic-bezier(0.22, 0.61, 0.36, 1)` }}
           />
           {/* Sharp route line */}
           <path
@@ -215,7 +222,7 @@ export function StudioLivePreview() {
             strokeLinecap="round"
             strokeDasharray={pathLen}
             strokeDashoffset={renderedActive ? 0 : pathLen}
-            style={{ transition: "stroke-dashoffset 2520ms cubic-bezier(0.22, 0.61, 0.36, 1)" }}
+            style={{ transition: `stroke-dashoffset ${routeDuration}ms cubic-bezier(0.22, 0.61, 0.36, 1)` }}
           />
 
           {/* Stops */}
