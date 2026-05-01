@@ -15,7 +15,6 @@
  */
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { render, cleanup } from "@testing-library/react";
-import { act } from "react";
 
 // SiteLayout pulls heavy children that we don't need for these tests.
 vi.mock("@/components/Navbar", () => ({ Navbar: () => null }));
@@ -30,17 +29,16 @@ vi.mock("@/lib/smooth-anchor-scroll", () => ({
 
 import { SiteLayout } from "@/components/SiteLayout";
 
-// Fake IntersectionObserver — captures every observed target. Each
-// SiteLayout effect creates one observer; we keep them in registration
-// order so tests can address the reveal vs section-enter observer.
+// Minimal fake IntersectionObserver — SiteLayout calls
+// `new IntersectionObserver(...)` in its effects, so we need *a*
+// constructor present. The observer body itself is irrelevant for
+// these tests because the synchronous initial sweep claims every
+// element under JSDOM's default (0,0,0,0) rect before any IO callback
+// would have run.
 class FakeIO {
   static instances: FakeIO[] = [];
-  callback: IntersectionObserverCallback;
-  options?: IntersectionObserverInit;
   targets = new Set<Element>();
-  constructor(cb: IntersectionObserverCallback, options?: IntersectionObserverInit) {
-    this.callback = cb;
-    this.options = options;
+  constructor(_cb: IntersectionObserverCallback, _options?: IntersectionObserverInit) {
     FakeIO.instances.push(this);
   }
   observe(t: Element) {
@@ -54,30 +52,6 @@ class FakeIO {
   }
   takeRecords(): IntersectionObserverEntry[] {
     return [];
-  }
-  fire(entries: Partial<IntersectionObserverEntry>[]) {
-    const full = entries.map(
-      (e) =>
-        ({
-          isIntersecting: false,
-          intersectionRatio: 0,
-          time: 0,
-          rootBounds: null,
-          intersectionRect: { top: 0, bottom: 0, left: 0, right: 0, width: 0, height: 0, x: 0, y: 0, toJSON: () => ({}) } as DOMRectReadOnly,
-          ...e,
-        }) as IntersectionObserverEntry,
-    );
-    this.callback(full, this as unknown as IntersectionObserver);
-  }
-  /** Fire intersect=true for every target this observer holds. */
-  fireAllVisible() {
-    this.fire(
-      Array.from(this.targets).map((target) => ({
-        target,
-        isIntersecting: true,
-        boundingClientRect: { top: 100, bottom: 200, left: 0, right: 100, width: 100, height: 100, x: 0, y: 100, toJSON: () => ({}) } as DOMRectReadOnly,
-      })),
-    );
   }
   static reset() {
     FakeIO.instances = [];
