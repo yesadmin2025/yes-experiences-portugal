@@ -121,8 +121,10 @@
   --space-8: 72px;
   --space-9: 96px;
 
-  /* Section rhythm aligned with the new scale. */
-  --section-gap-mobile: 48px;
+  /* Section rhythm aligned with the new scale.
+     Mobile bumped 48 → 64px so adjacent sections breathe (target band
+     56–72px). Desktop unchanged. */
+  --section-gap-mobile: 64px;
   --section-gap-desktop: 96px;
 
   /* Editorial shadows — softer, warmer than the legacy teal-tinted set. */
