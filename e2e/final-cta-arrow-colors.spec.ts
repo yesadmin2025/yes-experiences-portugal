@@ -186,4 +186,135 @@ test.describe("Final CTA arrow colors — primary vs ghost", () => {
         `Offenders: ${offenders.map((o) => `${o.label}=${o.color}`).join(", ") || "(none)"}`,
     ).toEqual([]);
   });
+
+  /**
+   * SVG stroke / currentColor contract.
+   *
+   * Lucide icons render their strokes as `stroke="currentColor"` on the
+   * inner <path> elements. That means the visible arrow color is driven
+   * by the SVG's CSS `color` cascading down into `stroke` via the
+   * `currentColor` keyword.
+   *
+   * If a refactor ever:
+   *   • swaps Lucide for an icon set that hard-codes stroke="#fff"
+   *   • adds an inline `stroke="..."` override on the path
+   *   • sets `color: ...` on the <svg> but the path uses `stroke: black`
+   *
+   * …then `getComputedStyle(svg).color` would still report the right
+   * token (because `color` is set on the svg) while the rendered arrow
+   * is the wrong color on screen. The previous tests would pass and the
+   * regression would ship.
+   *
+   * This block closes that gap by reading the *resolved* stroke paint
+   * on the inner <path> element and asserting it matches the parent
+   * link's `color`. We also assert the path's `stroke` attribute is
+   * literally the string `currentColor`, locking in the inheritance
+   * contract at the markup level.
+   */
+  test("SVG stroke inherits via currentColor and matches link color across states", async ({ page }) => {
+    await gotoFinalCta(page);
+
+    const primary = page.locator("#final-cta a", { hasText: "Create Your Story" });
+    const ghost   = page.locator("#final-cta a", { hasText: "Talk to a Local" });
+
+    /**
+     * For a given CTA link, returns:
+     *   - linkColor:    computed `color` on the <a> (the source of truth)
+     *   - svgColor:     computed `color` on the <svg> (should inherit)
+     *   - pathStrokeAttr: the literal `stroke` attribute on inner <path>
+     *                   elements — must be "currentColor" for every path
+     *   - pathStrokeComputed: computed `stroke` paint on each <path> —
+     *                   must equal linkColor (rgb form) for every path
+     */
+    async function probe(cta: Locator) {
+      return cta.evaluate((link) => {
+        const svg = link.querySelector("svg");
+        if (!svg) throw new Error("CTA is missing its <svg> arrow");
+        const paths = Array.from(svg.querySelectorAll<SVGElement>("path, line, polyline"));
+        if (paths.length === 0) throw new Error("Arrow <svg> has no stroked child elements");
+
+        return {
+          linkColor: getComputedStyle(link).color,
+          svgColor:  getComputedStyle(svg).color,
+          pathStrokeAttrs: paths.map((p) => p.getAttribute("stroke")),
+          pathStrokeComputed: paths.map((p) => getComputedStyle(p).stroke),
+        };
+      });
+    }
+
+    // ---------- REST ----------
+    await page.mouse.move(0, 0);
+    const primaryRest = await probe(primary);
+    const ghostRest   = await probe(ghost);
+
+    // SVG inherits color from the link
+    expect.soft(primaryRest.svgColor, "primary svg inherits link color").toBe(primaryRest.linkColor);
+    expect.soft(ghostRest.svgColor,   "ghost svg inherits link color").toBe(ghostRest.linkColor);
+
+    // Every stroked child uses stroke="currentColor" at the markup level
+    for (const attr of primaryRest.pathStrokeAttrs) {
+      expect.soft(attr, "primary arrow path stroke attr").toBe("currentColor");
+    }
+    for (const attr of ghostRest.pathStrokeAttrs) {
+      expect.soft(attr, "ghost arrow path stroke attr").toBe("currentColor");
+    }
+
+    // Computed stroke paint matches the link's color exactly
+    for (const stroke of primaryRest.pathStrokeComputed) {
+      expect.soft(stroke, "primary rest stroke = link color (gold)").toBe(ARROW_COLORS.gold);
+    }
+    for (const stroke of ghostRest.pathStrokeComputed) {
+      expect.soft(stroke, "ghost rest stroke = link color (gold-soft)").toBe(ARROW_COLORS.goldSoft);
+    }
+
+    // ---------- HOVER ----------
+    await primary.hover();
+    const primaryHover = await probe(primary);
+    for (const stroke of primaryHover.pathStrokeComputed) {
+      expect.soft(stroke, "primary hover stroke = gold-deep").toBe(ARROW_COLORS.goldDeep);
+    }
+    expect.soft(primaryHover.svgColor).toBe(primaryHover.linkColor);
+
+    await page.mouse.move(0, 0);
+    await page.waitForTimeout(50);
+
+    await ghost.hover();
+    const ghostHover = await probe(ghost);
+    for (const stroke of ghostHover.pathStrokeComputed) {
+      expect.soft(stroke, "ghost hover stroke = gold").toBe(ARROW_COLORS.gold);
+    }
+    expect.soft(ghostHover.svgColor).toBe(ghostHover.linkColor);
+
+    await page.mouse.move(0, 0);
+
+    // ---------- FOCUS ----------
+    await primary.focus();
+    const primaryFocus = await probe(primary);
+    for (const stroke of primaryFocus.pathStrokeComputed) {
+      expect.soft(stroke, "primary focus stroke = gold (rest)").toBe(ARROW_COLORS.gold);
+    }
+    await primary.evaluate((el) => (el as HTMLElement).blur());
+
+    await ghost.focus();
+    const ghostFocus = await probe(ghost);
+    for (const stroke of ghostFocus.pathStrokeComputed) {
+      expect.soft(stroke, "ghost focus stroke = gold-soft (rest)").toBe(ARROW_COLORS.goldSoft);
+    }
+
+    // Final hard assertion: at no point did any path lose the
+    // currentColor inheritance contract.
+    const allAttrs = [
+      ...primaryRest.pathStrokeAttrs,
+      ...ghostRest.pathStrokeAttrs,
+      ...primaryHover.pathStrokeAttrs,
+      ...ghostHover.pathStrokeAttrs,
+      ...primaryFocus.pathStrokeAttrs,
+      ...ghostFocus.pathStrokeAttrs,
+    ];
+    const broken = allAttrs.filter((a) => a !== "currentColor");
+    expect(
+      broken,
+      `Every arrow path must use stroke="currentColor". Broken: ${broken.join(", ") || "(none)"}`,
+    ).toEqual([]);
+  });
 });
