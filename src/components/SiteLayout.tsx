@@ -182,7 +182,7 @@ function getRevealTelemetry(): RevealTelemetry {
         const fold = rect.bottom <= 0 ? "above" : rect.top >= viewportHeight ? "below" : "inside";
         const delayMs = parseMs(cs.transitionDelay || "0ms") + parseMs(cs.animationDelay || "0ms");
         const durationMs = Math.max(parseMs(cs.transitionDuration || "0ms"), parseMs(cs.animationDuration || "0ms"));
-        const atMs = Math.round(performance.now() - (window.__yesMotionStartedAt ?? performance.timeOrigin));
+        const atMs = Math.round(performance.now() - (window.__yesMotionStartedAt ?? 0));
         const realisticallyVisible = fold === "inside" && source === "io" && atMs >= 120;
         state.timings.push({
           section: sectionNameFor(target),
