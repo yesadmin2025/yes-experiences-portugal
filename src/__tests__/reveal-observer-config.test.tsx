@@ -894,3 +894,83 @@ describe("reveal observers — sequenced firing on mobile", () => {
   });
 });
 
+describe("FakeIO.kind — auto-classification on first observe", () => {
+  // These tests exercise the FakeIO test utility directly (no SiteLayout),
+  // pinning down the contract that `kind` is set the first time an element
+  // is observed and never silently downgraded afterwards.
+
+  function makeEl(...classes: string[]): HTMLElement {
+    const el = document.createElement("div");
+    for (const c of classes) el.classList.add(c);
+    return el;
+  }
+
+  it("classifies as 'reveal' when the first observed element has .reveal", () => {
+    const io = new FakeIO(() => {});
+    expect(io.kind).toBe("other");
+    io.observe(makeEl("reveal"));
+    expect(io.kind).toBe("reveal");
+  });
+
+  it("classifies as 'reveal' when the first observed element has .reveal-stagger", () => {
+    const io = new FakeIO(() => {});
+    io.observe(makeEl("reveal-stagger"));
+    expect(io.kind).toBe("reveal");
+  });
+
+  it("classifies as 'section-enter' when the first observed element has .section-enter", () => {
+    const io = new FakeIO(() => {});
+    io.observe(makeEl("section-enter"));
+    expect(io.kind).toBe("section-enter");
+  });
+
+  it("keeps kind as 'other' when only non-tracked elements are observed", () => {
+    const io = new FakeIO(() => {});
+    io.observe(makeEl("not-tracked"));
+    io.observe(makeEl("random", "foo"));
+    io.observe(makeEl()); // no classes at all
+    expect(io.kind).toBe("other");
+  });
+
+  it("upgrades from 'other' to a real kind once a tracked element is observed", () => {
+    const io = new FakeIO(() => {});
+    io.observe(makeEl("not-tracked"));
+    expect(io.kind).toBe("other");
+    io.observe(makeEl("reveal"));
+    expect(io.kind).toBe("reveal");
+  });
+
+  it("does not downgrade or switch kind once classified (reveal stays reveal)", () => {
+    const io = new FakeIO(() => {});
+    io.observe(makeEl("reveal"));
+    expect(io.kind).toBe("reveal");
+    // A later observe of a different kind must NOT mutate the locked-in kind.
+    io.observe(makeEl("section-enter"));
+    io.observe(makeEl("not-tracked"));
+    expect(io.kind).toBe("reveal");
+  });
+
+  it("does not switch kind from 'section-enter' to 'reveal' on later observes", () => {
+    const io = new FakeIO(() => {});
+    io.observe(makeEl("section-enter"));
+    expect(io.kind).toBe("section-enter");
+    io.observe(makeEl("reveal"));
+    io.observe(makeEl("reveal-stagger"));
+    expect(io.kind).toBe("section-enter");
+  });
+
+  it("FakeIO.allOf() partitions instances by their classified kind", () => {
+    FakeIO.reset();
+    const a = new FakeIO(() => {});
+    a.observe(makeEl("reveal"));
+    const b = new FakeIO(() => {});
+    b.observe(makeEl("section-enter"));
+    const c = new FakeIO(() => {});
+    c.observe(makeEl("not-tracked"));
+
+    expect(FakeIO.allOf("reveal")).toEqual([a]);
+    expect(FakeIO.allOf("section-enter")).toEqual([b]);
+    expect(FakeIO.allOf("other")).toEqual([c]);
+  });
+});
+
