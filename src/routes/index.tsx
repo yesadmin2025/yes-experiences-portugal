@@ -1344,20 +1344,20 @@ function HomePage() {
               />
 
               <div className="relative">
-                <span className="he-rule-flank font-sans text-[11px] uppercase tracking-[0.28em] font-semibold text-[color:var(--teal)]">
+                <span className="he-eyebrow-bar mb-4">
                   <MessageCircle size={12} aria-hidden="true" />
-                  Prefer a conversation?
+                  Prefer a conversation
                 </span>
               <h2
                 id="final-cta-title"
-                className="font-display mt-5 text-[2rem] sm:text-[2.4rem] md:text-[3.2rem] leading-[1.1] md:leading-[1.02] tracking-[-0.016em] font-bold text-[color:var(--charcoal)]"
+                className="serif mt-3 text-[2rem] sm:text-[2.4rem] md:text-[3.6rem] leading-[1.1] md:leading-[1.0] tracking-[-0.018em] text-[color:var(--charcoal)] font-medium"
               >
                   Ready to design your{" "}
-                  <span className="font-serif italic font-normal text-[color:var(--teal)]">
+                  <span className="italic font-normal text-[color:var(--teal)]">
                     Portugal?
                   </span>
                 </h2>
-                <p className="font-sans mt-5 text-[15.5px] md:text-[17px] leading-[1.7] text-[color:var(--charcoal-soft)] max-w-md mx-auto">
+                <p className="mt-5 text-[14.5px] md:text-[16px] text-[color:var(--charcoal-soft)] leading-[1.7] max-w-md mx-auto">
                   Start in the Studio, explore a Signature, or talk to a local.
                 </p>
                 <div className="mt-9 flex flex-col sm:flex-row gap-y-4 gap-x-4 justify-center items-stretch sm:items-center">
@@ -1385,7 +1385,7 @@ function HomePage() {
                     <ArrowRight size={12} aria-hidden="true" className="text-[color:var(--gold)] group-hover:text-[color:var(--gold-deep)] transition-[transform,color] duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1" />
                   </Link>
                 </div>
-                <p className="font-serif mt-6 text-[13px] italic text-[color:var(--charcoal-soft)]">
+                <p className="serif mt-6 text-[13px] italic text-[color:var(--charcoal-soft)]">
                   Need help shaping it? A local is one message away.
                 </p>
               </div>
