@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { SiteLayout } from "@/components/SiteLayout";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { Eyebrow } from "@/components/ui/Eyebrow";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -54,7 +55,7 @@ function AuthPage() {
     <SiteLayout>
       <section className="pt-32 pb-20 min-h-[80vh] flex items-center">
         <div className="container-x max-w-md mx-auto w-full">
-          <span className="eyebrow">Studio Access</span>
+          <Eyebrow>Studio Access</Eyebrow>
           <h1 className="serif text-4xl mt-4">
             {mode === "signin" ? "Sign in" : "Create account"}
           </h1>

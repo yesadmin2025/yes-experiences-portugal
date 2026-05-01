@@ -13,6 +13,8 @@ import {
 import { SiteLayout } from "@/components/SiteLayout";
 import { findTour, stopImage, stopFocal, type SignatureTour, type TourStop } from "@/data/signatureTours";
 import { whatsappHref } from "@/components/WhatsAppFab";
+import { Eyebrow } from "@/components/ui/Eyebrow";
+import { SectionTitle } from "@/components/ui/SectionTitle";
 
 /* ════════════════════════════════════════════════════════════════
  * /tours/$tourId/tailor — Tailor a Signature
@@ -192,12 +194,12 @@ function TailorPage() {
         <div className="container-x max-w-6xl">
           <div className="grid lg:grid-cols-[1fr_1.4fr] gap-6 lg:gap-10 items-end">
             <div>
-              <span className="eyebrow">Tailor this Signature</span>
-              <h1 className="serif mt-3 text-[2rem] sm:text-4xl md:text-[2.8rem] leading-[1.05] tracking-[-0.015em]">
+              <Eyebrow>Tailor this Signature</Eyebrow>
+              <SectionTitle as="h1" size="default" spacing="normal">
                 Keep the heart of this journey,{" "}
-                <span className="italic text-[color:var(--gold)]">adjust selected details</span>{" "}
+                <SectionTitle.Em>adjust selected details</SectionTitle.Em>{" "}
                 to match your rhythm.
-              </h1>
+              </SectionTitle>
               <p className="mt-5 text-[14.5px] text-[color:var(--charcoal-soft)] leading-relaxed max-w-lg">
                 You're tailoring{" "}
                 <span className="text-[color:var(--charcoal)]">
@@ -575,7 +577,7 @@ function TailorPage() {
             <aside className="lg:sticky lg:top-24">
               <div className="bg-[color:var(--card)] border border-[color:var(--border)] overflow-hidden">
                 <div className="px-5 py-4 bg-[color:var(--charcoal-deep)] text-[color:var(--ivory)] flex items-center justify-between">
-                  <span className="eyebrow text-[color:var(--gold-soft)]">Live summary</span>
+                  <Eyebrow tone="onDark">Live summary</Eyebrow>
                   <span className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-[0.22em] text-[color:var(--gold-soft)]">
                     <span className="relative inline-flex h-1.5 w-1.5">
                       <span className="absolute inline-flex h-full w-full rounded-full bg-[color:var(--gold)] opacity-60 animate-ping" />

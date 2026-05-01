@@ -25,6 +25,8 @@ import {
 import { snapStop, type StopCoord } from "@/data/stopCoords";
 import { SimpleTailorForm } from "@/components/SimpleTailorForm";
 import { useImportedTourImages } from "@/hooks/use-imported-tour-images";
+import { Eyebrow } from "@/components/ui/Eyebrow";
+import { SectionTitle } from "@/components/ui/SectionTitle";
 
 export const Route = createFileRoute("/tours/$tourId")({
   loader: ({ params }) => {
@@ -174,7 +176,7 @@ function TourHero({
 
             {/* Bottom hero copy */}
             <div className="absolute inset-x-0 bottom-0 p-5 sm:p-8 md:p-12 text-[color:var(--ivory)]">
-              <span className="eyebrow text-[color:var(--gold-soft)]">Signature Experience</span>
+              <Eyebrow tone="onDark">Signature Experience</Eyebrow>
               <h1 className="serif mt-3 text-[2rem] sm:text-4xl md:text-5xl lg:text-6xl leading-[1.02] tracking-[-0.015em] max-w-3xl">
                 {tour.title}
               </h1>
@@ -251,7 +253,7 @@ function IntroBlock({ tour }: { tour: SignatureTour }) {
   return (
     <section className="py-14 md:py-20">
       <div className="container-x max-w-3xl text-center">
-        <span className="eyebrow">The day, in short</span>
+        <Eyebrow flank>The day, in short</Eyebrow>
         <p className="serif mt-5 text-[1.5rem] sm:text-2xl md:text-[1.85rem] leading-snug text-[color:var(--charcoal)]">
           {tour.intro}
         </p>
@@ -271,8 +273,8 @@ function HighlightsBlock({ tour }: { tour: SignatureTour }) {
     <section className="pb-14 md:pb-16">
       <div className="container-x max-w-5xl">
         <div className="text-center mb-8">
-          <span className="eyebrow">Highlights</span>
-          <h2 className="serif text-3xl sm:text-4xl mt-3">What you'll actually do</h2>
+          <Eyebrow flank>Highlights</Eyebrow>
+          <SectionTitle size="compact">What you'll <SectionTitle.Em>actually do</SectionTitle.Em></SectionTitle>
         </div>
         <ul className="grid sm:grid-cols-2 gap-x-10 gap-y-4 max-w-3xl mx-auto">
           {(tour.highlights ?? []).map((h) => (
@@ -300,8 +302,8 @@ function ItineraryTimeline({ tour }: { tour: SignatureTour }) {
       <div className="container-x max-w-5xl">
         <div className="flex items-end justify-between mb-10 flex-wrap gap-3">
           <div>
-            <span className="eyebrow">Itinerary</span>
-            <h2 className="serif text-3xl sm:text-4xl mt-3">The story, stop by stop</h2>
+            <Eyebrow>Itinerary</Eyebrow>
+            <SectionTitle size="compact">The story, <SectionTitle.Em>stop by stop</SectionTitle.Em></SectionTitle>
           </div>
           <span className="text-[11px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)]">
             {stops.length} chapters · in this order
@@ -379,8 +381,8 @@ function RouteMap({ tour }: { tour: SignatureTour }) {
     <section className="py-14 md:py-20">
       <div className="container-x max-w-5xl">
         <div className="text-center mb-8">
-          <span className="eyebrow">The route</span>
-          <h2 className="serif text-3xl sm:text-4xl mt-3">Where the day goes</h2>
+          <Eyebrow flank>The route</Eyebrow>
+          <SectionTitle size="compact">Where the <SectionTitle.Em>day goes</SectionTitle.Em></SectionTitle>
           <p className="mt-3 text-[14px] text-[color:var(--charcoal-soft)] max-w-lg mx-auto">
             Real stops, in the order you'll see them.
           </p>
@@ -571,8 +573,8 @@ function GalleryStrip({
       <div className="container-x max-w-6xl">
         <div className="flex items-end justify-between mb-8 flex-wrap gap-3">
           <div>
-            <span className="eyebrow">Gallery</span>
-            <h2 className="serif text-3xl sm:text-4xl mt-3">Inside the day</h2>
+            <Eyebrow>Gallery</Eyebrow>
+            <SectionTitle size="compact">Inside <SectionTitle.Em>the day</SectionTitle.Em></SectionTitle>
           </div>
           <p className="text-[11px] uppercase tracking-[0.22em] text-[color:var(--charcoal-soft)]">
             Real photos · real stops
@@ -631,12 +633,12 @@ function TailorBlock({ tour }: { tour: SignatureTour }) {
       <div className="container-x max-w-6xl">
         <div className="grid lg:grid-cols-[1fr_1.1fr] gap-10 lg:gap-14 items-start">
           <div>
-            <span className="eyebrow">Tailor this Signature</span>
-            <h2 className="serif text-3xl sm:text-4xl md:text-[2.6rem] mt-4 leading-[1.05]">
+            <Eyebrow>Tailor this Signature</Eyebrow>
+            <SectionTitle size="compact" spacing="loose">
               Keep the experience.
               <br />
-              <span className="italic text-[color:var(--gold)]">Adjust the details.</span>
-            </h2>
+              <SectionTitle.Em>Adjust the details.</SectionTitle.Em>
+            </SectionTitle>
             <p className="mt-5 text-[15px] text-[color:var(--charcoal-soft)] leading-relaxed max-w-lg">
               This Signature is designed as it is. You can fine-tune a few details
               inside this specific tour — without redesigning the day.
@@ -699,11 +701,11 @@ function ReviewsBlock() {
     <section className="py-14 md:py-20 bg-[color:var(--charcoal-deep)] text-[color:var(--ivory)]">
       <div className="container-x max-w-6xl">
         <div className="text-center mb-10">
-          <span className="eyebrow text-[color:var(--gold-soft)]">What guests say</span>
-          <h2 className="serif text-3xl sm:text-4xl mt-3">
+          <Eyebrow flank tone="onDark">What guests say</Eyebrow>
+          <SectionTitle size="compact">
             700+{" "}
-            <span className="italic text-[color:var(--gold-soft)]">5-star reviews</span>
-          </h2>
+            <SectionTitle.Em className="text-[color:var(--gold-soft)]">5-star reviews</SectionTitle.Em>
+          </SectionTitle>
         </div>
 
         <div className="grid md:grid-cols-3 gap-5 md:gap-6">
@@ -752,10 +754,10 @@ function FinalCta({ tour }: { tour: SignatureTour }) {
       </div>
 
       <div className="relative container-x max-w-3xl text-center text-[color:var(--ivory)]">
-        <span className="eyebrow text-[color:var(--gold-soft)]">Ready when you are</span>
-        <h2 className="serif text-3xl sm:text-4xl md:text-5xl mt-4 leading-[1.05]">
+        <Eyebrow flank tone="onDark">Ready when you are</Eyebrow>
+        <SectionTitle size="default" spacing="loose" className="text-[color:var(--ivory)]">
           {tour.title.split("—")[0].trim()}
-        </h2>
+        </SectionTitle>
         <p className="serif italic font-light mt-4 text-lg md:text-xl text-[color:var(--ivory)]/85">
           Confirm in real time. The day is yours.
         </p>
@@ -816,8 +818,8 @@ function RelatedTours({ currentId }: { currentId: string }) {
   return (
     <section className="py-16 bg-[color:var(--ivory)] border-t border-[color:var(--border)]">
       <div className="container-x max-w-5xl">
-        <span className="eyebrow">More like this</span>
-        <h2 className="serif text-2xl sm:text-3xl mt-3">Other Signature Experiences</h2>
+        <Eyebrow>More like this</Eyebrow>
+        <SectionTitle size="compact">Other <SectionTitle.Em>Signature Experiences</SectionTitle.Em></SectionTitle>
         <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {others.map((t) => (
             <Link

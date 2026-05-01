@@ -10,11 +10,7 @@ exports[`Typography regression — headline class strings > [home] hero microcop
 
 exports[`Typography regression — headline class strings > [home] hero subheadline 1`] = `"mt-5 md:mt-7 text-[15.5px] md:text-[19px] text-[color:var(--ivory)]/95 max-w-md md:max-w-lg leading-[1.6] md:leading-[1.65] font-normal text-left opacity-0 animate-[heroFade_0.9s_ease-out_0.45s_forwards] [text-shadow:0_1px_8px_rgba(0,0,0,0.3)]"`;
 
-exports[`Typography regression — headline class strings > [multi-day] hero h1 1`] = `"font-display font-bold text-[2.4rem] md:text-[3.6rem] leading-[1.05] mt-5 text-[color:var(--charcoal)]"`;
-
 exports[`Typography regression — headline class strings > [multi-day] hero subhead 1`] = `"mt-6 text-[1rem] md:text-[1.1rem] text-[color:var(--charcoal-soft)] leading-relaxed"`;
-
-exports[`Typography regression — headline class strings > [proposals] hero h1 1`] = `"font-display font-bold text-[2.4rem] md:text-[3.6rem] leading-[1.05] mt-5 text-[color:var(--charcoal)]"`;
 
 exports[`Typography regression — headline class strings > [proposals] hero subhead 1`] = `"mt-6 text-[1rem] md:text-[1.1rem] text-[color:var(--charcoal-soft)] leading-relaxed"`;
 

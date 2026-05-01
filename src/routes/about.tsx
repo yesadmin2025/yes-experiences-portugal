@@ -1,6 +1,8 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
-import { ArrowRight } from "lucide-react";
+import { Eyebrow } from "@/components/ui/Eyebrow";
+import { SectionTitle } from "@/components/ui/SectionTitle";
+import { CtaButton } from "@/components/ui/CtaButton";
 import img from "@/assets/why-image.jpg";
 
 export const Route = createFileRoute("/about")({
@@ -21,10 +23,10 @@ function Page() {
     <SiteLayout>
       <section className="pt-32 pb-12 bg-[color:var(--sand)] text-center">
         <div className="container-x">
-          <span className="eyebrow">About YES</span>
-          <h1 className="serif text-4xl md:text-6xl mt-5 leading-tight">
-            We design <span className="italic text-[color:var(--teal)]">meaningful Portugal</span>.
-          </h1>
+          <Eyebrow flank>About YES</Eyebrow>
+          <SectionTitle as="h1" size="anchor" spacing="loose">
+            We design <SectionTitle.Em>meaningful Portugal</SectionTitle.Em>.
+          </SectionTitle>
         </div>
       </section>
 
@@ -44,13 +46,9 @@ function Page() {
             <p className="mt-8 serif italic text-2xl text-[color:var(--teal)]">
               Portugal, designed around you.
             </p>
-            <Link
-              to="/builder"
-              className="mt-8 inline-flex items-center gap-2 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-[color:var(--ivory)] px-7 py-3.5 text-sm tracking-wide"
-            >
+            <CtaButton to="/builder" variant="primary" className="mt-8">
               Begin Your Story
-              <ArrowRight size={16} />
-            </Link>
+            </CtaButton>
           </div>
         </div>
       </section>

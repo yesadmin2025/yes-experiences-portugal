@@ -4,6 +4,8 @@ import { ArrowRight, Clock, MapPin } from "lucide-react";
 import { signatureTours } from "@/data/signatureTours";
 import { useImportedTourImages } from "@/hooks/use-imported-tour-images";
 import { ImageQualityToggle } from "@/components/ImageQualityToggle";
+import { Eyebrow } from "@/components/ui/Eyebrow";
+import { SectionTitle } from "@/components/ui/SectionTitle";
 
 export const Route = createFileRoute("/day-tours")({
   head: () => ({
@@ -27,10 +29,10 @@ function DayToursPage() {
     <SiteLayout>
       <section className="pt-32 pb-12 bg-[color:var(--sand)] text-center">
         <div className="container-x">
-          <span className="eyebrow">Half & Full Day</span>
-          <h1 className="serif text-4xl md:text-6xl mt-5">
-            Day <span className="italic text-[color:var(--teal)]">Tours</span>
-          </h1>
+          <Eyebrow flank>Half &amp; Full Day</Eyebrow>
+          <SectionTitle as="h1" size="anchor" spacing="loose">
+            Day <SectionTitle.Em>Tours</SectionTitle.Em>
+          </SectionTitle>
           <p className="mt-5 max-w-xl mx-auto text-[color:var(--charcoal-soft)]">
             Private guides, refined pace, and the parts of Portugal you'll remember most.
             Reserve instantly — or adjust a few details within the experience to match your rhythm.

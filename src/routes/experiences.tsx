@@ -5,6 +5,8 @@ import { signatureTours } from "@/data/signatureTours";
 import { useImportedTourImages } from "@/hooks/use-imported-tour-images";
 import { ImageQualityToggle } from "@/components/ImageQualityToggle";
 import { ContrastAuditPanel } from "@/components/dev/ContrastAuditPanel";
+import { Eyebrow } from "@/components/ui/Eyebrow";
+import { SectionTitle } from "@/components/ui/SectionTitle";
 
 export const Route = createFileRoute("/experiences")({
   head: () => ({
@@ -32,10 +34,10 @@ function ExperiencesPage() {
     <SiteLayout>
       <section data-audit="experiences-hero" className="pt-32 pb-[var(--section-y-sm)] bg-[color:var(--sand)] text-center">
         <div className="container-x">
-          <span className="eyebrow">Signature Collection</span>
-          <h1 className="serif text-4xl md:text-6xl mt-5 leading-tight">
-            Signature <span className="italic text-[color:var(--teal)]">Tours</span>
-          </h1>
+          <Eyebrow flank>Signature Collection</Eyebrow>
+          <SectionTitle as="h1" size="anchor" spacing="loose">
+            Signature <SectionTitle.Em>Tours</SectionTitle.Em>
+          </SectionTitle>
           <p className="mt-5 max-w-xl mx-auto text-[color:var(--charcoal-soft)]">
             Complete private experiences, designed to be enjoyed as they are.
             Reserve instantly — or adjust a few details within the experience to match your rhythm.
