@@ -709,5 +709,118 @@ describe("reveal observers — sequenced firing on mobile", () => {
       expect(el.classList.contains("is-visible")).toBe(true),
     );
   });
+
+  it("partial scroll: only fired targets are unobserved; the rest stay observed and invisible", () => {
+    // Models a realistic mid-scroll snapshot on mobile: of 6 reveal
+    // cards, the first 3 enter the viewport (IO fires `isIntersecting=true`
+    // for them) and the remaining 3 are still below the fold (no entry
+    // delivered yet). Contract:
+    //   • exactly the fired 3 receive `is-visible` AND are removed from
+    //     `io.targets`;
+    //   • the unfired 3 stay invisible AND remain in `io.targets`, so
+    //     they will fire later when the user keeps scrolling — i.e. no
+    //     premature unobserve, no leak.
+    vi.stubGlobal(
+      "matchMedia",
+      makeMatchMedia({
+        "(max-width: 767.98px)": true,
+        "(prefers-reduced-motion: reduce)": false,
+      }),
+    );
+
+    render(
+      <SiteLayout>
+        <div className="reveal" data-idx="0" />
+        <div className="reveal" data-idx="1" />
+        <div className="reveal" data-idx="2" />
+        <div className="reveal" data-idx="3" />
+        <div className="reveal" data-idx="4" />
+        <div className="reveal" data-idx="5" />
+      </SiteLayout>,
+    );
+
+    const els = Array.from(
+      document.querySelectorAll<HTMLElement>(".reveal"),
+    );
+    expect(els.length).toBe(6);
+
+    // Reset post-mount sweep state and park each element below the
+    // fold; then re-observe so the IO is actively watching all 6.
+    els.forEach((el, i) => {
+      el.classList.remove("is-visible");
+      placeBelowFold(el, i);
+    });
+    const revealIO = FakeIO.instances.find((io) =>
+      Array.from(io.observedHistory).some((t) =>
+        (t as Element).classList.contains("reveal"),
+      ),
+    );
+    expect(revealIO).toBeDefined();
+    for (const el of els) revealIO!.observe(el);
+    expect(revealIO!.targets.size).toBe(6);
+
+    // Partial scroll: fire only the first 3 as isIntersecting=true.
+    const visible = els.slice(0, 3);
+    const stillBelow = els.slice(3);
+    revealIO!.fire(
+      visible.map((target) => ({
+        target,
+        isIntersecting: true,
+        intersectionRatio: 0.1,
+        boundingClientRect: {
+          top: 100,
+          bottom: 600,
+          left: 0,
+          right: 360,
+          width: 360,
+          height: 500,
+          x: 0,
+          y: 100,
+          toJSON: () => ({}),
+        } as DOMRectReadOnly,
+      })),
+    );
+
+    // Fired targets: visible + unobserved.
+    for (const el of visible) {
+      expect(el.classList.contains("is-visible")).toBe(true);
+      expect(revealIO!.targets.has(el)).toBe(false);
+    }
+    // Still-below targets: invisible + still observed (will fire later).
+    for (const el of stillBelow) {
+      expect(el.classList.contains("is-visible")).toBe(false);
+      expect(revealIO!.targets.has(el)).toBe(true);
+    }
+    // Live `targets` set must equal exactly the still-below subset —
+    // no extras, no missing entries.
+    expect(revealIO!.targets.size).toBe(stillBelow.length);
+    expect(new Set(stillBelow)).toEqual(new Set(revealIO!.targets));
+
+    // Continue scrolling: deliver the remaining 3. They should now
+    // also flip to visible and the observer should be empty (clean
+    // hand-off, no leak).
+    revealIO!.fire(
+      stillBelow.map((target) => ({
+        target,
+        isIntersecting: true,
+        intersectionRatio: 0.1,
+        boundingClientRect: {
+          top: 100,
+          bottom: 600,
+          left: 0,
+          right: 360,
+          width: 360,
+          height: 500,
+          x: 0,
+          y: 100,
+          toJSON: () => ({}),
+        } as DOMRectReadOnly,
+      })),
+    );
+    for (const el of stillBelow) {
+      expect(el.classList.contains("is-visible")).toBe(true);
+    }
+    expect(revealIO!.targets.size).toBe(0);
+  });
 });
 
