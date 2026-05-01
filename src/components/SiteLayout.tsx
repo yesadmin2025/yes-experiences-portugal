@@ -454,8 +454,25 @@ export function SiteLayout({ children }: { children: ReactNode }) {
     // missed something during the first frame on extreme fling scrolls.
     const t = window.setTimeout(() => sweep("sweepDelayed"), 600);
 
+    // FAIL-SAFE (1200ms): if for any reason the IntersectionObserver
+    // never fires (sandboxed iframe, throttled tab, browser quirk, layout
+    // shift after observe), force every still-pending element visible so
+    // content is NEVER stuck at opacity: 0. We disable transitions inline
+    // so off-screen elements don't animate while invisible — they just
+    // appear as the user scrolls to them.
+    const failSafe = window.setTimeout(() => {
+      els.forEach((el) => {
+        if (el.classList.contains("is-visible")) return;
+        el.style.transition = "none";
+        el.style.transitionDelay = "0ms";
+        el.classList.add("is-visible");
+        telemetry.log("reveal", "sweepDelayed", describeReveal(el));
+      });
+    }, 1200);
+
     return () => {
       window.clearTimeout(t);
+      window.clearTimeout(failSafe);
       io.disconnect();
     };
   }, []);
@@ -535,8 +552,20 @@ export function SiteLayout({ children }: { children: ReactNode }) {
     sweep("sweepInitial");
     const t = window.setTimeout(() => sweep("sweepDelayed"), 600);
 
+    // FAIL-SAFE (1200ms): force any still-pending section-enter visible
+    // so content never stays at opacity: 0 if IO failed to fire.
+    const failSafe = window.setTimeout(() => {
+      els.forEach((el) => {
+        if (el.classList.contains("is-visible")) return;
+        el.style.transition = "none";
+        el.classList.add("is-visible");
+        telemetry.log("sectionEnter", "sweepDelayed", describeReveal(el));
+      });
+    }, 1200);
+
     return () => {
       window.clearTimeout(t);
+      window.clearTimeout(failSafe);
       io.disconnect();
     };
   }, []);
