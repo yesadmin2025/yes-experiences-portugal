@@ -146,6 +146,7 @@ function getRevealTelemetry(): RevealTelemetry {
       ioFired: false,
       failSafeFired: false,
       iframeFallbackFired: false,
+      timings: [],
       log: () => {},
       setTotal: () => {},
       markIoFired: () => {},
@@ -169,10 +170,43 @@ function getRevealTelemetry(): RevealTelemetry {
     ioFired: false,
     failSafeFired: false,
     iframeFallbackFired: false,
-    log(bucket, source, selector) {
+    timings: [],
+    log(bucket, source, target, selector) {
       const b = state[bucket];
       b[source] += 1;
       state.byEntry[state.entry][bucket][source] += 1;
+      if (target) {
+        const rect = target.getBoundingClientRect();
+        const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+        const cs = window.getComputedStyle(target);
+        const fold = rect.bottom <= 0 ? "above" : rect.top >= viewportHeight ? "below" : "inside";
+        const delayMs = parseMs(cs.transitionDelay || "0ms") + parseMs(cs.animationDelay || "0ms");
+        const durationMs = Math.max(parseMs(cs.transitionDuration || "0ms"), parseMs(cs.animationDuration || "0ms"));
+        const atMs = Math.round(performance.now() - (window.__yesMotionStartedAt ?? performance.timeOrigin));
+        const realisticallyVisible = fold === "inside" && source === "io" && atMs >= 120;
+        state.timings.push({
+          section: sectionNameFor(target),
+          selector: selector ?? describeReveal(target),
+          source,
+          atMs,
+          top: Math.round(rect.top),
+          bottom: Math.round(rect.bottom),
+          viewportHeight: Math.round(viewportHeight),
+          fold,
+          durationMs: Math.round(durationMs),
+          delayMs: Math.round(delayMs),
+          realisticallyVisible,
+          note: realisticallyVisible
+            ? "visible on scroll"
+            : fold === "below"
+              ? "triggered while still below fold"
+              : fold === "above"
+                ? "animation completed before visible"
+                : source === "io"
+                  ? "triggered immediately on/near first paint"
+                  : "fallback/sweep path",
+        });
+      }
       if (debug) {
         // eslint-disable-next-line no-console
         console.debug(
