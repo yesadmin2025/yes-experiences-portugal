@@ -287,9 +287,10 @@
   html {
     scroll-behavior: smooth;
     /* Anchor scrolls land below the fixed navbar so jumps to #section
-       feel intentional, never "cut off". scroll-mt-* utilities still
-       win per-section when finer control is needed. */
-    scroll-padding-top: 5rem;
+       feel intentional, never "cut off". The three tiers mirror the
+       Navbar height ramp (80 / 88 / 96px). Per-section scroll-mt-*
+       utilities still win when finer control is needed. */
+    scroll-padding-top: 5rem; /* 80px — mobile navbar */
     /* Belt-and-braces: prevent any descendant overflow from creating
        horizontal scroll on mobile. The layout itself is already
        constrained by container-x and 100vw guards, but a single
@@ -297,7 +298,10 @@
     overflow-x: clip;
   }
   @media (min-width: 768px) {
-    html { scroll-padding-top: 6rem; }
+    html { scroll-padding-top: 5.5rem; } /* 88px — tablet navbar */
+  }
+  @media (min-width: 1024px) {
+    html { scroll-padding-top: 6rem; } /* 96px — desktop navbar */
   }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }

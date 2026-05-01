@@ -5,8 +5,14 @@ import { FloatingActions } from "./FloatingActions";
 import { WhatsAppFab } from "./WhatsAppFab";
 import { MobileStickyCTA } from "./MobileStickyCTA";
 import { PostHeroAnnouncer } from "./PostHeroAnnouncer";
+import { installSmoothAnchorScroll } from "@/lib/smooth-anchor-scroll";
 
 export function SiteLayout({ children }: { children: ReactNode }) {
+  // Smooth anchor scroll with navbar offset — covers every <a href="#…">
+  // on every page so jumps land cleanly below the fixed header rather
+  // than getting clipped under it. Reduced-motion safe.
+  useEffect(() => installSmoothAnchorScroll(), []);
+
   // Reveal-on-scroll with a consistent, calm stagger rhythm.
   // Siblings sharing a parent reveal sequentially at a fixed cadence so
   // every section across the page breathes at the same pace.

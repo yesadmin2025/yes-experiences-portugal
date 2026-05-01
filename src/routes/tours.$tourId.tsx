@@ -626,7 +626,7 @@ function TailorBlock({ tour }: { tour: SignatureTour }) {
   return (
     <section
       id="tailor"
-      className="py-14 md:py-20 bg-[color:var(--sand)]/50 scroll-mt-24"
+      className="py-14 md:py-20 bg-[color:var(--sand)]/50 scroll-mt-24 md:scroll-mt-28"
     >
       <div className="container-x max-w-6xl">
         <div className="grid lg:grid-cols-[1fr_1.1fr] gap-10 lg:gap-14 items-start">
