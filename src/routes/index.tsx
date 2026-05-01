@@ -865,7 +865,7 @@ function HomePage() {
           {/* 4-card editorial grid (consolidated from 5). 2-col desktop,
               stacked mobile. Each card: number, icon, label, serif
               headline, body, strategic phrase. */}
-          <ul className="he-stagger max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5 list-none p-0">
+          <ul className="he-stagger max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-3.5 md:gap-4 list-none p-0">
             {[
               {
                 Icon: Feather,
@@ -902,7 +902,7 @@ function HomePage() {
             ].map((b) => (
               <li
                 key={b.num}
-                className="reveal-stagger he-card-lift group relative flex flex-col rounded-[6px] border border-[#EAE2D6] bg-[color:var(--ivory)] p-6 md:p-8 shadow-[0_1px_2px_rgba(46,46,46,0.04)] overflow-hidden"
+                className="reveal-stagger he-card-lift group relative flex flex-col rounded-[6px] border border-[#EAE2D6] bg-[color:var(--ivory)] p-5 md:p-7 shadow-[0_1px_2px_rgba(46,46,46,0.04)] overflow-hidden"
               >
                 <span aria-hidden="true" className="gold-rule absolute left-0 top-0" />
                 <span
@@ -925,7 +925,7 @@ function HomePage() {
                 <span className="mt-4 text-[10.5px] uppercase tracking-[0.28em] font-semibold text-[color:var(--charcoal-soft)]">
                   {b.label}
                 </span>
-                <h3 className="serif mt-2.5 text-[1.4rem] md:text-[1.8rem] leading-[1.2] md:leading-[1.18] text-[color:var(--charcoal)] font-medium">
+                <h3 className="serif mt-2.5 text-[1.3rem] md:text-[1.6rem] leading-[1.22] md:leading-[1.18] text-[color:var(--charcoal)] font-medium">
                   {b.title}
                 </h3>
                 <p className="mt-3 text-[14px] md:text-[15px] text-[color:var(--charcoal-soft)] leading-[1.6]">
@@ -1124,9 +1124,9 @@ function HomePage() {
         aria-labelledby="groups-title"
       >
         <div className="container-x">
-          <div className="reveal text-center max-w-2xl mx-auto mb-12 md:mb-16">
+          <div className="reveal text-center max-w-2xl mx-auto mb-10 md:mb-12">
             <span className="he-eyebrow-bar mb-5">Groups &amp; celebrations</span>
-            <h2 id="groups-title" className="serif mt-3 text-[2rem] sm:text-[2.4rem] md:text-[3.6rem] leading-[1.1] md:leading-[1.0] tracking-[-0.016em] text-[color:var(--charcoal)] font-medium">
+            <h2 id="groups-title" className="serif mt-3 text-[2rem] sm:text-[2.4rem] md:text-[3.4rem] leading-[1.1] md:leading-[1.02] tracking-[-0.016em] text-[color:var(--charcoal)] font-medium">
               For moments bigger than a <span className="italic">tour.</span>
             </h2>
             <p className="mt-4 text-[14.5px] md:text-[16px] text-[color:var(--charcoal-soft)] leading-[1.65] max-w-md mx-auto">
@@ -1139,7 +1139,7 @@ function HomePage() {
               animated category label, soft gold divider, bold serif
               headline, body with one highlighted phrase, italic pull
               line, gold detail line, CTA with arrow nudge. */}
-          <div className="max-w-6xl mx-auto flex flex-col gap-14 md:gap-20">
+          <div className="max-w-6xl mx-auto flex flex-col gap-12 md:gap-16">
             {groupsAndCelebrations.map((m, i) => {
               const reverse = i % 2 === 1;
               return (
@@ -1212,7 +1212,7 @@ function HomePage() {
                             <span aria-hidden="true" className="inline-block h-[6px] w-[6px] rounded-full" style={{ backgroundColor: accent }} />
                             {m.eyebrow}
                           </span>
-                          <h3 className="serif mt-3 text-[1.75rem] md:text-[2.4rem] leading-[1.12] md:leading-[1.06] tracking-[-0.014em] text-[color:var(--charcoal)] font-medium">
+                          <h3 className="serif mt-3 text-[1.6rem] md:text-[2.1rem] leading-[1.14] md:leading-[1.08] tracking-[-0.014em] text-[color:var(--charcoal)] font-medium">
                             {m.title}
                           </h3>
                           <p className="mt-4 md:mt-4 text-[14.5px] md:text-[16px] leading-[1.65] md:leading-[1.7] text-[color:var(--charcoal-soft)]">

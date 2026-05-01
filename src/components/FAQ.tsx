@@ -135,7 +135,7 @@ export function FAQ() {
   return (
     <section
       id="faq"
-      className="py-24 md:py-32 bg-[color:var(--ivory)]"
+      className="py-16 md:py-20 bg-[color:var(--ivory)]"
       aria-labelledby="faq-title"
     >
       <div className="container-x">
@@ -144,7 +144,7 @@ export function FAQ() {
             Reassures before the questions even start. */}
         <div className="reveal max-w-3xl mx-auto text-center">
           <span className="eyebrow">Before you book</span>
-          <h2 id="faq-title" className="serif text-4xl md:text-5xl mt-5 leading-[1.1] tracking-[-0.015em] text-[color:var(--charcoal)]">
+          <h2 id="faq-title" className="serif text-[2rem] md:text-[2.6rem] mt-4 leading-[1.12] tracking-[-0.015em] text-[color:var(--charcoal)]">
             Still wondering{" "}
             <span className="italic text-[color:var(--teal)]">how it works?</span>
           </h2>
@@ -155,7 +155,7 @@ export function FAQ() {
         </div>
 
         {/* ── Questions ─────────────────────────────────────── */}
-        <div className="reveal mt-12 md:mt-14 max-w-3xl mx-auto">
+        <div className="reveal mt-10 md:mt-12 max-w-3xl mx-auto">
           <Accordion
             type="multiple"
             defaultValue={[...DEFAULT_OPEN]}
@@ -167,10 +167,10 @@ export function FAQ() {
                 value={`item-${i}`}
                 className="group border border-[color:var(--border)] hover:border-[color:var(--teal)]/40 bg-white/80 backdrop-blur-sm transition-colors duration-200 [&[data-state=open]]:border-[color:var(--teal)]/50 [&[data-state=open]]:shadow-[var(--shadow-card)]"
               >
-                <AccordionTrigger className="px-6 py-5 text-left text-base md:text-[17px] serif text-[color:var(--charcoal)] hover:no-underline hover:text-[color:var(--teal)] transition-colors duration-200 [&[data-state=open]]:text-[color:var(--teal)]">
+                <AccordionTrigger className="px-5 md:px-6 py-4 md:py-5 text-left text-[15px] md:text-[17px] serif text-[color:var(--charcoal)] hover:no-underline hover:text-[color:var(--teal)] transition-colors duration-200 [&[data-state=open]]:text-[color:var(--teal)]">
                   {item.q}
                 </AccordionTrigger>
-                <AccordionContent className="px-6 pb-6 pt-0 text-[15px] leading-[1.65] text-[color:var(--charcoal)]">
+                <AccordionContent className="px-5 md:px-6 pb-5 md:pb-6 pt-0 text-[14.5px] md:text-[15px] leading-[1.65] text-[color:var(--charcoal)]">
                   {item.a}
                 </AccordionContent>
               </AccordionItem>
@@ -182,7 +182,7 @@ export function FAQ() {
             "Not sure yet?" → Talk to a Local. Quiet, human, never
             pushy. The primary CTA goes to /contact (per brand rules,
             WhatsApp stays as optional support, never primary). */}
-        <div className="reveal mt-14 md:mt-16 max-w-md mx-auto text-center">
+        <div className="reveal mt-12 md:mt-14 max-w-md mx-auto text-center">
           <p className="text-[10.5px] uppercase tracking-[0.28em] font-semibold text-[color:var(--charcoal)]">
             Not sure yet?
           </p>
