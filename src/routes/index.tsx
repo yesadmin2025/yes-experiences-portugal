@@ -1086,23 +1086,23 @@ function HomePage() {
               page so its own scroll never reflows neighbours.
               Tablet+: keeps the calm 2/4-col grid. */}
           <ul
-            className="
-              flex sm:grid sm:grid-cols-2 lg:grid-cols-4
-              gap-5 md:gap-7
-              list-none p-0
-              -mx-5 px-5 sm:mx-0 sm:px-0
-              overflow-x-auto sm:overflow-visible
-              overscroll-x-contain sm:overscroll-auto
-              [contain:layout_paint] sm:[contain:none]
-              [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden
-            "
+            className={[
+              scrollDebug.staticMobileCarousels
+                ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
+                : "flex sm:grid sm:grid-cols-2 lg:grid-cols-4 -mx-5 px-5 sm:mx-0 sm:px-0 overflow-x-auto sm:overflow-visible overscroll-x-contain sm:overscroll-auto [contain:layout_paint] sm:[contain:none] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden",
+              "gap-5 md:gap-7 list-none p-0",
+            ].join(" ")}
             aria-label="Signature experiences"
           >
             {signatures.map((t) => {
               return (
                 <li
                   key={t.id}
-                  className="shrink-0 w-[84vw] sm:w-auto sm:shrink"
+                  className={
+                    scrollDebug.staticMobileCarousels
+                      ? "w-full"
+                      : "shrink-0 w-[84vw] sm:w-auto sm:shrink"
+                  }
                 >
                   {/* Card is a structured composition (NOT a single link) so
                       we can expose two distinct CTAs — Book + Tailor — and
@@ -1208,7 +1208,7 @@ function HomePage() {
           </ul>
 
           {/* Mobile-only swipe hint */}
-          <p className="sm:hidden mt-4 text-center text-[10.5px] uppercase tracking-[0.28em] font-semibold text-[color:var(--charcoal)]">
+          <p className={scrollDebug.staticMobileCarousels ? "hidden" : "sm:hidden mt-4 text-center text-[10.5px] uppercase tracking-[0.28em] font-semibold text-[color:var(--charcoal)]"}>
             Swipe to explore
           </p>
 
