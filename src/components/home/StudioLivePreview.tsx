@@ -201,7 +201,7 @@ export function StudioLivePreview() {
             strokeLinecap="round"
             filter="url(#slv-soft)"
             strokeDasharray={pathLen}
-            strokeDashoffset={active ? 0 : pathLen}
+            strokeDashoffset={renderedActive ? 0 : pathLen}
             style={{ transition: "stroke-dashoffset 2400ms cubic-bezier(0.22, 0.61, 0.36, 1)" }}
           />
           {/* Sharp route line */}
@@ -213,7 +213,7 @@ export function StudioLivePreview() {
             strokeWidth="1.8"
             strokeLinecap="round"
             strokeDasharray={pathLen}
-            strokeDashoffset={active ? 0 : pathLen}
+            strokeDashoffset={renderedActive ? 0 : pathLen}
             style={{ transition: "stroke-dashoffset 2400ms cubic-bezier(0.22, 0.61, 0.36, 1)" }}
           />
 
@@ -226,8 +226,8 @@ export function StudioLivePreview() {
               tabIndex={0}
               aria-label={`${s.label} — ${s.caption}`}
               style={{
-                opacity: active ? 1 : 0,
-                transform: active ? "translateY(0)" : "translateY(4px)",
+                opacity: renderedActive ? 1 : 0,
+                transform: renderedActive ? "translateY(0)" : "translateY(4px)",
                 transition: `opacity 520ms ease ${s.delay}ms, transform 520ms ease ${s.delay}ms`,
                 transformBox: "fill-box",
                 transformOrigin: `${s.x}px ${s.y}px`,
@@ -251,7 +251,7 @@ export function StudioLivePreview() {
                   r="6"
                   fill="var(--gold)"
                   opacity="0.18"
-                  className={active ? "slv-pulse" : ""}
+                  className={renderedActive ? "slv-pulse" : ""}
                   style={{ animationDelay: `${s.delay + 600}ms` }}
                 />
               )}
@@ -274,7 +274,7 @@ export function StudioLivePreview() {
                 left: `${(s.x / 200) * 100}%`,
                 top: `${(s.y / 260) * 100}%`,
                 transform: "translate(10px, -50%)",
-                opacity: active ? 1 : 0,
+                opacity: renderedActive ? 1 : 0,
                 transition: `opacity 600ms ease ${s.delay + 250}ms`,
               }}
             >
@@ -325,8 +325,8 @@ export function StudioLivePreview() {
               aria-label={`Selected moment: ${moment}`}
               className="slv-moment slv-focusable inline-flex items-center gap-1.5 rounded-full border border-[color:var(--teal)]/25 bg-[color:var(--ivory)] px-3 py-1 text-[11.5px] tracking-[0.02em] text-[color:var(--charcoal)]"
               style={{
-                opacity: active ? 1 : 0,
-                transform: active ? "translateY(0)" : "translateY(4px)",
+                opacity: renderedActive ? 1 : 0,
+                transform: renderedActive ? "translateY(0)" : "translateY(4px)",
                 transition: `opacity 520ms ease ${1500 + i * 220}ms, transform 520ms ease ${1500 + i * 220}ms`,
               }}
             >
@@ -339,8 +339,8 @@ export function StudioLivePreview() {
         <p
           className="serif italic mt-4 text-[14.5px] md:text-[15.5px] leading-[1.55] text-[color:var(--charcoal)]"
           style={{
-            opacity: active ? 1 : 0,
-            transform: active ? "translateY(0)" : "translateY(6px)",
+            opacity: renderedActive ? 1 : 0,
+            transform: renderedActive ? "translateY(0)" : "translateY(6px)",
             transition: "opacity 600ms ease 2100ms, transform 600ms ease 2100ms",
           }}
         >
