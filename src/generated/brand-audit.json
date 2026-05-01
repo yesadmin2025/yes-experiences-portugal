@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-05-01T01:37:54.161Z",
-  "filesScanned": 143,
+  "generatedAt": "2026-05-01T01:51:14.592Z",
+  "filesScanned": 144,
   "approvedPalette": {
     "teal": "#295B61",
     "teal-2": "#2A7C82",
@@ -1034,7 +1034,7 @@
     },
     {
       "file": "src/routes/index.tsx",
-      "line": 851,
+      "line": 856,
       "col": 106,
       "raw": "#E7DDD0",
       "normalized": "#e7ddd0",
@@ -1043,7 +1043,7 @@
     },
     {
       "file": "src/routes/index.tsx",
-      "line": 1010,
+      "line": 1015,
       "col": 114,
       "raw": "#E7DDD0",
       "normalized": "#e7ddd0",
@@ -1223,7 +1223,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 2011,
+      "line": 2021,
       "col": 23,
       "raw": "#000",
       "normalized": "#000000",
@@ -1232,7 +1232,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 2288,
+      "line": 2298,
       "col": 41,
       "raw": "#000",
       "normalized": "#000000",
@@ -1241,7 +1241,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 2288,
+      "line": 2298,
       "col": 47,
       "raw": "#000",
       "normalized": "#000000",
@@ -1250,7 +1250,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 2604,
+      "line": 2614,
       "col": 7,
       "raw": "#555",
       "normalized": "#555555",
