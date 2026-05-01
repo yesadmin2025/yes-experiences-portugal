@@ -228,7 +228,7 @@ function flashDebug(el: HTMLElement, label: string) {
   const prevOutline = el.style.outline;
   const prevOffset = el.style.outlineOffset;
   const prevTransition = el.style.transition;
-  el.style.outline = "2px dashed #C9A96A";
+  el.style.outline = "2px dashed var(--gold)";
   el.style.outlineOffset = "2px";
   el.style.transition = (prevTransition ? prevTransition + ", " : "") + "outline-color 600ms ease";
 
@@ -240,8 +240,8 @@ function flashDebug(el: HTMLElement, label: string) {
     "left:0",
     "z-index:99998",
     "padding:2px 6px",
-    "background:#C9A96A",
-    "color:#2E2E2E",
+    "background:color:var(--gold)",
+    "color:var(--charcoal)",
     "font:700 10px/1.2 ui-monospace,monospace",
     "border-radius:0 0 4px 0",
     "pointer-events:none",
@@ -519,7 +519,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
       "z-index:99999",
       "padding:8px 10px",
       "background:rgba(20,20,20,0.88)",
-      "color:#FAF8F3",
+      "color:var(--ivory)",
       "font:600 11px/1.35 ui-monospace,SFMono-Regular,Menlo,monospace",
       "border:1px solid rgba(201,169,106,0.5)",
       "border-radius:6px",
@@ -535,7 +535,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
       const pulses = document.querySelectorAll(".hero-cta-arrow-pulse").length;
       const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       hud.innerHTML =
-        `<div style="color:#C9A96A">reveal-debug · ${t.entry}</div>` +
+        `<div style="color:var(--gold)">reveal-debug · ${t.entry}</div>` +
         `<div>reveal ${t.reveal.io}/${t.reveal.sweepInitial}/${t.reveal.sweepDelayed} · pending ${t.reveal.pending}/${t.reveal.total}</div>` +
         `<div>section ${t.sectionEnter.io}/${t.sectionEnter.sweepInitial}/${t.sectionEnter.sweepDelayed} · pending ${t.sectionEnter.pending}/${t.sectionEnter.total}</div>` +
         `<div>hero pulses: ${pulses} · reduced-motion: ${reduced ? "ON" : "off"}</div>` +
