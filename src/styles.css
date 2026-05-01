@@ -1523,6 +1523,16 @@
   transform: translateY(0);
 }
 
+@media (max-width: 767.98px) {
+  html.scroll-debug-mobile-reveals-off .reveal,
+  html.scroll-debug-mobile-reveals-off .reveal-stagger {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    will-change: auto !important;
+  }
+}
+
 /* Layered lift — keep the reveal transform and the hover transform on
    different elements so they never fight. The outer node (.reveal /
    .reveal-stagger) owns the entrance transform + opacity. The inner
@@ -2766,6 +2776,16 @@
    route path stroke and revealing pin groups. */
 .studio-live[data-active="true"] svg path[style*="stroke-dashoffset"] {
   will-change: stroke-dashoffset;
+}
+
+@media (max-width: 767.98px) {
+  html.scroll-debug-studio-static .studio-live *,
+  html.scroll-debug-studio-static .studio-live svg path,
+  html.scroll-debug-studio-static .studio-live svg g {
+    animation: none !important;
+    transition: none !important;
+    will-change: auto !important;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { ArrowRight, Compass, Sparkles, X } from "lucide-react";
 import { usePastHero } from "@/hooks/use-past-hero";
+import { useScrollDebugFlags } from "@/lib/scroll-debug";
 
 /**
  * MobileStickyCTA
@@ -83,6 +84,7 @@ function buildDetail(cta: IntentCta): IntentDetail {
 }
 
 export function MobileStickyCTA() {
+  const scrollDebug = useScrollDebugFlags();
   // Shared visibility gate — same threshold, persistence, and BFCache
   // handling that <FloatingActions> uses.
   const visible = usePastHero({
@@ -177,6 +179,8 @@ export function MobileStickyCTA() {
       setSubmitting(true);
       trackIntent(buildDetail(cta));
     };
+
+  if (scrollDebug.disableStickyCta) return null;
 
   return (
     <>

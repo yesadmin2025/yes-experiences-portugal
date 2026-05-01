@@ -6,8 +6,22 @@ import { WhatsAppFab } from "./WhatsAppFab";
 import { MobileStickyCTA } from "./MobileStickyCTA";
 import { PostHeroAnnouncer } from "./PostHeroAnnouncer";
 import { installSmoothAnchorScroll } from "@/lib/smooth-anchor-scroll";
+import {
+  applyScrollDebugClasses,
+  getScrollDebugFlags,
+  reportScrollDebug,
+} from "@/lib/scroll-debug";
 
 export function SiteLayout({ children }: { children: ReactNode }) {
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const flags = getScrollDebugFlags();
+    if (!flags.enabled) return;
+    applyScrollDebugClasses(flags);
+    const timer = window.setTimeout(() => reportScrollDebug(), 500);
+    return () => window.clearTimeout(timer);
+  }, []);
+
   // Smooth anchor scroll with navbar offset — covers every <a href="#…">
   // on every page so jumps land cleanly below the fixed header rather
   // than getting clipped under it. Reduced-motion safe.
@@ -21,7 +35,12 @@ export function SiteLayout({ children }: { children: ReactNode }) {
     const els = document.querySelectorAll<HTMLElement>(".reveal, .reveal-stagger");
     if (!els.length) return;
 
+    const flags = getScrollDebugFlags();
+    const mobileRevealsDisabled =
+      flags.disableMobileReveals && window.matchMedia("(max-width: 767.98px)").matches;
+
     if (
+      mobileRevealsDisabled ||
       typeof IntersectionObserver === "undefined" ||
       window.matchMedia("(prefers-reduced-motion: reduce)").matches
     ) {
