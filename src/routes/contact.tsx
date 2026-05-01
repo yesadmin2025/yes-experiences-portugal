@@ -2,6 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
 import { Mail, Phone, MapPin } from "lucide-react";
 import { useState } from "react";
+import { Eyebrow } from "@/components/ui/Eyebrow";
+import { SectionTitle } from "@/components/ui/SectionTitle";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -22,10 +24,10 @@ function Page() {
     <SiteLayout>
       <section className="pt-32 pb-12 bg-[color:var(--sand)]">
         <div className="container-x text-center">
-          <span className="eyebrow">Talk to a Designer</span>
-          <h1 className="serif text-4xl md:text-6xl mt-5 leading-tight">
-            Begin Your <span className="italic text-[color:var(--teal)]">Portugal Story</span>
-          </h1>
+          <Eyebrow flank>Talk to a Designer</Eyebrow>
+          <SectionTitle as="h1" size="anchor" spacing="loose">
+            Begin Your <SectionTitle.Em>Portugal Story</SectionTitle.Em>
+          </SectionTitle>
           <p className="mt-5 max-w-xl mx-auto text-[color:var(--charcoal-soft)]">
             Tell us a little about who you are and what you'd love to experience. We'll respond
             within one business day.

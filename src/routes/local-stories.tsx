@@ -5,6 +5,8 @@ import editCoastal from "@/assets/edit-coastal-road.jpg";
 import editWinery from "@/assets/edit-winery.jpg";
 import editMarket from "@/assets/edit-market.jpg";
 import editViewpoint from "@/assets/edit-viewpoint.jpg";
+import { Eyebrow } from "@/components/ui/Eyebrow";
+import { SectionTitle } from "@/components/ui/SectionTitle";
 
 export const Route = createFileRoute("/local-stories")({
   head: () => ({
@@ -56,11 +58,11 @@ function Page() {
       {/* Header */}
       <section className="pt-40 pb-16 md:pt-48 md:pb-20 bg-[color:var(--sand)] text-center">
         <div className="container-x">
-          <span className="eyebrow">Local Stories &amp; Hidden Gems</span>
-          <h1 className="serif text-4xl md:text-6xl mt-5 leading-[1.05] text-[color:var(--charcoal)]">
+          <Eyebrow flank>Local Stories &amp; Hidden Gems</Eyebrow>
+          <SectionTitle as="h1" size="anchor" spacing="loose">
             The Portugal{" "}
-            <span className="italic text-[color:var(--teal)]">we travel ourselves</span>
-          </h1>
+            <SectionTitle.Em>we travel ourselves</SectionTitle.Em>
+          </SectionTitle>
           <p className="mt-6 max-w-xl mx-auto text-[15px] md:text-[17px] text-[color:var(--charcoal-soft)] leading-[1.75] font-light">
             Notes from the road — written by the locals who design our private experiences. Hidden
             places, family kitchens, quiet corners of a country we know by heart.
