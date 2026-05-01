@@ -1,5 +1,5 @@
-import { Link } from "@tanstack/react-router";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
+import { CtaButton } from "@/components/ui/CtaButton";
 
 interface Props {
   onStart: () => void;
@@ -69,21 +69,20 @@ export function EntryScreen({ onStart }: Props) {
           </p>
 
           <div className="mt-9 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4">
-            <button
+            <CtaButton
               type="button"
               onClick={onStart}
-              className="cta-unified group inline-flex items-center justify-center gap-2 px-7 py-4 min-h-[52px] rounded-[2px] bg-[color:var(--charcoal)] text-[color:var(--ivory)] text-[12.5px] uppercase tracking-[0.22em] font-bold hover:bg-[color:var(--teal)] shadow-[0_14px_32px_-16px_rgba(46,46,46,0.55)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--gold)]"
+              variant="primary"
             >
               Start building
-              <ArrowRight size={14} className="cta-unified-arrow" />
-            </button>
+            </CtaButton>
 
-            <Link
+            <CtaButton
               to="/experiences"
-              className="cta-unified inline-flex items-center justify-center gap-2 px-6 py-4 min-h-[52px] rounded-[2px] border border-[color:var(--charcoal)]/20 bg-transparent text-[12.5px] uppercase tracking-[0.22em] font-bold text-[color:var(--charcoal)] hover:border-[color:var(--charcoal)]/45"
+              variant="ghost"
             >
               Start from a signature
-            </Link>
+            </CtaButton>
           </div>
 
           <p className="mt-6 text-[12px] text-[color:var(--charcoal)]/55 tracking-wide">
