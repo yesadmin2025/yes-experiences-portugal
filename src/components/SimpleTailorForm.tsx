@@ -2,6 +2,8 @@ import { useMemo, useState } from "react";
 import { MessageCircle, Calendar, Users, Gauge, Plus, Check } from "lucide-react";
 import type { SignatureTour } from "@/data/signatureTours";
 import { whatsappHref } from "@/components/WhatsAppFab";
+import { Eyebrow } from "@/components/ui/Eyebrow";
+import { SectionTitle } from "@/components/ui/SectionTitle";
 
 /**
  * Minimal "Tailor this tour" panel.
@@ -66,10 +68,10 @@ export function SimpleTailorForm({ tour }: { tour: SignatureTour }) {
 
   return (
     <div className="border border-[color:var(--border)] bg-[color:var(--card)] p-5 sm:p-7">
-      <div className="flex items-center gap-2">
-        <span className="eyebrow">Tailored Signature</span>
-      </div>
-      <h2 className="serif text-2xl mt-2">Adjust a few details</h2>
+      <Eyebrow>Tailored Signature</Eyebrow>
+      <SectionTitle size="compact" spacing="tight">
+        Adjust a few <SectionTitle.Em>details</SectionTitle.Em>
+      </SectionTitle>
       <p className="mt-2 text-sm text-[color:var(--charcoal-soft)]">
         Match this experience to your rhythm — the route, story and local guide stay intact.
       </p>
