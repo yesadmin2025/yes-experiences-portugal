@@ -2152,7 +2152,59 @@
     transform: scaleX(1);
   }
 
-  /* "Live" pulse dot — paired with eyebrow text in the Builder section.
+  /* Chapter divider — small champagne-gold dot flanked by thin gold rules.
+     Used between major homepage chapters to add elegant separation without
+     a heavy border. Pure decoration; aria-hidden in JSX. Gold-deep for the
+     dot keeps it visible on ivory; rules fade to transparent on either
+     side so the mark reads as a punctuation, not a banner. */
+  .chapter-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    width: 100%;
+    max-width: 280px;
+    margin-left: auto;
+    margin-right: auto;
+    opacity: 0.9;
+  }
+  .chapter-divider::before,
+  .chapter-divider::after {
+    content: "";
+    flex: 1 1 auto;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      color-mix(in oklab, var(--gold-deep) 70%, transparent) 50%,
+      transparent 100%
+    );
+  }
+  .chapter-divider > .dot {
+    flex: 0 0 auto;
+    width: 5px;
+    height: 5px;
+    border-radius: 9999px;
+    background: var(--gold-deep);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--gold) 18%, transparent);
+  }
+  /* Reveal-aware draw-in: rules expand from the centre when the parent
+     .reveal/.reveal-stagger turns visible. Pure transform → no layout
+     shift. Reduced-motion is handled by the global reveal rules. */
+  .chapter-divider::before,
+  .chapter-divider::after {
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 600ms cubic-bezier(0.22, 0.61, 0.36, 1) 80ms;
+  }
+  .reveal.is-visible .chapter-divider::before,
+  .reveal.is-visible .chapter-divider::after,
+  .reveal-stagger.is-visible .chapter-divider::before,
+  .reveal-stagger.is-visible .chapter-divider::after,
+  .is-visible > .chapter-divider::before,
+  .is-visible > .chapter-divider::after {
+    transform: scaleX(1);
+  }
      Single soft pulse, kept subtle so it doesn't read as a notification. */
   .live-dot {
     position: relative;
