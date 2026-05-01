@@ -1219,3 +1219,76 @@ describe("FakeIO.observe — defensive classification (null / undefined / no cla
   });
 });
 
+describe("FakeIO.observe — explicit 'classList missing' contract", () => {
+  // Focused regression coverage: targets where `classList` is literally
+  // absent (undefined) must NOT crash observe() and MUST leave kind as
+  // "other" — both before and after legitimate classification.
+
+  function makeElLocal(...classes: string[]): HTMLElement {
+    const el = document.createElement("div");
+    for (const c of classes) el.classList.add(c);
+    return el;
+  }
+
+  it("observe(target) where target.classList === undefined does not throw", () => {
+    const io = new FakeIO(() => {});
+    const target = { classList: undefined } as unknown as Element;
+    expect(() => io.observe(target)).not.toThrow();
+  });
+
+  it("kind stays 'other' after observing a classList-less target", () => {
+    const io = new FakeIO(() => {});
+    const target = { classList: undefined } as unknown as Element;
+    io.observe(target);
+    expect(io.kind).toBe("other");
+  });
+
+  it("classList-less targets are NOT added to pending or observed sets", () => {
+    const io = new FakeIO(() => {});
+    io.observe({ classList: undefined } as unknown as Element);
+    io.observe({ classList: undefined } as unknown as Element);
+    io.observe({ classList: undefined } as unknown as Element);
+    expect(io.pendingTargets.size).toBe(0);
+    expect(io.observedTargets.size).toBe(0);
+    expect(io.kind).toBe("other");
+  });
+
+  it("a classList-less observe between valid ones does not flip the kind", () => {
+    const io = new FakeIO(() => {});
+    io.observe(makeElLocal("reveal"));
+    expect(io.kind).toBe("reveal");
+
+    expect(() =>
+      io.observe({ classList: undefined } as unknown as Element),
+    ).not.toThrow();
+    expect(io.kind).toBe("reveal");
+
+    io.observe(makeElLocal("reveal-stagger"));
+    expect(io.kind).toBe("reveal");
+    // Only the two real elements are tracked; the classList-less one is ignored.
+    expect(io.pendingTargets.size).toBe(2);
+    expect(io.observedTargets.size).toBe(2);
+  });
+
+  it("a classList-less observe BEFORE a valid one still allows classification on the next valid observe", () => {
+    const io = new FakeIO(() => {});
+    io.observe({ classList: undefined } as unknown as Element);
+    expect(io.kind).toBe("other");
+
+    io.observe(makeElLocal("section-enter"));
+    expect(io.kind).toBe("section-enter");
+    expect(io.pendingTargets.size).toBe(1);
+  });
+
+  it("repeated classList-less observes never throw and never mutate kind", () => {
+    const io = new FakeIO(() => {});
+    for (let i = 0; i < 25; i++) {
+      expect(() =>
+        io.observe({ classList: undefined } as unknown as Element),
+      ).not.toThrow();
+      expect(io.kind).toBe("other");
+    }
+    expect(io.pendingTargets.size).toBe(0);
+  });
+});
+
