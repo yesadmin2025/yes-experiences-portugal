@@ -92,45 +92,48 @@ function readDecl(
 }
 
 /**
- * Extract a CSS rule body for a selector. If `inMediaMin` is given,
- * only matches inside an `@media (min-width: <px>px)` block.
+ * Extract a CSS rule body for `.hero-cta-button` (only the bare
+ * selector, not the `.hero-cta-button.cta-*` compound rules). If
+ * `inMediaMin` is given, restricts the search to inside an
+ * `@media (min-width: <px>px)` block.
  */
-function extractRule(
-  selector: string,
-  inMediaMin?: number,
-): string {
-  if (inMediaMin == null) {
-    // Match the FIRST occurrence at top level (we only have one base rule).
-    const re = new RegExp(
-      `(?:^|\\n)\\s*\\${selector.startsWith(".") ? "" : ""}${selector
-        .replace(".", "\\.")
-        .replace(/\s+/g, "\\s+")}\\s*\\{([^}]+)\\}`,
+function extractHeroCtaRule(inMediaMin?: number): string {
+  // The bare selector: `.hero-cta-button {` with NO `.` following the
+  // class name. This excludes `.hero-cta-button.cta-secondary-dark`.
+  const ruleRe = /\.hero-cta-button\s*\{([^}]+)\}/g;
+
+  let scope = stylesSrc;
+  if (inMediaMin != null) {
+    const mediaRe = new RegExp(
+      `@media\\s*\\(\\s*min-width:\\s*${inMediaMin}px\\s*\\)\\s*\\{([\\s\\S]*?)\\n\\s*\\}\\s*(?=\\n|$)`,
     );
-    const m = stylesSrc.match(re);
-    if (!m) {
-      throw new Error(`CSS rule not found: ${selector}`);
+    const mediaBlock = stylesSrc.match(mediaRe);
+    if (!mediaBlock) {
+      throw new Error(`@media (min-width: ${inMediaMin}px) block not found`);
     }
-    return m[1];
+    scope = mediaBlock[1];
   }
-  // Match inside a specific @media (min-width: Npx) block.
-  const mediaRe = new RegExp(
-    `@media\\s*\\(\\s*min-width:\\s*${inMediaMin}px\\s*\\)\\s*\\{([\\s\\S]*?)\\n\\s*\\}\\s*(?=\\n|$)`,
+
+  // Walk all `.hero-cta-button { ... }` matches and pick the first one
+  // where the character right before the `{` is whitespace (not `.`),
+  // which means the bare class — not a compound selector.
+  let m: RegExpExecArray | null;
+  while ((m = ruleRe.exec(scope)) !== null) {
+    const before = scope.slice(Math.max(0, m.index - 1), m.index);
+    // m.index points at the `.` — the char before that should be whitespace
+    // or start-of-block, never `.` (that would be a compound selector).
+    if (before === "" || /\s/.test(before)) {
+      // Also ensure the char IMMEDIATELY after `.hero-cta-button` is `{`
+      // or whitespace — not `.` (compound) or `>` etc.
+      const after = m[0].slice(".hero-cta-button".length, ".hero-cta-button".length + 1);
+      if (/\s|\{/.test(after)) {
+        return m[1];
+      }
+    }
+  }
+  throw new Error(
+    `Bare .hero-cta-button rule not found${inMediaMin != null ? ` inside @media min-width:${inMediaMin}px` : ""}`,
   );
-  const mediaBlock = stylesSrc.match(mediaRe);
-  if (!mediaBlock) {
-    throw new Error(`@media (min-width: ${inMediaMin}px) block not found`);
-  }
-  const inner = mediaBlock[1];
-  const re = new RegExp(
-    `${selector.replace(".", "\\.")}\\s*\\{([^}]+)\\}`,
-  );
-  const m = inner.match(re);
-  if (!m) {
-    throw new Error(
-      `CSS rule ${selector} not found inside @media min-width:${inMediaMin}px`,
-    );
-  }
-  return m[1];
 }
 
 /* ─────────────────────────────────────────────────────────────────
@@ -243,8 +246,8 @@ describe("Hero subheadline — locked Tailwind tokens", () => {
 /* ─────────────────────────────────────────────────────────────────
  * .hero-cta-button CSS contract — geometry + type at mobile / md
  * ───────────────────────────────────────────────────────────────── */
-const CTA_BASE = extractRule(".hero-cta-button");
-const CTA_MD = extractRule(".hero-cta-button", 768);
+const CTA_BASE = extractHeroCtaRule();
+const CTA_MD = extractHeroCtaRule(768);
 
 describe(".hero-cta-button mobile contract — locked", () => {
   it("locks geometry (height + padding)", () => {
