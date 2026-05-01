@@ -8,11 +8,10 @@
  *
  * Tiers on the homepage:
  *
- *   · MAJOR section H2 (Studio, Why YES, Signatures, Groups)
+ *   · MAJOR section H2 (Studio, Why YES, Signatures, Groups, Final CTA)
  *     → text-[2rem] sm:text-[2.4rem] md:text-[3.6rem] (medium weight)
- *
- *   · Final CTA H2 (dark teal surface)
- *     → text-[2rem] sm:text-[2.4rem] md:text-[3.2rem]
+ *     The Final CTA card was re-aligned from a teal surface to ivory,
+ *     so it now follows the same ramp as the other major sections.
  *
  *   · SUB-section H2 (Three ways)
  *     → text-[1.7rem] sm:text-[1.95rem] md:text-[2.4rem]
@@ -42,7 +41,13 @@ function extractRem(cls: string, prefix: string | null): number | null {
 }
 
 describe("Homepage H2 — major section ramp (refined)", () => {
-  const MAJOR_IDS = ["studio-title", "why-yes-title", "signatures-title", "groups-title"];
+  const MAJOR_IDS = [
+    "studio-title",
+    "why-yes-title",
+    "signatures-title",
+    "groups-title",
+    "final-cta-title",
+  ];
 
   for (const id of MAJOR_IDS) {
     it(`#${id} uses 2rem → 2.4rem → 3.6rem ramp`, () => {
@@ -52,13 +57,6 @@ describe("Homepage H2 — major section ramp (refined)", () => {
       expect(extractRem(cls, "md"), `#${id}: md size`).toBe(3.6);
     });
   }
-
-  it("#final-cta-title uses 2rem → 2.4rem → 3.2rem ramp (lower md on dark surface)", () => {
-    const cls = findH2Block("final-cta-title");
-    expect(extractRem(cls, null)).toBe(2);
-    expect(extractRem(cls, "sm")).toBe(2.4);
-    expect(extractRem(cls, "md")).toBe(3.2);
-  });
 });
 
 describe("Homepage H2 — sub-section ramp (refined)", () => {
