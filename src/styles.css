@@ -2928,31 +2928,33 @@
 }
 
 /* ───────────────────────────────────────────────────────────────────
-   SECTION ENTRANCE — gradual, premium fade + rise on scroll.
-   Wrapper class `.section-enter` opts a section into a slightly larger
-   travel (18px → 0) and a calmer 520ms duration than the global
-   `.reveal` so big sections feel like chapters opening, not flickers.
-   Pairs with the existing IntersectionObserver in SiteLayout (it adds
-   `.is-visible` once the element crosses the threshold).
+   SECTION ENTRANCE — gradual, premium fade-in on scroll.
+
+   Wrapper class `.section-enter` opts a section into a soft chapter
+   fade-in. We deliberately keep this OPACITY-ONLY (no translateY) so
+   it cannot conflict with the inner `.reveal` / `.reveal-stagger`
+   elements, which already own the 10–12px lift. Two concurrent
+   transforms on parent + child looked like a "double-slide" on fast
+   mobile scrolls; opacity-only solves it cleanly.
+
+   Triggered by a dedicated IntersectionObserver in SiteLayout that
+   fires earlier than the global one (rootMargin -8%, threshold 0.02)
+   so tall sections in narrow mobile viewports begin fading in as soon
+   as their top edge appears, not when 14% is on screen.
    ─────────────────────────────────────────────────────────────── */
 @layer utilities {
   .section-enter {
     opacity: 0;
-    transform: translateY(18px);
-    transition:
-      opacity 520ms cubic-bezier(0.22, 0.61, 0.36, 1),
-      transform 520ms cubic-bezier(0.22, 0.61, 0.36, 1);
-    will-change: opacity, transform;
+    transition: opacity 420ms cubic-bezier(0.22, 0.61, 0.36, 1);
+    will-change: opacity;
   }
   .section-enter.is-visible {
     opacity: 1;
-    transform: translateY(0);
   }
   @media (prefers-reduced-motion: reduce) {
     .section-enter,
     .section-enter.is-visible {
       opacity: 1 !important;
-      transform: none !important;
       transition: none !important;
     }
   }
