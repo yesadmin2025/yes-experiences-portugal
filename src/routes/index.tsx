@@ -584,7 +584,7 @@ function HomePage() {
             {/* Brand signature — rendered ONCE (Patch 2A dedup).
                 The visible split is the only copy of the line; SRs read
                 it via aria-label on the wrapper. */}
-            <div className="hero-rhythm-microcopy-to-signature mb-2 md:mb-2 mt-8 md:mt-10 flex justify-center opacity-0 animate-[heroFade_0.9s_ease-out_1.05s_forwards]">
+            <div className="hero-rhythm-microcopy-to-signature mb-2 md:mb-2 mt-8 md:mt-10 flex justify-center opacity-0 animate-[heroFade_1.1s_ease-out_5.4s_forwards]">
               <div
                 data-hero-field="brandLine"
                 aria-label={HERO_COPY.brandLine}
