@@ -572,7 +572,7 @@ function HomePage() {
                 fragmented the hero CTA hierarchy. Local guidance is
                 still surfaced in the Studio reassurance line, the FAQ
                 closer, and the Final CTA secondary button. */}
-            <div className="hero-rhythm-cta-to-microcopy max-w-sm sm:max-w-xl mx-auto sm:mx-0 opacity-0 animate-[heroFade_0.9s_ease-out_0.85s_forwards]">
+            <div className="hero-rhythm-cta-to-microcopy max-w-sm sm:max-w-xl mx-auto sm:mx-0 opacity-0 animate-[heroFade_1.1s_ease-out_4.4s_forwards]">
               <p
                 data-hero-field="microcopy"
                 className="text-[14px] md:text-[14.5px] text-[color:var(--ivory)] leading-[1.65] md:leading-[1.7] font-normal tracking-[0.005em] text-center sm:text-left"
@@ -584,7 +584,7 @@ function HomePage() {
             {/* Brand signature — rendered ONCE (Patch 2A dedup).
                 The visible split is the only copy of the line; SRs read
                 it via aria-label on the wrapper. */}
-            <div className="hero-rhythm-microcopy-to-signature mb-2 md:mb-2 mt-8 md:mt-10 flex justify-center opacity-0 animate-[heroFade_0.9s_ease-out_1.05s_forwards]">
+            <div className="hero-rhythm-microcopy-to-signature mb-2 md:mb-2 mt-8 md:mt-10 flex justify-center opacity-0 animate-[heroFade_1.1s_ease-out_5.4s_forwards]">
               <div
                 data-hero-field="brandLine"
                 aria-label={HERO_COPY.brandLine}
