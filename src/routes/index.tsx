@@ -485,16 +485,33 @@ function HomePage() {
       <section
         className="relative min-h-[80svh] md:min-h-[94vh] flex items-end overflow-hidden"
       >
+        {/* Static fallback image — rendered first so it sits beneath
+            the video. Reduced-motion users and devices that fail to
+            load the video still see this. */}
         <img
           src={heroImg}
           alt="Hidden coastal road in Portugal at golden hour"
-          className="he-parallax absolute inset-0 w-full h-full object-cover object-center"
+          className="absolute inset-0 w-full h-full object-cover object-center"
           width={1920}
           height={1080}
         />
+        {/* Cinematic background video — drone shot of cliffs / ocean,
+            muted, looping, playsInline. Hidden under prefers-reduced-
+            motion so the static image takes over. ~1.6 MB MP4. */}
+        <video
+          src="/video/hero-coast.mp4"
+          poster="/video/hero-coast-poster.jpg"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          aria-hidden="true"
+          className="he-parallax absolute inset-0 w-full h-full object-cover object-center motion-reduce:hidden"
+        />
         {/* Animated journey overlay — communicates "your trip is being
             shaped in real time" via a slowly-drawing route + location
-            pings. Sits above the image, beneath the dark gradients so
+            pings. Sits above the video, beneath the dark gradients so
             the headline contrast is preserved. */}
         <HeroJourneyOverlay />
         {/* Soft dark gradient — required by brief for any text-over-image. */}
