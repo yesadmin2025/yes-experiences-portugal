@@ -3325,9 +3325,10 @@ html.motion-ready [data-motion].motion-in {
   opacity: 0;
   animation: heroJourneyPingIn 0.9s ease-out forwards;
 }
-.hero-journey-ping-1 { animation-delay: 1.6s; }
-.hero-journey-ping-2 { animation-delay: 2.6s; }
-.hero-journey-ping-3 { animation-delay: 3.6s; }
+.hero-journey-ping-1 { animation-delay: 1.5s; }
+.hero-journey-ping-2 { animation-delay: 2.4s; }
+.hero-journey-ping-3 { animation-delay: 3.3s; }
+.hero-journey-ping-4 { animation-delay: 4.2s; }
 
 @keyframes heroJourneyPingIn {
   0%   { opacity: 0; transform-origin: center; }
@@ -3339,9 +3340,10 @@ html.motion-ready [data-motion].motion-in {
   transform-box: fill-box;
   animation: heroJourneyHalo 4.2s ease-in-out infinite;
 }
-.hero-journey-ping-1 .hero-journey-ping-halo { animation-delay: 2.0s; }
-.hero-journey-ping-2 .hero-journey-ping-halo { animation-delay: 3.0s; }
-.hero-journey-ping-3 .hero-journey-ping-halo { animation-delay: 4.0s; }
+.hero-journey-ping-1 .hero-journey-ping-halo { animation-delay: 1.9s; }
+.hero-journey-ping-2 .hero-journey-ping-halo { animation-delay: 2.8s; }
+.hero-journey-ping-3 .hero-journey-ping-halo { animation-delay: 3.7s; }
+.hero-journey-ping-4 .hero-journey-ping-halo { animation-delay: 4.6s; }
 
 @keyframes heroJourneyHalo {
   0%, 100% { transform: scale(0.9); opacity: 0.55; }
