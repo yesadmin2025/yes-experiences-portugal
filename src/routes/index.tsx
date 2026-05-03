@@ -18,10 +18,8 @@ import imgArrabidaViewpoint from "@/assets/tours/arrabida-wine-allinclusive/view
 import imgArrabidaWineLunch from "@/assets/tours/arrabida-wine-allinclusive/lunch.jpg";
 import imgSintraCaboDaRoca from "@/assets/tours/sintra-cascais/cabo-da-roca.jpg";
 import imgTomarCoimbra from "@/assets/tours/tomar-coimbra/hero.jpg";
-// Additional story beats — boat/journey, celebration estate, group beach.
-import imgArrabidaBoatCoves from "@/assets/tours/arrabida-boat/coves.jpg";
+// Additional story beats — celebration estate + multi-region route.
 import imgSintraEstates from "@/assets/tours/sintra-cascais/estates.jpg";
-import imgTroiaBeach from "@/assets/tours/troia-comporta/beach.jpg";
 
 import {
   ArrowRight,
