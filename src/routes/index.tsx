@@ -667,7 +667,7 @@ function HomePage() {
 
          <div className="container-x relative z-10 pb-16 md:pb-32 pt-28 md:pt-40">
            <div className="max-w-[20rem] sm:max-w-2xl md:max-w-3xl text-[color:var(--ivory)]">
-             {/* Eyebrow — same on every scene per the brief. */}
+             {/* Eyebrow — fixed brand anchor on every scene. */}
              <span className="inline-flex items-center gap-2 sm:gap-3.5 max-w-full text-[10px] xs:text-[10.5px] sm:text-[12px] md:text-[12.5px] uppercase tracking-[0.24em] xs:tracking-[0.26em] sm:tracking-[0.3em] md:tracking-[0.32em] text-[color:var(--gold)] opacity-0 animate-[heroFade_0.9s_ease-out_0.20s_forwards]">
                <span aria-hidden="true" className="shrink-0">✦</span>
                <span data-hero-field="eyebrow" className="whitespace-nowrap truncate">
@@ -676,36 +676,61 @@ function HomePage() {
                <span aria-hidden="true" className="shrink-0">✦</span>
              </span>
 
-             {/* Canonical H1 — carries the approved HERO_COPY locks. Scenes
-                 1 and 2 spotlight line1/line2 in turn (each becomes the
-                 scene's MAIN message). On scenes 3–5 the H1 retreats to
-                 a calm anchor while a scene-specific message takes the
-                 spotlight (rendered below). Smaller scale than before so
-                 the hero feels lighter and more editorial. */}
-             <h1
-               data-hero-field="headlineLine1 headlineLine2"
-               data-hero-anchor={heroSceneIndex >= 2 ? "rest" : "spotlight"}
-               className="hero-h1 hero-h1-cinematic serif mt-5 md:mt-7 text-[1.6rem] xs:text-[1.7rem] sm:text-[2.25rem] md:text-[3.1rem] lg:text-[3.6rem] leading-[1.12] sm:leading-[1.06] md:leading-[1.02] tracking-[-0.02em] text-[color:var(--ivory)] text-left opacity-0 animate-[heroFade_1s_ease-out_0.55s_forwards] [text-shadow:0_2px_22px_rgba(0,0,0,0.4)]"
-             >
-               <span
-                 data-hero-field="headlineLine1"
-                 data-hero-spotlight={heroSceneIndex === 0 ? "on" : "off"}
-                 className="hero-h1-line block font-medium tracking-[-0.018em]"
+             {/* Canonical H1 — carries the approved HERO_COPY locks.
+                 The brief asks the headline to appear ONLY in the opening
+                 scene; we also keep it visible on the final action scene
+                 so it anchors the close (and so the byte-exact `?hero=last`
+                 lock still resolves it as visible). On scenes 2–4 the H1
+                 is removed from the visual flow entirely so each scene
+                 carries a single short message. */}
+             {(heroSceneIndex === 0 || isHeroActionScene) ? (
+               <h1
+                 data-hero-field="headlineLine1 headlineLine2"
+                 data-hero-anchor="spotlight"
+                 className="hero-h1 hero-h1-cinematic serif mt-5 md:mt-7 text-[1.6rem] xs:text-[1.7rem] sm:text-[2.25rem] md:text-[3.1rem] lg:text-[3.6rem] leading-[1.12] sm:leading-[1.06] md:leading-[1.02] tracking-[-0.02em] text-[color:var(--ivory)] text-left opacity-0 animate-[heroFade_1s_ease-out_0.55s_forwards] [text-shadow:0_2px_22px_rgba(0,0,0,0.4)]"
                >
-                 {HERO_COPY.headlineLine1}
-               </span>
-               <span
-                 data-hero-field="headlineLine2"
-                 data-hero-spotlight={heroSceneIndex === 1 ? "on" : "off"}
-                 className="hero-h1-line block italic font-normal text-[color:var(--gold-soft)] mt-1.5 md:mt-1.5 tracking-[-0.026em]"
+                 <span
+                   data-hero-field="headlineLine1"
+                   data-hero-spotlight="on"
+                   className="hero-h1-line block font-medium tracking-[-0.018em]"
+                 >
+                   {HERO_COPY.headlineLine1}
+                 </span>
+                 <span
+                   data-hero-field="headlineLine2"
+                   data-hero-spotlight="on"
+                   className="hero-h1-line block italic font-normal text-[color:var(--gold-soft)] mt-1.5 md:mt-1.5 tracking-[-0.026em]"
+                 >
+                   {HERO_COPY.headlineLine2}
+                 </span>
+               </h1>
+             ) : (
+               // Visually-hidden H1 on intermediate scenes so the SEO/a11y
+               // anchor + lock probes still resolve the canonical strings.
+               <h1
+                 data-hero-field="headlineLine1 headlineLine2"
+                 data-hero-anchor="rest"
+                 className="hero-h1 hero-h1-cinematic serif sr-only"
                >
-                 {HERO_COPY.headlineLine2}
-               </span>
-             </h1>
+                 <span
+                   data-hero-field="headlineLine1"
+                   data-hero-spotlight="off"
+                   className="hero-h1-line"
+                 >
+                   {HERO_COPY.headlineLine1}
+                 </span>{" "}
+                 <span
+                   data-hero-field="headlineLine2"
+                   data-hero-spotlight="off"
+                   className="hero-h1-line italic"
+                 >
+                   {HERO_COPY.headlineLine2}
+                 </span>
+               </h1>
+             )}
 
-             {/* Subheadline — kept in DOM as an SEO/a11y anchor. The brief
-                 explicitly forbids a long paragraph in the cinematic hero,
-                 so this remains visually-suppressed. */}
+             {/* Subheadline — visually-hidden SEO/a11y anchor. The brief
+                 forbids a long paragraph in the cinematic hero. */}
              <p
                data-hero-field="subheadline"
                className="sr-only"
@@ -713,39 +738,24 @@ function HomePage() {
                {HERO_COPY.subheadline}
              </p>
 
-             {/* Scene-specific message — replaces the H1 spotlight on
-                 scenes 3–5 (hidden places · shape it · action). Each
-                 scene shows ONE main + ONE supporting line. */}
+             {/* Single scene-message block — carries the ONE short cinematic
+                 line + optional supporting microline for the current scene.
+                 Re-keyed per scene so the rise-fade replays cleanly and only
+                 ONE message is ever readable at a time. */}
              <div
-               aria-hidden={heroSceneIndex < 2 ? "true" : undefined}
-               className={`hero-scene-message ${heroSceneIndex >= 2 ? "is-on" : "is-off"} mt-5 md:mt-7 max-w-[19rem] sm:max-w-xl`}
+               key={`scene-msg-${heroScene.id}`}
+               className="hero-scene-message is-on mt-5 md:mt-7 max-w-[19rem] sm:max-w-xl"
              >
-               <p
-                 key={`main-${heroScene.id}`}
-                 className="hero-scene-main serif text-[1.45rem] xs:text-[1.55rem] sm:text-[1.95rem] md:text-[2.4rem] leading-[1.18] tracking-[-0.016em] font-normal text-[color:var(--ivory)] [text-shadow:0_2px_18px_rgba(0,0,0,0.35)]"
-               >
-                 {heroScene.main}
-               </p>
-               <p
-                 key={`sup-${heroScene.id}`}
-                 className="hero-scene-supporting mt-3 md:mt-4 text-[13px] md:text-[14.5px] leading-[1.5] tracking-[0.005em] text-[color:var(--ivory)]/85 font-normal max-w-[17rem] sm:max-w-md line-clamp-2"
-               >
-                 {heroScene.supporting}
-               </p>
-             </div>
-
-             {/* Scene 1 + 2 supporting line — sits under the spotlighted
-                 H1 line. Scenes 3+ swap to the message block above. */}
-             <div
-               aria-hidden={heroSceneIndex >= 2 ? "true" : undefined}
-               className={`hero-scene-message ${heroSceneIndex < 2 ? "is-on" : "is-off"} mt-4 md:mt-6 max-w-[17rem] sm:max-w-md`}
-             >
-               <p
-                 key={`early-sup-${heroScene.id}`}
-                 className="hero-scene-supporting text-[13px] md:text-[14.5px] leading-[1.5] tracking-[0.005em] text-[color:var(--ivory)]/85 font-normal line-clamp-2"
-               >
-                 {heroScene.supporting}
-               </p>
+               {heroScene.main ? (
+                 <p className="hero-scene-main serif text-[1.45rem] xs:text-[1.55rem] sm:text-[1.95rem] md:text-[2.4rem] leading-[1.18] tracking-[-0.016em] font-normal text-[color:var(--ivory)] [text-shadow:0_2px_18px_rgba(0,0,0,0.35)]">
+                   {heroScene.main}
+                 </p>
+               ) : null}
+               {heroScene.supporting ? (
+                 <p className={`hero-scene-supporting ${heroScene.main ? "mt-3 md:mt-4" : "mt-2 md:mt-3"} text-[13px] md:text-[14.5px] leading-[1.5] tracking-[0.005em] text-[color:var(--ivory)]/85 font-normal max-w-[17rem] sm:max-w-md line-clamp-2`}>
+                   {heroScene.supporting}
+                 </p>
+               ) : null}
              </div>
 
              {/* Action block — CTAs + microcopy + brand signature appear
