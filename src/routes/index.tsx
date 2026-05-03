@@ -1013,46 +1013,6 @@ function HomePage() {
         </div>
       </section>
 
-      {/* HERO REST STRIP
-          A calm visible home for the full subheadline + brand signature,
-          relocated out of the cinematic first view to reduce hero clutter
-          while keeping both strings VISIBLE on the page (e2e copy locks
-          require .toBeVisible()). Two small DOM nodes mirror the locked
-          fields with the same `data-hero-field` attributes used by the
-          byte-exact spec, so the verifier still finds them. */}
-      <section
-        aria-label="What this means"
-        className="bg-[color:var(--ivory)] border-b border-[color:var(--border)] py-10 md:py-14"
-      >
-        <div className="container-x max-w-3xl text-center">
-          <p
-            data-hero-field="subheadline-visible"
-            className="serif text-[16px] md:text-[19px] text-[color:var(--charcoal)] leading-[1.65] font-normal"
-          >
-            {HERO_COPY.subheadline}
-          </p>
-          <div
-            data-hero-field="brandLine-visible"
-            aria-label={HERO_COPY.brandLine}
-            className="mt-7 md:mt-9 inline-flex items-center gap-5 md:gap-7 text-[color:var(--charcoal-soft)]"
-          >
-            <span aria-hidden="true" className="h-px w-10 md:w-14 bg-gradient-to-r from-transparent to-[color:var(--gold)] shrink-0 opacity-90" />
-            <span className="flex flex-col items-center gap-1.5 text-[10.5px] md:text-[11px] uppercase tracking-[0.32em] leading-[1.2] text-center">
-              <span className="text-[color:var(--charcoal)]" style={{ fontWeight: 450 }}>
-                Whatever you have in mind,
-              </span>
-              <span
-                className="text-[color:var(--gold-deep)] tracking-[0.4em] text-[12px] md:text-[12.5px]"
-                style={{ fontWeight: 600 }}
-              >
-                we say YES.
-              </span>
-            </span>
-            <span aria-hidden="true" className="h-px w-10 md:w-14 bg-gradient-to-l from-transparent to-[color:var(--gold)] shrink-0 opacity-90" />
-          </div>
-        </div>
-      </section>
-
 
       {/* 5 — SIGNATURE EXPERIENCES PREVIEW
           Up to 4 real Signature tours. Each card uses the tour's real
