@@ -611,26 +611,15 @@ function HomePage() {
                Local moments, shaped around you.
              </p>
 
-             {/* Microcopy — appears before the CTAs in the cascade so the
-                 reassurance lands first ("instant, no forms"). */}
-             <div className="hero-rhythm-cta-to-microcopy max-w-sm sm:max-w-xl mx-auto sm:mx-0 mt-6 md:mt-7 opacity-0 animate-[heroFade_1s_ease-out_2.4s_forwards]">
-               <p
-                 data-hero-field="microcopy"
-                 className="text-[12px] md:text-[13px] text-[color:var(--ivory)]/80 leading-[1.55] font-normal tracking-[0.01em] text-left"
-               >
-                 {HERO_COPY.microcopy}
-               </p>
-             </div>
-
-             {/* CTAs — exactly two, refined compact size. Reveal LAST so
-                 the user feels invited, not pushed. Equal width on mobile,
-                 left-aligned label + right-pinned arrow for matched
-                 visual logic across both buttons. */}
+             {/* CTAs — exactly two, refined compact size. They reveal late
+                 in the cascade so the user feels invited, not pushed. Equal
+                 width on mobile, left-aligned label + right-pinned arrow
+                 for matched visual logic across both buttons. */}
              <div className="mt-7 md:mt-9 flex flex-col sm:flex-row gap-3 sm:gap-4 w-full max-w-[22rem] sm:max-w-lg">
                <Link
                  to="/builder"
                  data-hero-field="primaryCta"
-                 className="hero-cta-button hero-cta-button--compact cta-primary he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left opacity-0 animate-[heroFade_1s_ease-out_3.1s_forwards]"
+                 className="hero-cta-button hero-cta-button--compact cta-primary he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left opacity-0 animate-[heroFade_1s_ease-out_2.6s_forwards]"
                >
                  <span className="block">{HERO_COPY.primaryCta}</span>
                  <ArrowRight
@@ -643,7 +632,7 @@ function HomePage() {
                <Link
                  to="/experiences"
                  data-hero-field="secondaryCta"
-                 className="hero-cta-button hero-cta-button--compact cta-secondary-dark he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left opacity-0 animate-[heroFade_1s_ease-out_3.4s_forwards]"
+                 className="hero-cta-button hero-cta-button--compact cta-secondary-dark he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left opacity-0 animate-[heroFade_1s_ease-out_2.9s_forwards]"
                >
                  <span className="block">{HERO_COPY.secondaryCta}</span>
                  <ArrowRight
@@ -653,6 +642,18 @@ function HomePage() {
                    aria-hidden="true"
                  />
                </Link>
+             </div>
+
+             {/* Microcopy — calm reassurance below the CTAs, the locked
+                 rhythm token (`hero-rhythm-cta-to-microcopy`) keeps the
+                 28px mobile / 24px desktop gap pinned. */}
+             <div className="hero-rhythm-cta-to-microcopy max-w-sm sm:max-w-xl mx-auto sm:mx-0 opacity-0 animate-[heroFade_1s_ease-out_3.4s_forwards]">
+               <p
+                 data-hero-field="microcopy"
+                 className="text-[12px] md:text-[13px] text-[color:var(--ivory)]/80 leading-[1.55] font-normal tracking-[0.01em] text-center sm:text-left"
+               >
+                 {HERO_COPY.microcopy}
+               </p>
              </div>
 
             {/* Brand signature — relocated below the hero as a calm
