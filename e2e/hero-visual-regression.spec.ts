@@ -44,10 +44,12 @@ async function prepareHero(page: Page) {
       /* Make sure every fade-in element is fully opaque. */
       [data-hero-field] { opacity: 1 !important; }
       .cta-magnet-group { opacity: 1 !important; transform: none !important; }
-      /* Hide the hero background image so we are only diffing text/CTA
-         layout — the image has a 32s zoom + pointer parallax that is
-         deliberately non-deterministic. */
-      section img[alt^="Hidden coastal"] { visibility: hidden !important; }
+      /* Hide the hero background imagery so we are only diffing text/CTA
+         layout — the cinematic story sequence has a slow Ken-Burns pan +
+         crossfade that is deliberately non-deterministic. */
+      section img[alt^="Hidden coastal"],
+      .hero-story-stage,
+      .hero-story-slide { visibility: hidden !important; }
       /* Hide the on-page debug reset button so it never sneaks into the
          CTA-group snapshot if layout reflows it nearby. */
       [data-hero-copy-reset] { display: none !important; }
