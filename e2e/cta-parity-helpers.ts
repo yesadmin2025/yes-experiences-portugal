@@ -75,7 +75,7 @@ export type CtaParityReport = {
   totalCount: number;
 };
 
-export async function gotoHero(page: Page, route = "/") {
+export async function gotoHero(page: Page, route = "/?hero=last") {
   await page.goto(route);
   const h1 = page.locator("h1.hero-h1");
   await expect(h1).toBeVisible();
