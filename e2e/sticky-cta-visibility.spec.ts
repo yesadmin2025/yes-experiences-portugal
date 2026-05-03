@@ -28,7 +28,7 @@ function stickyBar(page: Page): Locator {
   // The inner Link has a stable aria-label; we go up to the wrapper
   // div that owns the visibility transform + aria-hidden.
   return page
-    .getByRole("button", { name: "Say YES — choose how to begin your Portugal experience" })
+    .getByRole("button", { name: "Start your experience — choose how to begin" })
     .locator("xpath=ancestor::div[contains(@class,'fixed')][1]");
 }
 
