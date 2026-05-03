@@ -495,9 +495,11 @@ function HomePage() {
           width={1920}
           height={1080}
         />
-        {/* Cinematic background video — drone shot of cliffs / ocean,
-            muted, looping, playsInline. Hidden under prefers-reduced-
-            motion so the static image takes over. ~1.6 MB MP4. */}
+        {/* Cinematic background video — slow right-pan loop, muted,
+            looping, playsInline. Hidden under prefers-reduced-motion
+            so the static image takes over. The `hero-cine-pan` class
+            adds a slow rightward Ken-Burns pan + subtle scale to make
+            the loop feel like a journey unfolding. */}
         <video
           src="/video/hero-coast.mp4"
           poster="/video/hero-coast-poster.jpg"
@@ -507,13 +509,8 @@ function HomePage() {
           playsInline
           preload="metadata"
           aria-hidden="true"
-          className="he-parallax absolute inset-0 w-full h-full object-cover object-center motion-reduce:hidden"
+          className="hero-cine-pan absolute inset-0 w-full h-full object-cover object-center motion-reduce:hidden"
         />
-        {/* Animated journey overlay — communicates "your trip is being
-            shaped in real time" via a slowly-drawing route + location
-            pings. Sits above the video, beneath the dark gradients so
-            the headline contrast is preserved. */}
-        <HeroJourneyOverlay />
         {/* Soft dark gradient — required by brief for any text-over-image. */}
         <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/85 via-[color:var(--charcoal-deep)]/45 to-[color:var(--charcoal-deep)]/40 md:from-[color:var(--charcoal-deep)]/80 md:via-[color:var(--charcoal-deep)]/35 md:to-[color:var(--charcoal-deep)]/30 pointer-events-none z-[2]" />
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(15,15,15,0.65)_0%,rgba(15,15,15,0.4)_35%,transparent_70%)] md:bg-[linear-gradient(90deg,rgba(15,15,15,0.6)_0%,rgba(15,15,15,0.32)_40%,transparent_72%)] pointer-events-none z-[2]" />
