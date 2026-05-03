@@ -62,19 +62,19 @@ const HERO_SCENES = [
     id: "personalization",
     image: imgArrabidaWineLunch,
     position: "46% 52%",
-    line: "Choose the pace, places and moments that feel right.",
+    line: "Your pace. Your places. Your way.",
   },
   {
     id: "hidden-local",
     image: imgArrabidaViewpoint,
     position: "50% 44%",
-    line: "Guided by locals who know where the real moments happen.",
+    line: "Guided by locals who know the hidden corners.",
   },
   {
     id: "action",
     image: imgSintraEstates,
     position: "55% 48%",
-    line: "From a private day to a full journey, create it your way.",
+    line: "From a private day to a full journey.",
   },
 ] as const;
 
