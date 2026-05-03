@@ -73,52 +73,60 @@ const FEATURED_TOUR_IDS = [
  * No invented stops. Imagery is real Viator-sourced operation
  * photography. AI is not used to shape any of these strings.
  * ────────────────────────────────────────────────────────────── */
-const HERO_SCENE_DURATION_MS = 5000;
+const HERO_SCENE_DURATION_MS = 6500;
 
+/* ──────────────────────────────────────────────────────────────────
+ * Cinematic horizontal storytelling hero — 5 scenes, each a short
+ * "chapter" of a Portugal film. Background pans slowly right→left
+ * (drift-left) like a film reel; only the OPENING scene shows the
+ * canonical H1, and only the FINAL scene reveals CTAs. Every other
+ * scene shows ONE short cinematic line + ONE supporting microline.
+ * Imagery is real Viator-sourced operation photography only.
+ * ────────────────────────────────────────────────────────────── */
 const HERO_SCENES = [
   {
     id: "opening",
-    // Atlantic coastal road — sets the stage, wide horizon.
+    // Scene 1 — Portugal as stage. Wide coastal cliff horizon.
     image: heroImg,
     position: "50% 52%",
-    pan: "drift-right" as const,
-    main: "Portugal is the stage.",
-    supporting: "Local moments, beyond the obvious.",
+    pan: "drift-left" as const,
+    main: "",
+    supporting: "Private. Local. Yours.",
   },
   {
-    id: "your-story",
-    // Intimate wine table — personalization, human scale.
-    image: imgArrabidaWineLunch,
-    position: "48% 56%",
-    pan: "push-in" as const,
-    main: "You write the story.",
-    supporting: "A day, a journey, or something worth celebrating.",
-  },
-  {
-    id: "hidden-local",
-    // Hidden Arrábida cove — local knowledge, places few reach.
+    id: "hidden",
+    // Scene 2 — Hidden Arrábida cove, places few reach.
     image: imgArrabidaCoves,
+    position: "52% 50%",
+    pan: "drift-left" as const,
+    main: "Hidden places, chosen your way.",
+    supporting: "",
+  },
+  {
+    id: "local-moments",
+    // Scene 3 — Local table, wine, shared moment.
+    image: imgArrabidaWineLunch,
+    position: "50% 56%",
+    pan: "drift-left" as const,
+    main: "Local moments, shaped around you.",
+    supporting: "",
+  },
+  {
+    id: "occasions",
+    // Scene 4 — Estate gardens, celebration mood.
+    image: imgSintraEstates,
     position: "52% 48%",
     pan: "drift-left" as const,
-    main: "Hidden places. Real moments.",
-    supporting: "Guided by locals who know where the real magic happens.",
-  },
-  {
-    id: "shape-it",
-    // Sintra estate gardens — celebrations, proposals, private days.
-    image: imgSintraHero,
-    position: "54% 50%",
-    pan: "pull-back" as const,
-    main: "Shape it your way.",
-    supporting: "From private days to proposals, celebrations and groups.",
+    main: "For a day, a celebration, or something unforgettable.",
+    supporting: "",
   },
   {
     id: "action",
-    // Cabo da Roca cliffs — wide, decisive, "step into it".
+    // Scene 5 — Cabo da Roca cliffs, decisive horizon.
     image: imgSintraCaboDaRoca,
     position: "55% 48%",
-    pan: "push-in" as const,
-    main: "Create it. Confirm it. Live it.",
+    pan: "drift-left" as const,
+    main: "Build it live. Confirm instantly.",
     supporting: "Instant booking. Real local guidance if you want it.",
   },
 ] as const;
