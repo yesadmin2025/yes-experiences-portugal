@@ -1655,13 +1655,13 @@
   /* Subtle warm grade applied uniformly so all beats feel cohesive. */
   filter: saturate(0.92) contrast(1.02) brightness(0.96);
   animation:
-    heroStoryCrossfade 40s ease-in-out infinite,
-    heroStoryPan 40s ease-in-out infinite alternate;
+    heroStoryCrossfade 24s ease-in-out infinite,
+    heroStoryPan 24s ease-in-out infinite alternate;
 }
 .hero-story-slide-1 { opacity: 1; animation-delay: 0s, 0s; }
-.hero-story-slide-2 { animation-delay: -30s, -30s; }
-.hero-story-slide-3 { animation-delay: -20s, -20s; }
-.hero-story-slide-4 { animation-delay: -10s, -10s; }
+.hero-story-slide-2 { animation-delay: -18s, -18s; }
+.hero-story-slide-3 { animation-delay: -12s, -12s; }
+.hero-story-slide-4 { animation-delay: -6s, -6s; }
 /* Legacy class kept as a no-op so any lingering reference doesn't
    error in CSS validators or reduced-motion overrides below. */
 .hero-cine-pan { animation: none; }
