@@ -11,7 +11,7 @@
  *   Local guidance is available on demand, never required.
  */
 export const HERO_COPY = {
-  eyebrow: "PRIVATE · BY LOCALS · IN REAL TIME",
+  eyebrow: "PRIVATE · BY LOCALS · YOUR WAY",
   headlineLine1: "Portugal is the stage.",
   headlineLine2: "You write the story.",
   subheadline:

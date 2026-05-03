@@ -18,10 +18,8 @@ import imgArrabidaViewpoint from "@/assets/tours/arrabida-wine-allinclusive/view
 import imgArrabidaWineLunch from "@/assets/tours/arrabida-wine-allinclusive/lunch.jpg";
 import imgSintraCaboDaRoca from "@/assets/tours/sintra-cascais/cabo-da-roca.jpg";
 import imgTomarCoimbra from "@/assets/tours/tomar-coimbra/hero.jpg";
-// Additional story beats — boat/journey, celebration estate, group beach.
-import imgArrabidaBoatCoves from "@/assets/tours/arrabida-boat/coves.jpg";
+// Additional story beats — celebration estate + multi-region route.
 import imgSintraEstates from "@/assets/tours/sintra-cascais/estates.jpg";
-import imgTroiaBeach from "@/assets/tours/troia-comporta/beach.jpg";
 
 import {
   ArrowRight,
@@ -488,18 +486,19 @@ function HomePage() {
       <section
         className="relative min-h-[80svh] md:min-h-[94vh] flex items-end overflow-hidden"
       >
-        {/* Cinematic 6-beat story sequence — real Viator-sourced imagery,
-            no stock. Each slide holds ~6s with a slow rightward Ken-Burns
-            pan + soft crossfade, total loop = 36s. The first slide is
-            also the static/SSR fallback (no JS needed; CSS opacity
-            cycles handle the entire sequence). YES story spectrum:
-              1. Discovery / coastal road        (hero-coast)
-              2. Local moment / wine table       (Arrábida lunch)
-              3. Hidden place / viewpoint        (Arrábida viewpoint)
-              4. Journey / boat & coves          (Arrábida boat)
-              5. Celebration / estate gardens    (Sintra estates)
-              6. Groups & open days / beach      (Tróia beach)
-            Reduced-motion users see only slide 1, no animation. */}
+        {/* Cinematic 5-beat story sequence — real Viator-sourced imagery,
+            no stock. Each slide holds ~5s + 1s crossfade, total loop = 30s.
+            A slow Ken-Burns pan implies continuous, calm motion. The
+            rotating supporting line below the subheadline cycles in
+            lock-step with the image (one phrase per beat, see
+            `.hero-rotating-phrase:nth-child(N)` delays). YES story arc:
+              1. Discovery        — coastal road       (hero-coast)
+              2. Local moment     — wine table         (Arrábida lunch)
+              3. Hidden place     — viewpoint/vineyard (Arrábida viewpoint)
+              4. Celebration      — estate / intimate  (Sintra estates)
+              5. Live route       — multi-region path  (Tomar–Coimbra)
+            Slide 1 is the SSR/static fallback. Reduced-motion users
+            freeze on slide 1 with no animation. */}
         <div
           aria-hidden="true"
           className="hero-story-stage absolute inset-0 w-full h-full overflow-hidden"
@@ -527,23 +526,16 @@ function HomePage() {
             decoding="async"
           />
           <img
-            src={imgArrabidaBoatCoves}
+            src={imgSintraEstates}
             alt=""
             className="hero-story-slide hero-story-slide-4 absolute inset-0 w-full h-full object-cover object-center"
             loading="lazy"
             decoding="async"
           />
           <img
-            src={imgSintraEstates}
+            src={imgTomarCoimbra}
             alt=""
             className="hero-story-slide hero-story-slide-5 absolute inset-0 w-full h-full object-cover object-center"
-            loading="lazy"
-            decoding="async"
-          />
-          <img
-            src={imgTroiaBeach}
-            alt=""
-            className="hero-story-slide hero-story-slide-6 absolute inset-0 w-full h-full object-cover object-center"
             loading="lazy"
             decoding="async"
           />
@@ -592,18 +584,25 @@ function HomePage() {
               {HERO_COPY.subheadline}
             </p>
 
-            {/* Rotating supporting phrases — very subtle, one at a time,
-                fades through Private days · Celebrations · Groups ·
-                Full journeys. Aria-hidden so SRs don't pick up the
-                cycle; the subheadline already covers these in prose. */}
+            {/* Rotating supporting line — one phrase per image beat,
+                synced 1:1 with the 30s background loop (6s each).
+                Aria-hidden so SRs don't pick up the cycle; the
+                subheadline already conveys the same message in prose.
+                Each line MATCHES the matching visual beat:
+                  1 coast    → "Hidden places, chosen your way."
+                  2 wine     → "Local moments, shaped around you."
+                  3 viewpoint→ "From coastlines to vineyards, at your rhythm."
+                  4 estate   → "For a day, a celebration, or something unforgettable."
+                  5 route    → "Build it live. Confirm it instantly." */}
             <div
               aria-hidden="true"
-              className="hero-rotating-phrases mt-4 md:mt-5 h-[18px] md:h-[20px] text-[11.5px] md:text-[12px] uppercase tracking-[0.3em] text-[color:var(--gold-soft)]/85 opacity-0 animate-[heroFade_0.9s_ease-out_0.85s_forwards]"
+              className="hero-rotating-phrases mt-4 md:mt-5 h-[20px] md:h-[22px] text-[12px] md:text-[13px] tracking-[0.04em] text-[color:var(--gold-soft)]/95 italic opacity-0 animate-[heroFade_0.9s_ease-out_0.85s_forwards]"
             >
-              <span className="hero-rotating-phrase">Private days</span>
-              <span className="hero-rotating-phrase">Celebrations</span>
-              <span className="hero-rotating-phrase">Groups</span>
-              <span className="hero-rotating-phrase">Full journeys</span>
+              <span className="hero-rotating-phrase">Hidden places, chosen your way.</span>
+              <span className="hero-rotating-phrase">Local moments, shaped around you.</span>
+              <span className="hero-rotating-phrase">From coastlines to vineyards, at your rhythm.</span>
+              <span className="hero-rotating-phrase">For a day, a celebration, or something unforgettable.</span>
+              <span className="hero-rotating-phrase">Build it live. Confirm it instantly.</span>
             </div>
 
             {/* CTAs — exactly two, per brief.
