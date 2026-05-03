@@ -12,7 +12,7 @@
  *  - Covers any occasion (days, journeys, proposals, celebrations, groups)
  */
 export const HERO_COPY_SPEC = {
-  eyebrow: "PRIVATE · BY LOCALS · IN REAL TIME",
+  eyebrow: "PRIVATE · BY LOCALS · YOUR WAY",
   headlineLine1: "Portugal is the stage.",
   headlineLine2: "You write the story.",
   subheadline:
