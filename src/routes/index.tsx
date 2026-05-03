@@ -62,19 +62,19 @@ const HERO_SCENES = [
     id: "personalization",
     image: imgArrabidaWineLunch,
     position: "46% 52%",
-    line: "Choose the pace, places and moments that feel right.",
+    line: "Your pace. Your places. Your way.",
   },
   {
     id: "hidden-local",
     image: imgArrabidaViewpoint,
     position: "50% 44%",
-    line: "Guided by locals who know where the real moments happen.",
+    line: "Guided by locals who know the hidden corners.",
   },
   {
     id: "action",
     image: imgSintraEstates,
     position: "55% 48%",
-    line: "From a private day to a full journey, create it your way.",
+    line: "From a private day to a full journey.",
   },
 ] as const;
 
@@ -553,7 +553,7 @@ function HomePage() {
            Slide 1 is the SSR/static fallback. Reduced-motion freezes
            on slide 1 with all copy at full opacity. */}
         <section
-          className="relative min-h-[88svh] md:min-h-[94vh] flex items-end overflow-hidden"
+          className="relative min-h-[82svh] md:min-h-[94vh] flex items-end overflow-hidden"
           data-hero-scene={heroScene.id}
         >
           <div
@@ -583,9 +583,9 @@ function HomePage() {
          {/* Calm cinematic overlay — warm amber multiply + a soft bottom
              gradient so headline + CTAs always sit on a readable, premium
              surface without muddying the imagery. */}
-         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(46,30,18,0.16)_0%,rgba(46,30,18,0.04)_45%,rgba(46,30,18,0.20)_100%)] mix-blend-multiply pointer-events-none z-[2]" />
-         <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/82 via-[color:var(--charcoal-deep)]/40 to-[color:var(--charcoal-deep)]/30 md:from-[color:var(--charcoal-deep)]/78 md:via-[color:var(--charcoal-deep)]/30 md:to-[color:var(--charcoal-deep)]/22 pointer-events-none z-[2]" />
-         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(15,15,15,0.55)_0%,rgba(15,15,15,0.30)_42%,transparent_75%)] md:bg-[linear-gradient(90deg,rgba(15,15,15,0.55)_0%,rgba(15,15,15,0.28)_42%,transparent_75%)] pointer-events-none z-[2]" />
+         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(46,30,18,0.12)_0%,rgba(46,30,18,0.02)_45%,rgba(46,30,18,0.14)_100%)] mix-blend-multiply pointer-events-none z-[2]" />
+         <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/72 via-[color:var(--charcoal-deep)]/28 to-transparent md:from-[color:var(--charcoal-deep)]/70 md:via-[color:var(--charcoal-deep)]/22 md:to-transparent pointer-events-none z-[2]" />
+         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(15,15,15,0.45)_0%,rgba(15,15,15,0.18)_42%,transparent_72%)] md:bg-[linear-gradient(90deg,rgba(15,15,15,0.50)_0%,rgba(15,15,15,0.22)_42%,transparent_75%)] pointer-events-none z-[2]" />
 
           {/* Subtle story progress — no dots/arrows/controls, just a thin
               cinematic timeline at the bottom of the hero. */}
@@ -596,8 +596,8 @@ function HomePage() {
             <span key={heroScene.id} className="hero-story-progress-fill" />
          </div>
 
-         <div className="container-x relative z-10 pb-16 md:pb-36 pt-36 md:pt-40">
-           <div className="max-w-2xl md:max-w-3xl text-[color:var(--ivory)]">
+         <div className="container-x relative z-10 pb-14 md:pb-36 pt-28 md:pt-40">
+           <div className="max-w-[20rem] sm:max-w-2xl md:max-w-3xl text-[color:var(--ivory)]">
              <span className="inline-flex items-center gap-2 sm:gap-3.5 max-w-full text-[10px] xs:text-[10.5px] sm:text-[12px] md:text-[13px] uppercase tracking-[0.22em] xs:tracking-[0.24em] sm:tracking-[0.28em] md:tracking-[0.3em] text-[color:var(--gold)] opacity-0 animate-[heroFade_0.9s_ease-out_0.20s_forwards]">
                <span aria-hidden="true" className="shrink-0">✦</span>
                <span data-hero-field="eyebrow" className="whitespace-nowrap truncate">
@@ -634,17 +634,17 @@ function HomePage() {
 
                {/* Scene-controlled supporting line — only the active scene's
                    message is mounted, so no residual lines can linger. */}
-              <div
-                 className="hero-supporting-stage mt-6 md:mt-7 max-w-[20rem] sm:max-w-md min-h-[44px] md:min-h-[46px] relative opacity-0 animate-[heroFade_1s_ease-out_1.5s_forwards]"
-              >
-                 <p key={heroScene.id} className="hero-supporting-line text-[13.5px] md:text-[14.5px] leading-[1.5] tracking-[0.005em] text-[color:var(--ivory)]/90 font-normal">
-                   {heroScene.line}
-                </p>
-              </div>
+               <div
+                  className="hero-supporting-stage mt-5 md:mt-7 max-w-[17rem] sm:max-w-md relative opacity-0 animate-[heroFade_1s_ease-out_1.5s_forwards]"
+               >
+                  <p key={heroScene.id} className="hero-supporting-line text-[13px] md:text-[14.5px] leading-[1.45] tracking-[0.005em] text-[color:var(--ivory)]/90 font-normal line-clamp-2">
+                    {heroScene.line}
+                 </p>
+               </div>
 
-              {isHeroActionScene ? (
-                <div key="hero-action" className="hero-action-block mt-7 md:mt-9">
-                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full max-w-[21rem] sm:max-w-lg">
+               {isHeroActionScene ? (
+                 <div key="hero-action" className="hero-action-block mt-5 md:mt-9">
+                   <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-4 w-full max-w-[19rem] sm:max-w-lg">
                     <Link
                       to="/builder"
                       data-hero-field="primaryCta"
