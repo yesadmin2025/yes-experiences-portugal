@@ -1665,6 +1665,14 @@
 
 @media (prefers-reduced-motion: reduce) {
   .hero-cine-pan { animation: none !important; transform: none !important; }
+  .hero-story-slide {
+    animation: none !important;
+    transform: none !important;
+  }
+  /* Freeze on slide 1 — the SSR/static fallback. */
+  .hero-story-slide:not(.hero-story-slide-1) {
+    opacity: 0 !important;
+  }
   .hero-rotating-phrase {
     animation: none !important;
     opacity: 1 !important;
