@@ -642,9 +642,9 @@ function HomePage() {
                  </p>
                </div>
 
-              {isHeroActionScene ? (
-                <div key="hero-action" className="hero-action-block mt-7 md:mt-9">
-                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full max-w-[21rem] sm:max-w-lg">
+               {isHeroActionScene ? (
+                 <div key="hero-action" className="hero-action-block mt-5 md:mt-9">
+                   <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-4 w-full max-w-[19rem] sm:max-w-lg">
                     <Link
                       to="/builder"
                       data-hero-field="primaryCta"
