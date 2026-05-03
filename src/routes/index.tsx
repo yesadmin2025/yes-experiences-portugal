@@ -583,9 +583,9 @@ function HomePage() {
          {/* Calm cinematic overlay — warm amber multiply + a soft bottom
              gradient so headline + CTAs always sit on a readable, premium
              surface without muddying the imagery. */}
-         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(46,30,18,0.16)_0%,rgba(46,30,18,0.04)_45%,rgba(46,30,18,0.20)_100%)] mix-blend-multiply pointer-events-none z-[2]" />
-         <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/82 via-[color:var(--charcoal-deep)]/40 to-[color:var(--charcoal-deep)]/30 md:from-[color:var(--charcoal-deep)]/78 md:via-[color:var(--charcoal-deep)]/30 md:to-[color:var(--charcoal-deep)]/22 pointer-events-none z-[2]" />
-         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(15,15,15,0.55)_0%,rgba(15,15,15,0.30)_42%,transparent_75%)] md:bg-[linear-gradient(90deg,rgba(15,15,15,0.55)_0%,rgba(15,15,15,0.28)_42%,transparent_75%)] pointer-events-none z-[2]" />
+         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(46,30,18,0.12)_0%,rgba(46,30,18,0.02)_45%,rgba(46,30,18,0.14)_100%)] mix-blend-multiply pointer-events-none z-[2]" />
+         <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/72 via-[color:var(--charcoal-deep)]/28 to-transparent md:from-[color:var(--charcoal-deep)]/70 md:via-[color:var(--charcoal-deep)]/22 md:to-transparent pointer-events-none z-[2]" />
+         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(15,15,15,0.45)_0%,rgba(15,15,15,0.18)_42%,transparent_72%)] md:bg-[linear-gradient(90deg,rgba(15,15,15,0.50)_0%,rgba(15,15,15,0.22)_42%,transparent_75%)] pointer-events-none z-[2]" />
 
           {/* Subtle story progress — no dots/arrows/controls, just a thin
               cinematic timeline at the bottom of the hero. */}
