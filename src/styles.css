@@ -1728,6 +1728,15 @@
     opacity: 1 !important;
     background-color: var(--gold) !important;
   }
+  /* Supporting lines: freeze on scene-1 line, hide the rest. */
+  .hero-supporting-line {
+    animation: none !important;
+    transform: none !important;
+    opacity: 0 !important;
+  }
+  .hero-supporting-line-1 {
+    opacity: 1 !important;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
