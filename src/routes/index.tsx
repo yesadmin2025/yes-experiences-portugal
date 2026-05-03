@@ -491,9 +491,9 @@ function HomePage() {
              0.20s  eyebrow         — slide 1 atmosphere
              0.55s  headline        — slide 1 hook
              1.50s  supporting line — slide 2 personalization
-             2.40s  microcopy       — slide 3 reassurance
-             3.10s  primary CTA     — slide 4 action
-             3.40s  secondary CTA   — slide 4 action
+             2.60s  primary CTA     — slide 4 action
+             2.90s  secondary CTA   — slide 4 action
+             3.40s  microcopy       — slide 4 reassurance
 
            4-beat background sequence — real Viator-sourced imagery only:
              1. Opening / hook       — coastal road        (hero-coast)
