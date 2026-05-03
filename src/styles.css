@@ -1625,22 +1625,25 @@
   }
 }
 
-/* Cinematic hero story sequence — 5 real Viator-sourced beats covering
-   the YES story arc: discovery → local moment → hidden place →
-   celebration → live route. Each slide crossfades softly into the
-   next while a slow Ken-Burns pan implies continuous motion.
-   30s total loop = 6s per beat (≈5s hold + 1s crossfade).
+/* Cinematic hero story sequence — 4 real Viator-sourced beats covering
+   the YES storytelling arc: opening hook → personalization → local /
+   authentic → action / celebration. Each slide crossfades softly into
+   the next while a slow Ken-Burns drift implies continuous, calm motion.
+   40s total loop = 10s per beat (≈8s hold + 2s crossfade) — slower and
+   more cinematic than the previous 5-beat / 30s loop.
    Slide 1 is the SSR/static fallback so the hero never appears blank.
    Reduced-motion users freeze on slide 1 with no animation. */
 @keyframes heroStoryPan {
-  0%   { transform: scale(1.09) translate3d(-1.6%, 0.5%, 0); }
-  100% { transform: scale(1.09) translate3d(1.6%, -0.5%, 0); }
+  /* Subtle right-to-left drift — the user feels the camera "moving
+     toward" the scene without anything ever feeling busy. */
+  0%   { transform: scale(1.08) translate3d(-1.4%, 0.4%, 0); }
+  100% { transform: scale(1.08) translate3d(1.4%, -0.4%, 0); }
 }
 @keyframes heroStoryCrossfade {
-  /* 5 beats × 20% each. Slide is fully visible for ~16.5%, then
-     crossfades to the next over ~3.5% — soft, never abrupt. */
-  0%, 16.5%   { opacity: 1; }
-  20%, 96.5%  { opacity: 0; }
+  /* 4 beats × 25% each. Slide is fully visible for ~20%, then
+     crossfades to the next over ~5% — soft, never abrupt. */
+  0%, 20%     { opacity: 1; }
+  25%, 95%    { opacity: 0; }
   100%        { opacity: 1; }
 }
 .hero-story-stage { will-change: opacity; }
@@ -1650,48 +1653,40 @@
   /* Subtle warm grade applied uniformly so all beats feel cohesive. */
   filter: saturate(0.92) contrast(1.02) brightness(0.96);
   animation:
-    heroStoryCrossfade 30s ease-in-out infinite,
-    heroStoryPan 30s ease-in-out infinite alternate;
+    heroStoryCrossfade 40s ease-in-out infinite,
+    heroStoryPan 40s ease-in-out infinite alternate;
 }
 .hero-story-slide-1 { opacity: 1; animation-delay: 0s, 0s; }
-.hero-story-slide-2 { animation-delay: -24s, -24s; }
-.hero-story-slide-3 { animation-delay: -18s, -18s; }
-.hero-story-slide-4 { animation-delay: -12s, -12s; }
-.hero-story-slide-5 { animation-delay: -6s, -6s; }
+.hero-story-slide-2 { animation-delay: -30s, -30s; }
+.hero-story-slide-3 { animation-delay: -20s, -20s; }
+.hero-story-slide-4 { animation-delay: -10s, -10s; }
 /* Legacy class kept as a no-op so any lingering reference doesn't
    error in CSS validators or reduced-motion overrides below. */
 .hero-cine-pan { animation: none; }
 
-/* Rotating supporting phrases — one phrase per background beat,
-   synced 1:1 with the 30s image loop (6s per phrase). Each phrase
-   fades in, holds, then fades out exactly when its matching image
-   begins its crossfade to the next beat. */
-@keyframes heroRotatePhrase {
-  /* 6s per phrase × 5 = 30s. Fade in 0–4%, hold 4–17%, fade out 17–20%,
-     hidden 20–100%. */
-  0%          { opacity: 0; transform: translateY(4px); }
-  4%, 17%     { opacity: 1; transform: translateY(0); }
-  20%, 100%   { opacity: 0; transform: translateY(-2px); }
+/* Slide indicator dots — 4 minimal dots in champagne gold. The active
+   dot brightens and slightly widens to track the current beat. Pure
+   decoration, aria-hidden in markup. Synced 1:1 with the 40s image
+   loop (10s per beat). */
+@keyframes heroDotPulse {
+  /* 10s per beat × 4 = 40s. Active 0–22%, fade 22–25%, dim 25–100%. */
+  0%, 22%   { opacity: 1; transform: scaleX(1.6); background-color: var(--gold); }
+  25%, 100% { opacity: 0.35; transform: scaleX(1); background-color: var(--gold-soft); }
 }
-.hero-rotating-phrases {
-  position: relative;
-  display: block;
-}
-.hero-rotating-phrase {
-  position: absolute;
-  inset: 0;
+.hero-story-dot {
   display: inline-block;
-  opacity: 0;
-  animation: heroRotatePhrase 30s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  width: 14px;
+  height: 2px;
+  border-radius: 2px;
+  background-color: var(--gold-soft);
+  opacity: 0.35;
+  transform-origin: center;
+  animation: heroDotPulse 40s ease-in-out infinite;
 }
-/* Phrase N starts when slide N becomes the active beat. Slide 1 is at
-   t=0; each subsequent slide is 6s later. The phrase keyframes have a
-   short pre-roll, so we stagger by 6s with no extra offset. */
-.hero-rotating-phrase:nth-child(1) { animation-delay: 0s; }
-.hero-rotating-phrase:nth-child(2) { animation-delay: -24s; }
-.hero-rotating-phrase:nth-child(3) { animation-delay: -18s; }
-.hero-rotating-phrase:nth-child(4) { animation-delay: -12s; }
-.hero-rotating-phrase:nth-child(5) { animation-delay: -6s; }
+.hero-story-dot-1 { animation-delay: 0s; }
+.hero-story-dot-2 { animation-delay: -30s; }
+.hero-story-dot-3 { animation-delay: -20s; }
+.hero-story-dot-4 { animation-delay: -10s; }
 
 @media (prefers-reduced-motion: reduce) {
   .hero-cine-pan { animation: none !important; transform: none !important; }
@@ -1703,13 +1698,15 @@
   .hero-story-slide:not(.hero-story-slide-1) {
     opacity: 0 !important;
   }
-  .hero-rotating-phrase {
+  .hero-story-dot {
     animation: none !important;
-    opacity: 1 !important;
-    position: static !important;
+    opacity: 0.5 !important;
     transform: none !important;
   }
-  .hero-rotating-phrase:not(:first-child) { display: none !important; }
+  .hero-story-dot-1 {
+    opacity: 1 !important;
+    background-color: var(--gold) !important;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
