@@ -185,17 +185,17 @@ function tryExtractBareHeroCta(scope: string): string | null {
  * ───────────────────────────────────────────────────────────────── */
 const HERO_H1 = classSet(
   indexSrc,
-  /data-hero-field="headlineLine1 headlineLine2"\s+className="([^"]+)"/,
+  /data-hero-field="headlineLine1 headlineLine2"[\s\S]*?className="([^"]+)"/,
   'h1[data-hero-field="headlineLine1 headlineLine2"]',
 );
 const HERO_LINE2 = classSet(
   indexSrc,
-  /data-hero-field="headlineLine2"\s+className="([^"]+)"/,
+  /data-hero-field="headlineLine2"[\s\S]*?className="([^"]+)"/,
   'span[data-hero-field="headlineLine2"]',
 );
 const HERO_SUB = classSet(
   indexSrc,
-  /data-hero-field="subheadline"\s+className="([^"]+)"/,
+  /data-hero-field="subheadline"[\s\S]*?className="([^"]+)"/,
   'p[data-hero-field="subheadline"]',
 );
 
