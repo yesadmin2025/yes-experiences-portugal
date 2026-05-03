@@ -342,6 +342,28 @@ function HomePage() {
   const heroScene = HERO_SCENES[heroSceneIndex];
   const isHeroActionScene = heroSceneIndex === HERO_SCENES.length - 1;
 
+  // Preload every hero scene image as soon as the homepage mounts so
+  // crossfades between scenes feel instant — no flicker, no first-paint
+  // pop-in when the next scene activates. Scene 1 is rendered with
+  // fetchPriority="high" already; this guarantees scenes 2–5 are warm
+  // in the browser cache before their `is-active` transition begins.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const links: HTMLLinkElement[] = [];
+    for (const scene of HERO_SCENES) {
+      const link = document.createElement("link");
+      link.rel = "preload";
+      link.as = "image";
+      link.href = scene.image;
+      link.fetchPriority = "high";
+      document.head.appendChild(link);
+      links.push(link);
+    }
+    return () => {
+      for (const l of links) l.remove();
+    };
+  }, []);
+
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (heroFreezeOnLast) return;
