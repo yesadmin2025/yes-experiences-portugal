@@ -600,16 +600,31 @@ function HomePage() {
                {HERO_COPY.subheadline}
              </p>
 
-             {/* Single calm supporting line — one core idea per slide.
-                 Replaces the previous 5-phrase rotator (too busy). Stays
-                 visible the whole time so the eye has one quiet anchor
-                 between headline and CTAs. */}
-             <p
-               aria-hidden="true"
-               className="hero-supporting mt-6 md:mt-7 max-w-[22rem] sm:max-w-md text-[13px] md:text-[14.5px] leading-[1.55] tracking-[0.005em] text-[color:var(--ivory)]/85 font-normal opacity-0 animate-[heroFade_1s_ease-out_1.5s_forwards]"
-             >
-               Local moments, shaped around you.
-             </p>
+              {/* Scene-synced supporting lines — exactly ONE visible at a
+                  time, each line matches the matching background slide:
+                    Scene 1 (opening)         → "Local moments, shaped around you."
+                    Scene 2 (personalization) → "Choose the places, pace and moments that feel right."
+                    Scene 3 (local / hidden)  → "Guided by locals who know where the real moments happen."
+                    Scene 4 (action)          → "From a private day to a full journey, create it your way."
+                  Cycle = 24s (6s per scene). Crossfade ≈ 0.8s.
+                  All lines occupy the same grid cell so layout never shifts. */}
+              <div
+                aria-hidden="true"
+                className="hero-supporting-stage mt-6 md:mt-7 max-w-[22rem] sm:max-w-md min-h-[42px] md:min-h-[46px] relative opacity-0 animate-[heroFade_1s_ease-out_1.5s_forwards]"
+              >
+                <p className="hero-supporting-line hero-supporting-line-1 absolute inset-0 text-[13px] md:text-[14.5px] leading-[1.55] tracking-[0.005em] text-[color:var(--ivory)]/90 font-normal">
+                  Local moments, shaped around you.
+                </p>
+                <p className="hero-supporting-line hero-supporting-line-2 absolute inset-0 text-[13px] md:text-[14.5px] leading-[1.55] tracking-[0.005em] text-[color:var(--ivory)]/90 font-normal">
+                  Choose the places, pace and moments that feel right.
+                </p>
+                <p className="hero-supporting-line hero-supporting-line-3 absolute inset-0 text-[13px] md:text-[14.5px] leading-[1.55] tracking-[0.005em] text-[color:var(--ivory)]/90 font-normal">
+                  Guided by locals who know where the real moments happen.
+                </p>
+                <p className="hero-supporting-line hero-supporting-line-4 absolute inset-0 text-[13px] md:text-[14.5px] leading-[1.55] tracking-[0.005em] text-[color:var(--ivory)]/90 font-normal">
+                  From a private day to a full journey, create it your way.
+                </p>
+              </div>
 
              {/* CTAs — exactly two, refined compact size. They reveal late
                  in the cascade so the user feels invited, not pushed. Equal
@@ -619,7 +634,7 @@ function HomePage() {
                <Link
                  to="/builder"
                  data-hero-field="primaryCta"
-                 className="hero-cta-button hero-cta-button--compact cta-primary he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left opacity-0 animate-[heroFade_1s_ease-out_2.6s_forwards]"
+                 className="hero-cta-button hero-cta-button--compact cta-primary he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left opacity-0 animate-[heroFade_1.1s_ease-out_4.4s_forwards]"
                >
                  <span className="block">{HERO_COPY.primaryCta}</span>
                  <ArrowRight
@@ -632,7 +647,7 @@ function HomePage() {
                <Link
                  to="/experiences"
                  data-hero-field="secondaryCta"
-                 className="hero-cta-button hero-cta-button--compact cta-secondary-dark he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left opacity-0 animate-[heroFade_1s_ease-out_2.9s_forwards]"
+                 className="hero-cta-button hero-cta-button--compact cta-secondary-dark he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left opacity-0 animate-[heroFade_1.1s_ease-out_4.7s_forwards]"
                >
                  <span className="block">{HERO_COPY.secondaryCta}</span>
                  <ArrowRight
@@ -647,7 +662,7 @@ function HomePage() {
              {/* Microcopy — calm reassurance below the CTAs, the locked
                  rhythm token (`hero-rhythm-cta-to-microcopy`) keeps the
                  28px mobile / 24px desktop gap pinned. */}
-             <div className="hero-rhythm-cta-to-microcopy max-w-sm sm:max-w-xl mx-auto sm:mx-0 opacity-0 animate-[heroFade_1s_ease-out_3.4s_forwards]">
+             <div className="hero-rhythm-cta-to-microcopy max-w-sm sm:max-w-xl mx-auto sm:mx-0 opacity-0 animate-[heroFade_1.1s_ease-out_5.1s_forwards]">
                <p
                  data-hero-field="microcopy"
                  className="text-[12px] md:text-[13px] text-[color:var(--ivory)]/80 leading-[1.55] font-normal tracking-[0.01em] text-center sm:text-left"
