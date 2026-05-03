@@ -626,76 +626,60 @@ function HomePage() {
                {HERO_COPY.subheadline}
              </p>
 
-              {/* Scene-synced supporting lines — exactly ONE visible at a
-                  time, each line matches the matching background slide:
-                    Scene 1 (opening)         → "Local moments, shaped around you."
-                    Scene 2 (personalization) → "Choose the places, pace and moments that feel right."
-                    Scene 3 (local / hidden)  → "Guided by locals who know where the real moments happen."
-                    Scene 4 (action)          → "From a private day to a full journey, create it your way."
-                  Cycle = 24s (6s per scene). Crossfade ≈ 0.8s.
-                  All lines occupy the same grid cell so layout never shifts. */}
+               {/* Scene-controlled supporting line — only the active scene's
+                   message is mounted, so no residual lines can linger. */}
               <div
-                aria-hidden="true"
-                className="hero-supporting-stage mt-6 md:mt-7 max-w-[22rem] sm:max-w-md min-h-[42px] md:min-h-[46px] relative opacity-0 animate-[heroFade_1s_ease-out_1.5s_forwards]"
+                 className="hero-supporting-stage mt-6 md:mt-7 max-w-[20rem] sm:max-w-md min-h-[44px] md:min-h-[46px] relative opacity-0 animate-[heroFade_1s_ease-out_1.5s_forwards]"
               >
-                <p className="hero-supporting-line hero-supporting-line-1 absolute inset-0 text-[13px] md:text-[14.5px] leading-[1.55] tracking-[0.005em] text-[color:var(--ivory)]/90 font-normal">
-                  Local moments, shaped around you.
-                </p>
-                <p className="hero-supporting-line hero-supporting-line-2 absolute inset-0 text-[13px] md:text-[14.5px] leading-[1.55] tracking-[0.005em] text-[color:var(--ivory)]/90 font-normal">
-                  Choose the places, pace and moments that feel right.
-                </p>
-                <p className="hero-supporting-line hero-supporting-line-3 absolute inset-0 text-[13px] md:text-[14.5px] leading-[1.55] tracking-[0.005em] text-[color:var(--ivory)]/90 font-normal">
-                  Guided by locals who know where the real moments happen.
-                </p>
-                <p className="hero-supporting-line hero-supporting-line-4 absolute inset-0 text-[13px] md:text-[14.5px] leading-[1.55] tracking-[0.005em] text-[color:var(--ivory)]/90 font-normal">
-                  From a private day to a full journey, create it your way.
+                 <p key={heroScene.id} className="hero-supporting-line text-[13.5px] md:text-[14.5px] leading-[1.5] tracking-[0.005em] text-[color:var(--ivory)]/90 font-normal">
+                   {heroScene.line}
                 </p>
               </div>
 
-             {/* CTAs — exactly two, refined compact size. They reveal late
-                 in the cascade so the user feels invited, not pushed. Equal
-                 width on mobile, left-aligned label + right-pinned arrow
-                 for matched visual logic across both buttons. */}
-             <div className="mt-7 md:mt-9 flex flex-col sm:flex-row gap-3 sm:gap-4 w-full max-w-[22rem] sm:max-w-lg">
-               <Link
-                 to="/builder"
-                 data-hero-field="primaryCta"
-                 className="hero-cta-button hero-cta-button--compact cta-primary he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left opacity-0 animate-[heroFade_1.1s_ease-out_4.4s_forwards]"
-               >
-                 <span className="block">{HERO_COPY.primaryCta}</span>
-                 <ArrowRight
-                   size={16}
-                   strokeWidth={2.25}
-                   className="hero-cta-arrow-pulse shrink-0 text-[color:var(--gold-soft)] transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1.5 group-hover:text-[color:var(--gold)]"
-                   aria-hidden="true"
-                 />
-               </Link>
-               <Link
-                 to="/experiences"
-                 data-hero-field="secondaryCta"
-                 className="hero-cta-button hero-cta-button--compact cta-secondary-dark he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left opacity-0 animate-[heroFade_1.1s_ease-out_4.7s_forwards]"
-               >
-                 <span className="block">{HERO_COPY.secondaryCta}</span>
-                 <ArrowRight
-                   size={16}
-                   strokeWidth={2.25}
-                   className="hero-cta-arrow-pulse shrink-0 text-[color:var(--gold-soft)] transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1.5 group-hover:text-[color:var(--gold)]"
-                   aria-hidden="true"
-                 />
-               </Link>
-             </div>
+              {isHeroActionScene ? (
+                <div key="hero-action" className="hero-action-block mt-7 md:mt-9">
+                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full max-w-[21rem] sm:max-w-lg">
+                    <Link
+                      to="/builder"
+                      data-hero-field="primaryCta"
+                      className="hero-cta-button hero-cta-button--compact cta-primary he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left"
+                    >
+                      <span className="block">{HERO_COPY.primaryCta}</span>
+                      <ArrowRight
+                        size={16}
+                        strokeWidth={2.25}
+                        className="hero-cta-arrow-pulse shrink-0 text-[color:var(--gold-soft)] transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1.5 group-hover:text-[color:var(--gold)]"
+                        aria-hidden="true"
+                      />
+                    </Link>
+                    <Link
+                      to="/experiences"
+                      data-hero-field="secondaryCta"
+                      className="hero-cta-button hero-cta-button--compact cta-secondary-dark he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left"
+                    >
+                      <span className="block">{HERO_COPY.secondaryCta}</span>
+                      <ArrowRight
+                        size={16}
+                        strokeWidth={2.25}
+                        className="hero-cta-arrow-pulse shrink-0 text-[color:var(--gold-soft)] transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1.5 group-hover:text-[color:var(--gold)]"
+                        aria-hidden="true"
+                      />
+                    </Link>
+                  </div>
 
-             {/* Microcopy — calm reassurance below the CTAs, the locked
-                 rhythm token (`hero-rhythm-cta-to-microcopy`) keeps the
-                 28px mobile / 24px desktop gap pinned. */}
-             <div className="hero-rhythm-cta-to-microcopy max-w-sm sm:max-w-xl mx-auto sm:mx-0 opacity-0 animate-[heroFade_1.1s_ease-out_5.1s_forwards]">
-               <p
-                 data-hero-field="microcopy"
-                 className="text-[12px] md:text-[13px] text-[color:var(--ivory)]/80 leading-[1.55] font-normal tracking-[0.01em] text-center sm:text-left"
-               >
-                 {HERO_COPY.microcopy}
-               </p>
-             </div>
+                  <div className="hero-rhythm-cta-to-microcopy max-w-sm sm:max-w-xl mx-auto sm:mx-0">
+                    <p
+                      data-hero-field="microcopy"
+                      className="text-[11.5px] md:text-[13px] text-[color:var(--ivory)]/80 leading-[1.55] font-normal tracking-[0.01em] text-center sm:text-left"
+                    >
+                      {HERO_COPY.microcopy}
+                    </p>
+                    <p className="mt-2 text-[11.5px] md:text-[12.5px] text-[color:var(--ivory)]/68 leading-[1.45] font-normal tracking-[0.01em] text-center sm:text-left">
+                      A local is here if you want help shaping it.
+                    </p>
+                  </div>
+                </div>
+              ) : null}
 
             {/* Brand signature — relocated below the hero as a calm
                 separator strip. Still rendered ONCE on the page, still
