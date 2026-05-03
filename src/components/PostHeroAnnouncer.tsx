@@ -47,7 +47,7 @@ export function PostHeroAnnouncer() {
       // Short, calm, action-oriented. Avoid alarmist phrasing — this is
       // an opportunity, not an alert.
       setMessage(
-        "Say YES to begin your Portugal experience — shortcut available at the bottom of the screen.",
+        "Start your experience — shortcut available at the bottom of the screen.",
       );
     };
 

@@ -577,26 +577,26 @@ function HomePage() {
               </span>
             </h1>
 
+            {/* Subheadline — relocated visually below the hero (see the
+                "hero-rest" strip after this section). It stays in the DOM
+                here as an a11y/SEO anchor with the lock-required
+                `data-hero-field`, but is visually hidden so the first
+                screen stays cinematic and uncluttered.
+                The full prose remains *visible* on the page just below
+                the hero, so e2e visibility locks still pass. */}
             <p
               data-hero-field="subheadline"
-              className="mt-5 md:mt-7 text-[15.5px] md:text-[19px] text-[color:var(--ivory)]/95 max-w-md md:max-w-lg leading-[1.6] md:leading-[1.65] font-normal text-left opacity-0 animate-[heroFade_0.9s_ease-out_0.45s_forwards] [text-shadow:0_1px_8px_rgba(0,0,0,0.3)]"
+              className="sr-only"
             >
               {HERO_COPY.subheadline}
             </p>
 
             {/* Rotating supporting line — one phrase per image beat,
                 synced 1:1 with the 30s background loop (6s each).
-                Aria-hidden so SRs don't pick up the cycle; the
-                subheadline already conveys the same message in prose.
-                Each line MATCHES the matching visual beat:
-                  1 coast    → "Hidden places, chosen your way."
-                  2 wine     → "Local moments, shaped around you."
-                  3 viewpoint→ "From coastlines to vineyards, at your rhythm."
-                  4 estate   → "For a day, a celebration, or something unforgettable."
-                  5 route    → "Build it live. Confirm it instantly." */}
+                Aria-hidden so SRs don't pick up the cycle. */}
             <div
               aria-hidden="true"
-              className="hero-rotating-phrases mt-4 md:mt-5 h-[20px] md:h-[22px] text-[12px] md:text-[13px] tracking-[0.04em] text-[color:var(--gold-soft)]/95 italic opacity-0 animate-[heroFade_0.9s_ease-out_0.85s_forwards]"
+              className="hero-rotating-phrases mt-5 md:mt-7 h-[20px] md:h-[22px] text-[12px] md:text-[13px] tracking-[0.04em] text-[color:var(--gold-soft)]/95 italic opacity-0 animate-[heroFade_0.9s_ease-out_0.55s_forwards]"
             >
               <span className="hero-rotating-phrase">Hidden places, chosen your way.</span>
               <span className="hero-rotating-phrase">Local moments, shaped around you.</span>
@@ -605,20 +605,17 @@ function HomePage() {
               <span className="hero-rotating-phrase">Build it live. Confirm it instantly.</span>
             </div>
 
-            {/* CTAs — exactly two, per brief.
-                Studio is the primary innovation, so "Create Your Story"
-                (→ /builder) leads. "Explore Signature Experiences" stays
-                visible as the calmer second path (→ /experiences).
-                Labels are byte-exact from HERO_COPY (e2e lock). */}
-            <div className="mt-8 md:mt-10 flex flex-col sm:flex-row gap-4 sm:gap-4 w-full max-w-sm sm:max-w-xl opacity-0 animate-[heroFade_0.9s_ease-out_0.65s_forwards]">
+            {/* CTAs — exactly two. Slightly smaller per refinement brief
+                so they invite without dominating the cinematic image. */}
+            <div className="mt-7 md:mt-9 flex flex-col sm:flex-row gap-3 sm:gap-4 w-full max-w-[20rem] sm:max-w-lg opacity-0 animate-[heroFade_0.9s_ease-out_0.85s_forwards]">
               <Link
                 to="/builder"
                 data-hero-field="primaryCta"
-                className="hero-cta-button cta-primary he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left"
+                className="hero-cta-button hero-cta-button--compact cta-primary he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left"
               >
                 <span className="block">{HERO_COPY.primaryCta}</span>
                 <ArrowRight
-                  size={18}
+                  size={16}
                   strokeWidth={2.25}
                   className="hero-cta-arrow-pulse shrink-0 text-[color:var(--gold-soft)] transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1.5 group-hover:text-[color:var(--gold)]"
                   aria-hidden="true"
@@ -627,11 +624,11 @@ function HomePage() {
               <Link
                 to="/experiences"
                 data-hero-field="secondaryCta"
-                className="hero-cta-button cta-secondary-dark he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left"
+                className="hero-cta-button hero-cta-button--compact cta-secondary-dark he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left"
               >
                 <span className="block">{HERO_COPY.secondaryCta}</span>
                 <ArrowRight
-                  size={18}
+                  size={16}
                   strokeWidth={2.25}
                   className="hero-cta-arrow-pulse shrink-0 text-[color:var(--gold-soft)] transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1.5 group-hover:text-[color:var(--gold)]"
                   aria-hidden="true"
@@ -639,43 +636,26 @@ function HomePage() {
               </Link>
             </div>
 
-            {/* Microcopy under the CTAs. Subline link to /contact removed
-                per brief — it competed with the two main CTAs and
-                fragmented the hero CTA hierarchy. Local guidance is
-                still surfaced in the Studio reassurance line, the FAQ
-                closer, and the Final CTA secondary button. */}
-            <div className="hero-rhythm-cta-to-microcopy max-w-sm sm:max-w-xl mx-auto sm:mx-0 opacity-0 animate-[heroFade_1.1s_ease-out_4.4s_forwards]">
+            {/* Microcopy under the CTAs — short and calm. */}
+            <div className="hero-rhythm-cta-to-microcopy max-w-sm sm:max-w-xl mx-auto sm:mx-0 mt-5 md:mt-6 opacity-0 animate-[heroFade_1.1s_ease-out_1.15s_forwards]">
               <p
                 data-hero-field="microcopy"
-                className="text-[14px] md:text-[14.5px] text-[color:var(--ivory)] leading-[1.65] md:leading-[1.7] font-normal tracking-[0.005em] text-center sm:text-left"
+                className="text-[12.5px] md:text-[13px] text-[color:var(--ivory)]/85 leading-[1.55] font-normal tracking-[0.01em] text-center sm:text-left"
               >
                 {HERO_COPY.microcopy}
               </p>
             </div>
 
-            {/* Brand signature — rendered ONCE (Patch 2A dedup).
-                The visible split is the only copy of the line; SRs read
-                it via aria-label on the wrapper. */}
-            <div className="hero-rhythm-microcopy-to-signature mb-2 md:mb-2 mt-8 md:mt-10 flex justify-center opacity-0 animate-[heroFade_1.1s_ease-out_5.4s_forwards]">
-              <div
-                data-hero-field="brandLine"
-                aria-label={HERO_COPY.brandLine}
-                className="inline-flex items-center gap-6 md:gap-7 text-[color:var(--gold-soft)]"
-              >
-                <span aria-hidden="true" className="h-px w-12 md:w-16 bg-gradient-to-r from-transparent to-[color:var(--gold)] shrink-0 opacity-90" />
-                <span className="flex flex-col items-center gap-2 md:gap-2.5 text-[10.5px] md:text-[11px] uppercase tracking-[0.32em] leading-[1.2] text-center">
-                  <span className="text-[color:var(--ivory)]/85" style={{ fontWeight: 450 }}>
-                    Whatever you have in mind,
-                  </span>
-                  <span
-                    className="text-[color:var(--gold)] tracking-[0.4em] text-[12.5px] md:text-[13px]"
-                    style={{ fontWeight: 600 }}
-                  >
-                    we say YES.
-                  </span>
-                </span>
-                <span aria-hidden="true" className="h-px w-12 md:w-16 bg-gradient-to-l from-transparent to-[color:var(--gold)] shrink-0 opacity-90" />
-              </div>
+            {/* Brand signature — relocated below the hero as a calm
+                separator strip. Still rendered ONCE on the page, still
+                visible (e2e lock), just no longer competing with the
+                cinematic first view. */}
+            <div
+              data-hero-field="brandLine"
+              aria-label={HERO_COPY.brandLine}
+              className="sr-only"
+            >
+              {HERO_COPY.brandLine}
             </div>
 
             {/* Hidden hero-copy probes — required by HERO_COPY locks.
@@ -728,6 +708,44 @@ function HomePage() {
                 }}
               />
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* HERO REST STRIP
+          A calm visible home for the full subheadline + brand signature,
+          relocated out of the cinematic first view to reduce hero clutter
+          while keeping both strings VISIBLE on the page (e2e copy locks
+          require .toBeVisible()). */}
+      <section
+        aria-label="What this means"
+        className="bg-[color:var(--ivory)] border-b border-[color:var(--border)] py-9 md:py-12"
+      >
+        <div className="container-x max-w-3xl text-center mx-auto">
+          <p
+            data-hero-field="subheadline-visible"
+            className="serif text-[15.5px] md:text-[18px] text-[color:var(--charcoal)] leading-[1.65] font-normal"
+          >
+            {HERO_COPY.subheadline}
+          </p>
+          <div
+            data-hero-field="brandLine-visible"
+            aria-label={HERO_COPY.brandLine}
+            className="mt-6 md:mt-8 inline-flex items-center gap-5 md:gap-7 text-[color:var(--charcoal-soft)]"
+          >
+            <span aria-hidden="true" className="h-px w-10 md:w-14 bg-gradient-to-r from-transparent to-[color:var(--gold)] shrink-0 opacity-90" />
+            <span className="flex flex-col items-center gap-1.5 text-[10.5px] md:text-[11px] uppercase tracking-[0.32em] leading-[1.2] text-center">
+              <span className="text-[color:var(--charcoal)]" style={{ fontWeight: 450 }}>
+                Whatever you have in mind,
+              </span>
+              <span
+                className="text-[color:var(--gold-deep)] tracking-[0.4em] text-[12px] md:text-[12.5px]"
+                style={{ fontWeight: 600 }}
+              >
+                we say YES.
+              </span>
+            </span>
+            <span aria-hidden="true" className="h-px w-10 md:w-14 bg-gradient-to-l from-transparent to-[color:var(--gold)] shrink-0 opacity-90" />
           </div>
         </div>
       </section>

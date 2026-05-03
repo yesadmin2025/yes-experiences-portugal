@@ -31,14 +31,14 @@ const SCROLL_IDLE_MS = 220;
 const IDLE_SETTLE_MS = SCROLL_IDLE_MS + 180;
 
 const HEADLINE = "Your Portugal, Your Way";
-const EYEBROW = "Private. Local. Instantly secured.";
-const BUTTON_IDLE = "Say YES";
+const EYEBROW = "Private. Local. Curated.";
+const BUTTON_IDLE = "Start Your Experience";
 const BUTTON_LOADING = "Opening…";
-const BUTTON_ARIA = "Say YES — choose how to begin your Portugal experience";
+const BUTTON_ARIA = "Start your experience — choose how to begin";
 const CHOICE_EXPLORE = "Explore Signature Experiences";
 const CHOICE_DESIGN = "Design & Secure Your Own";
 const ANNOUNCEMENT =
-  "Say YES to begin your Portugal experience — shortcut available at the bottom of the screen.";
+  "Start your experience — shortcut available at the bottom of the screen.";
 
 /** The CTA <button> — stable across copy tweaks via aria-label. */
 function ctaButton(page: Page): Locator {
