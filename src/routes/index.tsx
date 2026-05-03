@@ -78,36 +78,46 @@ const HERO_SCENE_DURATION_MS = 5000;
 const HERO_SCENES = [
   {
     id: "opening",
+    // Atlantic coastal road — sets the stage, wide horizon.
     image: heroImg,
-    position: "50% 50%",
+    position: "50% 52%",
+    pan: "drift-right" as const,
     main: "Portugal is the stage.",
     supporting: "Local moments, beyond the obvious.",
   },
   {
     id: "your-story",
+    // Intimate wine table — personalization, human scale.
     image: imgArrabidaWineLunch,
-    position: "46% 52%",
+    position: "48% 56%",
+    pan: "push-in" as const,
     main: "You write the story.",
     supporting: "A day, a journey, or something worth celebrating.",
   },
   {
     id: "hidden-local",
-    image: imgArrabidaViewpoint,
-    position: "50% 44%",
+    // Hidden Arrábida cove — local knowledge, places few reach.
+    image: imgArrabidaCoves,
+    position: "52% 48%",
+    pan: "drift-left" as const,
     main: "Hidden places. Real moments.",
     supporting: "Guided by locals who know where the real magic happens.",
   },
   {
     id: "shape-it",
-    image: imgSintraCaboDaRoca,
-    position: "55% 48%",
+    // Sintra estate gardens — celebrations, proposals, private days.
+    image: imgSintraHero,
+    position: "54% 50%",
+    pan: "pull-back" as const,
     main: "Shape it your way.",
     supporting: "From private days to proposals, celebrations and groups.",
   },
   {
     id: "action",
-    image: imgSintraEstates,
+    // Cabo da Roca cliffs — wide, decisive, "step into it".
+    image: imgSintraCaboDaRoca,
     position: "55% 48%",
+    pan: "push-in" as const,
     main: "Create it. Confirm it. Live it.",
     supporting: "Instant booking. Real local guidance if you want it.",
   },
