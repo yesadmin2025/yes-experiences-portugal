@@ -546,6 +546,20 @@ function HomePage() {
               {HERO_COPY.subheadline}
             </p>
 
+            {/* Rotating supporting phrases — very subtle, one at a time,
+                fades through Private days · Celebrations · Groups ·
+                Full journeys. Aria-hidden so SRs don't pick up the
+                cycle; the subheadline already covers these in prose. */}
+            <div
+              aria-hidden="true"
+              className="hero-rotating-phrases mt-4 md:mt-5 h-[18px] md:h-[20px] text-[11.5px] md:text-[12px] uppercase tracking-[0.3em] text-[color:var(--gold-soft)]/85 opacity-0 animate-[heroFade_0.9s_ease-out_0.85s_forwards]"
+            >
+              <span className="hero-rotating-phrase">Private days</span>
+              <span className="hero-rotating-phrase">Celebrations</span>
+              <span className="hero-rotating-phrase">Groups</span>
+              <span className="hero-rotating-phrase">Full journeys</span>
+            </div>
+
             {/* CTAs — exactly two, per brief.
                 Studio is the primary innovation, so "Create Your Story"
                 (→ /builder) leads. "Explore Signature Experiences" stays
