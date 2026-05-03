@@ -644,14 +644,7 @@ function HomePage() {
                 whiteSpace: "nowrap",
                 border: 0,
               }}
-            >
-              <span data-probe-field="version">hero-copy-version:{HERO_COPY_VERSION}</span>
-              {" | "}
-              <span data-probe-field="headline">
-                {HERO_COPY.headlineLine1} {HERO_COPY.headlineLine2}
-              </span>
-              {" | "}
-              <span data-probe-field="subheadline">{HERO_COPY.subheadline}</span>
+            />
             </div>
             <div
               data-hero-copy-json={JSON.stringify({ version: HERO_COPY_VERSION, copy: HERO_COPY })}
