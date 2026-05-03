@@ -1627,24 +1627,59 @@
 }
 
 /* Cinematic hero story sequence — React state controls the active scene, so
-   the image, message and CTA visibility are never stacked together. */
+   the image, message and CTA visibility are never stacked together.
+
+   Each scene picks one of four Ken Burns variants via [data-hero-pan]:
+     · drift-right  — slow horizontal drift, opening / wide horizon
+     · drift-left   — slow horizontal drift, hidden-place reveal
+     · push-in      — gentle scale-in, intimate / decisive moments
+     · pull-back    — gentle scale-out, "shape it your way" reveal
+   All variants stay subtle (≤ ~3% scale, ≤ ~1.6% translate) so the
+   motion reads as cinematic, never animated. */
+@keyframes heroPanDriftRight {
+  0%   { transform: scale(1.085) translate3d(-1.4%, 0.4%, 0); }
+  100% { transform: scale(1.085) translate3d(1.4%, -0.4%, 0); }
+}
+@keyframes heroPanDriftLeft {
+  0%   { transform: scale(1.085) translate3d(1.4%, -0.3%, 0); }
+  100% { transform: scale(1.085) translate3d(-1.4%, 0.5%, 0); }
+}
+@keyframes heroPanPushIn {
+  0%   { transform: scale(1.045) translate3d(0, 0.4%, 0); }
+  100% { transform: scale(1.105) translate3d(-0.4%, -0.4%, 0); }
+}
+@keyframes heroPanPullBack {
+  0%   { transform: scale(1.115) translate3d(0.4%, -0.3%, 0); }
+  100% { transform: scale(1.05)  translate3d(-0.2%, 0.4%, 0); }
+}
+/* Backwards-compat alias — earlier code referenced heroStoryPan. */
 @keyframes heroStoryPan {
-  /* Subtle right-to-left drift — the user feels the camera "moving
-     toward" the scene without anything ever feeling busy. */
-  0%   { transform: scale(1.08) translate3d(-1.4%, 0.4%, 0); }
-  100% { transform: scale(1.08) translate3d(1.4%, -0.4%, 0); }
+  0%   { transform: scale(1.085) translate3d(-1.4%, 0.4%, 0); }
+  100% { transform: scale(1.085) translate3d(1.4%, -0.4%, 0); }
 }
 .hero-story-stage { will-change: opacity; }
 .hero-story-slide {
   opacity: 0;
   will-change: opacity, transform;
-  filter: saturate(0.92) contrast(1.02) brightness(0.96);
-  transform: scale(1.055) translate3d(-0.8%, 0.2%, 0);
+  filter: saturate(0.94) contrast(1.03) brightness(0.97);
+  transform: scale(1.06) translate3d(-0.6%, 0.2%, 0);
   transition: opacity 1400ms cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 .hero-story-slide.is-active {
   opacity: 1;
-  animation: heroStoryPan 6500ms ease-in-out both;
+  animation: heroStoryPan 7000ms ease-in-out both;
+}
+.hero-story-slide.is-active[data-hero-pan="drift-right"] {
+  animation: heroPanDriftRight 7000ms ease-in-out both;
+}
+.hero-story-slide.is-active[data-hero-pan="drift-left"] {
+  animation: heroPanDriftLeft 7000ms ease-in-out both;
+}
+.hero-story-slide.is-active[data-hero-pan="push-in"] {
+  animation: heroPanPushIn 7000ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+.hero-story-slide.is-active[data-hero-pan="pull-back"] {
+  animation: heroPanPullBack 7000ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
 }
 /* Legacy class kept as a no-op so any lingering reference doesn't
    error in CSS validators or reduced-motion overrides below. */
