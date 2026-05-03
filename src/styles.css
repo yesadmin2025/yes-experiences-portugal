@@ -1607,35 +1607,40 @@
   }
 }
 
-/* Cinematic hero story sequence — 4 real Viator-sourced beats
-   (discovery → local moment → route → celebration). Each slide
-   crossfades softly into the next while a slow rightward Ken-Burns
-   pan implies a continuous journey. 28s total loop = 7s per beat.
+/* Cinematic hero story sequence — 6 real Viator-sourced beats covering
+   the full YES story spectrum: discovery → local moment → hidden place →
+   journey → celebration → shared day. Each slide crossfades softly into
+   the next while a slow Ken-Burns pan implies continuous motion.
+   36s total loop = 6s per beat (≈4.7s hold + 1.3s crossfade).
    Slide 1 is the SSR/static fallback so the hero never appears blank.
    Reduced-motion users freeze on slide 1 with no animation. */
 @keyframes heroStoryPan {
-  0%   { transform: scale(1.08) translate3d(-1.4%, 0.4%, 0); }
-  100% { transform: scale(1.08) translate3d(1.4%, -0.4%, 0); }
+  0%   { transform: scale(1.09) translate3d(-1.6%, 0.5%, 0); }
+  100% { transform: scale(1.09) translate3d(1.6%, -0.5%, 0); }
 }
 @keyframes heroStoryCrossfade {
-  /* 4 beats × 25% each. Each slide stays visible for ~22%, then
-     crossfades to the next over ~3% — soft, never abrupt. */
-  0%, 22%   { opacity: 1; }
-  25%, 97%  { opacity: 0; }
-  100%      { opacity: 1; }
+  /* 6 beats × 16.667% each. Each slide stays fully visible for ~13%,
+     then crossfades to the next over ~3.6% — soft, never abrupt. */
+  0%, 13%      { opacity: 1; }
+  16.67%, 96.5% { opacity: 0; }
+  100%         { opacity: 1; }
 }
 .hero-story-stage { will-change: opacity; }
 .hero-story-slide {
   opacity: 0;
   will-change: opacity, transform;
+  /* Subtle warm grade applied uniformly so all beats feel cohesive. */
+  filter: saturate(0.92) contrast(1.02) brightness(0.96);
   animation:
-    heroStoryCrossfade 28s ease-in-out infinite,
-    heroStoryPan 28s ease-in-out infinite alternate;
+    heroStoryCrossfade 36s ease-in-out infinite,
+    heroStoryPan 36s ease-in-out infinite alternate;
 }
 .hero-story-slide-1 { opacity: 1; animation-delay: 0s, 0s; }
-.hero-story-slide-2 { animation-delay: -21s, -21s; }
-.hero-story-slide-3 { animation-delay: -14s, -14s; }
-.hero-story-slide-4 { animation-delay: -7s, -7s; }
+.hero-story-slide-2 { animation-delay: -30s, -30s; }
+.hero-story-slide-3 { animation-delay: -24s, -24s; }
+.hero-story-slide-4 { animation-delay: -18s, -18s; }
+.hero-story-slide-5 { animation-delay: -12s, -12s; }
+.hero-story-slide-6 { animation-delay: -6s, -6s; }
 /* Legacy class kept as a no-op so any lingering reference doesn't
    error in CSS validators or reduced-motion overrides below. */
 .hero-cine-pan { animation: none; }
