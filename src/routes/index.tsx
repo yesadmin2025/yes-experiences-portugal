@@ -634,13 +634,13 @@ function HomePage() {
 
                {/* Scene-controlled supporting line — only the active scene's
                    message is mounted, so no residual lines can linger. */}
-              <div
-                 className="hero-supporting-stage mt-6 md:mt-7 max-w-[20rem] sm:max-w-md min-h-[44px] md:min-h-[46px] relative opacity-0 animate-[heroFade_1s_ease-out_1.5s_forwards]"
-              >
-                 <p key={heroScene.id} className="hero-supporting-line text-[13.5px] md:text-[14.5px] leading-[1.5] tracking-[0.005em] text-[color:var(--ivory)]/90 font-normal">
-                   {heroScene.line}
-                </p>
-              </div>
+               <div
+                  className="hero-supporting-stage mt-5 md:mt-7 max-w-[17rem] sm:max-w-md relative opacity-0 animate-[heroFade_1s_ease-out_1.5s_forwards]"
+               >
+                  <p key={heroScene.id} className="hero-supporting-line text-[13px] md:text-[14.5px] leading-[1.45] tracking-[0.005em] text-[color:var(--ivory)]/90 font-normal line-clamp-2">
+                    {heroScene.line}
+                 </p>
+               </div>
 
               {isHeroActionScene ? (
                 <div key="hero-action" className="hero-action-block mt-7 md:mt-9">
