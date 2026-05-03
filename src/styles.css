@@ -1683,27 +1683,18 @@
   .hero-story-slide {
     animation: none !important;
     transform: none !important;
+    transition: none !important;
   }
-  /* Freeze on slide 1 — the SSR/static fallback. */
-  .hero-story-slide:not(.hero-story-slide-1) {
-    opacity: 0 !important;
+  .hero-story-slide.is-active {
+    opacity: 1 !important;
   }
-  .hero-story-dot {
+  .hero-story-progress-fill {
     animation: none !important;
-    opacity: 0.5 !important;
     transform: none !important;
   }
-  .hero-story-dot-1 {
-    opacity: 1 !important;
-    background-color: var(--gold) !important;
-  }
-  /* Supporting lines: freeze on scene-1 line, hide the rest. */
   .hero-supporting-line {
     animation: none !important;
     transform: none !important;
-    opacity: 0 !important;
-  }
-  .hero-supporting-line-1 {
     opacity: 1 !important;
   }
 }
