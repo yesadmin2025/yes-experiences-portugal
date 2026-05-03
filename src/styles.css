@@ -1607,17 +1607,38 @@
   }
 }
 
-/* Cinematic background pan — slow rightward Ken-Burns on the hero
-   video so the loop feels like a journey unfolding. Disabled under
-   prefers-reduced-motion (the static fallback image takes over). */
-@keyframes heroCinePan {
-  0%   { transform: scale(1.06) translate3d(-1.2%, 0, 0); }
-  100% { transform: scale(1.06) translate3d(1.2%, 0, 0); }
+/* Cinematic hero story sequence — 4 real Viator-sourced beats
+   (discovery → local moment → route → celebration). Each slide
+   crossfades softly into the next while a slow rightward Ken-Burns
+   pan implies a continuous journey. 28s total loop = 7s per beat.
+   Slide 1 is the SSR/static fallback so the hero never appears blank.
+   Reduced-motion users freeze on slide 1 with no animation. */
+@keyframes heroStoryPan {
+  0%   { transform: scale(1.08) translate3d(-1.4%, 0.4%, 0); }
+  100% { transform: scale(1.08) translate3d(1.4%, -0.4%, 0); }
 }
-.hero-cine-pan {
-  will-change: transform;
-  animation: heroCinePan 28s ease-in-out infinite alternate;
+@keyframes heroStoryCrossfade {
+  /* 4 beats × 25% each. Each slide stays visible for ~22%, then
+     crossfades to the next over ~3% — soft, never abrupt. */
+  0%, 22%   { opacity: 1; }
+  25%, 97%  { opacity: 0; }
+  100%      { opacity: 1; }
 }
+.hero-story-stage { will-change: opacity; }
+.hero-story-slide {
+  opacity: 0;
+  will-change: opacity, transform;
+  animation:
+    heroStoryCrossfade 28s ease-in-out infinite,
+    heroStoryPan 28s ease-in-out infinite alternate;
+}
+.hero-story-slide-1 { opacity: 1; animation-delay: 0s, 0s; }
+.hero-story-slide-2 { animation-delay: -21s, -21s; }
+.hero-story-slide-3 { animation-delay: -14s, -14s; }
+.hero-story-slide-4 { animation-delay: -7s, -7s; }
+/* Legacy class kept as a no-op so any lingering reference doesn't
+   error in CSS validators or reduced-motion overrides below. */
+.hero-cine-pan { animation: none; }
 
 /* Rotating supporting phrases — fades each phrase in and out one at a
    time. Each phrase holds for ~2s, total cycle = 12s (4 phrases × 3s). */
@@ -1644,6 +1665,14 @@
 
 @media (prefers-reduced-motion: reduce) {
   .hero-cine-pan { animation: none !important; transform: none !important; }
+  .hero-story-slide {
+    animation: none !important;
+    transform: none !important;
+  }
+  /* Freeze on slide 1 — the SSR/static fallback. */
+  .hero-story-slide:not(.hero-story-slide-1) {
+    opacity: 0 !important;
+  }
   .hero-rotating-phrase {
     animation: none !important;
     opacity: 1 !important;
