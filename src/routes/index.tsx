@@ -265,7 +265,13 @@ function HomePage() {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const timer = window.setInterval(() => {
-      setHeroSceneIndex((index) => (index + 1) % HERO_SCENES.length);
+      setHeroSceneIndex((index) => {
+        if (index >= HERO_SCENES.length - 1) {
+          window.clearInterval(timer);
+          return index;
+        }
+        return index + 1;
+      });
     }, HERO_SCENE_DURATION_MS);
 
     return () => window.clearInterval(timer);
