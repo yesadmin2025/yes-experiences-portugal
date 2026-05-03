@@ -488,15 +488,17 @@ function HomePage() {
       <section
         className="relative min-h-[80svh] md:min-h-[94vh] flex items-end overflow-hidden"
       >
-        {/* Cinematic 4-beat story sequence — real Viator-sourced imagery,
-            no stock. Each slide holds ~7s with a slow rightward Ken-Burns
-            pan + soft crossfade, total loop = 28s. The first slide is
+        {/* Cinematic 6-beat story sequence — real Viator-sourced imagery,
+            no stock. Each slide holds ~6s with a slow rightward Ken-Burns
+            pan + soft crossfade, total loop = 36s. The first slide is
             also the static/SSR fallback (no JS needed; CSS opacity
-            cycles handle the entire sequence). Sequence:
-              1. Discovery / coastal road  (hero-coast)
-              2. Local moment / wine table (Arrábida lunch)
-              3. Route / journey unfolding (Tomar–Coimbra)
-              4. Special moment / viewpoint (Arrábida viewpoint)
+            cycles handle the entire sequence). YES story spectrum:
+              1. Discovery / coastal road        (hero-coast)
+              2. Local moment / wine table       (Arrábida lunch)
+              3. Hidden place / viewpoint        (Arrábida viewpoint)
+              4. Journey / boat & coves          (Arrábida boat)
+              5. Celebration / estate gardens    (Sintra estates)
+              6. Groups & open days / beach      (Tróia beach)
             Reduced-motion users see only slide 1, no animation. */}
         <div
           aria-hidden="true"
@@ -518,24 +520,43 @@ function HomePage() {
             decoding="async"
           />
           <img
-            src={imgTomarCoimbra}
+            src={imgArrabidaViewpoint}
             alt=""
             className="hero-story-slide hero-story-slide-3 absolute inset-0 w-full h-full object-cover object-center"
             loading="lazy"
             decoding="async"
           />
           <img
-            src={imgArrabidaViewpoint}
+            src={imgArrabidaBoatCoves}
             alt=""
             className="hero-story-slide hero-story-slide-4 absolute inset-0 w-full h-full object-cover object-center"
+            loading="lazy"
+            decoding="async"
+          />
+          <img
+            src={imgSintraEstates}
+            alt=""
+            className="hero-story-slide hero-story-slide-5 absolute inset-0 w-full h-full object-cover object-center"
+            loading="lazy"
+            decoding="async"
+          />
+          <img
+            src={imgTroiaBeach}
+            alt=""
+            className="hero-story-slide hero-story-slide-6 absolute inset-0 w-full h-full object-cover object-center"
             loading="lazy"
             decoding="async"
           />
         </div>
         {/* Hidden hero alt text for SEO/a11y — moved off the visual layer
             so the storytelling stage stays a pure aria-hidden backdrop. */}
-        <span className="sr-only">Hidden coastal road in Portugal at golden hour</span>
-        {/* Soft dark gradient — required by brief for any text-over-image. */}
+        <span className="sr-only">
+          A cinematic story of Portugal — coastal roads, local tables, hidden viewpoints, boat journeys, celebrations and shared days with friends.
+        </span>
+        {/* Soft dark gradient — required by brief for any text-over-image.
+            Slightly warm-graded via a subtle amber multiply to keep all
+            beats visually consistent regardless of source white-balance. */}
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(46,30,18,0.18)_0%,rgba(46,30,18,0.06)_45%,rgba(46,30,18,0.22)_100%)] mix-blend-multiply pointer-events-none z-[2]" />
         <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/85 via-[color:var(--charcoal-deep)]/45 to-[color:var(--charcoal-deep)]/40 md:from-[color:var(--charcoal-deep)]/80 md:via-[color:var(--charcoal-deep)]/35 md:to-[color:var(--charcoal-deep)]/30 pointer-events-none z-[2]" />
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(15,15,15,0.65)_0%,rgba(15,15,15,0.4)_35%,transparent_70%)] md:bg-[linear-gradient(90deg,rgba(15,15,15,0.6)_0%,rgba(15,15,15,0.32)_40%,transparent_72%)] pointer-events-none z-[2]" />
 
