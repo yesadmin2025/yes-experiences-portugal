@@ -286,12 +286,22 @@ export const Route = createFileRoute("/")({
  * ════════════════════════════════════════════════════════════ */
 function HomePage() {
   const scrollDebug = useScrollDebugFlags();
-  const [heroSceneIndex, setHeroSceneIndex] = useState(0);
+  // `?hero=last` query param freezes the cinematic sequence on the
+  // final (action) scene where all approved HERO_COPY strings are
+  // simultaneously rendered. Used by the e2e copy lock + byte-exact +
+  // visual-regression suites so they don't race the auto-advance loop.
+  const heroFreezeOnLast =
+    typeof window !== "undefined" &&
+    /[?&]hero=last(?:&|$)/.test(window.location.search);
+  const [heroSceneIndex, setHeroSceneIndex] = useState(
+    heroFreezeOnLast ? HERO_SCENES.length - 1 : 0,
+  );
   const heroScene = HERO_SCENES[heroSceneIndex];
   const isHeroActionScene = heroSceneIndex === HERO_SCENES.length - 1;
 
   useEffect(() => {
     if (typeof window === "undefined") return;
+    if (heroFreezeOnLast) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const timer = window.setInterval(() => {
@@ -305,7 +315,7 @@ function HomePage() {
     }, HERO_SCENE_DURATION_MS);
 
     return () => window.clearInterval(timer);
-  }, []);
+  }, [heroFreezeOnLast]);
 
   // Homepage motion controller — `[data-motion]` / `.motion-in`.
   // See src/lib/home-motion.ts for the full contract. This is the
