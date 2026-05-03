@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { SiteLayout } from "@/components/SiteLayout";
 import { FAQ } from "@/components/FAQ";
@@ -47,6 +47,35 @@ const FEATURED_TOUR_IDS = [
   "sintra-cascais",
   "arrabida-boat",
   "troia-comporta",
+] as const;
+
+const HERO_SCENE_DURATION_MS = 6500;
+
+const HERO_SCENES = [
+  {
+    id: "opening",
+    image: heroImg,
+    position: "50% 50%",
+    line: "Local moments, shaped around you.",
+  },
+  {
+    id: "personalization",
+    image: imgArrabidaWineLunch,
+    position: "46% 52%",
+    line: "Choose the pace, places and moments that feel right.",
+  },
+  {
+    id: "hidden-local",
+    image: imgArrabidaViewpoint,
+    position: "50% 44%",
+    line: "Guided by locals who know where the real moments happen.",
+  },
+  {
+    id: "action",
+    image: imgSintraEstates,
+    position: "55% 48%",
+    line: "From a private day to a full journey, create it your way.",
+  },
 ] as const;
 
 const signatures = FEATURED_TOUR_IDS
