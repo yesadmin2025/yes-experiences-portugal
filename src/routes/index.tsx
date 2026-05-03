@@ -488,18 +488,19 @@ function HomePage() {
       <section
         className="relative min-h-[80svh] md:min-h-[94vh] flex items-end overflow-hidden"
       >
-        {/* Cinematic 6-beat story sequence — real Viator-sourced imagery,
-            no stock. Each slide holds ~6s with a slow rightward Ken-Burns
-            pan + soft crossfade, total loop = 36s. The first slide is
-            also the static/SSR fallback (no JS needed; CSS opacity
-            cycles handle the entire sequence). YES story spectrum:
-              1. Discovery / coastal road        (hero-coast)
-              2. Local moment / wine table       (Arrábida lunch)
-              3. Hidden place / viewpoint        (Arrábida viewpoint)
-              4. Journey / boat & coves          (Arrábida boat)
-              5. Celebration / estate gardens    (Sintra estates)
-              6. Groups & open days / beach      (Tróia beach)
-            Reduced-motion users see only slide 1, no animation. */}
+        {/* Cinematic 5-beat story sequence — real Viator-sourced imagery,
+            no stock. Each slide holds ~5s + 1s crossfade, total loop = 30s.
+            A slow Ken-Burns pan implies continuous, calm motion. The
+            rotating supporting line below the subheadline cycles in
+            lock-step with the image (one phrase per beat, see
+            `.hero-rotating-phrase:nth-child(N)` delays). YES story arc:
+              1. Discovery        — coastal road       (hero-coast)
+              2. Local moment     — wine table         (Arrábida lunch)
+              3. Hidden place     — viewpoint/vineyard (Arrábida viewpoint)
+              4. Celebration      — estate / intimate  (Sintra estates)
+              5. Live route       — multi-region path  (Tomar–Coimbra)
+            Slide 1 is the SSR/static fallback. Reduced-motion users
+            freeze on slide 1 with no animation. */}
         <div
           aria-hidden="true"
           className="hero-story-stage absolute inset-0 w-full h-full overflow-hidden"
@@ -527,23 +528,16 @@ function HomePage() {
             decoding="async"
           />
           <img
-            src={imgArrabidaBoatCoves}
+            src={imgSintraEstates}
             alt=""
             className="hero-story-slide hero-story-slide-4 absolute inset-0 w-full h-full object-cover object-center"
             loading="lazy"
             decoding="async"
           />
           <img
-            src={imgSintraEstates}
+            src={imgTomarCoimbra}
             alt=""
             className="hero-story-slide hero-story-slide-5 absolute inset-0 w-full h-full object-cover object-center"
-            loading="lazy"
-            decoding="async"
-          />
-          <img
-            src={imgTroiaBeach}
-            alt=""
-            className="hero-story-slide hero-story-slide-6 absolute inset-0 w-full h-full object-cover object-center"
             loading="lazy"
             decoding="async"
           />
