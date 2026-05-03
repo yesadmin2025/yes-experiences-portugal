@@ -555,6 +555,24 @@
     }
   }
 
+  /* Compact hero CTA — slimmer mobile/tablet pill, applied with
+     `.hero-cta-button--compact`. Tap target stays ≥44px (52 ≫ 44). Lets
+     the cinematic hero breathe without losing legibility. */
+  .hero-cta-button--compact {
+    height: 52px;
+    padding: 12px 18px 12px 16px;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+  }
+  @media (min-width: 768px) {
+    .hero-cta-button--compact {
+      height: 58px;
+      padding: 14px 22px 14px 20px;
+      font-size: 12px;
+      letter-spacing: 0.09em;
+    }
+  }
+
   .eyebrow {
     @apply inline-flex items-center gap-3 text-[11px] uppercase tracking-[0.28em] text-[color:var(--charcoal-soft)];
   }
