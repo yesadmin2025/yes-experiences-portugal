@@ -1626,89 +1626,57 @@
   }
 }
 
-/* Cinematic hero story sequence — 4 real Viator-sourced beats covering
-   the YES storytelling arc: opening hook → personalization → local /
-   authentic → action / celebration. Each slide crossfades softly into
-   the next while a slow Ken-Burns drift implies continuous, calm motion.
-   40s total loop = 10s per beat (≈8s hold + 2s crossfade) — slower and
-   more cinematic than the previous 5-beat / 30s loop.
-   Slide 1 is the SSR/static fallback so the hero never appears blank.
-   Reduced-motion users freeze on slide 1 with no animation. */
+/* Cinematic hero story sequence — React state controls the active scene, so
+   the image, message and CTA visibility are never stacked together. */
 @keyframes heroStoryPan {
   /* Subtle right-to-left drift — the user feels the camera "moving
      toward" the scene without anything ever feeling busy. */
   0%   { transform: scale(1.08) translate3d(-1.4%, 0.4%, 0); }
   100% { transform: scale(1.08) translate3d(1.4%, -0.4%, 0); }
 }
-@keyframes heroStoryCrossfade {
-  /* 4 beats × 25% each. Slide is fully visible for ~20%, then
-     crossfades to the next over ~5% — soft, never abrupt. */
-  0%, 20%     { opacity: 1; }
-  25%, 95%    { opacity: 0; }
-  100%        { opacity: 1; }
-}
 .hero-story-stage { will-change: opacity; }
 .hero-story-slide {
   opacity: 0;
   will-change: opacity, transform;
-  /* Subtle warm grade applied uniformly so all beats feel cohesive. */
   filter: saturate(0.92) contrast(1.02) brightness(0.96);
-  animation:
-    heroStoryCrossfade 24s ease-in-out infinite,
-    heroStoryPan 24s ease-in-out infinite alternate;
+  transform: scale(1.055) translate3d(-0.8%, 0.2%, 0);
+  transition: opacity 1400ms cubic-bezier(0.22, 0.61, 0.36, 1);
 }
-.hero-story-slide-1 { opacity: 1; animation-delay: 0s, 0s; }
-.hero-story-slide-2 { animation-delay: -18s, -18s; }
-.hero-story-slide-3 { animation-delay: -12s, -12s; }
-.hero-story-slide-4 { animation-delay: -6s, -6s; }
+.hero-story-slide.is-active {
+  opacity: 1;
+  animation: heroStoryPan 6500ms ease-in-out both;
+}
 /* Legacy class kept as a no-op so any lingering reference doesn't
    error in CSS validators or reduced-motion overrides below. */
 .hero-cine-pan { animation: none; }
 
-/* Slide indicator dots — 4 minimal dots in champagne gold. The active
-   dot brightens and slightly widens to track the current beat. Pure
-   decoration, aria-hidden in markup. Synced 1:1 with the 40s image
-   loop (10s per beat). */
-@keyframes heroDotPulse {
-  /* 10s per beat × 4 = 40s. Active 0–22%, fade 22–25%, dim 25–100%. */
-  0%, 22%   { opacity: 1; transform: scaleX(1.6); background-color: var(--gold); }
-  25%, 100% { opacity: 0.35; transform: scaleX(1); background-color: var(--gold-soft); }
+@keyframes heroStoryProgress {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
 }
-.hero-story-dot {
-  display: inline-block;
-  width: 14px;
-  height: 2px;
-  border-radius: 2px;
-  background-color: var(--gold-soft);
-  opacity: 0.35;
-  transform-origin: center;
-  animation: heroDotPulse 24s ease-in-out infinite;
+.hero-story-progress {
+  height: 1px;
+  background: color-mix(in oklab, var(--ivory) 24%, transparent);
+  overflow: hidden;
 }
-.hero-story-dot-1 { animation-delay: 0s; }
-.hero-story-dot-2 { animation-delay: -18s; }
-.hero-story-dot-3 { animation-delay: -12s; }
-.hero-story-dot-4 { animation-delay: -6s; }
+.hero-story-progress-fill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-origin: left center;
+  background: color-mix(in oklab, var(--gold-soft) 82%, transparent);
+  animation: heroStoryProgress 6500ms linear both;
+}
 
-/* Scene-synced supporting lines — exactly ONE visible at any time.
-   24s loop / 4 scenes / 6s per scene. Each line fades IN over the first
-   ~4% (~0.96s), holds opaque from 4% → 22%, fades OUT over 22% → 25%
-   (~0.7s), then stays fully invisible from 25% → 100%. The next line's
-   fade-in starts exactly when this one is at opacity 0, so there is no
-   moment when two lines are partially visible at the same time. */
-@keyframes heroSupportingCrossfade {
-  0%        { opacity: 0; transform: translateY(2px); }
-  4%, 22%   { opacity: 1; transform: translateY(0); }
-  25%, 100% { opacity: 0; transform: translateY(-2px); }
-}
 .hero-supporting-line {
-  opacity: 0;
+  opacity: 1;
   will-change: opacity, transform;
-  animation: heroSupportingCrossfade 24s cubic-bezier(0.22, 0.61, 0.36, 1) infinite;
+  animation: heroEnterRiseSoft 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) both;
 }
-.hero-supporting-line-1 { animation-delay: 0s; }
-.hero-supporting-line-2 { animation-delay: -18s; }
-.hero-supporting-line-3 { animation-delay: -12s; }
-.hero-supporting-line-4 { animation-delay: -6s; }
+
+.hero-action-block {
+  animation: heroEnterRiseSoft 0.75s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
 
 @media (prefers-reduced-motion: reduce) {
   .hero-cine-pan { animation: none !important; transform: none !important; }
