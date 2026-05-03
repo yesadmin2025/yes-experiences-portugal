@@ -256,6 +256,20 @@ export const Route = createFileRoute("/")({
  * ════════════════════════════════════════════════════════════ */
 function HomePage() {
   const scrollDebug = useScrollDebugFlags();
+  const [heroSceneIndex, setHeroSceneIndex] = useState(0);
+  const heroScene = HERO_SCENES[heroSceneIndex];
+  const isHeroActionScene = heroSceneIndex === HERO_SCENES.length - 1;
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const timer = window.setInterval(() => {
+      setHeroSceneIndex((index) => (index + 1) % HERO_SCENES.length);
+    }, HERO_SCENE_DURATION_MS);
+
+    return () => window.clearInterval(timer);
+  }, []);
 
   // Homepage motion controller — `[data-motion]` / `.motion-in`.
   // See src/lib/home-motion.ts for the full contract. This is the
