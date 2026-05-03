@@ -1691,13 +1691,15 @@
 .hero-story-dot-4 { animation-delay: -6s; }
 
 /* Scene-synced supporting lines — exactly ONE visible at any time.
-   24s loop / 4 scenes / 6s per scene. Each line is opaque ~0–22% of
-   the loop (≈5.3s) and crossfades over ~3% (~0.7s). All four lines
-   share the same absolute slot so the layout never reflows. */
+   24s loop / 4 scenes / 6s per scene. Each line fades IN over the first
+   ~4% (~0.96s), holds opaque from 4% → 22%, fades OUT over 22% → 25%
+   (~0.7s), then stays fully invisible from 25% → 100%. The next line's
+   fade-in starts exactly when this one is at opacity 0, so there is no
+   moment when two lines are partially visible at the same time. */
 @keyframes heroSupportingCrossfade {
-  0%, 22%   { opacity: 1; transform: translateY(0); }
-  25%, 97%  { opacity: 0; transform: translateY(-2px); }
-  100%      { opacity: 1; transform: translateY(0); }
+  0%        { opacity: 0; transform: translateY(2px); }
+  4%, 22%   { opacity: 1; transform: translateY(0); }
+  25%, 100% { opacity: 0; transform: translateY(-2px); }
 }
 .hero-supporting-line {
   opacity: 0;
