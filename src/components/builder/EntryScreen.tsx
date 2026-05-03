@@ -61,11 +61,11 @@ export function EntryScreen({ onStart }: Props) {
             id="builder-entry-title"
             className="serif mt-5 text-[2.6rem] sm:text-[3.4rem] md:text-[4rem] leading-[1.02] tracking-[-0.02em] font-semibold"
           >
-            Create your Portugal <span className="italic">experience</span>.
+            Portugal is the stage. <span className="italic">You write it.</span>
           </h1>
 
           <p className="mt-5 max-w-xl mx-auto serif italic text-[1.15rem] sm:text-[1.35rem] leading-[1.3] text-[color:var(--charcoal)]/85">
-            Choose what feels right. We'll shape a starting point in real time.
+            Shape it in real time. Confirm instantly. Local guidance whenever you want it.
           </p>
 
           <div className="mt-9 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4">
@@ -86,7 +86,7 @@ export function EntryScreen({ onStart }: Props) {
           </div>
 
           <p className="mt-6 text-[12px] text-[color:var(--charcoal)]/55 tracking-wide">
-            About a minute. No form. Just choices.
+            About a minute. You shape it. Confirmed instantly.
           </p>
         </div>
       </div>
