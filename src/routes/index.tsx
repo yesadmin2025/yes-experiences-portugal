@@ -596,8 +596,8 @@ function HomePage() {
             <span key={heroScene.id} className="hero-story-progress-fill" />
          </div>
 
-         <div className="container-x relative z-10 pb-16 md:pb-36 pt-36 md:pt-40">
-           <div className="max-w-2xl md:max-w-3xl text-[color:var(--ivory)]">
+         <div className="container-x relative z-10 pb-14 md:pb-36 pt-28 md:pt-40">
+           <div className="max-w-[20rem] sm:max-w-2xl md:max-w-3xl text-[color:var(--ivory)]">
              <span className="inline-flex items-center gap-2 sm:gap-3.5 max-w-full text-[10px] xs:text-[10.5px] sm:text-[12px] md:text-[13px] uppercase tracking-[0.22em] xs:tracking-[0.24em] sm:tracking-[0.28em] md:tracking-[0.3em] text-[color:var(--gold)] opacity-0 animate-[heroFade_0.9s_ease-out_0.20s_forwards]">
                <span aria-hidden="true" className="shrink-0">✦</span>
                <span data-hero-field="eyebrow" className="whitespace-nowrap truncate">
