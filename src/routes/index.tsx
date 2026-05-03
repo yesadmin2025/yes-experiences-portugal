@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { SiteLayout } from "@/components/SiteLayout";
 import { FAQ } from "@/components/FAQ";
@@ -47,6 +47,35 @@ const FEATURED_TOUR_IDS = [
   "sintra-cascais",
   "arrabida-boat",
   "troia-comporta",
+] as const;
+
+const HERO_SCENE_DURATION_MS = 6500;
+
+const HERO_SCENES = [
+  {
+    id: "opening",
+    image: heroImg,
+    position: "50% 50%",
+    line: "Local moments, shaped around you.",
+  },
+  {
+    id: "personalization",
+    image: imgArrabidaWineLunch,
+    position: "46% 52%",
+    line: "Choose the pace, places and moments that feel right.",
+  },
+  {
+    id: "hidden-local",
+    image: imgArrabidaViewpoint,
+    position: "50% 44%",
+    line: "Guided by locals who know where the real moments happen.",
+  },
+  {
+    id: "action",
+    image: imgSintraEstates,
+    position: "55% 48%",
+    line: "From a private day to a full journey, create it your way.",
+  },
 ] as const;
 
 const signatures = FEATURED_TOUR_IDS
@@ -227,6 +256,26 @@ export const Route = createFileRoute("/")({
  * ════════════════════════════════════════════════════════════ */
 function HomePage() {
   const scrollDebug = useScrollDebugFlags();
+  const [heroSceneIndex, setHeroSceneIndex] = useState(0);
+  const heroScene = HERO_SCENES[heroSceneIndex];
+  const isHeroActionScene = heroSceneIndex === HERO_SCENES.length - 1;
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const timer = window.setInterval(() => {
+      setHeroSceneIndex((index) => {
+        if (index >= HERO_SCENES.length - 1) {
+          window.clearInterval(timer);
+          return index;
+        }
+        return index + 1;
+      });
+    }, HERO_SCENE_DURATION_MS);
+
+    return () => window.clearInterval(timer);
+  }, []);
 
   // Homepage motion controller — `[data-motion]` / `.motion-in`.
   // See src/lib/home-motion.ts for the full contract. This is the
@@ -503,43 +552,29 @@ function HomePage() {
            40s total loop (10s per beat ≈ 8s hold + 2s crossfade).
            Slide 1 is the SSR/static fallback. Reduced-motion freezes
            on slide 1 with all copy at full opacity. */}
-       <section
-         className="relative min-h-[88svh] md:min-h-[94vh] flex items-end overflow-hidden"
-       >
-         <div
-           aria-hidden="true"
-           className="hero-story-stage absolute inset-0 w-full h-full overflow-hidden"
-         >
-           <img
-             src={heroImg}
-             alt=""
-             className="hero-story-slide hero-story-slide-1 absolute inset-0 w-full h-full object-cover object-center"
-             width={1920}
-             height={1080}
-             fetchPriority="high"
-           />
-           <img
-             src={imgArrabidaWineLunch}
-             alt=""
-             className="hero-story-slide hero-story-slide-2 absolute inset-0 w-full h-full object-cover object-center"
-             loading="lazy"
-             decoding="async"
-           />
-           <img
-             src={imgArrabidaViewpoint}
-             alt=""
-             className="hero-story-slide hero-story-slide-3 absolute inset-0 w-full h-full object-cover object-center"
-             loading="lazy"
-             decoding="async"
-           />
-           <img
-             src={imgSintraEstates}
-             alt=""
-             className="hero-story-slide hero-story-slide-4 absolute inset-0 w-full h-full object-cover object-center"
-             loading="lazy"
-             decoding="async"
-           />
-         </div>
+        <section
+          className="relative min-h-[88svh] md:min-h-[94vh] flex items-end overflow-hidden"
+          data-hero-scene={heroScene.id}
+        >
+          <div
+            aria-hidden="true"
+            className="hero-story-stage absolute inset-0 w-full h-full overflow-hidden"
+          >
+            {HERO_SCENES.map((scene, index) => (
+              <img
+                key={scene.id}
+                src={scene.image}
+                alt=""
+                className={`hero-story-slide absolute inset-0 w-full h-full object-cover ${index === heroSceneIndex ? "is-active" : ""}`}
+                style={{ objectPosition: scene.position }}
+                width={1920}
+                height={1080}
+                fetchPriority={index === 0 ? "high" : undefined}
+                loading={index === 0 ? undefined : "lazy"}
+                decoding={index === 0 ? undefined : "async"}
+              />
+            ))}
+          </div>
          {/* Hidden hero alt text for SEO/a11y — moved off the visual layer
              so the storytelling stage stays a pure aria-hidden backdrop. */}
          <span className="sr-only">
@@ -552,16 +587,13 @@ function HomePage() {
          <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/82 via-[color:var(--charcoal-deep)]/40 to-[color:var(--charcoal-deep)]/30 md:from-[color:var(--charcoal-deep)]/78 md:via-[color:var(--charcoal-deep)]/30 md:to-[color:var(--charcoal-deep)]/22 pointer-events-none z-[2]" />
          <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(15,15,15,0.55)_0%,rgba(15,15,15,0.30)_42%,transparent_75%)] md:bg-[linear-gradient(90deg,rgba(15,15,15,0.55)_0%,rgba(15,15,15,0.28)_42%,transparent_75%)] pointer-events-none z-[2]" />
 
-         {/* Slide indicator — 4 minimal gold dots, the active dot quietly
-             tracks the current beat. Aria-hidden, decorative. */}
+          {/* Subtle story progress — no dots/arrows/controls, just a thin
+              cinematic timeline at the bottom of the hero. */}
          <div
            aria-hidden="true"
-           className="hero-story-dots absolute z-10 left-1/2 -translate-x-1/2 bottom-5 md:left-auto md:translate-x-0 md:right-10 md:bottom-10 flex items-center gap-2.5 opacity-0 animate-[heroFade_0.9s_ease-out_1.8s_forwards]"
+            className="hero-story-progress absolute z-10 left-6 right-6 bottom-5 md:left-10 md:right-10 md:bottom-9 opacity-0 animate-[heroFade_0.9s_ease-out_1.8s_forwards]"
          >
-           <span className="hero-story-dot hero-story-dot-1" />
-           <span className="hero-story-dot hero-story-dot-2" />
-           <span className="hero-story-dot hero-story-dot-3" />
-           <span className="hero-story-dot hero-story-dot-4" />
+            <span key={heroScene.id} className="hero-story-progress-fill" />
          </div>
 
          <div className="container-x relative z-10 pb-16 md:pb-36 pt-36 md:pt-40">
@@ -600,76 +632,60 @@ function HomePage() {
                {HERO_COPY.subheadline}
              </p>
 
-              {/* Scene-synced supporting lines — exactly ONE visible at a
-                  time, each line matches the matching background slide:
-                    Scene 1 (opening)         → "Local moments, shaped around you."
-                    Scene 2 (personalization) → "Choose the places, pace and moments that feel right."
-                    Scene 3 (local / hidden)  → "Guided by locals who know where the real moments happen."
-                    Scene 4 (action)          → "From a private day to a full journey, create it your way."
-                  Cycle = 24s (6s per scene). Crossfade ≈ 0.8s.
-                  All lines occupy the same grid cell so layout never shifts. */}
+               {/* Scene-controlled supporting line — only the active scene's
+                   message is mounted, so no residual lines can linger. */}
               <div
-                aria-hidden="true"
-                className="hero-supporting-stage mt-6 md:mt-7 max-w-[22rem] sm:max-w-md min-h-[42px] md:min-h-[46px] relative opacity-0 animate-[heroFade_1s_ease-out_1.5s_forwards]"
+                 className="hero-supporting-stage mt-6 md:mt-7 max-w-[20rem] sm:max-w-md min-h-[44px] md:min-h-[46px] relative opacity-0 animate-[heroFade_1s_ease-out_1.5s_forwards]"
               >
-                <p className="hero-supporting-line hero-supporting-line-1 absolute inset-0 text-[13px] md:text-[14.5px] leading-[1.55] tracking-[0.005em] text-[color:var(--ivory)]/90 font-normal">
-                  Local moments, shaped around you.
-                </p>
-                <p className="hero-supporting-line hero-supporting-line-2 absolute inset-0 text-[13px] md:text-[14.5px] leading-[1.55] tracking-[0.005em] text-[color:var(--ivory)]/90 font-normal">
-                  Choose the places, pace and moments that feel right.
-                </p>
-                <p className="hero-supporting-line hero-supporting-line-3 absolute inset-0 text-[13px] md:text-[14.5px] leading-[1.55] tracking-[0.005em] text-[color:var(--ivory)]/90 font-normal">
-                  Guided by locals who know where the real moments happen.
-                </p>
-                <p className="hero-supporting-line hero-supporting-line-4 absolute inset-0 text-[13px] md:text-[14.5px] leading-[1.55] tracking-[0.005em] text-[color:var(--ivory)]/90 font-normal">
-                  From a private day to a full journey, create it your way.
+                 <p key={heroScene.id} className="hero-supporting-line text-[13.5px] md:text-[14.5px] leading-[1.5] tracking-[0.005em] text-[color:var(--ivory)]/90 font-normal">
+                   {heroScene.line}
                 </p>
               </div>
 
-             {/* CTAs — exactly two, refined compact size. They reveal late
-                 in the cascade so the user feels invited, not pushed. Equal
-                 width on mobile, left-aligned label + right-pinned arrow
-                 for matched visual logic across both buttons. */}
-             <div className="mt-7 md:mt-9 flex flex-col sm:flex-row gap-3 sm:gap-4 w-full max-w-[22rem] sm:max-w-lg">
-               <Link
-                 to="/builder"
-                 data-hero-field="primaryCta"
-                 className="hero-cta-button hero-cta-button--compact cta-primary he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left opacity-0 animate-[heroFade_1.1s_ease-out_4.4s_forwards]"
-               >
-                 <span className="block">{HERO_COPY.primaryCta}</span>
-                 <ArrowRight
-                   size={16}
-                   strokeWidth={2.25}
-                   className="hero-cta-arrow-pulse shrink-0 text-[color:var(--gold-soft)] transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1.5 group-hover:text-[color:var(--gold)]"
-                   aria-hidden="true"
-                 />
-               </Link>
-               <Link
-                 to="/experiences"
-                 data-hero-field="secondaryCta"
-                 className="hero-cta-button hero-cta-button--compact cta-secondary-dark he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left opacity-0 animate-[heroFade_1.1s_ease-out_4.7s_forwards]"
-               >
-                 <span className="block">{HERO_COPY.secondaryCta}</span>
-                 <ArrowRight
-                   size={16}
-                   strokeWidth={2.25}
-                   className="hero-cta-arrow-pulse shrink-0 text-[color:var(--gold-soft)] transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1.5 group-hover:text-[color:var(--gold)]"
-                   aria-hidden="true"
-                 />
-               </Link>
-             </div>
+              {isHeroActionScene ? (
+                <div key="hero-action" className="hero-action-block mt-7 md:mt-9">
+                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full max-w-[21rem] sm:max-w-lg">
+                    <Link
+                      to="/builder"
+                      data-hero-field="primaryCta"
+                      className="hero-cta-button hero-cta-button--compact cta-primary he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left"
+                    >
+                      <span className="block">{HERO_COPY.primaryCta}</span>
+                      <ArrowRight
+                        size={16}
+                        strokeWidth={2.25}
+                        className="hero-cta-arrow-pulse shrink-0 text-[color:var(--gold-soft)] transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1.5 group-hover:text-[color:var(--gold)]"
+                        aria-hidden="true"
+                      />
+                    </Link>
+                    <Link
+                      to="/experiences"
+                      data-hero-field="secondaryCta"
+                      className="hero-cta-button hero-cta-button--compact cta-secondary-dark he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left"
+                    >
+                      <span className="block">{HERO_COPY.secondaryCta}</span>
+                      <ArrowRight
+                        size={16}
+                        strokeWidth={2.25}
+                        className="hero-cta-arrow-pulse shrink-0 text-[color:var(--gold-soft)] transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1.5 group-hover:text-[color:var(--gold)]"
+                        aria-hidden="true"
+                      />
+                    </Link>
+                  </div>
 
-             {/* Microcopy — calm reassurance below the CTAs, the locked
-                 rhythm token (`hero-rhythm-cta-to-microcopy`) keeps the
-                 28px mobile / 24px desktop gap pinned. */}
-             <div className="hero-rhythm-cta-to-microcopy max-w-sm sm:max-w-xl mx-auto sm:mx-0 opacity-0 animate-[heroFade_1.1s_ease-out_5.1s_forwards]">
-               <p
-                 data-hero-field="microcopy"
-                 className="text-[12px] md:text-[13px] text-[color:var(--ivory)]/80 leading-[1.55] font-normal tracking-[0.01em] text-center sm:text-left"
-               >
-                 {HERO_COPY.microcopy}
-               </p>
-             </div>
+                  <div className="hero-rhythm-cta-to-microcopy max-w-sm sm:max-w-xl mx-auto sm:mx-0">
+                    <p
+                      data-hero-field="microcopy"
+                      className="text-[11.5px] md:text-[13px] text-[color:var(--ivory)]/80 leading-[1.55] font-normal tracking-[0.01em] text-center sm:text-left"
+                    >
+                      {HERO_COPY.microcopy}
+                    </p>
+                    <p className="mt-2 text-[11.5px] md:text-[12.5px] text-[color:var(--ivory)]/68 leading-[1.45] font-normal tracking-[0.01em] text-center sm:text-left">
+                      A local is here if you want help shaping it.
+                    </p>
+                  </div>
+                </div>
+              ) : null}
 
             {/* Brand signature — relocated below the hero as a calm
                 separator strip. Still rendered ONCE on the page, still
@@ -733,44 +749,6 @@ function HomePage() {
                 }}
               />
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* HERO REST STRIP
-          A calm visible home for the full subheadline + brand signature,
-          relocated out of the cinematic first view to reduce hero clutter
-          while keeping both strings VISIBLE on the page (e2e copy locks
-          require .toBeVisible()). */}
-      <section
-        aria-label="What this means"
-        className="bg-[color:var(--ivory)] border-b border-[color:var(--border)] py-9 md:py-12"
-      >
-        <div className="container-x max-w-3xl text-center mx-auto">
-          <p
-            data-hero-field="subheadline-visible"
-            className="serif text-[15.5px] md:text-[18px] text-[color:var(--charcoal)] leading-[1.65] font-normal"
-          >
-            {HERO_COPY.subheadline}
-          </p>
-          <div
-            data-hero-field="brandLine-visible"
-            aria-label={HERO_COPY.brandLine}
-            className="mt-6 md:mt-8 inline-flex items-center gap-5 md:gap-7 text-[color:var(--charcoal-soft)]"
-          >
-            <span aria-hidden="true" className="h-px w-10 md:w-14 bg-gradient-to-r from-transparent to-[color:var(--gold)] shrink-0 opacity-90" />
-            <span className="flex flex-col items-center gap-1.5 text-[10.5px] md:text-[11px] uppercase tracking-[0.32em] leading-[1.2] text-center">
-              <span className="text-[color:var(--charcoal)]" style={{ fontWeight: 450 }}>
-                Whatever you have in mind,
-              </span>
-              <span
-                className="text-[color:var(--gold-deep)] tracking-[0.4em] text-[12px] md:text-[12.5px]"
-                style={{ fontWeight: 600 }}
-              >
-                we say YES.
-              </span>
-            </span>
-            <span aria-hidden="true" className="h-px w-10 md:w-14 bg-gradient-to-l from-transparent to-[color:var(--gold)] shrink-0 opacity-90" />
           </div>
         </div>
       </section>
