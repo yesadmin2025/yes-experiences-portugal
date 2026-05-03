@@ -19,7 +19,6 @@ import imgArrabidaWineLunch from "@/assets/tours/arrabida-wine-allinclusive/lunc
 import imgSintraCaboDaRoca from "@/assets/tours/sintra-cascais/cabo-da-roca.jpg";
 import imgTomarCoimbra from "@/assets/tours/tomar-coimbra/hero.jpg";
 // Additional story beats — celebration estate + multi-region route.
-import imgSintraEstates from "@/assets/tours/sintra-cascais/estates.jpg";
 // Extra real Viator-sourced beats used by the cinematic hero rotation —
 // each scene gets a distinct, story-rich Portugal image so the visuals
 // carry the narrative even before the user reads the copy.
@@ -83,14 +82,29 @@ const HERO_SCENE_DURATION_MS = 6500;
  * scene shows ONE short cinematic line + ONE supporting microline.
  * Imagery is real Viator-sourced operation photography only.
  * ────────────────────────────────────────────────────────────── */
+/**
+ * Cinematic 5-scene story. Each scene = ONE real Portugal image +
+ * one cinematic headline (with intentional line breaks) + one short
+ * supporting microline. CTAs appear ONLY on scene 5.
+ *
+ * `main` is an array so we can render line breaks the same way an
+ * editorial film would title-card a chapter — each line lands as its
+ * own beat, not a run-on sentence.
+ *
+ * Imagery is real Viator-sourced operation photography only — no
+ * stock, no AI faces, no generic clichés.
+ */
 const HERO_SCENES = [
   {
     id: "opening",
-    // Scene 1 — Portugal as stage. Wide coastal cliff horizon.
+    // Scene 1 — Arrival. Wide coastal cliff horizon, Portugal opens.
     image: heroImg,
     position: "50% 52%",
     pan: "drift-left" as const,
-    main: "",
+    // Scene 1's headline is the canonical H1 (rendered separately so
+    // the byte-exact copy lock holds). The cinematic message slot
+    // stays empty here; the eyebrow + H1 + supporting line carry it.
+    main: [] as readonly string[],
     supporting: "Private. Local. Yours.",
   },
   {
@@ -99,35 +113,39 @@ const HERO_SCENES = [
     image: imgArrabidaCoves,
     position: "52% 50%",
     pan: "drift-left" as const,
-    main: "Hidden places, chosen your way.",
-    supporting: "",
+    main: ["Hidden places,", "chosen your way."] as readonly string[],
+    supporting: "Beyond the obvious, closer to the real.",
   },
   {
     id: "local-moments",
-    // Scene 3 — Local table, wine, shared moment.
+    // Scene 3 — Local table, wine pour, shared moment.
     image: imgArrabidaWineLunch,
     position: "50% 56%",
-    pan: "drift-left" as const,
-    main: "Local moments, shaped around you.",
-    supporting: "",
+    pan: "push-in" as const,
+    main: ["Local moments,", "shaped around you."] as readonly string[],
+    supporting: "Food, wine, people, rhythm.",
   },
   {
     id: "occasions",
-    // Scene 4 — Estate gardens, celebration mood.
-    image: imgSintraEstates,
-    position: "52% 48%",
+    // Scene 4 — Quiet Arrábida viewpoint, intimate occasion mood.
+    image: imgArrabidaViewpoint,
+    position: "50% 50%",
     pan: "drift-left" as const,
-    main: "For a day, a celebration, or something unforgettable.",
-    supporting: "",
+    main: [
+      "For a day, a celebration,",
+      "or something unforgettable.",
+    ] as readonly string[],
+    supporting: "Your occasion sets the rhythm.",
   },
   {
     id: "action",
-    // Scene 5 — Cabo da Roca cliffs, decisive horizon.
-    image: imgSintraCaboDaRoca,
-    position: "55% 48%",
-    pan: "drift-left" as const,
-    main: "Build it live. Confirm instantly.",
-    supporting: "Instant booking. Real local guidance if you want it.",
+    // Scene 5 — Multi-region route (Tomar–Coimbra): the journey
+    // itself, the closing chapter where the story becomes a plan.
+    image: imgTomarCoimbra,
+    position: "50% 50%",
+    pan: "pull-back" as const,
+    main: ["Build it live.", "Confirm instantly."] as readonly string[],
+    supporting: "No forms. No waiting.",
   },
 ] as const;
 
@@ -322,6 +340,28 @@ function HomePage() {
   );
   const heroScene = HERO_SCENES[heroSceneIndex];
   const isHeroActionScene = heroSceneIndex === HERO_SCENES.length - 1;
+
+  // Preload every hero scene image as soon as the homepage mounts so
+  // crossfades between scenes feel instant — no flicker, no first-paint
+  // pop-in when the next scene activates. Scene 1 is rendered with
+  // fetchPriority="high" already; this guarantees scenes 2–5 are warm
+  // in the browser cache before their `is-active` transition begins.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const links: HTMLLinkElement[] = [];
+    for (const scene of HERO_SCENES) {
+      const link = document.createElement("link");
+      link.rel = "preload";
+      link.as = "image";
+      link.href = scene.image;
+      link.fetchPriority = "high";
+      document.head.appendChild(link);
+      links.push(link);
+    }
+    return () => {
+      for (const l of links) l.remove();
+    };
+  }, []);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -746,13 +786,17 @@ function HomePage() {
                key={`scene-msg-${heroScene.id}`}
                className="hero-scene-message is-on mt-5 md:mt-7 max-w-[19rem] sm:max-w-xl"
              >
-               {heroScene.main ? (
-                 <p className="hero-scene-main serif text-[1.45rem] xs:text-[1.55rem] sm:text-[1.95rem] md:text-[2.4rem] leading-[1.18] tracking-[-0.016em] font-normal text-[color:var(--ivory)] [text-shadow:0_2px_18px_rgba(0,0,0,0.35)]">
-                   {heroScene.main}
-                 </p>
-               ) : null}
+                {heroScene.main.length > 0 ? (
+                  <p className="hero-scene-main serif text-[1.45rem] xs:text-[1.55rem] sm:text-[1.95rem] md:text-[2.4rem] leading-[1.15] tracking-[-0.018em] font-normal text-[color:var(--ivory)] [text-shadow:0_2px_18px_rgba(0,0,0,0.35)]">
+                    {heroScene.main.map((line, i) => (
+                      <span key={i} className="block">
+                        {line}
+                      </span>
+                    ))}
+                  </p>
+                ) : null}
                {heroScene.supporting ? (
-                 <p className={`hero-scene-supporting ${heroScene.main ? "mt-3 md:mt-4" : "mt-2 md:mt-3"} text-[13px] md:text-[14.5px] leading-[1.5] tracking-[0.005em] text-[color:var(--ivory)]/85 font-normal max-w-[17rem] sm:max-w-md line-clamp-2`}>
+                 <p className={`hero-scene-supporting ${heroScene.main.length > 0 ? "mt-3 md:mt-4" : "mt-2 md:mt-3"} text-[13px] md:text-[14.5px] leading-[1.5] tracking-[0.005em] text-[color:var(--ivory)]/85 font-normal max-w-[17rem] sm:max-w-md line-clamp-2`}>
                    {heroScene.supporting}
                  </p>
                ) : null}
