@@ -546,43 +546,29 @@ function HomePage() {
            40s total loop (10s per beat ≈ 8s hold + 2s crossfade).
            Slide 1 is the SSR/static fallback. Reduced-motion freezes
            on slide 1 with all copy at full opacity. */}
-       <section
-         className="relative min-h-[88svh] md:min-h-[94vh] flex items-end overflow-hidden"
-       >
-         <div
-           aria-hidden="true"
-           className="hero-story-stage absolute inset-0 w-full h-full overflow-hidden"
-         >
-           <img
-             src={heroImg}
-             alt=""
-             className="hero-story-slide hero-story-slide-1 absolute inset-0 w-full h-full object-cover object-center"
-             width={1920}
-             height={1080}
-             fetchPriority="high"
-           />
-           <img
-             src={imgArrabidaWineLunch}
-             alt=""
-             className="hero-story-slide hero-story-slide-2 absolute inset-0 w-full h-full object-cover object-center"
-             loading="lazy"
-             decoding="async"
-           />
-           <img
-             src={imgArrabidaViewpoint}
-             alt=""
-             className="hero-story-slide hero-story-slide-3 absolute inset-0 w-full h-full object-cover object-center"
-             loading="lazy"
-             decoding="async"
-           />
-           <img
-             src={imgSintraEstates}
-             alt=""
-             className="hero-story-slide hero-story-slide-4 absolute inset-0 w-full h-full object-cover object-center"
-             loading="lazy"
-             decoding="async"
-           />
-         </div>
+        <section
+          className="relative min-h-[88svh] md:min-h-[94vh] flex items-end overflow-hidden"
+          data-hero-scene={heroScene.id}
+        >
+          <div
+            aria-hidden="true"
+            className="hero-story-stage absolute inset-0 w-full h-full overflow-hidden"
+          >
+            {HERO_SCENES.map((scene, index) => (
+              <img
+                key={scene.id}
+                src={scene.image}
+                alt=""
+                className={`hero-story-slide absolute inset-0 w-full h-full object-cover ${index === heroSceneIndex ? "is-active" : ""}`}
+                style={{ objectPosition: scene.position }}
+                width={1920}
+                height={1080}
+                fetchPriority={index === 0 ? "high" : undefined}
+                loading={index === 0 ? undefined : "lazy"}
+                decoding={index === 0 ? undefined : "async"}
+              />
+            ))}
+          </div>
          {/* Hidden hero alt text for SEO/a11y — moved off the visual layer
              so the storytelling stage stays a pure aria-hidden backdrop. */}
          <span className="sr-only">
@@ -595,16 +581,13 @@ function HomePage() {
          <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/82 via-[color:var(--charcoal-deep)]/40 to-[color:var(--charcoal-deep)]/30 md:from-[color:var(--charcoal-deep)]/78 md:via-[color:var(--charcoal-deep)]/30 md:to-[color:var(--charcoal-deep)]/22 pointer-events-none z-[2]" />
          <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(15,15,15,0.55)_0%,rgba(15,15,15,0.30)_42%,transparent_75%)] md:bg-[linear-gradient(90deg,rgba(15,15,15,0.55)_0%,rgba(15,15,15,0.28)_42%,transparent_75%)] pointer-events-none z-[2]" />
 
-         {/* Slide indicator — 4 minimal gold dots, the active dot quietly
-             tracks the current beat. Aria-hidden, decorative. */}
+          {/* Subtle story progress — no dots/arrows/controls, just a thin
+              cinematic timeline at the bottom of the hero. */}
          <div
            aria-hidden="true"
-           className="hero-story-dots absolute z-10 left-1/2 -translate-x-1/2 bottom-5 md:left-auto md:translate-x-0 md:right-10 md:bottom-10 flex items-center gap-2.5 opacity-0 animate-[heroFade_0.9s_ease-out_1.8s_forwards]"
+            className="hero-story-progress absolute z-10 left-6 right-6 bottom-5 md:left-10 md:right-10 md:bottom-9 opacity-0 animate-[heroFade_0.9s_ease-out_1.8s_forwards]"
          >
-           <span className="hero-story-dot hero-story-dot-1" />
-           <span className="hero-story-dot hero-story-dot-2" />
-           <span className="hero-story-dot hero-story-dot-3" />
-           <span className="hero-story-dot hero-story-dot-4" />
+            <span key={heroScene.id} className="hero-story-progress-fill" />
          </div>
 
          <div className="container-x relative z-10 pb-16 md:pb-36 pt-36 md:pt-40">
