@@ -49,34 +49,64 @@ const FEATURED_TOUR_IDS = [
   "troia-comporta",
 ] as const;
 
-const HERO_SCENE_DURATION_MS = 6500;
+/* ──────────────────────────────────────────────────────────────────
+ * HERO — cinematic 5-scene storytelling sequence (mobile-first).
+ *
+ * Each scene shows ONE main message + ONE short supporting line, on a
+ * single real Viator-sourced image. Scenes auto-advance every 5s with
+ * a slow crossfade + soft Ken Burns drift. CTAs and microcopy appear
+ * ONLY on scene 5 (the action scene).
+ *
+ * Scene 5's visible copy intentionally aligns with the approved
+ * HERO_COPY lock — it carries the canonical H1 / subheadline / CTAs /
+ * microcopy / brand line. `?hero=last` (used by the e2e copy lock and
+ * visual-regression specs) freezes the sequence on scene 5 so all
+ * approved strings are simultaneously rendered for byte-exact and
+ * visibility assertions.
+ *
+ * No invented stops. Imagery is real Viator-sourced operation
+ * photography. AI is not used to shape any of these strings.
+ * ────────────────────────────────────────────────────────────── */
+const HERO_SCENE_DURATION_MS = 5000;
 
 const HERO_SCENES = [
   {
     id: "opening",
     image: heroImg,
     position: "50% 50%",
-    line: "Local moments, shaped around you.",
+    main: "Portugal is the stage.",
+    supporting: "Local moments, beyond the obvious.",
   },
   {
-    id: "personalization",
+    id: "your-story",
     image: imgArrabidaWineLunch,
     position: "46% 52%",
-    line: "Your pace. Your places. Your way.",
+    main: "You write the story.",
+    supporting: "A day, a journey, or something worth celebrating.",
   },
   {
     id: "hidden-local",
     image: imgArrabidaViewpoint,
     position: "50% 44%",
-    line: "Guided by locals who know the hidden corners.",
+    main: "Hidden places. Real moments.",
+    supporting: "Guided by locals who know where the real magic happens.",
+  },
+  {
+    id: "shape-it",
+    image: imgSintraCaboDaRoca,
+    position: "55% 48%",
+    main: "Shape it your way.",
+    supporting: "From private days to proposals, celebrations and groups.",
   },
   {
     id: "action",
     image: imgSintraEstates,
     position: "55% 48%",
-    line: "From a private day to a full journey.",
+    main: "Create it. Confirm it. Live it.",
+    supporting: "Instant booking. Real local guidance if you want it.",
   },
 ] as const;
+
 
 const signatures = FEATURED_TOUR_IDS
   .filter((id) => isValidTourId(id))
