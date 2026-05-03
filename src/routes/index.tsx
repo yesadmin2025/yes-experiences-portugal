@@ -20,6 +20,12 @@ import imgSintraCaboDaRoca from "@/assets/tours/sintra-cascais/cabo-da-roca.jpg"
 import imgTomarCoimbra from "@/assets/tours/tomar-coimbra/hero.jpg";
 // Additional story beats — celebration estate + multi-region route.
 import imgSintraEstates from "@/assets/tours/sintra-cascais/estates.jpg";
+// Extra real Viator-sourced beats used by the cinematic hero rotation —
+// each scene gets a distinct, story-rich Portugal image so the visuals
+// carry the narrative even before the user reads the copy.
+import imgArrabidaCoves from "@/assets/tours/arrabida-boat/coves.jpg";
+import imgSintraHero from "@/assets/tours/sintra-cascais/hero.jpg";
+import imgTroiaBeach from "@/assets/tours/troia-comporta/beach.jpg";
 
 import {
   ArrowRight,
@@ -72,36 +78,46 @@ const HERO_SCENE_DURATION_MS = 5000;
 const HERO_SCENES = [
   {
     id: "opening",
+    // Atlantic coastal road — sets the stage, wide horizon.
     image: heroImg,
-    position: "50% 50%",
+    position: "50% 52%",
+    pan: "drift-right" as const,
     main: "Portugal is the stage.",
     supporting: "Local moments, beyond the obvious.",
   },
   {
     id: "your-story",
+    // Intimate wine table — personalization, human scale.
     image: imgArrabidaWineLunch,
-    position: "46% 52%",
+    position: "48% 56%",
+    pan: "push-in" as const,
     main: "You write the story.",
     supporting: "A day, a journey, or something worth celebrating.",
   },
   {
     id: "hidden-local",
-    image: imgArrabidaViewpoint,
-    position: "50% 44%",
+    // Hidden Arrábida cove — local knowledge, places few reach.
+    image: imgArrabidaCoves,
+    position: "52% 48%",
+    pan: "drift-left" as const,
     main: "Hidden places. Real moments.",
     supporting: "Guided by locals who know where the real magic happens.",
   },
   {
     id: "shape-it",
-    image: imgSintraCaboDaRoca,
-    position: "55% 48%",
+    // Sintra estate gardens — celebrations, proposals, private days.
+    image: imgSintraHero,
+    position: "54% 50%",
+    pan: "pull-back" as const,
     main: "Shape it your way.",
     supporting: "From private days to proposals, celebrations and groups.",
   },
   {
     id: "action",
-    image: imgSintraEstates,
+    // Cabo da Roca cliffs — wide, decisive, "step into it".
+    image: imgSintraCaboDaRoca,
     position: "55% 48%",
+    pan: "push-in" as const,
     main: "Create it. Confirm it. Live it.",
     supporting: "Instant booking. Real local guidance if you want it.",
   },
@@ -593,7 +609,7 @@ function HomePage() {
            Slide 1 is the SSR/static fallback. Reduced-motion freezes
            on slide 1 with all copy at full opacity. */}
         <section
-          className="relative min-h-[86svh] md:min-h-[92vh] flex items-end overflow-hidden"
+          className="relative min-h-[82svh] md:min-h-[90vh] flex items-end overflow-hidden"
           data-hero-scene={heroScene.id}
           data-hero-scene-index={heroSceneIndex}
         >
@@ -606,6 +622,7 @@ function HomePage() {
                 key={scene.id}
                 src={scene.image}
                 alt=""
+                data-hero-pan={scene.pan}
                 className={`hero-story-slide absolute inset-0 w-full h-full object-cover ${index === heroSceneIndex ? "is-active" : ""}`}
                 style={{ objectPosition: scene.position }}
                 width={1920}
@@ -619,14 +636,17 @@ function HomePage() {
          {/* Hidden hero alt text for SEO/a11y — the storytelling stage stays
              a pure aria-hidden backdrop. */}
          <span className="sr-only">
-           A cinematic story of Portugal — coastal roads, intimate local tables, hidden viewpoints and shared celebrations.
+           A cinematic story of Portugal — coastal roads, intimate local tables, hidden coves, estate gardens and cliff horizons.
          </span>
 
-         {/* Cinematic readability overlay — soft, never muddy. Two layers:
-             a gentle bottom-up dark veil so text always sits on contrast,
-             and a faint warm wash so the imagery keeps its premium grade. */}
-         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(20,18,16,0.22)_0%,rgba(20,18,16,0.10)_38%,rgba(20,18,16,0.46)_100%)] pointer-events-none z-[2]" />
-         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(46,30,18,0.10)_0%,rgba(46,30,18,0.0)_55%,rgba(46,30,18,0.10)_100%)] mix-blend-multiply pointer-events-none z-[2]" />
+         {/* Cinematic readability overlay — softer than before, never muddy.
+             A faint top-down shade keeps the eyebrow legible, the middle
+             stays almost transparent so the imagery breathes, and a deeper
+             bottom veil anchors the headline + CTAs. A warm wash adds the
+             premium grade without crushing detail. */}
+         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(20,18,16,0.30)_0%,rgba(20,18,16,0.06)_42%,rgba(20,18,16,0.10)_62%,rgba(20,18,16,0.52)_100%)] pointer-events-none z-[2]" />
+         <div className="absolute inset-0 bg-[radial-gradient(120%_70%_at_30%_85%,rgba(20,16,12,0.30)_0%,rgba(20,16,12,0)_55%)] pointer-events-none z-[2]" />
+         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(46,30,18,0.08)_0%,rgba(46,30,18,0)_55%,rgba(46,30,18,0.08)_100%)] mix-blend-multiply pointer-events-none z-[2]" />
 
           {/* Subtle story progress — a thin cinematic timeline at the
               bottom of the hero. Re-keys per scene so the fill replays. */}
@@ -657,7 +677,7 @@ function HomePage() {
              <h1
                data-hero-field="headlineLine1 headlineLine2"
                data-hero-anchor={heroSceneIndex >= 2 ? "rest" : "spotlight"}
-               className="hero-h1 hero-h1-cinematic serif mt-6 md:mt-7 text-[1.85rem] sm:text-[2.5rem] md:text-[3.4rem] lg:text-[3.9rem] leading-[1.08] sm:leading-[1.04] md:leading-[1.02] tracking-[-0.022em] text-[color:var(--ivory)] text-left opacity-0 animate-[heroFade_1s_ease-out_0.55s_forwards] [text-shadow:0_2px_22px_rgba(0,0,0,0.4)]"
+               className="hero-h1 hero-h1-cinematic serif mt-5 md:mt-7 text-[1.6rem] xs:text-[1.7rem] sm:text-[2.25rem] md:text-[3.1rem] lg:text-[3.6rem] leading-[1.12] sm:leading-[1.06] md:leading-[1.02] tracking-[-0.02em] text-[color:var(--ivory)] text-left opacity-0 animate-[heroFade_1s_ease-out_0.55s_forwards] [text-shadow:0_2px_22px_rgba(0,0,0,0.4)]"
              >
                <span
                  data-hero-field="headlineLine1"
@@ -694,7 +714,7 @@ function HomePage() {
              >
                <p
                  key={`main-${heroScene.id}`}
-                 className="hero-scene-main serif text-[1.65rem] sm:text-[2.1rem] md:text-[2.6rem] leading-[1.14] tracking-[-0.018em] font-medium text-[color:var(--ivory)] [text-shadow:0_2px_18px_rgba(0,0,0,0.35)]"
+                 className="hero-scene-main serif text-[1.45rem] xs:text-[1.55rem] sm:text-[1.95rem] md:text-[2.4rem] leading-[1.18] tracking-[-0.016em] font-normal text-[color:var(--ivory)] [text-shadow:0_2px_18px_rgba(0,0,0,0.35)]"
                >
                  {heroScene.main}
                </p>

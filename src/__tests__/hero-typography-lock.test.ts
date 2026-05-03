@@ -185,29 +185,30 @@ function tryExtractBareHeroCta(scope: string): string | null {
  * ───────────────────────────────────────────────────────────────── */
 const HERO_H1 = classSet(
   indexSrc,
-  /data-hero-field="headlineLine1 headlineLine2"\s+className="([^"]+)"/,
+  /data-hero-field="headlineLine1 headlineLine2"[\s\S]*?className="([^"]+)"/,
   'h1[data-hero-field="headlineLine1 headlineLine2"]',
 );
 const HERO_LINE2 = classSet(
   indexSrc,
-  /data-hero-field="headlineLine2"\s+className="([^"]+)"/,
+  /data-hero-field="headlineLine2"[\s\S]*?className="([^"]+)"/,
   'span[data-hero-field="headlineLine2"]',
 );
 const HERO_SUB = classSet(
   indexSrc,
-  /data-hero-field="subheadline"\s+className="([^"]+)"/,
+  /data-hero-field="subheadline"[\s\S]*?className="([^"]+)"/,
   'p[data-hero-field="subheadline"]',
 );
 
 describe("Hero <h1> — locked Tailwind tokens (order-independent)", () => {
-  it("locks size ramp across mobile / sm / md / lg", () => {
+  it("locks size ramp across mobile / xs / sm / md / lg", () => {
     expectAllTokens(
       HERO_H1,
       [
-        "text-[1.85rem]",
-        "sm:text-[2.5rem]",
-        "md:text-[3.4rem]",
-        "lg:text-[3.9rem]",
+        "text-[1.6rem]",
+        "xs:text-[1.7rem]",
+        "sm:text-[2.25rem]",
+        "md:text-[3.1rem]",
+        "lg:text-[3.6rem]",
       ],
       "hero h1 size ramp",
     );
@@ -216,7 +217,7 @@ describe("Hero <h1> — locked Tailwind tokens (order-independent)", () => {
   it("locks line-height ramp across mobile / sm / md", () => {
     expectAllTokens(
       HERO_H1,
-      ["leading-[1.08]", "sm:leading-[1.04]", "md:leading-[1.02]"],
+      ["leading-[1.12]", "sm:leading-[1.06]", "md:leading-[1.02]"],
       "hero h1 line-height ramp",
     );
   });
@@ -224,7 +225,7 @@ describe("Hero <h1> — locked Tailwind tokens (order-independent)", () => {
   it("locks tracking + ivory color token", () => {
     expectAllTokens(
       HERO_H1,
-      ["tracking-[-0.022em]", "text-[color:var(--ivory)]"],
+      ["tracking-[-0.02em]", "text-[color:var(--ivory)]"],
       "hero h1 tracking + color",
     );
   });
