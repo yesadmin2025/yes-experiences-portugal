@@ -622,6 +622,7 @@ function HomePage() {
                 key={scene.id}
                 src={scene.image}
                 alt=""
+                data-hero-pan={scene.pan}
                 className={`hero-story-slide absolute inset-0 w-full h-full object-cover ${index === heroSceneIndex ? "is-active" : ""}`}
                 style={{ objectPosition: scene.position }}
                 width={1920}
@@ -635,14 +636,17 @@ function HomePage() {
          {/* Hidden hero alt text for SEO/a11y — the storytelling stage stays
              a pure aria-hidden backdrop. */}
          <span className="sr-only">
-           A cinematic story of Portugal — coastal roads, intimate local tables, hidden viewpoints and shared celebrations.
+           A cinematic story of Portugal — coastal roads, intimate local tables, hidden coves, estate gardens and cliff horizons.
          </span>
 
-         {/* Cinematic readability overlay — soft, never muddy. Two layers:
-             a gentle bottom-up dark veil so text always sits on contrast,
-             and a faint warm wash so the imagery keeps its premium grade. */}
-         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(20,18,16,0.22)_0%,rgba(20,18,16,0.10)_38%,rgba(20,18,16,0.46)_100%)] pointer-events-none z-[2]" />
-         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(46,30,18,0.10)_0%,rgba(46,30,18,0.0)_55%,rgba(46,30,18,0.10)_100%)] mix-blend-multiply pointer-events-none z-[2]" />
+         {/* Cinematic readability overlay — softer than before, never muddy.
+             A faint top-down shade keeps the eyebrow legible, the middle
+             stays almost transparent so the imagery breathes, and a deeper
+             bottom veil anchors the headline + CTAs. A warm wash adds the
+             premium grade without crushing detail. */}
+         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(20,18,16,0.30)_0%,rgba(20,18,16,0.06)_42%,rgba(20,18,16,0.10)_62%,rgba(20,18,16,0.52)_100%)] pointer-events-none z-[2]" />
+         <div className="absolute inset-0 bg-[radial-gradient(120%_70%_at_30%_85%,rgba(20,16,12,0.30)_0%,rgba(20,16,12,0)_55%)] pointer-events-none z-[2]" />
+         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(46,30,18,0.08)_0%,rgba(46,30,18,0)_55%,rgba(46,30,18,0.08)_100%)] mix-blend-multiply pointer-events-none z-[2]" />
 
           {/* Subtle story progress — a thin cinematic timeline at the
               bottom of the hero. Re-keys per scene so the fill replays. */}
