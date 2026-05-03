@@ -1557,64 +1557,100 @@
 }
 
 @media (max-width: 767px) {
-  /* 1. Eyebrow — drops from above. The eyebrow span itself isn't
-     animated; its parent <span> carries the inline animation. We
-     override the parent via :has so the directional vector applies. */
+  /* Mobile hero — calm, cinematic, single-direction storytelling.
+     Every phrase enters with a soft fade + subtle upward rise. No
+     slide-from-side, no marketing-slideshow feel. Order is dictated
+     by the staggered delays only. */
   span:has(> [data-hero-field="eyebrow"]) {
-    animation: heroEnterFromAbove 1.2s cubic-bezier(0.22, 0.61, 0.36, 1) 0.2s both !important;
+    animation: heroEnterRiseSoft 1.1s cubic-bezier(0.22, 0.61, 0.36, 1) 0.2s both !important;
   }
 
-  /* 2 + 3. Headline lines — from left, then right. Wrapper just
-     ensures opacity is up; spans drive the visible direction. */
   .hero-h1 {
-    animation: heroEnterFadeOnly 0.4s ease-out 1s both !important;
+    animation: heroEnterFadeOnly 0.4s ease-out 0.6s both !important;
   }
   [data-hero-field="headlineLine1"] {
     display: block;
     opacity: 0;
-    animation: heroEnterFromLeft 1.4s cubic-bezier(0.22, 0.61, 0.36, 1) 1.2s both;
+    animation: heroEnterRiseSoft 1.2s cubic-bezier(0.22, 0.61, 0.36, 1) 0.7s both;
   }
   [data-hero-field="headlineLine2"] {
     display: block;
     opacity: 0;
-    animation: heroEnterFromRight 1.4s cubic-bezier(0.22, 0.61, 0.36, 1) 2.4s both;
+    animation: heroEnterRiseSoft 1.2s cubic-bezier(0.22, 0.61, 0.36, 1) 1.15s both;
   }
 
-  /* 4. Paragraph — rises from below */
   [data-hero-field="subheadline"] {
-    animation: heroEnterFromBelow 1.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) 3.6s both !important;
+    animation: heroEnterRiseSoft 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1.7s both !important;
   }
 
-  /* 5. Microcopy — soft drift from the left so it doesn't read as a
-     plain fade. e2e-locked delay (4.4s) preserved. The microcopy <p>
-     itself stays static; only the wrapper animates so the rhythm
-     measurements remain correct. */
   .hero-rhythm-cta-to-microcopy {
-    animation-name: heroEnterFromLeft !important;
-    animation-duration: 1.3s !important;
-    animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+    animation-name: heroEnterFadeOnly !important;
+    animation-duration: 1.1s !important;
+    animation-timing-function: ease-out !important;
   }
 
-  /* 6. Brand line — soft rise. e2e-locked delay (5.4s) preserved. */
   .hero-rhythm-microcopy-to-signature {
     animation-name: heroEnterRiseSoft !important;
-    animation-duration: 1.4s !important;
+    animation-duration: 1.2s !important;
     animation-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1) !important;
   }
   .hero-rhythm-microcopy-to-signature [data-hero-field="brandLine"] > span:nth-child(2) {
-    animation: heroEnterFadeWide 1.4s ease-out 6s both;
+    animation: heroEnterFadeWide 1.4s ease-out 5.8s both;
   }
 
-  /* 7 + 8. CTAs LAST — after the storytelling has fully landed.
-     Primary lifts up (calls action), secondary slides in from the
-     LEFT so the pair mirrors the headline left/right composition
-     and no two directions repeat in a row. */
+  /* CTAs LAST — soft lift, no horizontal slide. */
   .hero-cta-button[data-hero-field="primaryCta"] {
-    animation: heroEnterLiftPrimary 1.05s cubic-bezier(0.22, 0.61, 0.36, 1) 6.6s both !important;
+    animation: heroEnterLiftPrimary 1.05s cubic-bezier(0.22, 0.61, 0.36, 1) 2.3s both !important;
   }
   .hero-cta-button[data-hero-field="secondaryCta"] {
-    animation: heroEnterFromLeft 1.1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 7s both !important;
+    animation: heroEnterRiseSoft 1.05s cubic-bezier(0.25, 0.46, 0.45, 0.94) 2.55s both !important;
   }
+}
+
+/* Cinematic background pan — slow rightward Ken-Burns on the hero
+   video so the loop feels like a journey unfolding. Disabled under
+   prefers-reduced-motion (the static fallback image takes over). */
+@keyframes heroCinePan {
+  0%   { transform: scale(1.06) translate3d(-1.2%, 0, 0); }
+  100% { transform: scale(1.06) translate3d(1.2%, 0, 0); }
+}
+.hero-cine-pan {
+  will-change: transform;
+  animation: heroCinePan 28s ease-in-out infinite alternate;
+}
+
+/* Rotating supporting phrases — fades each phrase in and out one at a
+   time. Each phrase holds for ~2s, total cycle = 12s (4 phrases × 3s). */
+@keyframes heroRotatePhrase {
+  0%, 6%   { opacity: 0; transform: translateY(4px); }
+  10%, 22% { opacity: 1; transform: translateY(0); }
+  26%, 100% { opacity: 0; transform: translateY(-2px); }
+}
+.hero-rotating-phrases {
+  position: relative;
+  display: block;
+}
+.hero-rotating-phrase {
+  position: absolute;
+  inset: 0;
+  display: inline-block;
+  opacity: 0;
+  animation: heroRotatePhrase 12s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+.hero-rotating-phrase:nth-child(1) { animation-delay: 1.2s; }
+.hero-rotating-phrase:nth-child(2) { animation-delay: 4.2s; }
+.hero-rotating-phrase:nth-child(3) { animation-delay: 7.2s; }
+.hero-rotating-phrase:nth-child(4) { animation-delay: 10.2s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-cine-pan { animation: none !important; transform: none !important; }
+  .hero-rotating-phrase {
+    animation: none !important;
+    opacity: 1 !important;
+    position: static !important;
+    transform: none !important;
+  }
+  .hero-rotating-phrase:not(:first-child) { display: none !important; }
 }
 
 @media (prefers-reduced-motion: reduce) {
