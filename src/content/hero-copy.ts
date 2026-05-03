@@ -14,7 +14,7 @@
  *   Local guidance is available on demand, never required.
  */
 export const HERO_COPY = {
-  eyebrow: "REAL-TIME · YOUR CHOICES · INSTANT BOOKING",
+  eyebrow: "REAL-TIME · YOURS · INSTANT",
   headlineLine1: "Portugal is the stage,",
   headlineLine2: "you write your story.",
   subheadline:
