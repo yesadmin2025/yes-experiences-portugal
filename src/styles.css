@@ -1641,8 +1641,11 @@
   100% { transform: scale(1.085) translate3d(1.4%, -0.4%, 0); }
 }
 @keyframes heroPanDriftLeft {
-  0%   { transform: scale(1.085) translate3d(1.4%, -0.3%, 0); }
-  100% { transform: scale(1.085) translate3d(-1.4%, 0.5%, 0); }
+  /* Cinematic right→left film-reel pan. Image enters anchored slightly
+     right and drifts left as the scene plays. Slightly more travel
+     than the legacy variant so the horizontal motion reads clearly. */
+  0%   { transform: scale(1.10) translate3d(2.4%, 0, 0); }
+  100% { transform: scale(1.10) translate3d(-2.4%, 0, 0); }
 }
 @keyframes heroPanPushIn {
   0%   { transform: scale(1.045) translate3d(0, 0.4%, 0); }
