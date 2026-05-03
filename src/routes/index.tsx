@@ -613,7 +613,7 @@ function HomePage() {
                     className="text-[color:var(--gold)] tracking-[0.4em] text-[12.5px] md:text-[13px]"
                     style={{ fontWeight: 600 }}
                   >
-                    We say YES.
+                    we say YES.
                   </span>
                 </span>
                 <span aria-hidden="true" className="h-px w-12 md:w-16 bg-gradient-to-l from-transparent to-[color:var(--gold)] shrink-0 opacity-90" />
