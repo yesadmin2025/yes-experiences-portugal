@@ -13,7 +13,11 @@ import { HERO_COPY } from "../src/content/hero-copy";
 export { HERO_COPY };
 
 async function gotoHero(page: Page) {
-  await page.goto("/");
+  // `?hero=last` freezes the cinematic 5-scene sequence on the final
+  // (action) scene, where all approved hero copy + CTAs + microcopy
+  // are simultaneously visible. The auto-cycling sequence is for the
+  // real visitor; the lock asserts the FINAL anchor state.
+  await page.goto("/?hero=last");
   const h1 = page.locator("h1.hero-h1");
   await expect(h1).toBeVisible();
   await page.waitForFunction(() => {

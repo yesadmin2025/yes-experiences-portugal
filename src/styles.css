@@ -1699,6 +1699,84 @@
   }
 }
 
+/* ────────────────────────────────────────────────────────────────
+ * Cinematic 5-scene hero — spotlight + scene message choreography.
+ *
+ *   `hero-h1-cinematic` is the canonical H1 (carries the approved
+ *   HERO_COPY locks). On scenes 1–2 each line takes the spotlight in
+ *   turn; on scenes 3–5 the H1 retreats so the per-scene message
+ *   block can lead. The message blocks crossfade by toggling
+ *   `is-on` / `is-off` so only one block is ever read at a time.
+ *
+ *   All transitions stay under 1s, are GPU-only (opacity + transform),
+ *   and collapse to fully visible under prefers-reduced-motion.
+ * ────────────────────────────────────────────────────────────── */
+.hero-h1-cinematic .hero-h1-line {
+  transition:
+    opacity 700ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    filter  700ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  will-change: opacity, filter;
+}
+.hero-h1-cinematic[data-hero-anchor="rest"] .hero-h1-line {
+  opacity: 0.32;
+  filter: saturate(0.85);
+}
+.hero-h1-cinematic[data-hero-anchor="spotlight"] .hero-h1-line[data-hero-spotlight="off"] {
+  opacity: 0.42;
+  filter: saturate(0.9);
+}
+.hero-h1-cinematic[data-hero-anchor="spotlight"] .hero-h1-line[data-hero-spotlight="on"] {
+  opacity: 1;
+}
+
+.hero-scene-message {
+  transition:
+    opacity 700ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 700ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  will-change: opacity, transform;
+}
+.hero-scene-message.is-off {
+  opacity: 0;
+  transform: translate3d(0, 4px, 0);
+  pointer-events: none;
+  /* Fully off so two messages never read at once. */
+  visibility: hidden;
+}
+.hero-scene-message.is-on {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  visibility: visible;
+}
+.hero-scene-message.is-on .hero-scene-main,
+.hero-scene-message.is-on .hero-scene-supporting {
+  animation: heroEnterRiseSoft 0.85s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+.hero-scene-message.is-on .hero-scene-supporting {
+  animation-delay: 120ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-h1-cinematic .hero-h1-line {
+    opacity: 1 !important;
+    filter: none !important;
+    transition: none !important;
+  }
+  .hero-scene-message {
+    transition: none !important;
+  }
+  .hero-scene-message.is-off {
+    opacity: 0 !important;
+    transform: none !important;
+  }
+  .hero-scene-message.is-on .hero-scene-main,
+  .hero-scene-message.is-on .hero-scene-supporting {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+
 @media (prefers-reduced-motion: reduce) {
   span:has(> [data-hero-field="eyebrow"]),
   [data-hero-field="headlineLine1"],

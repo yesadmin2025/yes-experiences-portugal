@@ -22,7 +22,10 @@ import { test, expect, type Page } from "@playwright/test";
  * BOTH the CSS tokens AND the expected values below in the same PR.
  */
 
-const ROUTE = "/";
+// `?hero=last` freezes the cinematic 5-scene sequence on the final
+// scene so CTAs/microcopy/signature are simultaneously rendered for
+// stable layout measurements.
+const ROUTE = "/?hero=last";
 const MOBILE_VIEWPORT = { width: 390, height: 844 } as const;
 
 // Sub-pixel tolerance — absorbs rounding from `getBoundingClientRect`

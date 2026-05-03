@@ -35,7 +35,10 @@ const FIELDS_TO_CHECK = [
 ] as const satisfies readonly (keyof typeof HERO_COPY_SPEC)[];
 
 async function gotoHero(page: Page) {
-  await page.goto("/");
+  // `?hero=last` freezes the cinematic sequence on the final scene where
+  // all approved hero strings are simultaneously rendered, so byte-exact
+  // DOM assertions are deterministic.
+  await page.goto("/?hero=last");
   // Wait for the headline opacity animation to finish so any
   // animation-driven content swap has settled before we read text.
   const h1 = page.locator("h1.hero-h1");

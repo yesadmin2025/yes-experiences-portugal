@@ -27,7 +27,7 @@ import { test, expect, type Page, type Locator } from "@playwright/test";
  */
 
 async function prepareHero(page: Page) {
-  await page.goto("/");
+  await page.goto("/?hero=last");
 
   // Wait for the headline to mount before injecting overrides — otherwise
   // the style block can race the hydrated React tree.
