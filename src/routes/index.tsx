@@ -662,7 +662,7 @@ function HomePage() {
              {/* Microcopy — calm reassurance below the CTAs, the locked
                  rhythm token (`hero-rhythm-cta-to-microcopy`) keeps the
                  28px mobile / 24px desktop gap pinned. */}
-             <div className="hero-rhythm-cta-to-microcopy max-w-sm sm:max-w-xl mx-auto sm:mx-0 opacity-0 animate-[heroFade_1s_ease-out_3.4s_forwards]">
+             <div className="hero-rhythm-cta-to-microcopy max-w-sm sm:max-w-xl mx-auto sm:mx-0 opacity-0 animate-[heroFade_1.1s_ease-out_5.1s_forwards]">
                <p
                  data-hero-field="microcopy"
                  className="text-[12px] md:text-[13px] text-[color:var(--ivory)]/80 leading-[1.55] font-normal tracking-[0.01em] text-center sm:text-left"
