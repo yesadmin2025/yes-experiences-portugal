@@ -634,7 +634,7 @@ function HomePage() {
                <Link
                  to="/builder"
                  data-hero-field="primaryCta"
-                 className="hero-cta-button hero-cta-button--compact cta-primary he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left opacity-0 animate-[heroFade_1s_ease-out_2.6s_forwards]"
+                 className="hero-cta-button hero-cta-button--compact cta-primary he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left opacity-0 animate-[heroFade_1.1s_ease-out_4.4s_forwards]"
                >
                  <span className="block">{HERO_COPY.primaryCta}</span>
                  <ArrowRight
