@@ -1581,11 +1581,14 @@
     animation: heroEnterFromBelow 1.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) 3.6s both !important;
   }
 
-  /* 5. Microcopy — pure soft fade. e2e-locked delay (4.4s) preserved. */
+  /* 5. Microcopy — soft drift from the left so it doesn't read as a
+     plain fade. e2e-locked delay (4.4s) preserved. The microcopy <p>
+     itself stays static; only the wrapper animates so the rhythm
+     measurements remain correct. */
   .hero-rhythm-cta-to-microcopy {
-    animation-name: heroEnterFadeOnly !important;
+    animation-name: heroEnterFromLeft !important;
     animation-duration: 1.3s !important;
-    animation-timing-function: ease-out !important;
+    animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
   }
 
   /* 6. Brand line — soft rise. e2e-locked delay (5.4s) preserved. */
