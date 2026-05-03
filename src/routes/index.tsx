@@ -645,7 +645,7 @@ function HomePage() {
                 border: 0,
               }}
             />
-            </div>
+
             <div
               data-hero-copy-json={JSON.stringify({ version: HERO_COPY_VERSION, copy: HERO_COPY })}
               data-testid="hero-copy-json"
