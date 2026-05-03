@@ -1616,14 +1616,13 @@
     animation: heroEnterFadeWide 1.4s ease-out 5.8s both;
   }
 
-  /* CTAs LAST — staged scene-4 reveal. Matches the inline animate-[heroFade]
-     delays on the route (4.4s primary, 4.7s secondary) so the user feels
-     atmosphere first and is invited to act only after the story has played. */
+  /* CTAs are conditionally mounted only in scene 4. Once mounted, they enter
+     immediately — no hidden CTA block is reserved in scenes 1–3. */
   .hero-cta-button[data-hero-field="primaryCta"] {
-    animation: heroEnterLiftPrimary 1.1s cubic-bezier(0.22, 0.61, 0.36, 1) 4.4s both !important;
+    animation: heroEnterLiftPrimary 0.75s cubic-bezier(0.22, 0.61, 0.36, 1) 0.1s both !important;
   }
   .hero-cta-button[data-hero-field="secondaryCta"] {
-    animation: heroEnterRiseSoft 1.1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 4.7s both !important;
+    animation: heroEnterRiseSoft 0.75s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s both !important;
   }
 }
 
