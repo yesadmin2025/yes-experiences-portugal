@@ -83,14 +83,29 @@ const HERO_SCENE_DURATION_MS = 6500;
  * scene shows ONE short cinematic line + ONE supporting microline.
  * Imagery is real Viator-sourced operation photography only.
  * ────────────────────────────────────────────────────────────── */
+/**
+ * Cinematic 5-scene story. Each scene = ONE real Portugal image +
+ * one cinematic headline (with intentional line breaks) + one short
+ * supporting microline. CTAs appear ONLY on scene 5.
+ *
+ * `main` is an array so we can render line breaks the same way an
+ * editorial film would title-card a chapter — each line lands as its
+ * own beat, not a run-on sentence.
+ *
+ * Imagery is real Viator-sourced operation photography only — no
+ * stock, no AI faces, no generic clichés.
+ */
 const HERO_SCENES = [
   {
     id: "opening",
-    // Scene 1 — Portugal as stage. Wide coastal cliff horizon.
+    // Scene 1 — Arrival. Wide coastal cliff horizon, Portugal opens.
     image: heroImg,
     position: "50% 52%",
     pan: "drift-left" as const,
-    main: "",
+    // Scene 1's headline is the canonical H1 (rendered separately so
+    // the byte-exact copy lock holds). The cinematic message slot
+    // stays empty here; the eyebrow + H1 + supporting line carry it.
+    main: [] as readonly string[],
     supporting: "Private. Local. Yours.",
   },
   {
@@ -99,35 +114,39 @@ const HERO_SCENES = [
     image: imgArrabidaCoves,
     position: "52% 50%",
     pan: "drift-left" as const,
-    main: "Hidden places, chosen your way.",
-    supporting: "",
+    main: ["Hidden places,", "chosen your way."] as readonly string[],
+    supporting: "Beyond the obvious, closer to the real.",
   },
   {
     id: "local-moments",
-    // Scene 3 — Local table, wine, shared moment.
+    // Scene 3 — Local table, wine pour, shared moment.
     image: imgArrabidaWineLunch,
     position: "50% 56%",
-    pan: "drift-left" as const,
-    main: "Local moments, shaped around you.",
-    supporting: "",
+    pan: "push-in" as const,
+    main: ["Local moments,", "shaped around you."] as readonly string[],
+    supporting: "Food, wine, people, rhythm.",
   },
   {
     id: "occasions",
-    // Scene 4 — Estate gardens, celebration mood.
-    image: imgSintraEstates,
-    position: "52% 48%",
+    // Scene 4 — Quiet Arrábida viewpoint, intimate occasion mood.
+    image: imgArrabidaViewpoint,
+    position: "50% 50%",
     pan: "drift-left" as const,
-    main: "For a day, a celebration, or something unforgettable.",
-    supporting: "",
+    main: [
+      "For a day, a celebration,",
+      "or something unforgettable.",
+    ] as readonly string[],
+    supporting: "Your occasion sets the rhythm.",
   },
   {
     id: "action",
-    // Scene 5 — Cabo da Roca cliffs, decisive horizon.
-    image: imgSintraCaboDaRoca,
-    position: "55% 48%",
-    pan: "drift-left" as const,
-    main: "Build it live. Confirm instantly.",
-    supporting: "Instant booking. Real local guidance if you want it.",
+    // Scene 5 — Multi-region route (Tomar–Coimbra): the journey
+    // itself, the closing chapter where the story becomes a plan.
+    image: imgTomarCoimbra,
+    position: "50% 50%",
+    pan: "pull-back" as const,
+    main: ["Build it live.", "Confirm instantly."] as readonly string[],
+    supporting: "No forms. No waiting.",
   },
 ] as const;
 
