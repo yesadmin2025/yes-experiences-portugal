@@ -193,17 +193,17 @@ export const Route = createFileRoute("/")({
   }),
   head: () => ({
     meta: [
-      { title: "YES experiences Portugal — Portugal is the stage, you write your story." },
+      { title: "YES experiences Portugal — Portugal is the stage. You write the story." },
       { name: "yes-hero-copy-version", content: HERO_COPY_VERSION },
       { name: "description", content: HERO_COPY.subheadline },
       {
         property: "og:title",
-        content: "Portugal is the stage, you write your story. — YES experiences",
+        content: "Portugal is the stage. You write the story. — YES experiences",
       },
       { property: "og:description", content: HERO_COPY.subheadline },
       {
         property: "twitter:title",
-        content: "Portugal is the stage, you write your story. — YES experiences",
+        content: "Portugal is the stage. You write the story. — YES experiences",
       },
       { property: "twitter:description", content: HERO_COPY.subheadline },
       { property: "og:image", content: heroImg },
