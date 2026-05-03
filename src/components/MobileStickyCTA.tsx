@@ -312,20 +312,52 @@ export function MobileStickyCTA() {
           className="bg-white border-t border-[color:var(--charcoal)]/15 shadow-[0_-8px_28px_-18px_rgba(15,23,42,0.18)]"
           style={{ paddingBottom: "max(env(safe-area-inset-bottom), 0px)" }}
         >
-          <div className="px-4 py-3 flex items-center gap-3">
-            {/* Left — branded promise.
-                Headline names what we sell ("Your Portugal, Your Way");
-                the eyebrow underneath is the trust micro-copy
-                ("Private. Local. Instantly secured."). Both stay short
-                enough to never wrap inside the ~60% column. */}
+          <div className="px-3.5 py-2 flex items-center gap-2.5">
+            {/* Left — branded promise. Compact two-line label. */}
             <div className="min-w-0 flex-1">
-              <p className="serif italic text-[14px] xs:text-[15px] leading-tight text-[color:var(--charcoal)] truncate">
+              <p className="serif italic text-[13px] leading-tight text-[color:var(--charcoal)] truncate">
                 Your Portugal, Your Way
               </p>
-              <p className="text-[9.5px] xs:text-[10.5px] uppercase tracking-[0.14em] xs:tracking-[0.2em] text-[color:var(--charcoal-soft)] mt-0.5 truncate">
+              <p className="text-[9px] xs:text-[9.5px] uppercase tracking-[0.16em] text-[color:var(--charcoal-soft)] mt-0.5 truncate">
                 Private. Local. Curated.
               </p>
             </div>
+
+            {/* Primary CTA — slimmer pill so the bar feels supportive,
+                not blocking. Tap target preserved at 40px height. */}
+            <button
+              type="button"
+              onClick={handleSayYes}
+              tabIndex={visible && !submitting ? 0 : -1}
+              aria-haspopup="dialog"
+              aria-expanded={sheetOpen}
+              aria-controls="yes-choice-title"
+              aria-disabled={submitting}
+              aria-busy={submitting}
+              data-cta="say_yes_open"
+              data-cta-surface="mobile_sticky"
+              data-state={submitting ? "submitting" : sheetOpen ? "open" : "idle"}
+              className={[
+                "group inline-flex items-center gap-1.5 bg-[color:var(--teal)] hover:bg-[color:var(--teal-2)] text-white",
+                "border border-[color:var(--gold)]/60 hover:border-[color:var(--gold)] px-3.5 py-2 text-[10.5px] font-semibold tracking-[0.1em] uppercase whitespace-nowrap",
+                "shadow-[0_6px_18px_-10px_rgba(41,91,97,0.55)] hover:shadow-[0_10px_24px_-12px_rgba(201,169,106,0.45)]",
+                "transition-[opacity,background-color,box-shadow,border-color,transform] duration-300",
+                "hover:-translate-y-[1px]",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-white",
+                submitting ? "opacity-70 pointer-events-none cursor-default" : "",
+              ].join(" ")}
+              aria-label="Start your experience — choose how to begin"
+            >
+              {submitting ? "Opening…" : "Start Your Experience"}
+              <ArrowRight
+                size={12}
+                className={[
+                  "text-[color:var(--gold-soft)] transition-[color,transform] duration-300",
+                  sheetOpen ? "-rotate-90" : "group-hover:translate-x-0.5",
+                ].join(" ")}
+              />
+            </button>
+          </div>
 
             {/* Primary CTA — opens the two-way choice sheet.
                 Deliberately a <button>, not a Link, because the next step
