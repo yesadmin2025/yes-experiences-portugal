@@ -31,7 +31,6 @@ import {
 } from "lucide-react";
 import { PlatformBadge } from "@/components/PlatformBadge";
 import { StudioLivePreview } from "@/components/home/StudioLivePreview";
-import { HeroJourneyOverlay } from "@/components/home/HeroJourneyOverlay";
 import { getScrollDebugFlags, useScrollDebugFlags } from "@/lib/scroll-debug";
 
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
@@ -193,17 +192,17 @@ export const Route = createFileRoute("/")({
   }),
   head: () => ({
     meta: [
-      { title: "YES experiences Portugal — Portugal is the stage, you write your story." },
+      { title: "YES experiences Portugal — Portugal is the stage. You write the story." },
       { name: "yes-hero-copy-version", content: HERO_COPY_VERSION },
       { name: "description", content: HERO_COPY.subheadline },
       {
         property: "og:title",
-        content: "Portugal is the stage, you write your story. — YES experiences",
+        content: "Portugal is the stage. You write the story. — YES experiences",
       },
       { property: "og:description", content: HERO_COPY.subheadline },
       {
         property: "twitter:title",
-        content: "Portugal is the stage, you write your story. — YES experiences",
+        content: "Portugal is the stage. You write the story. — YES experiences",
       },
       { property: "twitter:description", content: HERO_COPY.subheadline },
       { property: "og:image", content: heroImg },
@@ -495,9 +494,11 @@ function HomePage() {
           width={1920}
           height={1080}
         />
-        {/* Cinematic background video — drone shot of cliffs / ocean,
-            muted, looping, playsInline. Hidden under prefers-reduced-
-            motion so the static image takes over. ~1.6 MB MP4. */}
+        {/* Cinematic background video — slow right-pan loop, muted,
+            looping, playsInline. Hidden under prefers-reduced-motion
+            so the static image takes over. The `hero-cine-pan` class
+            adds a slow rightward Ken-Burns pan + subtle scale to make
+            the loop feel like a journey unfolding. */}
         <video
           src="/video/hero-coast.mp4"
           poster="/video/hero-coast-poster.jpg"
@@ -507,13 +508,8 @@ function HomePage() {
           playsInline
           preload="metadata"
           aria-hidden="true"
-          className="he-parallax absolute inset-0 w-full h-full object-cover object-center motion-reduce:hidden"
+          className="hero-cine-pan absolute inset-0 w-full h-full object-cover object-center motion-reduce:hidden"
         />
-        {/* Animated journey overlay — communicates "your trip is being
-            shaped in real time" via a slowly-drawing route + location
-            pings. Sits above the video, beneath the dark gradients so
-            the headline contrast is preserved. */}
-        <HeroJourneyOverlay />
         {/* Soft dark gradient — required by brief for any text-over-image. */}
         <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/85 via-[color:var(--charcoal-deep)]/45 to-[color:var(--charcoal-deep)]/40 md:from-[color:var(--charcoal-deep)]/80 md:via-[color:var(--charcoal-deep)]/35 md:to-[color:var(--charcoal-deep)]/30 pointer-events-none z-[2]" />
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(15,15,15,0.65)_0%,rgba(15,15,15,0.4)_35%,transparent_70%)] md:bg-[linear-gradient(90deg,rgba(15,15,15,0.6)_0%,rgba(15,15,15,0.32)_40%,transparent_72%)] pointer-events-none z-[2]" />
@@ -549,6 +545,20 @@ function HomePage() {
             >
               {HERO_COPY.subheadline}
             </p>
+
+            {/* Rotating supporting phrases — very subtle, one at a time,
+                fades through Private days · Celebrations · Groups ·
+                Full journeys. Aria-hidden so SRs don't pick up the
+                cycle; the subheadline already covers these in prose. */}
+            <div
+              aria-hidden="true"
+              className="hero-rotating-phrases mt-4 md:mt-5 h-[18px] md:h-[20px] text-[11.5px] md:text-[12px] uppercase tracking-[0.3em] text-[color:var(--gold-soft)]/85 opacity-0 animate-[heroFade_0.9s_ease-out_0.85s_forwards]"
+            >
+              <span className="hero-rotating-phrase">Private days</span>
+              <span className="hero-rotating-phrase">Celebrations</span>
+              <span className="hero-rotating-phrase">Groups</span>
+              <span className="hero-rotating-phrase">Full journeys</span>
+            </div>
 
             {/* CTAs — exactly two, per brief.
                 Studio is the primary innovation, so "Create Your Story"
@@ -616,7 +626,7 @@ function HomePage() {
                     className="text-[color:var(--gold)] tracking-[0.4em] text-[12.5px] md:text-[13px]"
                     style={{ fontWeight: 600 }}
                   >
-                    We say YES.
+                    we say YES.
                   </span>
                 </span>
                 <span aria-hidden="true" className="h-px w-12 md:w-16 bg-gradient-to-l from-transparent to-[color:var(--gold)] shrink-0 opacity-90" />
@@ -647,15 +657,8 @@ function HomePage() {
                 whiteSpace: "nowrap",
                 border: 0,
               }}
-            >
-              <span data-probe-field="version">hero-copy-version:{HERO_COPY_VERSION}</span>
-              {" | "}
-              <span data-probe-field="headline">
-                {HERO_COPY.headlineLine1} {HERO_COPY.headlineLine2}
-              </span>
-              {" | "}
-              <span data-probe-field="subheadline">{HERO_COPY.subheadline}</span>
-            </div>
+            />
+
             <div
               data-hero-copy-json={JSON.stringify({ version: HERO_COPY_VERSION, copy: HERO_COPY })}
               data-testid="hero-copy-json"
