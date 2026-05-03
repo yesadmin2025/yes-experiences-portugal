@@ -1500,15 +1500,15 @@
    chapters of a sentence being written. CTAs appear LAST, after the brand
    line has settled, so the eye reads the story before being asked to act.
 
-   Order & vectors (mobile only):
-     1. Eyebrow         ↓ from above   (0.2s · 1.2s)
-     2. Headline line 1 → from left    (1.2s · 1.4s)
-     3. Headline line 2 ← from right   (2.4s · 1.4s)
-     4. Paragraph       ↑ from below   (3.6s · 1.3s)
-     5. Microcopy       · soft fade    (4.4s · 1.3s)   [e2e-locked delay]
-     6. Brand line      ↑ soft rise    (5.4s · 1.4s)   [e2e-locked delay]
-     7. Primary CTA     ↑ lift+scale   (6.6s · 1.05s)  [last]
-     8. Secondary CTA   ← from right   (7.0s · 1.1s)   [last]
+   Order & vectors (mobile only) — every phrase has a distinct vector:
+     1. Eyebrow         ↓ from above        (0.2s · 1.2s)
+     2. Headline line 1 → from left         (1.2s · 1.4s)
+     3. Headline line 2 ← from right        (2.4s · 1.4s)
+     4. Paragraph       ↑ from below        (3.6s · 1.3s)
+     5. Microcopy       → soft drift right  (4.4s · 1.3s)   [e2e-locked delay]
+     6. Brand line      ↑ soft rise + wide  (5.4s · 1.4s)   [e2e-locked delay]
+     7. Primary CTA     ↑ lift + scale      (6.6s · 1.05s)  [last]
+     8. Secondary CTA   → from left         (7.0s · 1.1s)   [last]
 
    End state is always { opacity: 1; transform: none; filter: none } so the
    e2e rhythm tests that freeze animations measure the locked final layout.
@@ -1581,11 +1581,14 @@
     animation: heroEnterFromBelow 1.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) 3.6s both !important;
   }
 
-  /* 5. Microcopy — pure soft fade. e2e-locked delay (4.4s) preserved. */
+  /* 5. Microcopy — soft drift from the left so it doesn't read as a
+     plain fade. e2e-locked delay (4.4s) preserved. The microcopy <p>
+     itself stays static; only the wrapper animates so the rhythm
+     measurements remain correct. */
   .hero-rhythm-cta-to-microcopy {
-    animation-name: heroEnterFadeOnly !important;
+    animation-name: heroEnterFromLeft !important;
     animation-duration: 1.3s !important;
-    animation-timing-function: ease-out !important;
+    animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
   }
 
   /* 6. Brand line — soft rise. e2e-locked delay (5.4s) preserved. */
@@ -1600,12 +1603,13 @@
 
   /* 7 + 8. CTAs LAST — after the storytelling has fully landed.
      Primary lifts up (calls action), secondary slides in from the
-     right so the two buttons feel like a pair, not a duplicate. */
+     LEFT so the pair mirrors the headline left/right composition
+     and no two directions repeat in a row. */
   .hero-cta-button[data-hero-field="primaryCta"] {
     animation: heroEnterLiftPrimary 1.05s cubic-bezier(0.22, 0.61, 0.36, 1) 6.6s both !important;
   }
   .hero-cta-button[data-hero-field="secondaryCta"] {
-    animation: heroEnterFromRight 1.1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 7s both !important;
+    animation: heroEnterFromLeft 1.1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 7s both !important;
   }
 }
 
