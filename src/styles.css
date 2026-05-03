@@ -1683,12 +1683,31 @@
   background-color: var(--gold-soft);
   opacity: 0.35;
   transform-origin: center;
-  animation: heroDotPulse 40s ease-in-out infinite;
+  animation: heroDotPulse 24s ease-in-out infinite;
 }
 .hero-story-dot-1 { animation-delay: 0s; }
-.hero-story-dot-2 { animation-delay: -30s; }
-.hero-story-dot-3 { animation-delay: -20s; }
-.hero-story-dot-4 { animation-delay: -10s; }
+.hero-story-dot-2 { animation-delay: -18s; }
+.hero-story-dot-3 { animation-delay: -12s; }
+.hero-story-dot-4 { animation-delay: -6s; }
+
+/* Scene-synced supporting lines — exactly ONE visible at any time.
+   24s loop / 4 scenes / 6s per scene. Each line is opaque ~0–22% of
+   the loop (≈5.3s) and crossfades over ~3% (~0.7s). All four lines
+   share the same absolute slot so the layout never reflows. */
+@keyframes heroSupportingCrossfade {
+  0%, 22%   { opacity: 1; transform: translateY(0); }
+  25%, 97%  { opacity: 0; transform: translateY(-2px); }
+  100%      { opacity: 1; transform: translateY(0); }
+}
+.hero-supporting-line {
+  opacity: 0;
+  will-change: opacity, transform;
+  animation: heroSupportingCrossfade 24s cubic-bezier(0.22, 0.61, 0.36, 1) infinite;
+}
+.hero-supporting-line-1 { animation-delay: 0s; }
+.hero-supporting-line-2 { animation-delay: -18s; }
+.hero-supporting-line-3 { animation-delay: -12s; }
+.hero-supporting-line-4 { animation-delay: -6s; }
 
 @media (prefers-reduced-motion: reduce) {
   .hero-cine-pan { animation: none !important; transform: none !important; }
