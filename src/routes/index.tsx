@@ -586,18 +586,25 @@ function HomePage() {
               {HERO_COPY.subheadline}
             </p>
 
-            {/* Rotating supporting phrases — very subtle, one at a time,
-                fades through Private days · Celebrations · Groups ·
-                Full journeys. Aria-hidden so SRs don't pick up the
-                cycle; the subheadline already covers these in prose. */}
+            {/* Rotating supporting line — one phrase per image beat,
+                synced 1:1 with the 30s background loop (6s each).
+                Aria-hidden so SRs don't pick up the cycle; the
+                subheadline already conveys the same message in prose.
+                Each line MATCHES the matching visual beat:
+                  1 coast    → "Hidden places, chosen your way."
+                  2 wine     → "Local moments, shaped around you."
+                  3 viewpoint→ "From coastlines to vineyards, at your rhythm."
+                  4 estate   → "For a day, a celebration, or something unforgettable."
+                  5 route    → "Build it live. Confirm it instantly." */}
             <div
               aria-hidden="true"
-              className="hero-rotating-phrases mt-4 md:mt-5 h-[18px] md:h-[20px] text-[11.5px] md:text-[12px] uppercase tracking-[0.3em] text-[color:var(--gold-soft)]/85 opacity-0 animate-[heroFade_0.9s_ease-out_0.85s_forwards]"
+              className="hero-rotating-phrases mt-4 md:mt-5 h-[20px] md:h-[22px] text-[12px] md:text-[13px] tracking-[0.04em] text-[color:var(--gold-soft)]/95 italic opacity-0 animate-[heroFade_0.9s_ease-out_0.85s_forwards]"
             >
-              <span className="hero-rotating-phrase">Private days</span>
-              <span className="hero-rotating-phrase">Celebrations</span>
-              <span className="hero-rotating-phrase">Groups</span>
-              <span className="hero-rotating-phrase">Full journeys</span>
+              <span className="hero-rotating-phrase">Hidden places, chosen your way.</span>
+              <span className="hero-rotating-phrase">Local moments, shaped around you.</span>
+              <span className="hero-rotating-phrase">From coastlines to vineyards, at your rhythm.</span>
+              <span className="hero-rotating-phrase">For a day, a celebration, or something unforgettable.</span>
+              <span className="hero-rotating-phrase">Build it live. Confirm it instantly.</span>
             </div>
 
             {/* CTAs — exactly two, per brief.
