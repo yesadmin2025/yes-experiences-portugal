@@ -204,10 +204,10 @@ describe("Hero <h1> — locked Tailwind tokens (order-independent)", () => {
     expectAllTokens(
       HERO_H1,
       [
-        "text-[2.05rem]",
-        "sm:text-[2.7rem]",
-        "md:text-[4rem]",
-        "lg:text-[4.6rem]",
+        "text-[1.85rem]",
+        "sm:text-[2.5rem]",
+        "md:text-[3.4rem]",
+        "lg:text-[3.9rem]",
       ],
       "hero h1 size ramp",
     );
@@ -216,7 +216,7 @@ describe("Hero <h1> — locked Tailwind tokens (order-independent)", () => {
   it("locks line-height ramp across mobile / sm / md", () => {
     expectAllTokens(
       HERO_H1,
-      ["leading-[1.1]", "sm:leading-[1.04]", "md:leading-[1.0]"],
+      ["leading-[1.08]", "sm:leading-[1.04]", "md:leading-[1.02]"],
       "hero h1 line-height ramp",
     );
   });
@@ -224,7 +224,7 @@ describe("Hero <h1> — locked Tailwind tokens (order-independent)", () => {
   it("locks tracking + ivory color token", () => {
     expectAllTokens(
       HERO_H1,
-      ["tracking-[-0.02em]", "text-[color:var(--ivory)]"],
+      ["tracking-[-0.022em]", "text-[color:var(--ivory)]"],
       "hero h1 tracking + color",
     );
   });
@@ -235,33 +235,12 @@ describe("Hero <h1> — locked Tailwind tokens (order-independent)", () => {
 });
 
 describe("Hero <h1> italic line (headlineLine2) — locked Tailwind tokens", () => {
-  it("locks size ramp across mobile / sm / md / lg", () => {
-    expectAllTokens(
-      HERO_LINE2,
-      [
-        "text-[2.05rem]",
-        "sm:text-[2.7rem]",
-        "md:text-[4rem]",
-        "lg:text-[4.6rem]",
-      ],
-      "hero line2 size ramp",
-    );
-  });
-
-  it("locks line-height ramp across mobile / sm / md", () => {
-    expectAllTokens(
-      HERO_LINE2,
-      ["leading-[1.1]", "sm:leading-[1.04]", "md:leading-[1.0]"],
-      "hero line2 line-height ramp",
-    );
-  });
-
   it("locks italic emphasis tracking + gold-soft color", () => {
     expectAllTokens(
       HERO_LINE2,
       [
         "italic",
-        "tracking-[-0.024em]",
+        "tracking-[-0.026em]",
         "text-[color:var(--gold-soft)]",
       ],
       "hero line2 emphasis",
@@ -269,21 +248,9 @@ describe("Hero <h1> italic line (headlineLine2) — locked Tailwind tokens", () 
   });
 });
 
-describe("Hero subheadline — locked Tailwind tokens", () => {
-  it("locks size ramp mobile → md", () => {
-    expectAllTokens(
-      HERO_SUB,
-      ["text-[15.5px]", "md:text-[19px]"],
-      "hero subheadline size",
-    );
-  });
-
-  it("locks line-height ramp mobile → md", () => {
-    expectAllTokens(
-      HERO_SUB,
-      ["leading-[1.6]", "md:leading-[1.65]"],
-      "hero subheadline line-height",
-    );
+describe("Hero subheadline — visually-hidden SEO anchor", () => {
+  it("is rendered with the sr-only utility (no longer visible in cinematic hero)", () => {
+    expect(HERO_SUB.has("sr-only")).toBe(true);
   });
 });
 
