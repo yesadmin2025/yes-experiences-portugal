@@ -1607,11 +1607,11 @@
   }
 }
 
-/* Cinematic hero story sequence — 6 real Viator-sourced beats covering
-   the full YES story spectrum: discovery → local moment → hidden place →
-   journey → celebration → shared day. Each slide crossfades softly into
-   the next while a slow Ken-Burns pan implies continuous motion.
-   36s total loop = 6s per beat (≈4.7s hold + 1.3s crossfade).
+/* Cinematic hero story sequence — 5 real Viator-sourced beats covering
+   the YES story arc: discovery → local moment → hidden place →
+   celebration → live route. Each slide crossfades softly into the
+   next while a slow Ken-Burns pan implies continuous motion.
+   30s total loop = 6s per beat (≈5s hold + 1s crossfade).
    Slide 1 is the SSR/static fallback so the hero never appears blank.
    Reduced-motion users freeze on slide 1 with no animation. */
 @keyframes heroStoryPan {
@@ -1619,11 +1619,11 @@
   100% { transform: scale(1.09) translate3d(1.6%, -0.5%, 0); }
 }
 @keyframes heroStoryCrossfade {
-  /* 6 beats × 16.667% each. Each slide stays fully visible for ~13%,
-     then crossfades to the next over ~3.6% — soft, never abrupt. */
-  0%, 13%      { opacity: 1; }
-  16.67%, 96.5% { opacity: 0; }
-  100%         { opacity: 1; }
+  /* 5 beats × 20% each. Slide is fully visible for ~16.5%, then
+     crossfades to the next over ~3.5% — soft, never abrupt. */
+  0%, 16.5%   { opacity: 1; }
+  20%, 96.5%  { opacity: 0; }
+  100%        { opacity: 1; }
 }
 .hero-story-stage { will-change: opacity; }
 .hero-story-slide {
@@ -1632,25 +1632,28 @@
   /* Subtle warm grade applied uniformly so all beats feel cohesive. */
   filter: saturate(0.92) contrast(1.02) brightness(0.96);
   animation:
-    heroStoryCrossfade 36s ease-in-out infinite,
-    heroStoryPan 36s ease-in-out infinite alternate;
+    heroStoryCrossfade 30s ease-in-out infinite,
+    heroStoryPan 30s ease-in-out infinite alternate;
 }
 .hero-story-slide-1 { opacity: 1; animation-delay: 0s, 0s; }
-.hero-story-slide-2 { animation-delay: -30s, -30s; }
-.hero-story-slide-3 { animation-delay: -24s, -24s; }
-.hero-story-slide-4 { animation-delay: -18s, -18s; }
-.hero-story-slide-5 { animation-delay: -12s, -12s; }
-.hero-story-slide-6 { animation-delay: -6s, -6s; }
+.hero-story-slide-2 { animation-delay: -24s, -24s; }
+.hero-story-slide-3 { animation-delay: -18s, -18s; }
+.hero-story-slide-4 { animation-delay: -12s, -12s; }
+.hero-story-slide-5 { animation-delay: -6s, -6s; }
 /* Legacy class kept as a no-op so any lingering reference doesn't
    error in CSS validators or reduced-motion overrides below. */
 .hero-cine-pan { animation: none; }
 
-/* Rotating supporting phrases — fades each phrase in and out one at a
-   time. Each phrase holds for ~2s, total cycle = 12s (4 phrases × 3s). */
+/* Rotating supporting phrases — one phrase per background beat,
+   synced 1:1 with the 30s image loop (6s per phrase). Each phrase
+   fades in, holds, then fades out exactly when its matching image
+   begins its crossfade to the next beat. */
 @keyframes heroRotatePhrase {
-  0%, 6%   { opacity: 0; transform: translateY(4px); }
-  10%, 22% { opacity: 1; transform: translateY(0); }
-  26%, 100% { opacity: 0; transform: translateY(-2px); }
+  /* 6s per phrase × 5 = 30s. Fade in 0–4%, hold 4–17%, fade out 17–20%,
+     hidden 20–100%. */
+  0%          { opacity: 0; transform: translateY(4px); }
+  4%, 17%     { opacity: 1; transform: translateY(0); }
+  20%, 100%   { opacity: 0; transform: translateY(-2px); }
 }
 .hero-rotating-phrases {
   position: relative;
@@ -1661,12 +1664,16 @@
   inset: 0;
   display: inline-block;
   opacity: 0;
-  animation: heroRotatePhrase 12s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  animation: heroRotatePhrase 30s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
-.hero-rotating-phrase:nth-child(1) { animation-delay: 1.2s; }
-.hero-rotating-phrase:nth-child(2) { animation-delay: 4.2s; }
-.hero-rotating-phrase:nth-child(3) { animation-delay: 7.2s; }
-.hero-rotating-phrase:nth-child(4) { animation-delay: 10.2s; }
+/* Phrase N starts when slide N becomes the active beat. Slide 1 is at
+   t=0; each subsequent slide is 6s later. The phrase keyframes have a
+   short pre-roll, so we stagger by 6s with no extra offset. */
+.hero-rotating-phrase:nth-child(1) { animation-delay: 0s; }
+.hero-rotating-phrase:nth-child(2) { animation-delay: -24s; }
+.hero-rotating-phrase:nth-child(3) { animation-delay: -18s; }
+.hero-rotating-phrase:nth-child(4) { animation-delay: -12s; }
+.hero-rotating-phrase:nth-child(5) { animation-delay: -6s; }
 
 @media (prefers-reduced-motion: reduce) {
   .hero-cine-pan { animation: none !important; transform: none !important; }
