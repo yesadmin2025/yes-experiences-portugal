@@ -477,174 +477,183 @@ function HomePage() {
 
   return (
     <SiteLayout>
-      <div className="home-energy">
-      {/* 1 — HERO
-          One strong real image, calm overlays, two CTAs, no parallax,
-          no zoom. HERO_COPY stays byte-exact for lock parity. The brand
-          signature ("Whatever you have in mind, We say YES.") is rendered
-          ONCE inside HERO_COPY.brandLine — no duplicate slogans. */}
-      <section
-        className="relative min-h-[80svh] md:min-h-[94vh] flex items-end overflow-hidden"
-      >
-        {/* Cinematic 5-beat story sequence — real Viator-sourced imagery,
-            no stock. Each slide holds ~5s + 1s crossfade, total loop = 30s.
-            A slow Ken-Burns pan implies continuous, calm motion. The
-            rotating supporting line below the subheadline cycles in
-            lock-step with the image (one phrase per beat, see
-            `.hero-rotating-phrase:nth-child(N)` delays). YES story arc:
-              1. Discovery        — coastal road       (hero-coast)
-              2. Local moment     — wine table         (Arrábida lunch)
-              3. Hidden place     — viewpoint/vineyard (Arrábida viewpoint)
-              4. Celebration      — estate / intimate  (Sintra estates)
-              5. Live route       — multi-region path  (Tomar–Coimbra)
-            Slide 1 is the SSR/static fallback. Reduced-motion users
-            freeze on slide 1 with no animation. */}
-        <div
-          aria-hidden="true"
-          className="hero-story-stage absolute inset-0 w-full h-full overflow-hidden"
-        >
-          <img
-            src={heroImg}
-            alt=""
-            className="hero-story-slide hero-story-slide-1 absolute inset-0 w-full h-full object-cover object-center"
-            width={1920}
-            height={1080}
-            fetchPriority="high"
-          />
-          <img
-            src={imgArrabidaWineLunch}
-            alt=""
-            className="hero-story-slide hero-story-slide-2 absolute inset-0 w-full h-full object-cover object-center"
-            loading="lazy"
-            decoding="async"
-          />
-          <img
-            src={imgArrabidaViewpoint}
-            alt=""
-            className="hero-story-slide hero-story-slide-3 absolute inset-0 w-full h-full object-cover object-center"
-            loading="lazy"
-            decoding="async"
-          />
-          <img
-            src={imgSintraEstates}
-            alt=""
-            className="hero-story-slide hero-story-slide-4 absolute inset-0 w-full h-full object-cover object-center"
-            loading="lazy"
-            decoding="async"
-          />
-          <img
-            src={imgTomarCoimbra}
-            alt=""
-            className="hero-story-slide hero-story-slide-5 absolute inset-0 w-full h-full object-cover object-center"
-            loading="lazy"
-            decoding="async"
-          />
-        </div>
-        {/* Hidden hero alt text for SEO/a11y — moved off the visual layer
-            so the storytelling stage stays a pure aria-hidden backdrop. */}
-        <span className="sr-only">
-          A cinematic story of Portugal — coastal roads, local tables, hidden viewpoints, boat journeys, celebrations and shared days with friends.
-        </span>
-        {/* Soft dark gradient — required by brief for any text-over-image.
-            Slightly warm-graded via a subtle amber multiply to keep all
-            beats visually consistent regardless of source white-balance. */}
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(46,30,18,0.18)_0%,rgba(46,30,18,0.06)_45%,rgba(46,30,18,0.22)_100%)] mix-blend-multiply pointer-events-none z-[2]" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/85 via-[color:var(--charcoal-deep)]/45 to-[color:var(--charcoal-deep)]/40 md:from-[color:var(--charcoal-deep)]/80 md:via-[color:var(--charcoal-deep)]/35 md:to-[color:var(--charcoal-deep)]/30 pointer-events-none z-[2]" />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(15,15,15,0.65)_0%,rgba(15,15,15,0.4)_35%,transparent_70%)] md:bg-[linear-gradient(90deg,rgba(15,15,15,0.6)_0%,rgba(15,15,15,0.32)_40%,transparent_72%)] pointer-events-none z-[2]" />
+       <div className="home-energy">
+       {/* 1 — HERO
+           Mobile-first cinematic 4-beat storytelling sequence. Each beat
+           communicates ONE emotional idea. Copy reveals progressively in
+           a calm cascade so the user feels atmosphere first, action last.
+           HERO_COPY stays byte-exact for lock parity. The brand signature
+           ("Whatever you have in mind, We say YES.") is rendered ONCE
+           inside HERO_COPY.brandLine — no duplicate slogans.
 
-        <div className="container-x relative z-10 pb-14 md:pb-36 pt-32 md:pt-40">
-          <div className="max-w-2xl md:max-w-3xl text-[color:var(--ivory)]">
-            <span className="inline-flex items-center gap-2 sm:gap-3.5 max-w-full text-[10px] xs:text-[10.5px] sm:text-[12px] md:text-[13px] uppercase tracking-[0.16em] xs:tracking-[0.2em] sm:tracking-[0.26em] md:tracking-[0.3em] text-[color:var(--gold)] opacity-0 animate-[heroFade_0.8s_ease-out_0.1s_forwards]">
-              <span aria-hidden="true" className="shrink-0">✦</span>
-              <span data-hero-field="eyebrow" className="whitespace-nowrap truncate">
-                {HERO_COPY.eyebrow}
-              </span>
-              <span aria-hidden="true" className="shrink-0">✦</span>
-            </span>
+           Reveal cascade (all `forwards`, so the animation freeze in
+           e2e tests resolves to the final visible state):
+             0.20s  eyebrow         — slide 1 atmosphere
+             0.55s  headline        — slide 1 hook
+             1.50s  supporting line — slide 2 personalization
+             2.40s  microcopy       — slide 3 reassurance
+             3.10s  primary CTA     — slide 4 action
+             3.40s  secondary CTA   — slide 4 action
 
-            <h1
-              data-hero-field="headlineLine1 headlineLine2"
-              className="hero-h1 serif mt-5 md:mt-8 text-[2.05rem] sm:text-[2.7rem] md:text-[4rem] lg:text-[4.6rem] leading-[1.1] sm:leading-[1.04] md:leading-[1.0] tracking-[-0.02em] text-[color:var(--ivory)] text-left opacity-0 animate-[heroFade_0.9s_ease-out_0.25s_forwards] [text-shadow:0_2px_18px_rgba(0,0,0,0.35)]"
-            >
-              <span data-hero-field="headlineLine1" className="block font-medium tracking-[-0.018em]">
-                {HERO_COPY.headlineLine1}
-              </span>
-              <span
-                data-hero-field="headlineLine2"
-                className="block italic font-normal text-[color:var(--gold-soft)] mt-1 md:mt-1.5 text-[2.05rem] sm:text-[2.7rem] md:text-[4rem] lg:text-[4.6rem] tracking-[-0.024em] leading-[1.1] sm:leading-[1.04] md:leading-[1.0]"
-              >
-                {HERO_COPY.headlineLine2}
-              </span>
-            </h1>
+           4-beat background sequence — real Viator-sourced imagery only:
+             1. Opening / hook       — coastal road        (hero-coast)
+             2. Personalization      — wine table          (Arrábida lunch)
+             3. Local / authentic    — hidden viewpoint    (Arrábida viewpoint)
+             4. Action / celebration — estate intimate     (Sintra estates)
+           40s total loop (10s per beat ≈ 8s hold + 2s crossfade).
+           Slide 1 is the SSR/static fallback. Reduced-motion freezes
+           on slide 1 with all copy at full opacity. */}
+       <section
+         className="relative min-h-[88svh] md:min-h-[94vh] flex items-end overflow-hidden"
+       >
+         <div
+           aria-hidden="true"
+           className="hero-story-stage absolute inset-0 w-full h-full overflow-hidden"
+         >
+           <img
+             src={heroImg}
+             alt=""
+             className="hero-story-slide hero-story-slide-1 absolute inset-0 w-full h-full object-cover object-center"
+             width={1920}
+             height={1080}
+             fetchPriority="high"
+           />
+           <img
+             src={imgArrabidaWineLunch}
+             alt=""
+             className="hero-story-slide hero-story-slide-2 absolute inset-0 w-full h-full object-cover object-center"
+             loading="lazy"
+             decoding="async"
+           />
+           <img
+             src={imgArrabidaViewpoint}
+             alt=""
+             className="hero-story-slide hero-story-slide-3 absolute inset-0 w-full h-full object-cover object-center"
+             loading="lazy"
+             decoding="async"
+           />
+           <img
+             src={imgSintraEstates}
+             alt=""
+             className="hero-story-slide hero-story-slide-4 absolute inset-0 w-full h-full object-cover object-center"
+             loading="lazy"
+             decoding="async"
+           />
+         </div>
+         {/* Hidden hero alt text for SEO/a11y — moved off the visual layer
+             so the storytelling stage stays a pure aria-hidden backdrop. */}
+         <span className="sr-only">
+           A cinematic story of Portugal — coastal roads, intimate local tables, hidden viewpoints and shared celebrations.
+         </span>
+         {/* Calm cinematic overlay — warm amber multiply + a soft bottom
+             gradient so headline + CTAs always sit on a readable, premium
+             surface without muddying the imagery. */}
+         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(46,30,18,0.16)_0%,rgba(46,30,18,0.04)_45%,rgba(46,30,18,0.20)_100%)] mix-blend-multiply pointer-events-none z-[2]" />
+         <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--charcoal-deep)]/82 via-[color:var(--charcoal-deep)]/40 to-[color:var(--charcoal-deep)]/30 md:from-[color:var(--charcoal-deep)]/78 md:via-[color:var(--charcoal-deep)]/30 md:to-[color:var(--charcoal-deep)]/22 pointer-events-none z-[2]" />
+         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(15,15,15,0.55)_0%,rgba(15,15,15,0.30)_42%,transparent_75%)] md:bg-[linear-gradient(90deg,rgba(15,15,15,0.55)_0%,rgba(15,15,15,0.28)_42%,transparent_75%)] pointer-events-none z-[2]" />
 
-            {/* Subheadline — relocated visually below the hero (see the
-                "hero-rest" strip after this section). It stays in the DOM
-                here as an a11y/SEO anchor with the lock-required
-                `data-hero-field`, but is visually hidden so the first
-                screen stays cinematic and uncluttered.
-                The full prose remains *visible* on the page just below
-                the hero, so e2e visibility locks still pass. */}
-            <p
-              data-hero-field="subheadline"
-              className="sr-only"
-            >
-              {HERO_COPY.subheadline}
-            </p>
+         {/* Slide indicator — 4 minimal gold dots, the active dot quietly
+             tracks the current beat. Aria-hidden, decorative. */}
+         <div
+           aria-hidden="true"
+           className="hero-story-dots absolute z-10 left-1/2 -translate-x-1/2 bottom-5 md:left-auto md:translate-x-0 md:right-10 md:bottom-10 flex items-center gap-2.5 opacity-0 animate-[heroFade_0.9s_ease-out_1.8s_forwards]"
+         >
+           <span className="hero-story-dot hero-story-dot-1" />
+           <span className="hero-story-dot hero-story-dot-2" />
+           <span className="hero-story-dot hero-story-dot-3" />
+           <span className="hero-story-dot hero-story-dot-4" />
+         </div>
 
-            {/* Rotating supporting line — one phrase per image beat,
-                synced 1:1 with the 30s background loop (6s each).
-                Aria-hidden so SRs don't pick up the cycle. */}
-            <div
-              aria-hidden="true"
-              className="hero-rotating-phrases mt-5 md:mt-7 h-[20px] md:h-[22px] text-[12px] md:text-[13px] tracking-[0.04em] text-[color:var(--gold-soft)]/95 italic opacity-0 animate-[heroFade_0.9s_ease-out_0.55s_forwards]"
-            >
-              <span className="hero-rotating-phrase">Hidden places, chosen your way.</span>
-              <span className="hero-rotating-phrase">Local moments, shaped around you.</span>
-              <span className="hero-rotating-phrase">From coastlines to vineyards, at your rhythm.</span>
-              <span className="hero-rotating-phrase">For a day, a celebration, or something unforgettable.</span>
-              <span className="hero-rotating-phrase">Build it live. Confirm it instantly.</span>
-            </div>
+         <div className="container-x relative z-10 pb-16 md:pb-36 pt-36 md:pt-40">
+           <div className="max-w-2xl md:max-w-3xl text-[color:var(--ivory)]">
+             <span className="inline-flex items-center gap-2 sm:gap-3.5 max-w-full text-[10px] xs:text-[10.5px] sm:text-[12px] md:text-[13px] uppercase tracking-[0.22em] xs:tracking-[0.24em] sm:tracking-[0.28em] md:tracking-[0.3em] text-[color:var(--gold)] opacity-0 animate-[heroFade_0.9s_ease-out_0.20s_forwards]">
+               <span aria-hidden="true" className="shrink-0">✦</span>
+               <span data-hero-field="eyebrow" className="whitespace-nowrap truncate">
+                 {HERO_COPY.eyebrow}
+               </span>
+               <span aria-hidden="true" className="shrink-0">✦</span>
+             </span>
 
-            {/* CTAs — exactly two. Slightly smaller per refinement brief
-                so they invite without dominating the cinematic image. */}
-            <div className="mt-7 md:mt-9 flex flex-col sm:flex-row gap-3 sm:gap-4 w-full max-w-[20rem] sm:max-w-lg opacity-0 animate-[heroFade_0.9s_ease-out_0.85s_forwards]">
-              <Link
-                to="/builder"
-                data-hero-field="primaryCta"
-                className="hero-cta-button hero-cta-button--compact cta-primary he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left"
-              >
-                <span className="block">{HERO_COPY.primaryCta}</span>
-                <ArrowRight
-                  size={16}
-                  strokeWidth={2.25}
-                  className="hero-cta-arrow-pulse shrink-0 text-[color:var(--gold-soft)] transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1.5 group-hover:text-[color:var(--gold)]"
-                  aria-hidden="true"
-                />
-              </Link>
-              <Link
-                to="/experiences"
-                data-hero-field="secondaryCta"
-                className="hero-cta-button hero-cta-button--compact cta-secondary-dark he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left"
-              >
-                <span className="block">{HERO_COPY.secondaryCta}</span>
-                <ArrowRight
-                  size={16}
-                  strokeWidth={2.25}
-                  className="hero-cta-arrow-pulse shrink-0 text-[color:var(--gold-soft)] transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1.5 group-hover:text-[color:var(--gold)]"
-                  aria-hidden="true"
-                />
-              </Link>
-            </div>
+             <h1
+               data-hero-field="headlineLine1 headlineLine2"
+               className="hero-h1 serif mt-7 md:mt-8 text-[2.15rem] sm:text-[2.8rem] md:text-[4rem] lg:text-[4.6rem] leading-[1.08] sm:leading-[1.04] md:leading-[1.0] tracking-[-0.022em] text-[color:var(--ivory)] text-left opacity-0 animate-[heroFade_1s_ease-out_0.55s_forwards] [text-shadow:0_2px_22px_rgba(0,0,0,0.4)]"
+             >
+               <span data-hero-field="headlineLine1" className="block font-medium tracking-[-0.018em]">
+                 {HERO_COPY.headlineLine1}
+               </span>
+               <span
+                 data-hero-field="headlineLine2"
+                 className="block italic font-normal text-[color:var(--gold-soft)] mt-1.5 md:mt-1.5 text-[2.15rem] sm:text-[2.8rem] md:text-[4rem] lg:text-[4.6rem] tracking-[-0.026em] leading-[1.08] sm:leading-[1.04] md:leading-[1.0]"
+               >
+                 {HERO_COPY.headlineLine2}
+               </span>
+             </h1>
 
-            {/* Microcopy under the CTAs — short and calm. */}
-            <div className="hero-rhythm-cta-to-microcopy max-w-sm sm:max-w-xl mx-auto sm:mx-0 mt-5 md:mt-6 opacity-0 animate-[heroFade_1.1s_ease-out_1.15s_forwards]">
-              <p
-                data-hero-field="microcopy"
-                className="text-[12.5px] md:text-[13px] text-[color:var(--ivory)]/85 leading-[1.55] font-normal tracking-[0.01em] text-center sm:text-left"
-              >
-                {HERO_COPY.microcopy}
-              </p>
-            </div>
+             {/* Subheadline — kept in DOM as an SEO/a11y anchor (full prose
+                 still visible in the rest strip below). On the cinematic
+                 first screen we show only a single, calm supporting line
+                 (next element), per the storytelling brief. */}
+             <p
+               data-hero-field="subheadline"
+               className="sr-only"
+             >
+               {HERO_COPY.subheadline}
+             </p>
+
+             {/* Single calm supporting line — one core idea per slide.
+                 Replaces the previous 5-phrase rotator (too busy). Stays
+                 visible the whole time so the eye has one quiet anchor
+                 between headline and CTAs. */}
+             <p
+               aria-hidden="true"
+               className="hero-supporting mt-6 md:mt-7 max-w-[22rem] sm:max-w-md text-[13px] md:text-[14.5px] leading-[1.55] tracking-[0.005em] text-[color:var(--ivory)]/85 font-normal opacity-0 animate-[heroFade_1s_ease-out_1.5s_forwards]"
+             >
+               Local moments, shaped around you.
+             </p>
+
+             {/* Microcopy — appears before the CTAs in the cascade so the
+                 reassurance lands first ("instant, no forms"). */}
+             <div className="hero-rhythm-cta-to-microcopy max-w-sm sm:max-w-xl mx-auto sm:mx-0 mt-6 md:mt-7 opacity-0 animate-[heroFade_1s_ease-out_2.4s_forwards]">
+               <p
+                 data-hero-field="microcopy"
+                 className="text-[12px] md:text-[13px] text-[color:var(--ivory)]/80 leading-[1.55] font-normal tracking-[0.01em] text-left"
+               >
+                 {HERO_COPY.microcopy}
+               </p>
+             </div>
+
+             {/* CTAs — exactly two, refined compact size. Reveal LAST so
+                 the user feels invited, not pushed. Equal width on mobile,
+                 left-aligned label + right-pinned arrow for matched
+                 visual logic across both buttons. */}
+             <div className="mt-7 md:mt-9 flex flex-col sm:flex-row gap-3 sm:gap-4 w-full max-w-[22rem] sm:max-w-lg">
+               <Link
+                 to="/builder"
+                 data-hero-field="primaryCta"
+                 className="hero-cta-button hero-cta-button--compact cta-primary he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left opacity-0 animate-[heroFade_1s_ease-out_3.1s_forwards]"
+               >
+                 <span className="block">{HERO_COPY.primaryCta}</span>
+                 <ArrowRight
+                   size={16}
+                   strokeWidth={2.25}
+                   className="hero-cta-arrow-pulse shrink-0 text-[color:var(--gold-soft)] transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1.5 group-hover:text-[color:var(--gold)]"
+                   aria-hidden="true"
+                 />
+               </Link>
+               <Link
+                 to="/experiences"
+                 data-hero-field="secondaryCta"
+                 className="hero-cta-button hero-cta-button--compact cta-secondary-dark he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left opacity-0 animate-[heroFade_1s_ease-out_3.4s_forwards]"
+               >
+                 <span className="block">{HERO_COPY.secondaryCta}</span>
+                 <ArrowRight
+                   size={16}
+                   strokeWidth={2.25}
+                   className="hero-cta-arrow-pulse shrink-0 text-[color:var(--gold-soft)] transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1.5 group-hover:text-[color:var(--gold)]"
+                   aria-hidden="true"
+                 />
+               </Link>
+             </div>
 
             {/* Brand signature — relocated below the hero as a calm
                 separator strip. Still rendered ONCE on the page, still
