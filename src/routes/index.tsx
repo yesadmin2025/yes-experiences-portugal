@@ -600,16 +600,31 @@ function HomePage() {
                {HERO_COPY.subheadline}
              </p>
 
-             {/* Single calm supporting line — one core idea per slide.
-                 Replaces the previous 5-phrase rotator (too busy). Stays
-                 visible the whole time so the eye has one quiet anchor
-                 between headline and CTAs. */}
-             <p
-               aria-hidden="true"
-               className="hero-supporting mt-6 md:mt-7 max-w-[22rem] sm:max-w-md text-[13px] md:text-[14.5px] leading-[1.55] tracking-[0.005em] text-[color:var(--ivory)]/85 font-normal opacity-0 animate-[heroFade_1s_ease-out_1.5s_forwards]"
-             >
-               Local moments, shaped around you.
-             </p>
+              {/* Scene-synced supporting lines — exactly ONE visible at a
+                  time, each line matches the matching background slide:
+                    Scene 1 (opening)         → "Local moments, shaped around you."
+                    Scene 2 (personalization) → "Choose the places, pace and moments that feel right."
+                    Scene 3 (local / hidden)  → "Guided by locals who know where the real moments happen."
+                    Scene 4 (action)          → "From a private day to a full journey, create it your way."
+                  Cycle = 24s (6s per scene). Crossfade ≈ 0.8s.
+                  All lines occupy the same grid cell so layout never shifts. */}
+              <div
+                aria-hidden="true"
+                className="hero-supporting-stage mt-6 md:mt-7 max-w-[22rem] sm:max-w-md min-h-[42px] md:min-h-[46px] relative opacity-0 animate-[heroFade_1s_ease-out_1.5s_forwards]"
+              >
+                <p className="hero-supporting-line hero-supporting-line-1 absolute inset-0 text-[13px] md:text-[14.5px] leading-[1.55] tracking-[0.005em] text-[color:var(--ivory)]/90 font-normal">
+                  Local moments, shaped around you.
+                </p>
+                <p className="hero-supporting-line hero-supporting-line-2 absolute inset-0 text-[13px] md:text-[14.5px] leading-[1.55] tracking-[0.005em] text-[color:var(--ivory)]/90 font-normal">
+                  Choose the places, pace and moments that feel right.
+                </p>
+                <p className="hero-supporting-line hero-supporting-line-3 absolute inset-0 text-[13px] md:text-[14.5px] leading-[1.55] tracking-[0.005em] text-[color:var(--ivory)]/90 font-normal">
+                  Guided by locals who know where the real moments happen.
+                </p>
+                <p className="hero-supporting-line hero-supporting-line-4 absolute inset-0 text-[13px] md:text-[14.5px] leading-[1.55] tracking-[0.005em] text-[color:var(--ivory)]/90 font-normal">
+                  From a private day to a full journey, create it your way.
+                </p>
+              </div>
 
              {/* CTAs — exactly two, refined compact size. They reveal late
                  in the cascade so the user feels invited, not pushed. Equal
