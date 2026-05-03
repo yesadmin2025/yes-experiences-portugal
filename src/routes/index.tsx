@@ -19,7 +19,6 @@ import imgArrabidaWineLunch from "@/assets/tours/arrabida-wine-allinclusive/lunc
 import imgSintraCaboDaRoca from "@/assets/tours/sintra-cascais/cabo-da-roca.jpg";
 import imgTomarCoimbra from "@/assets/tours/tomar-coimbra/hero.jpg";
 // Additional story beats — celebration estate + multi-region route.
-import imgSintraEstates from "@/assets/tours/sintra-cascais/estates.jpg";
 // Extra real Viator-sourced beats used by the cinematic hero rotation —
 // each scene gets a distinct, story-rich Portugal image so the visuals
 // carry the narrative even before the user reads the copy.
