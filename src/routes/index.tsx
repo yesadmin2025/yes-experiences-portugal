@@ -609,7 +609,7 @@ function HomePage() {
            Slide 1 is the SSR/static fallback. Reduced-motion freezes
            on slide 1 with all copy at full opacity. */}
         <section
-          className="relative min-h-[86svh] md:min-h-[92vh] flex items-end overflow-hidden"
+          className="relative min-h-[82svh] md:min-h-[90vh] flex items-end overflow-hidden"
           data-hero-scene={heroScene.id}
           data-hero-scene-index={heroSceneIndex}
         >
@@ -677,7 +677,7 @@ function HomePage() {
              <h1
                data-hero-field="headlineLine1 headlineLine2"
                data-hero-anchor={heroSceneIndex >= 2 ? "rest" : "spotlight"}
-               className="hero-h1 hero-h1-cinematic serif mt-6 md:mt-7 text-[1.85rem] sm:text-[2.5rem] md:text-[3.4rem] lg:text-[3.9rem] leading-[1.08] sm:leading-[1.04] md:leading-[1.02] tracking-[-0.022em] text-[color:var(--ivory)] text-left opacity-0 animate-[heroFade_1s_ease-out_0.55s_forwards] [text-shadow:0_2px_22px_rgba(0,0,0,0.4)]"
+               className="hero-h1 hero-h1-cinematic serif mt-5 md:mt-7 text-[1.6rem] xs:text-[1.7rem] sm:text-[2.25rem] md:text-[3.1rem] lg:text-[3.6rem] leading-[1.12] sm:leading-[1.06] md:leading-[1.02] tracking-[-0.02em] text-[color:var(--ivory)] text-left opacity-0 animate-[heroFade_1s_ease-out_0.55s_forwards] [text-shadow:0_2px_22px_rgba(0,0,0,0.4)]"
              >
                <span
                  data-hero-field="headlineLine1"
@@ -714,7 +714,7 @@ function HomePage() {
              >
                <p
                  key={`main-${heroScene.id}`}
-                 className="hero-scene-main serif text-[1.65rem] sm:text-[2.1rem] md:text-[2.6rem] leading-[1.14] tracking-[-0.018em] font-medium text-[color:var(--ivory)] [text-shadow:0_2px_18px_rgba(0,0,0,0.35)]"
+                 className="hero-scene-main serif text-[1.45rem] xs:text-[1.55rem] sm:text-[1.95rem] md:text-[2.4rem] leading-[1.18] tracking-[-0.016em] font-normal text-[color:var(--ivory)] [text-shadow:0_2px_18px_rgba(0,0,0,0.35)]"
                >
                  {heroScene.main}
                </p>
