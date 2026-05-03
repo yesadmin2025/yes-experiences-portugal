@@ -26,7 +26,7 @@ import { test, expect, type Page } from "@playwright/test";
  *     27.0px?".
  */
 
-const ROUTE = "/";
+const ROUTE = "/?hero=last";
 
 async function gotoHero(page: Page) {
   await page.goto(ROUTE);
