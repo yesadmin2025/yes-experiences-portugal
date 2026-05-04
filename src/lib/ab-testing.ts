@@ -216,7 +216,7 @@ export async function trackAbEvent(
       route: meta?.route ?? window.location.pathname,
       ...(safeMeta ? { meta: safeMeta } : {}),
     };
-    await supabase.from("hero_ab_events").insert(payload);
+    await supabase.from("hero_ab_events").insert([payload]);
   } catch {
     /* swallow — analytics never blocks UX */
   }
