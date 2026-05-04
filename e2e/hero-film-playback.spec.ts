@@ -107,6 +107,7 @@ const VIEWPORTS = [
     name: "desktop 1280×720",
     use: { viewport: { width: 1280, height: 720 } },
     droppedFrameRatioMax: 0.03, // ≤3% on desktop CI
+    firstFrameBudgetMs: 2000, // first decoded frame within 2s on desktop
   },
   {
     name: "mobile 393×851 (iPhone 14)",
@@ -115,6 +116,7 @@ const VIEWPORTS = [
       viewport: { width: 393, height: 851 },
     },
     droppedFrameRatioMax: 0.05, // ≤5% under mobile decode pressure
+    firstFrameBudgetMs: 2500, // mobile decode pressure → +500ms slack
   },
 ] as const;
 
