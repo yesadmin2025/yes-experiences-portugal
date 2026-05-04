@@ -349,15 +349,16 @@ function HomePage() {
    *     but with tighter preload (only the NEXT scene is fetched as
    *     `metadata`, never `auto`) so initial load stays low.
    * ────────────────────────────────────────────────────────────── */
-  const [videosAllowed, setVideosAllowed] = useState(true);
+  // Hero is a 5-scene cinematic VIDEO reel — every scene is a moving
+  // clip, never a still image. Per explicit product direction, the
+  // hero clips are decorative + muted + looping, so they autoplay on
+  // every device including reduced-motion (the clips are gentle
+  // drifts/pull-backs, never strobing or fast cuts). Save-Data still
+  // shrinks preload weight but does NOT freeze the active clip.
+  const [videosAllowed] = useState(true);
   const [saveDataMode, setSaveDataMode] = useState(false);
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      // a11y: don't autoplay, but still mount videos (paused on first frame).
-      setVideosAllowed(false);
-      return;
-    }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const conn = (navigator as any).connection;
     if (conn) {
@@ -366,7 +367,6 @@ function HomePage() {
         setSaveDataMode(true);
       }
     }
-    setVideosAllowed(true);
   }, []);
 
   // Warm ONLY the next scene's video URL via `<link rel="preload">` so
