@@ -3,7 +3,7 @@
  *
  * Locks the contract of `scaleHeroTimeline(actualDuration)`:
  *
- *   1. When `actualDuration` is within ±0.25s of the canonical 41.5s
+ *   1. When `actualDuration` is within ±0.25s of the canonical 39.633s
  *      master, the manifest is returned VERBATIM (no float drift).
  *   2. For any other finite, positive duration, every chapter's
  *      startTime/endTime is proportionally scaled.
@@ -51,7 +51,7 @@ function assertNoGapsAndOrdered(
 }
 
 describe("scaleHeroTimeline — canonical pass-through", () => {
-  it("returns the manifest verbatim when duration === canonical 41.5s", () => {
+  it("returns the manifest verbatim when duration === canonical 39.633s", () => {
     const out = scaleHeroTimeline(HERO_FILM_CANONICAL_DURATION_S);
     expect(out).toEqual(
       HERO_SCENES.map((s) => ({
@@ -62,7 +62,7 @@ describe("scaleHeroTimeline — canonical pass-through", () => {
     );
   });
 
-  it.each([41.25, 41.5, 41.749])(
+  it.each([39.4, 39.633333, 39.85])(
     "treats %ss as canonical (within ±0.25s tolerance) and returns manifest verbatim",
     (duration) => {
       const out = scaleHeroTimeline(duration);
