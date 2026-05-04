@@ -88,6 +88,17 @@ export type HeroScene = {
   main: readonly string[];
   /** Optional small supporting microline. */
   support?: string;
+  /**
+   * Where in the frame the chapter copy is allowed to sit so it never
+   * covers faces / primary subjects in this beat of the film.
+   *   "bottom" — default. Copy sits in the lower third (clear sky /
+   *              landscape / architecture above).
+   *   "top"    — copy shifts to the upper third because faces or
+   *              tabletop subjects sit in the lower half of the frame
+   *              (e.g. vineyard table beat, azulejo restaurant beat).
+   * The video itself never changes — only the text anchor does.
+   */
+  safeZone?: "bottom" | "top";
   credits: readonly HeroAssetCredit[];
 };
 
