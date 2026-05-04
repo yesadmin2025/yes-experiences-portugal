@@ -674,7 +674,7 @@ function HomePage() {
               bottom of the hero. Re-keys per scene so the fill replays. */}
          <div
            aria-hidden="true"
-            className="hero-story-progress absolute z-10 left-6 right-6 bottom-5 md:left-10 md:right-10 md:bottom-9 opacity-0 animate-[heroFade_0.9s_ease-out_1.4s_forwards]"
+            className="hero-story-progress absolute z-10 left-6 right-6 bottom-5 md:left-10 md:right-10 md:bottom-9 opacity-0 animate-[heroFadeFromRight_0.9s_ease-out_1.4s_forwards]"
          >
             <span key={heroScene.id} className="hero-story-progress-fill" />
          </div>
@@ -683,7 +683,7 @@ function HomePage() {
            <div className="max-w-[19.5rem] xs:max-w-[21rem] sm:max-w-2xl md:max-w-3xl text-[color:var(--ivory)] text-left">
               {/* Eyebrow — refined: smaller, lighter, calmer. Should sit
                   above the image without dominating it. */}
-              <span className="inline-flex items-center gap-2 sm:gap-3 max-w-full text-[9px] xs:text-[9.5px] sm:text-[10.5px] md:text-[11px] uppercase tracking-[0.22em] xs:tracking-[0.26em] sm:tracking-[0.3em] text-[color:var(--gold-soft)] [text-shadow:0_1px_8px_rgba(0,0,0,0.6),0_0_2px_rgba(0,0,0,0.5)] opacity-0 animate-[heroFade_0.9s_ease-out_0.20s_forwards]">
+              <span className="inline-flex items-center gap-2 sm:gap-3 max-w-full text-[9px] xs:text-[9.5px] sm:text-[10.5px] md:text-[11px] uppercase tracking-[0.22em] xs:tracking-[0.26em] sm:tracking-[0.3em] text-[color:var(--gold-soft)] [text-shadow:0_1px_8px_rgba(0,0,0,0.6),0_0_2px_rgba(0,0,0,0.5)] opacity-0 animate-[heroFadeFromRight_0.9s_ease-out_0.20s_forwards]">
                 <span aria-hidden="true" className="shrink-0 text-[7px] sm:text-[8px] opacity-80">✦</span>
                 <span data-hero-field="eyebrow" className="whitespace-nowrap truncate font-medium">
                   {HERO_COPY.eyebrow}
@@ -702,7 +702,7 @@ function HomePage() {
                 <h1
                   data-hero-field="headlineLine1 headlineLine2"
                   data-hero-anchor="spotlight"
-                 className="hero-h1 hero-h1-cinematic serif mt-3.5 md:mt-6 text-[1.4rem] xs:text-[1.6rem] sm:text-[2.15rem] md:text-[2.95rem] lg:text-[3.4rem] leading-[1.16] sm:leading-[1.08] md:leading-[1.04] tracking-[-0.02em] text-[color:var(--ivory)] text-left opacity-0 animate-[heroFade_1s_ease-out_0.55s_forwards] [text-shadow:0_2px_22px_rgba(0,0,0,0.4)]"
+                 className="hero-h1 hero-h1-cinematic serif mt-3.5 md:mt-6 text-[1.4rem] xs:text-[1.6rem] sm:text-[2.15rem] md:text-[2.95rem] lg:text-[3.4rem] leading-[1.16] sm:leading-[1.08] md:leading-[1.04] tracking-[-0.02em] text-[color:var(--ivory)] text-left opacity-0 animate-[heroFadeFromRight_1s_ease-out_0.55s_forwards] [text-shadow:0_2px_22px_rgba(0,0,0,0.4)]"
                >
                  <span
                    data-hero-field="headlineLine1"
