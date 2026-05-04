@@ -53,8 +53,8 @@ jobs:
             bunx playwright install --with-deps chromium
           fi
 
-      - name: Run hero cross-fade + timeline specs (desktop + mobile)
-        run: bunx playwright test e2e/hero-chapter-crossfade.spec.ts e2e/hero-chapter-crossfade-mobile.spec.ts e2e/hero-chapter-timeline.spec.ts
+      - name: Run hero cross-fade + timeline + playback specs (desktop + mobile)
+        run: bunx playwright test e2e/hero-chapter-crossfade.spec.ts e2e/hero-chapter-crossfade-mobile.spec.ts e2e/hero-chapter-timeline.spec.ts e2e/hero-film-playback.spec.ts
         env:
           CI: "true"
 
