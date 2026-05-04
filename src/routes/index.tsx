@@ -771,10 +771,23 @@ function HomePage() {
                   }
                 }
               }}
-              onError={() => {
+              onError={(e) => {
+                // 1080p failed → swap to 720p once. If 720p also fails,
+                // the poster image stays visible (no broken UI).
+                const v = e.currentTarget;
+                if (v.dataset.heroFilmFallback !== "1" && !saveDataMode) {
+                  v.dataset.heroFilmFallback = "1";
+                  // eslint-disable-next-line no-console
+                  console.warn(
+                    `[hero] 1080p film failed; falling back to 720p (${HERO_FILM.src720}).`,
+                  );
+                  v.src = HERO_FILM.src720;
+                  v.load();
+                  return;
+                }
                 // eslint-disable-next-line no-console
                 console.error(
-                  `[hero] continuous film failed to load (${HERO_FILM.src1080}).`,
+                  `[hero] continuous film failed to load — poster fallback active (${HERO_FILM.poster}).`,
                 );
               }}
             />
