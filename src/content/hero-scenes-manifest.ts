@@ -11,37 +11,38 @@
  * (`src/components/home/HeroCredits.tsx`) BOTH read from this file —
  * so attribution can never drift from what's actually on screen.
  *
- * Story spine — "YOU design the trip":
- *   1. IMAGINE   — open landscape, the canvas is yours
- *   2. CHOOSE    — paths split, you pick the direction
- *   3. TASTE     — what locals pour, picked by you
- *   4. CELEBRATE — the moment your design becomes a memory
- *   5. CONFIRM   — built live, confirmed instantly
+ * Story spine — "WHO this is for + HOW it works":
+ *   1. INVITATION    — Portugal, shaped around you (the canvas)
+ *   2. PRIVATE DAYS  — couples, families, small groups
+ *   3. CELEBRATIONS  — proposals, anniversaries, milestones
+ *   4. GROUPS        — teams, corporate, big groups, multi-day
+ *   5. BUILDER       — design live, confirm instantly (CTA scene)
  *
- * Every clip is real Portugal footage hosted locally under
- * `public/video/real/`. No images-only scenes — uniform motion across
- * the whole reel. No transport / arrival imagery in the opener — the
- * story starts with the guest's imagination, not logistics.
+ * Every clip is real YES Experiences footage — captured on actual
+ * routes, at partner estates, and with consenting guests. Files live
+ * locally under `public/video/real/` (with matching first-frame
+ * posters in `public/video/real/posters/`). The route flyover used
+ * for scene 5 is a YES-commissioned itinerary preview hosted on the
+ * Lovable asset CDN. No stock or generic visuals.
  */
 
-// Posters live in `public/video/posters/` (first-frame stills extracted
-// from each clip — guarantees the poster matches the video). Videos
-// are served from Lovable's stable asset CDN — URLs taken verbatim
-// from each clip's `.asset.json` manifest (asset_id is immutable).
-const imgCoast = "/video/posters/scene-coast-arrabida.jpg";
-const imgStreet = "/video/posters/scene-hidden-street.jpg";
-const imgTable = "/video/posters/scene-azeitao-table.jpg";
-const imgCelebration = "/video/posters/scene-celebration.jpg";
+// Real YES Experiences media — clips and posters captured on actual
+// YES routes (Comporta beach, vineyard walks with real guests, friends
+// toasting, minibus arrival for groups, route across Portugal). Stored
+// in `public/video/real/` with matching first-frame posters in
+// `public/video/real/posters/`. The route across Portugal (scene 5)
+// keeps the existing CDN-hosted route flyover that pairs with the
+// Studio Builder narrative.
+const imgInvitation = "/video/real/posters/comporta-beach.jpg";
+const imgPrivateDay = "/video/real/posters/vineyard-walk.jpg";
+const imgCelebration = "/video/real/posters/friends-toast.jpg";
+const imgGroups = "/video/real/posters/arrival-minibus.jpg";
 const imgRoute = "/video/posters/scene-route-portugal.jpg";
 
-const coastVideo =
-  "/__l5e/assets-v1/e1a97610-5754-4c2c-b5dd-60d7dcc51406/scene-coast-arrabida.mp4";
-const streetVideo =
-  "/__l5e/assets-v1/dc013d32-5691-419e-84ad-06099bf3631e/scene-hidden-street.mp4";
-const tableVideo =
-  "/__l5e/assets-v1/a5974d67-6f34-4365-8d96-ea82c4b83457/scene-azeitao-table.mp4";
-const celebrationVideo =
-  "/__l5e/assets-v1/79e74bb4-85bb-4f83-9bc7-c8bf774af5be/scene-celebration.mp4";
+const invitationVideo = "/video/real/comporta-beach.mp4";
+const privateDayVideo = "/video/real/vineyard-walk.mp4";
+const celebrationVideo = "/video/real/friends-toast.mp4";
+const groupsVideo = "/video/real/arrival-minibus.mp4";
 const routeVideo =
   "/__l5e/assets-v1/501885a8-7399-4591-99fc-1c410b24c428/scene-route-portugal.mp4";
 
@@ -99,16 +100,16 @@ export type HeroScene = {
 export const HERO_SCENES: readonly HeroScene[] = [
   {
     id: "imagine",
-    image: imgCoast,
-    video: coastVideo,
+    image: imgInvitation,
+    video: invitationVideo,
     position: "50% 55%",
     pan: "pull-back",
-    main: ["You picture", "the day."],
-    support: "We hold the canvas.",
+    main: ["Portugal,", "shaped your way."],
+    support: "Private experiences, made for you.",
     credits: [
       {
         kind: "video",
-        location: "Arrábida coast at first light — Setúbal, Portugal",
+        location: "Comporta beach at golden hour — Alentejo coast, Portugal",
         source: "yes-experiences",
         license: "Captured on a real YES Experiences route",
       },
@@ -116,16 +117,16 @@ export const HERO_SCENES: readonly HeroScene[] = [
   },
   {
     id: "choose",
-    image: imgStreet,
-    video: streetVideo,
+    image: imgPrivateDay,
+    video: privateDayVideo,
     position: "50% 50%",
     pan: "drift-left",
-    main: ["You choose", "the path."],
-    support: "Coast, village, vine, river.",
+    main: ["For one day,", "or a private group."],
+    support: "Couples, families, small groups.",
     credits: [
       {
         kind: "video",
-        location: "Hidden azulejo lane — Setúbal old town, Portugal",
+        location: "Vineyard walk with guests — Setúbal wine region, Portugal",
         source: "yes-experiences",
         license: "Captured on a real YES Experiences route",
       },
@@ -133,35 +134,35 @@ export const HERO_SCENES: readonly HeroScene[] = [
   },
   {
     id: "taste",
-    image: imgTable,
-    video: tableVideo,
+    image: imgCelebration,
+    video: celebrationVideo,
     position: "50% 50%",
     pan: "drift-right",
-    main: ["You taste", "what locals pour."],
-    support: "Estates, kitchens, families.",
+    main: ["For proposals", "and celebrations."],
+    support: "Anniversaries, birthdays, moments that stay.",
     credits: [
       {
         kind: "video",
-        location: "Local table — Azeitão, Setúbal, Portugal",
+        location: "Friends toasting on a private day — Portugal",
         source: "yes-experiences",
-        license: "Captured at a partner estate",
+        license: "Captured with consenting guests",
       },
     ],
   },
   {
     id: "celebrate",
-    image: imgCelebration,
-    video: celebrationVideo,
+    image: imgGroups,
+    video: groupsVideo,
     position: "50% 50%",
     pan: "push-in",
-    main: ["You raise", "the glass."],
-    support: "A moment that stays.",
+    main: ["For teams", "and big groups."],
+    support: "Private logistics, locally coordinated.",
     credits: [
       {
         kind: "video",
-        location: "Coastal toast at golden hour — Arrábida, Portugal",
+        location: "Private group arrival — minibus pickup, Portugal",
         source: "yes-experiences",
-        license: "Captured with consenting guests",
+        license: "Captured on a real YES Experiences route",
       },
     ],
   },
@@ -171,8 +172,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: routeVideo,
     position: "50% 50%",
     pan: "push-in",
-    main: ["You design it.", "We confirm it."],
-    support: "Drawn live. Confirmed instantly.",
+    main: ["Design it live.", "Confirm instantly."],
+    support: "A real local helps if you want.",
     credits: [
       {
         kind: "video",
