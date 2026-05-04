@@ -1,7 +1,7 @@
 /**
  * Hero film manifest — single source of truth.
  *
- * The hero is ONE continuous cinematic brand film (~35s, 30fps, 1080×1920)
+ * The hero is ONE continuous cinematic brand film (~39.6s, 30fps, 1080×1920)
  * — NOT a slideshow, NOT a carousel, NOT five stacked videos. The film is
  * finished from YES Experiences source material with warm color-graded dissolves, so
  * the user always sees a single uninterrupted `<video>` element.
@@ -14,13 +14,14 @@
  * keep working — they all point at the SAME film, on purpose: there is
  * only one source of motion.
  *
- * Story spine — six chapter overlays over one continuous film:
- *   1. PORTUGAL OPENS    ( 0.0s –  4.525s)
- *   2. PRIVATE DAYS      ( 4.525s – 10.808s)
- *   3. FOOD + WINE       (10.808s – 15.325s)
- *   4. GROUPS            (15.325s – 19.542s)
- *   5. MOMENTS           (19.542s – 24.225s)
- *   6. BUILDER + CTA     (24.225s – 35.133s)
+ * Story spine — six chapter overlays locked to the SIX real scene cuts
+ * detected at 4.900 / 11.933 / 17.200 / 22.167 / 27.600 / 39.633:
+ *   1. PORTUGAL OPENS    ( 0.000s –  4.900s)
+ *   2. PRIVATE DAYS      ( 4.900s – 11.933s)
+ *   3. PROPOSALS         (11.933s – 17.200s)
+ *   4. CORPORATE/GROUPS  (17.200s – 22.167s)
+ *   5. MULTI-DAY JOURNEY (22.167s – 27.600s)
+ *   6. BUILDER + CTA     (27.600s – 39.633s)
  *
  * No invented locations or partners. AI was used only as a tonal
  * connective tissue between real YES poster frames — every starting
@@ -34,8 +35,8 @@ const FILM_720 = "/video/film/yes-hero-film-720.mp4";
 const FILM_POSTER = "/video/film/yes-hero-poster.jpg";
 
 export const HERO_FILM = {
-  /** Total film length in seconds (matches the smoothed continuous MP4). */
-  durationSeconds: 35.133333,
+  /** Total film length in seconds (matches the continuous MP4 master). */
+  durationSeconds: 39.633333,
   /** Mobile-first source — used for ≤480px CSS pixels. */
   src720: FILM_720,
   /** Tablet + desktop source. */
@@ -101,29 +102,21 @@ const filmCredit: HeroAssetCredit = {
 
 /**
  * Six chapter overlays sequenced over the SINGLE continuous uploaded film
- * (41.5s, played untouched). Each chapter fades its copy in/out softly
- * — the underlying video never cuts, never slides, never changes source.
+ * (39.633s, played untouched). Each chapter is locked to one of the six
+ * real scene cuts detected in the master at 4.900 / 11.933 / 17.200 /
+ * 22.167 / 27.600 / 39.633 — so the overlay copy always lands over the
+ * scene it describes, never over the next cut. Adjacent windows are
+ * gapless (chapter[i].endTime === chapter[i+1].startTime) so the rAF
+ * lookup never falls into a no-overlay frame, and the chapter overlay
+ * component cross-fades the copy itself (≈600ms) for a smooth handoff
+ * across each visual cut.
  *
- * Pacing — coordinated to the film, NOT the copy
- * -----------------------------------------------
- * Earlier versions packed all six chapters into the first 36s, leaving
- * the last 5.5s with no active overlay (flicker), and ramped through
- * the opening at 4–5s per beat — text felt faster than the visuals.
- *
- * The pacing below stretches across the FULL 41.5s with a calmer cadence
- * (≈6.5–9s per chapter) and zero gaps between chapters, so each fade-out
- * cross-fades directly into the next fade-in. The opening "imagine"
- * chapter holds for 6s with NO main copy (eyebrow + H1 only) so the
- * Portugal visuals are allowed to land before any narrative line is read.
- * The final action chapter gets the longest hold (9s) so the CTAs are on
- * screen long enough to be read, focused, and clicked.
- *
- *   1. PORTUGAL OPENS    ( 0.0s –  6.0s)   — 6.0s, eyebrow/H1 only
- *   2. PRIVATE DAYS      ( 6.0s – 12.5s)   — 6.5s
- *   3. PROPOSALS         (12.5s – 19.0s)   — 6.5s
- *   4. CORPORATE/GROUPS  (19.0s – 25.5s)   — 6.5s
- *   5. MULTI-DAY JOURNEY (25.5s – 32.5s)   — 7.0s
- *   6. BUILDER + CTA     (32.5s – 41.5s)   — 9.0s, action scene
+ *   1. PORTUGAL OPENS    ( 0.000s –  4.900s)   — eyebrow + H1 only
+ *   2. PRIVATE DAYS      ( 4.900s – 11.933s)
+ *   3. PROPOSALS         (11.933s – 17.200s)
+ *   4. CORPORATE/GROUPS  (17.200s – 22.167s)
+ *   5. MULTI-DAY JOURNEY (22.167s – 27.600s)
+ *   6. BUILDER + CTA     (27.600s – 39.633s)   — action scene, longest hold
  */
 export const HERO_SCENES: readonly HeroScene[] = [
   {
@@ -133,7 +126,7 @@ export const HERO_SCENES: readonly HeroScene[] = [
     position: { mobile: "50% 55%", tablet: "50% 50%", desktop: "50% 50%" },
     pan: "pull-back",
     startTime: 0.0,
-    endTime: 6.0,
+    endTime: 4.9,
     main: [],
     support: "Private experiences, shaped around you.",
     credits: [filmCredit],
@@ -144,8 +137,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 45%", tablet: "50% 45%", desktop: "50% 45%" },
     pan: "drift-left",
-    startTime: 6.0,
-    endTime: 12.5,
+    startTime: 4.9,
+    endTime: 11.933,
     main: ["Design your private day."],
     support: "Your people. Your pace.",
     credits: [filmCredit],
@@ -156,8 +149,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 45%", tablet: "50% 45%", desktop: "50% 45%" },
     pan: "drift-right",
-    startTime: 12.5,
-    endTime: 19.0,
+    startTime: 11.933,
+    endTime: 17.2,
     main: ["For proposals, celebrations", "and moments worth keeping."],
     support: "Anniversaries, birthdays, unforgettable moments.",
     credits: [filmCredit],
@@ -168,8 +161,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 45%", tablet: "50% 45%", desktop: "50% 45%" },
     pan: "push-in",
-    startTime: 19.0,
-    endTime: 25.5,
+    startTime: 17.2,
+    endTime: 22.167,
     main: ["For corporate groups", "and private journeys."],
     support: "Carefully coordinated. Locally guided.",
     credits: [filmCredit],
@@ -180,8 +173,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 50%", tablet: "50% 50%", desktop: "50% 50%" },
     pan: "drift-left",
-    startTime: 25.5,
-    endTime: 32.5,
+    startTime: 22.167,
+    endTime: 27.6,
     main: ["From one perfect day", "to a journey across Portugal."],
     support: "Multi-day experiences, designed around you.",
     credits: [filmCredit],
@@ -192,8 +185,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 50%", tablet: "50% 50%", desktop: "50% 50%" },
     pan: "push-in",
-    startTime: 32.5,
-    endTime: 41.5,
+    startTime: 27.6,
+    endTime: 39.633,
     main: ["Build it live.", "Confirm instantly."],
     support: "Real local guidance whenever you want it.",
     credits: [filmCredit],
@@ -206,11 +199,11 @@ export const HERO_ALL_CREDITS = HERO_SCENES.flatMap((scene) =>
 
 /**
  * Canonical film duration the manifest is authored against. The
- * uploaded master is exactly 41.5s; if a re-encode changes the real
- * duration we proportionally scale every chapter's start/end so
- * overlays stay locked to playback.
+ * uploaded master is 39.633s (six real scene cuts); if a re-encode
+ * changes the real duration we proportionally scale every chapter's
+ * start/end so overlays stay locked to playback.
  */
-export const HERO_FILM_CANONICAL_DURATION_S = 41.5;
+export const HERO_FILM_CANONICAL_DURATION_S = 39.633333;
 
 /** Tolerance below which we treat the actual duration as canonical. */
 export const HERO_FILM_CANONICAL_TOLERANCE_S = 0.25;
@@ -233,7 +226,7 @@ export type HeroChapterWindow = {
  *
  * Invariants enforced by the unit test suite:
  *   • First chapter starts at 0
- *   • Last chapter ends at exactly `actualDuration` (within 1e-9)
+ *   • Last chapter ends at exactly `actualDuration` (within 1e-6)
  *   • For every adjacent pair, chapter[i].endTime === chapter[i+1].startTime
  *     so the active-chapter rAF lookup never falls into a gap.
  */
