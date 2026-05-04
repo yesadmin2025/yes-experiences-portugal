@@ -1,0 +1,36 @@
+name: Prebuild checks
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  prebuild:
+    name: Run prebuild guardrails
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Check unused route imports
+        run: bun run check:routes
+
+      - name: Check hero scene ID variant coverage
+        run: bun run check:hero-scene-ids
+
+      - name: Site brand audit
+        run: node scripts/site-brand-audit.mjs
+
+      - name: Chrome runtime contrast
+        run: node scripts/chrome-runtime-contrast.mjs
+
+      - name: Brand audit
+        run: bun run brand:audit
