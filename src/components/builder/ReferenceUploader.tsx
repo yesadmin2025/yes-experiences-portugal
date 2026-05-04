@@ -13,6 +13,7 @@ import { useEffect, useRef, useState } from "react";
 import { Plus, X, ImageIcon, FileText, Loader2, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { deleteBuilderReference } from "@/server/builderReferences.functions";
 
 const MAX_FILES = 5;
 const MAX_BYTES = 10 * 1024 * 1024;
@@ -164,10 +165,19 @@ export function ReferenceUploader({ sessionId, onToneReady }: Props) {
   async function handleRemove(row: ReferenceRow) {
     setRows((prev) => prev.filter((r) => r.id !== row.id));
     setTone(null);
-    await Promise.allSettled([
-      supabase.storage.from("builder-references").remove([row.file_path]),
-      supabase.from("builder_reference_uploads").delete().eq("id", row.id),
-    ]);
+    // Server-side delete: validates `id + session_id` server-side and
+    // removes the storage object + table row using the admin client.
+    // Anonymous client-side deletes are no longer permitted by RLS.
+    try {
+      const result = await deleteBuilderReference({
+        data: { rowId: row.id, sessionId },
+      });
+      if (!result.ok) {
+        console.warn("Failed to delete reference:", result.reason);
+      }
+    } catch (err) {
+      console.warn("deleteBuilderReference threw:", err);
+    }
   }
 
   async function handleAnalyze() {
