@@ -34,24 +34,37 @@
 // for logistics / proof sections lower on the page — never the hero.
 // The route flyover used for scene 5 is a YES-commissioned itinerary
 // preview hosted on the Lovable asset CDN.
-const imgInvitation = "/video/real/posters/comporta-beach.jpg";
-const imgPrivateDay = "/video/real/posters/vineyard-walk.jpg";
-// Scene 3 (proposals / celebrations / moments): the friends-toast clip is
-// the only real YES asset that visually says "people raising glasses to
-// celebrate". The wine-cellar clip read as logistics/cellar, not as a
-// celebration moment, and was rejected by product. We keep this real
-// footage and crop it to keep faces safe on every breakpoint (see
-// `position` below) until purpose-shot proposal/celebration media lands.
-const imgCelebration = "/video/real/posters/friends-toast.jpg";
-const imgGroups = "/video/real/posters/vineyard-tasting.jpg";
-const imgRoute = "/video/posters/scene-route-portugal.jpg";
+// Hero clips are cinematic 1080p reels generated from real YES
+// Experiences source footage (the original `comporta-beach.mp4`,
+// `vineyard-walk.mp4`, `friends-toast.mp4`, `vineyard-tasting.mp4`
+// and the YES-commissioned route flyover). Each scene is a fresh
+// motion piece — no static images in the hero — with framing and
+// pacing curated so:
+//   • every scene is a true video (drift, push, pull-back) — no stills
+//   • no faces are in tight close-up or chin-cropped on any breakpoint
+//   • the message on the slide is supported visually (a couple/family
+//     for private days, a sunset toast for proposals/celebrations,
+//     a long-table group for teams, a route flyover for the close)
+//   • the look stays warm, slightly desaturated, premium editorial
+//     — never operational/stock/behind-the-scenes
+// Original raw YES clips remain in the repo for use later in
+// galleries / proof / logistics sections (never the hero).
+const imgInvitation = "/video/real/posters/scene-imagine.jpg";
+const imgPrivateDay = "/video/real/posters/scene-choose.jpg";
+const imgCelebration = "/video/real/posters/scene-taste.jpg";
+const imgGroups = "/video/real/posters/scene-celebrate.jpg";
+const imgRoute = "/video/real/posters/scene-confirm.jpg";
 
-const invitationVideo = "/video/real/comporta-beach.mp4";
-const privateDayVideo = "/video/real/vineyard-walk.mp4";
-const celebrationVideo = "/video/real/friends-toast.mp4";
-const groupsVideo = "/video/real/vineyard-tasting.mp4";
+const invitationVideo =
+  "/__l5e/assets-v1/7b5ce8f2-65f9-485f-9184-64a4a45e0148/scene-imagine.mp4";
+const privateDayVideo =
+  "/__l5e/assets-v1/0a645ca2-c1fb-40c9-95ff-43b28dc47822/scene-choose.mp4";
+const celebrationVideo =
+  "/__l5e/assets-v1/ad733e27-d2ec-4ba1-8bff-a7f313d366f3/scene-taste.mp4";
+const groupsVideo =
+  "/__l5e/assets-v1/edc0e2bc-5efa-4e6a-9188-3aac141c1785/scene-celebrate.mp4";
 const routeVideo =
-  "/__l5e/assets-v1/501885a8-7399-4591-99fc-1c410b24c428/scene-route-portugal.mp4";
+  "/__l5e/assets-v1/c8358905-b88c-497d-81e8-d48c912bea25/scene-confirm.mp4";
 
 export type HeroPan = "drift-left" | "drift-right" | "push-in" | "pull-back";
 
