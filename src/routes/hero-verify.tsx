@@ -8,9 +8,7 @@ import {
   triggerDownload,
   type CheckResult,
   type MultiResponse,
-  type PageReport,
   type SingleResponse,
-  type SpecDrift,
   type VerifyResponse,
 } from "@/lib/hero-verify-download";
 import { clearHistory, loadHistory, saveRun, type HistoryEntry } from "@/lib/hero-verify-history";
