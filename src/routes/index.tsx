@@ -282,11 +282,17 @@ function HomePage() {
   const heroFreezeOnLast =
     typeof window !== "undefined" &&
     /[?&]hero=last(?:&|$)/.test(window.location.search);
+  // A/B variant resolution. SSR returns the control; on the client the
+  // visitor's assigned variant is swapped in (one re-render, no flicker
+  // for the ~1/N visitors in control). Imagery / video / position are
+  // ALWAYS taken from the manifest — only `main` and `support` strings
+  // are varied. CTAs and locked HERO_COPY are never touched.
+  const { scenes: heroScenes, trackEvent: trackHeroEvent } = useHeroVariant();
   const [heroSceneIndex, setHeroSceneIndex] = useState(
-    heroFreezeOnLast ? HERO_SCENES.length - 1 : 0,
+    heroFreezeOnLast ? heroScenes.length - 1 : 0,
   );
-  const heroScene = HERO_SCENES[heroSceneIndex];
-  const isHeroActionScene = heroSceneIndex === HERO_SCENES.length - 1;
+  const heroScene = heroScenes[heroSceneIndex];
+  const isHeroActionScene = heroSceneIndex === heroScenes.length - 1;
 
   // Preload every hero scene image as soon as the homepage mounts so
   // crossfades between scenes feel instant — no flicker, no first-paint
