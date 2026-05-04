@@ -297,6 +297,7 @@ function HomePage() {
   );
   const heroScene = heroScenes[heroSceneIndex];
   const isHeroActionScene = heroSceneIndex === heroScenes.length - 1;
+  const heroChapterDebug = useHeroChapterDebugToggle();
 
   // Focus management — when the cinematic film reaches its final action
   // chapter, move keyboard/screen-reader focus to the primary CTA so AT
