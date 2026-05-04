@@ -116,7 +116,7 @@ const HERO_SCENE_DURATION_MS = 6500;
 const HERO_SCENES = [
   {
     id: "opening",
-    // Scene 1 — Coast. Portugal opens.
+    // Scene 1 — Coast (real owned hero coast footage). Portugal opens.
     image: heroImg,
     video: "/video/hero-coast.mp4",
     position: "50% 52%",
@@ -125,36 +125,36 @@ const HERO_SCENES = [
   },
   {
     id: "hidden",
-    // Scene 2 — Hidden Arrábida cove.
+    // Scene 2 — Hidden cove, aerial drone over turquoise water.
     image: imgArrabidaCoves,
-    video: undefined,
+    video: sceneHiddenCove.url,
     position: "52% 50%",
     pan: "drift-left" as const,
     main: ["Hidden places."] as readonly string[],
   },
   {
     id: "local-moments",
-    // Scene 3 — Local table, wine, shared moment.
+    // Scene 3 — Local table, wine pour in a vineyard.
     image: imgArrabidaWineLunch,
-    video: undefined,
+    video: sceneLocalTable.url,
     position: "50% 56%",
     pan: "push-in" as const,
     main: ["Local tables."] as readonly string[],
   },
   {
     id: "occasions",
-    // Scene 4 — Quiet viewpoint, intimate moment.
+    // Scene 4 — Hidden Lisbon street at golden hour.
     image: imgArrabidaViewpoint,
-    video: undefined,
+    video: sceneHiddenStreet.url,
     position: "50% 50%",
     pan: "drift-left" as const,
     main: ["Your moments."] as readonly string[],
   },
   {
     id: "action",
-    // Scene 5 — Route across Portugal: the close.
+    // Scene 5 — Aerial route across Portugal: the close.
     image: imgTomarCoimbra,
-    video: undefined,
+    video: sceneRoutePortugal.url,
     position: "50% 50%",
     pan: "pull-back" as const,
     main: ["Build it live."] as readonly string[],
