@@ -85,49 +85,82 @@ function readManifestIds() {
  */
 function readVariantSceneKeys() {
   const src = readFileSync(VARIANTS_PATH, "utf8");
-  // Match every variant object: id followed eventually by a `scenes: { ... }`.
-  // We use a depth-counting parse to find the matching brace of each scenes
-  // block because regex alone can't reliably handle nested braces.
   const variants = [];
-  const idRe = /id:\s*"([^"]+)"\s*,[\s\S]*?scenes:\s*\{/g;
+  // Walk every `id: "<variantId>"` occurrence, then from there scan
+  // forward in a depth-aware way to find that variant's OWN `scenes: {`
+  // block (skipping over nested braces from intermediate fields).
+  const idRe = /id:\s*"([^"]+)"/g;
   let m;
   while ((m = idRe.exec(src)) !== null) {
     const variantId = m[1];
-    const scenesStart = idRe.lastIndex; // position just after the opening `{`
-    let depth = 1;
-    let i = scenesStart;
-    while (i < src.length && depth > 0) {
+    // From this id, scan forward at brace-depth 0 (relative to this
+    // variant's object body) until we hit `scenes:` followed by `{`.
+    let i = idRe.lastIndex;
+    let depth = 0;
+    let scenesStart = -1;
+    while (i < src.length) {
       const ch = src[i];
       if (ch === "{") depth++;
-      else if (ch === "}") depth--;
+      else if (ch === "}") {
+        if (depth === 0) break; // exited this variant's object body
+        depth--;
+      } else if (depth === 0 && ch === "s" && src.startsWith("scenes:", i)) {
+        // Find the next `{` after `scenes:`.
+        let j = i + "scenes:".length;
+        while (j < src.length && src[j] !== "{") j++;
+        scenesStart = j + 1;
+        i = scenesStart;
+        break;
+      }
       i++;
     }
-    if (depth !== 0) {
+    if (scenesStart === -1) {
+      // Variant declares no `scenes:` block — fine, it inherits control.
+      variants.push({ variantId, keys: [] });
+      continue;
+    }
+    // Walk to the matching closing brace of `scenes: { ... }`.
+    let d = 1;
+    while (i < src.length && d > 0) {
+      const ch = src[i];
+      if (ch === "{") d++;
+      else if (ch === "}") d--;
+      i++;
+    }
+    if (d !== 0) {
       fail(`Unbalanced braces while parsing variant "${variantId}" scenes in ${VARIANTS_PATH}.`);
     }
     const scenesBody = src.slice(scenesStart, i - 1);
-    // Top-level keys inside the scenes block: identifiers OR quoted strings,
-    // followed by `:`. We only want top-level (depth 1 inside scenesBody).
+    // Collect ONLY top-level keys inside scenesBody (depth 0 within it).
     const keys = [];
-    let d = 0;
-    let buf = "";
+    let bd = 0;
+    let tokenStart = -1;
     for (let j = 0; j < scenesBody.length; j++) {
       const ch = scenesBody[j];
-      if (ch === "{") d++;
-      else if (ch === "}") d--;
-      if (d === 0) buf += ch;
-    }
-    // Match either `foo:` or `"foo":` at the start of a line (after ws/comma).
-    const keyRe = /(?:^|[,{\s])\s*(?:"([a-zA-Z0-9_-]+)"|([a-zA-Z_][a-zA-Z0-9_-]*))\s*:\s*\{/g;
-    let km;
-    while ((km = keyRe.exec(buf)) !== null) {
-      keys.push(km[1] ?? km[2]);
+      if (bd === 0) {
+        // Look for an identifier or quoted string followed by `:` then `{`.
+        if (tokenStart === -1 && (ch === '"' || /[a-zA-Z_]/.test(ch))) {
+          // Try to match a key literal here.
+          const slice = scenesBody.slice(j);
+          const km = slice.match(/^(?:"([a-zA-Z0-9_-]+)"|([a-zA-Z_][a-zA-Z0-9_-]*))\s*:\s*\{/);
+          if (km) {
+            keys.push(km[1] ?? km[2]);
+            j += km[0].length - 1;
+            // Skip the body of this key's object via depth tracking.
+            bd = 1;
+            continue;
+          }
+        }
+      } else {
+        if (ch === "{") bd++;
+        else if (ch === "}") bd--;
+      }
     }
     variants.push({ variantId, keys });
+    // Advance the outer regex past this variant's scenes block so we
+    // don't re-match the same id from a nested structure.
+    idRe.lastIndex = i;
   }
-  // Drop the implicit `control` variant — it never declares per-scene
-  // overrides inline, it's derived from the manifest. If it shows up here
-  // it's still fine to validate, but we don't want it to cause noise.
   return variants;
 }
 
