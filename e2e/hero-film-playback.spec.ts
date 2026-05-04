@@ -313,7 +313,9 @@ for (const vp of VIEWPORTS) {
           JITTER_RATIO,
         );
 
+      type Classification = "success" | "jitter-retry" | "hard-fail";
       const attempts: ProbeResult[] = [];
+      const classifications: Classification[] = [];
       let final: ProbeResult | null = null;
       let traceStarted = false;
       for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
