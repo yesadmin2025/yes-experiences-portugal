@@ -69,14 +69,34 @@ export type HeroAssetCredit = {
   license: string;
 };
 
+/**
+ * Per-breakpoint object-position presets. `mobile` covers ≤767px (tall
+ * portrait — heads/horizons must stay clear of the bottom scrim and CTA
+ * stack), `tablet` covers 768–1199px (landscape, more horizontal room),
+ * `desktop` covers ≥1200px (cinemascope-style framing). All three are
+ * required so the breakpoint swap is deterministic — no fallbacks at
+ * runtime, no resize observers, just CSS @media transitions.
+ */
+export type HeroPositionByBreakpoint = {
+  readonly mobile: string;
+  readonly tablet: string;
+  readonly desktop: string;
+};
+
 export type HeroScene = {
   id: string;
   /** Poster / fallback still — always required. */
   image: string;
   /** Looped clip URL — required for uniform motion across the reel. */
   video: string;
-  /** CSS object-position for the still + video. */
-  position: string;
+  /**
+   * CSS object-position for the still + video, per breakpoint. The
+   * route emits a `<style>` block driven by these tokens so framing
+   * adjusts at the CSS layer (no JS resize listeners). The desktop
+   * value also acts as the inline `style.objectPosition` so SSR + the
+   * first paint already use the correct framing for ≥1200px viewports.
+   */
+  position: HeroPositionByBreakpoint;
   /** Ken-Burns pan applied to the active slide. */
   pan: HeroPan;
   /** Cinematic main message (each entry = its own line). */
