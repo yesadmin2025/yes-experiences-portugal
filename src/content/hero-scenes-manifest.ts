@@ -167,6 +167,9 @@ export const HERO_SCENES: readonly HeroScene[] = [
     credits: [filmCredit],
   },
   {
+    // 21–28s: vineyard table — friends raising wine glasses. THIS is the
+    // celebration / proposals beat. Faces are present but composed in the
+    // lower-third; copy lives in the safe upper area.
     id: "journey",
     image: FILM_POSTER,
     video: FILM_1080,
@@ -174,11 +177,15 @@ export const HERO_SCENES: readonly HeroScene[] = [
     pan: "drift-left",
     startTime: 21.0,
     endTime: 28.0,
-    main: ["From one perfect day", "to a journey across Portugal."],
-    support: "Multi-day experiences, designed around you.",
+    main: ["For proposals, celebrations", "and moments worth keeping."],
+    support: "Birthdays, anniversaries, unforgettable moments.",
     credits: [filmCredit],
   },
   {
+    // 28–36s: market stall (28–34s) into café table (34–36s). Groups of
+    // friends sharing food in real Portuguese settings — the "corporate
+    // groups & private journeys" beat lands here, and the final CTA block
+    // appears for this chapter only (action scene).
     id: "confirm",
     image: FILM_POSTER,
     video: FILM_1080,
