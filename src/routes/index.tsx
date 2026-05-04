@@ -396,9 +396,29 @@ function HomePage() {
     return () => mq.removeEventListener?.("change", onChange);
   }, []);
 
-  // Drive the active chapter index from the film's currentTime. The
-  // ?hero=last query param freezes on the last chapter for byte-exact
-  // copy-lock + visual-regression tests.
+  // Auto-synced chapter timeline. The manifest declares chapter windows
+  // for the canonical 41.5s film, but the actual `<video>` may differ
+  // (re-encode, alternate source). On `loadedmetadata` we read the real
+  // duration and scale every chapter's startTime/endTime proportionally
+  // so overlays NEVER desync from the underlying playback. If the
+  // duration matches within 0.25s we keep the manifest values verbatim
+  // (avoids floating-point drift on the canonical asset).
+  const [heroTimeline, setHeroTimeline] = useState<
+    readonly { id: string; startTime: number; endTime: number }[]
+  >(() => HERO_SCENES.map((s) => ({ id: s.id, startTime: s.startTime, endTime: s.endTime })));
+
+  // Cross-fade transition state. When the active chapter changes we keep
+  // the previous chapter rendered for OVERLAP_MS so its copy fades OUT
+  // while the next fades IN — perfectly smooth, no binary swap.
+  const HERO_OVERLAP_MS = 600;
+  const [heroPrevIndex, setHeroPrevIndex] = useState<number | null>(null);
+  const [heroTransitionStart, setHeroTransitionStart] = useState<number>(0);
+  const [heroFadeAlpha, setHeroFadeAlpha] = useState<number>(1);
+
+  // Drive the active chapter index from the film's currentTime — using
+  // the auto-synced timeline above. The ?hero=last query param freezes
+  // on the last chapter for byte-exact copy-lock + visual-regression
+  // tests.
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (heroFreezeOnLast) {
@@ -410,30 +430,76 @@ function HomePage() {
     );
     if (!video) return;
 
+    // Sync chapter windows to the real video duration once metadata
+    // arrives. Scaled timeline = manifest * (actualDuration / 41.5).
+    const syncTimeline = () => {
+      const actual = video.duration;
+      if (!Number.isFinite(actual) || actual <= 0) return;
+      const canonical = 41.5;
+      if (Math.abs(actual - canonical) <= 0.25) return; // canonical asset
+      const ratio = actual / canonical;
+      setHeroTimeline(
+        HERO_SCENES.map((s) => ({
+          id: s.id,
+          startTime: s.startTime * ratio,
+          endTime: s.endTime * ratio,
+        })),
+      );
+    };
+    if (video.readyState >= 1) syncTimeline();
+    else video.addEventListener("loadedmetadata", syncTimeline, { once: true });
+
     let raf = 0;
+    // Eased cross-fade alpha ∈ [0,1]: 0 = previous fully visible,
+    // 1 = next fully visible. Cosine ease produces a calm, premium
+    // S-curve — no linear pop, no spring.
+    const easeInOut = (x: number) =>
+      x <= 0 ? 0 : x >= 1 ? 1 : 0.5 - 0.5 * Math.cos(Math.PI * x);
+
     const tick = () => {
       const t = video.currentTime;
-      // Find the chapter whose [startTime, endTime] window contains t.
-      // If t falls in a transition gap (e.g. 5.0–5.4s), keep the
-      // previous chapter so copy doesn't blink off-screen.
       let nextIndex = -1;
-      for (let i = 0; i < HERO_SCENES.length; i += 1) {
-        const s = HERO_SCENES[i];
+      for (let i = 0; i < heroTimeline.length; i += 1) {
+        const s = heroTimeline[i];
         if (t >= s.startTime && t <= s.endTime) {
           nextIndex = i;
           break;
         }
       }
       if (nextIndex !== -1) {
-        setHeroSceneIndex((prev) => (prev === nextIndex ? prev : nextIndex));
+        setHeroSceneIndex((prev) => {
+          if (prev === nextIndex) return prev;
+          // Boundary crossed — start a fresh overlap window.
+          setHeroPrevIndex(prev);
+          setHeroTransitionStart(performance.now());
+          setHeroFadeAlpha(0);
+          return nextIndex;
+        });
       }
+      // Advance the eased alpha for an in-flight transition. Quantize
+      // to 5% steps so React only re-renders ~20 times across the 600ms
+      // window instead of 60fps × 0.6s = 36 frames worth of state churn.
+      setHeroPrevIndex((prev) => {
+        if (prev === null) return prev;
+        const elapsed = performance.now() - heroTransitionStart;
+        const linear = Math.min(1, elapsed / HERO_OVERLAP_MS);
+        const eased = easeInOut(linear);
+        setHeroFadeAlpha((curr) => {
+          const quantized = Math.round(eased * 20) / 20;
+          return Math.abs(curr - quantized) >= 0.05 || quantized === 1 || quantized === 0
+            ? quantized
+            : curr;
+        });
+        return linear >= 1 ? null : prev;
+      });
       raf = window.requestAnimationFrame(tick);
     };
     raf = window.requestAnimationFrame(tick);
     return () => {
       if (raf) window.cancelAnimationFrame(raf);
+      video.removeEventListener("loadedmetadata", syncTimeline);
     };
-  }, [heroFreezeOnLast, heroScenes.length]);
+  }, [heroFreezeOnLast, heroScenes.length, heroTimeline, heroTransitionStart]);
 
 
   // Homepage motion controller — `[data-motion]` / `.motion-in`.
@@ -906,39 +972,89 @@ function HomePage() {
                {HERO_COPY.subheadline}
              </p>
 
-              {/* Single scene-message block — carries the ONE short cinematic
-                  line + optional supporting microline for the current scene.
-                  On scene 1 the canonical H1 already carries the message, so
-                  the scene-message stays in the DOM (sr-only) for contract
-                  parity but is not visually rendered — preventing the H1 +
-                  scene-main from stacking on top of each other on mobile. */}
-               <div
-                 key={`scene-msg-${heroScene.id}`}
-                 className={`hero-scene-message is-on max-w-[18rem] xs:max-w-[20rem] sm:max-w-xl ${
-                   heroSceneIndex === 0 ? "sr-only" : "mt-3.5 md:mt-6"
-                 }`}
-               >
-                   {heroScene.main.length > 0 ? (
-                     <p
-                       className={`hero-scene-main serif leading-[1.14] sm:leading-[1.1] md:leading-[1.06] tracking-[-0.018em] font-medium text-[color:var(--ivory)] [text-shadow:0_2px_4px_rgba(0,0,0,0.55),0_4px_22px_rgba(0,0,0,0.55)] ${
-                         heroScene.main.length >= 3
-                           ? "text-[1.25rem] xs:text-[1.4rem] sm:text-[1.85rem] md:text-[2.3rem]"
-                           : "text-[1.5rem] xs:text-[1.65rem] sm:text-[2.15rem] md:text-[2.65rem]"
-                       }`}
-                     >
-                       {heroScene.main.map((line, i) => (
-                         <span key={i} className="block">
-                           {line}
-                         </span>
-                       ))}
-                     </p>
-                   ) : null}
-                   {"support" in heroScene && heroScene.support ? (
-                     <p className="hero-scene-supporting mt-2 md:mt-3.5 font-sans text-[11.5px] xs:text-[12px] sm:text-[13.5px] md:text-[14px] tracking-[0.01em] leading-[1.5] font-medium text-[color:var(--ivory)]/95 [text-shadow:0_1px_3px_rgba(0,0,0,0.7),0_2px_14px_rgba(0,0,0,0.6)]">
-                       {heroScene.support}
-                     </p>
-                   ) : null}
+              {/* Cross-faded scene-message stack. During a chapter
+                  boundary we render the OUTGOING and INCOMING messages
+                  together for ~600ms with eased opacity (cosine S-curve)
+                  so the text glides between chapters instead of binary
+                  swapping. Once the transition completes the previous
+                  block is unmounted, leaving a single scene-message in
+                  the DOM (preserving the existing contract).
+                  On scene 1 the canonical H1 already carries the message,
+                  so the active block stays sr-only — the cross-fade only
+                  matters from scene 2 onwards. */}
+              <div className="hero-scene-message-stack relative max-w-[18rem] xs:max-w-[20rem] sm:max-w-xl">
+                {heroPrevIndex !== null && heroPrevIndex !== heroSceneIndex
+                  ? (() => {
+                      const prevScene = heroScenes[heroPrevIndex];
+                      if (!prevScene || prevScene.main.length === 0) return null;
+                      return (
+                        <div
+                          key={`scene-msg-prev-${prevScene.id}`}
+                          aria-hidden="true"
+                          data-hero-overlay="prev"
+                          className="hero-scene-message is-on absolute inset-0 mt-3.5 md:mt-6 pointer-events-none"
+                          style={{
+                            opacity: 1 - heroFadeAlpha,
+                            transition: "opacity 80ms linear",
+                          }}
+                        >
+                          <p
+                            className={`hero-scene-main serif leading-[1.14] sm:leading-[1.1] md:leading-[1.06] tracking-[-0.018em] font-medium text-[color:var(--ivory)] [text-shadow:0_2px_4px_rgba(0,0,0,0.55),0_4px_22px_rgba(0,0,0,0.55)] ${
+                              prevScene.main.length >= 3
+                                ? "text-[1.25rem] xs:text-[1.4rem] sm:text-[1.85rem] md:text-[2.3rem]"
+                                : "text-[1.5rem] xs:text-[1.65rem] sm:text-[2.15rem] md:text-[2.65rem]"
+                            }`}
+                          >
+                            {prevScene.main.map((line, i) => (
+                              <span key={i} className="block">
+                                {line}
+                              </span>
+                            ))}
+                          </p>
+                          {prevScene.support ? (
+                            <p className="hero-scene-supporting mt-2 md:mt-3.5 font-sans text-[11.5px] xs:text-[12px] sm:text-[13.5px] md:text-[14px] tracking-[0.01em] leading-[1.5] font-medium text-[color:var(--ivory)]/95 [text-shadow:0_1px_3px_rgba(0,0,0,0.7),0_2px_14px_rgba(0,0,0,0.6)]">
+                              {prevScene.support}
+                            </p>
+                          ) : null}
+                        </div>
+                      );
+                    })()
+                  : null}
+
+                <div
+                  key={`scene-msg-${heroScene.id}`}
+                  data-hero-overlay="current"
+                  className={`hero-scene-message is-on relative ${
+                    heroSceneIndex === 0 ? "sr-only" : "mt-3.5 md:mt-6"
+                  }`}
+                  style={
+                    heroPrevIndex !== null && heroPrevIndex !== heroSceneIndex
+                      ? { opacity: heroFadeAlpha, transition: "opacity 80ms linear" }
+                      : undefined
+                  }
+                >
+                  {heroScene.main.length > 0 ? (
+                    <p
+                      className={`hero-scene-main serif leading-[1.14] sm:leading-[1.1] md:leading-[1.06] tracking-[-0.018em] font-medium text-[color:var(--ivory)] [text-shadow:0_2px_4px_rgba(0,0,0,0.55),0_4px_22px_rgba(0,0,0,0.55)] ${
+                        heroScene.main.length >= 3
+                          ? "text-[1.25rem] xs:text-[1.4rem] sm:text-[1.85rem] md:text-[2.3rem]"
+                          : "text-[1.5rem] xs:text-[1.65rem] sm:text-[2.15rem] md:text-[2.65rem]"
+                      }`}
+                    >
+                      {heroScene.main.map((line, i) => (
+                        <span key={i} className="block">
+                          {line}
+                        </span>
+                      ))}
+                    </p>
+                  ) : null}
+                  {"support" in heroScene && heroScene.support ? (
+                    <p className="hero-scene-supporting mt-2 md:mt-3.5 font-sans text-[11.5px] xs:text-[12px] sm:text-[13.5px] md:text-[14px] tracking-[0.01em] leading-[1.5] font-medium text-[color:var(--ivory)]/95 [text-shadow:0_1px_3px_rgba(0,0,0,0.7),0_2px_14px_rgba(0,0,0,0.6)]">
+                      {heroScene.support}
+                    </p>
+                  ) : null}
                 </div>
+              </div>
 
              {/* Action block — CTAs + microcopy + brand signature appear
                  ONLY on scene 5 per the storytelling brief. */}
