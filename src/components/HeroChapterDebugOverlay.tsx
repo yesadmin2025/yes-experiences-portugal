@@ -110,7 +110,7 @@ export function HeroChapterDebugOverlay() {
         // While prev is mounted we're inside the cross-fade window.
         // Approximate elapsed via 1 - currentOpacity^(1/curve) is
         // unreliable; expose the raw opacities + total instead.
-        const fadeElapsedMs = prevEl
+        const fadeElapsedMs = prevEl && prevOpacity !== null
           ? Math.round((1 - prevOpacity) * HERO_OVERLAP_MS)
           : null;
 
