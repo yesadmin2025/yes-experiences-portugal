@@ -33,7 +33,10 @@ import { HERO_COPY } from "@/content/hero-copy";
 const MAX_MAIN_LINES = 3;
 const MAX_WORDS_PER_LINE = 6;
 const MAX_SUPPORT_WORDS = 9;
-const MAX_SUPPORT_SENTENCES = 2;
+// Approved support lines may be punchy three-beat lockups
+// (e.g. "Your people. Your pace. Your Portugal.") so we cap
+// at 3 short sentences — still much tighter than a paragraph.
+const MAX_SUPPORT_SENTENCES = 3;
 
 function wordCount(s: string): number {
   return s.trim().split(/\s+/).filter(Boolean).length;
