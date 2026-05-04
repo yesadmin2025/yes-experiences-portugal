@@ -26,6 +26,15 @@ import imgArrabidaCoves from "@/assets/tours/arrabida-boat/coves.jpg";
 import imgSintraHero from "@/assets/tours/sintra-cascais/hero.jpg";
 import imgTroiaBeach from "@/assets/tours/troia-comporta/beach.jpg";
 
+// Cinematic stock-style Portugal video clips, one per hero scene.
+// Real-look footage (aerial coves, vineyard table, alfama street, route
+// across central Portugal). Served via CDN through .asset.json pointers
+// so they never bloat the JS bundle.
+import sceneHiddenCove from "../../public/video/scene-hidden-cove.mp4.asset.json";
+import sceneLocalTable from "../../public/video/scene-local-table.mp4.asset.json";
+import sceneHiddenStreet from "../../public/video/scene-hidden-street.mp4.asset.json";
+import sceneRoutePortugal from "../../public/video/scene-route-portugal.mp4.asset.json";
+
 import {
   ArrowRight,
   Star,
