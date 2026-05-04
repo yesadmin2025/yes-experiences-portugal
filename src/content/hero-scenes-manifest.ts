@@ -36,7 +36,7 @@ const FILM_POSTER = "/video/film/yes-hero-poster.jpg";
 
 export const HERO_FILM = {
   /** Total film length in seconds (matches the stitched MP4). */
-  durationSeconds: 27.6,
+  durationSeconds: 36,
   /** Mobile-first source — used for ≤480px CSS pixels. */
   src720: FILM_720,
   /** Tablet + desktop source. */
@@ -94,27 +94,30 @@ export type HeroScene = {
 const filmCredit: HeroAssetCredit = {
   kind: "video",
   location:
-    "Continuous cinematic film — Comporta beach, Setúbal vineyards, Alentejo estate, coastal road across Portugal",
+    "Continuous cinematic Portugal hero film — single take, no cuts, color-graded for warmth",
   source: "yes-experiences",
   license:
-    "AI-extended cinematic film, anchored on real YES Experiences poster frames",
+    "Single continuous hero film provided by YES Experiences (no slideshow, no carousel)",
 };
 
 /**
- * Six chapter overlays sequenced over the SINGLE continuous film.
- * Timestamps are in seconds and chosen so each beat lands in the
- * matching cinematic moment of the stitched MP4 (10s per source clip,
- * with 1.2s crossfades between them).
+ * Six chapter overlays sequenced over the SINGLE continuous 36s film.
+ * Each chapter is purely a TIMED TEXT OVERLAY — there are no cuts, no
+ * scene changes, no transitions in the underlying video. The film plays
+ * straight through and copy fades in/out on top.
  */
 export const HERO_SCENES: readonly HeroScene[] = [
   {
     id: "imagine",
     image: FILM_POSTER,
     video: FILM_1080,
-    position: { mobile: "50% 55%", tablet: "50% 50%", desktop: "50% 50%" },
+    position: { mobile: "50% 50%", tablet: "50% 50%", desktop: "50% 50%" },
     pan: "pull-back",
-    startTime: 0.4,
-    endTime: 5.0,
+    startTime: 0.0,
+    endTime: 4.0,
+    // Scene 1's main visual IS the canonical H1 above ("Portugal is the
+    // stage. / You write the story.") — duplicating it as a scene-message
+    // would stack two identical headlines. The H1 carries the 0–4s copy.
     main: [],
     support: "Private experiences, shaped around you.",
     credits: [filmCredit],
@@ -123,35 +126,35 @@ export const HERO_SCENES: readonly HeroScene[] = [
     id: "choose",
     image: FILM_POSTER,
     video: FILM_1080,
-    position: { mobile: "50% 45%", tablet: "50% 45%", desktop: "50% 45%" },
+    position: { mobile: "50% 50%", tablet: "50% 50%", desktop: "50% 50%" },
     pan: "drift-left",
-    startTime: 5.4,
-    endTime: 10.0,
+    startTime: 4.0,
+    endTime: 9.0,
     main: ["Design your private day."],
-    support: "Your people. Your pace. Your Portugal.",
+    support: "Your people. Your pace.",
     credits: [filmCredit],
   },
   {
     id: "taste",
     image: FILM_POSTER,
     video: FILM_1080,
-    position: { mobile: "50% 45%", tablet: "50% 45%", desktop: "50% 45%" },
+    position: { mobile: "50% 50%", tablet: "50% 50%", desktop: "50% 50%" },
     pan: "drift-right",
-    startTime: 10.4,
-    endTime: 14.5,
-    main: ["For proposals,", "celebrations,", "moments worth keeping."],
-    support: "Birthdays, anniversaries, yes-moments.",
+    startTime: 9.0,
+    endTime: 15.0,
+    main: ["For proposals, celebrations", "and moments worth keeping."],
+    support: "Birthdays, anniversaries, unforgettable moments.",
     credits: [filmCredit],
   },
   {
     id: "celebrate",
     image: FILM_POSTER,
     video: FILM_1080,
-    position: { mobile: "50% 45%", tablet: "50% 45%", desktop: "50% 45%" },
+    position: { mobile: "50% 50%", tablet: "50% 50%", desktop: "50% 50%" },
     pan: "push-in",
-    startTime: 14.9,
-    endTime: 19.0,
-    main: ["For corporate groups,", "teams and private journeys."],
+    startTime: 15.0,
+    endTime: 21.0,
+    main: ["For corporate groups", "and private journeys."],
     support: "Carefully coordinated. Locally guided.",
     credits: [filmCredit],
   },
@@ -161,10 +164,10 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 50%", tablet: "50% 50%", desktop: "50% 50%" },
     pan: "drift-left",
-    startTime: 19.4,
-    endTime: 23.4,
+    startTime: 21.0,
+    endTime: 28.0,
     main: ["From one perfect day", "to a journey across Portugal."],
-    support: "Every route shaped around your rhythm.",
+    support: "Multi-day experiences, designed around you.",
     credits: [filmCredit],
   },
   {
@@ -173,10 +176,10 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 50%", tablet: "50% 50%", desktop: "50% 50%" },
     pan: "push-in",
-    startTime: 23.8,
-    endTime: 27.6,
+    startTime: 28.0,
+    endTime: 36.0,
     main: ["Build it live.", "Confirm instantly."],
-    support: "Real local guidance, every step of the way.",
+    support: "Real local guidance whenever you want it.",
     credits: [filmCredit],
   },
 ] as const;
