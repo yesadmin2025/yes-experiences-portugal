@@ -99,8 +99,8 @@ export type HeroScene = {
 export const HERO_SCENES: readonly HeroScene[] = [
   {
     id: "imagine",
-    image: imgVineyard,
-    video: vineyardVideo,
+    image: imgCoast,
+    video: coastVideo,
     position: "50% 55%",
     pan: "push-in",
     main: ["You picture", "the day."],
@@ -108,7 +108,7 @@ export const HERO_SCENES: readonly HeroScene[] = [
     credits: [
       {
         kind: "video",
-        location: "Vineyard at first light — Azeitão, Setúbal",
+        location: "Arrábida coast at first light — Setúbal, Portugal",
         source: "yes-experiences",
         license: "Captured on a real YES Experiences route",
       },
@@ -116,16 +116,16 @@ export const HERO_SCENES: readonly HeroScene[] = [
   },
   {
     id: "choose",
-    image: imgPier,
-    video: pierVideo,
+    image: imgStreet,
+    video: streetVideo,
     position: "50% 50%",
     pan: "drift-left",
     main: ["You choose", "the path."],
-    support: "Coast, vine, ruins, river.",
+    support: "Coast, village, vine, river.",
     credits: [
       {
         kind: "video",
-        location: "Carrasqueira stilt pier — Comporta, Alentejo",
+        location: "Hidden azulejo lane — Setúbal old town, Portugal",
         source: "yes-experiences",
         license: "Captured on a real YES Experiences route",
       },
@@ -133,8 +133,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
   },
   {
     id: "taste",
-    image: imgTasting,
-    video: tastingVideo,
+    image: imgTable,
+    video: tableVideo,
     position: "50% 50%",
     pan: "drift-right",
     main: ["You taste", "what locals pour."],
@@ -142,7 +142,7 @@ export const HERO_SCENES: readonly HeroScene[] = [
     credits: [
       {
         kind: "video",
-        location: "Tasting at a partner estate — Azeitão, Setúbal",
+        location: "Local table — Azeitão, Setúbal, Portugal",
         source: "yes-experiences",
         license: "Captured at a partner estate",
       },
@@ -150,16 +150,16 @@ export const HERO_SCENES: readonly HeroScene[] = [
   },
   {
     id: "celebrate",
-    image: imgToast,
-    video: toastVideo,
+    image: imgCelebration,
+    video: celebrationVideo,
     position: "50% 50%",
     pan: "push-in",
     main: ["You raise", "the glass."],
-    support: "The moment your trip turns into a memory.",
+    support: "A day, a celebration, a moment that stays.",
     credits: [
       {
         kind: "video",
-        location: "Long-table lunch — Setúbal, Portugal",
+        location: "Coastal toast at golden hour — Arrábida, Portugal",
         source: "yes-experiences",
         license: "Captured with consenting guests",
       },
@@ -167,18 +167,18 @@ export const HERO_SCENES: readonly HeroScene[] = [
   },
   {
     id: "confirm",
-    image: imgCellar,
-    video: cellarVideo,
+    image: imgRoute,
+    video: routeVideo,
     position: "50% 50%",
     pan: "pull-back",
     main: ["You design it.", "We confirm it."],
-    support: "Built live. No forms. No waiting.",
+    support: "Built live on the map. No forms. No waiting.",
     credits: [
       {
         kind: "video",
-        location: "Cellar close — Setúbal, Portugal",
+        location: "Route drawn across Portugal — itinerary preview",
         source: "yes-experiences",
-        license: "Captured at a partner estate",
+        license: "Captured for YES Experiences",
       },
     ],
   },
