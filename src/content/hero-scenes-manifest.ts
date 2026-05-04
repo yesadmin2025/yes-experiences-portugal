@@ -123,6 +123,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     credits: [filmCredit],
   },
   {
+    // 4–9s: coast aerial continues. Wide landscape, no faces — fits the
+    // "design your private day" beat (the canvas of Portugal opening up).
     id: "choose",
     image: FILM_POSTER,
     video: FILM_1080,
@@ -135,6 +137,9 @@ export const HERO_SCENES: readonly HeroScene[] = [
     credits: [filmCredit],
   },
   {
+    // 9–15s: azulejo artisan workshop. Craftsmanship, hand-painted tiles —
+    // the "moments worth keeping" beat lands on hand-made craft, not on a
+    // celebration shot. Faces are small and back-turned: text-safe.
     id: "taste",
     image: FILM_POSTER,
     video: FILM_1080,
@@ -142,11 +147,14 @@ export const HERO_SCENES: readonly HeroScene[] = [
     pan: "drift-right",
     startTime: 9.0,
     endTime: 15.0,
-    main: ["For proposals, celebrations", "and moments worth keeping."],
-    support: "Birthdays, anniversaries, unforgettable moments.",
+    main: ["Crafted with care.", "Made to be remembered."],
+    support: "Artisans, traditions, moments that last.",
     credits: [filmCredit],
   },
   {
+    // 15–21s: workshop → vineyard crossfade (18s xfade). Spans craft into
+    // landscape — the "from one day to a journey" beat fits the transition
+    // and avoids landing copy on the motion-blur midpoint.
     id: "celebrate",
     image: FILM_POSTER,
     video: FILM_1080,
@@ -154,8 +162,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     pan: "push-in",
     startTime: 15.0,
     endTime: 21.0,
-    main: ["For corporate groups", "and private journeys."],
-    support: "Carefully coordinated. Locally guided.",
+    main: ["From one perfect day", "to a journey across Portugal."],
+    support: "Multi-day experiences, designed around you.",
     credits: [filmCredit],
   },
   {
