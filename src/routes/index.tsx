@@ -667,12 +667,21 @@ function HomePage() {
           >
             {HERO_SCENES.map((scene, index) => {
               const isActive = index === heroSceneIndex;
-              // Mount video only for the active or next scene so we don't
-              // download 5 mp4s at once. Poster image stays under the
-              // <video> as a static fallback / first-paint frame.
+              const isNext = index === heroSceneIndex + 1;
+              // Mount the video only for the ACTIVE and NEXT scene so we
+              // never have more than two mp4 elements live in the DOM.
+              // On low-bandwidth / reduced-motion / very narrow devices
+              // we skip videos entirely and the still poster carries the
+              // scene (already animated by the Ken-Burns pan).
               const shouldMountVideo =
-                Boolean(scene.video) &&
-                (isActive || index === heroSceneIndex + 1);
+                videosAllowed && Boolean(scene.video) && (isActive || isNext);
+              // Tiered preload — active loads aggressively, next prefetches
+              // only metadata + first bytes, others never appear here.
+              const videoPreload: "auto" | "metadata" | "none" = isActive
+                ? "auto"
+                : isNext
+                  ? "metadata"
+                  : "none";
               return (
                 <div
                   key={scene.id}
@@ -697,11 +706,11 @@ function HomePage() {
                       poster={scene.image}
                       className="absolute inset-0 w-full h-full object-cover"
                       style={{ objectPosition: scene.position }}
-                      autoPlay
+                      autoPlay={isActive}
                       muted
                       loop
                       playsInline
-                      preload={index === 0 ? "auto" : "metadata"}
+                      preload={videoPreload}
                     />
                   ) : null}
                 </div>
