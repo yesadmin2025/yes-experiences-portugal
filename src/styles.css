@@ -1662,27 +1662,41 @@
 }
 .hero-story-stage { will-change: opacity; }
 .hero-story-slide {
+  /* Default (out-of-view) state: each new scene starts slightly off
+     to the RIGHT of the frame so it can slide in to centre as it
+     becomes active — the cinematic right→left film-strip feel. */
   opacity: 0;
   will-change: opacity, transform;
   filter: saturate(0.94) contrast(1.03) brightness(0.97);
-  transform: scale(1.06) translate3d(-0.6%, 0.2%, 0);
-  transition: opacity 1600ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  transform: scale(1.06) translate3d(6%, 0, 0);
+  transition:
+    opacity 1400ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 1400ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    filter 1400ms cubic-bezier(0.22, 0.61, 0.36, 1);
 }
+/* When a slide leaves (becomes inactive), it drifts further LEFT and
+   fades — completing the horizontal film travel from right to left. */
+.hero-story-slide:not(.is-active) {
+  transform: scale(1.06) translate3d(-6%, 0, 0);
+}
+/* The active slide settles in centre frame and the Ken Burns pan
+   takes over on top. */
 .hero-story-slide.is-active {
   opacity: 1;
-  animation: heroPanDriftLeft 8500ms linear both;
+  transform: scale(1.04) translate3d(0, 0, 0);
+  animation: heroPanDriftLeft 9000ms linear both;
 }
 .hero-story-slide.is-active[data-hero-pan="drift-right"] {
-  animation: heroPanDriftRight 8500ms linear both;
+  animation: heroPanDriftRight 9000ms linear both;
 }
 .hero-story-slide.is-active[data-hero-pan="drift-left"] {
-  animation: heroPanDriftLeft 8500ms linear both;
+  animation: heroPanDriftLeft 9000ms linear both;
 }
 .hero-story-slide.is-active[data-hero-pan="push-in"] {
-  animation: heroPanPushIn 8500ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  animation: heroPanPushIn 9000ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
 }
 .hero-story-slide.is-active[data-hero-pan="pull-back"] {
-  animation: heroPanPullBack 8500ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  animation: heroPanPullBack 9000ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
 }
 /* Legacy class kept as a no-op so any lingering reference doesn't
    error in CSS validators or reduced-motion overrides below. */
@@ -1785,12 +1799,39 @@
   transform: translate3d(0, 0, 0);
   visibility: visible;
 }
-.hero-scene-message.is-on .hero-scene-main,
-.hero-scene-message.is-on .hero-scene-supporting {
-  animation: heroEnterRiseSoft 0.85s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+.hero-scene-message.is-on .hero-scene-main {
+  animation: heroSceneAlightMain 1100ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
 }
+.hero-scene-message.is-on .hero-scene-main > span {
+  /* Each line of the main message alights individually, staggered by
+     index, so the headline reads as a sequenced reveal rather than a
+     block fade. */
+  display: block;
+  animation: heroSceneAlightLine 900ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+.hero-scene-message.is-on .hero-scene-main > span:nth-child(1) { animation-delay: 120ms; }
+.hero-scene-message.is-on .hero-scene-main > span:nth-child(2) { animation-delay: 320ms; }
+.hero-scene-message.is-on .hero-scene-main > span:nth-child(3) { animation-delay: 520ms; }
 .hero-scene-message.is-on .hero-scene-supporting {
-  animation-delay: 120ms;
+  animation: heroSceneAlightSupport 850ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  animation-delay: 720ms;
+}
+
+/* Right→left "alight" — text drifts in the same direction the film
+   strip is moving. Tiny travel (~14px) keeps it premium, not
+   gimmicky. */
+@keyframes heroSceneAlightMain {
+  0%   { opacity: 0; transform: translate3d(14px, 0, 0); filter: blur(2px); }
+  60%  { opacity: 1; transform: translate3d(2px, 0, 0); filter: blur(0); }
+  100% { opacity: 1; transform: translate3d(0, 0, 0); filter: blur(0); }
+}
+@keyframes heroSceneAlightLine {
+  0%   { opacity: 0; transform: translate3d(18px, 0, 0); }
+  100% { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+@keyframes heroSceneAlightSupport {
+  0%   { opacity: 0; transform: translate3d(10px, 0, 0); letter-spacing: 0.30em; }
+  100% { opacity: 0.85; transform: translate3d(0, 0, 0); letter-spacing: 0.22em; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1807,10 +1848,13 @@
     transform: none !important;
   }
   .hero-scene-message.is-on .hero-scene-main,
+  .hero-scene-message.is-on .hero-scene-main > span,
   .hero-scene-message.is-on .hero-scene-supporting {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;
+    filter: none !important;
+    letter-spacing: 0.22em !important;
   }
 }
 

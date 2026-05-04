@@ -34,6 +34,7 @@ import sceneHiddenCove from "../../public/video/scene-hidden-cove.mp4.asset.json
 import sceneLocalTable from "../../public/video/scene-local-table.mp4.asset.json";
 import sceneHiddenStreet from "../../public/video/scene-hidden-street.mp4.asset.json";
 import sceneRoutePortugal from "../../public/video/scene-route-portugal.mp4.asset.json";
+import sceneCelebration from "../../public/video/scene-celebration.mp4.asset.json";
 
 import {
   ArrowRight,
@@ -127,9 +128,9 @@ const HERO_SCENES = [
   },
   {
     id: "hidden",
-    // Scene 2 — Hidden cove / village street: beyond the obvious.
+    // Scene 2 — Hidden Portuguese village street / azulejo corner.
     image: imgArrabidaCoves,
-    video: sceneHiddenCove.url,
+    video: sceneHiddenStreet.url,
     position: "52% 50%",
     pan: "drift-left" as const,
     main: ["Hidden places,", "chosen your way."] as readonly string[],
@@ -147,11 +148,11 @@ const HERO_SCENES = [
   },
   {
     id: "occasions",
-    // Scene 4 — Couple / celebration / private group moment.
+    // Scene 4 — Couple / celebration / private group toast.
     image: imgArrabidaViewpoint,
-    video: sceneHiddenStreet.url,
+    video: sceneCelebration.url,
     position: "50% 50%",
-    pan: "drift-left" as const,
+    pan: "push-in" as const,
     main: ["For a day,", "a celebration,", "or something unforgettable."] as readonly string[],
     support: "Your occasion sets the rhythm.",
   },
@@ -749,8 +750,8 @@ function HomePage() {
             <span key={heroScene.id} className="hero-story-progress-fill" />
          </div>
 
-         <div className="container-x relative z-10 pb-[max(3.5rem,env(safe-area-inset-bottom))] md:pb-32 pt-24 md:pt-40">
-           <div className="max-w-[20rem] sm:max-w-2xl md:max-w-3xl text-[color:var(--ivory)]">
+         <div className="container-x relative z-10 pb-[max(5rem,calc(env(safe-area-inset-bottom)+4rem))] md:pb-32 pt-24 md:pt-40">
+           <div className="max-w-[19.5rem] xs:max-w-[21rem] sm:max-w-2xl md:max-w-3xl text-[color:var(--ivory)] text-left">
              {/* Eyebrow — fixed brand anchor on every scene. */}
              <span className="inline-flex items-center gap-2 sm:gap-3.5 max-w-full text-[9.5px] xs:text-[10.5px] sm:text-[12px] md:text-[12.5px] uppercase tracking-[0.18em] xs:tracking-[0.22em] sm:tracking-[0.3em] md:tracking-[0.32em] text-[color:var(--gold)] [text-shadow:0_1px_8px_rgba(0,0,0,0.6),0_0_2px_rgba(0,0,0,0.5)] opacity-0 animate-[heroFade_0.9s_ease-out_0.20s_forwards]">
                <span aria-hidden="true" className="shrink-0">✦</span>
@@ -840,7 +841,7 @@ function HomePage() {
                     </p>
                   ) : null}
                   {"support" in heroScene && heroScene.support ? (
-                    <p className="hero-scene-support mt-2.5 md:mt-3.5 font-sans text-[11px] xs:text-[12px] sm:text-[13px] uppercase tracking-[0.22em] text-[color:var(--ivory)]/85 [text-shadow:0_1px_10px_rgba(0,0,0,0.55)]">
+                    <p className="hero-scene-supporting mt-2.5 md:mt-3.5 font-sans text-[11px] xs:text-[12px] sm:text-[13px] uppercase tracking-[0.22em] text-[color:var(--ivory)]/85 [text-shadow:0_1px_10px_rgba(0,0,0,0.55)]">
                       {heroScene.support}
                     </p>
                   ) : null}
