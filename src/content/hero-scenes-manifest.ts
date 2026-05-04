@@ -35,8 +35,8 @@ const FILM_720 = "/video/film/yes-hero-film-720.mp4";
 const FILM_POSTER = "/video/film/yes-hero-poster.jpg";
 
 export const HERO_FILM = {
-  /** Total film length in seconds (matches the stitched MP4). */
-  durationSeconds: 27.6,
+  /** Total film length in seconds (matches the uploaded continuous MP4). */
+  durationSeconds: 41.5,
   /** Mobile-first source — used for ≤480px CSS pixels. */
   src720: FILM_720,
   /** Tablet + desktop source. */
