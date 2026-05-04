@@ -69,14 +69,34 @@ export type HeroAssetCredit = {
   license: string;
 };
 
+/**
+ * Per-breakpoint object-position presets. `mobile` covers ≤767px (tall
+ * portrait — heads/horizons must stay clear of the bottom scrim and CTA
+ * stack), `tablet` covers 768–1199px (landscape, more horizontal room),
+ * `desktop` covers ≥1200px (cinemascope-style framing). All three are
+ * required so the breakpoint swap is deterministic — no fallbacks at
+ * runtime, no resize observers, just CSS @media transitions.
+ */
+export type HeroPositionByBreakpoint = {
+  readonly mobile: string;
+  readonly tablet: string;
+  readonly desktop: string;
+};
+
 export type HeroScene = {
   id: string;
   /** Poster / fallback still — always required. */
   image: string;
   /** Looped clip URL — required for uniform motion across the reel. */
   video: string;
-  /** CSS object-position for the still + video. */
-  position: string;
+  /**
+   * CSS object-position for the still + video, per breakpoint. The
+   * route emits a `<style>` block driven by these tokens so framing
+   * adjusts at the CSS layer (no JS resize listeners). The desktop
+   * value also acts as the inline `style.objectPosition` so SSR + the
+   * first paint already use the correct framing for ≥1200px viewports.
+   */
+  position: HeroPositionByBreakpoint;
   /** Ken-Burns pan applied to the active slide. */
   pan: HeroPan;
   /** Cinematic main message (each entry = its own line). */
@@ -106,7 +126,9 @@ export const HERO_SCENES: readonly HeroScene[] = [
     id: "imagine",
     image: imgInvitation,
     video: invitationVideo,
-    position: "50% 62%",
+    // Beach + horizon: on mobile we sit low so sand fills under the
+    // headline; tablet/desktop centre the horizon classically.
+    position: { mobile: "50% 68%", tablet: "50% 58%", desktop: "50% 55%" },
     pan: "pull-back",
     main: ["Portugal,", "shaped your way."],
     support: "Private experiences, made for you.",
@@ -125,7 +147,7 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: privateDayVideo,
     // Walking guests — anchor to upper third so heads stay safely framed
     // on tall mobile (393×587) and don't crop on landscape tablet.
-    position: "50% 38%",
+    position: { mobile: "50% 32%", tablet: "50% 38%", desktop: "50% 42%" },
     pan: "drift-left",
     main: ["For one private day,", "or a small group escape."],
     support: "Couples, families, friends — at your rhythm.",
@@ -144,7 +166,7 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: celebrationVideo,
     // Candlelit wine-cellar — atmospheric, no faces in frame, so we
     // sit slightly above centre to feature the warm light arches.
-    position: "50% 45%",
+    position: { mobile: "50% 52%", tablet: "50% 48%", desktop: "50% 45%" },
     pan: "drift-right",
     main: ["For proposals,", "celebrations,", "and moments worth keeping."],
     support: "Anniversaries, birthdays, moments that stay.",
@@ -163,7 +185,7 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: groupsVideo,
     // Group tasting at a long table — keep heads above mid-line so
     // they never get clipped by the bottom gradient on mobile.
-    position: "50% 42%",
+    position: { mobile: "50% 36%", tablet: "50% 42%", desktop: "50% 48%" },
     pan: "push-in",
     main: ["For teams, groups,", "and shared journeys."],
     support: "Private, local and carefully coordinated.",
@@ -180,7 +202,7 @@ export const HERO_SCENES: readonly HeroScene[] = [
     id: "confirm",
     image: imgRoute,
     video: routeVideo,
-    position: "50% 50%",
+    position: { mobile: "50% 50%", tablet: "50% 50%", desktop: "50% 50%" },
     pan: "push-in",
     main: ["Design it live.", "Confirm instantly."],
     support: "Real local guidance whenever you want it.",

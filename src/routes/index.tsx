@@ -771,6 +771,21 @@ function HomePage() {
             aria-hidden="true"
             className="hero-story-stage absolute inset-0 w-full h-full overflow-hidden"
           >
+            {/*
+              Per-breakpoint object-position presets — emitted once,
+              driven entirely by the manifest. Mobile = ≤767px (tall
+              portrait, protect heads/horizons from the bottom scrim),
+              tablet = 768–1199px, desktop = ≥1200px. CSS @media swaps
+              framing without React re-renders or resize listeners.
+              The desktop value is also the inline default so the very
+              first paint on ≥1200px viewports already uses the correct
+              framing before the stylesheet attaches.
+            */}
+            <style>{HERO_SCENES.map((s) => (
+              `[data-hero-scene-id="${s.id}"] > video{object-position:${s.position.mobile}}` +
+              `@media (min-width:768px){[data-hero-scene-id="${s.id}"] > video{object-position:${s.position.tablet}}}` +
+              `@media (min-width:1200px){[data-hero-scene-id="${s.id}"] > video{object-position:${s.position.desktop}}}`
+            )).join("")}</style>
             {HERO_SCENES.map((scene, index) => {
               const isActive = index === heroSceneIndex;
               const isNext = index === heroSceneIndex + 1;
@@ -812,7 +827,7 @@ function HomePage() {
                       src={scene.video}
                       poster={scene.image}
                       className="absolute inset-0 w-full h-full object-cover"
-                      style={{ objectPosition: scene.position }}
+                      style={{ objectPosition: scene.position.desktop }}
                       autoPlay={isActive && videosAllowed}
                       muted
                       loop
