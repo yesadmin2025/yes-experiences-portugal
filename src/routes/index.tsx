@@ -774,10 +774,10 @@ function HomePage() {
                  lock still resolves it as visible). On scenes 2–4 the H1
                  is removed from the visual flow entirely so each scene
                  carries a single short message. */}
-             {(heroSceneIndex === 0 || isHeroActionScene) ? (
-               <h1
-                 data-hero-field="headlineLine1 headlineLine2"
-                 data-hero-anchor="spotlight"
+              {heroSceneIndex === 0 ? (
+                <h1
+                  data-hero-field="headlineLine1 headlineLine2"
+                  data-hero-anchor="spotlight"
                  className="hero-h1 hero-h1-cinematic serif mt-3.5 md:mt-6 text-[1.4rem] xs:text-[1.6rem] sm:text-[2.15rem] md:text-[2.95rem] lg:text-[3.4rem] leading-[1.16] sm:leading-[1.08] md:leading-[1.04] tracking-[-0.02em] text-[color:var(--ivory)] text-left opacity-0 animate-[heroFade_1s_ease-out_0.55s_forwards] [text-shadow:0_2px_22px_rgba(0,0,0,0.4)]"
                >
                  <span
