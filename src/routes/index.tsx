@@ -7,39 +7,17 @@ import { CtaButton } from "@/components/ui/CtaButton";
 
 import heroImg from "@/assets/hero-coast.jpg";
 
-// Real Viator-sourced tour photography — every card maps to an actual
-// Signature tour. No stock or invented imagery.
-// Each Occasions card image is chosen to MATCH its theme:
-//  · Proposals    → quiet Arrábida viewpoint (intimate, private moment)
-//  · Celebrations → Arrábida wine lunch table (gathering, shared joy)
-//  · Corporate    → Cabo da Roca cliffs (premium, group-scale, non-religious)
-//  · Multi-day    → Tomar–Coimbra (multi-region journey, not a single beach)
+// Real Viator-sourced tour photography used by the Occasions / Signature
+// cards on this page. Hero-scene imagery is declared in the manifest at
+// `src/content/hero-scenes-manifest.ts` (single source of truth, feeds
+// both the route and the credits modal).
 import imgArrabidaViewpoint from "@/assets/tours/arrabida-wine-allinclusive/viewpoint.jpg";
 import imgArrabidaWineLunch from "@/assets/tours/arrabida-wine-allinclusive/lunch.jpg";
 import imgSintraCaboDaRoca from "@/assets/tours/sintra-cascais/cabo-da-roca.jpg";
 import imgTomarCoimbra from "@/assets/tours/tomar-coimbra/hero.jpg";
-// Additional story beats — celebration estate + multi-region route.
-// Extra real Viator-sourced beats used by the cinematic hero rotation —
-// each scene gets a distinct, story-rich Portugal image so the visuals
-// carry the narrative even before the user reads the copy.
 import imgArrabidaCoves from "@/assets/tours/arrabida-boat/coves.jpg";
 import imgSintraHero from "@/assets/tours/sintra-cascais/hero.jpg";
 import imgTroiaBeach from "@/assets/tours/troia-comporta/beach.jpg";
-// Authentically Portuguese poster fallbacks for the cinematic hero —
-// Sesimbra fishing village (hidden street), Azeitão wine table (local
-// moments), Cabo da Roca cliffs (Atlantic route close).
-import imgSesimbraVillage from "@/assets/tours/arrabida-boat/sesimbra.jpg";
-import imgAzeitaoWinery from "@/assets/tours/azeitao-cheese/winery.jpg";
-
-// Cinematic stock-style Portugal video clips, one per hero scene.
-// Real-look footage (aerial coves, vineyard table, alfama street, route
-// across central Portugal). Served via CDN through .asset.json pointers
-// so they never bloat the JS bundle.
-import sceneHiddenCove from "../../public/video/scene-hidden-cove.mp4.asset.json";
-import sceneLocalTable from "../../public/video/scene-local-table.mp4.asset.json";
-import sceneHiddenStreet from "../../public/video/scene-hidden-street.mp4.asset.json";
-import sceneRoutePortugal from "../../public/video/scene-route-portugal.mp4.asset.json";
-import sceneCelebration from "../../public/video/scene-celebration.mp4.asset.json";
 
 import {
   ArrowRight,
@@ -56,6 +34,7 @@ import { StudioLivePreview } from "@/components/home/StudioLivePreview";
 import { getScrollDebugFlags, useScrollDebugFlags } from "@/lib/scroll-debug";
 
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
+import { HERO_SCENES } from "@/content/hero-scenes-manifest";
 import { signatureTours, isValidTourId } from "@/data/signatureTours";
 
 /* ──────────────────────────────────────────────────────────────────
@@ -110,68 +89,11 @@ const HERO_SCENE_DURATION_MS = 5200;
  * stock, no AI faces, no generic clichés.
  */
 /**
- * Cinematic hero sequence. Each scene = ONE Portugal moment + ONE
- * short message. Scene 1 carries the canonical H1; scenes 2–4 each
- * show a single line of text; scene 5 is the action close (CTAs).
- *
- * `video` is optional — when present we render an autoplay/muted/
- * looped <video> with the image as poster + fallback. When absent we
- * render the still image with the existing Ken Burns pan. Both are
- * real Portugal footage / Viator-sourced operation photography.
+ * Cinematic hero sequence is now declared in
+ * `src/content/hero-scenes-manifest.ts` — single source of truth that
+ * also feeds the credits modal. Adding/replacing a scene clip happens
+ * THERE, not here, so attribution stays in sync with what's rendered.
  */
-const HERO_SCENES = [
-  {
-    id: "opening",
-    // Scene 1 — Coast: Portugal opens. H1 carries the main line; we
-    // still expose a supporting microline below it for cinematic rhythm.
-    image: heroImg,
-    video: "/video/hero-coast.mp4",
-    position: "50% 52%",
-    pan: "drift-left" as const,
-    main: [] as readonly string[],
-    support: "Private. Local. Yours.",
-  },
-  {
-    id: "hidden",
-    // Scene 2 — Sesimbra fishing village / Portuguese narrow street.
-    image: imgSesimbraVillage,
-    video: sceneHiddenStreet.url,
-    position: "52% 50%",
-    pan: "drift-left" as const,
-    main: ["Hidden places,", "chosen your way."] as readonly string[],
-    support: "Beyond the obvious.",
-  },
-  {
-    id: "local-moments",
-    // Scene 3 — Azeitão winery table, Portuguese wine + cheese.
-    image: imgAzeitaoWinery,
-    video: sceneLocalTable.url,
-    position: "50% 56%",
-    pan: "push-in" as const,
-    main: ["Local moments,", "shaped around you."] as readonly string[],
-    support: "Food, wine, people, rhythm.",
-  },
-  {
-    id: "occasions",
-    // Scene 4 — Couple / celebration / private group toast.
-    image: imgArrabidaViewpoint,
-    video: sceneCelebration.url,
-    position: "50% 50%",
-    pan: "push-in" as const,
-    main: ["For a day,", "a celebration,", "or something unforgettable."] as readonly string[],
-    support: "Your occasion sets the rhythm.",
-  },
-  {
-    id: "action",
-    // Scene 5 — Cabo da Roca cliffs / Atlantic route close. CTAs reveal here.
-    image: imgSintraCaboDaRoca,
-    video: sceneRoutePortugal.url,
-    position: "50% 50%",
-    pan: "pull-back" as const,
-    main: ["Build it live.", "Confirm instantly."] as readonly string[],
-    support: "No forms. No waiting.",
-  },
-] as const;
 
 
 const signatures = FEATURED_TOUR_IDS
