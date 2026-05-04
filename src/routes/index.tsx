@@ -819,12 +819,7 @@ function HomePage() {
                     ))}
                   </p>
                 ) : null}
-               {heroScene.supporting ? (
-                 <p className={`hero-scene-supporting ${heroScene.main.length > 0 ? "mt-3 md:mt-4" : "mt-2 md:mt-3"} text-[13px] md:text-[14.5px] leading-[1.5] tracking-[0.005em] text-[color:var(--ivory)]/85 font-normal max-w-[17rem] sm:max-w-md line-clamp-2`}>
-                   {heroScene.supporting}
-                 </p>
-               ) : null}
-             </div>
+              </div>
 
              {/* Action block — CTAs + microcopy + brand signature appear
                  ONLY on scene 5 per the storytelling brief. */}
