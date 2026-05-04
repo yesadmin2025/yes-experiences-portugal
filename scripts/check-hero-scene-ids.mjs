@@ -98,25 +98,38 @@ function readVariantSceneKeys() {
     let i = idRe.lastIndex;
     let depth = 0;
     let scenesStart = -1;
+    let exited = false;
     while (i < src.length) {
       const ch = src[i];
       if (ch === "{") depth++;
       else if (ch === "}") {
-        if (depth === 0) break; // exited this variant's object body
+        if (depth === 0) {
+          exited = true;
+          break;
+        }
         depth--;
       } else if (depth === 0 && ch === "s" && src.startsWith("scenes:", i)) {
-        // Find the next `{` after `scenes:`.
+        // Find the next non-whitespace char after `scenes:`.
         let j = i + "scenes:".length;
-        while (j < src.length && src[j] !== "{") j++;
-        scenesStart = j + 1;
-        i = scenesStart;
-        break;
+        while (j < src.length && /\s/.test(src[j])) j++;
+        if (src[j] === "{") {
+          scenesStart = j + 1;
+          i = scenesStart;
+          break;
+        } else {
+          // `scenes: <identifier>` (e.g. `scenes: controlScenes`) — no
+          // inline override block, inherits from control source.
+          i = j;
+          continue;
+        }
       }
       i++;
     }
     if (scenesStart === -1) {
-      // Variant declares no `scenes:` block — fine, it inherits control.
       variants.push({ variantId, keys: [] });
+      // Advance past this variant's body if we exited it, so the next
+      // outer match doesn't re-enter from inside it.
+      if (exited) idRe.lastIndex = i;
       continue;
     }
     // Walk to the matching closing brace of `scenes: { ... }`.
