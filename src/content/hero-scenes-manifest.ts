@@ -23,11 +23,14 @@
  * `public/video/real/` for control over compression + attribution.
  */
 
-import imgArrival from "/video/real/posters/arrival-minibus.jpg?url";
-import imgRuins from "/video/real/posters/troia-ruins.jpg?url";
-import imgWine from "/video/real/posters/vineyard-tasting.jpg?url";
-import imgToast from "/video/real/posters/friends-toast.jpg?url";
-import imgVineyard from "/video/real/posters/vineyard-walk.jpg?url";
+// Posters and videos live in `public/video/real/` so they're served
+// at stable URLs (same-origin, cacheable, no Vite hashing). Reference
+// them as plain absolute paths — no import indirection.
+const imgArrival = "/video/real/posters/arrival-minibus.jpg";
+const imgRuins = "/video/real/posters/troia-ruins.jpg";
+const imgWine = "/video/real/posters/vineyard-tasting.jpg";
+const imgToast = "/video/real/posters/friends-toast.jpg";
+const imgVineyard = "/video/real/posters/vineyard-walk.jpg";
 
 const arrivalVideo = "/video/real/arrival-minibus.mp4";
 const ruinsVideo = "/video/real/troia-ruins.mp4";
