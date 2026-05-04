@@ -185,7 +185,7 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: groupsVideo,
     // Group tasting at a long table — keep heads above mid-line so
     // they never get clipped by the bottom gradient on mobile.
-    position: "50% 42%",
+    position: { mobile: "50% 36%", tablet: "50% 42%", desktop: "50% 48%" },
     pan: "push-in",
     main: ["For teams, groups,", "and shared journeys."],
     support: "Private, local and carefully coordinated.",
