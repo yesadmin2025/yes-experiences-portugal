@@ -132,6 +132,10 @@ export const HERO_COPY_EXPERIMENT: HeroExperiment = {
           main: ["Marking a", "moment soon?"],
           support: "Birthdays, anniversaries, proposals.",
         },
+        journey: {
+          main: ["One day,", "or a journey?"],
+          support: "Across Portugal, your rhythm.",
+        },
         confirm: {
           main: ["Ready to", "build it?"],
           support: "No forms. No waiting.",
