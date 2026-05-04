@@ -11,17 +11,19 @@
  * (`src/components/home/HeroCredits.tsx`) BOTH read from this file —
  * so attribution can never drift from what's actually on screen.
  *
- * Story spine — "YOU design the trip":
- *   1. IMAGINE   — open landscape, the canvas is yours
- *   2. CHOOSE    — paths split, you pick the direction
- *   3. TASTE     — what locals pour, picked by you
- *   4. CELEBRATE — the moment your design becomes a memory
- *   5. CONFIRM   — built live, confirmed instantly
+ * Story spine — "WHO this is for + HOW it works":
+ *   1. INVITATION    — Portugal, shaped around you (the canvas)
+ *   2. PRIVATE DAYS  — couples, families, small groups
+ *   3. CELEBRATIONS  — proposals, anniversaries, milestones
+ *   4. GROUPS        — teams, corporate, big groups, multi-day
+ *   5. BUILDER       — design live, confirm instantly (CTA scene)
  *
- * Every clip is real Portugal footage hosted locally under
- * `public/video/real/`. No images-only scenes — uniform motion across
- * the whole reel. No transport / arrival imagery in the opener — the
- * story starts with the guest's imagination, not logistics.
+ * Every clip is real YES Experiences footage — captured on actual
+ * routes, at partner estates, and with consenting guests. Files live
+ * locally under `public/video/real/` (with matching first-frame
+ * posters in `public/video/real/posters/`). The route flyover used
+ * for scene 5 is a YES-commissioned itinerary preview hosted on the
+ * Lovable asset CDN. No stock or generic visuals.
  */
 
 // Real YES Experiences media — clips and posters captured on actual
