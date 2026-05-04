@@ -841,7 +841,7 @@ function HomePage() {
                     </p>
                   ) : null}
                   {"support" in heroScene && heroScene.support ? (
-                    <p className="hero-scene-support mt-2.5 md:mt-3.5 font-sans text-[11px] xs:text-[12px] sm:text-[13px] uppercase tracking-[0.22em] text-[color:var(--ivory)]/85 [text-shadow:0_1px_10px_rgba(0,0,0,0.55)]">
+                    <p className="hero-scene-supporting mt-2.5 md:mt-3.5 font-sans text-[11px] xs:text-[12px] sm:text-[13px] uppercase tracking-[0.22em] text-[color:var(--ivory)]/85 [text-shadow:0_1px_10px_rgba(0,0,0,0.55)]">
                       {heroScene.support}
                     </p>
                   ) : null}
