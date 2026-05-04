@@ -964,8 +964,13 @@ function HomePage() {
               />
             </div>
           </div>
-        </div>
-      </section>
+          {/* Soft transition into the next section — gentle ivory fade
+              so the trust strip lands without a hard edge. */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-16 md:h-20 z-[3] bg-[linear-gradient(180deg,rgba(250,248,243,0)_0%,rgba(250,248,243,0.55)_70%,var(--ivory)_100%)]"
+          />
+        </section>
 
       {/* 2 — TRUST STRIP
           Restrained: review count, real platforms, one short line about
@@ -974,7 +979,7 @@ function HomePage() {
           page (per "no repeated review sections" guardrail). */}
       <section
         id="reviews"
-        className="he-trust-rule section-enter bg-[color:var(--ivory)] border-b border-[color:var(--border)] section-y-sm scroll-mt-24 md:scroll-mt-28"
+        className="he-trust-rule section-enter bg-[color:var(--ivory)] border-b border-[color:var(--border)] pt-10 md:pt-14 pb-8 md:pb-10 scroll-mt-24 md:scroll-mt-28"
         aria-labelledby="trust-bar-title"
       >
         <h2 id="trust-bar-title" className="sr-only">
