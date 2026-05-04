@@ -757,6 +757,7 @@ function HomePage() {
               src={saveDataMode ? HERO_FILM.src720 : HERO_FILM.src1080}
               poster={HERO_FILM.poster}
               className="absolute inset-0 w-full h-full object-cover"
+              aria-label="Cinematic film of Portugal — coastal roads, local tables, hidden coves and estate gardens. Decorative; full description provided alongside."
               autoPlay={!reducedMotion}
               muted
               loop
