@@ -1088,7 +1088,44 @@ function HomePage() {
           />
         </section>
 
-      {/* 2 — TRUST STRIP
+      {/* 1.5 — AUDIENCE BRIDGE
+          Soft editorial bridge between the cinematic hero and the trust
+          strip. Names the use cases the hero hinted at (one private day,
+          a proposal/celebration, a group escape, a full Portugal
+          journey) so the audience never has to guess "is this for me?".
+          No CTAs, no images, no buttons — calm + premium, then proof. */}
+      <section
+        id="audience-bridge"
+        aria-labelledby="audience-bridge-title"
+        className="section-enter bg-[color:var(--ivory)] border-b border-[color:var(--border)] py-14 md:py-20"
+      >
+        <div className="container-x">
+          <div className="reveal max-w-2xl mx-auto text-center">
+            <h2
+              id="audience-bridge-title"
+              className="serif text-[1.55rem] sm:text-[1.85rem] md:text-[2.3rem] leading-[1.3] md:leading-[1.22] tracking-[-0.012em] text-[color:var(--charcoal)] font-normal"
+            >
+              Some come for one private day.
+              <br />
+              Some for a <span className="italic text-[color:var(--teal)]">proposal</span>, a celebration, or a group escape.
+              <br />
+              Some are planning a full <span className="italic">journey across Portugal</span>.
+            </h2>
+            {/* Champagne gold hairline divider */}
+            <div
+              aria-hidden="true"
+              className="mx-auto my-6 md:my-8 h-px w-24 md:w-32 bg-gradient-to-r from-transparent via-[color:var(--gold)]/70 to-transparent"
+            />
+            <p className="text-[14.5px] md:text-[16px] leading-[1.7] text-[color:var(--charcoal-soft)]">
+              However your story begins,
+              <br className="hidden sm:block" />
+              {" "}we shape it with local knowledge.
+            </p>
+          </div>
+        </div>
+      </section>
+
+
           Restrained: review count, real platforms, one short line about
           private guides + real local knowledge. No avatars carousel, no
           repeated review block. This is the SINGLE review surface on the
