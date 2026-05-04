@@ -26,25 +26,24 @@
 
 // Posters live in `public/video/posters/` (first-frame stills extracted
 // from each clip — guarantees the poster matches the video). Videos
-// are served from Lovable's stable asset CDN — we resolve the URL from
-// each clip's `.asset.json` manifest at build time so renames stay safe.
-import sceneCoastAsset from "/public/video/scene-coast-arrabida.mp4.asset.json";
-import sceneStreetAsset from "/public/video/scene-hidden-street.mp4.asset.json";
-import sceneTableAsset from "/public/video/scene-azeitao-table.mp4.asset.json";
-import sceneCelebrationAsset from "/public/video/scene-celebration.mp4.asset.json";
-import sceneRouteAsset from "/public/video/scene-route-portugal.mp4.asset.json";
-
+// are served from Lovable's stable asset CDN — URLs taken verbatim
+// from each clip's `.asset.json` manifest (asset_id is immutable).
 const imgCoast = "/video/posters/scene-coast-arrabida.jpg";
 const imgStreet = "/video/posters/scene-hidden-street.jpg";
 const imgTable = "/video/posters/scene-azeitao-table.jpg";
 const imgCelebration = "/video/posters/scene-celebration.jpg";
 const imgRoute = "/video/posters/scene-route-portugal.jpg";
 
-const coastVideo: string = sceneCoastAsset.url;
-const streetVideo: string = sceneStreetAsset.url;
-const tableVideo: string = sceneTableAsset.url;
-const celebrationVideo: string = sceneCelebrationAsset.url;
-const routeVideo: string = sceneRouteAsset.url;
+const coastVideo =
+  "/__l5e/assets-v1/e1a97610-5754-4c2c-b5dd-60d7dcc51406/scene-coast-arrabida.mp4";
+const streetVideo =
+  "/__l5e/assets-v1/dc013d32-5691-419e-84ad-06099bf3631e/scene-hidden-street.mp4";
+const tableVideo =
+  "/__l5e/assets-v1/a5974d67-6f34-4365-8d96-ea82c4b83457/scene-azeitao-table.mp4";
+const celebrationVideo =
+  "/__l5e/assets-v1/79e74bb4-85bb-4f83-9bc7-c8bf774af5be/scene-celebration.mp4";
+const routeVideo =
+  "/__l5e/assets-v1/501885a8-7399-4591-99fc-1c410b24c428/scene-route-portugal.mp4";
 
 export type HeroPan = "drift-left" | "drift-right" | "push-in" | "pull-back";
 
