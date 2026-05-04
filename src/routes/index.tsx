@@ -972,39 +972,89 @@ function HomePage() {
                {HERO_COPY.subheadline}
              </p>
 
-              {/* Single scene-message block — carries the ONE short cinematic
-                  line + optional supporting microline for the current scene.
-                  On scene 1 the canonical H1 already carries the message, so
-                  the scene-message stays in the DOM (sr-only) for contract
-                  parity but is not visually rendered — preventing the H1 +
-                  scene-main from stacking on top of each other on mobile. */}
-               <div
-                 key={`scene-msg-${heroScene.id}`}
-                 className={`hero-scene-message is-on max-w-[18rem] xs:max-w-[20rem] sm:max-w-xl ${
-                   heroSceneIndex === 0 ? "sr-only" : "mt-3.5 md:mt-6"
-                 }`}
-               >
-                   {heroScene.main.length > 0 ? (
-                     <p
-                       className={`hero-scene-main serif leading-[1.14] sm:leading-[1.1] md:leading-[1.06] tracking-[-0.018em] font-medium text-[color:var(--ivory)] [text-shadow:0_2px_4px_rgba(0,0,0,0.55),0_4px_22px_rgba(0,0,0,0.55)] ${
-                         heroScene.main.length >= 3
-                           ? "text-[1.25rem] xs:text-[1.4rem] sm:text-[1.85rem] md:text-[2.3rem]"
-                           : "text-[1.5rem] xs:text-[1.65rem] sm:text-[2.15rem] md:text-[2.65rem]"
-                       }`}
-                     >
-                       {heroScene.main.map((line, i) => (
-                         <span key={i} className="block">
-                           {line}
-                         </span>
-                       ))}
-                     </p>
-                   ) : null}
-                   {"support" in heroScene && heroScene.support ? (
-                     <p className="hero-scene-supporting mt-2 md:mt-3.5 font-sans text-[11.5px] xs:text-[12px] sm:text-[13.5px] md:text-[14px] tracking-[0.01em] leading-[1.5] font-medium text-[color:var(--ivory)]/95 [text-shadow:0_1px_3px_rgba(0,0,0,0.7),0_2px_14px_rgba(0,0,0,0.6)]">
-                       {heroScene.support}
-                     </p>
-                   ) : null}
+              {/* Cross-faded scene-message stack. During a chapter
+                  boundary we render the OUTGOING and INCOMING messages
+                  together for ~600ms with eased opacity (cosine S-curve)
+                  so the text glides between chapters instead of binary
+                  swapping. Once the transition completes the previous
+                  block is unmounted, leaving a single scene-message in
+                  the DOM (preserving the existing contract).
+                  On scene 1 the canonical H1 already carries the message,
+                  so the active block stays sr-only — the cross-fade only
+                  matters from scene 2 onwards. */}
+              <div className="hero-scene-message-stack relative max-w-[18rem] xs:max-w-[20rem] sm:max-w-xl">
+                {heroPrevIndex !== null && heroPrevIndex !== heroSceneIndex
+                  ? (() => {
+                      const prevScene = heroScenes[heroPrevIndex];
+                      if (!prevScene || prevScene.main.length === 0) return null;
+                      return (
+                        <div
+                          key={`scene-msg-prev-${prevScene.id}`}
+                          aria-hidden="true"
+                          data-hero-overlay="prev"
+                          className="hero-scene-message is-on absolute inset-0 mt-3.5 md:mt-6 pointer-events-none"
+                          style={{
+                            opacity: 1 - heroFadeAlpha,
+                            transition: "opacity 80ms linear",
+                          }}
+                        >
+                          <p
+                            className={`hero-scene-main serif leading-[1.14] sm:leading-[1.1] md:leading-[1.06] tracking-[-0.018em] font-medium text-[color:var(--ivory)] [text-shadow:0_2px_4px_rgba(0,0,0,0.55),0_4px_22px_rgba(0,0,0,0.55)] ${
+                              prevScene.main.length >= 3
+                                ? "text-[1.25rem] xs:text-[1.4rem] sm:text-[1.85rem] md:text-[2.3rem]"
+                                : "text-[1.5rem] xs:text-[1.65rem] sm:text-[2.15rem] md:text-[2.65rem]"
+                            }`}
+                          >
+                            {prevScene.main.map((line, i) => (
+                              <span key={i} className="block">
+                                {line}
+                              </span>
+                            ))}
+                          </p>
+                          {prevScene.support ? (
+                            <p className="hero-scene-supporting mt-2 md:mt-3.5 font-sans text-[11.5px] xs:text-[12px] sm:text-[13.5px] md:text-[14px] tracking-[0.01em] leading-[1.5] font-medium text-[color:var(--ivory)]/95 [text-shadow:0_1px_3px_rgba(0,0,0,0.7),0_2px_14px_rgba(0,0,0,0.6)]">
+                              {prevScene.support}
+                            </p>
+                          ) : null}
+                        </div>
+                      );
+                    })()
+                  : null}
+
+                <div
+                  key={`scene-msg-${heroScene.id}`}
+                  data-hero-overlay="current"
+                  className={`hero-scene-message is-on relative ${
+                    heroSceneIndex === 0 ? "sr-only" : "mt-3.5 md:mt-6"
+                  }`}
+                  style={
+                    heroPrevIndex !== null && heroPrevIndex !== heroSceneIndex
+                      ? { opacity: heroFadeAlpha, transition: "opacity 80ms linear" }
+                      : undefined
+                  }
+                >
+                  {heroScene.main.length > 0 ? (
+                    <p
+                      className={`hero-scene-main serif leading-[1.14] sm:leading-[1.1] md:leading-[1.06] tracking-[-0.018em] font-medium text-[color:var(--ivory)] [text-shadow:0_2px_4px_rgba(0,0,0,0.55),0_4px_22px_rgba(0,0,0,0.55)] ${
+                        heroScene.main.length >= 3
+                          ? "text-[1.25rem] xs:text-[1.4rem] sm:text-[1.85rem] md:text-[2.3rem]"
+                          : "text-[1.5rem] xs:text-[1.65rem] sm:text-[2.15rem] md:text-[2.65rem]"
+                      }`}
+                    >
+                      {heroScene.main.map((line, i) => (
+                        <span key={i} className="block">
+                          {line}
+                        </span>
+                      ))}
+                    </p>
+                  ) : null}
+                  {"support" in heroScene && heroScene.support ? (
+                    <p className="hero-scene-supporting mt-2 md:mt-3.5 font-sans text-[11.5px] xs:text-[12px] sm:text-[13.5px] md:text-[14px] tracking-[0.01em] leading-[1.5] font-medium text-[color:var(--ivory)]/95 [text-shadow:0_1px_3px_rgba(0,0,0,0.7),0_2px_14px_rgba(0,0,0,0.6)]">
+                      {heroScene.support}
+                    </p>
+                  ) : null}
                 </div>
+              </div>
 
              {/* Action block — CTAs + microcopy + brand signature appear
                  ONLY on scene 5 per the storytelling brief. */}
