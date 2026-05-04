@@ -1,26 +1,41 @@
-name: Lighthouse CI (Home)
+name: Lighthouse CI (Home + key routes)
 
-# Lightweight Lighthouse run against the home page to catch performance
-# regressions that could affect hero video playback + chapter overlay
-# timing (long tasks, render-blocking JS, oversized assets).
+# Lightweight Lighthouse runs against the home page, hero verification
+# page, builder, and experiences index — to catch performance regressions
+# that could affect hero video playback + chapter overlay timing across
+# the high-traffic editorial routes (long tasks, render-blocking JS,
+# oversized assets, layout shifts).
 #
-# Budgets are intentionally lenient — this is a guard against major
-# regressions, not a strict performance gate. Tighten thresholds in
-# .lighthouserc.json once a baseline is established.
+# Two passes: desktop (.lighthouserc.json) and mobile
+# (.lighthouserc.mobile.json) — mobile uses Slow 4G throttling + 4x CPU
+# slowdown so we catch overlay-timing regressions on the smaller devices
+# the team actually browses on (per Core memory, mobile-first).
+#
+# Budgets are intentionally lenient — these are guards against major
+# regressions, not strict performance gates. Tighten thresholds once a
+# baseline is established.
 on:
   pull_request:
   push:
   workflow_dispatch:
 
 concurrency:
-  group: lighthouse-home-${{ github.ref }}
+  group: lighthouse-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   lighthouse:
-    name: Lighthouse (home)
+    name: Lighthouse (${{ matrix.preset }})
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 18
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - preset: desktop
+            config: ./.lighthouserc.json
+          - preset: mobile
+            config: ./.lighthouserc.mobile.json
 
     steps:
       - name: Checkout
@@ -45,8 +60,8 @@ jobs:
       - name: Install Lighthouse CI
         run: npm install -g @lhci/cli@0.14.x
 
-      - name: Run Lighthouse CI
-        run: lhci autorun --config=./.lighthouserc.json
+      - name: Run Lighthouse CI (${{ matrix.preset }})
+        run: lhci autorun --config=${{ matrix.config }}
         env:
           LHCI_BUILD_CONTEXT__CURRENT_HASH: ${{ github.sha }}
 
@@ -54,6 +69,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: lighthouse-report
+          name: lighthouse-report-${{ matrix.preset }}
           path: .lighthouseci/
           retention-days: 14
