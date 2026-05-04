@@ -94,58 +94,61 @@ const HERO_SCENE_DURATION_MS = 6500;
  * Imagery is real Viator-sourced operation photography only — no
  * stock, no AI faces, no generic clichés.
  */
+/**
+ * Cinematic hero sequence. Each scene = ONE Portugal moment + ONE
+ * short message. Scene 1 carries the canonical H1; scenes 2–4 each
+ * show a single line of text; scene 5 is the action close (CTAs).
+ *
+ * `video` is optional — when present we render an autoplay/muted/
+ * looped <video> with the image as poster + fallback. When absent we
+ * render the still image with the existing Ken Burns pan. Both are
+ * real Portugal footage / Viator-sourced operation photography.
+ */
 const HERO_SCENES = [
   {
     id: "opening",
-    // Scene 1 — Arrival. Wide coastal cliff horizon, Portugal opens.
+    // Scene 1 — Coast. Portugal opens.
     image: heroImg,
+    video: "/video/hero-coast.mp4",
     position: "50% 52%",
     pan: "drift-left" as const,
-    // Scene 1's headline is the canonical H1 (rendered separately so
-    // the byte-exact copy lock holds). The cinematic message slot
-    // stays empty here; the eyebrow + H1 + supporting line carry it.
     main: [] as readonly string[],
-    supporting: "Private. Local. Yours.",
   },
   {
     id: "hidden",
-    // Scene 2 — Hidden Arrábida cove, places few reach.
+    // Scene 2 — Hidden Arrábida cove.
     image: imgArrabidaCoves,
+    video: undefined,
     position: "52% 50%",
     pan: "drift-left" as const,
-    main: ["Hidden places,", "chosen your way."] as readonly string[],
-    supporting: "Beyond the obvious, closer to the real.",
+    main: ["Hidden places."] as readonly string[],
   },
   {
     id: "local-moments",
-    // Scene 3 — Local table, wine pour, shared moment.
+    // Scene 3 — Local table, wine, shared moment.
     image: imgArrabidaWineLunch,
+    video: undefined,
     position: "50% 56%",
     pan: "push-in" as const,
-    main: ["Local moments,", "shaped around you."] as readonly string[],
-    supporting: "Food, wine, people, rhythm.",
+    main: ["Local tables."] as readonly string[],
   },
   {
     id: "occasions",
-    // Scene 4 — Quiet Arrábida viewpoint, intimate occasion mood.
+    // Scene 4 — Quiet viewpoint, intimate moment.
     image: imgArrabidaViewpoint,
+    video: undefined,
     position: "50% 50%",
     pan: "drift-left" as const,
-    main: [
-      "For a day, a celebration,",
-      "or something unforgettable.",
-    ] as readonly string[],
-    supporting: "Your occasion sets the rhythm.",
+    main: ["Your moments."] as readonly string[],
   },
   {
     id: "action",
-    // Scene 5 — Multi-region route (Tomar–Coimbra): the journey
-    // itself, the closing chapter where the story becomes a plan.
+    // Scene 5 — Route across Portugal: the close.
     image: imgTomarCoimbra,
+    video: undefined,
     position: "50% 50%",
     pan: "pull-back" as const,
-    main: ["Build it live.", "Confirm instantly."] as readonly string[],
-    supporting: "No forms. No waiting.",
+    main: ["Build it live."] as readonly string[],
   },
 ] as const;
 
@@ -665,21 +668,42 @@ function HomePage() {
             aria-hidden="true"
             className="hero-story-stage absolute inset-0 w-full h-full overflow-hidden"
           >
-            {HERO_SCENES.map((scene, index) => (
-              <img
-                key={scene.id}
-                src={scene.image}
-                alt=""
-                data-hero-pan={scene.pan}
-                className={`hero-story-slide absolute inset-0 w-full h-full object-cover ${index === heroSceneIndex ? "is-active" : ""}`}
-                style={{ objectPosition: scene.position }}
-                width={1920}
-                height={1080}
-                fetchPriority={index === 0 ? "high" : undefined}
-                loading={index === 0 ? undefined : "lazy"}
-                decoding={index === 0 ? undefined : "async"}
-              />
-            ))}
+            {HERO_SCENES.map((scene, index) => {
+              const isActive = index === heroSceneIndex;
+              if (scene.video) {
+                return (
+                  <video
+                    key={scene.id}
+                    src={scene.video}
+                    poster={scene.image}
+                    data-hero-pan={scene.pan}
+                    className={`hero-story-slide absolute inset-0 w-full h-full object-cover ${isActive ? "is-active" : ""}`}
+                    style={{ objectPosition: scene.position }}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload={index === 0 ? "auto" : "metadata"}
+                    aria-hidden="true"
+                  />
+                );
+              }
+              return (
+                <img
+                  key={scene.id}
+                  src={scene.image}
+                  alt=""
+                  data-hero-pan={scene.pan}
+                  className={`hero-story-slide absolute inset-0 w-full h-full object-cover ${isActive ? "is-active" : ""}`}
+                  style={{ objectPosition: scene.position }}
+                  width={1920}
+                  height={1080}
+                  fetchPriority={index === 0 ? "high" : undefined}
+                  loading={index === 0 ? undefined : "lazy"}
+                  decoding={index === 0 ? undefined : "async"}
+                />
+              );
+            })}
           </div>
          {/* Hidden hero alt text for SEO/a11y — the storytelling stage stays
              a pure aria-hidden backdrop. */}
@@ -687,14 +711,13 @@ function HomePage() {
            A cinematic story of Portugal — coastal roads, intimate local tables, hidden coves, estate gardens and cliff horizons.
          </span>
 
-         {/* Cinematic readability overlay — softer than before, never muddy.
-             A faint top-down shade keeps the eyebrow legible, the middle
-             stays almost transparent so the imagery breathes, and a deeper
-             bottom veil anchors the headline + CTAs. A warm wash adds the
-             premium grade without crushing detail. */}
-         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(20,18,16,0.30)_0%,rgba(20,18,16,0.06)_42%,rgba(20,18,16,0.10)_62%,rgba(20,18,16,0.52)_100%)] pointer-events-none z-[2]" />
-         <div className="absolute inset-0 bg-[radial-gradient(120%_70%_at_30%_85%,rgba(20,16,12,0.30)_0%,rgba(20,16,12,0)_55%)] pointer-events-none z-[2]" />
-         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(46,30,18,0.08)_0%,rgba(46,30,18,0)_55%,rgba(46,30,18,0.08)_100%)] mix-blend-multiply pointer-events-none z-[2]" />
+         {/* Cinematic readability overlay — stronger bottom anchor so a
+             single short message + eyebrow stay legible on warm,
+             bright frames (wine tables, viewpoints) without crushing
+             detail on darker frames. */}
+         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(20,18,16,0.42)_0%,rgba(20,18,16,0.10)_38%,rgba(20,18,16,0.18)_60%,rgba(20,18,16,0.62)_100%)] pointer-events-none z-[2]" />
+         <div className="absolute inset-0 bg-[radial-gradient(120%_70%_at_30%_85%,rgba(20,16,12,0.40)_0%,rgba(20,16,12,0)_55%)] pointer-events-none z-[2]" />
+         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(46,30,18,0.10)_0%,rgba(46,30,18,0)_55%,rgba(46,30,18,0.10)_100%)] mix-blend-multiply pointer-events-none z-[2]" />
 
           {/* Subtle story progress — a thin cinematic timeline at the
               bottom of the hero. Re-keys per scene so the fill replays. */}
@@ -705,10 +728,10 @@ function HomePage() {
             <span key={heroScene.id} className="hero-story-progress-fill" />
          </div>
 
-         <div className="container-x relative z-10 pb-16 md:pb-32 pt-28 md:pt-40">
+         <div className="container-x relative z-10 pb-14 md:pb-32 pt-24 md:pt-40">
            <div className="max-w-[20rem] sm:max-w-2xl md:max-w-3xl text-[color:var(--ivory)]">
              {/* Eyebrow — fixed brand anchor on every scene. */}
-             <span className="inline-flex items-center gap-2 sm:gap-3.5 max-w-full text-[10px] xs:text-[10.5px] sm:text-[12px] md:text-[12.5px] uppercase tracking-[0.24em] xs:tracking-[0.26em] sm:tracking-[0.3em] md:tracking-[0.32em] text-[color:var(--gold)] opacity-0 animate-[heroFade_0.9s_ease-out_0.20s_forwards]">
+             <span className="inline-flex items-center gap-2 sm:gap-3.5 max-w-full text-[9.5px] xs:text-[10.5px] sm:text-[12px] md:text-[12.5px] uppercase tracking-[0.18em] xs:tracking-[0.22em] sm:tracking-[0.3em] md:tracking-[0.32em] text-[color:var(--gold)] [text-shadow:0_1px_8px_rgba(0,0,0,0.6),0_0_2px_rgba(0,0,0,0.5)] opacity-0 animate-[heroFade_0.9s_ease-out_0.20s_forwards]">
                <span aria-hidden="true" className="shrink-0">✦</span>
                <span data-hero-field="eyebrow" className="whitespace-nowrap truncate">
                  {HERO_COPY.eyebrow}
@@ -786,21 +809,16 @@ function HomePage() {
                key={`scene-msg-${heroScene.id}`}
                className="hero-scene-message is-on mt-5 md:mt-7 max-w-[19rem] sm:max-w-xl"
              >
-                {heroScene.main.length > 0 ? (
-                  <p className="hero-scene-main serif text-[1.45rem] xs:text-[1.55rem] sm:text-[1.95rem] md:text-[2.4rem] leading-[1.15] tracking-[-0.018em] font-normal text-[color:var(--ivory)] [text-shadow:0_2px_18px_rgba(0,0,0,0.35)]">
-                    {heroScene.main.map((line, i) => (
-                      <span key={i} className="block">
-                        {line}
-                      </span>
-                    ))}
-                  </p>
-                ) : null}
-               {heroScene.supporting ? (
-                 <p className={`hero-scene-supporting ${heroScene.main.length > 0 ? "mt-3 md:mt-4" : "mt-2 md:mt-3"} text-[13px] md:text-[14.5px] leading-[1.5] tracking-[0.005em] text-[color:var(--ivory)]/85 font-normal max-w-[17rem] sm:max-w-md line-clamp-2`}>
-                   {heroScene.supporting}
-                 </p>
-               ) : null}
-             </div>
+                 {heroScene.main.length > 0 ? (
+                   <p className="hero-scene-main serif text-[1.7rem] xs:text-[1.85rem] sm:text-[2.1rem] md:text-[2.6rem] leading-[1.12] tracking-[-0.02em] font-normal text-[color:var(--ivory)] [text-shadow:0_2px_22px_rgba(0,0,0,0.45)]">
+                     {heroScene.main.map((line, i) => (
+                       <span key={i} className="block">
+                         {line}
+                       </span>
+                     ))}
+                   </p>
+                 ) : null}
+              </div>
 
              {/* Action block — CTAs + microcopy + brand signature appear
                  ONLY on scene 5 per the storytelling brief. */}
@@ -838,7 +856,7 @@ function HomePage() {
                  <div className="hero-rhythm-cta-to-microcopy max-w-sm sm:max-w-xl mx-auto sm:mx-0">
                    <p
                      data-hero-field="microcopy"
-                     className="text-[11.5px] md:text-[13px] text-[color:var(--ivory)]/82 leading-[1.55] font-normal tracking-[0.01em] text-center sm:text-left"
+                     className="text-[11.5px] md:text-[13px] text-[color:var(--ivory)]/90 [text-shadow:0_1px_10px_rgba(0,0,0,0.55)] leading-[1.55] font-normal tracking-[0.01em] text-center sm:text-left"
                    >
                      {HERO_COPY.microcopy}
                    </p>
