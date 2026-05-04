@@ -859,19 +859,26 @@ function HomePage() {
              {isHeroActionScene ? (
                <div key="hero-action" className="hero-action-block mt-6 md:mt-9">
                  <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-3.5 w-full max-w-[19rem] sm:max-w-lg">
-                   <Link
-                     to="/builder"
-                     data-hero-field="primaryCta"
-                     className="hero-cta-button hero-cta-button--compact cta-primary he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left"
-                   >
-                     <span className="block">{HERO_COPY.primaryCta}</span>
-                     <ArrowRight
-                       size={15}
-                       strokeWidth={2.25}
-                       className="hero-cta-arrow-pulse shrink-0 text-[color:var(--gold-soft)] transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1.5 group-hover:text-[color:var(--gold)]"
-                       aria-hidden="true"
-                     />
-                   </Link>
+                    <Link
+                      to="/builder"
+                      data-hero-field="primaryCta"
+                      onClick={() => {
+                        trackHeroEvent("cta_click", {
+                          sceneId: heroScene.id,
+                          extra: { cta: "primary", target: "/builder" },
+                        });
+                        trackHeroEvent("builder_start", { sceneId: heroScene.id });
+                      }}
+                      className="hero-cta-button hero-cta-button--compact cta-primary he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left"
+                    >
+                      <span className="block">{HERO_COPY.primaryCta}</span>
+                      <ArrowRight
+                        size={15}
+                        strokeWidth={2.25}
+                        className="hero-cta-arrow-pulse shrink-0 text-[color:var(--gold-soft)] transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1.5 group-hover:text-[color:var(--gold)]"
+                        aria-hidden="true"
+                      />
+                    </Link>
                    <Link
                      to="/experiences"
                      data-hero-field="secondaryCta"
