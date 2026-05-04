@@ -5,7 +5,7 @@ import { SiteLayout } from "@/components/SiteLayout";
 import { FAQ } from "@/components/FAQ";
 import { CtaButton } from "@/components/ui/CtaButton";
 
-// Real Viator-sourced tour photography used by the Occasions / Signature
+import heroImg from "@/assets/hero-coast.jpg";
 // cards on this page. Hero-scene imagery is declared in the manifest at
 // `src/content/hero-scenes-manifest.ts` (single source of truth, feeds
 // both the route and the credits modal).
