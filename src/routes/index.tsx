@@ -902,12 +902,12 @@ function HomePage() {
                  </div>
 
                  <div className="hero-rhythm-cta-to-microcopy max-w-sm sm:max-w-xl mx-auto sm:mx-0">
-                   <p
-                     data-hero-field="microcopy"
-                     className="text-[10.5px] md:text-[11.5px] text-[color:var(--ivory)]/75 [text-shadow:0_1px_10px_rgba(0,0,0,0.55)] leading-[1.55] font-normal tracking-[0.01em] text-center sm:text-left"
-                   >
-                     {HERO_COPY.microcopy}
-                   </p>
+                    <p
+                      data-hero-field="microcopy"
+                      className="text-[9.5px] md:text-[10.5px] text-[color:var(--ivory)]/65 [text-shadow:0_1px_10px_rgba(0,0,0,0.55)] leading-[1.55] font-normal tracking-[0.015em] text-center sm:text-left"
+                    >
+                      {HERO_COPY.microcopy}
+                    </p>
                  </div>
                </div>
              ) : null}
