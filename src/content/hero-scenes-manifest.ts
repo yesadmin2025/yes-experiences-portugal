@@ -36,16 +36,19 @@
 // preview hosted on the Lovable asset CDN.
 const imgInvitation = "/video/real/posters/comporta-beach.jpg";
 const imgPrivateDay = "/video/real/posters/vineyard-walk.jpg";
-// Scene 3 (proposals / celebrations / moments) uses the wine-cellar clip:
-// candlelit, atmospheric, no tight face close-ups — reads premium and
-// emotional on every breakpoint instead of a literal toast crop.
-const imgCelebration = "/video/real/posters/wine-cellar.jpg";
+// Scene 3 (proposals / celebrations / moments): the friends-toast clip is
+// the only real YES asset that visually says "people raising glasses to
+// celebrate". The wine-cellar clip read as logistics/cellar, not as a
+// celebration moment, and was rejected by product. We keep this real
+// footage and crop it to keep faces safe on every breakpoint (see
+// `position` below) until purpose-shot proposal/celebration media lands.
+const imgCelebration = "/video/real/posters/friends-toast.jpg";
 const imgGroups = "/video/real/posters/vineyard-tasting.jpg";
 const imgRoute = "/video/posters/scene-route-portugal.jpg";
 
 const invitationVideo = "/video/real/comporta-beach.mp4";
 const privateDayVideo = "/video/real/vineyard-walk.mp4";
-const celebrationVideo = "/video/real/wine-cellar.mp4";
+const celebrationVideo = "/video/real/friends-toast.mp4";
 const groupsVideo = "/video/real/vineyard-tasting.mp4";
 const routeVideo =
   "/__l5e/assets-v1/501885a8-7399-4591-99fc-1c410b24c428/scene-route-portugal.mp4";
