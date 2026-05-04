@@ -59,11 +59,23 @@ const controlScenes: Record<string, SceneCopyOverride> = Object.fromEntries(
  * `cta_click` + `builder_start` downstream.
  */
 export const HERO_COPY_EXPERIMENT: HeroExperiment = {
-  key: "hero_copy_v1",
+  // Stable analytics key. Bumped from `hero_copy_v1` → `hero_copy_v2`
+  // when the cinematic "You picture / choose / taste / raise / design"
+  // spine became canonical. Bumping the key invalidates every prior
+  // visitor's localStorage assignment so returning visitors immediately
+  // see the new control copy instead of being pinned to an old variant.
+  key: "hero_copy_v2",
+  // 100% weight on `control` for now — the cinematic spine IS the
+  // approved hero. `benefit` and `question` remain defined so we can
+  // re-enable the split (e.g. 60/20/20) later without rewiring any
+  // analytics. Setting a variant's weight to 0 fully excludes it from
+  // assignment but keeps it documented + previewable via
+  // `?heroVariant=benefit` / `?heroVariant=question`.
+  weights: { control: 1, benefit: 0, question: 0 },
   variants: [
     {
       id: "control",
-      hypothesis: "Current cinematic phrasing — emotional, minimal.",
+      hypothesis: "Cinematic 'you design it' spine — current canonical hero.",
       scenes: controlScenes,
     },
     {
