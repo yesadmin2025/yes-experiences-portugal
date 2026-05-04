@@ -309,6 +309,60 @@ function HomePage() {
     };
   }, []);
 
+  /* ──────────────────────────────────────────────────────────────
+   * Hero video — per-device gating + adjacent-scene preloading.
+   *
+   *   • `videosAllowed` is `false` on Save-Data, very slow networks
+   *     (effectiveType ≤ 3g), prefers-reduced-motion, or very narrow
+   *     viewports — in those cases the static Viator-sourced still
+   *     is shown and NO mp4 is ever fetched.
+   *   • For every other device we mount the *active* clip (`auto`
+   *     preload, autoplay) AND the *next* clip silently with
+   *     `preload="metadata"` so its first frames are warm before
+   *     it activates — eliminating the first-frame freeze on
+   *     scene change.
+   *   • On top of that we issue a single `<link rel="preload"
+   *     as="video">` for the next scene's URL when it changes, so
+   *     the CDN connection is opened proactively even for browsers
+   *     that ignore `<video preload="metadata">`.
+   * ────────────────────────────────────────────────────────────── */
+  const videosAllowed = useMemo(() => {
+    if (typeof window === "undefined") return false; // SSR-safe; client effect re-evaluates on mount
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return false;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const conn = (navigator as any).connection;
+    if (conn) {
+      if (conn.saveData) return false;
+      const eff = String(conn.effectiveType || "");
+      if (eff === "slow-2g" || eff === "2g" || eff === "3g") return false;
+    }
+    // Skip on very narrow / very low-DPR devices — the still + Ken-Burns
+    // pan reads as the same shot at this size, without the bandwidth.
+    if (window.matchMedia("(max-width: 360px)").matches) return false;
+    return true;
+  }, []);
+
+  // Warm the next scene's video URL via `<link rel="preload">` so the
+  // CDN handshake + first bytes land before the slide goes active.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (!videosAllowed) return;
+    const next = HERO_SCENES[heroSceneIndex + 1];
+    if (!next?.video) return;
+    const link = document.createElement("link");
+    link.rel = "preload";
+    link.as = "video";
+    link.href = next.video;
+    // Browsers gate cross-origin preload on a matching crossorigin
+    // attribute; the asset CDN serves with permissive CORS so anonymous
+    // is the right value here.
+    link.crossOrigin = "anonymous";
+    document.head.appendChild(link);
+    return () => {
+      link.remove();
+    };
+  }, [heroSceneIndex, videosAllowed]);
+
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (heroFreezeOnLast) return;
