@@ -254,6 +254,22 @@ export const Route = createFileRoute("/")({
       { property: "og:image", content: heroImg },
       { property: "twitter:image", content: heroImg },
     ],
+    links: [
+      // Kick off the hero film + poster downloads in parallel with HTML
+      // parse so the cinematic stage paints without stutter on mobile.
+      {
+        rel: "preload",
+        as: "image",
+        href: HERO_FILM.poster,
+        fetchpriority: "high",
+      },
+      {
+        rel: "preload",
+        as: "video",
+        href: HERO_FILM.src1080,
+        type: "video/mp4",
+      },
+    ],
   }),
   component: HomePage,
 });
