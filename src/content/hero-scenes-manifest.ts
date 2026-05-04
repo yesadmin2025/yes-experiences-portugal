@@ -94,17 +94,17 @@ export type HeroScene = {
 const filmCredit: HeroAssetCredit = {
   kind: "video",
   location:
-    "Real YES Portugal footage — Comporta beach, Carrasqueira pier, Setúbal vineyard toast, minibus arrival, Tróia Roman ruins, azulejo workshop",
+    "Continuous cinematic film — Comporta beach, Setúbal vineyards, Alentejo estate, coastal road across Portugal",
   source: "yes-experiences",
   license:
-    "Stitched continuous film from real YES operation footage (no AI generation)",
+    "AI-extended cinematic film, anchored on real YES Experiences poster frames",
 };
 
 /**
  * Six chapter overlays sequenced over the SINGLE continuous film.
- * Film = real YES Portugal footage stitched: comporta-beach → carrasqueira-pier
- * → friends-toast → arrival-minibus → troia-ruins → azulejo-workshop, with
- * 0.4s crossfades. Total duration 25.5s. No AI-generated frames.
+ * Timestamps are in seconds and chosen so each beat lands in the
+ * matching cinematic moment of the stitched MP4 (10s per source clip,
+ * with 1.2s crossfades between them).
  */
 export const HERO_SCENES: readonly HeroScene[] = [
   {
@@ -114,7 +114,7 @@ export const HERO_SCENES: readonly HeroScene[] = [
     position: { mobile: "50% 55%", tablet: "50% 50%", desktop: "50% 50%" },
     pan: "pull-back",
     startTime: 0.4,
-    endTime: 4.6,
+    endTime: 5.0,
     main: [],
     support: "Private experiences, shaped around you.",
     credits: [filmCredit],
@@ -125,8 +125,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 45%", tablet: "50% 45%", desktop: "50% 45%" },
     pan: "drift-left",
-    startTime: 5.0,
-    endTime: 9.2,
+    startTime: 5.4,
+    endTime: 10.0,
     main: ["Design your private day."],
     support: "Your people. Your pace. Your Portugal.",
     credits: [filmCredit],
@@ -137,8 +137,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 45%", tablet: "50% 45%", desktop: "50% 45%" },
     pan: "drift-right",
-    startTime: 9.6,
-    endTime: 13.3,
+    startTime: 10.4,
+    endTime: 14.5,
     main: ["For proposals,", "celebrations,", "moments worth keeping."],
     support: "Birthdays, anniversaries, yes-moments.",
     credits: [filmCredit],
@@ -149,8 +149,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 45%", tablet: "50% 45%", desktop: "50% 45%" },
     pan: "push-in",
-    startTime: 13.7,
-    endTime: 17.4,
+    startTime: 14.9,
+    endTime: 19.0,
     main: ["For corporate groups,", "teams and private journeys."],
     support: "Carefully coordinated. Locally guided.",
     credits: [filmCredit],
@@ -161,8 +161,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 50%", tablet: "50% 50%", desktop: "50% 50%" },
     pan: "drift-left",
-    startTime: 17.8,
-    endTime: 21.5,
+    startTime: 19.4,
+    endTime: 23.4,
     main: ["From one perfect day", "to a journey across Portugal."],
     support: "Every route shaped around your rhythm.",
     credits: [filmCredit],
@@ -173,8 +173,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 50%", tablet: "50% 50%", desktop: "50% 50%" },
     pan: "push-in",
-    startTime: 21.9,
-    endTime: 25.4,
+    startTime: 23.8,
+    endTime: 27.6,
     main: ["Build it live.", "Confirm instantly."],
     support: "Real local guidance, every step of the way.",
     credits: [filmCredit],
