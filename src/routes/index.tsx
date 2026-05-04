@@ -968,7 +968,7 @@ function HomePage() {
                     </p>
                   ) : null}
                   {"support" in heroScene && heroScene.support ? (
-                    <p className="hero-scene-supporting mt-2.5 md:mt-3.5 font-sans text-[10px] xs:text-[10.5px] sm:text-[11.5px] uppercase tracking-[0.18em] sm:tracking-[0.2em] text-[color:var(--ivory)]/80 [text-shadow:0_1px_10px_rgba(0,0,0,0.55)]">
+                    <p className="hero-scene-supporting mt-2.5 md:mt-3.5 font-sans text-[11.5px] xs:text-[12px] sm:text-[13px] md:text-[13.5px] tracking-[0.01em] leading-[1.5] text-[color:var(--ivory)]/85 [text-shadow:0_1px_10px_rgba(0,0,0,0.55)]">
                       {heroScene.support}
                     </p>
                   ) : null}
@@ -1112,13 +1112,13 @@ function HomePage() {
       <section
         id="audience-bridge"
         aria-labelledby="audience-bridge-title"
-        className="section-enter bg-[color:var(--ivory)] border-b border-[color:var(--border)] py-16 md:py-24"
+        className="section-enter bg-[color:var(--ivory)] border-b border-[color:var(--border)] py-12 md:py-20"
       >
         <div className="container-x">
           <div className="reveal max-w-2xl mx-auto text-center px-2">
             <h2
               id="audience-bridge-title"
-              className="serif text-[1.25rem] xs:text-[1.35rem] sm:text-[1.7rem] md:text-[2.15rem] leading-[1.45] sm:leading-[1.32] md:leading-[1.24] tracking-[-0.012em] text-[color:var(--charcoal)] font-normal"
+              className="serif text-[1.05rem] xs:text-[1.12rem] sm:text-[1.5rem] md:text-[2rem] leading-[1.42] sm:leading-[1.3] md:leading-[1.22] tracking-[-0.012em] text-[color:var(--charcoal)] font-normal"
             >
               Some come for one private day.
               <br />
@@ -1129,9 +1129,9 @@ function HomePage() {
             {/* Champagne gold hairline divider */}
             <div
               aria-hidden="true"
-              className="mx-auto my-7 md:my-10 h-px w-20 md:w-32 bg-gradient-to-r from-transparent via-[color:var(--gold)]/70 to-transparent"
+              className="mx-auto my-6 md:my-9 h-px w-16 md:w-28 bg-gradient-to-r from-transparent via-[color:var(--gold)]/60 to-transparent"
             />
-            <p className="text-[13px] md:text-[15.5px] leading-[1.75] tracking-[0.005em] text-[color:var(--charcoal-soft)]">
+            <p className="text-[12px] md:text-[14.5px] leading-[1.65] tracking-[0.005em] text-[color:var(--charcoal-soft)]">
               However your story begins,
               <br className="hidden sm:block" />
               {" "}we shape it with local knowledge.
