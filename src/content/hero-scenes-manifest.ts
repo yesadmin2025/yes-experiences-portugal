@@ -170,8 +170,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: routeVideo,
     position: "50% 50%",
     pan: "push-in",
-    main: ["You design it.", "We confirm it."],
-    support: "Drawn live. Confirmed instantly.",
+    main: ["Design it live.", "Confirm instantly."],
+    support: "A real local helps if you want.",
     credits: [
       {
         kind: "video",
