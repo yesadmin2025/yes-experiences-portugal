@@ -30,7 +30,7 @@ import { StudioLivePreview } from "@/components/home/StudioLivePreview";
 import { getScrollDebugFlags, useScrollDebugFlags } from "@/lib/scroll-debug";
 
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
-import { HERO_SCENES, HERO_FILM } from "@/content/hero-scenes-manifest";
+import { HERO_SCENES, HERO_FILM, scaleHeroTimeline, HERO_FILM_CANONICAL_DURATION_S } from "@/content/hero-scenes-manifest";
 import { useHeroVariant } from "@/hooks/use-hero-variant";
 import { signatureTours, isValidTourId } from "@/data/signatureTours";
 
