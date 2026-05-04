@@ -875,7 +875,7 @@ function HomePage() {
             <span key={heroScene.id} className="hero-story-progress-fill" />
          </div>
 
-         <div className="container-x relative z-10 pb-[max(5rem,calc(env(safe-area-inset-bottom)+4rem))] md:pb-32 pt-24 md:pt-40">
+         <div className="container-x relative z-10 pb-[max(6.5rem,calc(env(safe-area-inset-bottom)+5.5rem))] md:pb-32 pt-24 md:pt-40">
            <div className="max-w-[19.5rem] xs:max-w-[21rem] sm:max-w-2xl md:max-w-3xl text-[color:var(--ivory)] text-left">
               {/* Eyebrow — refined: smaller, lighter, calmer. Should sit
                   above the image without dominating it. */}
