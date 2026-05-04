@@ -326,20 +326,21 @@ function HomePage() {
    *     the CDN connection is opened proactively even for browsers
    *     that ignore `<video preload="metadata">`.
    * ────────────────────────────────────────────────────────────── */
-  const videosAllowed = useMemo(() => {
-    if (typeof window === "undefined") return false; // SSR-safe; client effect re-evaluates on mount
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return false;
+  const [videosAllowed, setVideosAllowed] = useState(false);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const conn = (navigator as any).connection;
     if (conn) {
-      if (conn.saveData) return false;
+      if (conn.saveData) return;
       const eff = String(conn.effectiveType || "");
-      if (eff === "slow-2g" || eff === "2g" || eff === "3g") return false;
+      if (eff === "slow-2g" || eff === "2g" || eff === "3g") return;
     }
     // Skip on very narrow / very low-DPR devices — the still + Ken-Burns
     // pan reads as the same shot at this size, without the bandwidth.
-    if (window.matchMedia("(max-width: 360px)").matches) return false;
-    return true;
+    if (window.matchMedia("(max-width: 360px)").matches) return;
+    setVideosAllowed(true);
   }, []);
 
   // Warm the next scene's video URL via `<link rel="preload">` so the
