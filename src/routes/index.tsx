@@ -133,8 +133,8 @@ const HERO_SCENES = [
   },
   {
     id: "hidden",
-    // Scene 2 — Hidden Portuguese village street / azulejo corner.
-    image: imgArrabidaCoves,
+    // Scene 2 — Sesimbra fishing village / Portuguese narrow street.
+    image: imgSesimbraVillage,
     video: sceneHiddenStreet.url,
     position: "52% 50%",
     pan: "drift-left" as const,
@@ -143,8 +143,8 @@ const HERO_SCENES = [
   },
   {
     id: "local-moments",
-    // Scene 3 — Local table, wine, market, food.
-    image: imgArrabidaWineLunch,
+    // Scene 3 — Azeitão winery table, Portuguese wine + cheese.
+    image: imgAzeitaoWinery,
     video: sceneLocalTable.url,
     position: "50% 56%",
     pan: "push-in" as const,
@@ -163,8 +163,8 @@ const HERO_SCENES = [
   },
   {
     id: "action",
-    // Scene 5 — Route / journey / studio close. CTAs reveal here.
-    image: imgTomarCoimbra,
+    // Scene 5 — Cabo da Roca cliffs / Atlantic route close. CTAs reveal here.
+    image: imgSintraCaboDaRoca,
     video: sceneRoutePortugal.url,
     position: "50% 50%",
     pan: "pull-back" as const,
