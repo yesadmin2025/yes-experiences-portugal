@@ -14,6 +14,11 @@
  * highest, so the dropped-frame budget there is more lenient (5%).
  */
 import { test, expect, devices, type Page } from "@playwright/test";
+import path from "path";
+import {
+  FIRST_FRAME_JITTER_RATIO,
+  isFirstFrameJitter,
+} from "./hero-film-playback.helpers";
 
 const VIDEO_SELECTOR = ".hero-story-stage video[data-hero-film='true']";
 
@@ -185,24 +190,26 @@ for (const vp of VIEWPORTS) {
 
     test(`first decoded frame within ${vp.firstFrameBudgetMs}ms of metadata-ready`, async ({
       page,
-    }) => {
+    }, testInfo) => {
       // Strict time-to-first-frame budget — measured from the
       // `loadedmetadata` event, NOT from page.goto(). This isolates
       // the *playback* readiness budget from network/route-load noise.
       //
-      // Retry policy (jitter-only):
-      //   We retry the probe up to MAX_ATTEMPTS times BUT only when the
-      //   failure reason indicates timing jitter — i.e. the budget was
-      //   exceeded by a small margin (< 1.5×) on a fully wired-up
-      //   pipeline. We do NOT retry on:
-      //     - missing video element        (real regression)
-      //     - decoder error                (real regression)
-      //     - autoplay rejection w/o frame (real regression)
-      //     - budget exceeded by ≥ 1.5×    (real regression, not jitter)
-      //   This keeps the assertion meaningful while absorbing CI
-      //   scheduler hiccups that produce sporadic ~50–200ms overruns.
+      // Retry policy (jitter-only): see isFirstFrameJitter() in
+      // ./hero-film-playback.helpers.ts. We retry up to MAX_ATTEMPTS
+      // times ONLY when the failure is "budget exceeded" with a
+      // near-miss overrun (< JITTER_RATIO × budget). Hard failures
+      // (missing element, decoder error, autoplay reject, wildly
+      // over-budget) fail fast on the first attempt.
+      //
+      // Trace policy: we manually start a Playwright tracing session
+      // for the FINAL attempt only (after all jitter retries are
+      // exhausted) and save it under the test results dir if the
+      // assertion still fails. This avoids the cost of always-on
+      // tracing while still giving you a full timeline + DOM
+      // snapshots when the bug actually reproduces.
       const MAX_ATTEMPTS = 3;
-      const JITTER_RATIO = 1.5;
+      const JITTER_RATIO = FIRST_FRAME_JITTER_RATIO;
 
       type ProbeResult = {
         ok: boolean;
@@ -299,17 +306,35 @@ for (const vp of VIEWPORTS) {
       };
 
       // Classify a failure as retryable jitter vs. hard regression.
-      const isJitter = (r: ProbeResult): boolean => {
-        if (r.ok) return false;
-        if (!r.reason.startsWith("budget exceeded")) return false;
-        // Only treat near-miss overruns as jitter. A wildly over-budget
-        // result (e.g. 5s when budget is 2s) is a real regression.
-        return r.ms > 0 && r.ms < vp.firstFrameBudgetMs * JITTER_RATIO;
-      };
+      const isJitter = (r: ProbeResult): boolean =>
+        isFirstFrameJitter(
+          { ok: r.ok, reason: r.reason, ms: r.ms },
+          vp.firstFrameBudgetMs,
+          JITTER_RATIO,
+        );
 
       const attempts: ProbeResult[] = [];
       let final: ProbeResult | null = null;
+      let traceStarted = false;
       for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
+        // On the LAST attempt, start a trace so we can save it on
+        // final failure. Skipped on earlier attempts to keep retries
+        // cheap.
+        if (attempt === MAX_ATTEMPTS && !traceStarted) {
+          try {
+            await page.context().tracing.start({
+              screenshots: true,
+              snapshots: true,
+              sources: true,
+              title: `hero-first-frame-${vp.name.replace(/\s+/g, "-")}`,
+            });
+            traceStarted = true;
+          } catch {
+            // Tracing may already be active (project-level config) —
+            // safe to ignore; we just won't double-start.
+          }
+        }
+
         const r = await runProbe();
         attempts.push(r);
         if (r.ok) {
@@ -341,6 +366,40 @@ for (const vp of VIEWPORTS) {
             `goto→firstFrame=${a.gotoToFirstFrameMs}ms`,
         )
         .join("\n");
+
+      // If we started a trace, persist it ONLY on final failure and
+      // attach to testInfo so it surfaces in the HTML report.
+      if (traceStarted) {
+        if (!final.ok) {
+          const tracePath = testInfo.outputPath(
+            `hero-first-frame-${vp.name.replace(/\s+/g, "-")}.zip`,
+          );
+          try {
+            await page.context().tracing.stop({ path: tracePath });
+            await testInfo.attach("hero-first-frame-trace", {
+              path: tracePath,
+              contentType: "application/zip",
+            });
+            // eslint-disable-next-line no-console
+            console.error(
+              `[hero-film-playback] trace saved → ${path.basename(tracePath)} ` +
+                `(open with: bunx playwright show-trace ${tracePath})`,
+            );
+          } catch (err) {
+            // eslint-disable-next-line no-console
+            console.error(
+              `[hero-film-playback] failed to save trace: ${(err as Error).message}`,
+            );
+          }
+        } else {
+          // Test recovered on the final attempt — discard the trace.
+          try {
+            await page.context().tracing.stop();
+          } catch {
+            /* noop */
+          }
+        }
+      }
 
       expect(
         final.ok,
