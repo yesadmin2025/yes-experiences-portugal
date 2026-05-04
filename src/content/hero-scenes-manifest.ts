@@ -27,22 +27,23 @@
  */
 
 // Real YES Experiences media — clips and posters captured on actual
-// YES routes (Comporta beach, vineyard walks with real guests, friends
-// toasting, minibus arrival for groups, route across Portugal). Stored
-// in `public/video/real/` with matching first-frame posters in
-// `public/video/real/posters/`. The route across Portugal (scene 5)
-// keeps the existing CDN-hosted route flyover that pairs with the
-// Studio Builder narrative.
+// YES routes. We curate the most cinematic moments for the hero
+// (coastal arrival, vineyard walk with guests, friends toasting,
+// vineyard tasting / wine cellar for groups & corporate). Operational
+// media (minibus arrival, indoor snapshots, workshops) is reserved
+// for logistics / proof sections lower on the page — never the hero.
+// The route flyover used for scene 5 is a YES-commissioned itinerary
+// preview hosted on the Lovable asset CDN.
 const imgInvitation = "/video/real/posters/comporta-beach.jpg";
 const imgPrivateDay = "/video/real/posters/vineyard-walk.jpg";
 const imgCelebration = "/video/real/posters/friends-toast.jpg";
-const imgGroups = "/video/real/posters/arrival-minibus.jpg";
+const imgGroups = "/video/real/posters/vineyard-tasting.jpg";
 const imgRoute = "/video/posters/scene-route-portugal.jpg";
 
 const invitationVideo = "/video/real/comporta-beach.mp4";
 const privateDayVideo = "/video/real/vineyard-walk.mp4";
 const celebrationVideo = "/video/real/friends-toast.mp4";
-const groupsVideo = "/video/real/arrival-minibus.mp4";
+const groupsVideo = "/video/real/vineyard-tasting.mp4";
 const routeVideo =
   "/__l5e/assets-v1/501885a8-7399-4591-99fc-1c410b24c428/scene-route-portugal.mp4";
 
@@ -121,8 +122,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: privateDayVideo,
     position: "50% 50%",
     pan: "drift-left",
-    main: ["For one day,", "or a private group."],
-    support: "Couples, families, small groups.",
+    main: ["For one private day,", "or a small group escape."],
+    support: "Couples, families, friends — at your rhythm.",
     credits: [
       {
         kind: "video",
@@ -136,9 +137,9 @@ export const HERO_SCENES: readonly HeroScene[] = [
     id: "taste",
     image: imgCelebration,
     video: celebrationVideo,
-    position: "50% 50%",
+    position: "50% 45%",
     pan: "drift-right",
-    main: ["For proposals", "and celebrations."],
+    main: ["For proposals,", "celebrations,", "and moments worth keeping."],
     support: "Anniversaries, birthdays, moments that stay.",
     credits: [
       {
@@ -155,12 +156,12 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: groupsVideo,
     position: "50% 50%",
     pan: "push-in",
-    main: ["For teams", "and big groups."],
-    support: "Private logistics, locally coordinated.",
+    main: ["For teams, groups,", "and shared journeys."],
+    support: "Private, local and carefully coordinated.",
     credits: [
       {
         kind: "video",
-        location: "Private group arrival — minibus pickup, Portugal",
+        location: "Private group tasting at a Setúbal estate — Portugal",
         source: "yes-experiences",
         license: "Captured on a real YES Experiences route",
       },
@@ -173,7 +174,7 @@ export const HERO_SCENES: readonly HeroScene[] = [
     position: "50% 50%",
     pan: "push-in",
     main: ["Design it live.", "Confirm instantly."],
-    support: "A real local helps if you want.",
+    support: "Real local guidance whenever you want it.",
     credits: [
       {
         kind: "video",

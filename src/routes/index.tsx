@@ -1097,13 +1097,13 @@ function HomePage() {
       <section
         id="audience-bridge"
         aria-labelledby="audience-bridge-title"
-        className="section-enter bg-[color:var(--ivory)] border-b border-[color:var(--border)] py-14 md:py-20"
+        className="section-enter bg-[color:var(--ivory)] border-b border-[color:var(--border)] py-16 md:py-24"
       >
         <div className="container-x">
-          <div className="reveal max-w-2xl mx-auto text-center">
+          <div className="reveal max-w-2xl mx-auto text-center px-2">
             <h2
               id="audience-bridge-title"
-              className="serif text-[1.55rem] sm:text-[1.85rem] md:text-[2.3rem] leading-[1.3] md:leading-[1.22] tracking-[-0.012em] text-[color:var(--charcoal)] font-normal"
+              className="serif text-[1.25rem] xs:text-[1.35rem] sm:text-[1.7rem] md:text-[2.15rem] leading-[1.45] sm:leading-[1.32] md:leading-[1.24] tracking-[-0.012em] text-[color:var(--charcoal)] font-normal"
             >
               Some come for one private day.
               <br />
@@ -1114,9 +1114,9 @@ function HomePage() {
             {/* Champagne gold hairline divider */}
             <div
               aria-hidden="true"
-              className="mx-auto my-6 md:my-8 h-px w-24 md:w-32 bg-gradient-to-r from-transparent via-[color:var(--gold)]/70 to-transparent"
+              className="mx-auto my-7 md:my-10 h-px w-20 md:w-32 bg-gradient-to-r from-transparent via-[color:var(--gold)]/70 to-transparent"
             />
-            <p className="text-[14.5px] md:text-[16px] leading-[1.7] text-[color:var(--charcoal-soft)]">
+            <p className="text-[13px] md:text-[15.5px] leading-[1.75] tracking-[0.005em] text-[color:var(--charcoal-soft)]">
               However your story begins,
               <br className="hidden sm:block" />
               {" "}we shape it with local knowledge.

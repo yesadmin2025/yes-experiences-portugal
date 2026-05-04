@@ -19,7 +19,7 @@ export const HERO_COPY_SPEC = {
     "Choose the places, pace and moments that feel right — from private days to celebrations, groups and full journeys — with local guidance whenever you want it. Confirm instantly.",
   primaryCta: "Create Your Story",
   secondaryCta: "Explore Signature Experiences",
-  microcopy: "Instant booking. Real local guidance if you want it.",
+  microcopy: "Instant booking. No forms. No waiting.",
 } as const;
 
 export type HeroSpecKey = keyof typeof HERO_COPY_SPEC;
