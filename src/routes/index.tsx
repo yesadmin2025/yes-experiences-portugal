@@ -476,12 +476,20 @@ function HomePage() {
           return nextIndex;
         });
       }
-      // Advance the eased alpha for an in-flight transition.
+      // Advance the eased alpha for an in-flight transition. Quantize
+      // to 5% steps so React only re-renders ~20 times across the 600ms
+      // window instead of 60fps × 0.6s = 36 frames worth of state churn.
       setHeroPrevIndex((prev) => {
         if (prev === null) return prev;
         const elapsed = performance.now() - heroTransitionStart;
         const linear = Math.min(1, elapsed / HERO_OVERLAP_MS);
-        setHeroFadeAlpha(easeInOut(linear));
+        const eased = easeInOut(linear);
+        setHeroFadeAlpha((curr) => {
+          const quantized = Math.round(eased * 20) / 20;
+          return Math.abs(curr - quantized) >= 0.05 || quantized === 1 || quantized === 0
+            ? quantized
+            : curr;
+        });
         return linear >= 1 ? null : prev;
       });
       raf = window.requestAnimationFrame(tick);
