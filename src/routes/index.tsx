@@ -34,6 +34,7 @@ import sceneHiddenCove from "../../public/video/scene-hidden-cove.mp4.asset.json
 import sceneLocalTable from "../../public/video/scene-local-table.mp4.asset.json";
 import sceneHiddenStreet from "../../public/video/scene-hidden-street.mp4.asset.json";
 import sceneRoutePortugal from "../../public/video/scene-route-portugal.mp4.asset.json";
+import sceneCelebration from "../../public/video/scene-celebration.mp4.asset.json";
 
 import {
   ArrowRight,
