@@ -56,6 +56,7 @@ import { StudioLivePreview } from "@/components/home/StudioLivePreview";
 import { getScrollDebugFlags, useScrollDebugFlags } from "@/lib/scroll-debug";
 
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
+import { HERO_SCENES } from "@/content/hero-scenes-manifest";
 import { signatureTours, isValidTourId } from "@/data/signatureTours";
 
 /* ──────────────────────────────────────────────────────────────────
@@ -110,68 +111,11 @@ const HERO_SCENE_DURATION_MS = 5200;
  * stock, no AI faces, no generic clichés.
  */
 /**
- * Cinematic hero sequence. Each scene = ONE Portugal moment + ONE
- * short message. Scene 1 carries the canonical H1; scenes 2–4 each
- * show a single line of text; scene 5 is the action close (CTAs).
- *
- * `video` is optional — when present we render an autoplay/muted/
- * looped <video> with the image as poster + fallback. When absent we
- * render the still image with the existing Ken Burns pan. Both are
- * real Portugal footage / Viator-sourced operation photography.
+ * Cinematic hero sequence is now declared in
+ * `src/content/hero-scenes-manifest.ts` — single source of truth that
+ * also feeds the credits modal. Adding/replacing a scene clip happens
+ * THERE, not here, so attribution stays in sync with what's rendered.
  */
-const HERO_SCENES = [
-  {
-    id: "opening",
-    // Scene 1 — Coast: Portugal opens. H1 carries the main line; we
-    // still expose a supporting microline below it for cinematic rhythm.
-    image: heroImg,
-    video: "/video/hero-coast.mp4",
-    position: "50% 52%",
-    pan: "drift-left" as const,
-    main: [] as readonly string[],
-    support: "Private. Local. Yours.",
-  },
-  {
-    id: "hidden",
-    // Scene 2 — Sesimbra fishing village / Portuguese narrow street.
-    image: imgSesimbraVillage,
-    video: sceneHiddenStreet.url,
-    position: "52% 50%",
-    pan: "drift-left" as const,
-    main: ["Hidden places,", "chosen your way."] as readonly string[],
-    support: "Beyond the obvious.",
-  },
-  {
-    id: "local-moments",
-    // Scene 3 — Azeitão winery table, Portuguese wine + cheese.
-    image: imgAzeitaoWinery,
-    video: sceneLocalTable.url,
-    position: "50% 56%",
-    pan: "push-in" as const,
-    main: ["Local moments,", "shaped around you."] as readonly string[],
-    support: "Food, wine, people, rhythm.",
-  },
-  {
-    id: "occasions",
-    // Scene 4 — Couple / celebration / private group toast.
-    image: imgArrabidaViewpoint,
-    video: sceneCelebration.url,
-    position: "50% 50%",
-    pan: "push-in" as const,
-    main: ["For a day,", "a celebration,", "or something unforgettable."] as readonly string[],
-    support: "Your occasion sets the rhythm.",
-  },
-  {
-    id: "action",
-    // Scene 5 — Cabo da Roca cliffs / Atlantic route close. CTAs reveal here.
-    image: imgSintraCaboDaRoca,
-    video: sceneRoutePortugal.url,
-    position: "50% 50%",
-    pan: "pull-back" as const,
-    main: ["Build it live.", "Confirm instantly."] as readonly string[],
-    support: "No forms. No waiting.",
-  },
-] as const;
 
 
 const signatures = FEATURED_TOUR_IDS
