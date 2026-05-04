@@ -94,58 +94,61 @@ const HERO_SCENE_DURATION_MS = 6500;
  * Imagery is real Viator-sourced operation photography only — no
  * stock, no AI faces, no generic clichés.
  */
+/**
+ * Cinematic hero sequence. Each scene = ONE Portugal moment + ONE
+ * short message. Scene 1 carries the canonical H1; scenes 2–4 each
+ * show a single line of text; scene 5 is the action close (CTAs).
+ *
+ * `video` is optional — when present we render an autoplay/muted/
+ * looped <video> with the image as poster + fallback. When absent we
+ * render the still image with the existing Ken Burns pan. Both are
+ * real Portugal footage / Viator-sourced operation photography.
+ */
 const HERO_SCENES = [
   {
     id: "opening",
-    // Scene 1 — Arrival. Wide coastal cliff horizon, Portugal opens.
+    // Scene 1 — Coast. Portugal opens.
     image: heroImg,
+    video: "/video/hero-coast.mp4",
     position: "50% 52%",
     pan: "drift-left" as const,
-    // Scene 1's headline is the canonical H1 (rendered separately so
-    // the byte-exact copy lock holds). The cinematic message slot
-    // stays empty here; the eyebrow + H1 + supporting line carry it.
     main: [] as readonly string[],
-    supporting: "Private. Local. Yours.",
   },
   {
     id: "hidden",
-    // Scene 2 — Hidden Arrábida cove, places few reach.
+    // Scene 2 — Hidden Arrábida cove.
     image: imgArrabidaCoves,
+    video: undefined,
     position: "52% 50%",
     pan: "drift-left" as const,
-    main: ["Hidden places,", "chosen your way."] as readonly string[],
-    supporting: "Beyond the obvious, closer to the real.",
+    main: ["Hidden places."] as readonly string[],
   },
   {
     id: "local-moments",
-    // Scene 3 — Local table, wine pour, shared moment.
+    // Scene 3 — Local table, wine, shared moment.
     image: imgArrabidaWineLunch,
+    video: undefined,
     position: "50% 56%",
     pan: "push-in" as const,
-    main: ["Local moments,", "shaped around you."] as readonly string[],
-    supporting: "Food, wine, people, rhythm.",
+    main: ["Local tables."] as readonly string[],
   },
   {
     id: "occasions",
-    // Scene 4 — Quiet Arrábida viewpoint, intimate occasion mood.
+    // Scene 4 — Quiet viewpoint, intimate moment.
     image: imgArrabidaViewpoint,
+    video: undefined,
     position: "50% 50%",
     pan: "drift-left" as const,
-    main: [
-      "For a day, a celebration,",
-      "or something unforgettable.",
-    ] as readonly string[],
-    supporting: "Your occasion sets the rhythm.",
+    main: ["Your moments."] as readonly string[],
   },
   {
     id: "action",
-    // Scene 5 — Multi-region route (Tomar–Coimbra): the journey
-    // itself, the closing chapter where the story becomes a plan.
+    // Scene 5 — Route across Portugal: the close.
     image: imgTomarCoimbra,
+    video: undefined,
     position: "50% 50%",
     pan: "pull-back" as const,
-    main: ["Build it live.", "Confirm instantly."] as readonly string[],
-    supporting: "No forms. No waiting.",
+    main: ["Build it live."] as readonly string[],
   },
 ] as const;
 
