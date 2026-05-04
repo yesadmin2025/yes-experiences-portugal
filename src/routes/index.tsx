@@ -1198,12 +1198,30 @@ function HomePage() {
             </div>
           </div>
           </div>
-          {/* Soft transition into the next section — extended ivory fade
-              so the trust strip lands without a hard edge and the eye gets
-              breathing room after the cinematic close. */}
+          {/* Seamless premium transition into the next section.
+              Three layered passes so the cinematic film dissolves into
+              the audience-bridge ivory surface without a perceptible
+              edge on any viewport:
+                1. Tall warm-charcoal vignette (≈40% of stage height)
+                   blends the dark hero floor into the upcoming ivory
+                   plate — kills the hard tonal jump.
+                2. Extended ivory fade — taller on mobile (h-44) where
+                   the next section sits closer to the fold; standard
+                   on desktop (h-40).
+                3. 1px hairline noise overlay at the very edge stops
+                   any banding in the gradient on OLED / wide-gamut
+                   mobile displays. */}
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-28 md:h-36 z-[3] bg-[linear-gradient(180deg,rgba(250,248,243,0)_0%,rgba(250,248,243,0.35)_55%,rgba(250,248,243,0.85)_85%,var(--ivory)_100%)]"
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-[55%] z-[2] bg-[linear-gradient(180deg,rgba(20,16,12,0)_0%,rgba(28,22,16,0.18)_45%,rgba(40,30,20,0.30)_75%,rgba(60,46,32,0.18)_100%)] mix-blend-multiply"
+          />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-44 md:h-40 z-[3] bg-[linear-gradient(180deg,rgba(250,248,243,0)_0%,rgba(250,248,243,0.18)_30%,rgba(250,248,243,0.55)_62%,rgba(250,248,243,0.92)_88%,var(--ivory)_100%)]"
+          />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-2 z-[4] bg-[var(--ivory)]"
           />
         </section>
 
