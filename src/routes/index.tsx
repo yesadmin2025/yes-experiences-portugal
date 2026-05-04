@@ -756,6 +756,7 @@ function HomePage() {
   return (
     <SiteLayout>
        <div className="home-energy">
+       {heroChapterDebug && <HeroChapterDebugOverlay />}
        {/* 1 — HERO
            Mobile-first cinematic 4-beat storytelling sequence. Each beat
            communicates ONE emotional idea. Copy reveals progressively in
