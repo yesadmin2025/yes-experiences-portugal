@@ -1125,7 +1125,7 @@ function HomePage() {
         </div>
       </section>
 
-
+      {/* 2 — TRUST STRIP
           Restrained: review count, real platforms, one short line about
           private guides + real local knowledge. No avatars carousel, no
           repeated review block. This is the SINGLE review surface on the
