@@ -186,7 +186,7 @@ export const HERO_SCENES: readonly HeroScene[] = [
     position: { mobile: "50% 50%", tablet: "50% 50%", desktop: "50% 50%" },
     pan: "push-in",
     startTime: 27.6,
-    endTime: 39.633,
+    endTime: 39.633333,
     main: ["Build it live.", "Confirm instantly."],
     support: "Real local guidance whenever you want it.",
     credits: [filmCredit],
