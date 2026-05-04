@@ -1517,6 +1517,33 @@
   }
 }
 
+/* Same opacity curve as heroFade but on the X-axis — text drifts in
+   from the right so it rides the same direction as the right→left
+   film-strip motion behind it. Used by the eyebrow, H1 and the
+   thin progress bar so every overlay element shares one vector. */
+@keyframes heroFadeFromRight {
+  0% {
+    opacity: 0;
+    transform: translate3d(22px, 0, 0);
+    filter: blur(1.5px);
+  }
+  35% {
+    opacity: 0.85;
+    transform: translate3d(8px, 0, 0);
+    filter: blur(0.4px);
+  }
+  55% {
+    opacity: 0.98;
+    transform: translate3d(2px, 0, 0);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    filter: blur(0);
+  }
+}
+
 /* ---------------------------------------------------------------------------
    Mobile hero choreography — slow, directional, true storytelling sequence.
    Each phrase enters from a *different* direction, one after another, like
