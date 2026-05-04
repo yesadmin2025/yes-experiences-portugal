@@ -1027,12 +1027,16 @@ function HomePage() {
                           style={{
                             opacity: 1 - heroFadeAlpha,
                             transform: `translate3d(0, ${(-4 * heroFadeAlpha).toFixed(2)}px, 0)`,
-                            // 220ms linear chase between the JS-quantized
-                            // 5% alpha steps — long enough to smooth
-                            // visible stair-stepping but well under the
-                            // 1450ms cosine cross-fade window so the
-                            // overall S-curve shape is preserved.
-                            transition: "opacity 220ms linear, transform 220ms ease-out",
+                            // 380ms ease-in-out chase between the
+                            // JS-quantized ~3.3% alpha steps. Long
+                            // enough to mask any per-step jump (each
+                            // step is now ≤3.3%) yet still well under
+                            // the 1450ms smootherstep window so the
+                            // overall S-curve shape is preserved and
+                            // the dissolve reads as one continuous
+                            // motion instead of stair-steps.
+                            transition:
+                              "opacity 380ms cubic-bezier(0.4, 0, 0.2, 1), transform 380ms cubic-bezier(0.4, 0, 0.2, 1)",
                             willChange: "opacity, transform",
                           }}
                         >
@@ -1074,7 +1078,8 @@ function HomePage() {
                       ? {
                           opacity: heroFadeAlpha,
                           transform: `translate3d(0, ${((1 - heroFadeAlpha) * 4).toFixed(2)}px, 0)`,
-                          transition: "opacity 220ms linear, transform 220ms ease-out",
+                          transition:
+                            "opacity 380ms cubic-bezier(0.4, 0, 0.2, 1), transform 380ms cubic-bezier(0.4, 0, 0.2, 1)",
                           willChange: "opacity, transform",
                         }
                       : undefined
