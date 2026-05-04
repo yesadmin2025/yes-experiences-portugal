@@ -809,15 +809,15 @@ function HomePage() {
                key={`scene-msg-${heroScene.id}`}
                className="hero-scene-message is-on mt-5 md:mt-7 max-w-[19rem] sm:max-w-xl"
              >
-                {heroScene.main.length > 0 ? (
-                  <p className="hero-scene-main serif text-[1.45rem] xs:text-[1.55rem] sm:text-[1.95rem] md:text-[2.4rem] leading-[1.15] tracking-[-0.018em] font-normal text-[color:var(--ivory)] [text-shadow:0_2px_18px_rgba(0,0,0,0.35)]">
-                    {heroScene.main.map((line, i) => (
-                      <span key={i} className="block">
-                        {line}
-                      </span>
-                    ))}
-                  </p>
-                ) : null}
+                 {heroScene.main.length > 0 ? (
+                   <p className="hero-scene-main serif text-[1.7rem] xs:text-[1.85rem] sm:text-[2.1rem] md:text-[2.6rem] leading-[1.12] tracking-[-0.02em] font-normal text-[color:var(--ivory)] [text-shadow:0_2px_22px_rgba(0,0,0,0.45)]">
+                     {heroScene.main.map((line, i) => (
+                       <span key={i} className="block">
+                         {line}
+                       </span>
+                     ))}
+                   </p>
+                 ) : null}
               </div>
 
              {/* Action block — CTAs + microcopy + brand signature appear
