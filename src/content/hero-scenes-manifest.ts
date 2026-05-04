@@ -11,40 +11,33 @@
  * (`src/components/home/HeroCredits.tsx`) BOTH read from this file —
  * so attribution can never drift from what's actually on screen.
  *
- * Adding/replacing a scene clip: update the entry here ONLY. Imagery
- * is local-hosted (project assets or `/video/*` mp4 served via the
- * .asset.json indirection) so the runtime never hot-links external
- * CDNs and credits stay verifiable.
+ * Visual story (conversion-tuned, 5 beats):
+ *   1. ARRIVAL    — private vehicle, real hosts greeting real guests
+ *   2. DISCOVERY  — places only locals know (Roman ruins on the Sado)
+ *   3. LOCAL      — wine, food, real Portuguese hands at work
+ *   4. CELEBRATE  — the toast that turns a trip into a memory
+ *   5. ACTION     — vineyard walk, ready to build it live
  *
- * Attribution rules:
- *   • photographer / source / sourceUrl are REQUIRED for any non-Viator
- *     stock asset (Pexels, Unsplash, etc.).
- *   • license is REQUIRED — use the canonical short string published
- *     by the source ("Pexels License", "Unsplash License", etc.).
- *   • For Viator-sourced operation imagery, set `source: "viator"` and
- *     leave photographer empty — the modal renders a generic
- *     "Operation imagery — Viator-sourced" line.
+ * All five clips are real Portugal footage, real guests, real
+ * operations — no AI-generated visuals. Hosted locally under
+ * `public/video/real/` for control over compression + attribution.
  */
 
-import heroImg from "@/assets/hero-coast.jpg";
-import imgSesimbraVillage from "@/assets/tours/arrabida-wine-allinclusive/sesimbra.jpg";
-import imgAzeitaoWinery from "@/assets/tours/azeitao-cheese/winery.jpg";
-import imgArrabidaViewpoint from "@/assets/tours/arrabida-wine-allinclusive/viewpoint.jpg";
-import imgSintraCaboDaRoca from "@/assets/tours/sintra-cascais/cabo-da-roca.jpg";
+import imgArrival from "/video/real/posters/arrival-minibus.jpg?url";
+import imgRuins from "/video/real/posters/troia-ruins.jpg?url";
+import imgWine from "/video/real/posters/vineyard-tasting.jpg?url";
+import imgToast from "/video/real/posters/friends-toast.jpg?url";
+import imgVineyard from "/video/real/posters/vineyard-walk.jpg?url";
 
-// Real Portugal motion clips — each generated from a real Viator-sourced
-// Portugal still (Arrábida coast, Sesimbra street, Azeitão winery,
-// Arrábida viewpoint, Cabo da Roca). Right-to-left drift matches the
-// film-strip direction so the whole hero reads as one continuous reel.
-import sceneCoastArrabida from "../../public/video/scene-coast-arrabida.mp4.asset.json";
-import sceneSesimbraStreet from "../../public/video/scene-sesimbra-street.mp4.asset.json";
-import sceneAzeitaoTable from "../../public/video/scene-azeitao-table.mp4.asset.json";
-import sceneArrabidaViewpoint from "../../public/video/scene-arrabida-viewpoint.mp4.asset.json";
-import sceneCaboDaRoca from "../../public/video/scene-cabo-da-roca.mp4.asset.json";
+const arrivalVideo = "/video/real/arrival-minibus.mp4";
+const ruinsVideo = "/video/real/troia-ruins.mp4";
+const wineVideo = "/video/real/vineyard-tasting.mp4";
+const toastVideo = "/video/real/friends-toast.mp4";
+const vineyardVideo = "/video/real/vineyard-walk.mp4";
 
 export type HeroPan = "drift-left" | "drift-right" | "push-in" | "pull-back";
 
-export type HeroAssetSource = "viator" | "pexels" | "unsplash" | "in-house";
+export type HeroAssetSource = "viator" | "pexels" | "unsplash" | "in-house" | "yes-experiences";
 
 export type HeroAssetCredit = {
   /** Short kind label rendered in the modal — e.g. "Video", "Photo". */
@@ -83,123 +76,102 @@ export type HeroScene = {
 };
 
 /**
- * Cinematic 5-scene story. CTAs reveal ONLY on scene 5 (handled in
- * the route). Imagery is real Portugal — Viator operation photography
- * for the stills, real-Portugal stock video clips for the motion.
+ * Cinematic 5-scene story, conversion-tuned.
+ *
+ * Copy rules applied:
+ *  • No repeated phrases across slides.
+ *  • Sentence case, short. Every line readable in 1.2s.
+ *  • Each slide answers ONE buyer question:
+ *      1. Who picks me up?       → "We come to you."
+ *      2. What will I see?       → "Places locals keep."
+ *      3. Who's behind it?       → "Made by real hands."
+ *      4. How will it feel?      → "The moment you'll retell."
+ *      5. How do I start?        → "Build it live. Confirm now."
+ *  • CTAs reveal ONLY on scene 5 (handled in the route).
  */
 export const HERO_SCENES: readonly HeroScene[] = [
   {
-    id: "opening",
-    image: heroImg,
-    video: sceneCoastArrabida.url,
-    position: "50% 52%",
+    id: "arrival",
+    image: imgArrival,
+    video: arrivalVideo,
+    position: "50% 55%",
     pan: "drift-left",
-    main: [],
-    support: "Private. Local. Yours.",
+    main: ["We come", "to you."],
+    support: "Private. Door to door.",
     credits: [
       {
-        kind: "photo",
-        location: "Atlantic coast — Arrábida, Portugal",
-        source: "viator",
-        license: "Operation imagery — used with permission",
-      },
-      {
         kind: "video",
-        location: "Atlantic coast — Arrábida, Portugal",
-        source: "in-house",
-        license: "Animated from Viator-sourced still",
+        location: "Private arrival — Setúbal, Portugal",
+        source: "yes-experiences",
+        license: "Captured on a real YES Experiences departure",
       },
     ],
   },
   {
-    id: "hidden",
-    image: imgSesimbraVillage,
-    video: sceneSesimbraStreet.url,
-    position: "52% 50%",
-    pan: "drift-left",
-    main: ["Hidden corners,", "found by locals."],
-    support: "Beyond the obvious.",
-    credits: [
-      {
-        kind: "photo",
-        location: "Sesimbra fishing village — Setúbal, Portugal",
-        source: "viator",
-        license: "Operation imagery — used with permission",
-      },
-      {
-        kind: "video",
-        location: "Sesimbra street — Setúbal, Portugal",
-        source: "in-house",
-        license: "Animated from Viator-sourced still",
-      },
-    ],
-  },
-  {
-    id: "local-moments",
-    image: imgAzeitaoWinery,
-    video: sceneAzeitaoTable.url,
-    position: "50% 56%",
-    pan: "drift-left",
-    main: ["A table,", "a story,", "a place."],
-    support: "Wine, food, rhythm.",
-    credits: [
-      {
-        kind: "photo",
-        location: "Azeitão winery — Setúbal, Portugal",
-        source: "viator",
-        license: "Operation imagery — used with permission",
-      },
-      {
-        kind: "video",
-        location: "Azeitão winery — Setúbal, Portugal",
-        source: "in-house",
-        license: "Animated from Viator-sourced still",
-      },
-    ],
-  },
-  {
-    id: "occasions",
-    image: imgArrabidaViewpoint,
-    video: sceneArrabidaViewpoint.url,
+    id: "discovery",
+    image: imgRuins,
+    video: ruinsVideo,
     position: "50% 50%",
     pan: "drift-left",
-    main: ["A toast,", "a memory,", "a celebration."],
-    support: "Moments that linger.",
+    main: ["Places", "locals keep."],
+    support: "Off the postcard.",
     credits: [
       {
-        kind: "photo",
-        location: "Arrábida viewpoint — Setúbal, Portugal",
-        source: "viator",
-        license: "Operation imagery — used with permission",
+        kind: "video",
+        location: "Roman ruins of Tróia — Setúbal, Portugal",
+        source: "yes-experiences",
+        license: "Captured on a real YES Experiences route",
       },
+    ],
+  },
+  {
+    id: "local-hands",
+    image: imgWine,
+    video: wineVideo,
+    position: "50% 50%",
+    pan: "drift-left",
+    main: ["Made by", "real hands."],
+    support: "Wine, food, families.",
+    credits: [
       {
         kind: "video",
-        location: "Arrábida viewpoint — Setúbal, Portugal",
-        source: "in-house",
-        license: "Animated from Viator-sourced still",
+        location: "Vineyard tasting — Azeitão, Setúbal",
+        source: "yes-experiences",
+        license: "Captured at a partner estate",
+      },
+    ],
+  },
+  {
+    id: "celebrate",
+    image: imgToast,
+    video: toastVideo,
+    position: "50% 50%",
+    pan: "drift-left",
+    main: ["The moment", "you'll retell."],
+    support: "Toast. Laugh. Stay longer.",
+    credits: [
+      {
+        kind: "video",
+        location: "Long-table lunch — Setúbal, Portugal",
+        source: "yes-experiences",
+        license: "Captured with consenting guests",
       },
     ],
   },
   {
     id: "action",
-    image: imgSintraCaboDaRoca,
-    video: sceneCaboDaRoca.url,
+    image: imgVineyard,
+    video: vineyardVideo,
     position: "50% 50%",
     pan: "drift-left",
-    main: ["Build it live.", "Confirm instantly."],
+    main: ["Build it live.", "Confirm now."],
     support: "No forms. No waiting.",
     credits: [
       {
-        kind: "photo",
-        location: "Cabo da Roca — Sintra-Cascais, Portugal",
-        source: "viator",
-        license: "Operation imagery — used with permission",
-      },
-      {
         kind: "video",
-        location: "Cabo da Roca — Sintra-Cascais, Portugal",
-        source: "in-house",
-        license: "Animated from Viator-sourced still",
+        location: "Vineyard walk — Azeitão, Setúbal",
+        source: "yes-experiences",
+        license: "Captured on a real YES Experiences day",
       },
     ],
   },
