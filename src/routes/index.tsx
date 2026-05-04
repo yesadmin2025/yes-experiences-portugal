@@ -754,12 +754,12 @@ function HomePage() {
            <div className="max-w-[19.5rem] xs:max-w-[21rem] sm:max-w-2xl md:max-w-3xl text-[color:var(--ivory)] text-left">
               {/* Eyebrow — refined: smaller, lighter, calmer. Should sit
                   above the image without dominating it. */}
-              <span className="inline-flex items-center gap-2 sm:gap-3 max-w-full text-[9px] xs:text-[9.5px] sm:text-[10.5px] md:text-[11px] uppercase tracking-[0.22em] xs:tracking-[0.26em] sm:tracking-[0.3em] text-[color:var(--gold-soft)] [text-shadow:0_1px_8px_rgba(0,0,0,0.6),0_0_2px_rgba(0,0,0,0.5)] opacity-0 animate-[heroFadeFromRight_0.9s_ease-out_0.20s_forwards]">
-                <span aria-hidden="true" className="shrink-0 text-[7px] sm:text-[8px] opacity-80">✦</span>
+              <span className="inline-flex items-center gap-2 sm:gap-3 max-w-full text-[8.5px] xs:text-[9px] sm:text-[10px] md:text-[10.5px] uppercase tracking-[0.24em] xs:tracking-[0.28em] sm:tracking-[0.32em] text-[color:var(--gold-soft)]/85 [text-shadow:0_1px_8px_rgba(0,0,0,0.6),0_0_2px_rgba(0,0,0,0.5)] opacity-0 animate-[heroFadeFromRight_0.9s_ease-out_0.20s_forwards]">
+                <span aria-hidden="true" className="shrink-0 text-[6.5px] sm:text-[7.5px] opacity-70">✦</span>
                 <span data-hero-field="eyebrow" className="whitespace-nowrap truncate font-medium">
                   {HERO_COPY.eyebrow}
                 </span>
-                <span aria-hidden="true" className="shrink-0 text-[7px] sm:text-[8px] opacity-80">✦</span>
+                <span aria-hidden="true" className="shrink-0 text-[6.5px] sm:text-[7.5px] opacity-70">✦</span>
               </span>
 
              {/* Canonical H1 — carries the approved HERO_COPY locks.
