@@ -458,10 +458,16 @@ function HomePage() {
 
     let raf = 0;
     // Eased cross-fade alpha ∈ [0,1]: 0 = previous fully visible,
-    // 1 = next fully visible. Cosine ease produces a calm, premium
-    // S-curve — no linear pop, no spring.
-    const easeInOut = (x: number) =>
-      x <= 0 ? 0 : x >= 1 ? 1 : 0.5 - 0.5 * Math.cos(Math.PI * x);
+    // 1 = next fully visible. Smootherstep (6x^5-15x^4+10x^3) gives a
+    // gentler entry/exit than cosine — the curve sits flatter near 0
+    // and 1 so the copyright dissolves in/out without a perceptible
+    // mid-fade kick. Continuous 1st AND 2nd derivatives = no abrupt
+    // visual moments at any point of the ramp.
+    const easeInOut = (x: number) => {
+      if (x <= 0) return 0;
+      if (x >= 1) return 1;
+      return x * x * x * (x * (x * 6 - 15) + 10);
+    };
 
     const tick = () => {
       const t = video.currentTime;
