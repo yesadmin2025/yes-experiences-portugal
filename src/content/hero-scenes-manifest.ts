@@ -170,7 +170,7 @@ export const HERO_SCENES: readonly HeroScene[] = [
     image: imgRoute,
     video: routeVideo,
     position: "50% 50%",
-    pan: "pull-back",
+    pan: "push-in",
     main: ["You design it.", "We confirm it."],
     support: "Drawn live. Confirmed instantly.",
     credits: [
