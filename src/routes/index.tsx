@@ -490,16 +490,18 @@ function HomePage() {
         });
       }
       // Advance the eased alpha for an in-flight transition. Quantize
-      // to 5% steps so React only re-renders ~20 times across the 600ms
-      // window instead of 60fps × 0.6s = 36 frames worth of state churn.
+      // to ~3.3% steps (30 buckets) so React re-renders ~30 times
+      // across the 1450ms window — fine enough that the CSS chase
+      // (380ms ease-in-out) never has to hop more than ~3% per tick,
+      // killing the visible stair-step.
       setHeroPrevIndex((prev) => {
         if (prev === null) return prev;
         const elapsed = performance.now() - heroTransitionStart;
         const linear = Math.min(1, elapsed / HERO_OVERLAP_MS);
         const eased = easeInOut(linear);
         setHeroFadeAlpha((curr) => {
-          const quantized = Math.round(eased * 20) / 20;
-          return Math.abs(curr - quantized) >= 0.05 || quantized === 1 || quantized === 0
+          const quantized = Math.round(eased * 30) / 30;
+          return Math.abs(curr - quantized) >= 1 / 30 || quantized === 1 || quantized === 0
             ? quantized
             : curr;
         });
