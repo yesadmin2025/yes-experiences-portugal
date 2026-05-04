@@ -33,6 +33,10 @@ import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
 import { HERO_SCENES, HERO_FILM, scaleHeroTimeline, HERO_FILM_CANONICAL_DURATION_S } from "@/content/hero-scenes-manifest";
 import { useHeroVariant } from "@/hooks/use-hero-variant";
 import { signatureTours, isValidTourId } from "@/data/signatureTours";
+import {
+  HeroChapterDebugOverlay,
+  useHeroChapterDebugToggle,
+} from "@/components/HeroChapterDebugOverlay";
 
 /* ──────────────────────────────────────────────────────────────────
  * Featured Signature tours — exactly 4 real tours, in display order.
@@ -64,7 +68,10 @@ const FEATURED_TOUR_IDS = [
  * photography. AI is not used to shape any of these strings.
  * ────────────────────────────────────────────────────────────── */
 const HERO_SCENE_DURATION_MS = 5200;
-const HERO_FILM_PLAYBACK_RATE = 0.86;
+// Slowed further (0.86 → 0.78) so the closing "Build it live / Confirm
+// instantly" beat holds visibly through the Portugal-map close instead
+// of finishing before it. Same media element governs every viewport.
+const HERO_FILM_PLAYBACK_RATE = 0.78;
 
 /* ──────────────────────────────────────────────────────────────────
  * Cinematic horizontal storytelling hero — 5 scenes, each a short
@@ -290,6 +297,7 @@ function HomePage() {
   );
   const heroScene = heroScenes[heroSceneIndex];
   const isHeroActionScene = heroSceneIndex === heroScenes.length - 1;
+  const heroChapterDebug = useHeroChapterDebugToggle();
 
   // Focus management — when the cinematic film reaches its final action
   // chapter, move keyboard/screen-reader focus to the primary CTA so AT
@@ -749,6 +757,7 @@ function HomePage() {
   return (
     <SiteLayout>
        <div className="home-energy">
+       {heroChapterDebug && <HeroChapterDebugOverlay />}
        {/* 1 — HERO
            Mobile-first cinematic 4-beat storytelling sequence. Each beat
            communicates ONE emotional idea. Copy reveals progressively in
