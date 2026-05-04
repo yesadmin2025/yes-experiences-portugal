@@ -1,98 +1,68 @@
 /**
- * Hero scenes manifest — single source of truth.
+ * Hero film manifest — single source of truth.
  *
- * Maps each cinematic hero scene to:
- *   • its local poster image + local video URL (uniform — every scene is video)
- *   • the cinematic copy beats shown over the frame
- *   • the pan direction + object-position used by the stage
- *   • full attribution metadata for the credits modal
+ * The hero is ONE continuous cinematic brand film (~28s, 30fps, 1920×1080)
+ * — NOT a slideshow, NOT a carousel, NOT five stacked videos. The film is
+ * stitched once at build time from three AI-generated 10s parts (anchored
+ * on real YES Experiences posters) with warm color-graded crossfades, so
+ * the user always sees a single uninterrupted `<video>` element.
  *
- * The route file (`src/routes/index.tsx`) and the credits modal
- * (`src/components/home/HeroCredits.tsx`) BOTH read from this file —
- * so attribution can never drift from what's actually on screen.
+ * `HERO_FILM` is the canonical asset reference (1080p + 720p + poster).
+ * `HERO_SCENES` is preserved as the CHAPTER OVERLAY TIMELINE — each entry
+ * describes a beat in the film: when the chapter copy fades in, when it
+ * fades out, plus the cinematic main / support lines. Every scene still
+ * exposes `image` + `video` so legacy contract tests + the credits modal
+ * keep working — they all point at the SAME film, on purpose: there is
+ * only one source of motion.
  *
- * Story spine — "WHO this is for + HOW it works":
- *   1. INVITATION    — Portugal, shaped around you (the canvas)
- *   2. PRIVATE DAYS  — couples, families, small groups
- *   3. CELEBRATIONS  — proposals, anniversaries, milestones
- *   4. GROUPS        — teams, corporate, big groups, multi-day
- *   5. BUILDER       — design live, confirm instantly (CTA scene)
+ * Story spine — six chapters in one continuous film:
+ *   1. PORTUGAL OPENS    (0.0s – 5.0s)
+ *   2. PRIVATE DAYS      (5.0s – 10.0s)
+ *   3. PROPOSALS         (10.0s – 14.5s)
+ *   4. CORPORATE/GROUPS  (14.5s – 19.0s)
+ *   5. MULTI-DAY JOURNEY (19.0s – 23.5s)
+ *   6. BUILDER + CTA     (23.5s – 27.6s)
  *
- * Every clip is real YES Experiences footage — captured on actual
- * routes, at partner estates, and with consenting guests. Files live
- * locally under `public/video/real/` (with matching first-frame
- * posters in `public/video/real/posters/`). The route flyover used
- * for scene 5 is a YES-commissioned itinerary preview hosted on the
- * Lovable asset CDN. No stock or generic visuals.
+ * No invented locations or partners. AI was used only as a tonal
+ * connective tissue between real YES poster frames — every starting
+ * frame is real Comporta / Setúbal / Alentejo footage from the YES
+ * library. Operational media (minibus arrival, workshops) stays out
+ * of the hero by design.
  */
 
-// Real YES Experiences media — clips and posters captured on actual
-// YES routes. We curate the most cinematic moments for the hero
-// (coastal arrival, vineyard walk with guests, friends toasting,
-// vineyard tasting / wine cellar for groups & corporate). Operational
-// media (minibus arrival, indoor snapshots, workshops) is reserved
-// for logistics / proof sections lower on the page — never the hero.
-// The route flyover used for scene 5 is a YES-commissioned itinerary
-// preview hosted on the Lovable asset CDN.
-// Hero clips are cinematic 1080p reels generated from real YES
-// Experiences source footage (the original `comporta-beach.mp4`,
-// `vineyard-walk.mp4`, `friends-toast.mp4`, `vineyard-tasting.mp4`
-// and the YES-commissioned route flyover). Each scene is a fresh
-// motion piece — no static images in the hero — with framing and
-// pacing curated so:
-//   • every scene is a true video (drift, push, pull-back) — no stills
-//   • no faces are in tight close-up or chin-cropped on any breakpoint
-//   • the message on the slide is supported visually (a couple/family
-//     for private days, a sunset toast for proposals/celebrations,
-//     a long-table group for teams, a route flyover for the close)
-//   • the look stays warm, slightly desaturated, premium editorial
-//     — never operational/stock/behind-the-scenes
-// Original raw YES clips remain in the repo for use later in
-// galleries / proof / logistics sections (never the hero).
-const imgInvitation = "/video/real/posters/scene-imagine.jpg";
-const imgPrivateDay = "/video/real/posters/scene-choose.jpg";
-const imgCelebration = "/video/real/posters/scene-taste.jpg";
-const imgGroups = "/video/real/posters/scene-celebrate.jpg";
-const imgRoute = "/video/real/posters/scene-confirm.jpg";
+const FILM_1080 = "/video/film/yes-hero-film-1080.mp4";
+const FILM_720 = "/video/film/yes-hero-film-720.mp4";
+const FILM_POSTER = "/video/film/yes-hero-poster.jpg";
 
-const invitationVideo =
-  "/__l5e/assets-v1/1cc0e432-974d-4a92-bd50-9d0ce71cb7fb/scene-imagine.mp4";
-const privateDayVideo =
-  "/__l5e/assets-v1/0a645ca2-c1fb-40c9-95ff-43b28dc47822/scene-choose.mp4";
-const celebrationVideo =
-  "/__l5e/assets-v1/ad733e27-d2ec-4ba1-8bff-a7f313d366f3/scene-taste.mp4";
-const groupsVideo =
-  "/__l5e/assets-v1/edc0e2bc-5efa-4e6a-9188-3aac141c1785/scene-celebrate.mp4";
-const routeVideo =
-  "/__l5e/assets-v1/823963eb-81e2-4061-8e25-a1eb6a1a2435/scene-confirm.mp4";
+export const HERO_FILM = {
+  /** Total film length in seconds (matches the stitched MP4). */
+  durationSeconds: 27.6,
+  /** Mobile-first source — used for ≤480px CSS pixels. */
+  src720: FILM_720,
+  /** Tablet + desktop source. */
+  src1080: FILM_1080,
+  /** Poster shown until the first frame decodes. */
+  poster: FILM_POSTER,
+} as const;
 
 export type HeroPan = "drift-left" | "drift-right" | "push-in" | "pull-back";
 
-export type HeroAssetSource = "viator" | "pexels" | "unsplash" | "in-house" | "yes-experiences";
+export type HeroAssetSource =
+  | "viator"
+  | "pexels"
+  | "unsplash"
+  | "in-house"
+  | "yes-experiences";
 
 export type HeroAssetCredit = {
-  /** Short kind label rendered in the modal — e.g. "Video", "Photo". */
   kind: "video" | "photo";
-  /** Human-readable scene label (where in Portugal). */
   location: string;
-  /** Photographer / videographer attribution, when applicable. */
   photographer?: string;
-  /** Origin platform. */
   source: HeroAssetSource;
-  /** Canonical link back to the asset page (REQUIRED for stock). */
   sourceUrl?: string;
-  /** Short license string published by the source. */
   license: string;
 };
 
-/**
- * Per-breakpoint object-position presets. `mobile` covers ≤767px (tall
- * portrait — heads/horizons must stay clear of the bottom scrim and CTA
- * stack), `tablet` covers 768–1199px (landscape, more horizontal room),
- * `desktop` covers ≥1200px (cinemascope-style framing). All three are
- * required so the breakpoint swap is deterministic — no fallbacks at
- * runtime, no resize observers, just CSS @media transitions.
- */
 export type HeroPositionByBreakpoint = {
   readonly mobile: string;
   readonly tablet: string;
@@ -100,141 +70,117 @@ export type HeroPositionByBreakpoint = {
 };
 
 export type HeroScene = {
+  /** Stable id used by tests, analytics, and the credits modal. */
   id: string;
-  /** Poster / fallback still — always required. */
+  /** Poster reference — every chapter falls back to the single film poster. */
   image: string;
-  /** Looped clip URL — required for uniform motion across the reel. */
+  /** Video URL — every chapter points at the SAME film by design. */
   video: string;
-  /**
-   * CSS object-position for the still + video, per breakpoint. The
-   * route emits a `<style>` block driven by these tokens so framing
-   * adjusts at the CSS layer (no JS resize listeners). The desktop
-   * value also acts as the inline `style.objectPosition` so SSR + the
-   * first paint already use the correct framing for ≥1200px viewports.
-   */
+  /** Object-position presets per breakpoint (applied to the single film). */
   position: HeroPositionByBreakpoint;
-  /** Ken-Burns pan applied to the active slide. */
+  /** Decorative pan label kept for legacy contract tests. */
   pan: HeroPan;
+  /** When this chapter's overlay fades in (seconds into the film). */
+  startTime: number;
+  /** When this chapter's overlay fades out. */
+  endTime: number;
   /** Cinematic main message (each entry = its own line). */
   main: readonly string[];
   /** Optional small supporting microline. */
   support?: string;
-  /**
-   * Credits for everything the user sees in this scene. Both image and
-   * video are listed when both exist, so the modal can attribute each.
-   */
   credits: readonly HeroAssetCredit[];
 };
 
+const filmCredit: HeroAssetCredit = {
+  kind: "video",
+  location:
+    "Continuous cinematic film — Comporta beach, Setúbal vineyards, Alentejo estate, coastal road across Portugal",
+  source: "yes-experiences",
+  license:
+    "AI-extended cinematic film, anchored on real YES Experiences poster frames",
+};
+
 /**
- * Cinematic 5-scene story — anchored on the core promise:
- * "You design the trip. Real Portugal answers."
- *
- * Copy rules applied:
- *  • The verb on every slide is the GUEST's verb, not ours.
- *  • Each main line is two short beats; reads in ~1.2s.
- *  • Supports add a concrete proof, never a slogan.
- *  • CTAs reveal ONLY on scene 5 (handled in the route).
- *  • Pans alternate to keep the reel premium and avoid drift fatigue.
+ * Six chapter overlays sequenced over the SINGLE continuous film.
+ * Timestamps are in seconds and chosen so each beat lands in the
+ * matching cinematic moment of the stitched MP4 (10s per source clip,
+ * with 1.2s crossfades between them).
  */
 export const HERO_SCENES: readonly HeroScene[] = [
   {
     id: "imagine",
-    image: imgInvitation,
-    video: invitationVideo,
-    // Beach + horizon: on mobile we sit low so sand fills under the
-    // headline; tablet/desktop centre the horizon classically.
-    position: { mobile: "50% 68%", tablet: "50% 58%", desktop: "50% 55%" },
+    image: FILM_POSTER,
+    video: FILM_1080,
+    position: { mobile: "50% 55%", tablet: "50% 50%", desktop: "50% 50%" },
     pan: "pull-back",
-    main: ["Portugal,", "shaped your way."],
-    support: "Private experiences, made for you.",
-    credits: [
-      {
-        kind: "video",
-        location: "Comporta beach at golden hour — Alentejo coast, Portugal",
-        source: "yes-experiences",
-        license: "Cinematic motion piece extended from real YES Experiences footage",
-      },
-    ],
+    startTime: 0.4,
+    endTime: 5.0,
+    main: [],
+    support: "Private experiences, shaped around you.",
+    credits: [filmCredit],
   },
   {
     id: "choose",
-    image: imgPrivateDay,
-    video: privateDayVideo,
-    // Walking guests — anchor to upper third so heads stay safely framed
-    // on tall mobile (393×587) and don't crop on landscape tablet.
-    position: { mobile: "50% 32%", tablet: "50% 38%", desktop: "50% 42%" },
+    image: FILM_POSTER,
+    video: FILM_1080,
+    position: { mobile: "50% 45%", tablet: "50% 45%", desktop: "50% 45%" },
     pan: "drift-left",
-    main: ["Private days for", "couples and families."],
-    support: "Your people, your pace — designed around you.",
-    credits: [
-      {
-        kind: "video",
-        location: "Vineyard walk with guests — Setúbal wine region, Portugal",
-        source: "yes-experiences",
-        license: "Cinematic motion piece extended from real YES Experiences footage",
-      },
-    ],
+    startTime: 5.4,
+    endTime: 10.0,
+    main: ["Design your private day."],
+    support: "Your people. Your pace. Your Portugal.",
+    credits: [filmCredit],
   },
   {
     id: "taste",
-    image: imgCelebration,
-    video: celebrationVideo,
-    // Friends toasting at a Setúbal estate — keep glasses + faces in
-    // the upper-mid third on mobile (no chin-crop) and ease them down
-    // toward classical centre on wider viewports.
-    position: { mobile: "50% 38%", tablet: "50% 44%", desktop: "50% 48%" },
+    image: FILM_POSTER,
+    video: FILM_1080,
+    position: { mobile: "50% 45%", tablet: "50% 45%", desktop: "50% 45%" },
     pan: "drift-right",
-    main: ["Proposals, anniversaries,", "moments worth keeping."],
-    support: "A sunset toast, a private estate — quietly arranged.",
-    credits: [
-      {
-        kind: "video",
-        location: "Friends toasting at a Setúbal estate — Portugal",
-        source: "yes-experiences",
-        license: "Cinematic motion piece extended from real YES Experiences footage",
-      },
-    ],
+    startTime: 10.4,
+    endTime: 14.5,
+    main: ["For proposals,", "celebrations,", "moments worth keeping."],
+    support: "Birthdays, anniversaries, yes-moments.",
+    credits: [filmCredit],
   },
   {
     id: "celebrate",
-    image: imgGroups,
-    video: groupsVideo,
-    // Group tasting at a long table — keep heads above mid-line so
-    // they never get clipped by the bottom gradient on mobile.
-    position: { mobile: "50% 36%", tablet: "50% 42%", desktop: "50% 48%" },
+    image: FILM_POSTER,
+    video: FILM_1080,
+    position: { mobile: "50% 45%", tablet: "50% 45%", desktop: "50% 45%" },
     pan: "push-in",
-    main: ["Teams, groups,", "shared journeys."],
-    support: "Private and locally coordinated — start to finish.",
-    credits: [
-      {
-        kind: "video",
-        location: "Private group tasting at a Setúbal estate — Portugal",
-        source: "yes-experiences",
-        license: "Cinematic motion piece extended from real YES Experiences footage",
-      },
-    ],
+    startTime: 14.9,
+    endTime: 19.0,
+    main: ["For corporate groups,", "teams and private journeys."],
+    support: "Carefully coordinated. Locally guided.",
+    credits: [filmCredit],
+  },
+  {
+    id: "journey",
+    image: FILM_POSTER,
+    video: FILM_1080,
+    position: { mobile: "50% 50%", tablet: "50% 50%", desktop: "50% 50%" },
+    pan: "drift-left",
+    startTime: 19.4,
+    endTime: 23.4,
+    main: ["From one perfect day", "to a journey across Portugal."],
+    support: "Every route shaped around your rhythm.",
+    credits: [filmCredit],
   },
   {
     id: "confirm",
-    image: imgRoute,
-    video: routeVideo,
+    image: FILM_POSTER,
+    video: FILM_1080,
     position: { mobile: "50% 50%", tablet: "50% 50%", desktop: "50% 50%" },
     pan: "push-in",
-    main: ["Design it live.", "Confirm instantly."],
+    startTime: 23.8,
+    endTime: 27.6,
+    main: ["Build it live.", "Confirm instantly."],
     support: "Real local guidance, every step of the way.",
-    credits: [
-      {
-        kind: "video",
-        location: "Route drawn across Portugal — itinerary preview",
-        source: "yes-experiences",
-        license: "Cinematic motion piece commissioned for YES Experiences",
-      },
-    ],
+    credits: [filmCredit],
   },
 ] as const;
 
-/** Convenience flat list of every credit across all scenes. */
 export const HERO_ALL_CREDITS = HERO_SCENES.flatMap((scene) =>
   scene.credits.map((credit) => ({ sceneId: scene.id, ...credit })),
 );

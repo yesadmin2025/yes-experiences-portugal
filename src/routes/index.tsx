@@ -34,7 +34,7 @@ import { StudioLivePreview } from "@/components/home/StudioLivePreview";
 import { getScrollDebugFlags, useScrollDebugFlags } from "@/lib/scroll-debug";
 
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
-import { HERO_SCENES } from "@/content/hero-scenes-manifest";
+import { HERO_SCENES, HERO_FILM } from "@/content/hero-scenes-manifest";
 import { useHeroVariant } from "@/hooks/use-hero-variant";
 import { signatureTours, isValidTourId } from "@/data/signatureTours";
 
@@ -337,26 +337,20 @@ function HomePage() {
   }, []);
 
   /* ──────────────────────────────────────────────────────────────
-   * Hero video — uniform video-only playback across all devices.
+   * Hero film — ONE continuous cinematic <video> element.
    *
-   *   • Scenes 1–5 are videos. There is NO image-only fallback mode.
-   *     The poster jpg is shown only for the brief first-paint window
-   *     before the video element decodes its first frame.
-   *   • The ONLY case where we don't autoplay is `prefers-reduced-motion`
-   *     (a11y). Even then the <video> element mounts with `preload=metadata`
-   *     so the first frame paints — we just don't loop-animate it.
-   *   • Save-Data / slow-2g / 2g / 3g / narrow viewports DO get videos,
-   *     but with tighter preload (only the NEXT scene is fetched as
-   *     `metadata`, never `auto`) so initial load stays low.
+   *   • The hero is a single ~28s film (1080p stitched from three
+   *     AI-extended clips anchored on real YES posters). There are
+   *     NO slides, NO carousel, NO per-scene videos. Chapter overlays
+   *     fade in/out by listening to the film's currentTime.
+   *   • Save-Data / slow-2g / 2g / 3g devices get the 720p source
+   *     (≈7.7MB) instead of 1080p (≈16MB). Both are h264 + faststart.
+   *   • Reduced-motion is respected: the film still mounts and shows
+   *     the first frame, but doesn't auto-loop. Chapter timeline
+   *     stays on the opening chapter so copy is still legible.
    * ────────────────────────────────────────────────────────────── */
-  // Hero is a 5-scene cinematic VIDEO reel — every scene is a moving
-  // clip, never a still image. Per explicit product direction, the
-  // hero clips are decorative + muted + looping, so they autoplay on
-  // every device including reduced-motion (the clips are gentle
-  // drifts/pull-backs, never strobing or fast cuts). Save-Data still
-  // shrinks preload weight but does NOT freeze the active clip.
-  const [videosAllowed] = useState(true);
   const [saveDataMode, setSaveDataMode] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
   useEffect(() => {
     if (typeof window === "undefined") return;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -367,125 +361,52 @@ function HomePage() {
         setSaveDataMode(true);
       }
     }
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReducedMotion(mq.matches);
+    const onChange = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
+    mq.addEventListener?.("change", onChange);
+    return () => mq.removeEventListener?.("change", onChange);
   }, []);
 
-  // Warm ONLY the next scene's video URL via `<link rel="preload">` so
-  // the CDN handshake + first bytes land before the slide goes active.
-  // We never warm scenes beyond N+1 — keeps initial load low even on
-  // Save-Data / slow networks, where the active clip is the only one
-  // fully fetched and the next is just metadata-prefetched.
+  // Drive the active chapter index from the film's currentTime. The
+  // ?hero=last query param freezes on the last chapter for byte-exact
+  // copy-lock + visual-regression tests.
   useEffect(() => {
     if (typeof window === "undefined") return;
-    // On Save-Data / slow networks, skip the proactive `<link rel=preload>`
-    // entirely — the in-DOM `<video preload="metadata">` on the NEXT slide
-    // is enough to get a first frame ready without a second parallel fetch.
-    if (saveDataMode) return;
-    const next = HERO_SCENES[heroSceneIndex + 1];
-    if (!next?.video) return;
-    const link = document.createElement("link");
-    link.rel = "preload";
-    link.as = "video";
-    link.href = next.video;
-    // Browsers gate cross-origin preload on a matching crossorigin
-    // attribute; the asset CDN serves with permissive CORS so anonymous
-    // is the right value here.
-    link.crossOrigin = "anonymous";
-    document.head.appendChild(link);
-    return () => {
-      link.remove();
-    };
-  }, [heroSceneIndex, saveDataMode]);
+    if (heroFreezeOnLast) {
+      setHeroSceneIndex(heroScenes.length - 1);
+      return;
+    }
+    const video = document.querySelector<HTMLVideoElement>(
+      ".hero-story-stage video[data-hero-film='true']",
+    );
+    if (!video) return;
 
-  /* ──────────────────────────────────────────────────────────────
-   * Runtime assertions (dev-only) — verify that the hero stage
-   * actually mounted in the contract we claim:
-   *
-   *   1. Video-only mode: every ACTIVE and NEXT slide must have a
-   *      <video> element. An <img>-only slide would be an image-only
-   *      fallback state, which is not supported.
-   *   2. Preload tier contract: every mounted <video>'s `preload`
-   *      attribute must match the active/next rule
-   *      (active = "auto" | "metadata" on Save-Data, next = "metadata").
-   *
-   * These run after every scene change, only in dev (Vite's
-   * `import.meta.env.DEV`), and never throw — they only console.error
-   * so QA / Sentry pick the violations up without breaking the page
-   * for real visitors.
-   * ────────────────────────────────────────────────────────────── */
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (!import.meta.env.DEV) return;
-    // Defer one frame so React has committed the DOM.
-    const raf = window.requestAnimationFrame(() => {
-      const stage = document.querySelector<HTMLElement>(".hero-story-stage");
-      if (!stage) return;
-      const slides = Array.from(
-        stage.querySelectorAll<HTMLElement>("[data-hero-scene-id]"),
-      );
-      const activeScene = HERO_SCENES[heroSceneIndex];
-      const nextScene = HERO_SCENES[heroSceneIndex + 1];
-      for (const slide of slides) {
-        const sceneId = slide.getAttribute("data-hero-scene-id");
-        const isActive = sceneId === activeScene?.id;
-        const isNext = nextScene ? sceneId === nextScene.id : false;
-        const video = slide.querySelector<HTMLVideoElement>("video");
-
-        // Contract 1 — video-only mode for active + next.
-        if ((isActive || isNext) && !video) {
-          // eslint-disable-next-line no-console
-          console.error(
-            `[hero/runtime] scene "${sceneId}" is ${isActive ? "ACTIVE" : "NEXT"} but has NO <video> — image-only mode is not supported.`,
-          );
-        }
-
-        // Contract 2 — preload tier matches active/next rule.
-        if (video) {
-          const preload = video.getAttribute("preload");
-          if (isActive) {
-            const expected = saveDataMode ? "metadata" : "auto";
-            if (preload !== expected) {
-              // eslint-disable-next-line no-console
-              console.error(
-                `[hero/runtime] active scene "${sceneId}" has preload="${preload}" — expected "${expected}".`,
-              );
-            }
-          } else if (isNext) {
-            if (preload !== "metadata") {
-              // eslint-disable-next-line no-console
-              console.error(
-                `[hero/runtime] next scene "${sceneId}" has preload="${preload}" — expected "metadata".`,
-              );
-            }
-          } else {
-            // Non-active / non-next slides should not have <video> at all.
-            // eslint-disable-next-line no-console
-            console.error(
-              `[hero/runtime] scene "${sceneId}" mounted a <video> but is neither ACTIVE nor NEXT — preload tier broken.`,
-            );
-          }
+    let raf = 0;
+    const tick = () => {
+      const t = video.currentTime;
+      // Find the chapter whose [startTime, endTime] window contains t.
+      // If t falls in a transition gap (e.g. 5.0–5.4s), keep the
+      // previous chapter so copy doesn't blink off-screen.
+      let nextIndex = -1;
+      for (let i = 0; i < HERO_SCENES.length; i += 1) {
+        const s = HERO_SCENES[i];
+        if (t >= s.startTime && t <= s.endTime) {
+          nextIndex = i;
+          break;
         }
       }
-    });
-    return () => window.cancelAnimationFrame(raf);
-  }, [heroSceneIndex, saveDataMode]);
+      if (nextIndex !== -1) {
+        setHeroSceneIndex((prev) => (prev === nextIndex ? prev : nextIndex));
+      }
+      raf = window.requestAnimationFrame(tick);
+    };
+    raf = window.requestAnimationFrame(tick);
+    return () => {
+      if (raf) window.cancelAnimationFrame(raf);
+    };
+  }, [heroFreezeOnLast, heroScenes.length]);
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (heroFreezeOnLast) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    const timer = window.setInterval(() => {
-      setHeroSceneIndex((index) => {
-        if (index >= HERO_SCENES.length - 1) {
-          window.clearInterval(timer);
-          return index;
-        }
-        return index + 1;
-      });
-    }, HERO_SCENE_DURATION_MS);
-
-    return () => window.clearInterval(timer);
-  }, [heroFreezeOnLast]);
 
   // Homepage motion controller — `[data-motion]` / `.motion-in`.
   // See src/lib/home-motion.ts for the full contract. This is the
@@ -781,74 +702,70 @@ function HomePage() {
               first paint on ≥1200px viewports already uses the correct
               framing before the stylesheet attaches.
             */}
+            {/*
+              Per-breakpoint object-position presets — emitted once,
+              driven entirely by the manifest. Mobile = ≤767px (tall
+              portrait, protect heads/horizons from the bottom scrim),
+              tablet = 768–1199px, desktop = ≥1200px. CSS @media swaps
+              framing without React re-renders or resize listeners.
+              The desktop value is also the inline default so the very
+              first paint on ≥1200px viewports already uses the correct
+              framing before the stylesheet attaches.
+            */}
             <style>{HERO_SCENES.map((s) => (
-              `[data-hero-scene-id="${s.id}"] > video{object-position:${s.position.mobile}}` +
-              `@media (min-width:768px){[data-hero-scene-id="${s.id}"] > video{object-position:${s.position.tablet}}}` +
-              `@media (min-width:1200px){[data-hero-scene-id="${s.id}"] > video{object-position:${s.position.desktop}}}`
+              `[data-hero-scene-id="${s.id}"][data-hero-active="true"] ~ video[data-hero-film="true"]{object-position:${s.position.mobile}}` +
+              `@media (min-width:768px){[data-hero-scene-id="${s.id}"][data-hero-active="true"] ~ video[data-hero-film="true"]{object-position:${s.position.tablet}}}` +
+              `@media (min-width:1200px){[data-hero-scene-id="${s.id}"][data-hero-active="true"] ~ video[data-hero-film="true"]{object-position:${s.position.desktop}}}`
             )).join("")}</style>
-            {HERO_SCENES.map((scene, index) => {
-              const isActive = index === heroSceneIndex;
-              const isNext = index === heroSceneIndex + 1;
-              // Hero is video-only on EVERY slide — no static fallback.
-              // We always mount the <video> element so the user never
-              // sees a frozen poster on inactive slides; the active
-              // clip loads as `auto`, the next as `metadata`, and the
-              // rest stay at `none` (browser fetches a few KB to paint
-              // the first frame, no full download).
-              const hasVideo = Boolean(scene.video);
-              const videoPreload: "auto" | "metadata" | "none" = isActive
-                ? saveDataMode
-                  ? "metadata"
-                  : "auto"
-                : isNext
-                  ? "metadata"
-                  : "none";
-              return (
-                <div
-                  key={scene.id}
-                  className={`hero-story-slide absolute inset-0 w-full h-full ${isActive ? "is-active" : ""}`}
-                  data-hero-pan={scene.pan}
-                  data-hero-scene-id={scene.id}
-                  aria-hidden="true"
-                >
-                  {hasVideo && scene.video ? (
-                    <video
-                      src={scene.video}
-                      poster={scene.image}
-                      className="absolute inset-0 w-full h-full object-cover"
-                      style={{ objectPosition: scene.position.desktop }}
-                      autoPlay
-                      muted
-                      loop
-                      playsInline
-                      preload={videoPreload}
-                      ref={(el) => {
-                        if (!el) return;
-                        // Some embedded contexts (Lovable preview iframe,
-                        // reduced-motion environments) ignore the
-                        // declarative `autoplay` attribute. Kicking
-                        // `.play()` on the active slide guarantees the
-                        // hero is ALWAYS in motion as designed.
-                        if (isActive && videosAllowed) {
-                          const p = el.play();
-                          if (p && typeof p.catch === "function") {
-                            p.catch(() => {
-                              /* autoplay rejection — leave first frame visible */
-                            });
-                          }
-                        }
-                      }}
-                      onError={() => {
-                        // eslint-disable-next-line no-console
-                        console.error(
-                          `[hero] video failed to load for scene "${scene.id}" (${scene.video}).`,
-                        );
-                      }}
-                    />
-                  ) : null}
-                </div>
-              );
-            })}
+
+            {/* Chapter markers — invisible. They exist so the runtime
+                contract tests, the credits modal, and the existing
+                scene-id selectors keep finding stable nodes per
+                chapter. The actual visual is the single <video> below. */}
+            {HERO_SCENES.map((scene, index) => (
+              <div
+                key={scene.id}
+                data-hero-pan={scene.pan}
+                data-hero-scene-id={scene.id}
+                data-hero-active={index === heroSceneIndex ? "true" : "false"}
+                aria-hidden="true"
+                style={{ display: "none" }}
+              />
+            ))}
+
+            {/* The ONE continuous cinematic film — never a slideshow.
+                Renders 1080p by default, drops to 720p on Save-Data /
+                slow networks. Loops, muted, plays inline, autoplays
+                except under prefers-reduced-motion (which still mounts
+                the first frame for context). */}
+            <video
+              data-hero-film="true"
+              src={saveDataMode ? HERO_FILM.src720 : HERO_FILM.src1080}
+              poster={HERO_FILM.poster}
+              className="absolute inset-0 w-full h-full object-cover"
+              autoPlay={!reducedMotion}
+              muted
+              loop
+              playsInline
+              preload="auto"
+              ref={(el) => {
+                if (!el) return;
+                if (!reducedMotion) {
+                  const p = el.play();
+                  if (p && typeof p.catch === "function") {
+                    p.catch(() => {
+                      /* autoplay rejection — leave first frame visible */
+                    });
+                  }
+                }
+              }}
+              onError={() => {
+                // eslint-disable-next-line no-console
+                console.error(
+                  `[hero] continuous film failed to load (${HERO_FILM.src1080}).`,
+                );
+              }}
+            />
           </div>
          {/* Hidden hero alt text for SEO/a11y — the storytelling stage stays
              a pure aria-hidden backdrop. */}
@@ -859,21 +776,10 @@ function HomePage() {
          {/* Cinematic readability overlay — layered scrim ensures the
              eyebrow + headline + supporting line stay AA-legible on
              every frame, including bright vineyard / wine-table /
-             sunlit-village clips. Top→bottom: gentle top vignette,
-             strong bottom anchor (where text lives), and a low-left
-             radial focus that pools shadow exactly under the copy. */}
+             sunlit-village clips. */}
          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(20,18,16,0.42)_0%,rgba(20,18,16,0.10)_28%,rgba(20,18,16,0.32)_55%,rgba(14,12,10,0.85)_100%)] pointer-events-none z-[2]" />
          <div className="absolute inset-0 bg-[radial-gradient(140%_85%_at_22%_92%,rgba(14,10,8,0.72)_0%,rgba(14,10,8,0.22)_45%,rgba(14,10,8,0)_70%)] pointer-events-none z-[2]" />
          <div className="absolute inset-x-0 bottom-0 h-[62%] bg-[linear-gradient(180deg,rgba(46,30,18,0)_0%,rgba(30,20,12,0.22)_45%,rgba(20,14,10,0.65)_100%)] mix-blend-multiply pointer-events-none z-[2]" />
-
-          {/* Subtle story progress — a thin cinematic timeline at the
-              bottom of the hero. Re-keys per scene so the fill replays. */}
-          <div
-            aria-hidden="true"
-             className="hero-story-progress absolute z-10 left-6 right-6 bottom-[max(1rem,calc(env(safe-area-inset-bottom)+0.5rem))] md:left-10 md:right-10 md:bottom-9 opacity-0 animate-[heroFadeFromRight_0.9s_ease-out_1.4s_forwards]"
-          >
-             <span key={heroScene.id} className="hero-story-progress-fill" />
-          </div>
 
           {/* Copy column — generous bottom padding ensures the support
               line + scene-main never collide with the progress bar in
