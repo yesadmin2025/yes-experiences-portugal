@@ -763,7 +763,7 @@ function HomePage() {
            Slide 1 is the SSR/static fallback. Reduced-motion freezes
            on slide 1 with all copy at full opacity. */}
         <section
-          className="relative min-h-[85svh] md:min-h-[90vh] flex items-end overflow-hidden"
+          className="hero-stage relative min-h-[max(85svh,640px)] md:min-h-[90vh] landscape:max-md:min-h-[680px] flex items-end overflow-hidden"
           data-hero-scene={heroScene.id}
           data-hero-scene-index={heroSceneIndex}
         >
@@ -868,14 +868,18 @@ function HomePage() {
 
           {/* Subtle story progress — a thin cinematic timeline at the
               bottom of the hero. Re-keys per scene so the fill replays. */}
-         <div
-           aria-hidden="true"
-            className="hero-story-progress absolute z-10 left-6 right-6 bottom-5 md:left-10 md:right-10 md:bottom-9 opacity-0 animate-[heroFadeFromRight_0.9s_ease-out_1.4s_forwards]"
-         >
-            <span key={heroScene.id} className="hero-story-progress-fill" />
-         </div>
+          <div
+            aria-hidden="true"
+             className="hero-story-progress absolute z-10 left-6 right-6 bottom-[max(1rem,calc(env(safe-area-inset-bottom)+0.5rem))] md:left-10 md:right-10 md:bottom-9 opacity-0 animate-[heroFadeFromRight_0.9s_ease-out_1.4s_forwards]"
+          >
+             <span key={heroScene.id} className="hero-story-progress-fill" />
+          </div>
 
-         <div className="container-x relative z-10 pb-[max(6.5rem,calc(env(safe-area-inset-bottom)+5.5rem))] md:pb-32 pt-24 md:pt-40">
+          {/* Copy column — generous bottom padding ensures the support
+              line + scene-main never collide with the progress bar in
+              any orientation. The min-height clamp on `.hero-stage`
+              guarantees enough vertical room even on landscape mobile. */}
+          <div className="hero-copy-column container-x relative z-10 pb-[max(7rem,calc(env(safe-area-inset-bottom)+6rem))] md:pb-32 pt-24 md:pt-40">
            <div className="max-w-[19.5rem] xs:max-w-[21rem] sm:max-w-2xl md:max-w-3xl text-[color:var(--ivory)] text-left">
               {/* Eyebrow — refined: smaller, lighter, calmer. Should sit
                   above the image without dominating it. */}
