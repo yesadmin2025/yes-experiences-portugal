@@ -34,3 +34,6 @@ jobs:
 
       - name: Brand audit
         run: bun run brand:audit
+
+      - name: Hero accessibility (axe-core)
+        run: bun run a11y:hero
