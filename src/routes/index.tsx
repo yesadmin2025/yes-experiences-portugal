@@ -396,6 +396,79 @@ function HomePage() {
     };
   }, [heroSceneIndex, saveDataMode]);
 
+  /* ──────────────────────────────────────────────────────────────
+   * Runtime assertions (dev-only) — verify that the hero stage
+   * actually mounted in the contract we claim:
+   *
+   *   1. Video-only mode: every ACTIVE and NEXT slide must have a
+   *      <video> element. An <img>-only slide would be an image-only
+   *      fallback state, which is not supported.
+   *   2. Preload tier contract: every mounted <video>'s `preload`
+   *      attribute must match the active/next rule
+   *      (active = "auto" | "metadata" on Save-Data, next = "metadata").
+   *
+   * These run after every scene change, only in dev (Vite's
+   * `import.meta.env.DEV`), and never throw — they only console.error
+   * so QA / Sentry pick the violations up without breaking the page
+   * for real visitors.
+   * ────────────────────────────────────────────────────────────── */
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (!import.meta.env.DEV) return;
+    // Defer one frame so React has committed the DOM.
+    const raf = window.requestAnimationFrame(() => {
+      const stage = document.querySelector<HTMLElement>(".hero-story-stage");
+      if (!stage) return;
+      const slides = Array.from(
+        stage.querySelectorAll<HTMLElement>("[data-hero-scene-id]"),
+      );
+      const activeScene = HERO_SCENES[heroSceneIndex];
+      const nextScene = HERO_SCENES[heroSceneIndex + 1];
+      for (const slide of slides) {
+        const sceneId = slide.getAttribute("data-hero-scene-id");
+        const isActive = sceneId === activeScene?.id;
+        const isNext = nextScene ? sceneId === nextScene.id : false;
+        const video = slide.querySelector<HTMLVideoElement>("video");
+
+        // Contract 1 — video-only mode for active + next.
+        if ((isActive || isNext) && !video) {
+          // eslint-disable-next-line no-console
+          console.error(
+            `[hero/runtime] scene "${sceneId}" is ${isActive ? "ACTIVE" : "NEXT"} but has NO <video> — image-only mode is not supported.`,
+          );
+        }
+
+        // Contract 2 — preload tier matches active/next rule.
+        if (video) {
+          const preload = video.getAttribute("preload");
+          if (isActive) {
+            const expected = saveDataMode ? "metadata" : "auto";
+            if (preload !== expected) {
+              // eslint-disable-next-line no-console
+              console.error(
+                `[hero/runtime] active scene "${sceneId}" has preload="${preload}" — expected "${expected}".`,
+              );
+            }
+          } else if (isNext) {
+            if (preload !== "metadata") {
+              // eslint-disable-next-line no-console
+              console.error(
+                `[hero/runtime] next scene "${sceneId}" has preload="${preload}" — expected "metadata".`,
+              );
+            }
+          } else {
+            // Non-active / non-next slides should not have <video> at all.
+            // eslint-disable-next-line no-console
+            console.error(
+              `[hero/runtime] scene "${sceneId}" mounted a <video> but is neither ACTIVE nor NEXT — preload tier broken.`,
+            );
+          }
+        }
+      }
+    });
+    return () => window.cancelAnimationFrame(raf);
+  }, [heroSceneIndex, saveDataMode]);
+
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (heroFreezeOnLast) return;
