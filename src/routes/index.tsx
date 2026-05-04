@@ -862,9 +862,9 @@ function HomePage() {
              sunlit-village clips. Top→bottom: gentle top vignette,
              strong bottom anchor (where text lives), and a low-left
              radial focus that pools shadow exactly under the copy. */}
-         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(20,18,16,0.48)_0%,rgba(20,18,16,0.14)_30%,rgba(20,18,16,0.30)_55%,rgba(14,12,10,0.78)_100%)] pointer-events-none z-[2]" />
-         <div className="absolute inset-0 bg-[radial-gradient(140%_85%_at_22%_92%,rgba(14,10,8,0.62)_0%,rgba(14,10,8,0.18)_45%,rgba(14,10,8,0)_70%)] pointer-events-none z-[2]" />
-         <div className="absolute inset-x-0 bottom-0 h-[58%] bg-[linear-gradient(180deg,rgba(46,30,18,0)_0%,rgba(30,20,12,0.18)_45%,rgba(20,14,10,0.55)_100%)] mix-blend-multiply pointer-events-none z-[2]" />
+         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(20,18,16,0.42)_0%,rgba(20,18,16,0.10)_28%,rgba(20,18,16,0.32)_55%,rgba(14,12,10,0.85)_100%)] pointer-events-none z-[2]" />
+         <div className="absolute inset-0 bg-[radial-gradient(140%_85%_at_22%_92%,rgba(14,10,8,0.72)_0%,rgba(14,10,8,0.22)_45%,rgba(14,10,8,0)_70%)] pointer-events-none z-[2]" />
+         <div className="absolute inset-x-0 bottom-0 h-[62%] bg-[linear-gradient(180deg,rgba(46,30,18,0)_0%,rgba(30,20,12,0.22)_45%,rgba(20,14,10,0.65)_100%)] mix-blend-multiply pointer-events-none z-[2]" />
 
           {/* Subtle story progress — a thin cinematic timeline at the
               bottom of the hero. Re-keys per scene so the fill replays. */}
