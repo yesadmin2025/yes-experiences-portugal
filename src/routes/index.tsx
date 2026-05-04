@@ -826,20 +826,25 @@ function HomePage() {
                  line + optional supporting microline for the current scene.
                  Re-keyed per scene so the rise-fade replays cleanly and only
                  ONE message is ever readable at a time. */}
-             <div
-               key={`scene-msg-${heroScene.id}`}
-               className="hero-scene-message is-on mt-5 md:mt-7 max-w-[19rem] sm:max-w-xl"
-             >
-                 {heroScene.main.length > 0 ? (
-                   <p className="hero-scene-main serif text-[1.7rem] xs:text-[1.85rem] sm:text-[2.1rem] md:text-[2.6rem] leading-[1.12] tracking-[-0.02em] font-normal text-[color:var(--ivory)] [text-shadow:0_2px_22px_rgba(0,0,0,0.45)]">
-                     {heroScene.main.map((line, i) => (
-                       <span key={i} className="block">
-                         {line}
-                       </span>
-                     ))}
-                   </p>
-                 ) : null}
-              </div>
+              <div
+                key={`scene-msg-${heroScene.id}`}
+                className="hero-scene-message is-on mt-4 md:mt-7 max-w-[19rem] sm:max-w-xl"
+              >
+                  {heroScene.main.length > 0 ? (
+                    <p className="hero-scene-main serif text-[1.45rem] xs:text-[1.65rem] sm:text-[2.1rem] md:text-[2.6rem] leading-[1.14] tracking-[-0.02em] font-normal text-[color:var(--ivory)] [text-shadow:0_2px_22px_rgba(0,0,0,0.45)]">
+                      {heroScene.main.map((line, i) => (
+                        <span key={i} className="block">
+                          {line}
+                        </span>
+                      ))}
+                    </p>
+                  ) : null}
+                  {"support" in heroScene && heroScene.support ? (
+                    <p className="hero-scene-support mt-2.5 md:mt-3.5 font-sans text-[11px] xs:text-[12px] sm:text-[13px] uppercase tracking-[0.22em] text-[color:var(--ivory)]/85 [text-shadow:0_1px_10px_rgba(0,0,0,0.55)]">
+                      {heroScene.support}
+                    </p>
+                  ) : null}
+               </div>
 
              {/* Action block — CTAs + microcopy + brand signature appear
                  ONLY on scene 5 per the storytelling brief. */}
