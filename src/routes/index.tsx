@@ -369,11 +369,17 @@ function HomePage() {
     setVideosAllowed(true);
   }, []);
 
-  // Warm the next scene's video URL via `<link rel="preload">` so the
-  // CDN handshake + first bytes land before the slide goes active.
+  // Warm ONLY the next scene's video URL via `<link rel="preload">` so
+  // the CDN handshake + first bytes land before the slide goes active.
+  // We never warm scenes beyond N+1 — keeps initial load low even on
+  // Save-Data / slow networks, where the active clip is the only one
+  // fully fetched and the next is just metadata-prefetched.
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (!videosAllowed) return;
+    // On Save-Data / slow networks, skip the proactive `<link rel=preload>`
+    // entirely — the in-DOM `<video preload="metadata">` on the NEXT slide
+    // is enough to get a first frame ready without a second parallel fetch.
+    if (saveDataMode) return;
     const next = HERO_SCENES[heroSceneIndex + 1];
     if (!next?.video) return;
     const link = document.createElement("link");
@@ -388,7 +394,7 @@ function HomePage() {
     return () => {
       link.remove();
     };
-  }, [heroSceneIndex, videosAllowed]);
+  }, [heroSceneIndex, saveDataMode]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
