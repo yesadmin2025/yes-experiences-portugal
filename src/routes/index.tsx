@@ -366,13 +366,10 @@ function HomePage() {
 
   // Drive the active chapter index from the film's currentTime. The
   // ?hero=last query param freezes on the last chapter for byte-exact
-  // copy-lock + visual-regression tests. Under prefers-reduced-motion
-  // we ALSO freeze on the final chapter so the user sees the full
-  // message + both CTAs immediately, without any chapter cross-fade
-  // or fade-in motion (the video itself doesn't autoplay either).
+  // copy-lock + visual-regression tests.
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (heroFreezeOnLast || reducedMotion) {
+    if (heroFreezeOnLast) {
       setHeroSceneIndex(heroScenes.length - 1);
       return;
     }
@@ -404,7 +401,7 @@ function HomePage() {
     return () => {
       if (raf) window.cancelAnimationFrame(raf);
     };
-  }, [heroFreezeOnLast, heroScenes.length, reducedMotion]);
+  }, [heroFreezeOnLast, heroScenes.length]);
 
 
   // Homepage motion controller — `[data-motion]` / `.motion-in`.

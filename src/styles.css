@@ -1782,25 +1782,6 @@
     transform: none !important;
     opacity: 1 !important;
   }
-  /* Reduced-motion: ALL hero copy fades become instant.
-     Targets the inline `animate-[heroFadeFromRight_...]` utilities on
-     the eyebrow + canonical H1, the chapter scene-message enter, and
-     the final-scene action block. Copy is shown immediately at full
-     opacity with no transform — no fade-in, no upward drift, no
-     chapter cross-fade — so users with the OS preference set never
-     see motion. */
-  .hero-stage [class*="animate-[heroFadeFromRight"],
-  .hero-stage [class*="animate-[heroEnterRise"],
-  .hero-scene-message,
-  .hero-scene-message.is-on,
-  .hero-scene-main,
-  .hero-scene-supporting,
-  .hero-action-block {
-    animation: none !important;
-    transform: none !important;
-    transition: none !important;
-    opacity: 1 !important;
-  }
 }
 
 /* ────────────────────────────────────────────────────────────────
