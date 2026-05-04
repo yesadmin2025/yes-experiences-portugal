@@ -835,10 +835,16 @@ function HomePage() {
                  ONE message is ever readable at a time. */}
               <div
                 key={`scene-msg-${heroScene.id}`}
-                className="hero-scene-message is-on mt-4 md:mt-7 max-w-[19rem] sm:max-w-xl"
+                className="hero-scene-message is-on mt-3.5 md:mt-6 max-w-[18rem] xs:max-w-[20rem] sm:max-w-xl"
               >
                   {heroScene.main.length > 0 ? (
-                    <p className="hero-scene-main serif text-[1.45rem] xs:text-[1.65rem] sm:text-[2.1rem] md:text-[2.6rem] leading-[1.14] tracking-[-0.02em] font-normal text-[color:var(--ivory)] [text-shadow:0_2px_22px_rgba(0,0,0,0.45)]">
+                    <p
+                      className={`hero-scene-main serif leading-[1.18] sm:leading-[1.12] md:leading-[1.08] tracking-[-0.018em] font-normal text-[color:var(--ivory)] [text-shadow:0_2px_22px_rgba(0,0,0,0.45)] ${
+                        heroScene.main.length >= 3
+                          ? "text-[1.2rem] xs:text-[1.35rem] sm:text-[1.75rem] md:text-[2.2rem]"
+                          : "text-[1.4rem] xs:text-[1.55rem] sm:text-[2rem] md:text-[2.5rem]"
+                      }`}
+                    >
                       {heroScene.main.map((line, i) => (
                         <span key={i} className="block">
                           {line}
@@ -847,7 +853,7 @@ function HomePage() {
                     </p>
                   ) : null}
                   {"support" in heroScene && heroScene.support ? (
-                    <p className="hero-scene-supporting mt-2.5 md:mt-3.5 font-sans text-[11px] xs:text-[12px] sm:text-[13px] uppercase tracking-[0.22em] text-[color:var(--ivory)]/85 [text-shadow:0_1px_10px_rgba(0,0,0,0.55)]">
+                    <p className="hero-scene-supporting mt-2.5 md:mt-3.5 font-sans text-[10px] xs:text-[10.5px] sm:text-[11.5px] uppercase tracking-[0.18em] sm:tracking-[0.2em] text-[color:var(--ivory)]/80 [text-shadow:0_1px_10px_rgba(0,0,0,0.55)]">
                       {heroScene.support}
                     </p>
                   ) : null}
