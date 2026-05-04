@@ -702,74 +702,70 @@ function HomePage() {
               first paint on ≥1200px viewports already uses the correct
               framing before the stylesheet attaches.
             */}
+            {/*
+              Per-breakpoint object-position presets — emitted once,
+              driven entirely by the manifest. Mobile = ≤767px (tall
+              portrait, protect heads/horizons from the bottom scrim),
+              tablet = 768–1199px, desktop = ≥1200px. CSS @media swaps
+              framing without React re-renders or resize listeners.
+              The desktop value is also the inline default so the very
+              first paint on ≥1200px viewports already uses the correct
+              framing before the stylesheet attaches.
+            */}
             <style>{HERO_SCENES.map((s) => (
-              `[data-hero-scene-id="${s.id}"] > video{object-position:${s.position.mobile}}` +
-              `@media (min-width:768px){[data-hero-scene-id="${s.id}"] > video{object-position:${s.position.tablet}}}` +
-              `@media (min-width:1200px){[data-hero-scene-id="${s.id}"] > video{object-position:${s.position.desktop}}}`
+              `[data-hero-scene-id="${s.id}"][data-hero-active="true"] ~ video[data-hero-film="true"]{object-position:${s.position.mobile}}` +
+              `@media (min-width:768px){[data-hero-scene-id="${s.id}"][data-hero-active="true"] ~ video[data-hero-film="true"]{object-position:${s.position.tablet}}}` +
+              `@media (min-width:1200px){[data-hero-scene-id="${s.id}"][data-hero-active="true"] ~ video[data-hero-film="true"]{object-position:${s.position.desktop}}}`
             )).join("")}</style>
-            {HERO_SCENES.map((scene, index) => {
-              const isActive = index === heroSceneIndex;
-              const isNext = index === heroSceneIndex + 1;
-              // Hero is video-only on EVERY slide — no static fallback.
-              // We always mount the <video> element so the user never
-              // sees a frozen poster on inactive slides; the active
-              // clip loads as `auto`, the next as `metadata`, and the
-              // rest stay at `none` (browser fetches a few KB to paint
-              // the first frame, no full download).
-              const hasVideo = Boolean(scene.video);
-              const videoPreload: "auto" | "metadata" | "none" = isActive
-                ? saveDataMode
-                  ? "metadata"
-                  : "auto"
-                : isNext
-                  ? "metadata"
-                  : "none";
-              return (
-                <div
-                  key={scene.id}
-                  className={`hero-story-slide absolute inset-0 w-full h-full ${isActive ? "is-active" : ""}`}
-                  data-hero-pan={scene.pan}
-                  data-hero-scene-id={scene.id}
-                  aria-hidden="true"
-                >
-                  {hasVideo && scene.video ? (
-                    <video
-                      src={scene.video}
-                      poster={scene.image}
-                      className="absolute inset-0 w-full h-full object-cover"
-                      style={{ objectPosition: scene.position.desktop }}
-                      autoPlay
-                      muted
-                      loop
-                      playsInline
-                      preload={videoPreload}
-                      ref={(el) => {
-                        if (!el) return;
-                        // Some embedded contexts (Lovable preview iframe,
-                        // reduced-motion environments) ignore the
-                        // declarative `autoplay` attribute. Kicking
-                        // `.play()` on the active slide guarantees the
-                        // hero is ALWAYS in motion as designed.
-                        if (isActive && videosAllowed) {
-                          const p = el.play();
-                          if (p && typeof p.catch === "function") {
-                            p.catch(() => {
-                              /* autoplay rejection — leave first frame visible */
-                            });
-                          }
-                        }
-                      }}
-                      onError={() => {
-                        // eslint-disable-next-line no-console
-                        console.error(
-                          `[hero] video failed to load for scene "${scene.id}" (${scene.video}).`,
-                        );
-                      }}
-                    />
-                  ) : null}
-                </div>
-              );
-            })}
+
+            {/* Chapter markers — invisible. They exist so the runtime
+                contract tests, the credits modal, and the existing
+                scene-id selectors keep finding stable nodes per
+                chapter. The actual visual is the single <video> below. */}
+            {HERO_SCENES.map((scene, index) => (
+              <div
+                key={scene.id}
+                data-hero-pan={scene.pan}
+                data-hero-scene-id={scene.id}
+                data-hero-active={index === heroSceneIndex ? "true" : "false"}
+                aria-hidden="true"
+                style={{ display: "none" }}
+              />
+            ))}
+
+            {/* The ONE continuous cinematic film — never a slideshow.
+                Renders 1080p by default, drops to 720p on Save-Data /
+                slow networks. Loops, muted, plays inline, autoplays
+                except under prefers-reduced-motion (which still mounts
+                the first frame for context). */}
+            <video
+              data-hero-film="true"
+              src={saveDataMode ? HERO_FILM.src720 : HERO_FILM.src1080}
+              poster={HERO_FILM.poster}
+              className="absolute inset-0 w-full h-full object-cover"
+              autoPlay={!reducedMotion}
+              muted
+              loop
+              playsInline
+              preload="auto"
+              ref={(el) => {
+                if (!el) return;
+                if (!reducedMotion) {
+                  const p = el.play();
+                  if (p && typeof p.catch === "function") {
+                    p.catch(() => {
+                      /* autoplay rejection — leave first frame visible */
+                    });
+                  }
+                }
+              }}
+              onError={() => {
+                // eslint-disable-next-line no-console
+                console.error(
+                  `[hero] continuous film failed to load (${HERO_FILM.src1080}).`,
+                );
+              }}
+            />
           </div>
          {/* Hidden hero alt text for SEO/a11y — the storytelling stage stays
              a pure aria-hidden backdrop. */}
@@ -780,21 +776,10 @@ function HomePage() {
          {/* Cinematic readability overlay — layered scrim ensures the
              eyebrow + headline + supporting line stay AA-legible on
              every frame, including bright vineyard / wine-table /
-             sunlit-village clips. Top→bottom: gentle top vignette,
-             strong bottom anchor (where text lives), and a low-left
-             radial focus that pools shadow exactly under the copy. */}
+             sunlit-village clips. */}
          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(20,18,16,0.42)_0%,rgba(20,18,16,0.10)_28%,rgba(20,18,16,0.32)_55%,rgba(14,12,10,0.85)_100%)] pointer-events-none z-[2]" />
          <div className="absolute inset-0 bg-[radial-gradient(140%_85%_at_22%_92%,rgba(14,10,8,0.72)_0%,rgba(14,10,8,0.22)_45%,rgba(14,10,8,0)_70%)] pointer-events-none z-[2]" />
          <div className="absolute inset-x-0 bottom-0 h-[62%] bg-[linear-gradient(180deg,rgba(46,30,18,0)_0%,rgba(30,20,12,0.22)_45%,rgba(20,14,10,0.65)_100%)] mix-blend-multiply pointer-events-none z-[2]" />
-
-          {/* Subtle story progress — a thin cinematic timeline at the
-              bottom of the hero. Re-keys per scene so the fill replays. */}
-          <div
-            aria-hidden="true"
-             className="hero-story-progress absolute z-10 left-6 right-6 bottom-[max(1rem,calc(env(safe-area-inset-bottom)+0.5rem))] md:left-10 md:right-10 md:bottom-9 opacity-0 animate-[heroFadeFromRight_0.9s_ease-out_1.4s_forwards]"
-          >
-             <span key={heroScene.id} className="hero-story-progress-fill" />
-          </div>
 
           {/* Copy column — generous bottom padding ensures the support
               line + scene-main never collide with the progress bar in
