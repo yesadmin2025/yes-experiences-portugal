@@ -19,6 +19,7 @@
  */
 
 import { supabase } from "@/integrations/supabase/client";
+import type { Json } from "@/integrations/supabase/types";
 import type { HeroExperiment, HeroCopyVariant } from "@/content/hero-scene-variants";
 
 const ANON_KEY = "yes_anon_id";
@@ -204,8 +205,8 @@ export async function trackAbEvent(
     // `meta.extra` is loosely typed `Record<string, unknown>` for caller
     // ergonomics; the column is `jsonb`. Round-trip through JSON to
     // strip non-serializable values and satisfy the generated `Json` type.
-    const safeMeta = meta?.extra
-      ? (JSON.parse(JSON.stringify(meta.extra)) as Record<string, unknown>)
+    const safeMeta: Json | undefined = meta?.extra
+      ? (JSON.parse(JSON.stringify(meta.extra)) as Json)
       : undefined;
     const payload = {
       anonymous_id: anonId,
