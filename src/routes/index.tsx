@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { SiteLayout } from "@/components/SiteLayout";
 import { FAQ } from "@/components/FAQ";
@@ -289,6 +289,38 @@ function HomePage() {
   );
   const heroScene = heroScenes[heroSceneIndex];
   const isHeroActionScene = heroSceneIndex === heroScenes.length - 1;
+
+  // Focus management — when the cinematic film reaches its final action
+  // chapter, move keyboard/screen-reader focus to the primary CTA so AT
+  // users land on the actionable surface as soon as it's available.
+  // Only fires once per page view, and only if the user hasn't already
+  // moved focus into the hero (we don't yank focus away from interactive
+  // elements they may already be exploring). Skipped under
+  // prefers-reduced-motion freeze (the page opens directly on the action
+  // scene, so a focus jump on mount would be jarring) and when the
+  // ?hero=last byte-exact lock is in effect.
+  const heroPrimaryCtaRef = useRef<HTMLAnchorElement | null>(null);
+  const heroFocusedRef = useRef(false);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (!isHeroActionScene) return;
+    if (heroFocusedRef.current) return;
+    if (heroFreezeOnLast) return;
+    const active = document.activeElement;
+    const heroSection = document.querySelector('[data-hero-scene-index]');
+    if (active && heroSection && heroSection.contains(active)) return;
+    if (active && active !== document.body) return;
+    const el = heroPrimaryCtaRef.current;
+    if (!el) return;
+    heroFocusedRef.current = true;
+    // preventScroll keeps the cinematic close in view — focus is what
+    // matters for AT, not a scroll jump.
+    try {
+      el.focus({ preventScroll: true });
+    } catch {
+      el.focus();
+    }
+  }, [isHeroActionScene, heroFreezeOnLast]);
 
   // Runtime poster guard — verify each scene's poster URL responds 2xx
   // BEFORE the slide goes active. If a poster is missing/404 we log a
@@ -683,7 +715,25 @@ function HomePage() {
           className="hero-stage relative min-h-[max(85svh,640px)] md:min-h-[90vh] landscape:max-md:min-h-[680px] flex items-end overflow-hidden"
           data-hero-scene={heroScene.id}
           data-hero-scene-index={heroSceneIndex}
+          aria-roledescription="cinematic hero film"
+          aria-label={`YES Experiences hero film — chapter ${heroSceneIndex + 1} of ${heroScenes.length}: ${(heroScene.main.length ? heroScene.main.join(" ") : HERO_COPY.headlineLine1 + " " + HERO_COPY.headlineLine2)}`}
         >
+          {/* Polite live region — announces the active chapter to screen
+              readers as the silent film cross-fades between beats. Visually
+              hidden; one announcement per scene change. */}
+          <div
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+            className="sr-only"
+            data-testid="hero-chapter-announcer"
+          >
+            {`Chapter ${heroSceneIndex + 1} of ${heroScenes.length}. ${
+              heroScene.main.length
+                ? heroScene.main.join(" ")
+                : `${HERO_COPY.headlineLine1} ${HERO_COPY.headlineLine2}`
+            }${heroScene.support ? `. ${heroScene.support}` : ""}`}
+          </div>
           <div
             aria-hidden="true"
             className="hero-story-stage absolute inset-0 w-full h-full overflow-hidden"
@@ -739,6 +789,7 @@ function HomePage() {
               src={saveDataMode ? HERO_FILM.src720 : HERO_FILM.src1080}
               poster={HERO_FILM.poster}
               className="absolute inset-0 w-full h-full object-cover"
+              aria-label="Cinematic film of Portugal — coastal roads, local tables, hidden coves and estate gardens. Decorative; full description provided alongside."
               autoPlay={!reducedMotion}
               muted
               loop
@@ -891,12 +942,17 @@ function HomePage() {
 
              {/* Action block — CTAs + microcopy + brand signature appear
                  ONLY on scene 5 per the storytelling brief. */}
-             {isHeroActionScene ? (
-               <div key="hero-action" className="hero-action-block mt-6 md:mt-9">
-                 <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-3.5 w-full max-w-[19rem] sm:max-w-lg">
-                    <Link
-                      to="/builder"
-                      data-hero-field="primaryCta"
+              {isHeroActionScene ? (
+                <div key="hero-action" className="hero-action-block mt-6 md:mt-9">
+                  <div
+                    role="group"
+                    aria-label="Hero actions — start designing your day or browse signature experiences"
+                    className="flex flex-col sm:flex-row gap-2.5 sm:gap-3.5 w-full max-w-[19rem] sm:max-w-lg"
+                  >
+                     <Link
+                       to="/builder"
+                       ref={heroPrimaryCtaRef}
+                       data-hero-field="primaryCta"
                       onClick={() => {
                         trackHeroEvent("cta_click", {
                           sceneId: heroScene.id,
