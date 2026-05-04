@@ -1,10 +1,9 @@
 /**
  * Hero film manifest — single source of truth.
  *
- * The hero is ONE continuous cinematic brand film (~28s, 30fps, 1920×1080)
+ * The hero is ONE continuous cinematic brand film (~35s, 30fps, 1080×1920)
  * — NOT a slideshow, NOT a carousel, NOT five stacked videos. The film is
- * stitched once at build time from three AI-generated 10s parts (anchored
- * on real YES Experiences posters) with warm color-graded crossfades, so
+ * finished from YES Experiences source material with warm color-graded dissolves, so
  * the user always sees a single uninterrupted `<video>` element.
  *
  * `HERO_FILM` is the canonical asset reference (1080p + 720p + poster).
@@ -15,13 +14,13 @@
  * keep working — they all point at the SAME film, on purpose: there is
  * only one source of motion.
  *
- * Story spine — six chapters in one continuous film:
- *   1. PORTUGAL OPENS    (0.0s – 5.0s)
- *   2. PRIVATE DAYS      (5.0s – 10.0s)
- *   3. PROPOSALS         (10.0s – 14.5s)
- *   4. CORPORATE/GROUPS  (14.5s – 19.0s)
- *   5. MULTI-DAY JOURNEY (19.0s – 23.5s)
- *   6. BUILDER + CTA     (23.5s – 27.6s)
+ * Story spine — six chapter overlays over one continuous film:
+ *   1. PORTUGAL OPENS    ( 0.0s –  4.525s)
+ *   2. PRIVATE DAYS      ( 4.525s – 10.808s)
+ *   3. FOOD + WINE       (10.808s – 15.325s)
+ *   4. GROUPS            (15.325s – 19.542s)
+ *   5. MOMENTS           (19.542s – 24.225s)
+ *   6. BUILDER + CTA     (24.225s – 35.133s)
  *
  * No invented locations or partners. AI was used only as a tonal
  * connective tissue between real YES poster frames — every starting
@@ -35,8 +34,8 @@ const FILM_720 = "/video/film/yes-hero-film-720.mp4";
 const FILM_POSTER = "/video/film/yes-hero-poster.jpg";
 
 export const HERO_FILM = {
-  /** Total film length in seconds (matches the uploaded continuous MP4). */
-  durationSeconds: 41.5,
+  /** Total film length in seconds (matches the smoothed continuous MP4). */
+  durationSeconds: 35.133333,
   /** Mobile-first source — used for ≤480px CSS pixels. */
   src720: FILM_720,
   /** Tablet + desktop source. */
