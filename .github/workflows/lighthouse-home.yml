@@ -1,0 +1,59 @@
+name: Lighthouse CI (Home)
+
+# Lightweight Lighthouse run against the home page to catch performance
+# regressions that could affect hero video playback + chapter overlay
+# timing (long tasks, render-blocking JS, oversized assets).
+#
+# Budgets are intentionally lenient — this is a guard against major
+# regressions, not a strict performance gate. Tighten thresholds in
+# .lighthouserc.json once a baseline is established.
+on:
+  pull_request:
+  push:
+  workflow_dispatch:
+
+concurrency:
+  group: lighthouse-home-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lighthouse:
+    name: Lighthouse (home)
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Setup Node (for Lighthouse CI)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build production bundle
+        run: bun run build
+
+      - name: Install Lighthouse CI
+        run: npm install -g @lhci/cli@0.14.x
+
+      - name: Run Lighthouse CI
+        run: lhci autorun --config=./.lighthouserc.json
+        env:
+          LHCI_BUILD_CONTEXT__CURRENT_HASH: ${{ github.sha }}
+
+      - name: Upload Lighthouse report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-report
+          path: .lighthouseci/
+          retention-days: 14
