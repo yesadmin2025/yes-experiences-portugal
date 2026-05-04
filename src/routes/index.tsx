@@ -81,7 +81,7 @@ const FEATURED_TOUR_IDS = [
  * No invented stops. Imagery is real Viator-sourced operation
  * photography. AI is not used to shape any of these strings.
  * ────────────────────────────────────────────────────────────── */
-const HERO_SCENE_DURATION_MS = 6500;
+const HERO_SCENE_DURATION_MS = 5200;
 
 /* ──────────────────────────────────────────────────────────────────
  * Cinematic horizontal storytelling hero — 5 scenes, each a short
@@ -116,48 +116,54 @@ const HERO_SCENE_DURATION_MS = 6500;
 const HERO_SCENES = [
   {
     id: "opening",
-    // Scene 1 — Coast (real owned hero coast footage). Portugal opens.
+    // Scene 1 — Coast: Portugal opens. H1 carries the main line; we
+    // still expose a supporting microline below it for cinematic rhythm.
     image: heroImg,
     video: "/video/hero-coast.mp4",
     position: "50% 52%",
     pan: "drift-left" as const,
     main: [] as readonly string[],
+    support: "Private. Local. Yours.",
   },
   {
     id: "hidden",
-    // Scene 2 — Hidden cove, aerial drone over turquoise water.
+    // Scene 2 — Hidden cove / village street: beyond the obvious.
     image: imgArrabidaCoves,
     video: sceneHiddenCove.url,
     position: "52% 50%",
     pan: "drift-left" as const,
-    main: ["Hidden places."] as readonly string[],
+    main: ["Hidden places,", "chosen your way."] as readonly string[],
+    support: "Beyond the obvious.",
   },
   {
     id: "local-moments",
-    // Scene 3 — Local table, wine pour in a vineyard.
+    // Scene 3 — Local table, wine, market, food.
     image: imgArrabidaWineLunch,
     video: sceneLocalTable.url,
     position: "50% 56%",
     pan: "push-in" as const,
-    main: ["Local tables."] as readonly string[],
+    main: ["Local moments,", "shaped around you."] as readonly string[],
+    support: "Food, wine, people, rhythm.",
   },
   {
     id: "occasions",
-    // Scene 4 — Hidden Lisbon street at golden hour.
+    // Scene 4 — Couple / celebration / private group moment.
     image: imgArrabidaViewpoint,
     video: sceneHiddenStreet.url,
     position: "50% 50%",
     pan: "drift-left" as const,
-    main: ["Your moments."] as readonly string[],
+    main: ["For a day,", "a celebration,", "or something unforgettable."] as readonly string[],
+    support: "Your occasion sets the rhythm.",
   },
   {
     id: "action",
-    // Scene 5 — Aerial route across Portugal: the close.
+    // Scene 5 — Route / journey / studio close. CTAs reveal here.
     image: imgTomarCoimbra,
     video: sceneRoutePortugal.url,
     position: "50% 50%",
     pan: "pull-back" as const,
-    main: ["Build it live."] as readonly string[],
+    main: ["Build it live.", "Confirm instantly."] as readonly string[],
+    support: "No forms. No waiting.",
   },
 ] as const;
 
@@ -743,7 +749,7 @@ function HomePage() {
             <span key={heroScene.id} className="hero-story-progress-fill" />
          </div>
 
-         <div className="container-x relative z-10 pb-14 md:pb-32 pt-24 md:pt-40">
+         <div className="container-x relative z-10 pb-[max(3.5rem,env(safe-area-inset-bottom))] md:pb-32 pt-24 md:pt-40">
            <div className="max-w-[20rem] sm:max-w-2xl md:max-w-3xl text-[color:var(--ivory)]">
              {/* Eyebrow — fixed brand anchor on every scene. */}
              <span className="inline-flex items-center gap-2 sm:gap-3.5 max-w-full text-[9.5px] xs:text-[10.5px] sm:text-[12px] md:text-[12.5px] uppercase tracking-[0.18em] xs:tracking-[0.22em] sm:tracking-[0.3em] md:tracking-[0.32em] text-[color:var(--gold)] [text-shadow:0_1px_8px_rgba(0,0,0,0.6),0_0_2px_rgba(0,0,0,0.5)] opacity-0 animate-[heroFade_0.9s_ease-out_0.20s_forwards]">
@@ -765,7 +771,7 @@ function HomePage() {
                <h1
                  data-hero-field="headlineLine1 headlineLine2"
                  data-hero-anchor="spotlight"
-                 className="hero-h1 hero-h1-cinematic serif mt-5 md:mt-7 text-[1.6rem] xs:text-[1.7rem] sm:text-[2.25rem] md:text-[3.1rem] lg:text-[3.6rem] leading-[1.12] sm:leading-[1.06] md:leading-[1.02] tracking-[-0.02em] text-[color:var(--ivory)] text-left opacity-0 animate-[heroFade_1s_ease-out_0.55s_forwards] [text-shadow:0_2px_22px_rgba(0,0,0,0.4)]"
+                 className="hero-h1 hero-h1-cinematic serif mt-4 md:mt-7 text-[1.5rem] xs:text-[1.7rem] sm:text-[2.25rem] md:text-[3.1rem] lg:text-[3.6rem] leading-[1.14] sm:leading-[1.06] md:leading-[1.02] tracking-[-0.02em] text-[color:var(--ivory)] text-left opacity-0 animate-[heroFade_1s_ease-out_0.55s_forwards] [text-shadow:0_2px_22px_rgba(0,0,0,0.4)]"
                >
                  <span
                    data-hero-field="headlineLine1"
@@ -820,20 +826,25 @@ function HomePage() {
                  line + optional supporting microline for the current scene.
                  Re-keyed per scene so the rise-fade replays cleanly and only
                  ONE message is ever readable at a time. */}
-             <div
-               key={`scene-msg-${heroScene.id}`}
-               className="hero-scene-message is-on mt-5 md:mt-7 max-w-[19rem] sm:max-w-xl"
-             >
-                 {heroScene.main.length > 0 ? (
-                   <p className="hero-scene-main serif text-[1.7rem] xs:text-[1.85rem] sm:text-[2.1rem] md:text-[2.6rem] leading-[1.12] tracking-[-0.02em] font-normal text-[color:var(--ivory)] [text-shadow:0_2px_22px_rgba(0,0,0,0.45)]">
-                     {heroScene.main.map((line, i) => (
-                       <span key={i} className="block">
-                         {line}
-                       </span>
-                     ))}
-                   </p>
-                 ) : null}
-              </div>
+              <div
+                key={`scene-msg-${heroScene.id}`}
+                className="hero-scene-message is-on mt-4 md:mt-7 max-w-[19rem] sm:max-w-xl"
+              >
+                  {heroScene.main.length > 0 ? (
+                    <p className="hero-scene-main serif text-[1.45rem] xs:text-[1.65rem] sm:text-[2.1rem] md:text-[2.6rem] leading-[1.14] tracking-[-0.02em] font-normal text-[color:var(--ivory)] [text-shadow:0_2px_22px_rgba(0,0,0,0.45)]">
+                      {heroScene.main.map((line, i) => (
+                        <span key={i} className="block">
+                          {line}
+                        </span>
+                      ))}
+                    </p>
+                  ) : null}
+                  {"support" in heroScene && heroScene.support ? (
+                    <p className="hero-scene-support mt-2.5 md:mt-3.5 font-sans text-[11px] xs:text-[12px] sm:text-[13px] uppercase tracking-[0.22em] text-[color:var(--ivory)]/85 [text-shadow:0_1px_10px_rgba(0,0,0,0.55)]">
+                      {heroScene.support}
+                    </p>
+                  ) : null}
+               </div>
 
              {/* Action block — CTAs + microcopy + brand signature appear
                  ONLY on scene 5 per the storytelling brief. */}
