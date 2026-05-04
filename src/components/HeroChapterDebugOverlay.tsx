@@ -92,6 +92,28 @@ export function HeroChapterDebugOverlay() {
         if (idx === -1) idx = HERO_SCENES.length - 1;
         const c = HERO_SCENES[idx];
         const rate = video.playbackRate || 1;
+
+        // Live read of the rendered overlay opacities — proves the
+        // dissolve curve and timing on real frames.
+        const prevEl = document.querySelector<HTMLElement>(
+          '[data-hero-overlay="prev"]',
+        );
+        const currentEl = document.querySelector<HTMLElement>(
+          '[data-hero-overlay="current"]',
+        );
+        const prevOpacity = prevEl
+          ? parseFloat(getComputedStyle(prevEl).opacity || "1")
+          : null;
+        const currentOpacity = currentEl
+          ? parseFloat(getComputedStyle(currentEl).opacity || "1")
+          : 1;
+        // While prev is mounted we're inside the cross-fade window.
+        // Approximate elapsed via 1 - currentOpacity^(1/curve) is
+        // unreliable; expose the raw opacities + total instead.
+        const fadeElapsedMs = prevEl
+          ? Math.round((1 - prevOpacity) * HERO_OVERLAP_MS)
+          : null;
+
         setSnap({
           chapterId: c.id,
           chapterIndex: idx,
@@ -101,6 +123,10 @@ export function HeroChapterDebugOverlay() {
           effectiveTime: (t - c.startTime) / rate,
           playbackRate: rate,
           remainingInChapter: (c.endTime - t) / rate,
+          prevOpacity,
+          currentOpacity,
+          fadeElapsedMs,
+          fadeTotalMs: HERO_OVERLAP_MS,
         });
       }
       raf = window.requestAnimationFrame(tick);
