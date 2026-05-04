@@ -128,9 +128,9 @@ const HERO_SCENES = [
   },
   {
     id: "hidden",
-    // Scene 2 — Hidden cove / village street: beyond the obvious.
+    // Scene 2 — Hidden Portuguese village street / azulejo corner.
     image: imgArrabidaCoves,
-    video: sceneHiddenCove.url,
+    video: sceneHiddenStreet.url,
     position: "52% 50%",
     pan: "drift-left" as const,
     main: ["Hidden places,", "chosen your way."] as readonly string[],
@@ -148,11 +148,11 @@ const HERO_SCENES = [
   },
   {
     id: "occasions",
-    // Scene 4 — Couple / celebration / private group moment.
+    // Scene 4 — Couple / celebration / private group toast.
     image: imgArrabidaViewpoint,
-    video: sceneHiddenStreet.url,
+    video: sceneCelebration.url,
     position: "50% 50%",
-    pan: "drift-left" as const,
+    pan: "push-in" as const,
     main: ["For a day,", "a celebration,", "or something unforgettable."] as readonly string[],
     support: "Your occasion sets the rhythm.",
   },
