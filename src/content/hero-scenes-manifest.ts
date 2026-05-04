@@ -147,7 +147,7 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: privateDayVideo,
     // Walking guests — anchor to upper third so heads stay safely framed
     // on tall mobile (393×587) and don't crop on landscape tablet.
-    position: "50% 38%",
+    position: { mobile: "50% 32%", tablet: "50% 38%", desktop: "50% 42%" },
     pan: "drift-left",
     main: ["For one private day,", "or a small group escape."],
     support: "Couples, families, friends — at your rhythm.",
