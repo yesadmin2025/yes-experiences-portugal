@@ -36,13 +36,16 @@
 // preview hosted on the Lovable asset CDN.
 const imgInvitation = "/video/real/posters/comporta-beach.jpg";
 const imgPrivateDay = "/video/real/posters/vineyard-walk.jpg";
-const imgCelebration = "/video/real/posters/friends-toast.jpg";
+// Scene 3 (proposals / celebrations / moments) uses the wine-cellar clip:
+// candlelit, atmospheric, no tight face close-ups — reads premium and
+// emotional on every breakpoint instead of a literal toast crop.
+const imgCelebration = "/video/real/posters/wine-cellar.jpg";
 const imgGroups = "/video/real/posters/vineyard-tasting.jpg";
 const imgRoute = "/video/posters/scene-route-portugal.jpg";
 
 const invitationVideo = "/video/real/comporta-beach.mp4";
 const privateDayVideo = "/video/real/vineyard-walk.mp4";
-const celebrationVideo = "/video/real/friends-toast.mp4";
+const celebrationVideo = "/video/real/wine-cellar.mp4";
 const groupsVideo = "/video/real/vineyard-tasting.mp4";
 const routeVideo =
   "/__l5e/assets-v1/501885a8-7399-4591-99fc-1c410b24c428/scene-route-portugal.mp4";
@@ -103,7 +106,7 @@ export const HERO_SCENES: readonly HeroScene[] = [
     id: "imagine",
     image: imgInvitation,
     video: invitationVideo,
-    position: "50% 55%",
+    position: "50% 62%",
     pan: "pull-back",
     main: ["Portugal,", "shaped your way."],
     support: "Private experiences, made for you.",
@@ -120,7 +123,9 @@ export const HERO_SCENES: readonly HeroScene[] = [
     id: "choose",
     image: imgPrivateDay,
     video: privateDayVideo,
-    position: "50% 50%",
+    // Walking guests — anchor to upper third so heads stay safely framed
+    // on tall mobile (393×587) and don't crop on landscape tablet.
+    position: "50% 38%",
     pan: "drift-left",
     main: ["For one private day,", "or a small group escape."],
     support: "Couples, families, friends — at your rhythm.",
@@ -137,6 +142,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     id: "taste",
     image: imgCelebration,
     video: celebrationVideo,
+    // Candlelit wine-cellar — atmospheric, no faces in frame, so we
+    // sit slightly above centre to feature the warm light arches.
     position: "50% 45%",
     pan: "drift-right",
     main: ["For proposals,", "celebrations,", "and moments worth keeping."],
@@ -144,9 +151,9 @@ export const HERO_SCENES: readonly HeroScene[] = [
     credits: [
       {
         kind: "video",
-        location: "Friends toasting on a private day — Portugal",
+        location: "Candlelit wine cellar at a Setúbal estate — Portugal",
         source: "yes-experiences",
-        license: "Captured with consenting guests",
+        license: "Captured on a real YES Experiences route",
       },
     ],
   },
@@ -154,7 +161,9 @@ export const HERO_SCENES: readonly HeroScene[] = [
     id: "celebrate",
     image: imgGroups,
     video: groupsVideo,
-    position: "50% 50%",
+    // Group tasting at a long table — keep heads above mid-line so
+    // they never get clipped by the bottom gradient on mobile.
+    position: "50% 42%",
     pan: "push-in",
     main: ["For teams, groups,", "and shared journeys."],
     support: "Private, local and carefully coordinated.",
