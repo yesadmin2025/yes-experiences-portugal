@@ -681,7 +681,7 @@ function HomePage() {
            Slide 1 is the SSR/static fallback. Reduced-motion freezes
            on slide 1 with all copy at full opacity. */}
         <section
-          className="relative min-h-[82svh] md:min-h-[90vh] flex items-end overflow-hidden"
+          className="relative min-h-[85svh] md:min-h-[90vh] flex items-end overflow-hidden"
           data-hero-scene={heroScene.id}
           data-hero-scene-index={heroSceneIndex}
         >
