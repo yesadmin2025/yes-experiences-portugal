@@ -559,18 +559,18 @@
      `.hero-cta-button--compact`. Tap target stays ≥44px (52 ≫ 44). Lets
      the cinematic hero breathe without losing legibility. */
   .hero-cta-button--compact {
-    height: 46px;
-    padding: 10px 16px 10px 14px;
-    font-size: 10.5px;
-    letter-spacing: 0.075em;
+    height: 44px;
+    padding: 8px 16px 8px 14px;
+    font-size: 10.25px;
+    letter-spacing: 0.07em;
     font-weight: 600;
   }
   @media (min-width: 768px) {
     .hero-cta-button--compact {
-      height: 52px;
-      padding: 13px 20px 13px 18px;
-      font-size: 11.5px;
-      letter-spacing: 0.085em;
+      height: 48px;
+      padding: 11px 20px 11px 18px;
+      font-size: 11px;
+      letter-spacing: 0.08em;
     }
   }
 

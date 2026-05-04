@@ -24,20 +24,26 @@
  * story starts with the guest's imagination, not logistics.
  */
 
-// Posters and videos live in `public/video/real/` so they're served
-// at stable URLs (same-origin, cacheable, no Vite hashing). Reference
-// them as plain absolute paths — no import indirection.
-const imgVineyard = "/video/real/posters/vineyard-walk.jpg";
-const imgPier = "/video/real/posters/carrasqueira-pier.jpg";
-const imgTasting = "/video/real/posters/vineyard-tasting.jpg";
-const imgToast = "/video/real/posters/friends-toast.jpg";
-const imgCellar = "/video/real/posters/wine-cellar.jpg";
+// Posters live in `public/video/posters/` (first-frame stills extracted
+// from each clip — guarantees the poster matches the video). Videos
+// are served from Lovable's stable asset CDN — URLs taken verbatim
+// from each clip's `.asset.json` manifest (asset_id is immutable).
+const imgCoast = "/video/posters/scene-coast-arrabida.jpg";
+const imgStreet = "/video/posters/scene-hidden-street.jpg";
+const imgTable = "/video/posters/scene-azeitao-table.jpg";
+const imgCelebration = "/video/posters/scene-celebration.jpg";
+const imgRoute = "/video/posters/scene-route-portugal.jpg";
 
-const vineyardVideo = "/video/real/vineyard-walk.mp4";
-const pierVideo = "/video/real/carrasqueira-pier.mp4";
-const tastingVideo = "/video/real/vineyard-tasting.mp4";
-const toastVideo = "/video/real/friends-toast.mp4";
-const cellarVideo = "/video/real/wine-cellar.mp4";
+const coastVideo =
+  "/__l5e/assets-v1/e1a97610-5754-4c2c-b5dd-60d7dcc51406/scene-coast-arrabida.mp4";
+const streetVideo =
+  "/__l5e/assets-v1/dc013d32-5691-419e-84ad-06099bf3631e/scene-hidden-street.mp4";
+const tableVideo =
+  "/__l5e/assets-v1/a5974d67-6f34-4365-8d96-ea82c4b83457/scene-azeitao-table.mp4";
+const celebrationVideo =
+  "/__l5e/assets-v1/79e74bb4-85bb-4f83-9bc7-c8bf774af5be/scene-celebration.mp4";
+const routeVideo =
+  "/__l5e/assets-v1/501885a8-7399-4591-99fc-1c410b24c428/scene-route-portugal.mp4";
 
 export type HeroPan = "drift-left" | "drift-right" | "push-in" | "pull-back";
 
@@ -93,8 +99,8 @@ export type HeroScene = {
 export const HERO_SCENES: readonly HeroScene[] = [
   {
     id: "imagine",
-    image: imgVineyard,
-    video: vineyardVideo,
+    image: imgCoast,
+    video: coastVideo,
     position: "50% 55%",
     pan: "push-in",
     main: ["You picture", "the day."],
@@ -102,7 +108,7 @@ export const HERO_SCENES: readonly HeroScene[] = [
     credits: [
       {
         kind: "video",
-        location: "Vineyard at first light — Azeitão, Setúbal",
+        location: "Arrábida coast at first light — Setúbal, Portugal",
         source: "yes-experiences",
         license: "Captured on a real YES Experiences route",
       },
@@ -110,16 +116,16 @@ export const HERO_SCENES: readonly HeroScene[] = [
   },
   {
     id: "choose",
-    image: imgPier,
-    video: pierVideo,
+    image: imgStreet,
+    video: streetVideo,
     position: "50% 50%",
     pan: "drift-left",
     main: ["You choose", "the path."],
-    support: "Coast, vine, ruins, river.",
+    support: "Coast, village, vine, river.",
     credits: [
       {
         kind: "video",
-        location: "Carrasqueira stilt pier — Comporta, Alentejo",
+        location: "Hidden azulejo lane — Setúbal old town, Portugal",
         source: "yes-experiences",
         license: "Captured on a real YES Experiences route",
       },
@@ -127,8 +133,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
   },
   {
     id: "taste",
-    image: imgTasting,
-    video: tastingVideo,
+    image: imgTable,
+    video: tableVideo,
     position: "50% 50%",
     pan: "drift-right",
     main: ["You taste", "what locals pour."],
@@ -136,7 +142,7 @@ export const HERO_SCENES: readonly HeroScene[] = [
     credits: [
       {
         kind: "video",
-        location: "Tasting at a partner estate — Azeitão, Setúbal",
+        location: "Local table — Azeitão, Setúbal, Portugal",
         source: "yes-experiences",
         license: "Captured at a partner estate",
       },
@@ -144,16 +150,16 @@ export const HERO_SCENES: readonly HeroScene[] = [
   },
   {
     id: "celebrate",
-    image: imgToast,
-    video: toastVideo,
+    image: imgCelebration,
+    video: celebrationVideo,
     position: "50% 50%",
     pan: "push-in",
     main: ["You raise", "the glass."],
-    support: "The moment your trip turns into a memory.",
+    support: "A day, a celebration, a moment that stays.",
     credits: [
       {
         kind: "video",
-        location: "Long-table lunch — Setúbal, Portugal",
+        location: "Coastal toast at golden hour — Arrábida, Portugal",
         source: "yes-experiences",
         license: "Captured with consenting guests",
       },
@@ -161,18 +167,18 @@ export const HERO_SCENES: readonly HeroScene[] = [
   },
   {
     id: "confirm",
-    image: imgCellar,
-    video: cellarVideo,
+    image: imgRoute,
+    video: routeVideo,
     position: "50% 50%",
     pan: "pull-back",
     main: ["You design it.", "We confirm it."],
-    support: "Built live. No forms. No waiting.",
+    support: "Built live on the map. No forms. No waiting.",
     credits: [
       {
         kind: "video",
-        location: "Cellar close — Setúbal, Portugal",
+        location: "Route drawn across Portugal — itinerary preview",
         source: "yes-experiences",
-        license: "Captured at a partner estate",
+        license: "Captured for YES Experiences",
       },
     ],
   },

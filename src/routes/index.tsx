@@ -754,12 +754,12 @@ function HomePage() {
            <div className="max-w-[19.5rem] xs:max-w-[21rem] sm:max-w-2xl md:max-w-3xl text-[color:var(--ivory)] text-left">
               {/* Eyebrow — refined: smaller, lighter, calmer. Should sit
                   above the image without dominating it. */}
-              <span className="inline-flex items-center gap-2 sm:gap-3 max-w-full text-[9px] xs:text-[9.5px] sm:text-[10.5px] md:text-[11px] uppercase tracking-[0.22em] xs:tracking-[0.26em] sm:tracking-[0.3em] text-[color:var(--gold-soft)] [text-shadow:0_1px_8px_rgba(0,0,0,0.6),0_0_2px_rgba(0,0,0,0.5)] opacity-0 animate-[heroFadeFromRight_0.9s_ease-out_0.20s_forwards]">
-                <span aria-hidden="true" className="shrink-0 text-[7px] sm:text-[8px] opacity-80">✦</span>
+              <span className="inline-flex items-center gap-2 sm:gap-3 max-w-full text-[8.5px] xs:text-[9px] sm:text-[10px] md:text-[10.5px] uppercase tracking-[0.24em] xs:tracking-[0.28em] sm:tracking-[0.32em] text-[color:var(--gold-soft)]/85 [text-shadow:0_1px_8px_rgba(0,0,0,0.6),0_0_2px_rgba(0,0,0,0.5)] opacity-0 animate-[heroFadeFromRight_0.9s_ease-out_0.20s_forwards]">
+                <span aria-hidden="true" className="shrink-0 text-[6.5px] sm:text-[7.5px] opacity-70">✦</span>
                 <span data-hero-field="eyebrow" className="whitespace-nowrap truncate font-medium">
                   {HERO_COPY.eyebrow}
                 </span>
-                <span aria-hidden="true" className="shrink-0 text-[7px] sm:text-[8px] opacity-80">✦</span>
+                <span aria-hidden="true" className="shrink-0 text-[6.5px] sm:text-[7.5px] opacity-70">✦</span>
               </span>
 
              {/* Canonical H1 — carries the approved HERO_COPY locks.
@@ -902,12 +902,12 @@ function HomePage() {
                  </div>
 
                  <div className="hero-rhythm-cta-to-microcopy max-w-sm sm:max-w-xl mx-auto sm:mx-0">
-                   <p
-                     data-hero-field="microcopy"
-                     className="text-[10.5px] md:text-[11.5px] text-[color:var(--ivory)]/75 [text-shadow:0_1px_10px_rgba(0,0,0,0.55)] leading-[1.55] font-normal tracking-[0.01em] text-center sm:text-left"
-                   >
-                     {HERO_COPY.microcopy}
-                   </p>
+                    <p
+                      data-hero-field="microcopy"
+                      className="text-[9.5px] md:text-[10.5px] text-[color:var(--ivory)]/65 [text-shadow:0_1px_10px_rgba(0,0,0,0.55)] leading-[1.55] font-normal tracking-[0.015em] text-center sm:text-left"
+                    >
+                      {HERO_COPY.microcopy}
+                    </p>
                  </div>
                </div>
              ) : null}
@@ -974,11 +974,12 @@ function HomePage() {
             </div>
           </div>
           </div>
-          {/* Soft transition into the next section — gentle ivory fade
-              so the trust strip lands without a hard edge. */}
+          {/* Soft transition into the next section — extended ivory fade
+              so the trust strip lands without a hard edge and the eye gets
+              breathing room after the cinematic close. */}
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-16 md:h-20 z-[3] bg-[linear-gradient(180deg,rgba(250,248,243,0)_0%,rgba(250,248,243,0.55)_70%,var(--ivory)_100%)]"
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-28 md:h-36 z-[3] bg-[linear-gradient(180deg,rgba(250,248,243,0)_0%,rgba(250,248,243,0.35)_55%,rgba(250,248,243,0.85)_85%,var(--ivory)_100%)]"
           />
         </section>
 
@@ -989,7 +990,7 @@ function HomePage() {
           page (per "no repeated review sections" guardrail). */}
       <section
         id="reviews"
-        className="he-trust-rule section-enter bg-[color:var(--ivory)] border-b border-[color:var(--border)] pt-10 md:pt-14 pb-8 md:pb-10 scroll-mt-24 md:scroll-mt-28"
+        className="he-trust-rule section-enter bg-[color:var(--ivory)] border-b border-[color:var(--border)] pt-16 md:pt-24 pb-12 md:pb-14 scroll-mt-24 md:scroll-mt-28"
         aria-labelledby="trust-bar-title"
       >
         <h2 id="trust-bar-title" className="sr-only">

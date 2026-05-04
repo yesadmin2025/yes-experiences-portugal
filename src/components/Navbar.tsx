@@ -36,7 +36,7 @@ export function Navbar() {
   return (
     <header className="fixed top-0 inset-x-0 z-50 bg-white/95 backdrop-blur-md border-b border-[color:var(--charcoal)]/15 shadow-[0_8px_24px_-20px_rgba(15,23,42,0.18)] opacity-0 animate-[headerFade_900ms_ease-out_forwards]">
       <div className="container-x">
-        <div className="flex items-center justify-between h-[80px] md:h-[88px] lg:h-[96px]">
+        <div className="flex items-center justify-between h-[64px] md:h-[80px] lg:h-[92px]">
           {/* Official master logo — uploaded brand asset, used as-is.
               Logo height is tuned so the "PORTUGAL" wordmark beneath the
               YES lockup remains legible on mobile while keeping a calm
@@ -52,7 +52,7 @@ export function Navbar() {
             <Logo
               theme="teal-on-ivory"
               fetchPriority="high"
-              className="block h-[60px] md:h-[64px] lg:h-[68px] w-auto select-none"
+              className="block h-[48px] md:h-[58px] lg:h-[66px] w-auto select-none"
             />
           </Link>
 
