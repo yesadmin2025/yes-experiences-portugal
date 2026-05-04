@@ -184,13 +184,64 @@ export function HeroChapterDebugOverlay() {
           <span className="text-right">
             {chapterDuration.toFixed(2)}s · eff {effectiveDuration.toFixed(2)}s
           </span>
+          <span className="text-white/50">overlay prev/curr</span>
+          <span className="text-right">
+            {snap.prevOpacity === null ? "—" : snap.prevOpacity.toFixed(2)} /{" "}
+            {snap.currentOpacity.toFixed(2)}
+          </span>
+          <span className="text-white/50">fade window</span>
+          <span className="text-right">
+            {snap.fadeElapsedMs === null
+              ? "idle"
+              : `${snap.fadeElapsedMs}ms / ${snap.fadeTotalMs}ms`}
+          </span>
         </div>
 
-        <div className="relative h-1.5 rounded-full bg-white/10">
-          <div
-            className="absolute inset-y-0 left-0 rounded-full bg-[color:var(--gold)]"
-            style={{ width: `${progressPct}%` }}
-          />
+        <div className="mb-1.5">
+          <div className="flex items-center justify-between mb-0.5 text-[9.5px] text-white/50 uppercase tracking-[0.14em]">
+            <span>chapter progress</span>
+            <span>{progressPct.toFixed(0)}%</span>
+          </div>
+          <div className="relative h-1.5 rounded-full bg-white/10">
+            <div
+              className="absolute inset-y-0 left-0 rounded-full bg-[color:var(--gold)]"
+              style={{ width: `${progressPct}%` }}
+            />
+          </div>
+        </div>
+
+        <div>
+          <div className="flex items-center justify-between mb-0.5 text-[9.5px] text-white/50 uppercase tracking-[0.14em]">
+            <span>fade dissolve (smootherstep)</span>
+            <span>
+              {snap.prevOpacity === null
+                ? "—"
+                : `${Math.round((1 - snap.prevOpacity) * 100)}%`}
+            </span>
+          </div>
+          <div className="relative h-3 rounded-sm bg-white/10 overflow-hidden">
+            {/* Outgoing (prev) ramp */}
+            <div
+              className="absolute inset-y-0 left-0 bg-[color:var(--ivory)]/55"
+              style={{
+                width: `${(snap.prevOpacity ?? 0) * 100}%`,
+              }}
+            />
+            {/* Incoming (current) ramp — drawn from the right so the
+                two bars meet visually as the dissolve progresses. */}
+            <div
+              className="absolute inset-y-0 right-0 bg-[color:var(--gold-soft)]/85"
+              style={{
+                width: `${snap.currentOpacity * 100}%`,
+              }}
+            />
+            {/* 50% midline marker */}
+            <div className="absolute inset-y-0 left-1/2 w-px bg-white/30" />
+          </div>
+          <div className="flex justify-between mt-0.5 text-[9px] text-white/40 tabular-nums">
+            <span>prev opacity</span>
+            <span>curr opacity</span>
+          </div>
         </div>
       </div>
     </div>
