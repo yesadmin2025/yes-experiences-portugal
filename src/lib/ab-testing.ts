@@ -165,12 +165,14 @@ export async function recordAssignment(
     /* ignore */
   }
   try {
-    await supabase.from("hero_ab_assignments").insert({
-      anonymous_id: anonId,
-      experiment_key: experiment.key,
-      variant: variant.id,
-      user_agent: navigator.userAgent.slice(0, 250),
-    });
+    await supabase.from("hero_ab_assignments").insert([
+      {
+        anonymous_id: anonId,
+        experiment_key: experiment.key,
+        variant: variant.id,
+        user_agent: navigator.userAgent.slice(0, 250),
+      },
+    ]);
   } catch {
     // Non-fatal — the table has UNIQUE(anonymous_id, experiment_key)
     // so duplicate inserts intentionally throw a 23505. We don't care.
