@@ -2,7 +2,7 @@
  * Hero scenes manifest — single source of truth.
  *
  * Maps each cinematic hero scene to:
- *   • its local poster image + (optional) local video URL
+ *   • its local poster image + local video URL (uniform — every scene is video)
  *   • the cinematic copy beats shown over the frame
  *   • the pan direction + object-position used by the stage
  *   • full attribution metadata for the credits modal
@@ -11,32 +11,33 @@
  * (`src/components/home/HeroCredits.tsx`) BOTH read from this file —
  * so attribution can never drift from what's actually on screen.
  *
- * Visual story (conversion-tuned, 5 beats):
- *   1. ARRIVAL    — private vehicle, real hosts greeting real guests
- *   2. DISCOVERY  — places only locals know (Roman ruins on the Sado)
- *   3. LOCAL      — wine, food, real Portuguese hands at work
- *   4. CELEBRATE  — the toast that turns a trip into a memory
- *   5. ACTION     — vineyard walk, ready to build it live
+ * Story spine — "YOU design the trip":
+ *   1. IMAGINE   — open landscape, the canvas is yours
+ *   2. CHOOSE    — paths split, you pick the direction
+ *   3. TASTE     — what locals pour, picked by you
+ *   4. CELEBRATE — the moment your design becomes a memory
+ *   5. CONFIRM   — built live, confirmed instantly
  *
- * All five clips are real Portugal footage, real guests, real
- * operations — no AI-generated visuals. Hosted locally under
- * `public/video/real/` for control over compression + attribution.
+ * Every clip is real Portugal footage hosted locally under
+ * `public/video/real/`. No images-only scenes — uniform motion across
+ * the whole reel. No transport / arrival imagery in the opener — the
+ * story starts with the guest's imagination, not logistics.
  */
 
 // Posters and videos live in `public/video/real/` so they're served
 // at stable URLs (same-origin, cacheable, no Vite hashing). Reference
 // them as plain absolute paths — no import indirection.
-const imgArrival = "/video/real/posters/arrival-minibus.jpg";
-const imgRuins = "/video/real/posters/troia-ruins.jpg";
-const imgWine = "/video/real/posters/vineyard-tasting.jpg";
-const imgToast = "/video/real/posters/friends-toast.jpg";
 const imgVineyard = "/video/real/posters/vineyard-walk.jpg";
+const imgPier = "/video/real/posters/carrasqueira-pier.jpg";
+const imgTasting = "/video/real/posters/vineyard-tasting.jpg";
+const imgToast = "/video/real/posters/friends-toast.jpg";
+const imgCellar = "/video/real/posters/wine-cellar.jpg";
 
-const arrivalVideo = "/video/real/arrival-minibus.mp4";
-const ruinsVideo = "/video/real/troia-ruins.mp4";
-const wineVideo = "/video/real/vineyard-tasting.mp4";
-const toastVideo = "/video/real/friends-toast.mp4";
 const vineyardVideo = "/video/real/vineyard-walk.mp4";
+const pierVideo = "/video/real/carrasqueira-pier.mp4";
+const tastingVideo = "/video/real/vineyard-tasting.mp4";
+const toastVideo = "/video/real/friends-toast.mp4";
+const cellarVideo = "/video/real/wine-cellar.mp4";
 
 export type HeroPan = "drift-left" | "drift-right" | "push-in" | "pull-back";
 
@@ -61,8 +62,8 @@ export type HeroScene = {
   id: string;
   /** Poster / fallback still — always required. */
   image: string;
-  /** Optional looped clip URL. Falls back to `image` when omitted. */
-  video?: string;
+  /** Looped clip URL — required for uniform motion across the reel. */
+  video: string;
   /** CSS object-position for the still + video. */
   position: string;
   /** Ken-Burns pan applied to the active slide. */
@@ -79,66 +80,63 @@ export type HeroScene = {
 };
 
 /**
- * Cinematic 5-scene story, conversion-tuned.
+ * Cinematic 5-scene story — anchored on the core promise:
+ * "You design the trip. Real Portugal answers."
  *
  * Copy rules applied:
- *  • No repeated phrases across slides.
- *  • Sentence case, short. Every line readable in 1.2s.
- *  • Each slide answers ONE buyer question:
- *      1. Who picks me up?       → "We come to you."
- *      2. What will I see?       → "Places locals keep."
- *      3. Who's behind it?       → "Made by real hands."
- *      4. How will it feel?      → "The moment you'll retell."
- *      5. How do I start?        → "Build it live. Confirm now."
+ *  • The verb on every slide is the GUEST's verb, not ours.
+ *  • Each main line is two short beats; reads in ~1.2s.
+ *  • Supports add a concrete proof, never a slogan.
  *  • CTAs reveal ONLY on scene 5 (handled in the route).
+ *  • Pans alternate to keep the reel premium and avoid drift fatigue.
  */
 export const HERO_SCENES: readonly HeroScene[] = [
   {
-    id: "arrival",
-    image: imgArrival,
-    video: arrivalVideo,
+    id: "imagine",
+    image: imgVineyard,
+    video: vineyardVideo,
     position: "50% 55%",
-    pan: "drift-left",
-    main: ["We come", "to you."],
-    support: "Private. Door to door.",
+    pan: "push-in",
+    main: ["You picture", "the day."],
+    support: "We hold the canvas.",
     credits: [
       {
         kind: "video",
-        location: "Private arrival — Setúbal, Portugal",
-        source: "yes-experiences",
-        license: "Captured on a real YES Experiences departure",
-      },
-    ],
-  },
-  {
-    id: "discovery",
-    image: imgRuins,
-    video: ruinsVideo,
-    position: "50% 50%",
-    pan: "drift-left",
-    main: ["Places", "locals keep."],
-    support: "Off the postcard.",
-    credits: [
-      {
-        kind: "video",
-        location: "Roman ruins of Tróia — Setúbal, Portugal",
+        location: "Vineyard at first light — Azeitão, Setúbal",
         source: "yes-experiences",
         license: "Captured on a real YES Experiences route",
       },
     ],
   },
   {
-    id: "local-hands",
-    image: imgWine,
-    video: wineVideo,
+    id: "choose",
+    image: imgPier,
+    video: pierVideo,
     position: "50% 50%",
     pan: "drift-left",
-    main: ["Made by", "real hands."],
-    support: "Wine, food, families.",
+    main: ["You choose", "the path."],
+    support: "Coast, vine, ruins, river.",
     credits: [
       {
         kind: "video",
-        location: "Vineyard tasting — Azeitão, Setúbal",
+        location: "Carrasqueira stilt pier — Comporta, Alentejo",
+        source: "yes-experiences",
+        license: "Captured on a real YES Experiences route",
+      },
+    ],
+  },
+  {
+    id: "taste",
+    image: imgTasting,
+    video: tastingVideo,
+    position: "50% 50%",
+    pan: "drift-right",
+    main: ["You taste", "what locals pour."],
+    support: "Estates, kitchens, families.",
+    credits: [
+      {
+        kind: "video",
+        location: "Tasting at a partner estate — Azeitão, Setúbal",
         source: "yes-experiences",
         license: "Captured at a partner estate",
       },
@@ -149,9 +147,9 @@ export const HERO_SCENES: readonly HeroScene[] = [
     image: imgToast,
     video: toastVideo,
     position: "50% 50%",
-    pan: "drift-left",
-    main: ["The moment", "you'll retell."],
-    support: "Toast. Laugh. Stay longer.",
+    pan: "push-in",
+    main: ["You raise", "the glass."],
+    support: "The moment your trip turns into a memory.",
     credits: [
       {
         kind: "video",
@@ -162,19 +160,19 @@ export const HERO_SCENES: readonly HeroScene[] = [
     ],
   },
   {
-    id: "action",
-    image: imgVineyard,
-    video: vineyardVideo,
+    id: "confirm",
+    image: imgCellar,
+    video: cellarVideo,
     position: "50% 50%",
-    pan: "drift-left",
-    main: ["Build it live.", "Confirm now."],
-    support: "No forms. No waiting.",
+    pan: "pull-back",
+    main: ["You design it.", "We confirm it."],
+    support: "Built live. No forms. No waiting.",
     credits: [
       {
         kind: "video",
-        location: "Vineyard walk — Azeitão, Setúbal",
+        location: "Cellar close — Setúbal, Portugal",
         source: "yes-experiences",
-        license: "Captured on a real YES Experiences day",
+        license: "Captured at a partner estate",
       },
     ],
   },
