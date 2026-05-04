@@ -182,5 +182,84 @@ for (const vp of VIEWPORTS) {
         expect(observedFps).toBeLessThan(40);
       }
     });
+
+    test(`first decoded frame within ${vp.firstFrameBudgetMs}ms of route load`, async ({
+      page,
+    }) => {
+      // Strict time-to-first-frame budget. We measure from page.goto()
+      // resolve (DOM ready) to the moment the <video>:
+      //   - has readyState >= HAVE_CURRENT_DATA (2) AND
+      //   - has fired its first 'playing' event (or currentTime > 0
+      //     advanced under autoplay) — proving an actual frame was
+      //     painted, not just metadata loaded.
+      //
+      // Catches: render-blocking JS pushing decoder start, accidental
+      // preload="none", a heavier asset on the critical path, or
+      // autoplay rejection without a play() kickstart.
+      const t0 = Date.now();
+      await page.goto("/");
+
+      const result = await page.evaluate(
+        async ({ sel, budget }) => {
+          const start = performance.now();
+          const v = document.querySelector(sel) as HTMLVideoElement | null;
+          if (!v) return { ok: false, reason: "video element missing", ms: -1 };
+
+          // Kickstart play() if autoplay was rejected — matches the
+          // ref={} branch in the index route.
+          if (v.paused) {
+            try {
+              await v.play();
+            } catch {
+              /* noop */
+            }
+          }
+
+          return await new Promise<{
+            ok: boolean;
+            reason: string;
+            ms: number;
+          }>((resolve) => {
+            const settle = (ok: boolean, reason: string) => {
+              cleanup();
+              resolve({ ok, reason, ms: performance.now() - start });
+            };
+            const onPlaying = () => settle(true, "playing event");
+            const onTimeUpdate = () => {
+              if (v.currentTime > 0 && v.readyState >= 2) {
+                settle(true, "currentTime advanced");
+              }
+            };
+            const cleanup = () => {
+              v.removeEventListener("playing", onPlaying);
+              v.removeEventListener("timeupdate", onTimeUpdate);
+              clearTimeout(timer);
+            };
+            const timer = setTimeout(
+              () => settle(false, `budget exceeded (${budget}ms)`),
+              budget,
+            );
+            // Already playing? settle immediately.
+            if (!v.paused && v.currentTime > 0 && v.readyState >= 2) {
+              settle(true, "already playing");
+              return;
+            }
+            v.addEventListener("playing", onPlaying);
+            v.addEventListener("timeupdate", onTimeUpdate);
+          });
+        },
+        { sel: VIDEO_SELECTOR, budget: vp.firstFrameBudgetMs },
+      );
+
+      const totalMs = Date.now() - t0;
+      expect(
+        result.ok,
+        `hero video did not produce a first frame within ${vp.firstFrameBudgetMs}ms after route load. reason="${result.reason}", in-page ms=${result.ms.toFixed(0)}, total ms=${totalMs}`,
+      ).toBe(true);
+      expect(
+        result.ms,
+        `first frame at ${result.ms.toFixed(0)}ms — exceeds ${vp.firstFrameBudgetMs}ms budget`,
+      ).toBeLessThanOrEqual(vp.firstFrameBudgetMs);
+    });
   });
 }
