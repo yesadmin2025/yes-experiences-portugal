@@ -290,6 +290,38 @@ function HomePage() {
   const heroScene = heroScenes[heroSceneIndex];
   const isHeroActionScene = heroSceneIndex === heroScenes.length - 1;
 
+  // Focus management — when the cinematic film reaches its final action
+  // chapter, move keyboard/screen-reader focus to the primary CTA so AT
+  // users land on the actionable surface as soon as it's available.
+  // Only fires once per page view, and only if the user hasn't already
+  // moved focus into the hero (we don't yank focus away from interactive
+  // elements they may already be exploring). Skipped under
+  // prefers-reduced-motion freeze (the page opens directly on the action
+  // scene, so a focus jump on mount would be jarring) and when the
+  // ?hero=last byte-exact lock is in effect.
+  const heroPrimaryCtaRef = useRef<HTMLAnchorElement | null>(null);
+  const heroFocusedRef = useRef(false);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (!isHeroActionScene) return;
+    if (heroFocusedRef.current) return;
+    if (heroFreezeOnLast) return;
+    const active = document.activeElement;
+    const heroSection = document.querySelector('[data-hero-scene-index]');
+    if (active && heroSection && heroSection.contains(active)) return;
+    if (active && active !== document.body) return;
+    const el = heroPrimaryCtaRef.current;
+    if (!el) return;
+    heroFocusedRef.current = true;
+    // preventScroll keeps the cinematic close in view — focus is what
+    // matters for AT, not a scroll jump.
+    try {
+      el.focus({ preventScroll: true });
+    } catch {
+      el.focus();
+    }
+  }, [isHeroActionScene, heroFreezeOnLast]);
+
   // Runtime poster guard — verify each scene's poster URL responds 2xx
   // BEFORE the slide goes active. If a poster is missing/404 we log a
   // loud error (so it surfaces in Sentry / console / QA), but the reel
