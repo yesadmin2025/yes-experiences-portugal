@@ -49,7 +49,13 @@ type Snap = {
   effectiveTime: number;
   playbackRate: number;
   remainingInChapter: number;
+  prevOpacity: number | null;
+  currentOpacity: number;
+  fadeElapsedMs: number | null;
+  fadeTotalMs: number;
 };
+
+const HERO_OVERLAP_MS = 1450;
 
 /**
  * HeroChapterDebugOverlay — fixed-corner readout that proves the
