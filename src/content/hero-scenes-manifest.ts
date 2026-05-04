@@ -27,15 +27,20 @@
  */
 
 import heroImg from "@/assets/hero-coast.jpg";
-import imgSesimbraVillage from "@/assets/tours/arrabida-boat/sesimbra.jpg";
+import imgSesimbraVillage from "@/assets/tours/arrabida-wine-allinclusive/sesimbra.jpg";
 import imgAzeitaoWinery from "@/assets/tours/azeitao-cheese/winery.jpg";
 import imgArrabidaViewpoint from "@/assets/tours/arrabida-wine-allinclusive/viewpoint.jpg";
 import imgSintraCaboDaRoca from "@/assets/tours/sintra-cascais/cabo-da-roca.jpg";
 
-import sceneHiddenStreet from "../../public/video/scene-hidden-street.mp4.asset.json";
-import sceneLocalTable from "../../public/video/scene-local-table.mp4.asset.json";
-import sceneCelebration from "../../public/video/scene-celebration.mp4.asset.json";
-import sceneRoutePortugal from "../../public/video/scene-route-portugal.mp4.asset.json";
+// Real Portugal motion clips — each generated from a real Viator-sourced
+// Portugal still (Arrábida coast, Sesimbra street, Azeitão winery,
+// Arrábida viewpoint, Cabo da Roca). Right-to-left drift matches the
+// film-strip direction so the whole hero reads as one continuous reel.
+import sceneCoastArrabida from "../../public/video/scene-coast-arrabida.mp4.asset.json";
+import sceneSesimbraStreet from "../../public/video/scene-sesimbra-street.mp4.asset.json";
+import sceneAzeitaoTable from "../../public/video/scene-azeitao-table.mp4.asset.json";
+import sceneArrabidaViewpoint from "../../public/video/scene-arrabida-viewpoint.mp4.asset.json";
+import sceneCaboDaRoca from "../../public/video/scene-cabo-da-roca.mp4.asset.json";
 
 export type HeroPan = "drift-left" | "drift-right" | "push-in" | "pull-back";
 
@@ -86,7 +91,7 @@ export const HERO_SCENES: readonly HeroScene[] = [
   {
     id: "opening",
     image: heroImg,
-    video: "/video/hero-coast.mp4",
+    video: sceneCoastArrabida.url,
     position: "50% 52%",
     pan: "drift-left",
     main: [],
@@ -100,19 +105,19 @@ export const HERO_SCENES: readonly HeroScene[] = [
       },
       {
         kind: "video",
-        location: "Atlantic coast — Portugal",
+        location: "Atlantic coast — Arrábida, Portugal",
         source: "in-house",
-        license: "Project-owned footage",
+        license: "Animated from Viator-sourced still",
       },
     ],
   },
   {
     id: "hidden",
     image: imgSesimbraVillage,
-    video: sceneHiddenStreet.url,
+    video: sceneSesimbraStreet.url,
     position: "52% 50%",
     pan: "drift-left",
-    main: ["Hidden places,", "chosen your way."],
+    main: ["Hidden corners,", "found by locals."],
     support: "Beyond the obvious.",
     credits: [
       {
@@ -123,21 +128,20 @@ export const HERO_SCENES: readonly HeroScene[] = [
       },
       {
         kind: "video",
-        location: "Hidden street — Portugal",
-        source: "pexels",
-        license: "Pexels License (free to use)",
-        sourceUrl: "https://www.pexels.com/",
+        location: "Sesimbra street — Setúbal, Portugal",
+        source: "in-house",
+        license: "Animated from Viator-sourced still",
       },
     ],
   },
   {
     id: "local-moments",
     image: imgAzeitaoWinery,
-    video: sceneLocalTable.url,
+    video: sceneAzeitaoTable.url,
     position: "50% 56%",
-    pan: "push-in",
-    main: ["Local moments,", "shaped around you."],
-    support: "Food, wine, people, rhythm.",
+    pan: "drift-left",
+    main: ["A table,", "a story,", "a place."],
+    support: "Wine, food, rhythm.",
     credits: [
       {
         kind: "photo",
@@ -147,21 +151,20 @@ export const HERO_SCENES: readonly HeroScene[] = [
       },
       {
         kind: "video",
-        location: "Local table — wine & cheese",
-        source: "pexels",
-        license: "Pexels License (free to use)",
-        sourceUrl: "https://www.pexels.com/",
+        location: "Azeitão winery — Setúbal, Portugal",
+        source: "in-house",
+        license: "Animated from Viator-sourced still",
       },
     ],
   },
   {
     id: "occasions",
     image: imgArrabidaViewpoint,
-    video: sceneCelebration.url,
+    video: sceneArrabidaViewpoint.url,
     position: "50% 50%",
-    pan: "push-in",
-    main: ["For a day,", "a celebration,", "or something unforgettable."],
-    support: "Your occasion sets the rhythm.",
+    pan: "drift-left",
+    main: ["A day. A toast.", "Something unforgettable."],
+    support: "The occasion shapes the day.",
     credits: [
       {
         kind: "photo",
@@ -171,19 +174,18 @@ export const HERO_SCENES: readonly HeroScene[] = [
       },
       {
         kind: "video",
-        location: "Sunset celebration — Atlantic coast",
-        source: "pexels",
-        license: "Pexels License (free to use)",
-        sourceUrl: "https://www.pexels.com/",
+        location: "Arrábida viewpoint — Setúbal, Portugal",
+        source: "in-house",
+        license: "Animated from Viator-sourced still",
       },
     ],
   },
   {
     id: "action",
     image: imgSintraCaboDaRoca,
-    video: sceneRoutePortugal.url,
+    video: sceneCaboDaRoca.url,
     position: "50% 50%",
-    pan: "pull-back",
+    pan: "drift-left",
     main: ["Build it live.", "Confirm instantly."],
     support: "No forms. No waiting.",
     credits: [
@@ -195,10 +197,9 @@ export const HERO_SCENES: readonly HeroScene[] = [
       },
       {
         kind: "video",
-        location: "Vineyard road — Alentejo, Portugal",
-        source: "pexels",
-        license: "Pexels License (free to use)",
-        sourceUrl: "https://www.pexels.com/",
+        location: "Cabo da Roca — Sintra-Cascais, Portugal",
+        source: "in-house",
+        license: "Animated from Viator-sourced still",
       },
     ],
   },
