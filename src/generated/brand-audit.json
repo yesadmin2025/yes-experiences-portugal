@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-04T00:56:34.366Z",
+  "generatedAt": "2026-05-04T01:06:10.771Z",
   "filesScanned": 165,
   "approvedPalette": {
     "teal": "#295B61",
@@ -1169,7 +1169,7 @@
     },
     {
       "file": "src/routes/index.tsx",
-      "line": 1080,
+      "line": 1082,
       "col": 108,
       "raw": "#EAE2D6",
       "normalized": "#eae2d6",
@@ -1178,7 +1178,7 @@
     },
     {
       "file": "src/routes/index.tsx",
-      "line": 1234,
+      "line": 1236,
       "col": 114,
       "raw": "#EAE2D6",
       "normalized": "#eae2d6",
@@ -1394,7 +1394,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 2562,
+      "line": 2567,
       "col": 23,
       "raw": "#000",
       "normalized": "#000000",
@@ -1403,7 +1403,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 2893,
+      "line": 2898,
       "col": 41,
       "raw": "#000",
       "normalized": "#000000",
@@ -1412,7 +1412,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 2893,
+      "line": 2898,
       "col": 47,
       "raw": "#000",
       "normalized": "#000000",
@@ -1421,7 +1421,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 3352,
+      "line": 3357,
       "col": 7,
       "raw": "#555",
       "normalized": "#555555",
