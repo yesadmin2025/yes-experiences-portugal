@@ -100,6 +100,10 @@ export const HERO_COPY_EXPERIMENT: HeroExperiment = {
           main: ["Mark the day", "the right way."],
           support: "Birthdays, anniversaries, big yeses.",
         },
+        journey: {
+          main: ["One day,", "or many."],
+          support: "Multi-day Portugal, your rhythm.",
+        },
         confirm: {
           main: ["Design it now.", "Confirmed instantly."],
           support: "No forms. No waiting.",
@@ -127,6 +131,10 @@ export const HERO_COPY_EXPERIMENT: HeroExperiment = {
         celebrate: {
           main: ["Marking a", "moment soon?"],
           support: "Birthdays, anniversaries, proposals.",
+        },
+        journey: {
+          main: ["One day,", "or a journey?"],
+          support: "Across Portugal, your rhythm.",
         },
         confirm: {
           main: ["Ready to", "build it?"],

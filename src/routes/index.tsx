@@ -15,9 +15,6 @@ import imgArrabidaViewpoint from "@/assets/tours/arrabida-wine-allinclusive/view
 import imgArrabidaWineLunch from "@/assets/tours/arrabida-wine-allinclusive/lunch.jpg";
 import imgSintraCaboDaRoca from "@/assets/tours/sintra-cascais/cabo-da-roca.jpg";
 import imgTomarCoimbra from "@/assets/tours/tomar-coimbra/hero.jpg";
-import imgArrabidaCoves from "@/assets/tours/arrabida-boat/coves.jpg";
-import imgSintraHero from "@/assets/tours/sintra-cascais/hero.jpg";
-import imgTroiaBeach from "@/assets/tours/troia-comporta/beach.jpg";
 
 import {
   ArrowRight,
@@ -27,7 +24,6 @@ import {
   MessageCircle,
   Compass,
   Feather,
-  LifeBuoy,
 } from "lucide-react";
 import { PlatformBadge } from "@/components/PlatformBadge";
 import { StudioLivePreview } from "@/components/home/StudioLivePreview";
