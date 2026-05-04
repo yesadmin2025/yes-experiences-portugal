@@ -116,48 +116,54 @@ const HERO_SCENE_DURATION_MS = 6500;
 const HERO_SCENES = [
   {
     id: "opening",
-    // Scene 1 — Coast (real owned hero coast footage). Portugal opens.
+    // Scene 1 — Coast: Portugal opens. H1 carries the main line; we
+    // still expose a supporting microline below it for cinematic rhythm.
     image: heroImg,
     video: "/video/hero-coast.mp4",
     position: "50% 52%",
     pan: "drift-left" as const,
     main: [] as readonly string[],
+    support: "Private. Local. Yours.",
   },
   {
     id: "hidden",
-    // Scene 2 — Hidden cove, aerial drone over turquoise water.
+    // Scene 2 — Hidden cove / village street: beyond the obvious.
     image: imgArrabidaCoves,
     video: sceneHiddenCove.url,
     position: "52% 50%",
     pan: "drift-left" as const,
-    main: ["Hidden places."] as readonly string[],
+    main: ["Hidden places,", "chosen your way."] as readonly string[],
+    support: "Beyond the obvious.",
   },
   {
     id: "local-moments",
-    // Scene 3 — Local table, wine pour in a vineyard.
+    // Scene 3 — Local table, wine, market, food.
     image: imgArrabidaWineLunch,
     video: sceneLocalTable.url,
     position: "50% 56%",
     pan: "push-in" as const,
-    main: ["Local tables."] as readonly string[],
+    main: ["Local moments,", "shaped around you."] as readonly string[],
+    support: "Food, wine, people, rhythm.",
   },
   {
     id: "occasions",
-    // Scene 4 — Hidden Lisbon street at golden hour.
+    // Scene 4 — Couple / celebration / private group moment.
     image: imgArrabidaViewpoint,
     video: sceneHiddenStreet.url,
     position: "50% 50%",
     pan: "drift-left" as const,
-    main: ["Your moments."] as readonly string[],
+    main: ["For a day,", "a celebration,", "or something unforgettable."] as readonly string[],
+    support: "Your occasion sets the rhythm.",
   },
   {
     id: "action",
-    // Scene 5 — Aerial route across Portugal: the close.
+    // Scene 5 — Route / journey / studio close. CTAs reveal here.
     image: imgTomarCoimbra,
     video: sceneRoutePortugal.url,
     position: "50% 50%",
     pan: "pull-back" as const,
-    main: ["Build it live."] as readonly string[],
+    main: ["Build it live.", "Confirm instantly."] as readonly string[],
+    support: "No forms. No waiting.",
   },
 ] as const;
 
