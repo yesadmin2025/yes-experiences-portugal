@@ -396,9 +396,29 @@ function HomePage() {
     return () => mq.removeEventListener?.("change", onChange);
   }, []);
 
-  // Drive the active chapter index from the film's currentTime. The
-  // ?hero=last query param freezes on the last chapter for byte-exact
-  // copy-lock + visual-regression tests.
+  // Auto-synced chapter timeline. The manifest declares chapter windows
+  // for the canonical 41.5s film, but the actual `<video>` may differ
+  // (re-encode, alternate source). On `loadedmetadata` we read the real
+  // duration and scale every chapter's startTime/endTime proportionally
+  // so overlays NEVER desync from the underlying playback. If the
+  // duration matches within 0.25s we keep the manifest values verbatim
+  // (avoids floating-point drift on the canonical asset).
+  const [heroTimeline, setHeroTimeline] = useState<
+    readonly { id: string; startTime: number; endTime: number }[]
+  >(() => HERO_SCENES.map((s) => ({ id: s.id, startTime: s.startTime, endTime: s.endTime })));
+
+  // Cross-fade transition state. When the active chapter changes we keep
+  // the previous chapter rendered for OVERLAP_MS so its copy fades OUT
+  // while the next fades IN — perfectly smooth, no binary swap.
+  const HERO_OVERLAP_MS = 600;
+  const [heroPrevIndex, setHeroPrevIndex] = useState<number | null>(null);
+  const [heroTransitionStart, setHeroTransitionStart] = useState<number>(0);
+  const [heroFadeAlpha, setHeroFadeAlpha] = useState<number>(1);
+
+  // Drive the active chapter index from the film's currentTime — using
+  // the auto-synced timeline above. The ?hero=last query param freezes
+  // on the last chapter for byte-exact copy-lock + visual-regression
+  // tests.
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (heroFreezeOnLast) {
@@ -410,30 +430,68 @@ function HomePage() {
     );
     if (!video) return;
 
+    // Sync chapter windows to the real video duration once metadata
+    // arrives. Scaled timeline = manifest * (actualDuration / 41.5).
+    const syncTimeline = () => {
+      const actual = video.duration;
+      if (!Number.isFinite(actual) || actual <= 0) return;
+      const canonical = 41.5;
+      if (Math.abs(actual - canonical) <= 0.25) return; // canonical asset
+      const ratio = actual / canonical;
+      setHeroTimeline(
+        HERO_SCENES.map((s) => ({
+          id: s.id,
+          startTime: s.startTime * ratio,
+          endTime: s.endTime * ratio,
+        })),
+      );
+    };
+    if (video.readyState >= 1) syncTimeline();
+    else video.addEventListener("loadedmetadata", syncTimeline, { once: true });
+
     let raf = 0;
+    // Eased cross-fade alpha ∈ [0,1]: 0 = previous fully visible,
+    // 1 = next fully visible. Cosine ease produces a calm, premium
+    // S-curve — no linear pop, no spring.
+    const easeInOut = (x: number) =>
+      x <= 0 ? 0 : x >= 1 ? 1 : 0.5 - 0.5 * Math.cos(Math.PI * x);
+
     const tick = () => {
       const t = video.currentTime;
-      // Find the chapter whose [startTime, endTime] window contains t.
-      // If t falls in a transition gap (e.g. 5.0–5.4s), keep the
-      // previous chapter so copy doesn't blink off-screen.
       let nextIndex = -1;
-      for (let i = 0; i < HERO_SCENES.length; i += 1) {
-        const s = HERO_SCENES[i];
+      for (let i = 0; i < heroTimeline.length; i += 1) {
+        const s = heroTimeline[i];
         if (t >= s.startTime && t <= s.endTime) {
           nextIndex = i;
           break;
         }
       }
       if (nextIndex !== -1) {
-        setHeroSceneIndex((prev) => (prev === nextIndex ? prev : nextIndex));
+        setHeroSceneIndex((prev) => {
+          if (prev === nextIndex) return prev;
+          // Boundary crossed — start a fresh overlap window.
+          setHeroPrevIndex(prev);
+          setHeroTransitionStart(performance.now());
+          setHeroFadeAlpha(0);
+          return nextIndex;
+        });
       }
+      // Advance the eased alpha for an in-flight transition.
+      setHeroPrevIndex((prev) => {
+        if (prev === null) return prev;
+        const elapsed = performance.now() - heroTransitionStart;
+        const linear = Math.min(1, elapsed / HERO_OVERLAP_MS);
+        setHeroFadeAlpha(easeInOut(linear));
+        return linear >= 1 ? null : prev;
+      });
       raf = window.requestAnimationFrame(tick);
     };
     raf = window.requestAnimationFrame(tick);
     return () => {
       if (raf) window.cancelAnimationFrame(raf);
+      video.removeEventListener("loadedmetadata", syncTimeline);
     };
-  }, [heroFreezeOnLast, heroScenes.length]);
+  }, [heroFreezeOnLast, heroScenes.length, heroTimeline, heroTransitionStart]);
 
 
   // Homepage motion controller — `[data-motion]` / `.motion-in`.
