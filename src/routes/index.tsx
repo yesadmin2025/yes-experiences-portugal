@@ -964,6 +964,7 @@ function HomePage() {
               />
             </div>
           </div>
+          </div>
           {/* Soft transition into the next section — gentle ivory fade
               so the trust strip lands without a hard edge. */}
           <div
