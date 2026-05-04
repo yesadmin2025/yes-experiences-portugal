@@ -24,20 +24,27 @@
  * story starts with the guest's imagination, not logistics.
  */
 
-// Posters and videos live in `public/video/real/` so they're served
-// at stable URLs (same-origin, cacheable, no Vite hashing). Reference
-// them as plain absolute paths — no import indirection.
-const imgVineyard = "/video/real/posters/vineyard-walk.jpg";
-const imgPier = "/video/real/posters/carrasqueira-pier.jpg";
-const imgTasting = "/video/real/posters/vineyard-tasting.jpg";
-const imgToast = "/video/real/posters/friends-toast.jpg";
-const imgCellar = "/video/real/posters/wine-cellar.jpg";
+// Posters live in `public/video/posters/` (first-frame stills extracted
+// from each clip — guarantees the poster matches the video). Videos
+// are served from Lovable's stable asset CDN — we resolve the URL from
+// each clip's `.asset.json` manifest at build time so renames stay safe.
+import sceneCoastAsset from "/public/video/scene-coast-arrabida.mp4.asset.json";
+import sceneStreetAsset from "/public/video/scene-hidden-street.mp4.asset.json";
+import sceneTableAsset from "/public/video/scene-azeitao-table.mp4.asset.json";
+import sceneCelebrationAsset from "/public/video/scene-celebration.mp4.asset.json";
+import sceneRouteAsset from "/public/video/scene-route-portugal.mp4.asset.json";
 
-const vineyardVideo = "/video/real/vineyard-walk.mp4";
-const pierVideo = "/video/real/carrasqueira-pier.mp4";
-const tastingVideo = "/video/real/vineyard-tasting.mp4";
-const toastVideo = "/video/real/friends-toast.mp4";
-const cellarVideo = "/video/real/wine-cellar.mp4";
+const imgCoast = "/video/posters/scene-coast-arrabida.jpg";
+const imgStreet = "/video/posters/scene-hidden-street.jpg";
+const imgTable = "/video/posters/scene-azeitao-table.jpg";
+const imgCelebration = "/video/posters/scene-celebration.jpg";
+const imgRoute = "/video/posters/scene-route-portugal.jpg";
+
+const coastVideo: string = sceneCoastAsset.url;
+const streetVideo: string = sceneStreetAsset.url;
+const tableVideo: string = sceneTableAsset.url;
+const celebrationVideo: string = sceneCelebrationAsset.url;
+const routeVideo: string = sceneRouteAsset.url;
 
 export type HeroPan = "drift-left" | "drift-right" | "push-in" | "pull-back";
 
