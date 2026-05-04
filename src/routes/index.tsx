@@ -5,41 +5,17 @@ import { SiteLayout } from "@/components/SiteLayout";
 import { FAQ } from "@/components/FAQ";
 import { CtaButton } from "@/components/ui/CtaButton";
 
-import heroImg from "@/assets/hero-coast.jpg";
-
-// Real Viator-sourced tour photography — every card maps to an actual
-// Signature tour. No stock or invented imagery.
-// Each Occasions card image is chosen to MATCH its theme:
-//  · Proposals    → quiet Arrábida viewpoint (intimate, private moment)
-//  · Celebrations → Arrábida wine lunch table (gathering, shared joy)
-//  · Corporate    → Cabo da Roca cliffs (premium, group-scale, non-religious)
-//  · Multi-day    → Tomar–Coimbra (multi-region journey, not a single beach)
+// Real Viator-sourced tour photography used by the Occasions / Signature
+// cards on this page. Hero-scene imagery is declared in the manifest at
+// `src/content/hero-scenes-manifest.ts` (single source of truth, feeds
+// both the route and the credits modal).
 import imgArrabidaViewpoint from "@/assets/tours/arrabida-wine-allinclusive/viewpoint.jpg";
 import imgArrabidaWineLunch from "@/assets/tours/arrabida-wine-allinclusive/lunch.jpg";
 import imgSintraCaboDaRoca from "@/assets/tours/sintra-cascais/cabo-da-roca.jpg";
 import imgTomarCoimbra from "@/assets/tours/tomar-coimbra/hero.jpg";
-// Additional story beats — celebration estate + multi-region route.
-// Extra real Viator-sourced beats used by the cinematic hero rotation —
-// each scene gets a distinct, story-rich Portugal image so the visuals
-// carry the narrative even before the user reads the copy.
 import imgArrabidaCoves from "@/assets/tours/arrabida-boat/coves.jpg";
 import imgSintraHero from "@/assets/tours/sintra-cascais/hero.jpg";
 import imgTroiaBeach from "@/assets/tours/troia-comporta/beach.jpg";
-// Authentically Portuguese poster fallbacks for the cinematic hero —
-// Sesimbra fishing village (hidden street), Azeitão wine table (local
-// moments), Cabo da Roca cliffs (Atlantic route close).
-import imgSesimbraVillage from "@/assets/tours/arrabida-boat/sesimbra.jpg";
-import imgAzeitaoWinery from "@/assets/tours/azeitao-cheese/winery.jpg";
-
-// Cinematic stock-style Portugal video clips, one per hero scene.
-// Real-look footage (aerial coves, vineyard table, alfama street, route
-// across central Portugal). Served via CDN through .asset.json pointers
-// so they never bloat the JS bundle.
-import sceneHiddenCove from "../../public/video/scene-hidden-cove.mp4.asset.json";
-import sceneLocalTable from "../../public/video/scene-local-table.mp4.asset.json";
-import sceneHiddenStreet from "../../public/video/scene-hidden-street.mp4.asset.json";
-import sceneRoutePortugal from "../../public/video/scene-route-portugal.mp4.asset.json";
-import sceneCelebration from "../../public/video/scene-celebration.mp4.asset.json";
 
 import {
   ArrowRight,
