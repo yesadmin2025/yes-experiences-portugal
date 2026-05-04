@@ -728,7 +728,7 @@ function HomePage() {
             <span key={heroScene.id} className="hero-story-progress-fill" />
          </div>
 
-         <div className="container-x relative z-10 pb-16 md:pb-32 pt-28 md:pt-40">
+         <div className="container-x relative z-10 pb-14 md:pb-32 pt-24 md:pt-40">
            <div className="max-w-[20rem] sm:max-w-2xl md:max-w-3xl text-[color:var(--ivory)]">
              {/* Eyebrow — fixed brand anchor on every scene. */}
              <span className="inline-flex items-center gap-2 sm:gap-3.5 max-w-full text-[10px] xs:text-[10.5px] sm:text-[12px] md:text-[12.5px] uppercase tracking-[0.24em] xs:tracking-[0.26em] sm:tracking-[0.3em] md:tracking-[0.32em] text-[color:var(--gold)] opacity-0 animate-[heroFade_0.9s_ease-out_0.20s_forwards]">
