@@ -1,8 +1,9 @@
 {
   "ci": {
     "collect": {
-      "staticDistDir": "./dist/client",
-      "url": ["http://localhost/index.html"],
+      "startServerCommand": "bun run preview --port 4173",
+      "startServerReadyPattern": "Local:",
+      "url": ["http://localhost:4173/"],
       "numberOfRuns": 1,
       "settings": {
         "preset": "desktop",
