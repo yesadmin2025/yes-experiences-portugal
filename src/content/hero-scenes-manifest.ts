@@ -115,10 +115,7 @@ export const HERO_SCENES: readonly HeroScene[] = [
     pan: "pull-back",
     startTime: 0.0,
     endTime: 4.0,
-    // Scene 1's main visual IS the canonical H1 above ("Portugal is the
-    // stage. / You write the story.") — duplicating it as a scene-message
-    // would stack two identical headlines. The H1 carries the 0–4s copy.
-    main: [],
+    main: ["Portugal is the stage.", "You write the story."],
     support: "Private experiences, shaped around you.",
     credits: [filmCredit],
   },

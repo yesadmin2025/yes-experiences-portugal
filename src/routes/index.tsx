@@ -254,22 +254,6 @@ export const Route = createFileRoute("/")({
       { property: "og:image", content: heroImg },
       { property: "twitter:image", content: heroImg },
     ],
-    links: [
-      // Kick off the hero film + poster downloads in parallel with HTML
-      // parse so the cinematic stage paints without stutter on mobile.
-      {
-        rel: "preload",
-        as: "image",
-        href: HERO_FILM.poster,
-        fetchpriority: "high",
-      },
-      {
-        rel: "preload",
-        as: "video",
-        href: HERO_FILM.src1080,
-        type: "video/mp4",
-      },
-    ],
   }),
   component: HomePage,
 });
@@ -771,23 +755,10 @@ function HomePage() {
                   }
                 }
               }}
-              onError={(e) => {
-                // 1080p failed → swap to 720p once. If 720p also fails,
-                // the poster image stays visible (no broken UI).
-                const v = e.currentTarget;
-                if (v.dataset.heroFilmFallback !== "1" && !saveDataMode) {
-                  v.dataset.heroFilmFallback = "1";
-                  // eslint-disable-next-line no-console
-                  console.warn(
-                    `[hero] 1080p film failed; falling back to 720p (${HERO_FILM.src720}).`,
-                  );
-                  v.src = HERO_FILM.src720;
-                  v.load();
-                  return;
-                }
+              onError={() => {
                 // eslint-disable-next-line no-console
                 console.error(
-                  `[hero] continuous film failed to load — poster fallback active (${HERO_FILM.poster}).`,
+                  `[hero] continuous film failed to load (${HERO_FILM.src1080}).`,
                 );
               }}
             />
@@ -884,52 +855,39 @@ function HomePage() {
                {HERO_COPY.subheadline}
              </p>
 
-              {/* Chapter copy stack — ALL six chapter messages live in the
-                  DOM at once, stacked absolutely in the same slot. Only the
-                  active chapter carries `.is-on`; the rest carry `.is-off`.
-                  CSS transitions opacity 700ms in BOTH directions, giving a
-                  true cross-fade (in AND out) without any layout pop. The
-                  first chapter still routes through the cinematic H1 above,
-                  so its scene-message renders sr-only for contract parity. */}
-              <div className="hero-scene-stack relative mt-3.5 md:mt-6 min-h-[5.5rem] xs:min-h-[6rem] sm:min-h-[7rem] md:min-h-[8rem]">
-                {heroScenes.map((scene, idx) => {
-                  const isActive = idx === heroSceneIndex;
-                  const isFirst = idx === 0;
-                  return (
-                    <div
-                      key={`scene-msg-${scene.id}`}
-                      data-hero-scene-msg={scene.id}
-                      aria-hidden={isActive ? undefined : true}
-                      className={`hero-scene-message ${isActive ? "is-on" : "is-off"} max-w-[18rem] xs:max-w-[20rem] sm:max-w-xl ${
-                        isFirst
-                          ? "sr-only"
-                          : "absolute inset-x-0 top-0"
-                      }`}
-                    >
-                      {scene.main.length > 0 ? (
-                        <p
-                          className={`hero-scene-main serif leading-[1.14] sm:leading-[1.1] md:leading-[1.06] tracking-[-0.018em] font-medium text-[color:var(--ivory)] [text-shadow:0_2px_4px_rgba(0,0,0,0.55),0_4px_22px_rgba(0,0,0,0.55)] ${
-                            scene.main.length >= 3
-                              ? "text-[1.25rem] xs:text-[1.4rem] sm:text-[1.85rem] md:text-[2.3rem]"
-                              : "text-[1.5rem] xs:text-[1.65rem] sm:text-[2.15rem] md:text-[2.65rem]"
-                          }`}
-                        >
-                          {scene.main.map((line, i) => (
-                            <span key={i} className="block">
-                              {line}
-                            </span>
-                          ))}
-                        </p>
-                      ) : null}
-                      {scene.support ? (
-                        <p className="hero-scene-supporting mt-2 md:mt-3.5 font-sans text-[11.5px] xs:text-[12px] sm:text-[13.5px] md:text-[14px] tracking-[0.01em] leading-[1.5] font-medium text-[color:var(--ivory)]/95 [text-shadow:0_1px_3px_rgba(0,0,0,0.7),0_2px_14px_rgba(0,0,0,0.6)]">
-                          {scene.support}
-                        </p>
-                      ) : null}
-                    </div>
-                  );
-                })}
-              </div>
+              {/* Single scene-message block — carries the ONE short cinematic
+                  line + optional supporting microline for the current scene.
+                  On scene 1 the canonical H1 already carries the message, so
+                  the scene-message stays in the DOM (sr-only) for contract
+                  parity but is not visually rendered — preventing the H1 +
+                  scene-main from stacking on top of each other on mobile. */}
+               <div
+                 key={`scene-msg-${heroScene.id}`}
+                 className={`hero-scene-message is-on max-w-[18rem] xs:max-w-[20rem] sm:max-w-xl ${
+                   heroSceneIndex === 0 ? "sr-only" : "mt-3.5 md:mt-6"
+                 }`}
+               >
+                   {heroScene.main.length > 0 ? (
+                     <p
+                       className={`hero-scene-main serif leading-[1.14] sm:leading-[1.1] md:leading-[1.06] tracking-[-0.018em] font-medium text-[color:var(--ivory)] [text-shadow:0_2px_4px_rgba(0,0,0,0.55),0_4px_22px_rgba(0,0,0,0.55)] ${
+                         heroScene.main.length >= 3
+                           ? "text-[1.25rem] xs:text-[1.4rem] sm:text-[1.85rem] md:text-[2.3rem]"
+                           : "text-[1.5rem] xs:text-[1.65rem] sm:text-[2.15rem] md:text-[2.65rem]"
+                       }`}
+                     >
+                       {heroScene.main.map((line, i) => (
+                         <span key={i} className="block">
+                           {line}
+                         </span>
+                       ))}
+                     </p>
+                   ) : null}
+                   {"support" in heroScene && heroScene.support ? (
+                     <p className="hero-scene-supporting mt-2 md:mt-3.5 font-sans text-[11.5px] xs:text-[12px] sm:text-[13.5px] md:text-[14px] tracking-[0.01em] leading-[1.5] font-medium text-[color:var(--ivory)]/95 [text-shadow:0_1px_3px_rgba(0,0,0,0.7),0_2px_14px_rgba(0,0,0,0.6)]">
+                       {heroScene.support}
+                     </p>
+                   ) : null}
+                </div>
 
              {/* Action block — CTAs + microcopy + brand signature appear
                  ONLY on scene 5 per the storytelling brief. */}
