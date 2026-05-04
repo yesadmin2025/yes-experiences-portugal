@@ -166,7 +166,7 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: celebrationVideo,
     // Candlelit wine-cellar — atmospheric, no faces in frame, so we
     // sit slightly above centre to feature the warm light arches.
-    position: "50% 45%",
+    position: { mobile: "50% 52%", tablet: "50% 48%", desktop: "50% 45%" },
     pan: "drift-right",
     main: ["For proposals,", "celebrations,", "and moments worth keeping."],
     support: "Anniversaries, birthdays, moments that stay.",
