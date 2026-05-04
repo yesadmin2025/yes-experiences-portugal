@@ -738,13 +738,15 @@ function HomePage() {
            A cinematic story of Portugal — coastal roads, intimate local tables, hidden coves, estate gardens and cliff horizons.
          </span>
 
-         {/* Cinematic readability overlay — stronger bottom anchor so a
-             single short message + eyebrow stay legible on warm,
-             bright frames (wine tables, viewpoints) without crushing
-             detail on darker frames. */}
-         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(20,18,16,0.42)_0%,rgba(20,18,16,0.10)_38%,rgba(20,18,16,0.18)_60%,rgba(20,18,16,0.62)_100%)] pointer-events-none z-[2]" />
-         <div className="absolute inset-0 bg-[radial-gradient(120%_70%_at_30%_85%,rgba(20,16,12,0.40)_0%,rgba(20,16,12,0)_55%)] pointer-events-none z-[2]" />
-         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(46,30,18,0.10)_0%,rgba(46,30,18,0)_55%,rgba(46,30,18,0.10)_100%)] mix-blend-multiply pointer-events-none z-[2]" />
+         {/* Cinematic readability overlay — layered scrim ensures the
+             eyebrow + headline + supporting line stay AA-legible on
+             every frame, including bright vineyard / wine-table /
+             sunlit-village clips. Top→bottom: gentle top vignette,
+             strong bottom anchor (where text lives), and a low-left
+             radial focus that pools shadow exactly under the copy. */}
+         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(20,18,16,0.48)_0%,rgba(20,18,16,0.14)_30%,rgba(20,18,16,0.30)_55%,rgba(14,12,10,0.78)_100%)] pointer-events-none z-[2]" />
+         <div className="absolute inset-0 bg-[radial-gradient(140%_85%_at_22%_92%,rgba(14,10,8,0.62)_0%,rgba(14,10,8,0.18)_45%,rgba(14,10,8,0)_70%)] pointer-events-none z-[2]" />
+         <div className="absolute inset-x-0 bottom-0 h-[58%] bg-[linear-gradient(180deg,rgba(46,30,18,0)_0%,rgba(30,20,12,0.18)_45%,rgba(20,14,10,0.55)_100%)] mix-blend-multiply pointer-events-none z-[2]" />
 
           {/* Subtle story progress — a thin cinematic timeline at the
               bottom of the hero. Re-keys per scene so the fill replays. */}
@@ -774,10 +776,10 @@ function HomePage() {
                  lock still resolves it as visible). On scenes 2–4 the H1
                  is removed from the visual flow entirely so each scene
                  carries a single short message. */}
-             {(heroSceneIndex === 0 || isHeroActionScene) ? (
-               <h1
-                 data-hero-field="headlineLine1 headlineLine2"
-                 data-hero-anchor="spotlight"
+              {heroSceneIndex === 0 ? (
+                <h1
+                  data-hero-field="headlineLine1 headlineLine2"
+                  data-hero-anchor="spotlight"
                  className="hero-h1 hero-h1-cinematic serif mt-3.5 md:mt-6 text-[1.4rem] xs:text-[1.6rem] sm:text-[2.15rem] md:text-[2.95rem] lg:text-[3.4rem] leading-[1.16] sm:leading-[1.08] md:leading-[1.04] tracking-[-0.02em] text-[color:var(--ivory)] text-left opacity-0 animate-[heroFade_1s_ease-out_0.55s_forwards] [text-shadow:0_2px_22px_rgba(0,0,0,0.4)]"
                >
                  <span
