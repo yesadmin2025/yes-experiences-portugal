@@ -167,6 +167,10 @@ export const HERO_SCENES: readonly HeroScene[] = [
     endTime: 21.0,
     main: ["For corporate groups", "and private journeys."],
     support: "Carefully coordinated. Locally guided.",
+    // Vineyard table beat: faces sit in the lower half of the frame, so
+    // the chapter copy anchors to the top safe-zone instead of the
+    // default bottom anchor. The video itself never changes.
+    safeZone: "top",
     credits: [filmCredit],
   },
   {
