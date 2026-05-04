@@ -72,23 +72,23 @@ export const HERO_COPY_EXPERIMENT: HeroExperiment = {
         "Spell out the concrete benefit on every scene — likely to lift " +
         "click-through with first-time visitors who scan more than they read.",
       scenes: {
-        arrival: {
-          main: ["Picked up", "at your door."],
-          support: "Private driver. Anywhere in the region.",
+        imagine: {
+          main: ["Design your", "Portugal day."],
+          support: "Built around how you want to feel.",
         },
-        discovery: {
-          main: ["See places", "tours don't reach."],
-          support: "Routed by people who live here.",
+        choose: {
+          main: ["Pick the route.", "We drive it."],
+          support: "Coast, vine, ruins, river — your call.",
         },
-        "local-hands": {
-          main: ["Hosted by", "local families."],
-          support: "Real wineries. Real kitchens.",
+        taste: {
+          main: ["Taste estates", "tours skip."],
+          support: "Hosted by the people who run them.",
         },
         celebrate: {
-          main: ["A day", "you'll talk about."],
+          main: ["Mark the day", "the right way."],
           support: "Birthdays, anniversaries, big yeses.",
         },
-        action: {
+        confirm: {
           main: ["Design it now.", "Confirmed instantly."],
           support: "No forms. No waiting.",
         },
@@ -100,15 +100,15 @@ export const HERO_COPY_EXPERIMENT: HeroExperiment = {
         "Lead with the visitor's own scenario as a question — higher " +
         "engagement, especially on mobile where dwell time is short.",
       scenes: {
-        arrival: {
-          main: ["Where should", "we meet you?"],
-          support: "We pick you up. Anywhere.",
+        imagine: {
+          main: ["What would", "your day be?"],
+          support: "Tell us how you want it to feel.",
         },
-        discovery: {
-          main: ["Want to see", "the real Portugal?"],
-          support: "The places locals keep.",
+        choose: {
+          main: ["Coast or", "vineyards first?"],
+          support: "Your route, drawn live.",
         },
-        "local-hands": {
+        taste: {
           main: ["Wine, food,", "or both today?"],
           support: "Hosted by real families.",
         },
@@ -116,7 +116,7 @@ export const HERO_COPY_EXPERIMENT: HeroExperiment = {
           main: ["Marking a", "moment soon?"],
           support: "Birthdays, anniversaries, proposals.",
         },
-        action: {
+        confirm: {
           main: ["Ready to", "build it?"],
           support: "No forms. No waiting.",
         },
