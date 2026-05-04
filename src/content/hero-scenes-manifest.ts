@@ -56,7 +56,7 @@ const imgGroups = "/video/real/posters/scene-celebrate.jpg";
 const imgRoute = "/video/real/posters/scene-confirm.jpg";
 
 const invitationVideo =
-  "/__l5e/assets-v1/7b5ce8f2-65f9-485f-9184-64a4a45e0148/scene-imagine.mp4";
+  "/__l5e/assets-v1/1cc0e432-974d-4a92-bd50-9d0ce71cb7fb/scene-imagine.mp4";
 const privateDayVideo =
   "/__l5e/assets-v1/0a645ca2-c1fb-40c9-95ff-43b28dc47822/scene-choose.mp4";
 const celebrationVideo =
@@ -64,7 +64,7 @@ const celebrationVideo =
 const groupsVideo =
   "/__l5e/assets-v1/edc0e2bc-5efa-4e6a-9188-3aac141c1785/scene-celebrate.mp4";
 const routeVideo =
-  "/__l5e/assets-v1/c8358905-b88c-497d-81e8-d48c912bea25/scene-confirm.mp4";
+  "/__l5e/assets-v1/823963eb-81e2-4061-8e25-a1eb6a1a2435/scene-confirm.mp4";
 
 export type HeroPan = "drift-left" | "drift-right" | "push-in" | "pull-back";
 
@@ -165,8 +165,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     // on tall mobile (393×587) and don't crop on landscape tablet.
     position: { mobile: "50% 32%", tablet: "50% 38%", desktop: "50% 42%" },
     pan: "drift-left",
-    main: ["For couples, families", "and private groups."],
-    support: "Your people. Your pace. Your Portugal.",
+    main: ["Private days for", "couples and families."],
+    support: "Your people, your pace — designed around you.",
     credits: [
       {
         kind: "video",
@@ -185,8 +185,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     // toward classical centre on wider viewports.
     position: { mobile: "50% 38%", tablet: "50% 44%", desktop: "50% 48%" },
     pan: "drift-right",
-    main: ["For proposals,", "celebrations,", "and moments worth keeping."],
-    support: "Anniversaries, birthdays, sunset toasts.",
+    main: ["Proposals, anniversaries,", "moments worth keeping."],
+    support: "A sunset toast, a private estate — quietly arranged.",
     credits: [
       {
         kind: "video",
@@ -204,8 +204,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     // they never get clipped by the bottom gradient on mobile.
     position: { mobile: "50% 36%", tablet: "50% 42%", desktop: "50% 48%" },
     pan: "push-in",
-    main: ["For teams, groups", "and shared journeys."],
-    support: "Private, local and carefully coordinated.",
+    main: ["Teams, groups,", "shared journeys."],
+    support: "Private and locally coordinated — start to finish.",
     credits: [
       {
         kind: "video",
@@ -222,7 +222,7 @@ export const HERO_SCENES: readonly HeroScene[] = [
     position: { mobile: "50% 50%", tablet: "50% 50%", desktop: "50% 50%" },
     pan: "push-in",
     main: ["Design it live.", "Confirm instantly."],
-    support: "Real local guidance whenever you want it.",
+    support: "Real local guidance, every step of the way.",
     credits: [
       {
         kind: "video",
