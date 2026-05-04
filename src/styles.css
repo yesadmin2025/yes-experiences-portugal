@@ -1848,10 +1848,13 @@
     transform: none !important;
   }
   .hero-scene-message.is-on .hero-scene-main,
+  .hero-scene-message.is-on .hero-scene-main > span,
   .hero-scene-message.is-on .hero-scene-supporting {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;
+    filter: none !important;
+    letter-spacing: 0.22em !important;
   }
 }
 
