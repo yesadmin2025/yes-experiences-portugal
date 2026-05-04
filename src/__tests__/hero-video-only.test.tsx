@@ -206,7 +206,7 @@ describe("hero — runtime poster guard + video-only mode", () => {
     const errorMessages = errorSpy.mock.calls.map((c: unknown[]) => String(c[0]));
     expect(
       errorMessages.some(
-        (m) => m.startsWith("[hero] poster probe failed") && m.includes("no image fallback"),
+        (m: string) => m.startsWith("[hero] poster probe failed") && m.includes("no image fallback"),
       ),
     ).toBe(true);
 
