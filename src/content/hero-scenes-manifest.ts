@@ -94,10 +94,10 @@ export type HeroScene = {
 const filmCredit: HeroAssetCredit = {
   kind: "video",
   location:
-    "Continuous cinematic film — Comporta beach, Setúbal vineyards, Alentejo estate, coastal road across Portugal",
+    "Real YES Portugal footage — Comporta beach, Carrasqueira pier, Setúbal vineyard toast, minibus arrival, Tróia Roman ruins, azulejo workshop",
   source: "yes-experiences",
   license:
-    "AI-extended cinematic film, anchored on real YES Experiences poster frames",
+    "Stitched continuous film from real YES operation footage (no AI generation)",
 };
 
 /**
