@@ -418,8 +418,10 @@ function HomePage() {
 
   // Cross-fade transition state. When the active chapter changes we keep
   // the previous chapter rendered for OVERLAP_MS so its copy fades OUT
-  // while the next fades IN — perfectly smooth, no binary swap.
-  const HERO_OVERLAP_MS = 600;
+  // while the next fades IN. This is intentionally slower than the scene
+  // cut: the film can move first, then the copyright/copy breathes into
+  // the next beat with a premium dissolve instead of a binary swap.
+  const HERO_OVERLAP_MS = 1450;
   const [heroPrevIndex, setHeroPrevIndex] = useState<number | null>(null);
   const [heroTransitionStart, setHeroTransitionStart] = useState<number>(0);
   const [heroFadeAlpha, setHeroFadeAlpha] = useState<number>(1);
@@ -1016,13 +1018,14 @@ function HomePage() {
                           className="hero-scene-message is-on absolute inset-0 mt-3.5 md:mt-6 pointer-events-none"
                           style={{
                             opacity: 1 - heroFadeAlpha,
-                            // 140ms linear chase between the JS-quantized
+                            transform: `translate3d(0, ${(-4 * heroFadeAlpha).toFixed(2)}px, 0)`,
+                            // 220ms linear chase between the JS-quantized
                             // 5% alpha steps — long enough to smooth
                             // visible stair-stepping but well under the
-                            // 600ms cosine cross-fade window so the
+                            // 1450ms cosine cross-fade window so the
                             // overall S-curve shape is preserved.
-                            transition: "opacity 140ms linear",
-                            willChange: "opacity",
+                            transition: "opacity 220ms linear, transform 220ms ease-out",
+                            willChange: "opacity, transform",
                           }}
                         >
                           <p
@@ -1053,13 +1056,18 @@ function HomePage() {
                   data-hero-overlay="current"
                   className={`hero-scene-message is-on relative ${
                     heroSceneIndex === 0 ? "sr-only" : "mt-3.5 md:mt-6"
+                  } ${
+                    heroPrevIndex !== null && heroPrevIndex !== heroSceneIndex
+                      ? "is-crossfading"
+                      : ""
                   }`}
                   style={
                     heroPrevIndex !== null && heroPrevIndex !== heroSceneIndex
                       ? {
                           opacity: heroFadeAlpha,
-                          transition: "opacity 140ms linear",
-                          willChange: "opacity",
+                          transform: `translate3d(0, ${((1 - heroFadeAlpha) * 4).toFixed(2)}px, 0)`,
+                          transition: "opacity 220ms linear, transform 220ms ease-out",
+                          willChange: "opacity, transform",
                         }
                       : undefined
                   }
