@@ -910,12 +910,17 @@ function HomePage() {
 
              {/* Action block — CTAs + microcopy + brand signature appear
                  ONLY on scene 5 per the storytelling brief. */}
-             {isHeroActionScene ? (
-               <div key="hero-action" className="hero-action-block mt-6 md:mt-9">
-                 <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-3.5 w-full max-w-[19rem] sm:max-w-lg">
-                    <Link
-                      to="/builder"
-                      data-hero-field="primaryCta"
+              {isHeroActionScene ? (
+                <div key="hero-action" className="hero-action-block mt-6 md:mt-9">
+                  <div
+                    role="group"
+                    aria-label="Hero actions — start designing your day or browse signature experiences"
+                    className="flex flex-col sm:flex-row gap-2.5 sm:gap-3.5 w-full max-w-[19rem] sm:max-w-lg"
+                  >
+                     <Link
+                       to="/builder"
+                       ref={heroPrimaryCtaRef}
+                       data-hero-field="primaryCta"
                       onClick={() => {
                         trackHeroEvent("cta_click", {
                           sceneId: heroScene.id,
