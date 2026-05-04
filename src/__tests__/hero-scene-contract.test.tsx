@@ -30,7 +30,7 @@ import {
 } from "@/content/hero-scene-variants";
 import { HERO_COPY } from "@/content/hero-copy";
 
-const MAX_MAIN_LINES = 2;
+const MAX_MAIN_LINES = 3;
 const MAX_WORDS_PER_LINE = 6;
 const MAX_SUPPORT_WORDS = 9;
 const MAX_SUPPORT_SENTENCES = 2;
