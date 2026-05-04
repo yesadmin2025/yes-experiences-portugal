@@ -1043,10 +1043,10 @@
     /* Hairline gold border — matches the primary's restrained edge
        at the EXACT SAME 1px weight so primary + secondary render at
        identical rendered widths down to the sub-pixel. The "presence"
-       comes from the diffuse glow below, not the line. Slightly higher
-       gold opacity (62%) compensates for the absent fill so the edge
-       still reads as a deliberate gold rim against the hero photograph. */
-    border: 1px solid color-mix(in oklab, var(--gold) 62%, transparent);
+       comes from the diffuse glow below, not the line. Bumped to 76%
+       so the gold rim reads clearly on the cinematic hero photograph
+       without losing the editorial restraint. */
+    border: 1px solid color-mix(in oklab, var(--gold) 76%, transparent);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
     /* No text-shadow at rest — clean ivory type. */
