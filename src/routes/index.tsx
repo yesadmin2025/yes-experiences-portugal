@@ -789,20 +789,13 @@ function HomePage() {
             {HERO_SCENES.map((scene, index) => {
               const isActive = index === heroSceneIndex;
               const isNext = index === heroSceneIndex + 1;
-              // Scenes 1–5 are video-only. We mount the <video> for the
-              // ACTIVE and NEXT scene (max two live <video> in the DOM),
-              // and we ALWAYS mount it as long as `scene.video` exists —
-              // there is no image-only fallback mode, even on Save-Data
-              // or reduced-motion. Reduced-motion users simply don't get
-              // autoplay (the first-frame poster + decoded frame are
-              // still shown).
+              // Hero is video-only on EVERY slide — no static fallback.
+              // We always mount the <video> element so the user never
+              // sees a frozen poster on inactive slides; the active
+              // clip loads as `auto`, the next as `metadata`, and the
+              // rest stay at `none` (browser fetches a few KB to paint
+              // the first frame, no full download).
               const hasVideo = Boolean(scene.video);
-              const shouldMountVideo = hasVideo && (isActive || isNext);
-              // Tiered preload — active loads aggressively, next prefetches
-              // only metadata + first bytes, others never appear here.
-              // Save-Data clamps the active clip to `metadata` too, so
-              // the first frame paints quickly without fetching the full
-              // mp4 until the slide actually goes active.
               const videoPreload: "auto" | "metadata" | "none" = isActive
                 ? saveDataMode
                   ? "metadata"
@@ -818,21 +811,33 @@ function HomePage() {
                   data-hero-scene-id={scene.id}
                   aria-hidden="true"
                 >
-                  {/* Video-only hero — no <img> placeholder. The native
-                      `poster` attribute on <video> handles first-paint;
-                      the runtime probe above logs errors for missing
-                      posters but the video carries the scene regardless. */}
-                  {shouldMountVideo && scene.video ? (
+                  {hasVideo && scene.video ? (
                     <video
                       src={scene.video}
                       poster={scene.image}
                       className="absolute inset-0 w-full h-full object-cover"
                       style={{ objectPosition: scene.position.desktop }}
-                      autoPlay={isActive && videosAllowed}
+                      autoPlay
                       muted
                       loop
                       playsInline
                       preload={videoPreload}
+                      ref={(el) => {
+                        if (!el) return;
+                        // Some embedded contexts (Lovable preview iframe,
+                        // reduced-motion environments) ignore the
+                        // declarative `autoplay` attribute. Kicking
+                        // `.play()` on the active slide guarantees the
+                        // hero is ALWAYS in motion as designed.
+                        if (isActive && videosAllowed) {
+                          const p = el.play();
+                          if (p && typeof p.catch === "function") {
+                            p.catch(() => {
+                              /* autoplay rejection — leave first frame visible */
+                            });
+                          }
+                        }
+                      }}
                       onError={() => {
                         // eslint-disable-next-line no-console
                         console.error(
