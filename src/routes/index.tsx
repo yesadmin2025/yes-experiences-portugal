@@ -1112,7 +1112,7 @@ function HomePage() {
       <section
         id="audience-bridge"
         aria-labelledby="audience-bridge-title"
-        className="section-enter bg-[color:var(--ivory)] border-b border-[color:var(--border)] py-16 md:py-24"
+        className="section-enter bg-[color:var(--ivory)] border-b border-[color:var(--border)] py-12 md:py-20"
       >
         <div className="container-x">
           <div className="reveal max-w-2xl mx-auto text-center px-2">
