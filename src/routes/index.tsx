@@ -701,17 +701,24 @@ function HomePage() {
             {HERO_SCENES.map((scene, index) => {
               const isActive = index === heroSceneIndex;
               const isNext = index === heroSceneIndex + 1;
-              // Mount the video only for the ACTIVE and NEXT scene so we
-              // never have more than two mp4 elements live in the DOM.
-              // On low-bandwidth / reduced-motion / very narrow devices
-              // we skip videos entirely and the still poster carries the
-              // scene (already animated by the Ken-Burns pan).
-              const shouldMountVideo =
-                videosAllowed && Boolean(scene.video) && (isActive || isNext);
+              // Scenes 1–5 are video-only. We mount the <video> for the
+              // ACTIVE and NEXT scene (max two live <video> in the DOM),
+              // and we ALWAYS mount it as long as `scene.video` exists —
+              // there is no image-only fallback mode, even on Save-Data
+              // or reduced-motion. Reduced-motion users simply don't get
+              // autoplay (the first-frame poster + decoded frame are
+              // still shown).
+              const hasVideo = Boolean(scene.video);
+              const shouldMountVideo = hasVideo && (isActive || isNext);
               // Tiered preload — active loads aggressively, next prefetches
               // only metadata + first bytes, others never appear here.
+              // Save-Data clamps the active clip to `metadata` too, so
+              // the first frame paints quickly without fetching the full
+              // mp4 until the slide actually goes active.
               const videoPreload: "auto" | "metadata" | "none" = isActive
-                ? "auto"
+                ? saveDataMode
+                  ? "metadata"
+                  : "auto"
                 : isNext
                   ? "metadata"
                   : "none";
@@ -720,8 +727,14 @@ function HomePage() {
                   key={scene.id}
                   className={`hero-story-slide absolute inset-0 w-full h-full ${isActive ? "is-active" : ""}`}
                   data-hero-pan={scene.pan}
+                  data-hero-scene-id={scene.id}
                   aria-hidden="true"
                 >
+                  {/* First-paint placeholder ONLY — the poster jpg paints
+                      for ~1 frame before the <video> below decodes its
+                      first frame. It is NEVER a fallback for video. If
+                      the poster 404s the runtime guard above logs an
+                      error; the video carries the scene regardless. */}
                   <img
                     src={scene.image}
                     alt=""
@@ -732,6 +745,12 @@ function HomePage() {
                     fetchPriority={index === 0 ? "high" : undefined}
                     loading={index === 0 ? undefined : "lazy"}
                     decoding={index === 0 ? undefined : "async"}
+                    onError={() => {
+                      // eslint-disable-next-line no-console
+                      console.error(
+                        `[hero] poster failed to load for scene "${scene.id}" (${scene.image}). Video-only playback continues — no image fallback.`,
+                      );
+                    }}
                   />
                   {shouldMountVideo && scene.video ? (
                     <video
@@ -739,11 +758,17 @@ function HomePage() {
                       poster={scene.image}
                       className="absolute inset-0 w-full h-full object-cover"
                       style={{ objectPosition: scene.position }}
-                      autoPlay={isActive}
+                      autoPlay={isActive && videosAllowed}
                       muted
                       loop
                       playsInline
                       preload={videoPreload}
+                      onError={() => {
+                        // eslint-disable-next-line no-console
+                        console.error(
+                          `[hero] video failed to load for scene "${scene.id}" (${scene.video}).`,
+                        );
+                      }}
                     />
                   ) : null}
                 </div>
