@@ -81,7 +81,7 @@ const FEATURED_TOUR_IDS = [
  * No invented stops. Imagery is real Viator-sourced operation
  * photography. AI is not used to shape any of these strings.
  * ────────────────────────────────────────────────────────────── */
-const HERO_SCENE_DURATION_MS = 6500;
+const HERO_SCENE_DURATION_MS = 5200;
 
 /* ──────────────────────────────────────────────────────────────────
  * Cinematic horizontal storytelling hero — 5 scenes, each a short
