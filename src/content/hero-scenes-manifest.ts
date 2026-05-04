@@ -115,7 +115,7 @@ export const HERO_SCENES: readonly HeroScene[] = [
     pan: "pull-back",
     startTime: 0.4,
     endTime: 5.0,
-    main: ["Portugal is the stage.", "You write the story."],
+    main: [],
     support: "Private experiences, shaped around you.",
     credits: [filmCredit],
   },
