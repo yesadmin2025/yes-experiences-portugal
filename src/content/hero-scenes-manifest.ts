@@ -202,7 +202,7 @@ export const HERO_SCENES: readonly HeroScene[] = [
     id: "confirm",
     image: imgRoute,
     video: routeVideo,
-    position: "50% 50%",
+    position: { mobile: "50% 50%", tablet: "50% 50%", desktop: "50% 50%" },
     pan: "push-in",
     main: ["Design it live.", "Confirm instantly."],
     support: "Real local guidance whenever you want it.",
