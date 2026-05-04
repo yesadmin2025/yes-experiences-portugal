@@ -155,7 +155,7 @@ export const HERO_SCENES: readonly HeroScene[] = [
     position: "50% 50%",
     pan: "push-in",
     main: ["You raise", "the glass."],
-    support: "A day, a celebration, a moment that stays.",
+    support: "A moment that stays.",
     credits: [
       {
         kind: "video",
@@ -172,7 +172,7 @@ export const HERO_SCENES: readonly HeroScene[] = [
     position: "50% 50%",
     pan: "pull-back",
     main: ["You design it.", "We confirm it."],
-    support: "Built live on the map. No forms. No waiting.",
+    support: "Drawn live. Confirmed instantly.",
     credits: [
       {
         kind: "video",
