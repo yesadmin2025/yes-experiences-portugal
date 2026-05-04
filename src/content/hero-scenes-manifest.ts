@@ -105,13 +105,26 @@ const filmCredit: HeroAssetCredit = {
  * (41.5s, played untouched). Each chapter fades its copy in/out softly
  * — the underlying video never cuts, never slides, never changes source.
  *
- * Timing matches the storytelling brief:
- *   1. PORTUGAL OPENS    (0.0s –  4.0s)   — eyebrow/H1 only, no chapter copy
- *   2. PRIVATE DAYS      (4.0s –  9.0s)
- *   3. PROPOSALS         (9.0s – 15.0s)
- *   4. CORPORATE/GROUPS (15.0s – 21.0s)
- *   5. MULTI-DAY JOURNEY (21.0s – 28.0s)
- *   6. BUILDER + CTA    (28.0s – 36.0s)   — final scene, CTAs render here
+ * Pacing — coordinated to the film, NOT the copy
+ * -----------------------------------------------
+ * Earlier versions packed all six chapters into the first 36s, leaving
+ * the last 5.5s with no active overlay (flicker), and ramped through
+ * the opening at 4–5s per beat — text felt faster than the visuals.
+ *
+ * The pacing below stretches across the FULL 41.5s with a calmer cadence
+ * (≈6.5–9s per chapter) and zero gaps between chapters, so each fade-out
+ * cross-fades directly into the next fade-in. The opening "imagine"
+ * chapter holds for 6s with NO main copy (eyebrow + H1 only) so the
+ * Portugal visuals are allowed to land before any narrative line is read.
+ * The final action chapter gets the longest hold (9s) so the CTAs are on
+ * screen long enough to be read, focused, and clicked.
+ *
+ *   1. PORTUGAL OPENS    ( 0.0s –  6.0s)   — 6.0s, eyebrow/H1 only
+ *   2. PRIVATE DAYS      ( 6.0s – 12.5s)   — 6.5s
+ *   3. PROPOSALS         (12.5s – 19.0s)   — 6.5s
+ *   4. CORPORATE/GROUPS  (19.0s – 25.5s)   — 6.5s
+ *   5. MULTI-DAY JOURNEY (25.5s – 32.5s)   — 7.0s
+ *   6. BUILDER + CTA     (32.5s – 41.5s)   — 9.0s, action scene
  */
 export const HERO_SCENES: readonly HeroScene[] = [
   {
@@ -121,7 +134,7 @@ export const HERO_SCENES: readonly HeroScene[] = [
     position: { mobile: "50% 55%", tablet: "50% 50%", desktop: "50% 50%" },
     pan: "pull-back",
     startTime: 0.0,
-    endTime: 4.0,
+    endTime: 6.0,
     main: [],
     support: "Private experiences, shaped around you.",
     credits: [filmCredit],
@@ -132,8 +145,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 45%", tablet: "50% 45%", desktop: "50% 45%" },
     pan: "drift-left",
-    startTime: 4.0,
-    endTime: 9.0,
+    startTime: 6.0,
+    endTime: 12.5,
     main: ["Design your private day."],
     support: "Your people. Your pace.",
     credits: [filmCredit],
@@ -144,8 +157,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 45%", tablet: "50% 45%", desktop: "50% 45%" },
     pan: "drift-right",
-    startTime: 9.0,
-    endTime: 15.0,
+    startTime: 12.5,
+    endTime: 19.0,
     main: ["For proposals, celebrations", "and moments worth keeping."],
     support: "Anniversaries, birthdays, unforgettable moments.",
     credits: [filmCredit],
@@ -156,8 +169,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 45%", tablet: "50% 45%", desktop: "50% 45%" },
     pan: "push-in",
-    startTime: 15.0,
-    endTime: 21.0,
+    startTime: 19.0,
+    endTime: 25.5,
     main: ["For corporate groups", "and private journeys."],
     support: "Carefully coordinated. Locally guided.",
     credits: [filmCredit],
@@ -168,8 +181,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 50%", tablet: "50% 50%", desktop: "50% 50%" },
     pan: "drift-left",
-    startTime: 21.0,
-    endTime: 28.0,
+    startTime: 25.5,
+    endTime: 32.5,
     main: ["From one perfect day", "to a journey across Portugal."],
     support: "Multi-day experiences, designed around you.",
     credits: [filmCredit],
@@ -180,8 +193,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 50%", tablet: "50% 50%", desktop: "50% 50%" },
     pan: "push-in",
-    startTime: 28.0,
-    endTime: 36.0,
+    startTime: 32.5,
+    endTime: 41.5,
     main: ["Build it live.", "Confirm instantly."],
     support: "Real local guidance whenever you want it.",
     credits: [filmCredit],
