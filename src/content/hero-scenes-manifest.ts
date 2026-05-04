@@ -126,7 +126,9 @@ export const HERO_SCENES: readonly HeroScene[] = [
     id: "imagine",
     image: imgInvitation,
     video: invitationVideo,
-    position: "50% 62%",
+    // Beach + horizon: on mobile we sit low so sand fills under the
+    // headline; tablet/desktop centre the horizon classically.
+    position: { mobile: "50% 68%", tablet: "50% 58%", desktop: "50% 55%" },
     pan: "pull-back",
     main: ["Portugal,", "shaped your way."],
     support: "Private experiences, made for you.",
