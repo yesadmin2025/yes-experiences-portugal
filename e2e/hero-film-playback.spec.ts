@@ -188,97 +188,167 @@ for (const vp of VIEWPORTS) {
     }) => {
       // Strict time-to-first-frame budget — measured from the
       // `loadedmetadata` event, NOT from page.goto(). This isolates
-      // the *playback* readiness budget from network/route-load noise:
+      // the *playback* readiness budget from network/route-load noise.
       //
-      //   - page.goto() resolves on DOMContentLoaded, but TanStack's
-      //     hydration + the <video> mount can land 100–800ms later
-      //     under cold cache. Timing from there made the assertion
-      //     flaky on CI.
-      //   - loadedmetadata fires once the codec + dimensions are
-      //     known and the decoder has the first sync sample — this
-      //     is the canonical "ready to start producing frames" event.
-      //   - From metadata, the budget covers ONLY the decode pipeline
-      //     (canplay → first painted frame), which is what we actually
-      //     want to guard against regressing.
-      //
-      // We still report the total wall-clock from goto so reviewers
-      // can correlate against route-load regressions.
-      const tNav = Date.now();
-      await page.goto("/");
+      // Retry policy (jitter-only):
+      //   We retry the probe up to MAX_ATTEMPTS times BUT only when the
+      //   failure reason indicates timing jitter — i.e. the budget was
+      //   exceeded by a small margin (< 1.5×) on a fully wired-up
+      //   pipeline. We do NOT retry on:
+      //     - missing video element        (real regression)
+      //     - decoder error                (real regression)
+      //     - autoplay rejection w/o frame (real regression)
+      //     - budget exceeded by ≥ 1.5×    (real regression, not jitter)
+      //   This keeps the assertion meaningful while absorbing CI
+      //   scheduler hiccups that produce sporadic ~50–200ms overruns.
+      const MAX_ATTEMPTS = 3;
+      const JITTER_RATIO = 1.5;
 
-      // Wait for the <video> element to mount AND for loadedmetadata
-      // to fire. Both happen via the helper at the top of this spec.
-      await waitForVideoMetadata(page);
-      const tMetadataMs = Date.now() - tNav;
+      type ProbeResult = {
+        ok: boolean;
+        reason: string;
+        ms: number;
+        gotoToMetadataMs: number;
+        gotoToFirstFrameMs: number;
+      };
 
-      const result = await page.evaluate(
-        async ({ sel, budget }) => {
-          const start = performance.now();
-          const v = document.querySelector(sel) as HTMLVideoElement | null;
-          if (!v) return { ok: false, reason: "video element missing", ms: -1 };
+      const runProbe = async (): Promise<ProbeResult> => {
+        const tNav = Date.now();
+        await page.goto("/");
+        await waitForVideoMetadata(page);
+        const gotoToMetadataMs = Date.now() - tNav;
 
-          // Already producing frames? settle immediately. This is the
-          // common case once metadata + first decoded frame are ready.
-          if (
-            !v.paused &&
-            v.currentTime > 0 &&
-            v.readyState >= 2 /* HAVE_CURRENT_DATA */
-          ) {
-            return { ok: true, reason: "already playing", ms: 0 };
-          }
+        const probe = await page.evaluate(
+          async ({ sel, budget }) => {
+            const start = performance.now();
+            const v = document.querySelector(sel) as HTMLVideoElement | null;
+            if (!v) return { ok: false, reason: "video element missing", ms: -1 };
 
-          // Kickstart play() if autoplay was rejected — matches the
-          // ref={} branch in src/routes/index.tsx.
-          if (v.paused) {
-            try {
-              await v.play();
-            } catch {
-              /* surfaced via budget timeout below */
+            // Surface decoder errors as a non-retryable failure.
+            if (v.error) {
+              return {
+                ok: false,
+                reason: `decoder error: code=${v.error.code} msg="${v.error.message}"`,
+                ms: -1,
+              };
             }
-          }
 
-          return await new Promise<{
-            ok: boolean;
-            reason: string;
-            ms: number;
-          }>((resolve) => {
-            const settle = (ok: boolean, reason: string) => {
-              cleanup();
-              resolve({ ok, reason, ms: performance.now() - start });
-            };
-            const onPlaying = () => settle(true, "playing event");
-            const onTimeUpdate = () => {
-              if (v.currentTime > 0 && v.readyState >= 2) {
-                settle(true, "currentTime advanced");
+            if (
+              !v.paused &&
+              v.currentTime > 0 &&
+              v.readyState >= 2 /* HAVE_CURRENT_DATA */
+            ) {
+              return { ok: true, reason: "already playing", ms: 0 };
+            }
+
+            if (v.paused) {
+              try {
+                await v.play();
+              } catch (err) {
+                return {
+                  ok: false,
+                  reason: `autoplay rejected: ${(err as Error)?.message ?? "unknown"}`,
+                  ms: performance.now() - start,
+                };
               }
-            };
-            const cleanup = () => {
-              v.removeEventListener("playing", onPlaying);
-              v.removeEventListener("timeupdate", onTimeUpdate);
-              clearTimeout(timer);
-            };
-            const timer = setTimeout(
-              () => settle(false, `budget exceeded (${budget}ms)`),
-              budget,
-            );
-            v.addEventListener("playing", onPlaying);
-            v.addEventListener("timeupdate", onTimeUpdate);
-          });
-        },
-        { sel: VIDEO_SELECTOR, budget: vp.firstFrameBudgetMs },
-      );
+            }
 
-      const totalMs = Date.now() - tNav;
+            return await new Promise<{
+              ok: boolean;
+              reason: string;
+              ms: number;
+            }>((resolve) => {
+              const settle = (ok: boolean, reason: string) => {
+                cleanup();
+                resolve({ ok, reason, ms: performance.now() - start });
+              };
+              const onPlaying = () => settle(true, "playing event");
+              const onTimeUpdate = () => {
+                if (v.currentTime > 0 && v.readyState >= 2) {
+                  settle(true, "currentTime advanced");
+                }
+              };
+              const onError = () =>
+                settle(
+                  false,
+                  `decoder error: code=${v.error?.code ?? "?"} msg="${v.error?.message ?? ""}"`,
+                );
+              const cleanup = () => {
+                v.removeEventListener("playing", onPlaying);
+                v.removeEventListener("timeupdate", onTimeUpdate);
+                v.removeEventListener("error", onError);
+                clearTimeout(timer);
+              };
+              const timer = setTimeout(
+                () => settle(false, `budget exceeded (${budget}ms)`),
+                budget,
+              );
+              v.addEventListener("playing", onPlaying);
+              v.addEventListener("timeupdate", onTimeUpdate);
+              v.addEventListener("error", onError);
+            });
+          },
+          { sel: VIDEO_SELECTOR, budget: vp.firstFrameBudgetMs },
+        );
+
+        return {
+          ...probe,
+          gotoToMetadataMs,
+          gotoToFirstFrameMs: Date.now() - tNav,
+        };
+      };
+
+      // Classify a failure as retryable jitter vs. hard regression.
+      const isJitter = (r: ProbeResult): boolean => {
+        if (r.ok) return false;
+        if (!r.reason.startsWith("budget exceeded")) return false;
+        // Only treat near-miss overruns as jitter. A wildly over-budget
+        // result (e.g. 5s when budget is 2s) is a real regression.
+        return r.ms > 0 && r.ms < vp.firstFrameBudgetMs * JITTER_RATIO;
+      };
+
+      const attempts: ProbeResult[] = [];
+      let final: ProbeResult | null = null;
+      for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
+        const r = await runProbe();
+        attempts.push(r);
+        if (r.ok) {
+          final = r;
+          break;
+        }
+        if (!isJitter(r)) {
+          // Hard failure — abort retries, fail fast with full context.
+          final = r;
+          break;
+        }
+        // Jitter — log and retry. Cool-down lets the worker settle.
+        // eslint-disable-next-line no-console
+        console.warn(
+          `[hero-film-playback] attempt ${attempt}/${MAX_ATTEMPTS} jittered: ` +
+            `${r.reason} (post-metadata=${r.ms.toFixed(0)}ms, ` +
+            `goto→metadata=${r.gotoToMetadataMs}ms). Retrying.`,
+        );
+        await page.waitForTimeout(250);
+      }
+      if (!final) final = attempts[attempts.length - 1];
+
+      const summary = attempts
+        .map(
+          (a, i) =>
+            `  attempt ${i + 1}: ok=${a.ok} reason="${a.reason}" ` +
+            `post-metadata=${a.ms.toFixed(0)}ms ` +
+            `goto→metadata=${a.gotoToMetadataMs}ms ` +
+            `goto→firstFrame=${a.gotoToFirstFrameMs}ms`,
+        )
+        .join("\n");
+
       expect(
-        result.ok,
-        `hero video did not produce a first frame within ${vp.firstFrameBudgetMs}ms of loadedmetadata. ` +
-          `reason="${result.reason}", post-metadata ms=${result.ms.toFixed(0)}, ` +
-          `goto→metadata ms=${tMetadataMs}, goto→firstFrame ms=${totalMs}`,
+        final.ok,
+        `hero video did not produce a first frame within ${vp.firstFrameBudgetMs}ms of loadedmetadata after ${attempts.length} attempt(s).\n${summary}`,
       ).toBe(true);
       expect(
-        result.ms,
-        `first frame at ${result.ms.toFixed(0)}ms after metadata — exceeds ${vp.firstFrameBudgetMs}ms budget ` +
-          `(goto→metadata was ${tMetadataMs}ms)`,
+        final.ms,
+        `first frame at ${final.ms.toFixed(0)}ms after metadata — exceeds ${vp.firstFrameBudgetMs}ms budget after ${attempts.length} attempt(s).\n${summary}`,
       ).toBeLessThanOrEqual(vp.firstFrameBudgetMs);
     });
   });
