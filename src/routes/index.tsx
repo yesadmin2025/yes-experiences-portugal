@@ -668,21 +668,42 @@ function HomePage() {
             aria-hidden="true"
             className="hero-story-stage absolute inset-0 w-full h-full overflow-hidden"
           >
-            {HERO_SCENES.map((scene, index) => (
-              <img
-                key={scene.id}
-                src={scene.image}
-                alt=""
-                data-hero-pan={scene.pan}
-                className={`hero-story-slide absolute inset-0 w-full h-full object-cover ${index === heroSceneIndex ? "is-active" : ""}`}
-                style={{ objectPosition: scene.position }}
-                width={1920}
-                height={1080}
-                fetchPriority={index === 0 ? "high" : undefined}
-                loading={index === 0 ? undefined : "lazy"}
-                decoding={index === 0 ? undefined : "async"}
-              />
-            ))}
+            {HERO_SCENES.map((scene, index) => {
+              const isActive = index === heroSceneIndex;
+              if (scene.video) {
+                return (
+                  <video
+                    key={scene.id}
+                    src={scene.video}
+                    poster={scene.image}
+                    data-hero-pan={scene.pan}
+                    className={`hero-story-slide absolute inset-0 w-full h-full object-cover ${isActive ? "is-active" : ""}`}
+                    style={{ objectPosition: scene.position }}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload={index === 0 ? "auto" : "metadata"}
+                    aria-hidden="true"
+                  />
+                );
+              }
+              return (
+                <img
+                  key={scene.id}
+                  src={scene.image}
+                  alt=""
+                  data-hero-pan={scene.pan}
+                  className={`hero-story-slide absolute inset-0 w-full h-full object-cover ${isActive ? "is-active" : ""}`}
+                  style={{ objectPosition: scene.position }}
+                  width={1920}
+                  height={1080}
+                  fetchPriority={index === 0 ? "high" : undefined}
+                  loading={index === 0 ? undefined : "lazy"}
+                  decoding={index === 0 ? undefined : "async"}
+                />
+              );
+            })}
           </div>
          {/* Hidden hero alt text for SEO/a11y — the storytelling stage stays
              a pure aria-hidden backdrop. */}
