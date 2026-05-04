@@ -294,67 +294,92 @@ function HomePage() {
   const heroScene = heroScenes[heroSceneIndex];
   const isHeroActionScene = heroSceneIndex === heroScenes.length - 1;
 
-  // Preload every hero scene image as soon as the homepage mounts so
-  // crossfades between scenes feel instant — no flicker, no first-paint
-  // pop-in when the next scene activates. Scene 1 is rendered with
-  // fetchPriority="high" already; this guarantees scenes 2–5 are warm
-  // in the browser cache before their `is-active` transition begins.
+  // Runtime poster guard — verify each scene's poster URL responds 2xx
+  // BEFORE the slide goes active. If a poster is missing/404 we log a
+  // loud error (so it surfaces in Sentry / console / QA), but the reel
+  // NEVER falls back to image-only mode: videos keep playing as the
+  // sole visual carrier. This is the single source of truth that
+  // "image fallback" is no longer a supported state for the hero.
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const links: HTMLLinkElement[] = [];
-    for (const scene of HERO_SCENES) {
-      const link = document.createElement("link");
-      link.rel = "preload";
-      link.as = "image";
-      link.href = scene.image;
-      link.fetchPriority = "high";
-      document.head.appendChild(link);
-      links.push(link);
-    }
+    let cancelled = false;
+    (async () => {
+      for (const scene of HERO_SCENES) {
+        if (!scene.image) {
+          // eslint-disable-next-line no-console
+          console.error(
+            `[hero] scene "${scene.id}" has no poster declared — video-only playback continues, but please add a poster jpg.`,
+          );
+          continue;
+        }
+        try {
+          const res = await fetch(scene.image, { method: "HEAD", cache: "force-cache" });
+          if (cancelled) return;
+          if (!res.ok) {
+            // eslint-disable-next-line no-console
+            console.error(
+              `[hero] poster missing for scene "${scene.id}" (${scene.image} → HTTP ${res.status}). Video-only playback continues — no image fallback.`,
+            );
+          }
+        } catch (err) {
+          if (cancelled) return;
+          // eslint-disable-next-line no-console
+          console.error(
+            `[hero] poster probe failed for scene "${scene.id}" (${scene.image}). Video-only playback continues — no image fallback.`,
+            err,
+          );
+        }
+      }
+    })();
     return () => {
-      for (const l of links) l.remove();
+      cancelled = true;
     };
   }, []);
 
   /* ──────────────────────────────────────────────────────────────
-   * Hero video — per-device gating + adjacent-scene preloading.
+   * Hero video — uniform video-only playback across all devices.
    *
-   *   • `videosAllowed` is `false` on Save-Data, very slow networks
-   *     (effectiveType ≤ 3g), prefers-reduced-motion, or very narrow
-   *     viewports — in those cases the static Viator-sourced still
-   *     is shown and NO mp4 is ever fetched.
-   *   • For every other device we mount the *active* clip (`auto`
-   *     preload, autoplay) AND the *next* clip silently with
-   *     `preload="metadata"` so its first frames are warm before
-   *     it activates — eliminating the first-frame freeze on
-   *     scene change.
-   *   • On top of that we issue a single `<link rel="preload"
-   *     as="video">` for the next scene's URL when it changes, so
-   *     the CDN connection is opened proactively even for browsers
-   *     that ignore `<video preload="metadata">`.
+   *   • Scenes 1–5 are videos. There is NO image-only fallback mode.
+   *     The poster jpg is shown only for the brief first-paint window
+   *     before the video element decodes its first frame.
+   *   • The ONLY case where we don't autoplay is `prefers-reduced-motion`
+   *     (a11y). Even then the <video> element mounts with `preload=metadata`
+   *     so the first frame paints — we just don't loop-animate it.
+   *   • Save-Data / slow-2g / 2g / 3g / narrow viewports DO get videos,
+   *     but with tighter preload (only the NEXT scene is fetched as
+   *     `metadata`, never `auto`) so initial load stays low.
    * ────────────────────────────────────────────────────────────── */
-  const [videosAllowed, setVideosAllowed] = useState(false);
+  const [videosAllowed, setVideosAllowed] = useState(true);
+  const [saveDataMode, setSaveDataMode] = useState(false);
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      // a11y: don't autoplay, but still mount videos (paused on first frame).
+      setVideosAllowed(false);
+      return;
+    }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const conn = (navigator as any).connection;
     if (conn) {
-      if (conn.saveData) return;
       const eff = String(conn.effectiveType || "");
-      if (eff === "slow-2g" || eff === "2g" || eff === "3g") return;
+      if (conn.saveData || eff === "slow-2g" || eff === "2g" || eff === "3g") {
+        setSaveDataMode(true);
+      }
     }
-    // Skip on very narrow / very low-DPR devices — the still + Ken-Burns
-    // pan reads as the same shot at this size, without the bandwidth.
-    if (window.matchMedia("(max-width: 360px)").matches) return;
     setVideosAllowed(true);
   }, []);
 
-  // Warm the next scene's video URL via `<link rel="preload">` so the
-  // CDN handshake + first bytes land before the slide goes active.
+  // Warm ONLY the next scene's video URL via `<link rel="preload">` so
+  // the CDN handshake + first bytes land before the slide goes active.
+  // We never warm scenes beyond N+1 — keeps initial load low even on
+  // Save-Data / slow networks, where the active clip is the only one
+  // fully fetched and the next is just metadata-prefetched.
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (!videosAllowed) return;
+    // On Save-Data / slow networks, skip the proactive `<link rel=preload>`
+    // entirely — the in-DOM `<video preload="metadata">` on the NEXT slide
+    // is enough to get a first frame ready without a second parallel fetch.
+    if (saveDataMode) return;
     const next = HERO_SCENES[heroSceneIndex + 1];
     if (!next?.video) return;
     const link = document.createElement("link");
@@ -369,7 +394,7 @@ function HomePage() {
     return () => {
       link.remove();
     };
-  }, [heroSceneIndex, videosAllowed]);
+  }, [heroSceneIndex, saveDataMode]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -676,17 +701,24 @@ function HomePage() {
             {HERO_SCENES.map((scene, index) => {
               const isActive = index === heroSceneIndex;
               const isNext = index === heroSceneIndex + 1;
-              // Mount the video only for the ACTIVE and NEXT scene so we
-              // never have more than two mp4 elements live in the DOM.
-              // On low-bandwidth / reduced-motion / very narrow devices
-              // we skip videos entirely and the still poster carries the
-              // scene (already animated by the Ken-Burns pan).
-              const shouldMountVideo =
-                videosAllowed && Boolean(scene.video) && (isActive || isNext);
+              // Scenes 1–5 are video-only. We mount the <video> for the
+              // ACTIVE and NEXT scene (max two live <video> in the DOM),
+              // and we ALWAYS mount it as long as `scene.video` exists —
+              // there is no image-only fallback mode, even on Save-Data
+              // or reduced-motion. Reduced-motion users simply don't get
+              // autoplay (the first-frame poster + decoded frame are
+              // still shown).
+              const hasVideo = Boolean(scene.video);
+              const shouldMountVideo = hasVideo && (isActive || isNext);
               // Tiered preload — active loads aggressively, next prefetches
               // only metadata + first bytes, others never appear here.
+              // Save-Data clamps the active clip to `metadata` too, so
+              // the first frame paints quickly without fetching the full
+              // mp4 until the slide actually goes active.
               const videoPreload: "auto" | "metadata" | "none" = isActive
-                ? "auto"
+                ? saveDataMode
+                  ? "metadata"
+                  : "auto"
                 : isNext
                   ? "metadata"
                   : "none";
@@ -695,8 +727,14 @@ function HomePage() {
                   key={scene.id}
                   className={`hero-story-slide absolute inset-0 w-full h-full ${isActive ? "is-active" : ""}`}
                   data-hero-pan={scene.pan}
+                  data-hero-scene-id={scene.id}
                   aria-hidden="true"
                 >
+                  {/* First-paint placeholder ONLY — the poster jpg paints
+                      for ~1 frame before the <video> below decodes its
+                      first frame. It is NEVER a fallback for video. If
+                      the poster 404s the runtime guard above logs an
+                      error; the video carries the scene regardless. */}
                   <img
                     src={scene.image}
                     alt=""
@@ -707,6 +745,12 @@ function HomePage() {
                     fetchPriority={index === 0 ? "high" : undefined}
                     loading={index === 0 ? undefined : "lazy"}
                     decoding={index === 0 ? undefined : "async"}
+                    onError={() => {
+                      // eslint-disable-next-line no-console
+                      console.error(
+                        `[hero] poster failed to load for scene "${scene.id}" (${scene.image}). Video-only playback continues — no image fallback.`,
+                      );
+                    }}
                   />
                   {shouldMountVideo && scene.video ? (
                     <video
@@ -714,11 +758,17 @@ function HomePage() {
                       poster={scene.image}
                       className="absolute inset-0 w-full h-full object-cover"
                       style={{ objectPosition: scene.position }}
-                      autoPlay={isActive}
+                      autoPlay={isActive && videosAllowed}
                       muted
                       loop
                       playsInline
                       preload={videoPreload}
+                      onError={() => {
+                        // eslint-disable-next-line no-console
+                        console.error(
+                          `[hero] video failed to load for scene "${scene.id}" (${scene.video}).`,
+                        );
+                      }}
                     />
                   ) : null}
                 </div>
