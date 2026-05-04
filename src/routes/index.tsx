@@ -25,6 +25,11 @@ import imgTomarCoimbra from "@/assets/tours/tomar-coimbra/hero.jpg";
 import imgArrabidaCoves from "@/assets/tours/arrabida-boat/coves.jpg";
 import imgSintraHero from "@/assets/tours/sintra-cascais/hero.jpg";
 import imgTroiaBeach from "@/assets/tours/troia-comporta/beach.jpg";
+// Authentically Portuguese poster fallbacks for the cinematic hero —
+// Sesimbra fishing village (hidden street), Azeitão wine table (local
+// moments), Cabo da Roca cliffs (Atlantic route close).
+import imgSesimbraVillage from "@/assets/tours/arrabida-boat/sesimbra.jpg";
+import imgAzeitaoWinery from "@/assets/tours/azeitao-cheese/winery.jpg";
 
 // Cinematic stock-style Portugal video clips, one per hero scene.
 // Real-look footage (aerial coves, vineyard table, alfama street, route
@@ -128,8 +133,8 @@ const HERO_SCENES = [
   },
   {
     id: "hidden",
-    // Scene 2 — Hidden Portuguese village street / azulejo corner.
-    image: imgArrabidaCoves,
+    // Scene 2 — Sesimbra fishing village / Portuguese narrow street.
+    image: imgSesimbraVillage,
     video: sceneHiddenStreet.url,
     position: "52% 50%",
     pan: "drift-left" as const,
@@ -138,8 +143,8 @@ const HERO_SCENES = [
   },
   {
     id: "local-moments",
-    // Scene 3 — Local table, wine, market, food.
-    image: imgArrabidaWineLunch,
+    // Scene 3 — Azeitão winery table, Portuguese wine + cheese.
+    image: imgAzeitaoWinery,
     video: sceneLocalTable.url,
     position: "50% 56%",
     pan: "push-in" as const,
@@ -158,8 +163,8 @@ const HERO_SCENES = [
   },
   {
     id: "action",
-    // Scene 5 — Route / journey / studio close. CTAs reveal here.
-    image: imgTomarCoimbra,
+    // Scene 5 — Cabo da Roca cliffs / Atlantic route close. CTAs reveal here.
+    image: imgSintraCaboDaRoca,
     video: sceneRoutePortugal.url,
     position: "50% 50%",
     pan: "pull-back" as const,
@@ -676,7 +681,7 @@ function HomePage() {
            Slide 1 is the SSR/static fallback. Reduced-motion freezes
            on slide 1 with all copy at full opacity. */}
         <section
-          className="relative min-h-[82svh] md:min-h-[90vh] flex items-end overflow-hidden"
+          className="relative min-h-[85svh] md:min-h-[90vh] flex items-end overflow-hidden"
           data-hero-scene={heroScene.id}
           data-hero-scene-index={heroSceneIndex}
         >
@@ -752,14 +757,15 @@ function HomePage() {
 
          <div className="container-x relative z-10 pb-[max(5rem,calc(env(safe-area-inset-bottom)+4rem))] md:pb-32 pt-24 md:pt-40">
            <div className="max-w-[19.5rem] xs:max-w-[21rem] sm:max-w-2xl md:max-w-3xl text-[color:var(--ivory)] text-left">
-             {/* Eyebrow — fixed brand anchor on every scene. */}
-             <span className="inline-flex items-center gap-2 sm:gap-3.5 max-w-full text-[9.5px] xs:text-[10.5px] sm:text-[12px] md:text-[12.5px] uppercase tracking-[0.18em] xs:tracking-[0.22em] sm:tracking-[0.3em] md:tracking-[0.32em] text-[color:var(--gold)] [text-shadow:0_1px_8px_rgba(0,0,0,0.6),0_0_2px_rgba(0,0,0,0.5)] opacity-0 animate-[heroFade_0.9s_ease-out_0.20s_forwards]">
-               <span aria-hidden="true" className="shrink-0">✦</span>
-               <span data-hero-field="eyebrow" className="whitespace-nowrap truncate">
-                 {HERO_COPY.eyebrow}
-               </span>
-               <span aria-hidden="true" className="shrink-0">✦</span>
-             </span>
+              {/* Eyebrow — refined: smaller, lighter, calmer. Should sit
+                  above the image without dominating it. */}
+              <span className="inline-flex items-center gap-2 sm:gap-3 max-w-full text-[9px] xs:text-[9.5px] sm:text-[10.5px] md:text-[11px] uppercase tracking-[0.22em] xs:tracking-[0.26em] sm:tracking-[0.3em] text-[color:var(--gold-soft)] [text-shadow:0_1px_8px_rgba(0,0,0,0.6),0_0_2px_rgba(0,0,0,0.5)] opacity-0 animate-[heroFade_0.9s_ease-out_0.20s_forwards]">
+                <span aria-hidden="true" className="shrink-0 text-[7px] sm:text-[8px] opacity-80">✦</span>
+                <span data-hero-field="eyebrow" className="whitespace-nowrap truncate font-medium">
+                  {HERO_COPY.eyebrow}
+                </span>
+                <span aria-hidden="true" className="shrink-0 text-[7px] sm:text-[8px] opacity-80">✦</span>
+              </span>
 
              {/* Canonical H1 — carries the approved HERO_COPY locks.
                  The brief asks the headline to appear ONLY in the opening
@@ -772,7 +778,7 @@ function HomePage() {
                <h1
                  data-hero-field="headlineLine1 headlineLine2"
                  data-hero-anchor="spotlight"
-                 className="hero-h1 hero-h1-cinematic serif mt-4 md:mt-7 text-[1.5rem] xs:text-[1.7rem] sm:text-[2.25rem] md:text-[3.1rem] lg:text-[3.6rem] leading-[1.14] sm:leading-[1.06] md:leading-[1.02] tracking-[-0.02em] text-[color:var(--ivory)] text-left opacity-0 animate-[heroFade_1s_ease-out_0.55s_forwards] [text-shadow:0_2px_22px_rgba(0,0,0,0.4)]"
+                 className="hero-h1 hero-h1-cinematic serif mt-3.5 md:mt-6 text-[1.4rem] xs:text-[1.6rem] sm:text-[2.15rem] md:text-[2.95rem] lg:text-[3.4rem] leading-[1.16] sm:leading-[1.08] md:leading-[1.04] tracking-[-0.02em] text-[color:var(--ivory)] text-left opacity-0 animate-[heroFade_1s_ease-out_0.55s_forwards] [text-shadow:0_2px_22px_rgba(0,0,0,0.4)]"
                >
                  <span
                    data-hero-field="headlineLine1"
@@ -829,10 +835,16 @@ function HomePage() {
                  ONE message is ever readable at a time. */}
               <div
                 key={`scene-msg-${heroScene.id}`}
-                className="hero-scene-message is-on mt-4 md:mt-7 max-w-[19rem] sm:max-w-xl"
+                className="hero-scene-message is-on mt-3.5 md:mt-6 max-w-[18rem] xs:max-w-[20rem] sm:max-w-xl"
               >
                   {heroScene.main.length > 0 ? (
-                    <p className="hero-scene-main serif text-[1.45rem] xs:text-[1.65rem] sm:text-[2.1rem] md:text-[2.6rem] leading-[1.14] tracking-[-0.02em] font-normal text-[color:var(--ivory)] [text-shadow:0_2px_22px_rgba(0,0,0,0.45)]">
+                    <p
+                      className={`hero-scene-main serif leading-[1.18] sm:leading-[1.12] md:leading-[1.08] tracking-[-0.018em] font-normal text-[color:var(--ivory)] [text-shadow:0_2px_22px_rgba(0,0,0,0.45)] ${
+                        heroScene.main.length >= 3
+                          ? "text-[1.2rem] xs:text-[1.35rem] sm:text-[1.75rem] md:text-[2.2rem]"
+                          : "text-[1.4rem] xs:text-[1.55rem] sm:text-[2rem] md:text-[2.5rem]"
+                      }`}
+                    >
                       {heroScene.main.map((line, i) => (
                         <span key={i} className="block">
                           {line}
@@ -841,7 +853,7 @@ function HomePage() {
                     </p>
                   ) : null}
                   {"support" in heroScene && heroScene.support ? (
-                    <p className="hero-scene-supporting mt-2.5 md:mt-3.5 font-sans text-[11px] xs:text-[12px] sm:text-[13px] uppercase tracking-[0.22em] text-[color:var(--ivory)]/85 [text-shadow:0_1px_10px_rgba(0,0,0,0.55)]">
+                    <p className="hero-scene-supporting mt-2.5 md:mt-3.5 font-sans text-[10px] xs:text-[10.5px] sm:text-[11.5px] uppercase tracking-[0.18em] sm:tracking-[0.2em] text-[color:var(--ivory)]/80 [text-shadow:0_1px_10px_rgba(0,0,0,0.55)]">
                       {heroScene.support}
                     </p>
                   ) : null}
@@ -883,7 +895,7 @@ function HomePage() {
                  <div className="hero-rhythm-cta-to-microcopy max-w-sm sm:max-w-xl mx-auto sm:mx-0">
                    <p
                      data-hero-field="microcopy"
-                     className="text-[11.5px] md:text-[13px] text-[color:var(--ivory)]/90 [text-shadow:0_1px_10px_rgba(0,0,0,0.55)] leading-[1.55] font-normal tracking-[0.01em] text-center sm:text-left"
+                     className="text-[10.5px] md:text-[11.5px] text-[color:var(--ivory)]/75 [text-shadow:0_1px_10px_rgba(0,0,0,0.55)] leading-[1.55] font-normal tracking-[0.01em] text-center sm:text-left"
                    >
                      {HERO_COPY.microcopy}
                    </p>
@@ -952,8 +964,14 @@ function HomePage() {
               />
             </div>
           </div>
-        </div>
-      </section>
+          </div>
+          {/* Soft transition into the next section — gentle ivory fade
+              so the trust strip lands without a hard edge. */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-16 md:h-20 z-[3] bg-[linear-gradient(180deg,rgba(250,248,243,0)_0%,rgba(250,248,243,0.55)_70%,var(--ivory)_100%)]"
+          />
+        </section>
 
       {/* 2 — TRUST STRIP
           Restrained: review count, real platforms, one short line about
@@ -962,7 +980,7 @@ function HomePage() {
           page (per "no repeated review sections" guardrail). */}
       <section
         id="reviews"
-        className="he-trust-rule section-enter bg-[color:var(--ivory)] border-b border-[color:var(--border)] section-y-sm scroll-mt-24 md:scroll-mt-28"
+        className="he-trust-rule section-enter bg-[color:var(--ivory)] border-b border-[color:var(--border)] pt-10 md:pt-14 pb-8 md:pb-10 scroll-mt-24 md:scroll-mt-28"
         aria-labelledby="trust-bar-title"
       >
         <h2 id="trust-bar-title" className="sr-only">
