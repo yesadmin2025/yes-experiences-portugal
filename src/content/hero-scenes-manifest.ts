@@ -102,7 +102,7 @@ export const HERO_SCENES: readonly HeroScene[] = [
     image: imgCoast,
     video: coastVideo,
     position: "50% 55%",
-    pan: "push-in",
+    pan: "pull-back",
     main: ["You picture", "the day."],
     support: "We hold the canvas.",
     credits: [
