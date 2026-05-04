@@ -14,6 +14,11 @@
  * highest, so the dropped-frame budget there is more lenient (5%).
  */
 import { test, expect, devices, type Page } from "@playwright/test";
+import path from "path";
+import {
+  FIRST_FRAME_JITTER_RATIO,
+  isFirstFrameJitter,
+} from "./hero-film-playback.helpers";
 
 const VIDEO_SELECTOR = ".hero-story-stage video[data-hero-film='true']";
 
