@@ -30,7 +30,7 @@ import { StudioLivePreview } from "@/components/home/StudioLivePreview";
 import { getScrollDebugFlags, useScrollDebugFlags } from "@/lib/scroll-debug";
 
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
-import { HERO_SCENES, HERO_FILM } from "@/content/hero-scenes-manifest";
+import { HERO_SCENES, HERO_FILM, scaleHeroTimeline, HERO_FILM_CANONICAL_DURATION_S } from "@/content/hero-scenes-manifest";
 import { useHeroVariant } from "@/hooks/use-hero-variant";
 import { signatureTours, isValidTourId } from "@/data/signatureTours";
 
@@ -431,20 +431,16 @@ function HomePage() {
     if (!video) return;
 
     // Sync chapter windows to the real video duration once metadata
-    // arrives. Scaled timeline = manifest * (actualDuration / 41.5).
+    // arrives. Pure scaling logic lives in `scaleHeroTimeline` so the
+    // unit test suite can exercise the same code path without a DOM.
     const syncTimeline = () => {
       const actual = video.duration;
       if (!Number.isFinite(actual) || actual <= 0) return;
-      const canonical = 41.5;
-      if (Math.abs(actual - canonical) <= 0.25) return; // canonical asset
-      const ratio = actual / canonical;
-      setHeroTimeline(
-        HERO_SCENES.map((s) => ({
-          id: s.id,
-          startTime: s.startTime * ratio,
-          endTime: s.endTime * ratio,
-        })),
-      );
+      if (
+        Math.abs(actual - HERO_FILM_CANONICAL_DURATION_S) <= 0.25
+      )
+        return; // canonical asset, manifest already correct
+      setHeroTimeline(scaleHeroTimeline(actual));
     };
     if (video.readyState >= 1) syncTimeline();
     else video.addEventListener("loadedmetadata", syncTimeline, { once: true });

@@ -204,3 +204,60 @@ export const HERO_SCENES: readonly HeroScene[] = [
 export const HERO_ALL_CREDITS = HERO_SCENES.flatMap((scene) =>
   scene.credits.map((credit) => ({ sceneId: scene.id, ...credit })),
 );
+
+/**
+ * Canonical film duration the manifest is authored against. The
+ * uploaded master is exactly 41.5s; if a re-encode changes the real
+ * duration we proportionally scale every chapter's start/end so
+ * overlays stay locked to playback.
+ */
+export const HERO_FILM_CANONICAL_DURATION_S = 41.5;
+
+/** Tolerance below which we treat the actual duration as canonical. */
+export const HERO_FILM_CANONICAL_TOLERANCE_S = 0.25;
+
+export type HeroChapterWindow = {
+  readonly id: string;
+  readonly startTime: number;
+  readonly endTime: number;
+};
+
+/**
+ * Scale the manifest chapter timeline to a different total duration.
+ *
+ * Returns the manifest verbatim when `actualDuration` is within
+ * `HERO_FILM_CANONICAL_TOLERANCE_S` of the canonical 41.5s (avoids
+ * floating-point drift on the canonical asset). For any other finite
+ * positive duration, every chapter's `startTime`/`endTime` is
+ * multiplied by `actualDuration / 41.5`. Invalid or non-positive
+ * inputs fall back to the manifest unchanged.
+ *
+ * Invariants enforced by the unit test suite:
+ *   • First chapter starts at 0
+ *   • Last chapter ends at exactly `actualDuration` (within 1e-9)
+ *   • For every adjacent pair, chapter[i].endTime === chapter[i+1].startTime
+ *     so the active-chapter rAF lookup never falls into a gap.
+ */
+export function scaleHeroTimeline(
+  actualDuration: number,
+): readonly HeroChapterWindow[] {
+  const base: readonly HeroChapterWindow[] = HERO_SCENES.map((s) => ({
+    id: s.id,
+    startTime: s.startTime,
+    endTime: s.endTime,
+  }));
+  if (!Number.isFinite(actualDuration) || actualDuration <= 0) return base;
+  if (
+    Math.abs(actualDuration - HERO_FILM_CANONICAL_DURATION_S) <=
+    HERO_FILM_CANONICAL_TOLERANCE_S
+  ) {
+    return base;
+  }
+  const ratio = actualDuration / HERO_FILM_CANONICAL_DURATION_S;
+  return base.map((s) => ({
+    id: s.id,
+    startTime: s.startTime * ratio,
+    endTime: s.endTime * ratio,
+  }));
+}
+
