@@ -827,7 +827,7 @@ function HomePage() {
                       src={scene.video}
                       poster={scene.image}
                       className="absolute inset-0 w-full h-full object-cover"
-                      style={{ objectPosition: scene.position }}
+                      style={{ objectPosition: scene.position.desktop }}
                       autoPlay={isActive && videosAllowed}
                       muted
                       loop
