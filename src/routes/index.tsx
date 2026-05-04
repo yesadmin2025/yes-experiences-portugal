@@ -349,15 +349,16 @@ function HomePage() {
    *     but with tighter preload (only the NEXT scene is fetched as
    *     `metadata`, never `auto`) so initial load stays low.
    * ────────────────────────────────────────────────────────────── */
-  const [videosAllowed, setVideosAllowed] = useState(true);
+  // Hero is a 5-scene cinematic VIDEO reel — every scene is a moving
+  // clip, never a still image. Per explicit product direction, the
+  // hero clips are decorative + muted + looping, so they autoplay on
+  // every device including reduced-motion (the clips are gentle
+  // drifts/pull-backs, never strobing or fast cuts). Save-Data still
+  // shrinks preload weight but does NOT freeze the active clip.
+  const [videosAllowed] = useState(true);
   const [saveDataMode, setSaveDataMode] = useState(false);
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      // a11y: don't autoplay, but still mount videos (paused on first frame).
-      setVideosAllowed(false);
-      return;
-    }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const conn = (navigator as any).connection;
     if (conn) {
@@ -366,7 +367,6 @@ function HomePage() {
         setSaveDataMode(true);
       }
     }
-    setVideosAllowed(true);
   }, []);
 
   // Warm ONLY the next scene's video URL via `<link rel="preload">` so
@@ -789,20 +789,13 @@ function HomePage() {
             {HERO_SCENES.map((scene, index) => {
               const isActive = index === heroSceneIndex;
               const isNext = index === heroSceneIndex + 1;
-              // Scenes 1–5 are video-only. We mount the <video> for the
-              // ACTIVE and NEXT scene (max two live <video> in the DOM),
-              // and we ALWAYS mount it as long as `scene.video` exists —
-              // there is no image-only fallback mode, even on Save-Data
-              // or reduced-motion. Reduced-motion users simply don't get
-              // autoplay (the first-frame poster + decoded frame are
-              // still shown).
+              // Hero is video-only on EVERY slide — no static fallback.
+              // We always mount the <video> element so the user never
+              // sees a frozen poster on inactive slides; the active
+              // clip loads as `auto`, the next as `metadata`, and the
+              // rest stay at `none` (browser fetches a few KB to paint
+              // the first frame, no full download).
               const hasVideo = Boolean(scene.video);
-              const shouldMountVideo = hasVideo && (isActive || isNext);
-              // Tiered preload — active loads aggressively, next prefetches
-              // only metadata + first bytes, others never appear here.
-              // Save-Data clamps the active clip to `metadata` too, so
-              // the first frame paints quickly without fetching the full
-              // mp4 until the slide actually goes active.
               const videoPreload: "auto" | "metadata" | "none" = isActive
                 ? saveDataMode
                   ? "metadata"
@@ -818,21 +811,33 @@ function HomePage() {
                   data-hero-scene-id={scene.id}
                   aria-hidden="true"
                 >
-                  {/* Video-only hero — no <img> placeholder. The native
-                      `poster` attribute on <video> handles first-paint;
-                      the runtime probe above logs errors for missing
-                      posters but the video carries the scene regardless. */}
-                  {shouldMountVideo && scene.video ? (
+                  {hasVideo && scene.video ? (
                     <video
                       src={scene.video}
                       poster={scene.image}
                       className="absolute inset-0 w-full h-full object-cover"
                       style={{ objectPosition: scene.position.desktop }}
-                      autoPlay={isActive && videosAllowed}
+                      autoPlay
                       muted
                       loop
                       playsInline
                       preload={videoPreload}
+                      ref={(el) => {
+                        if (!el) return;
+                        // Some embedded contexts (Lovable preview iframe,
+                        // reduced-motion environments) ignore the
+                        // declarative `autoplay` attribute. Kicking
+                        // `.play()` on the active slide guarantees the
+                        // hero is ALWAYS in motion as designed.
+                        if (isActive && videosAllowed) {
+                          const p = el.play();
+                          if (p && typeof p.catch === "function") {
+                            p.catch(() => {
+                              /* autoplay rejection — leave first frame visible */
+                            });
+                          }
+                        }
+                      }}
                       onError={() => {
                         // eslint-disable-next-line no-console
                         console.error(
@@ -857,9 +862,9 @@ function HomePage() {
              sunlit-village clips. Top→bottom: gentle top vignette,
              strong bottom anchor (where text lives), and a low-left
              radial focus that pools shadow exactly under the copy. */}
-         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(20,18,16,0.48)_0%,rgba(20,18,16,0.14)_30%,rgba(20,18,16,0.30)_55%,rgba(14,12,10,0.78)_100%)] pointer-events-none z-[2]" />
-         <div className="absolute inset-0 bg-[radial-gradient(140%_85%_at_22%_92%,rgba(14,10,8,0.62)_0%,rgba(14,10,8,0.18)_45%,rgba(14,10,8,0)_70%)] pointer-events-none z-[2]" />
-         <div className="absolute inset-x-0 bottom-0 h-[58%] bg-[linear-gradient(180deg,rgba(46,30,18,0)_0%,rgba(30,20,12,0.18)_45%,rgba(20,14,10,0.55)_100%)] mix-blend-multiply pointer-events-none z-[2]" />
+         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(20,18,16,0.42)_0%,rgba(20,18,16,0.10)_28%,rgba(20,18,16,0.32)_55%,rgba(14,12,10,0.85)_100%)] pointer-events-none z-[2]" />
+         <div className="absolute inset-0 bg-[radial-gradient(140%_85%_at_22%_92%,rgba(14,10,8,0.72)_0%,rgba(14,10,8,0.22)_45%,rgba(14,10,8,0)_70%)] pointer-events-none z-[2]" />
+         <div className="absolute inset-x-0 bottom-0 h-[62%] bg-[linear-gradient(180deg,rgba(46,30,18,0)_0%,rgba(30,20,12,0.22)_45%,rgba(20,14,10,0.65)_100%)] mix-blend-multiply pointer-events-none z-[2]" />
 
           {/* Subtle story progress — a thin cinematic timeline at the
               bottom of the hero. Re-keys per scene so the fill replays. */}
@@ -954,10 +959,10 @@ function HomePage() {
               >
                   {heroScene.main.length > 0 ? (
                     <p
-                      className={`hero-scene-main serif leading-[1.18] sm:leading-[1.12] md:leading-[1.08] tracking-[-0.018em] font-normal text-[color:var(--ivory)] [text-shadow:0_2px_22px_rgba(0,0,0,0.45)] ${
+                      className={`hero-scene-main serif leading-[1.16] sm:leading-[1.1] md:leading-[1.06] tracking-[-0.018em] font-medium text-[color:var(--ivory)] [text-shadow:0_2px_4px_rgba(0,0,0,0.55),0_4px_22px_rgba(0,0,0,0.55)] ${
                         heroScene.main.length >= 3
-                          ? "text-[1.2rem] xs:text-[1.35rem] sm:text-[1.75rem] md:text-[2.2rem]"
-                          : "text-[1.4rem] xs:text-[1.55rem] sm:text-[2rem] md:text-[2.5rem]"
+                          ? "text-[1.3rem] xs:text-[1.45rem] sm:text-[1.85rem] md:text-[2.3rem]"
+                          : "text-[1.55rem] xs:text-[1.7rem] sm:text-[2.15rem] md:text-[2.65rem]"
                       }`}
                     >
                       {heroScene.main.map((line, i) => (
@@ -968,7 +973,7 @@ function HomePage() {
                     </p>
                   ) : null}
                   {"support" in heroScene && heroScene.support ? (
-                    <p className="hero-scene-supporting mt-2.5 md:mt-3.5 font-sans text-[11.5px] xs:text-[12px] sm:text-[13px] md:text-[13.5px] tracking-[0.01em] leading-[1.5] text-[color:var(--ivory)]/85 [text-shadow:0_1px_10px_rgba(0,0,0,0.55)]">
+                    <p className="hero-scene-supporting mt-2.5 md:mt-3.5 font-sans text-[12px] xs:text-[12.5px] sm:text-[13.5px] md:text-[14px] tracking-[0.01em] leading-[1.5] font-medium text-[color:var(--ivory)] [text-shadow:0_1px_3px_rgba(0,0,0,0.65),0_2px_14px_rgba(0,0,0,0.55)]">
                       {heroScene.support}
                     </p>
                   ) : null}
