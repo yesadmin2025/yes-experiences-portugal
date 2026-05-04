@@ -683,7 +683,25 @@ function HomePage() {
           className="hero-stage relative min-h-[max(85svh,640px)] md:min-h-[90vh] landscape:max-md:min-h-[680px] flex items-end overflow-hidden"
           data-hero-scene={heroScene.id}
           data-hero-scene-index={heroSceneIndex}
+          aria-roledescription="cinematic hero film"
+          aria-label={`YES Experiences hero film — chapter ${heroSceneIndex + 1} of ${heroScenes.length}: ${(heroScene.main.length ? heroScene.main.join(" ") : HERO_COPY.headlineLine1 + " " + HERO_COPY.headlineLine2)}`}
         >
+          {/* Polite live region — announces the active chapter to screen
+              readers as the silent film cross-fades between beats. Visually
+              hidden; one announcement per scene change. */}
+          <div
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+            className="sr-only"
+            data-testid="hero-chapter-announcer"
+          >
+            {`Chapter ${heroSceneIndex + 1} of ${heroScenes.length}. ${
+              heroScene.main.length
+                ? heroScene.main.join(" ")
+                : `${HERO_COPY.headlineLine1} ${HERO_COPY.headlineLine2}`
+            }${heroScene.support ? `. ${heroScene.support}` : ""}`}
+          </div>
           <div
             aria-hidden="true"
             className="hero-story-stage absolute inset-0 w-full h-full overflow-hidden"
