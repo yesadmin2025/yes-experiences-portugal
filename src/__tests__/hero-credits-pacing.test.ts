@@ -28,18 +28,20 @@ describe("hero credits pacing — playback rate slows every chapter enough to re
     expect(HERO_FILM_PLAYBACK_RATE).toBeLessThan(1);
   });
 
-  it.each(HERO_SCENES.chapters.map((c, i) => [i, c.id, c.startTime, c.endTime]))(
+  it.each(
+    HERO_SCENES.map((c, i) => [i, c.id, c.startTime, c.endTime] as const),
+  )(
     "chapter %i (%s) holds ≥ %ds on screen at the configured playback rate",
     (_i, _id, startTime, endTime) => {
-      const authored = (endTime as number) - (startTime as number);
+      const authored = endTime - startTime;
       const effective = authored / HERO_FILM_PLAYBACK_RATE;
       expect(effective).toBeGreaterThanOrEqual(MIN_VISIBLE_CHAPTER_SECONDS);
     },
   );
 
   it("total film runtime stays within a sane editorial ceiling (<60s)", () => {
-    const total = HERO_SCENES.durationSeconds / HERO_FILM_PLAYBACK_RATE;
+    const total = HERO_FILM.durationSeconds / HERO_FILM_PLAYBACK_RATE;
     expect(total).toBeLessThan(60);
-    expect(total).toBeGreaterThan(HERO_SCENES.durationSeconds);
+    expect(total).toBeGreaterThan(HERO_FILM.durationSeconds);
   });
 });
