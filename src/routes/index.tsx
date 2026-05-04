@@ -771,7 +771,7 @@ function HomePage() {
                <h1
                  data-hero-field="headlineLine1 headlineLine2"
                  data-hero-anchor="spotlight"
-                 className="hero-h1 hero-h1-cinematic serif mt-5 md:mt-7 text-[1.6rem] xs:text-[1.7rem] sm:text-[2.25rem] md:text-[3.1rem] lg:text-[3.6rem] leading-[1.12] sm:leading-[1.06] md:leading-[1.02] tracking-[-0.02em] text-[color:var(--ivory)] text-left opacity-0 animate-[heroFade_1s_ease-out_0.55s_forwards] [text-shadow:0_2px_22px_rgba(0,0,0,0.4)]"
+                 className="hero-h1 hero-h1-cinematic serif mt-4 md:mt-7 text-[1.5rem] xs:text-[1.7rem] sm:text-[2.25rem] md:text-[3.1rem] lg:text-[3.6rem] leading-[1.14] sm:leading-[1.06] md:leading-[1.02] tracking-[-0.02em] text-[color:var(--ivory)] text-left opacity-0 animate-[heroFade_1s_ease-out_0.55s_forwards] [text-shadow:0_2px_22px_rgba(0,0,0,0.4)]"
                >
                  <span
                    data-hero-field="headlineLine1"
