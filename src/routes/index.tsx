@@ -679,38 +679,44 @@ function HomePage() {
           >
             {HERO_SCENES.map((scene, index) => {
               const isActive = index === heroSceneIndex;
-              if (scene.video) {
-                return (
-                  <video
-                    key={scene.id}
-                    src={scene.video}
-                    poster={scene.image}
-                    data-hero-pan={scene.pan}
-                    className={`hero-story-slide absolute inset-0 w-full h-full object-cover ${isActive ? "is-active" : ""}`}
-                    style={{ objectPosition: scene.position }}
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    preload={index === 0 ? "auto" : "metadata"}
-                    aria-hidden="true"
-                  />
-                );
-              }
+              // Mount video only for the active or next scene so we don't
+              // download 5 mp4s at once. Poster image stays under the
+              // <video> as a static fallback / first-paint frame.
+              const shouldMountVideo =
+                Boolean(scene.video) &&
+                (isActive || index === heroSceneIndex + 1);
               return (
-                <img
+                <div
                   key={scene.id}
-                  src={scene.image}
-                  alt=""
+                  className={`hero-story-slide absolute inset-0 w-full h-full ${isActive ? "is-active" : ""}`}
                   data-hero-pan={scene.pan}
-                  className={`hero-story-slide absolute inset-0 w-full h-full object-cover ${isActive ? "is-active" : ""}`}
-                  style={{ objectPosition: scene.position }}
-                  width={1920}
-                  height={1080}
-                  fetchPriority={index === 0 ? "high" : undefined}
-                  loading={index === 0 ? undefined : "lazy"}
-                  decoding={index === 0 ? undefined : "async"}
-                />
+                  aria-hidden="true"
+                >
+                  <img
+                    src={scene.image}
+                    alt=""
+                    className="absolute inset-0 w-full h-full object-cover"
+                    style={{ objectPosition: scene.position }}
+                    width={1920}
+                    height={1080}
+                    fetchPriority={index === 0 ? "high" : undefined}
+                    loading={index === 0 ? undefined : "lazy"}
+                    decoding={index === 0 ? undefined : "async"}
+                  />
+                  {shouldMountVideo && scene.video ? (
+                    <video
+                      src={scene.video}
+                      poster={scene.image}
+                      className="absolute inset-0 w-full h-full object-cover"
+                      style={{ objectPosition: scene.position }}
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      preload={index === 0 ? "auto" : "metadata"}
+                    />
+                  ) : null}
+                </div>
               );
             })}
           </div>
