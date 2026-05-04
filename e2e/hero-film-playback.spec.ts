@@ -313,7 +313,9 @@ for (const vp of VIEWPORTS) {
           JITTER_RATIO,
         );
 
+      type Classification = "success" | "jitter-retry" | "hard-fail";
       const attempts: ProbeResult[] = [];
+      const classifications: Classification[] = [];
       let final: ProbeResult | null = null;
       let traceStarted = false;
       for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
@@ -338,14 +340,17 @@ for (const vp of VIEWPORTS) {
         const r = await runProbe();
         attempts.push(r);
         if (r.ok) {
+          classifications.push("success");
           final = r;
           break;
         }
         if (!isJitter(r)) {
           // Hard failure — abort retries, fail fast with full context.
+          classifications.push("hard-fail");
           final = r;
           break;
         }
+        classifications.push("jitter-retry");
         // Jitter — log and retry. Cool-down lets the worker settle.
         // eslint-disable-next-line no-console
         console.warn(
@@ -357,14 +362,40 @@ for (const vp of VIEWPORTS) {
       }
       if (!final) final = attempts[attempts.length - 1];
 
+      // Compact per-attempt log: ms, reason, classification.
+      // Always printed (success or fail) so reviewers can scan CI
+      // output without opening the trace.
+      const compactLog = attempts
+        .map((a, i) => {
+          const cls = classifications[i] ?? "unknown";
+          const tag =
+            cls === "success"
+              ? "✓ success"
+              : cls === "jitter-retry"
+                ? "↻ jitter-retry"
+                : "✗ hard-fail";
+          return (
+            `  [${i + 1}/${attempts.length}] ${tag} — ` +
+            `ms=${a.ms.toFixed(0)} reason="${a.reason}"`
+          );
+        })
+        .join("\n");
+      // eslint-disable-next-line no-console
+      console.log(
+        `[hero-film-playback] ${vp.name} — budget=${vp.firstFrameBudgetMs}ms, ` +
+          `attempts=${attempts.length}\n${compactLog}`,
+      );
+
       const summary = attempts
-        .map(
-          (a, i) =>
-            `  attempt ${i + 1}: ok=${a.ok} reason="${a.reason}" ` +
+        .map((a, i) => {
+          const cls = classifications[i] ?? "unknown";
+          return (
+            `  attempt ${i + 1} [${cls}]: ok=${a.ok} reason="${a.reason}" ` +
             `post-metadata=${a.ms.toFixed(0)}ms ` +
             `goto→metadata=${a.gotoToMetadataMs}ms ` +
-            `goto→firstFrame=${a.gotoToFirstFrameMs}ms`,
-        )
+            `goto→firstFrame=${a.gotoToFirstFrameMs}ms`
+          );
+        })
         .join("\n");
 
       // If we started a trace, persist it ONLY on final failure and
