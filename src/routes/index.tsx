@@ -809,20 +809,8 @@ function HomePage() {
           {/* Copy column — generous bottom padding ensures the support
               line + scene-main never collide with the progress bar in
               any orientation. The min-height clamp on `.hero-stage`
-              guarantees enough vertical room even on landscape mobile.
-              When the active chapter declares `safeZone: "top"` (faces
-              sit in the lower half of that frame, e.g. the vineyard
-              table beat), the column flips to a top anchor so the
-              overlay never covers faces — the video itself never
-              changes, only the text anchor does. */}
-          <div
-            data-hero-safezone={heroScene.safeZone ?? "bottom"}
-            className={`hero-copy-column container-x relative z-10 ${
-              heroScene.safeZone === "top"
-                ? "pt-[max(5.5rem,calc(env(safe-area-inset-top)+4.5rem))] md:pt-28 pb-24 md:pb-32"
-                : "pb-[max(7rem,calc(env(safe-area-inset-bottom)+6rem))] md:pb-32 pt-24 md:pt-40"
-            }`}
-          >
+              guarantees enough vertical room even on landscape mobile. */}
+          <div className="hero-copy-column container-x relative z-10 pb-[max(7rem,calc(env(safe-area-inset-bottom)+6rem))] md:pb-32 pt-24 md:pt-40">
            <div className="max-w-[19.5rem] xs:max-w-[21rem] sm:max-w-2xl md:max-w-3xl text-[color:var(--ivory)] text-left">
               {/* Eyebrow — refined: smaller, lighter, calmer. Should sit
                   above the image without dominating it. */}

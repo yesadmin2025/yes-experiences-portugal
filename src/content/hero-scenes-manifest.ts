@@ -88,17 +88,6 @@ export type HeroScene = {
   main: readonly string[];
   /** Optional small supporting microline. */
   support?: string;
-  /**
-   * Where in the frame the chapter copy is allowed to sit so it never
-   * covers faces / primary subjects in this beat of the film.
-   *   "bottom" — default. Copy sits in the lower third (clear sky /
-   *              landscape / architecture above).
-   *   "top"    — copy shifts to the upper third because faces or
-   *              tabletop subjects sit in the lower half of the frame
-   *              (e.g. vineyard table beat, azulejo restaurant beat).
-   * The video itself never changes — only the text anchor does.
-   */
-  safeZone?: "bottom" | "top";
   credits: readonly HeroAssetCredit[];
 };
 
@@ -167,10 +156,6 @@ export const HERO_SCENES: readonly HeroScene[] = [
     endTime: 21.0,
     main: ["For corporate groups", "and private journeys."],
     support: "Carefully coordinated. Locally guided.",
-    // Vineyard table beat: faces sit in the lower half of the frame, so
-    // the chapter copy anchors to the top safe-zone instead of the
-    // default bottom anchor. The video itself never changes.
-    safeZone: "top",
     credits: [filmCredit],
   },
   {
