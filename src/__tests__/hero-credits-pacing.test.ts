@@ -15,7 +15,7 @@
  * mobile reader can finish the line + microline before the cross-fade.
  */
 import { describe, it, expect } from "vitest";
-import { HERO_SCENES } from "../content/hero-scenes-manifest";
+import { HERO_SCENES, HERO_FILM } from "../content/hero-scenes-manifest";
 
 // Must match src/routes/index.tsx
 const HERO_FILM_PLAYBACK_RATE = 0.86;
