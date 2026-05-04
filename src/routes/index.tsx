@@ -25,6 +25,11 @@ import imgTomarCoimbra from "@/assets/tours/tomar-coimbra/hero.jpg";
 import imgArrabidaCoves from "@/assets/tours/arrabida-boat/coves.jpg";
 import imgSintraHero from "@/assets/tours/sintra-cascais/hero.jpg";
 import imgTroiaBeach from "@/assets/tours/troia-comporta/beach.jpg";
+// Authentically Portuguese poster fallbacks for the cinematic hero —
+// Sesimbra fishing village (hidden street), Azeitão wine table (local
+// moments), Cabo da Roca cliffs (Atlantic route close).
+import imgSesimbraVillage from "@/assets/tours/arrabida-boat/sesimbra.jpg";
+import imgAzeitaoWinery from "@/assets/tours/azeitao-cheese/winery.jpg";
 
 // Cinematic stock-style Portugal video clips, one per hero scene.
 // Real-look footage (aerial coves, vineyard table, alfama street, route
