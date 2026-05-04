@@ -850,6 +850,17 @@ function HomePage() {
               data-hero-film="true"
               src={saveDataMode ? HERO_FILM.src720 : HERO_FILM.src1080}
               poster={HERO_FILM.poster}
+              // translate3d/will-change promote the <video> to its own
+              // compositor layer so frame blits never trigger paint of
+              // the overlay text above. backface-visibility:hidden hints
+              // the GPU to skip subpixel re-rasterization between
+              // frames — matters most on the 38fps source where any
+              // CPU-side compositing makes judder visible.
+              style={{
+                willChange: "transform",
+                transform: "translate3d(0,0,0)",
+                backfaceVisibility: "hidden",
+              }}
               className="absolute inset-0 w-full h-full object-cover"
               aria-label="Cinematic film of Portugal — coastal roads, local tables, hidden coves and estate gardens. Decorative; full description provided alongside."
               autoPlay={!reducedMotion}
@@ -991,7 +1002,13 @@ function HomePage() {
                           className="hero-scene-message is-on absolute inset-0 mt-3.5 md:mt-6 pointer-events-none"
                           style={{
                             opacity: 1 - heroFadeAlpha,
-                            transition: "opacity 80ms linear",
+                            // 140ms linear chase between the JS-quantized
+                            // 5% alpha steps — long enough to smooth
+                            // visible stair-stepping but well under the
+                            // 600ms cosine cross-fade window so the
+                            // overall S-curve shape is preserved.
+                            transition: "opacity 140ms linear",
+                            willChange: "opacity",
                           }}
                         >
                           <p
@@ -1025,7 +1042,11 @@ function HomePage() {
                   }`}
                   style={
                     heroPrevIndex !== null && heroPrevIndex !== heroSceneIndex
-                      ? { opacity: heroFadeAlpha, transition: "opacity 80ms linear" }
+                      ? {
+                          opacity: heroFadeAlpha,
+                          transition: "opacity 140ms linear",
+                          willChange: "opacity",
+                        }
                       : undefined
                   }
                 >

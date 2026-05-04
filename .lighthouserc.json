@@ -3,7 +3,12 @@
     "collect": {
       "startServerCommand": "bun run preview --port 4173",
       "startServerReadyPattern": "Local:",
-      "url": ["http://localhost:4173/"],
+      "url": [
+        "http://localhost:4173/",
+        "http://localhost:4173/hero-verify",
+        "http://localhost:4173/builder",
+        "http://localhost:4173/experiences"
+      ],
       "numberOfRuns": 1,
       "settings": {
         "preset": "desktop",
