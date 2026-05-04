@@ -879,19 +879,26 @@ function HomePage() {
                         aria-hidden="true"
                       />
                     </Link>
-                   <Link
-                     to="/experiences"
-                     data-hero-field="secondaryCta"
-                     className="hero-cta-button hero-cta-button--compact cta-secondary-dark he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left"
-                   >
-                     <span className="block">{HERO_COPY.secondaryCta}</span>
-                     <ArrowRight
-                       size={15}
-                       strokeWidth={2.25}
-                       className="hero-cta-arrow-pulse shrink-0 text-[color:var(--gold-soft)] transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1.5 group-hover:text-[color:var(--gold)]"
-                       aria-hidden="true"
-                     />
-                   </Link>
+                    <Link
+                      to="/experiences"
+                      data-hero-field="secondaryCta"
+                      onClick={() => {
+                        trackHeroEvent("cta_click", {
+                          sceneId: heroScene.id,
+                          extra: { cta: "secondary", target: "/experiences" },
+                        });
+                        trackHeroEvent("view_signature", { sceneId: heroScene.id });
+                      }}
+                      className="hero-cta-button hero-cta-button--compact cta-secondary-dark he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left"
+                    >
+                      <span className="block">{HERO_COPY.secondaryCta}</span>
+                      <ArrowRight
+                        size={15}
+                        strokeWidth={2.25}
+                        className="hero-cta-arrow-pulse shrink-0 text-[color:var(--gold-soft)] transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1.5 group-hover:text-[color:var(--gold)]"
+                        aria-hidden="true"
+                      />
+                    </Link>
                  </div>
 
                  <div className="hero-rhythm-cta-to-microcopy max-w-sm sm:max-w-xl mx-auto sm:mx-0">
