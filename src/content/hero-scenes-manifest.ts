@@ -163,8 +163,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: sceneArrabidaViewpoint.url,
     position: "50% 50%",
     pan: "drift-left",
-    main: ["A day. A toast.", "Something unforgettable."],
-    support: "The occasion shapes the day.",
+    main: ["A toast,", "a memory,", "a celebration."],
+    support: "Moments that linger.",
     credits: [
       {
         kind: "photo",
