@@ -26,6 +26,15 @@ import imgArrabidaCoves from "@/assets/tours/arrabida-boat/coves.jpg";
 import imgSintraHero from "@/assets/tours/sintra-cascais/hero.jpg";
 import imgTroiaBeach from "@/assets/tours/troia-comporta/beach.jpg";
 
+// Cinematic stock-style Portugal video clips, one per hero scene.
+// Real-look footage (aerial coves, vineyard table, alfama street, route
+// across central Portugal). Served via CDN through .asset.json pointers
+// so they never bloat the JS bundle.
+import sceneHiddenCove from "../../public/video/scene-hidden-cove.mp4.asset.json";
+import sceneLocalTable from "../../public/video/scene-local-table.mp4.asset.json";
+import sceneHiddenStreet from "../../public/video/scene-hidden-street.mp4.asset.json";
+import sceneRoutePortugal from "../../public/video/scene-route-portugal.mp4.asset.json";
+
 import {
   ArrowRight,
   Star,
@@ -107,7 +116,7 @@ const HERO_SCENE_DURATION_MS = 6500;
 const HERO_SCENES = [
   {
     id: "opening",
-    // Scene 1 — Coast. Portugal opens.
+    // Scene 1 — Coast (real owned hero coast footage). Portugal opens.
     image: heroImg,
     video: "/video/hero-coast.mp4",
     position: "50% 52%",
@@ -116,36 +125,36 @@ const HERO_SCENES = [
   },
   {
     id: "hidden",
-    // Scene 2 — Hidden Arrábida cove.
+    // Scene 2 — Hidden cove, aerial drone over turquoise water.
     image: imgArrabidaCoves,
-    video: undefined,
+    video: sceneHiddenCove.url,
     position: "52% 50%",
     pan: "drift-left" as const,
     main: ["Hidden places."] as readonly string[],
   },
   {
     id: "local-moments",
-    // Scene 3 — Local table, wine, shared moment.
+    // Scene 3 — Local table, wine pour in a vineyard.
     image: imgArrabidaWineLunch,
-    video: undefined,
+    video: sceneLocalTable.url,
     position: "50% 56%",
     pan: "push-in" as const,
     main: ["Local tables."] as readonly string[],
   },
   {
     id: "occasions",
-    // Scene 4 — Quiet viewpoint, intimate moment.
+    // Scene 4 — Hidden Lisbon street at golden hour.
     image: imgArrabidaViewpoint,
-    video: undefined,
+    video: sceneHiddenStreet.url,
     position: "50% 50%",
     pan: "drift-left" as const,
     main: ["Your moments."] as readonly string[],
   },
   {
     id: "action",
-    // Scene 5 — Route across Portugal: the close.
+    // Scene 5 — Aerial route across Portugal: the close.
     image: imgTomarCoimbra,
-    video: undefined,
+    video: sceneRoutePortugal.url,
     position: "50% 50%",
     pan: "pull-back" as const,
     main: ["Build it live."] as readonly string[],
@@ -670,38 +679,44 @@ function HomePage() {
           >
             {HERO_SCENES.map((scene, index) => {
               const isActive = index === heroSceneIndex;
-              if (scene.video) {
-                return (
-                  <video
-                    key={scene.id}
-                    src={scene.video}
-                    poster={scene.image}
-                    data-hero-pan={scene.pan}
-                    className={`hero-story-slide absolute inset-0 w-full h-full object-cover ${isActive ? "is-active" : ""}`}
-                    style={{ objectPosition: scene.position }}
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    preload={index === 0 ? "auto" : "metadata"}
-                    aria-hidden="true"
-                  />
-                );
-              }
+              // Mount video only for the active or next scene so we don't
+              // download 5 mp4s at once. Poster image stays under the
+              // <video> as a static fallback / first-paint frame.
+              const shouldMountVideo =
+                Boolean(scene.video) &&
+                (isActive || index === heroSceneIndex + 1);
               return (
-                <img
+                <div
                   key={scene.id}
-                  src={scene.image}
-                  alt=""
+                  className={`hero-story-slide absolute inset-0 w-full h-full ${isActive ? "is-active" : ""}`}
                   data-hero-pan={scene.pan}
-                  className={`hero-story-slide absolute inset-0 w-full h-full object-cover ${isActive ? "is-active" : ""}`}
-                  style={{ objectPosition: scene.position }}
-                  width={1920}
-                  height={1080}
-                  fetchPriority={index === 0 ? "high" : undefined}
-                  loading={index === 0 ? undefined : "lazy"}
-                  decoding={index === 0 ? undefined : "async"}
-                />
+                  aria-hidden="true"
+                >
+                  <img
+                    src={scene.image}
+                    alt=""
+                    className="absolute inset-0 w-full h-full object-cover"
+                    style={{ objectPosition: scene.position }}
+                    width={1920}
+                    height={1080}
+                    fetchPriority={index === 0 ? "high" : undefined}
+                    loading={index === 0 ? undefined : "lazy"}
+                    decoding={index === 0 ? undefined : "async"}
+                  />
+                  {shouldMountVideo && scene.video ? (
+                    <video
+                      src={scene.video}
+                      poster={scene.image}
+                      className="absolute inset-0 w-full h-full object-cover"
+                      style={{ objectPosition: scene.position }}
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      preload={index === 0 ? "auto" : "metadata"}
+                    />
+                  ) : null}
+                </div>
               );
             })}
           </div>
