@@ -177,13 +177,13 @@ describe("hero — runtime poster guard + video-only mode", () => {
     });
 
     // Loud error, scoped to [hero] and naming the failing scene.
-    const errorMessages = errorSpy.mock.calls.map((c) => String(c[0]));
-    const heroErrors = errorMessages.filter((m) => m.startsWith("[hero] poster"));
+    const errorMessages = errorSpy.mock.calls.map((c: unknown[]) => String(c[0]));
+    const heroErrors = errorMessages.filter((m: string) => m.startsWith("[hero] poster"));
     expect(heroErrors.length).toBeGreaterThan(0);
-    expect(heroErrors.some((m) => m.includes(HERO_SCENES[0].id))).toBe(true);
-    expect(heroErrors.some((m) => m.includes("HTTP 404"))).toBe(true);
+    expect(heroErrors.some((m: string) => m.includes(HERO_SCENES[0].id))).toBe(true);
+    expect(heroErrors.some((m: string) => m.includes("HTTP 404"))).toBe(true);
     expect(
-      heroErrors.some((m) => m.includes("no image fallback")),
+      heroErrors.some((m: string) => m.includes("no image fallback")),
     ).toBe(true);
 
     // Critical contract: the <video> for the failing scene still mounted.
@@ -203,7 +203,7 @@ describe("hero — runtime poster guard + video-only mode", () => {
       await Promise.resolve();
     });
 
-    const errorMessages = errorSpy.mock.calls.map((c) => String(c[0]));
+    const errorMessages = errorSpy.mock.calls.map((c: unknown[]) => String(c[0]));
     expect(
       errorMessages.some(
         (m) => m.startsWith("[hero] poster probe failed") && m.includes("no image fallback"),
