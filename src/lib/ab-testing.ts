@@ -201,6 +201,12 @@ export async function trackAbEvent(
   }
 
   try {
+    // `meta.extra` is loosely typed `Record<string, unknown>` for caller
+    // ergonomics; the column is `jsonb`. We round-trip through JSON to
+    // strip non-serializable values and satisfy the generated `Json` type.
+    const safeMeta = meta?.extra
+      ? (JSON.parse(JSON.stringify(meta.extra)) as Record<string, unknown>)
+      : null;
     await supabase.from("hero_ab_events").insert({
       anonymous_id: anonId,
       experiment_key: experiment.key,
@@ -208,7 +214,7 @@ export async function trackAbEvent(
       event,
       scene_id: meta?.sceneId,
       route: meta?.route ?? window.location.pathname,
-      meta: meta?.extra ?? null,
+      meta: safeMeta,
     });
   } catch {
     /* swallow — analytics never blocks UX */
