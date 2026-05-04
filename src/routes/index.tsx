@@ -35,6 +35,7 @@ import { getScrollDebugFlags, useScrollDebugFlags } from "@/lib/scroll-debug";
 
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
 import { HERO_SCENES } from "@/content/hero-scenes-manifest";
+import { useHeroVariant } from "@/hooks/use-hero-variant";
 import { signatureTours, isValidTourId } from "@/data/signatureTours";
 
 /* ──────────────────────────────────────────────────────────────────
@@ -281,11 +282,17 @@ function HomePage() {
   const heroFreezeOnLast =
     typeof window !== "undefined" &&
     /[?&]hero=last(?:&|$)/.test(window.location.search);
+  // A/B variant resolution. SSR returns the control; on the client the
+  // visitor's assigned variant is swapped in (one re-render, no flicker
+  // for the ~1/N visitors in control). Imagery / video / position are
+  // ALWAYS taken from the manifest — only `main` and `support` strings
+  // are varied. CTAs and locked HERO_COPY are never touched.
+  const { scenes: heroScenes, trackEvent: trackHeroEvent } = useHeroVariant();
   const [heroSceneIndex, setHeroSceneIndex] = useState(
-    heroFreezeOnLast ? HERO_SCENES.length - 1 : 0,
+    heroFreezeOnLast ? heroScenes.length - 1 : 0,
   );
-  const heroScene = HERO_SCENES[heroSceneIndex];
-  const isHeroActionScene = heroSceneIndex === HERO_SCENES.length - 1;
+  const heroScene = heroScenes[heroSceneIndex];
+  const isHeroActionScene = heroSceneIndex === heroScenes.length - 1;
 
   // Preload every hero scene image as soon as the homepage mounts so
   // crossfades between scenes feel instant — no flicker, no first-paint
@@ -852,32 +859,46 @@ function HomePage() {
              {isHeroActionScene ? (
                <div key="hero-action" className="hero-action-block mt-6 md:mt-9">
                  <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-3.5 w-full max-w-[19rem] sm:max-w-lg">
-                   <Link
-                     to="/builder"
-                     data-hero-field="primaryCta"
-                     className="hero-cta-button hero-cta-button--compact cta-primary he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left"
-                   >
-                     <span className="block">{HERO_COPY.primaryCta}</span>
-                     <ArrowRight
-                       size={15}
-                       strokeWidth={2.25}
-                       className="hero-cta-arrow-pulse shrink-0 text-[color:var(--gold-soft)] transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1.5 group-hover:text-[color:var(--gold)]"
-                       aria-hidden="true"
-                     />
-                   </Link>
-                   <Link
-                     to="/experiences"
-                     data-hero-field="secondaryCta"
-                     className="hero-cta-button hero-cta-button--compact cta-secondary-dark he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left"
-                   >
-                     <span className="block">{HERO_COPY.secondaryCta}</span>
-                     <ArrowRight
-                       size={15}
-                       strokeWidth={2.25}
-                       className="hero-cta-arrow-pulse shrink-0 text-[color:var(--gold-soft)] transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1.5 group-hover:text-[color:var(--gold)]"
-                       aria-hidden="true"
-                     />
-                   </Link>
+                    <Link
+                      to="/builder"
+                      data-hero-field="primaryCta"
+                      onClick={() => {
+                        trackHeroEvent("cta_click", {
+                          sceneId: heroScene.id,
+                          extra: { cta: "primary", target: "/builder" },
+                        });
+                        trackHeroEvent("builder_start", { sceneId: heroScene.id });
+                      }}
+                      className="hero-cta-button hero-cta-button--compact cta-primary he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left"
+                    >
+                      <span className="block">{HERO_COPY.primaryCta}</span>
+                      <ArrowRight
+                        size={15}
+                        strokeWidth={2.25}
+                        className="hero-cta-arrow-pulse shrink-0 text-[color:var(--gold-soft)] transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1.5 group-hover:text-[color:var(--gold)]"
+                        aria-hidden="true"
+                      />
+                    </Link>
+                    <Link
+                      to="/experiences"
+                      data-hero-field="secondaryCta"
+                      onClick={() => {
+                        trackHeroEvent("cta_click", {
+                          sceneId: heroScene.id,
+                          extra: { cta: "secondary", target: "/experiences" },
+                        });
+                        trackHeroEvent("view_signature", { sceneId: heroScene.id });
+                      }}
+                      className="hero-cta-button hero-cta-button--compact cta-secondary-dark he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left"
+                    >
+                      <span className="block">{HERO_COPY.secondaryCta}</span>
+                      <ArrowRight
+                        size={15}
+                        strokeWidth={2.25}
+                        className="hero-cta-arrow-pulse shrink-0 text-[color:var(--gold-soft)] transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-1.5 group-hover:text-[color:var(--gold)]"
+                        aria-hidden="true"
+                      />
+                    </Link>
                  </div>
 
                  <div className="hero-rhythm-cta-to-microcopy max-w-sm sm:max-w-xl mx-auto sm:mx-0">
