@@ -803,28 +803,10 @@ function HomePage() {
                   data-hero-scene-id={scene.id}
                   aria-hidden="true"
                 >
-                  {/* First-paint placeholder ONLY — the poster jpg paints
-                      for ~1 frame before the <video> below decodes its
-                      first frame. It is NEVER a fallback for video. If
-                      the poster 404s the runtime guard above logs an
-                      error; the video carries the scene regardless. */}
-                  <img
-                    src={scene.image}
-                    alt=""
-                    className="absolute inset-0 w-full h-full object-cover"
-                    style={{ objectPosition: scene.position }}
-                    width={1920}
-                    height={1080}
-                    fetchPriority={index === 0 ? "high" : undefined}
-                    loading={index === 0 ? undefined : "lazy"}
-                    decoding={index === 0 ? undefined : "async"}
-                    onError={() => {
-                      // eslint-disable-next-line no-console
-                      console.error(
-                        `[hero] poster failed to load for scene "${scene.id}" (${scene.image}). Video-only playback continues — no image fallback.`,
-                      );
-                    }}
-                  />
+                  {/* Video-only hero — no <img> placeholder. The native
+                      `poster` attribute on <video> handles first-paint;
+                      the runtime probe above logs errors for missing
+                      posters but the video carries the scene regardless. */}
                   {shouldMountVideo && scene.video ? (
                     <video
                       src={scene.video}

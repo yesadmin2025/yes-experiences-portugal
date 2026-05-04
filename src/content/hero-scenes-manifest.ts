@@ -102,7 +102,7 @@ export const HERO_SCENES: readonly HeroScene[] = [
     image: imgCoast,
     video: coastVideo,
     position: "50% 55%",
-    pan: "push-in",
+    pan: "pull-back",
     main: ["You picture", "the day."],
     support: "We hold the canvas.",
     credits: [
@@ -170,7 +170,7 @@ export const HERO_SCENES: readonly HeroScene[] = [
     image: imgRoute,
     video: routeVideo,
     position: "50% 50%",
-    pan: "pull-back",
+    pan: "push-in",
     main: ["You design it.", "We confirm it."],
     support: "Drawn live. Confirmed instantly.",
     credits: [
