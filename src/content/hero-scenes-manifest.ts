@@ -196,7 +196,6 @@ export const HERO_SCENES: readonly HeroScene[] = [
     startTime: 36.6,
     endTime: 39.633333,
     main: [],
-    support: undefined,
     credits: [filmCredit],
   },
 ] as const;
