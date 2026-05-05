@@ -85,16 +85,18 @@ describe("hero phrases — locked to chapter ids in canonical order", () => {
 });
 
 describe("hero timeline — frame-accurate sampling (mobile + desktop identical)", () => {
+  // Sample inside each chapter (avoiding shared boundaries where two
+  // windows touch). Mirrors the runtime rAF lookup.
   const samples: ReadonlyArray<readonly [number, string]> = [
     [0.0, "imagine"],
-    [2.9, "choose"],
+    [1.5, "imagine"],
     [5.0, "choose"],
-    [7.0, "taste"],
-    [9.6, "celebrate"],
-    [11.75, "corporate"],
-    [13.9, "journey"],
-    [16.9, "build"],
-    [24.7, "confirm"],
+    [8.0, "taste"],
+    [10.5, "celebrate"],
+    [12.5, "corporate"],
+    [15.0, "journey"],
+    [20.0, "build"],
+    [25.5, "confirm"],
     [27.6, "confirm"],
   ];
   it.each(samples)("at t=%ss the active chapter is %s", (t, expectedId) => {
