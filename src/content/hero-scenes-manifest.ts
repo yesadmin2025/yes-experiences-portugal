@@ -104,14 +104,14 @@ const filmCredit: HeroAssetCredit = {
  * so the rAF lookup never falls into a no-overlay frame. Soft 1.45s
  * cross-fade between overlays gives a premium dissolve, not a hard cut.
  *
- *   1. PORTUGAL OPENS    ( 0.000s –  3.400s)   — eyebrow + H1 only (coast)
- *   2. HIDDEN GEMS       ( 3.400s –  7.600s)   — market → azulejos, smooth dissolve
- *   3. PRIVATE DAY       ( 7.600s – 10.000s)   — intimate table at tiles
- *   4. CELEBRATIONS      (10.000s – 11.600s)   — vineyards / raised glasses
- *   5. CORPORATE         (11.600s – 13.000s)   — vineyards continues, copy crossfades
- *   6. PERFECT DAY       (13.000s – 16.800s)   — couple → boat
- *   7. PORTUGAL JOURNEY  (16.800s – 24.600s)   — monuments / roads / city / map
- *   8. CTA CLOSE         (24.600s – 27.633s)   — buttons on final Portugal map
+ *   1. PORTUGAL OPENS    ( 0.000s –  2.900s)   — coast opening, no duplicate later
+ *   2. HIDDEN GEMS       ( 2.900s –  7.000s)   — market → azulejos, same message
+ *   3. PRIVATE DAY       ( 7.000s –  9.800s)   — intimate table at tiles
+ *   4. CELEBRATIONS      ( 9.800s – 11.700s)   — vineyards / raised glasses
+ *   5. CORPORATE         (11.700s – 13.200s)   — corporate table
+ *   6. PERFECT DAY       (13.200s – 16.900s)   — couple → boat
+ *   7. PORTUGAL JOURNEY  (16.900s – 24.700s)   — monuments / roads / city / first map
+ *   8. CTA CLOSE         (24.700s – 27.633s)   — computer map → final Portugal map
  */
 export const HERO_SCENES: readonly HeroScene[] = [
   {
@@ -121,7 +121,7 @@ export const HERO_SCENES: readonly HeroScene[] = [
     position: { mobile: "50% 55%", tablet: "50% 50%", desktop: "50% 50%" },
     pan: "pull-back",
     startTime: 0.0,
-    endTime: 3.4,
+    endTime: 2.9,
     main: [],
     support: "Private experiences, shaped around you.",
     credits: [filmCredit],
@@ -132,9 +132,9 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 45%", tablet: "50% 45%", desktop: "50% 45%" },
     pan: "drift-left",
-    startTime: 3.4,
-    endTime: 7.6,
-    main: ["Hidden gems,", "quietly revealed."],
+    startTime: 2.9,
+    endTime: 7.0,
+    main: ["Hidden gems,", "known by locals."],
     support: "Markets, azulejos, local rhythm.",
     credits: [filmCredit],
   },
@@ -144,8 +144,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 45%", tablet: "50% 45%", desktop: "50% 45%" },
     pan: "drift-right",
-    startTime: 7.6,
-    endTime: 10.0,
+    startTime: 7.0,
+    endTime: 9.8,
     main: ["Your private day,", "shaped around you."],
     support: "Your people. Your pace. Your Portugal.",
     credits: [filmCredit],
@@ -156,8 +156,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 45%", tablet: "50% 45%", desktop: "50% 45%" },
     pan: "push-in",
-    startTime: 10.0,
-    endTime: 11.6,
+    startTime: 9.8,
+    endTime: 11.7,
     main: ["Celebrations,", "made effortless."],
     support: "Milestones shaped with care.",
     credits: [filmCredit],
@@ -168,8 +168,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 50%", tablet: "50% 50%", desktop: "50% 50%" },
     pan: "drift-left",
-    startTime: 11.6,
-    endTime: 13.0,
+    startTime: 11.7,
+    endTime: 13.2,
     main: ["For teams", "with purpose."],
     support: "Corporate tables, privately orchestrated.",
     credits: [filmCredit],
@@ -180,8 +180,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 50%", tablet: "50% 50%", desktop: "50% 50%" },
     pan: "push-in",
-    startTime: 13.0,
-    endTime: 16.8,
+    startTime: 13.2,
+    endTime: 16.9,
     main: ["One perfect day", "to remember."],
     support: "A couple, a coast, a story in motion.",
     credits: [filmCredit],
@@ -192,8 +192,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 50%", tablet: "50% 50%", desktop: "50% 50%" },
     pan: "push-in",
-    startTime: 16.8,
-    endTime: 24.6,
+    startTime: 16.9,
+    endTime: 24.7,
     main: ["A journey", "across Portugal."],
     support: "From landmark to route, designed as one flow.",
     credits: [filmCredit],
@@ -204,7 +204,7 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 50%", tablet: "50% 50%", desktop: "50% 50%" },
     pan: "push-in",
-    startTime: 24.6,
+    startTime: 24.7,
     endTime: 27.633333,
     main: [],
     credits: [filmCredit],
