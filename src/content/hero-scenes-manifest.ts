@@ -1,7 +1,7 @@
 /**
  * Hero film manifest — single source of truth.
  *
- * The hero is ONE continuous cinematic brand film (~39.6s, 30fps, 1080×1920)
+ * The hero is ONE continuous cinematic brand film (~27.6s, 30fps, 1080×1920)
  * — NOT a slideshow, NOT a carousel, NOT five stacked videos. The film is
  * finished from YES Experiences source material with warm color-graded dissolves, so
  * the user always sees a single uninterrupted `<video>` element.
@@ -31,7 +31,7 @@ const FILM_POSTER = "/video/film/yes-hero-poster.jpg";
 
 export const HERO_FILM = {
   /** Total film length in seconds (matches the continuous MP4 master). */
-  durationSeconds: 39.633333,
+  durationSeconds: 27.633333,
   /** Mobile-first source — used for ≤480px CSS pixels. */
   src720: FILM_720,
   /** Tablet + desktop source. */
@@ -97,20 +97,20 @@ const filmCredit: HeroAssetCredit = {
 
 /**
  * Chapter overlays sequenced over the SINGLE continuous premium remaster
- * (39.633s). The restored master keeps the original map / computer-map frames,
- * aligns corporate with the real corporate table beat, and keeps the Portugal
- * map as the final CTA frame.
+ * (27.633s). The remaster keeps the original map / computer-map frames,
+ * trims the long azulejo hold, aligns private → celebrations → corporate with
+ * the real table beats, and keeps the Portugal map as the final CTA frame.
  * Adjacent windows are gapless (chapter[i].endTime === chapter[i+1].startTime)
  * so the rAF lookup never falls into a no-overlay frame.
  *
- *   1. PORTUGAL OPENS    ( 0.000s –  3.700s)   — eyebrow + H1 only
- *   2. HIDDEN GEMS       ( 3.700s – 13.200s)   — market → azulejos
- *   3. PRIVATE DAY       (13.200s – 17.200s)   — private table
- *   4. CELEBRATIONS      (17.200s – 21.100s)   — vineyards / celebration
- *   5. CORPORATE         (21.100s – 24.000s)   — corporate table
- *   6. PERFECT DAY       (24.000s – 28.000s)   — couple → boat
- *   7. PORTUGAL JOURNEY  (28.000s – 36.000s)   — monument / city / live map
- *   8. CTA CLOSE         (36.000s – 39.633s)   — buttons on map frames
+ *   1. PORTUGAL OPENS    ( 0.000s –  3.400s)   — eyebrow + H1 only
+ *   2. HIDDEN GEMS       ( 3.400s –  7.600s)   — market → azulejos, trimmed
+ *   3. PRIVATE DAY       ( 7.600s – 10.200s)   — private table
+ *   4. CELEBRATIONS      (10.200s – 12.600s)   — vineyards / celebration
+ *   5. CORPORATE         (12.600s – 14.800s)   — corporate table
+ *   6. PERFECT DAY       (14.800s – 18.200s)   — couple → boat
+ *   7. PORTUGAL JOURNEY  (18.200s – 24.600s)   — monument / city / live map
+ *   8. CTA CLOSE         (24.600s – 27.633s)   — buttons on final map
  */
 export const HERO_SCENES: readonly HeroScene[] = [
   {
@@ -120,7 +120,7 @@ export const HERO_SCENES: readonly HeroScene[] = [
     position: { mobile: "50% 55%", tablet: "50% 50%", desktop: "50% 50%" },
     pan: "pull-back",
     startTime: 0.0,
-    endTime: 3.7,
+    endTime: 3.4,
     main: [],
     support: "Private experiences, shaped around you.",
     credits: [filmCredit],
@@ -131,8 +131,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 45%", tablet: "50% 45%", desktop: "50% 45%" },
     pan: "drift-left",
-    startTime: 3.7,
-    endTime: 13.2,
+    startTime: 3.4,
+    endTime: 7.6,
     main: ["Hidden gems,", "quietly revealed."],
     support: "Markets, azulejos, local rhythm.",
     credits: [filmCredit],
@@ -143,8 +143,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 45%", tablet: "50% 45%", desktop: "50% 45%" },
     pan: "drift-right",
-    startTime: 13.2,
-    endTime: 17.2,
+    startTime: 7.6,
+    endTime: 10.2,
     main: ["Your private day,", "crafted around you."],
     support: "Your people. Your pace. Your Portugal.",
     credits: [filmCredit],
@@ -155,8 +155,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 45%", tablet: "50% 45%", desktop: "50% 45%" },
     pan: "push-in",
-    startTime: 17.2,
-    endTime: 21.1,
+    startTime: 10.2,
+    endTime: 12.6,
     main: ["Celebrations", "made effortless."],
     support: "Milestones shaped with care.",
     credits: [filmCredit],
@@ -167,8 +167,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 50%", tablet: "50% 50%", desktop: "50% 50%" },
     pan: "drift-left",
-    startTime: 21.1,
-    endTime: 24.0,
+    startTime: 12.6,
+    endTime: 14.8,
     main: ["For teams", "with purpose."],
     support: "Corporate tables, privately orchestrated.",
     credits: [filmCredit],
@@ -179,8 +179,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 50%", tablet: "50% 50%", desktop: "50% 50%" },
     pan: "push-in",
-    startTime: 24.0,
-    endTime: 28.0,
+    startTime: 14.8,
+    endTime: 18.2,
     main: ["One perfect day", "to remember."],
     support: "A couple, a coast, a story in motion.",
     credits: [filmCredit],
@@ -191,8 +191,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 50%", tablet: "50% 50%", desktop: "50% 50%" },
     pan: "push-in",
-    startTime: 28.0,
-    endTime: 36.0,
+    startTime: 18.2,
+    endTime: 24.6,
     main: ["A journey", "across Portugal."],
     support: "From landmark to route, designed as one flow.",
     credits: [filmCredit],
@@ -203,8 +203,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 50%", tablet: "50% 50%", desktop: "50% 50%" },
     pan: "push-in",
-    startTime: 36.0,
-    endTime: 39.633333,
+    startTime: 24.6,
+    endTime: 27.633333,
     main: [],
     credits: [filmCredit],
   },
@@ -216,11 +216,11 @@ export const HERO_ALL_CREDITS = HERO_SCENES.flatMap((scene) =>
 
 /**
  * Canonical film duration the manifest is authored against. The
- * uploaded master is 39.633s (restored original-map master); if a re-encode
+ * uploaded master is 27.633s (trimmed original-map remaster); if a re-encode
  * changes the real duration we proportionally scale every chapter's
  * start/end so overlays stay locked to playback.
  */
-export const HERO_FILM_CANONICAL_DURATION_S = 39.633333;
+export const HERO_FILM_CANONICAL_DURATION_S = 27.633333;
 
 /** Tolerance below which we treat the actual duration as canonical. */
 export const HERO_FILM_CANONICAL_TOLERANCE_S = 0.25;
@@ -235,10 +235,10 @@ export type HeroChapterWindow = {
  * Scale the manifest chapter timeline to a different total duration.
  *
  * Returns the manifest verbatim when `actualDuration` is within
- * `HERO_FILM_CANONICAL_TOLERANCE_S` of the canonical 39.633s (avoids
+ * `HERO_FILM_CANONICAL_TOLERANCE_S` of the canonical 27.633s (avoids
  * floating-point drift on the canonical asset). For any other finite
  * positive duration, every chapter's `startTime`/`endTime` is
- * multiplied by `actualDuration / 39.633`. Invalid or non-positive
+ * multiplied by `actualDuration / 27.633`. Invalid or non-positive
  * inputs fall back to the manifest unchanged.
  *
  * Invariants enforced by the unit test suite:
