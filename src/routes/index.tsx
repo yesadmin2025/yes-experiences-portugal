@@ -71,7 +71,7 @@ const HERO_SCENE_DURATION_MS = 5200;
 // Slowed further (0.86 → 0.78) so the closing "Build it live / Confirm
 // instantly" beat holds visibly through the Portugal-map close instead
 // of finishing before it. Same media element governs every viewport.
-const HERO_FILM_PLAYBACK_RATE = 0.7;
+const HERO_FILM_PLAYBACK_RATE = 0.6;
 
 /* ──────────────────────────────────────────────────────────────────
  * Cinematic horizontal storytelling hero — 5 scenes, each a short
@@ -868,7 +868,7 @@ function HomePage() {
                 the first frame for context). */}
             <video
               data-hero-film="true"
-              src={saveDataMode ? HERO_FILM.src720 : HERO_FILM.src1080}
+              src={HERO_FILM.src1080}
               poster={HERO_FILM.poster}
               // translate3d/will-change promote the <video> to its own
               // compositor layer so frame blits never trigger paint of
@@ -1119,7 +1119,7 @@ function HomePage() {
              {/* Action block — CTAs + microcopy + brand signature appear
                  ONLY on scene 5 per the storytelling brief. */}
               {isHeroActionScene ? (
-                <div key="hero-action" className="hero-action-block mt-6 md:mt-9">
+                <div key="hero-action" className="hero-action-block hero-action-reveal mt-6 md:mt-9">
                   <div
                     role="group"
                     aria-label="Hero actions — start designing your day or browse signature experiences"
@@ -1136,7 +1136,7 @@ function HomePage() {
                         });
                         trackHeroEvent("builder_start", { sceneId: heroScene.id });
                       }}
-                      className="hero-cta-button hero-cta-button--compact cta-primary he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left"
+                      className="hero-cta-button hero-cta-button--compact cta-primary cta-attract he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left"
                     >
                       <span className="block text-[color:var(--gold-soft)]">{HERO_COPY.primaryCta}</span>
                       <ArrowRight
@@ -1156,7 +1156,7 @@ function HomePage() {
                         });
                         trackHeroEvent("view_signature", { sceneId: heroScene.id });
                       }}
-                      className="hero-cta-button hero-cta-button--compact cta-secondary-dark he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left"
+                      className="hero-cta-button hero-cta-button--compact cta-secondary-dark cta-attract he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left"
                     >
                       <span className="block text-[color:var(--gold-soft)]">{HERO_COPY.secondaryCta}</span>
                       <ArrowRight
@@ -1268,42 +1268,8 @@ function HomePage() {
           />
         </section>
 
-      {/* 1.5 — AUDIENCE BRIDGE
-          Soft editorial bridge between the cinematic hero and the trust
-          strip. Names the use cases the hero hinted at (one private day,
-          a proposal/celebration, a group escape, a full Portugal
-          journey) so the audience never has to guess "is this for me?".
-          No CTAs, no images, no buttons — calm + premium, then proof. */}
-      <section
-        id="audience-bridge"
-        aria-labelledby="audience-bridge-title"
-        className="section-enter bg-[color:var(--ivory)] border-b border-[color:var(--border)] py-12 md:py-20"
-      >
-        <div className="container-x">
-          <div className="reveal max-w-2xl mx-auto text-center px-2">
-            <h2
-              id="audience-bridge-title"
-              className="serif text-[1.05rem] xs:text-[1.12rem] sm:text-[1.5rem] md:text-[2rem] leading-[1.42] sm:leading-[1.3] md:leading-[1.22] tracking-[-0.012em] text-[color:var(--charcoal)] font-normal"
-            >
-              Some come for one private day.
-              <br />
-              Some for a <span className="italic text-[color:var(--teal)]">proposal</span>, a celebration, or a group escape.
-              <br />
-              Some are planning a full <span className="italic">journey across Portugal</span>.
-            </h2>
-            {/* Champagne gold hairline divider */}
-            <div
-              aria-hidden="true"
-              className="mx-auto my-6 md:my-9 h-px w-16 md:w-28 bg-gradient-to-r from-transparent via-[color:var(--gold)]/60 to-transparent"
-            />
-            <p className="text-[12px] md:text-[14.5px] leading-[1.65] tracking-[0.005em] text-[color:var(--charcoal-soft)]">
-              However your story begins,
-              <br className="hidden sm:block" />
-              {" "}we shape it with local knowledge.
-            </p>
-          </div>
-        </div>
-      </section>
+      {/* Audience-bridge section removed — hero flows directly into
+          social proof per latest editorial brief. */}
 
       {/* 2 — TRUST STRIP
           Restrained: review count, real platforms, one short line about
@@ -1312,7 +1278,7 @@ function HomePage() {
           page (per "no repeated review sections" guardrail). */}
       <section
         id="reviews"
-        className="he-trust-rule section-enter bg-[color:var(--ivory)] border-b border-[color:var(--border)] pt-16 md:pt-24 pb-12 md:pb-14 scroll-mt-24 md:scroll-mt-28"
+        className="he-trust-rule section-enter bg-[color:var(--ivory)] border-b border-[color:var(--border)] py-12 md:py-20 scroll-mt-24 md:scroll-mt-28"
         aria-labelledby="trust-bar-title"
       >
         <h2 id="trust-bar-title" className="sr-only">

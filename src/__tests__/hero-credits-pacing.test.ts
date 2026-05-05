@@ -18,7 +18,7 @@ import { describe, it, expect } from "vitest";
 import { HERO_SCENES, HERO_FILM } from "../content/hero-scenes-manifest";
 
 // Must match src/routes/index.tsx
-const HERO_FILM_PLAYBACK_RATE = 0.7;
+const HERO_FILM_PLAYBACK_RATE = 0.6;
 
 const MIN_VISIBLE_CHAPTER_SECONDS = 5.0;
 
@@ -39,9 +39,9 @@ describe("hero credits pacing — playback rate slows every chapter enough to re
     },
   );
 
-  it("total film runtime stays within a sane editorial ceiling (<60s)", () => {
+  it("total film runtime stays within a sane editorial ceiling (<75s)", () => {
     const total = HERO_FILM.durationSeconds / HERO_FILM_PLAYBACK_RATE;
-    expect(total).toBeLessThan(60);
+    expect(total).toBeLessThan(75);
     expect(total).toBeGreaterThan(HERO_FILM.durationSeconds);
   });
 });
