@@ -31,7 +31,7 @@ const FILM_POSTER = "/video/film/yes-hero-poster.jpg";
 
 export const HERO_FILM = {
   /** Total film length in seconds (matches the continuous MP4 master). */
-  durationSeconds: 27.133333,
+  durationSeconds: 39.633333,
   /** Mobile-first source — used for ≤480px CSS pixels. */
   src720: FILM_720,
   /** Tablet + desktop source. */
@@ -120,7 +120,7 @@ export const HERO_SCENES: readonly HeroScene[] = [
     position: { mobile: "50% 55%", tablet: "50% 50%", desktop: "50% 50%" },
     pan: "pull-back",
     startTime: 0.0,
-    endTime: 3.0,
+    endTime: 4.0,
     main: [],
     support: "Private experiences, shaped around you.",
     credits: [filmCredit],
@@ -131,10 +131,22 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 45%", tablet: "50% 45%", desktop: "50% 45%" },
     pan: "drift-left",
-    startTime: 3.0,
-    endTime: 6.6,
+    startTime: 4.0,
+    endTime: 10.0,
     main: ["Find the hidden gems", "only locals know."],
     support: "Markets, backstreets, family kitchens.",
+    credits: [filmCredit],
+  },
+  {
+    id: "corporate",
+    image: FILM_POSTER,
+    video: FILM_1080,
+    position: { mobile: "50% 50%", tablet: "50% 50%", desktop: "50% 50%" },
+    pan: "drift-left",
+    startTime: 10.0,
+    endTime: 13.5,
+    main: ["For teams who travel", "with intention."],
+    support: "Corporate retreats, quietly orchestrated.",
     credits: [filmCredit],
   },
   {
@@ -143,8 +155,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 45%", tablet: "50% 45%", desktop: "50% 45%" },
     pan: "drift-right",
-    startTime: 6.6,
-    endTime: 9.3,
+    startTime: 13.5,
+    endTime: 16.5,
     main: ["Private,", "shaped around you."],
     support: "Your people. Your pace.",
     credits: [filmCredit],
@@ -155,22 +167,10 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 45%", tablet: "50% 45%", desktop: "50% 45%" },
     pan: "push-in",
-    startTime: 9.3,
-    endTime: 11.7,
+    startTime: 16.5,
+    endTime: 20.0,
     main: ["For the moments", "worth remembering."],
     support: "Proposals, anniversaries, milestones.",
-    credits: [filmCredit],
-  },
-  {
-    id: "corporate",
-    image: FILM_POSTER,
-    video: FILM_1080,
-    position: { mobile: "50% 50%", tablet: "50% 50%", desktop: "50% 50%" },
-    pan: "drift-left",
-    startTime: 11.7,
-    endTime: 14.2,
-    main: ["For teams who travel", "with intention."],
-    support: "Corporate retreats, quietly orchestrated.",
     credits: [filmCredit],
   },
   {
@@ -179,8 +179,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 50%", tablet: "50% 50%", desktop: "50% 50%" },
     pan: "push-in",
-    startTime: 14.2,
-    endTime: 21.1,
+    startTime: 20.0,
+    endTime: 32.0,
     main: ["From one perfect day", "to a journey across Portugal."],
     support: "Multi-day, multi-region — your rhythm.",
     credits: [filmCredit],
@@ -191,8 +191,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 50%", tablet: "50% 50%", desktop: "50% 50%" },
     pan: "push-in",
-    startTime: 21.1,
-    endTime: 24.1,
+    startTime: 32.0,
+    endTime: 35.0,
     main: ["Start writing", "your story."],
     support: "Designed live. Confirmed instantly.",
     credits: [filmCredit],
@@ -203,8 +203,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 50%", tablet: "50% 50%", desktop: "50% 50%" },
     pan: "push-in",
-    startTime: 24.1,
-    endTime: 27.133333,
+    startTime: 35.0,
+    endTime: 39.633333,
     main: [],
     credits: [filmCredit],
   },
@@ -220,7 +220,7 @@ export const HERO_ALL_CREDITS = HERO_SCENES.flatMap((scene) =>
  * changes the real duration we proportionally scale every chapter's
  * start/end so overlays stay locked to playback.
  */
-export const HERO_FILM_CANONICAL_DURATION_S = 27.133333;
+export const HERO_FILM_CANONICAL_DURATION_S = 39.633333;
 
 /** Tolerance below which we treat the actual duration as canonical. */
 export const HERO_FILM_CANONICAL_TOLERANCE_S = 0.25;
