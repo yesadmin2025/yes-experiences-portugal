@@ -159,8 +159,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     pan: "push-in",
     startTime: 17.2,
     endTime: 22.167,
-    main: ["For proposals, celebrations", "and moments worth keeping."],
-    support: "Anniversaries, birthdays, unforgettable moments.",
+    main: ["For the moments", "worth remembering."],
+    support: "Proposals, anniversaries, milestones.",
     credits: [filmCredit],
   },
   {
@@ -171,8 +171,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     pan: "drift-left",
     startTime: 22.167,
     endTime: 27.6,
-    main: ["For corporate groups", "and private retreats."],
-    support: "Carefully coordinated. Locally guided.",
+    main: ["For teams who travel", "with intention."],
+    support: "Corporate retreats, quietly orchestrated.",
     credits: [filmCredit],
   },
   {
@@ -183,8 +183,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     pan: "push-in",
     startTime: 27.6,
     endTime: 33.6,
-    main: ["One day, or a", "multi-day journey."],
-    support: "Across Portugal, your rhythm.",
+    main: ["A single day,", "or a journey across Portugal."],
+    support: "Multi-day, multi-region, your rhythm.",
     credits: [filmCredit],
   },
   {
@@ -196,7 +196,7 @@ export const HERO_SCENES: readonly HeroScene[] = [
     startTime: 33.6,
     endTime: 36.6,
     main: ["Start writing", "your story."],
-    support: "Build it live. Confirm instantly.",
+    support: "Designed live. Confirmed instantly.",
     credits: [filmCredit],
   },
   {
