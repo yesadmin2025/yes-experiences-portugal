@@ -1,7 +1,7 @@
 /**
  * Hero film manifest — single source of truth.
  *
- * The hero is ONE continuous cinematic brand film (~39.6s, 30fps, 1080×1920)
+ * The hero is ONE continuous cinematic brand film (~27.6s, 30fps, 1080×1920)
  * — NOT a slideshow, NOT a carousel, NOT five stacked videos. The film is
  * finished from YES Experiences source material with warm color-graded dissolves, so
  * the user always sees a single uninterrupted `<video>` element.
@@ -31,7 +31,7 @@ const FILM_POSTER = "/video/film/yes-hero-poster.jpg";
 
 export const HERO_FILM = {
   /** Total film length in seconds (matches the continuous MP4 master). */
-  durationSeconds: 39.633333,
+  durationSeconds: 27.633333,
   /** Mobile-first source — used for ≤480px CSS pixels. */
   src720: FILM_720,
   /** Tablet + desktop source. */
@@ -97,20 +97,20 @@ const filmCredit: HeroAssetCredit = {
 
 /**
  * Chapter overlays sequenced over the SINGLE continuous premium remaster
- * (39.633s). The restored master keeps the original map / computer-map frames,
- * aligns corporate with the real corporate table beat, and keeps the Portugal
- * map as the final CTA frame.
+ * (27.633s). The remaster keeps the original map / computer-map frames,
+ * trims the long azulejo hold, aligns private → celebrations → corporate with
+ * the real table beats, and keeps the Portugal map as the final CTA frame.
  * Adjacent windows are gapless (chapter[i].endTime === chapter[i+1].startTime)
  * so the rAF lookup never falls into a no-overlay frame.
  *
- *   1. PORTUGAL OPENS    ( 0.000s –  3.700s)   — eyebrow + H1 only
- *   2. HIDDEN GEMS       ( 3.700s – 13.200s)   — market → azulejos
- *   3. PRIVATE DAY       (13.200s – 17.200s)   — private table
- *   4. CELEBRATIONS      (17.200s – 21.100s)   — vineyards / celebration
- *   5. CORPORATE         (21.100s – 24.000s)   — corporate table
- *   6. PERFECT DAY       (24.000s – 28.000s)   — couple → boat
- *   7. PORTUGAL JOURNEY  (28.000s – 36.000s)   — monument / city / live map
- *   8. CTA CLOSE         (36.000s – 39.633s)   — buttons on map frames
+ *   1. PORTUGAL OPENS    ( 0.000s –  3.400s)   — eyebrow + H1 only
+ *   2. HIDDEN GEMS       ( 3.400s –  7.600s)   — market → azulejos, trimmed
+ *   3. PRIVATE DAY       ( 7.600s – 10.200s)   — private table
+ *   4. CELEBRATIONS      (10.200s – 12.600s)   — vineyards / celebration
+ *   5. CORPORATE         (12.600s – 14.800s)   — corporate table
+ *   6. PERFECT DAY       (14.800s – 18.200s)   — couple → boat
+ *   7. PORTUGAL JOURNEY  (18.200s – 24.600s)   — monument / city / live map
+ *   8. CTA CLOSE         (24.600s – 27.633s)   — buttons on final map
  */
 export const HERO_SCENES: readonly HeroScene[] = [
   {
