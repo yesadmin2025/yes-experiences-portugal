@@ -167,8 +167,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 50%", tablet: "50% 50%", desktop: "50% 50%" },
     pan: "drift-left",
-    startTime: 22.167,
-    endTime: 25.4,
+    startTime: 11.7,
+    endTime: 14.2,
     main: ["For teams who travel", "with intention."],
     support: "Corporate retreats, quietly orchestrated.",
     credits: [filmCredit],
@@ -179,8 +179,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 50%", tablet: "50% 50%", desktop: "50% 50%" },
     pan: "push-in",
-    startTime: 25.4,
-    endTime: 33.6,
+    startTime: 14.2,
+    endTime: 21.1,
     main: ["From one perfect day", "to a journey across Portugal."],
     support: "Multi-day, multi-region — your rhythm.",
     credits: [filmCredit],
@@ -191,8 +191,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 50%", tablet: "50% 50%", desktop: "50% 50%" },
     pan: "push-in",
-    startTime: 33.6,
-    endTime: 36.6,
+    startTime: 21.1,
+    endTime: 24.1,
     main: ["Start writing", "your story."],
     support: "Designed live. Confirmed instantly.",
     credits: [filmCredit],
@@ -203,8 +203,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 50%", tablet: "50% 50%", desktop: "50% 50%" },
     pan: "push-in",
-    startTime: 36.6,
-    endTime: 39.633333,
+    startTime: 24.1,
+    endTime: 27.133333,
     main: [],
     credits: [filmCredit],
   },
@@ -216,11 +216,11 @@ export const HERO_ALL_CREDITS = HERO_SCENES.flatMap((scene) =>
 
 /**
  * Canonical film duration the manifest is authored against. The
- * uploaded master is 39.633s (six real scene cuts); if a re-encode
+ * uploaded master is 27.133s (premium remaster); if a re-encode
  * changes the real duration we proportionally scale every chapter's
  * start/end so overlays stay locked to playback.
  */
-export const HERO_FILM_CANONICAL_DURATION_S = 39.633333;
+export const HERO_FILM_CANONICAL_DURATION_S = 27.133333;
 
 /** Tolerance below which we treat the actual duration as canonical. */
 export const HERO_FILM_CANONICAL_TOLERANCE_S = 0.25;
