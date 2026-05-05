@@ -59,12 +59,10 @@ const controlScenes: Record<string, SceneCopyOverride> = Object.fromEntries(
  * `cta_click` + `builder_start` downstream.
  */
 export const HERO_COPY_EXPERIMENT: HeroExperiment = {
-  // Stable analytics key. Bumped from `hero_copy_v1` → `hero_copy_v2`
-  // when the cinematic "You picture / choose / taste / raise / design"
-  // spine became canonical. Bumping the key invalidates every prior
-  // visitor's localStorage assignment so returning visitors immediately
-  // see the new control copy instead of being pinned to an old variant.
-  key: "hero_copy_v2",
+  // Stable analytics key. Bumped to v3 when the market/azulejos timing and
+  // separate final CTA slide became canonical, so returning visitors are not
+  // pinned to an older localStorage copy sequence.
+  key: "hero_copy_v3",
   // 100% weight on `control` for now — the cinematic spine IS the
   // approved hero. `benefit` and `question` remain defined so we can
   // re-enable the split (e.g. 60/20/20) later without rewiring any
@@ -105,8 +103,8 @@ export const HERO_COPY_EXPERIMENT: HeroExperiment = {
           support: "Multi-day Portugal, your rhythm.",
         },
         confirm: {
-          main: ["Design it now.", "Confirmed instantly."],
-          support: "No forms. No waiting.",
+          main: [],
+          support: undefined,
         },
       },
     },
@@ -137,8 +135,8 @@ export const HERO_COPY_EXPERIMENT: HeroExperiment = {
           support: "Across Portugal, your rhythm.",
         },
         confirm: {
-          main: ["Ready to", "build it?"],
-          support: "No forms. No waiting.",
+          main: [],
+          support: undefined,
         },
       },
     },

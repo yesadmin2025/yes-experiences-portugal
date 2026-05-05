@@ -559,17 +559,17 @@
      `.hero-cta-button--compact`. Tap target stays ≥44px (52 ≫ 44). Lets
      the cinematic hero breathe without losing legibility. */
   .hero-cta-button--compact {
-    height: 38px;
-    padding: 6px 13px 6px 13px;
-    font-size: 9.75px;
-    letter-spacing: 0.08em;
-    font-weight: 600;
+    height: 52px;
+    padding: 12px 17px;
+    font-size: 10.75px;
+    letter-spacing: 0.075em;
+    font-weight: 700;
   }
   @media (min-width: 768px) {
     .hero-cta-button--compact {
-      height: 44px;
-      padding: 9px 17px 9px 17px;
-      font-size: 10.5px;
+      height: 60px;
+      padding: 14px 22px;
+      font-size: 11.75px;
       letter-spacing: 0.085em;
     }
   }
@@ -1763,18 +1763,17 @@
   animation: heroEnterRiseSoft 0.75s cubic-bezier(0.22, 0.61, 0.36, 1) both;
 }
 
-/* Sequenced reveal on the hero action block: text first, CTAs after.
-   The action block now contains: [CTA group] then [microcopy].
-   We delay the CTA row so the chapter copy lands before the buttons
-   appear, giving the close beat a clear "text → action" rhythm. */
+/* Sequenced reveal on the final hero slide: the closing phrase now lives
+   in its own previous chapter, so the CTA-only slide can arrive visibly
+   and confidently instead of sharing the same title card. */
 .hero-action-reveal > [role="group"] {
   opacity: 0;
-  transform: translate3d(0, 10px, 0);
-  animation: heroEnterRiseSoft 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) 1.4s both;
+  transform: translate3d(0, 14px, 0) scale(0.985);
+  animation: heroEnterRiseSoft 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.18s both;
 }
 .hero-action-reveal > .hero-rhythm-cta-to-microcopy {
   opacity: 0;
-  animation: heroEnterRiseSoft 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) 1.95s both;
+  animation: heroEnterRiseSoft 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.82s both;
 }
 
 /* Attention pulse on hero CTAs — gentle gold halo breath that draws
@@ -1799,8 +1798,8 @@
   }
 }
 .cta-attract {
-  animation: ctaAttractPulse 2.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  animation-delay: 2.4s;
+  animation: ctaAttractPulse 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  animation-delay: 1.05s;
 }
 .cta-attract:hover { animation: none; }
 @media (prefers-reduced-motion: reduce) {
