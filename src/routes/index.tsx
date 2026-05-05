@@ -1087,7 +1087,11 @@ function HomePage() {
                 >
                   {heroScene.main.length > 0 ? (
                     <p
-                      className={`hero-scene-main serif leading-[1.14] sm:leading-[1.1] md:leading-[1.06] tracking-[-0.018em] font-medium text-[color:var(--ivory)] [text-shadow:0_2px_4px_rgba(0,0,0,0.55),0_4px_22px_rgba(0,0,0,0.55)] ${
+                      className={`hero-scene-main serif leading-[1.14] sm:leading-[1.1] md:leading-[1.06] tracking-[-0.018em] font-medium [text-shadow:0_2px_4px_rgba(0,0,0,0.55),0_4px_22px_rgba(0,0,0,0.55)] ${
+                        heroSceneIndex % 2 === 1
+                          ? "text-[color:var(--gold-soft)]"
+                          : "text-[color:var(--ivory)]"
+                      } ${
                         heroScene.main.length >= 3
                           ? "text-[1.25rem] xs:text-[1.4rem] sm:text-[1.85rem] md:text-[2.3rem]"
                           : "text-[1.5rem] xs:text-[1.65rem] sm:text-[2.15rem] md:text-[2.65rem]"
@@ -1101,7 +1105,11 @@ function HomePage() {
                     </p>
                   ) : null}
                   {"support" in heroScene && heroScene.support ? (
-                    <p className="hero-scene-supporting mt-2 md:mt-3.5 font-sans text-[11.5px] xs:text-[12px] sm:text-[13.5px] md:text-[14px] tracking-[0.01em] leading-[1.5] font-medium text-[color:var(--ivory)]/95 [text-shadow:0_1px_3px_rgba(0,0,0,0.7),0_2px_14px_rgba(0,0,0,0.6)]">
+                    <p className={`hero-scene-supporting mt-2 md:mt-3.5 font-sans text-[11.5px] xs:text-[12px] sm:text-[13.5px] md:text-[14px] tracking-[0.01em] leading-[1.5] font-medium [text-shadow:0_1px_3px_rgba(0,0,0,0.7),0_2px_14px_rgba(0,0,0,0.6)] ${
+                      heroSceneIndex % 2 === 1
+                        ? "text-[color:var(--ivory)]/95"
+                        : "text-[color:var(--gold-soft)]/95"
+                    }`}>
                       {heroScene.support}
                     </p>
                   ) : null}
