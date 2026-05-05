@@ -220,7 +220,7 @@ export const HERO_ALL_CREDITS = HERO_SCENES.flatMap((scene) =>
  * changes the real duration we proportionally scale every chapter's
  * start/end so overlays stay locked to playback.
  */
-export const HERO_FILM_CANONICAL_DURATION_S = 27.133333;
+export const HERO_FILM_CANONICAL_DURATION_S = 39.633333;
 
 /** Tolerance below which we treat the actual duration as canonical. */
 export const HERO_FILM_CANONICAL_TOLERANCE_S = 0.25;
