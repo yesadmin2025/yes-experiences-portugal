@@ -243,6 +243,130 @@ export function HeroChapterDebugOverlay() {
             <span>curr opacity</span>
           </div>
         </div>
+
+        {/* Easing curve graph — smootherstep opacity over time */}
+        <EasingCurveGraph
+          progress={
+            snap.fadeElapsedMs === null
+              ? null
+              : Math.min(1, Math.max(0, snap.fadeElapsedMs / snap.fadeTotalMs))
+          }
+        />
+      </div>
+    </div>
+  );
+}
+
+/**
+ * EasingCurveGraph — SVG plot of the smootherstep curve
+ * (6t⁵ − 15t⁴ + 10t³) used for the hero overlay cross-fade.
+ * Draws the outgoing (1 − s(t)) and incoming (s(t)) ramps and a
+ * live playhead marker showing where the current fade sits.
+ */
+function EasingCurveGraph({ progress }: { progress: number | null }) {
+  const W = 240;
+  const H = 64;
+  const PAD = 4;
+  const innerW = W - PAD * 2;
+  const innerH = H - PAD * 2;
+
+  const smootherstep = (t: number) => t * t * t * (t * (t * 6 - 15) + 10);
+
+  const SAMPLES = 48;
+  const pointsIn: string[] = [];
+  const pointsOut: string[] = [];
+  for (let i = 0; i <= SAMPLES; i += 1) {
+    const t = i / SAMPLES;
+    const s = smootherstep(t);
+    const x = PAD + t * innerW;
+    const yIn = PAD + (1 - s) * innerH;
+    const yOut = PAD + s * innerH;
+    pointsIn.push(`${x.toFixed(2)},${yIn.toFixed(2)}`);
+    pointsOut.push(`${x.toFixed(2)},${yOut.toFixed(2)}`);
+  }
+
+  const playX = progress === null ? null : PAD + progress * innerW;
+  const playS = progress === null ? null : smootherstep(progress);
+  const playYIn = playS === null ? null : PAD + (1 - playS) * innerH;
+  const playYOut = playS === null ? null : PAD + playS * innerH;
+
+  return (
+    <div className="mt-2">
+      <div className="flex items-center justify-between mb-0.5 text-[9.5px] text-white/50 uppercase tracking-[0.14em]">
+        <span>easing curve · smootherstep</span>
+        <span className="tabular-nums">
+          {progress === null ? "idle" : `t=${progress.toFixed(2)} · α=${(playS ?? 0).toFixed(2)}`}
+        </span>
+      </div>
+      <svg
+        viewBox={`0 0 ${W} ${H}`}
+        className="block w-full h-[64px] rounded-sm bg-white/[0.04] ring-1 ring-white/10"
+        preserveAspectRatio="none"
+      >
+        {/* gridlines: 25/50/75% */}
+        {[0.25, 0.5, 0.75].map((g) => (
+          <line
+            key={g}
+            x1={PAD}
+            x2={W - PAD}
+            y1={PAD + g * innerH}
+            y2={PAD + g * innerH}
+            stroke="rgba(255,255,255,0.08)"
+            strokeWidth={1}
+          />
+        ))}
+        {[0.25, 0.5, 0.75].map((g) => (
+          <line
+            key={`v${g}`}
+            y1={PAD}
+            y2={H - PAD}
+            x1={PAD + g * innerW}
+            x2={PAD + g * innerW}
+            stroke="rgba(255,255,255,0.06)"
+            strokeWidth={1}
+          />
+        ))}
+        {/* outgoing curve (prev) */}
+        <polyline
+          points={pointsIn.join(" ")}
+          fill="none"
+          stroke="var(--ivory)"
+          strokeOpacity={0.7}
+          strokeWidth={1.4}
+        />
+        {/* incoming curve (current) */}
+        <polyline
+          points={pointsOut.join(" ")}
+          fill="none"
+          stroke="var(--gold-soft)"
+          strokeOpacity={0.95}
+          strokeWidth={1.4}
+        />
+        {/* playhead */}
+        {playX !== null && (
+          <>
+            <line
+              x1={playX}
+              x2={playX}
+              y1={PAD}
+              y2={H - PAD}
+              stroke="rgba(255,255,255,0.55)"
+              strokeWidth={1}
+              strokeDasharray="2 2"
+            />
+            {playYIn !== null && (
+              <circle cx={playX} cy={playYIn} r={2.5} fill="var(--ivory)" />
+            )}
+            {playYOut !== null && (
+              <circle cx={playX} cy={playYOut} r={2.5} fill="var(--gold-soft)" />
+            )}
+          </>
+        )}
+      </svg>
+      <div className="flex justify-between mt-0.5 text-[9px] text-white/40 tabular-nums">
+        <span>0ms</span>
+        <span>{Math.round(HERO_OVERLAP_MS / 2)}ms</span>
+        <span>{HERO_OVERLAP_MS}ms</span>
       </div>
     </div>
   );
