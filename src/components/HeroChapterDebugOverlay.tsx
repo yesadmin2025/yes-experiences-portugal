@@ -239,6 +239,8 @@ export function HeroChapterDebugOverlay() {
             <div className="absolute inset-y-0 left-1/2 w-px bg-white/30" />
           </div>
           <div className="flex justify-between mt-0.5 text-[9px] text-white/40 tabular-nums">
+            <span>prev opacity</span>
+            <span>curr opacity</span>
           </div>
         </div>
 
