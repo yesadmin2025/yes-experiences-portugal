@@ -1782,24 +1782,26 @@
 @keyframes ctaAttractPulse {
   0%, 100% {
     box-shadow:
-      inset 0 1px 0 0 color-mix(in oklab, var(--gold-soft) 35%, transparent),
-      inset 0 -1px 0 0 rgba(0, 0, 0, 0.18),
-      0 1px 2px rgba(15, 15, 15, 0.18),
-      0 0 18px -4px color-mix(in oklab, var(--gold) 18%, transparent),
-      0 10px 24px -12px rgba(41, 91, 97, 0.42);
+      inset 0 1px 0 0 color-mix(in oklab, var(--gold-soft) 45%, transparent),
+      inset 0 -1px 0 0 rgba(0, 0, 0, 0.22),
+      0 2px 4px rgba(15, 15, 15, 0.22),
+      0 0 24px -4px color-mix(in oklab, var(--gold) 28%, transparent),
+      0 12px 28px -12px rgba(41, 91, 97, 0.5);
+    transform: translateY(0);
   }
   50% {
     box-shadow:
-      inset 0 1px 0 0 color-mix(in oklab, var(--gold-soft) 50%, transparent),
-      inset 0 -1px 0 0 rgba(0, 0, 0, 0.18),
-      0 1px 2px rgba(15, 15, 15, 0.18),
-      0 0 32px -2px color-mix(in oklab, var(--gold) 42%, transparent),
-      0 12px 28px -14px rgba(201, 169, 106, 0.32);
+      inset 0 1px 0 0 color-mix(in oklab, var(--gold-soft) 70%, transparent),
+      inset 0 -1px 0 0 rgba(0, 0, 0, 0.22),
+      0 2px 4px rgba(15, 15, 15, 0.22),
+      0 0 44px 0 color-mix(in oklab, var(--gold) 60%, transparent),
+      0 18px 36px -14px rgba(201, 169, 106, 0.55);
+    transform: translateY(-1.5px);
   }
 }
 .cta-attract {
-  animation: ctaAttractPulse 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  animation-delay: 1.05s;
+  animation: ctaAttractPulse 2.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  animation-delay: 0.9s;
 }
 .cta-attract:hover { animation: none; }
 @media (prefers-reduced-motion: reduce) {
