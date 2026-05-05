@@ -68,10 +68,9 @@ const FEATURED_TOUR_IDS = [
  * photography. AI is not used to shape any of these strings.
  * ────────────────────────────────────────────────────────────── */
 const HERO_SCENE_DURATION_MS = 5200;
-// Slowed further (0.86 → 0.78) so the closing "Build it live / Confirm
-// instantly" beat holds visibly through the Portugal-map close instead
-// of finishing before it. Same media element governs every viewport.
-const HERO_FILM_PLAYBACK_RATE = 0.6;
+// Premium pacing: quick enough that market → azulejos → private table doesn't
+// drag, slow enough that the restored map close and chapter copy still breathe.
+const HERO_FILM_PLAYBACK_RATE = 0.72;
 
 /* ──────────────────────────────────────────────────────────────────
  * Cinematic horizontal storytelling hero — 5 scenes, each a short
@@ -406,7 +405,7 @@ function HomePage() {
   }, []);
 
   // Auto-synced chapter timeline. The manifest declares chapter windows
-  // for the canonical 41.5s film, but the actual `<video>` may differ
+  // for the canonical 39.633s film, but the actual `<video>` may differ
   // (re-encode, alternate source). On `loadedmetadata` we read the real
   // duration and scale every chapter's startTime/endTime proportionally
   // so overlays NEVER desync from the underlying playback. If the
