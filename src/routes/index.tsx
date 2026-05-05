@@ -71,7 +71,7 @@ const HERO_SCENE_DURATION_MS = 5200;
 // Slowed further (0.86 → 0.78) so the closing "Build it live / Confirm
 // instantly" beat holds visibly through the Portugal-map close instead
 // of finishing before it. Same media element governs every viewport.
-const HERO_FILM_PLAYBACK_RATE = 0.78;
+const HERO_FILM_PLAYBACK_RATE = 0.7;
 
 /* ──────────────────────────────────────────────────────────────────
  * Cinematic horizontal storytelling hero — 5 scenes, each a short
