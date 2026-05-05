@@ -1004,12 +1004,7 @@ function HomePage() {
                {HERO_COPY.subheadline}
              </p>
 
-              <p
-                aria-hidden="true"
-                className="mt-3 md:mt-4 text-[8.5px] xs:text-[9px] md:text-[10px] uppercase tracking-[0.18em] text-[color:var(--ivory)]/55 [text-shadow:0_1px_8px_rgba(0,0,0,0.72)] opacity-0 animate-[heroFadeFromRight_1.05s_ease-out_0.85s_forwards]"
-              >
-                © {new Date().getFullYear()} YES experiences Portugal
-              </p>
+
 
               {/* Cross-faded scene-message stack. During a chapter
                   boundary we render the OUTGOING and INCOMING messages
