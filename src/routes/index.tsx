@@ -296,7 +296,7 @@ function HomePage() {
     heroFreezeOnLast ? heroScenes.length - 1 : 0,
   );
   const heroScene = heroScenes[heroSceneIndex];
-  const isHeroActionScene = heroSceneIndex === heroScenes.length - 1;
+  const isHeroActionScene = heroScene.id === "confirm";
   const heroChapterDebug = useHeroChapterDebugToggle();
 
   // Focus management — when the cinematic film reaches its final action
@@ -1123,7 +1123,7 @@ function HomePage() {
                   <div
                     role="group"
                     aria-label="Hero actions — start designing your day or browse signature experiences"
-                    className="flex flex-col sm:flex-row gap-2.5 sm:gap-3.5 w-full max-w-[19rem] sm:max-w-lg"
+                    className="hero-cta-group cta-magnet-group flex flex-col sm:flex-row gap-3 sm:gap-4 w-full max-w-[20.5rem] sm:max-w-xl"
                   >
                      <Link
                        to="/builder"
@@ -1136,7 +1136,7 @@ function HomePage() {
                         });
                         trackHeroEvent("builder_start", { sceneId: heroScene.id });
                       }}
-                      className="hero-cta-button hero-cta-button--compact cta-primary cta-attract he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left"
+                       className="hero-cta-button hero-cta-button--compact cta-primary cta-attention cta-breathe cta-attract he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left"
                     >
                       <span className="block text-[color:var(--gold-soft)]">{HERO_COPY.primaryCta}</span>
                       <ArrowRight
@@ -1156,7 +1156,8 @@ function HomePage() {
                         });
                         trackHeroEvent("view_signature", { sceneId: heroScene.id });
                       }}
-                      className="hero-cta-button hero-cta-button--compact cta-secondary-dark cta-attract he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left"
+                      data-cta-stagger
+                      className="hero-cta-button hero-cta-button--compact cta-secondary-dark cta-attention cta-breathe cta-attract he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left"
                     >
                       <span className="block text-[color:var(--gold-soft)]">{HERO_COPY.secondaryCta}</span>
                       <ArrowRight
