@@ -138,9 +138,17 @@ export const HERO_COPY_EXPERIMENT: HeroExperiment = {
           main: ["Marking a", "moment soon?"],
           support: "Birthdays, anniversaries, proposals.",
         },
+        corporate: {
+          main: ["Team day", "or retreat?"],
+          support: "Coordinated end to end.",
+        },
         journey: {
           main: ["One day,", "or a journey?"],
           support: "Across Portugal, your rhythm.",
+        },
+        build: {
+          main: ["Start writing", "your story."],
+          support: "Build it live. Confirm instantly.",
         },
         confirm: {
           main: [],
