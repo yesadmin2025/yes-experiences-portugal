@@ -103,11 +103,7 @@ export const HERO_COPY_EXPERIMENT: HeroExperiment = {
           support: "Carefully coordinated. Locally guided.",
         },
         journey: {
-          main: ["One perfect day…"],
-          support: "Your rhythm, your pace.",
-        },
-        "journey-portugal": {
-          main: ["…or many,", "across Portugal."],
+          main: ["One day,", "or many."],
           support: "Multi-day Portugal, your rhythm.",
         },
         build: {
@@ -147,11 +143,7 @@ export const HERO_COPY_EXPERIMENT: HeroExperiment = {
           support: "Coordinated end to end.",
         },
         journey: {
-          main: ["One perfect day…"],
-          support: "Your rhythm, your pace.",
-        },
-        "journey-portugal": {
-          main: ["…or a journey", "across Portugal?"],
+          main: ["One day,", "or a journey?"],
           support: "Across Portugal, your rhythm.",
         },
         build: {
