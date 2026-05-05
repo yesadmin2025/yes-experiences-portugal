@@ -1066,7 +1066,8 @@ function HomePage() {
                 <div
                   key={`scene-msg-${heroScene.id}`}
                   data-hero-overlay="current"
-                  className={`hero-scene-message is-on relative ${
+                  data-hero-enter-dir={heroSceneIndex % 2 === 0 ? "left" : "right"}
+                  className={`hero-scene-message hero-scene-enter is-on relative ${
                     heroSceneIndex === 0 ? "sr-only" : "mt-3.5 md:mt-6"
                   } ${
                     heroPrevIndex !== null && heroPrevIndex !== heroSceneIndex
@@ -1077,9 +1078,6 @@ function HomePage() {
                     heroPrevIndex !== null && heroPrevIndex !== heroSceneIndex
                       ? {
                           opacity: heroFadeAlpha,
-                          transform: `translate3d(0, ${((1 - heroFadeAlpha) * 4).toFixed(2)}px, 0)`,
-                          transition:
-                            "opacity 380ms cubic-bezier(0.4, 0, 0.2, 1), transform 380ms cubic-bezier(0.4, 0, 0.2, 1)",
                           willChange: "opacity, transform",
                         }
                       : undefined
