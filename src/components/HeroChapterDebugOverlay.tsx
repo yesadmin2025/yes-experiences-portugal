@@ -244,14 +244,35 @@ export function HeroChapterDebugOverlay() {
           </div>
         </div>
 
-        {/* Easing curve graph — smootherstep opacity over time */}
-        <EasingCurveGraph
-          progress={
-            snap.fadeElapsedMs === null
-              ? null
-              : Math.min(1, Math.max(0, snap.fadeElapsedMs / snap.fadeTotalMs))
-          }
-        />
+        {/* Full chapter timeline — start/end of every overlay + image
+            window. The text window IS the image window by design (one
+            film, chapter overlays sync to currentTime), so this list
+            doubles as the source of truth for both. */}
+        <div className="mt-2 pt-2 border-t border-white/10">
+          <div className="mb-1 text-[9.5px] uppercase tracking-[0.14em] text-white/50">
+            timeline (text window = image window)
+          </div>
+          <ul className="space-y-0.5 text-[10px] tabular-nums">
+            {HERO_SCENES.map((s, i) => {
+              const active = i === snap.chapterIndex;
+              return (
+                <li
+                  key={s.id}
+                  className={`flex items-center justify-between gap-2 px-1 rounded ${
+                    active ? "bg-[color:var(--gold)]/15 text-[color:var(--gold-soft)]" : "text-white/70"
+                  }`}
+                >
+                  <span className="truncate">
+                    {String(i + 1).padStart(1, "0")}. {s.id}
+                  </span>
+                  <span className="text-right whitespace-nowrap text-white/55">
+                    {s.startTime.toFixed(2)}–{s.endTime.toFixed(2)}s
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
       </div>
     </div>
   );
