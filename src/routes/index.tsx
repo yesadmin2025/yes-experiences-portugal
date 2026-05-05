@@ -1004,12 +1004,7 @@ function HomePage() {
                {HERO_COPY.subheadline}
              </p>
 
-              <p
-                aria-hidden="true"
-                className="mt-3 md:mt-4 text-[8.5px] xs:text-[9px] md:text-[10px] uppercase tracking-[0.18em] text-[color:var(--ivory)]/55 [text-shadow:0_1px_8px_rgba(0,0,0,0.72)] opacity-0 animate-[heroFadeFromRight_1.05s_ease-out_0.85s_forwards]"
-              >
-                © {new Date().getFullYear()} YES experiences Portugal
-              </p>
+
 
               {/* Cross-faded scene-message stack. During a chapter
                   boundary we render the OUTGOING and INCOMING messages
@@ -1021,7 +1016,13 @@ function HomePage() {
                   On scene 1 the canonical H1 already carries the message,
                   so the active block stays sr-only — the cross-fade only
                   matters from scene 2 onwards. */}
-              <div className="hero-scene-message-stack relative max-w-[18rem] xs:max-w-[20rem] sm:max-w-xl">
+              <div
+                className="hero-scene-message-stack relative max-w-[18rem] xs:max-w-[20rem] sm:max-w-xl"
+                role="group"
+                aria-live="polite"
+                aria-atomic="true"
+                aria-label="Hero storytelling captions"
+              >
                 {heroPrevIndex !== null && heroPrevIndex !== heroSceneIndex
                   ? (() => {
                       const prevScene = heroScenes[heroPrevIndex];
@@ -1031,7 +1032,7 @@ function HomePage() {
                           key={`scene-msg-prev-${prevScene.id}`}
                           aria-hidden="true"
                           data-hero-overlay="prev"
-                          className="hero-scene-message is-on absolute inset-0 mt-3.5 md:mt-6 pointer-events-none"
+                          className="hero-scene-message hero-caption is-on absolute inset-0 mt-3.5 md:mt-6 pointer-events-none"
                           style={{
                             opacity: 1 - heroFadeAlpha,
                             transform: `translate3d(0, ${(-4 * heroFadeAlpha).toFixed(2)}px, 0)`,
@@ -1075,7 +1076,7 @@ function HomePage() {
                   key={`scene-msg-${heroScene.id}`}
                   data-hero-overlay="current"
                   data-hero-enter-dir={heroSceneIndex % 2 === 0 ? "left" : "right"}
-                  className={`hero-scene-message hero-scene-enter is-on relative ${
+                  className={`hero-scene-message hero-caption hero-scene-enter is-on relative ${
                     heroSceneIndex === 0 ? "sr-only" : "mt-3.5 md:mt-6"
                   } ${
                     heroPrevIndex !== null && heroPrevIndex !== heroSceneIndex

@@ -31,11 +31,14 @@ describe("hero credits pacing — playback rate slows every chapter enough to re
   it.each(
     HERO_SCENES.map((c, i) => [i, c.id, c.startTime, c.endTime] as const),
   )(
-    "chapter %i (%s) holds ≥ %ds on screen at the configured playback rate",
+    "chapter %i (%s) holds within editorial floor and ceiling at the configured playback rate",
     (_i, _id, startTime, endTime) => {
       const authored = endTime - startTime;
       const effective = authored / HERO_FILM_PLAYBACK_RATE;
       expect(effective).toBeGreaterThanOrEqual(MIN_VISIBLE_CHAPTER_SECONDS);
+      // Ceiling — no single beat may drag past 8s, otherwise viewers
+      // disengage waiting for the next chapter.
+      expect(effective).toBeLessThanOrEqual(8.0);
     },
   );
 
