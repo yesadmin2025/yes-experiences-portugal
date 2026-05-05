@@ -106,8 +106,8 @@ const filmCredit: HeroAssetCredit = {
  *   1. PORTUGAL OPENS    ( 0.000s –  3.700s)   — eyebrow + H1 only
  *   2. HIDDEN GEMS       ( 3.700s – 13.200s)   — market → azulejos
  *   3. PRIVATE DAY       (13.200s – 17.200s)   — private table
- *   4. CELEBRATIONS      (17.200s – 21.200s)   — vineyards / celebration
- *   5. CORPORATE         (21.200s – 24.000s)   — corporate table
+ *   4. CELEBRATIONS      (17.200s – 21.100s)   — vineyards / celebration
+ *   5. CORPORATE         (21.100s – 24.000s)   — corporate table
  *   6. PERFECT DAY       (24.000s – 28.000s)   — couple → boat
  *   7. PORTUGAL JOURNEY  (28.000s – 36.000s)   — monument / city / live map
  *   8. CTA CLOSE         (36.000s – 39.633s)   — buttons on map frames
@@ -156,7 +156,7 @@ export const HERO_SCENES: readonly HeroScene[] = [
     position: { mobile: "50% 45%", tablet: "50% 45%", desktop: "50% 45%" },
     pan: "push-in",
     startTime: 17.2,
-    endTime: 21.2,
+    endTime: 21.1,
     main: ["Celebrations", "made effortless."],
     support: "Milestones shaped with care.",
     credits: [filmCredit],
@@ -167,7 +167,7 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 50%", tablet: "50% 50%", desktop: "50% 50%" },
     pan: "drift-left",
-    startTime: 21.2,
+    startTime: 21.1,
     endTime: 24.0,
     main: ["For teams", "with purpose."],
     support: "Corporate tables, privately orchestrated.",
