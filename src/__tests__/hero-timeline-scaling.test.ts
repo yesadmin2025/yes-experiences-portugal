@@ -51,7 +51,7 @@ function assertNoGapsAndOrdered(
 }
 
 describe("scaleHeroTimeline — canonical pass-through", () => {
-  it("returns the manifest verbatim when duration === canonical 39.633s", () => {
+  it("returns the manifest verbatim when duration === canonical master", () => {
     const out = scaleHeroTimeline(HERO_FILM_CANONICAL_DURATION_S);
     expect(out).toEqual(
       HERO_SCENES.map((s) => ({
@@ -62,11 +62,14 @@ describe("scaleHeroTimeline — canonical pass-through", () => {
     );
   });
 
-  it.each([39.4, 39.633333, 39.85])(
+  it.each([
+    HERO_FILM_CANONICAL_DURATION_S - 0.2,
+    HERO_FILM_CANONICAL_DURATION_S,
+    HERO_FILM_CANONICAL_DURATION_S + 0.2,
+  ])(
     "treats %ss as canonical (within ±0.25s tolerance) and returns manifest verbatim",
     (duration) => {
       const out = scaleHeroTimeline(duration);
-      // Canonical fast-path: identical numeric values to the manifest.
       out.forEach((c, i) => {
         expect(c.startTime).toBe(HERO_SCENES[i].startTime);
         expect(c.endTime).toBe(HERO_SCENES[i].endTime);

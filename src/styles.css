@@ -1763,50 +1763,75 @@
   animation: heroEnterRiseSoft 0.75s cubic-bezier(0.22, 0.61, 0.36, 1) both;
 }
 
-/* Sequenced reveal on the final hero slide: the closing phrase now lives
-   in its own previous chapter, so the CTA-only slide can arrive visibly
-   and confidently instead of sharing the same title card. */
+/* Sequenced reveal on the final hero slide — premium two-sided entry.
+   Primary CTA glides in from the LEFT, secondary CTA from the RIGHT,
+   both with a soft gold-lit blur-out so they "land" rather than fade.
+   The CTA group container itself stays in place; each CTA carries its
+   own keyframe and direction so they read as two confident, premium
+   buttons appearing from opposite sides. */
+@keyframes heroCtaEnterLeft {
+  0%   { opacity: 0; transform: translate3d(-26px, 6px, 0) scale(0.97); filter: blur(3px) brightness(0.92); }
+  60%  { opacity: 1; filter: blur(0) brightness(1.06); }
+  100% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); filter: blur(0) brightness(1); }
+}
+@keyframes heroCtaEnterRight {
+  0%   { opacity: 0; transform: translate3d(26px, 6px, 0) scale(0.97); filter: blur(3px) brightness(0.92); }
+  60%  { opacity: 1; filter: blur(0) brightness(1.06); }
+  100% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); filter: blur(0) brightness(1); }
+}
 .hero-action-reveal > [role="group"] {
-  opacity: 0;
-  transform: translate3d(0, 14px, 0) scale(0.985);
-  animation: heroEnterRiseSoft 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.18s both;
+  opacity: 1;
+}
+.hero-action-reveal > [role="group"] > a:nth-child(1) {
+  animation: heroCtaEnterLeft 0.95s cubic-bezier(0.16, 1, 0.3, 1) 0.20s both;
+}
+.hero-action-reveal > [role="group"] > a:nth-child(2) {
+  animation: heroCtaEnterRight 0.95s cubic-bezier(0.16, 1, 0.3, 1) 0.42s both;
 }
 .hero-action-reveal > .hero-rhythm-cta-to-microcopy {
   opacity: 0;
-  animation: heroEnterRiseSoft 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.82s both;
+  animation: heroEnterRiseSoft 0.7s cubic-bezier(0.16, 1, 0.3, 1) 1.05s both;
 }
 
-/* Attention pulse on hero CTAs — gentle gold halo breath that draws
-   the eye without competing with the cinematic film. Pauses on hover
-   so the existing he-glow / he-sheen interactions read clean. */
+/* Attention pulse on hero CTAs — premium gold halo breath that draws
+   the eye without competing with the cinematic film. Stronger gold
+   bloom + warm rim so the CTAs read "alive" on the dark map close.
+   Pauses on hover so the existing he-glow / he-sheen interactions
+   own the active state. */
 @keyframes ctaAttractPulse {
   0%, 100% {
     box-shadow:
-      inset 0 1px 0 0 color-mix(in oklab, var(--gold-soft) 45%, transparent),
+      inset 0 1px 0 0 color-mix(in oklab, var(--gold-soft) 60%, transparent),
       inset 0 -1px 0 0 rgba(0, 0, 0, 0.22),
-      0 2px 4px rgba(15, 15, 15, 0.22),
-      0 0 24px -4px color-mix(in oklab, var(--gold) 28%, transparent),
-      0 12px 28px -12px rgba(41, 91, 97, 0.5);
+      0 2px 6px rgba(15, 15, 15, 0.28),
+      0 0 28px -2px color-mix(in oklab, var(--gold) 38%, transparent),
+      0 14px 32px -14px rgba(41, 91, 97, 0.55);
     transform: translateY(0);
   }
   50% {
     box-shadow:
-      inset 0 1px 0 0 color-mix(in oklab, var(--gold-soft) 70%, transparent),
+      inset 0 1px 0 0 color-mix(in oklab, var(--gold-soft) 92%, transparent),
       inset 0 -1px 0 0 rgba(0, 0, 0, 0.22),
-      0 2px 4px rgba(15, 15, 15, 0.22),
-      0 0 44px 0 color-mix(in oklab, var(--gold) 60%, transparent),
-      0 18px 36px -14px rgba(201, 169, 106, 0.55);
-    transform: translateY(-1.5px);
+      0 2px 6px rgba(15, 15, 15, 0.28),
+      0 0 56px 4px color-mix(in oklab, var(--gold) 72%, transparent),
+      0 22px 42px -14px rgba(201, 169, 106, 0.65);
+    transform: translateY(-2px);
   }
 }
 .cta-attract {
-  animation: ctaAttractPulse 2.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  animation-delay: 0.9s;
+  animation: ctaAttractPulse 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  animation-delay: 1.4s;
 }
+.cta-attract[data-cta-stagger] { animation-delay: 1.7s; }
 .cta-attract:hover { animation: none; }
 @media (prefers-reduced-motion: reduce) {
   .cta-attract { animation: none !important; }
-  .hero-action-reveal > [role="group"],
+  .hero-action-reveal > [role="group"] > a {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
   .hero-action-reveal > .hero-rhythm-cta-to-microcopy {
     opacity: 1 !important;
     transform: none !important;
