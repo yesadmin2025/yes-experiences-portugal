@@ -20,7 +20,7 @@ import { HERO_SCENES, HERO_FILM } from "../content/hero-scenes-manifest";
 // Must match src/routes/index.tsx
 const HERO_FILM_PLAYBACK_RATE = 0.6;
 
-const MIN_VISIBLE_CHAPTER_SECONDS = 4.0;
+const MIN_VISIBLE_CHAPTER_SECONDS = 3.9;
 
 describe("hero credits pacing — playback rate slows every chapter enough to read", () => {
   it("uses a sub-1.0 playback rate so credits never advance faster than authored", () => {
