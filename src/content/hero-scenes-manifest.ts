@@ -156,18 +156,6 @@ export const HERO_SCENES: readonly HeroScene[] = [
     credits: [filmCredit],
   },
   {
-    id: "taste",
-    image: FILM_POSTER,
-    video: FILM_1080,
-    position: { mobile: "50% 45%", tablet: "50% 45%", desktop: "50% 45%" },
-    pan: "drift-right",
-    startTime: 11.933,
-    endTime: 17.2,
-    main: ["For proposals, celebrations", "and moments worth keeping."],
-    support: "Anniversaries, birthdays, unforgettable moments.",
-    credits: [filmCredit],
-  },
-  {
     id: "celebrate",
     image: FILM_POSTER,
     video: FILM_1080,
