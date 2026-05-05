@@ -59,10 +59,10 @@ const controlScenes: Record<string, SceneCopyOverride> = Object.fromEntries(
  * `cta_click` + `builder_start` downstream.
  */
 export const HERO_COPY_EXPERIMENT: HeroExperiment = {
-  // Stable analytics key. Bumped to v4 when the restored original-map master
-  // became canonical, so returning visitors are not pinned to an older cached
-  // copy order where corporate / private / celebrations were mis-sequenced.
-  key: "hero_copy_v4",
+  // Stable analytics key. Bumped to v5 when the trimmed final-map master
+  // timings were re-locked so returning visitors are not pinned to older
+  // local assignments with stale copy cadence.
+  key: "hero_copy_v5",
   // 100% weight on `control` for now — the cinematic spine IS the
   // approved hero. `benefit` and `question` remain defined so we can
   // re-enable the split (e.g. 60/20/20) later without rewiring any
@@ -87,7 +87,7 @@ export const HERO_COPY_EXPERIMENT: HeroExperiment = {
           support: "Built around how you want to feel.",
         },
         choose: {
-          main: ["Hidden gems,", "made yours."],
+          main: ["Hidden gems,", "known by locals."],
           support: "Markets and azulejos, without the rush.",
         },
         taste: {
@@ -127,7 +127,7 @@ export const HERO_COPY_EXPERIMENT: HeroExperiment = {
           support: "Tell us how you want it to feel.",
         },
         choose: {
-          main: ["What will", "you discover?"],
+          main: ["Hidden gems,", "known by locals?"],
           support: "Markets, azulejos, the places between.",
         },
         taste: {
