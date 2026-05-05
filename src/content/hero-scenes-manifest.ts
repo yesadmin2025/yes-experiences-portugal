@@ -97,20 +97,21 @@ const filmCredit: HeroAssetCredit = {
 
 /**
  * Chapter overlays sequenced over the SINGLE continuous premium remaster
- * (27.633s). The remaster keeps the original map / computer-map frames,
- * trims the long azulejo hold, aligns private → celebrations → corporate with
- * the real table beats, and keeps the Portugal map as the final CTA frame.
+ * (27.633s). Copy beats are mapped to the REAL visual beats in the master:
+ * coast opening → market → azulejos → intimate table at tiles → vineyards
+ * → couple → boat → monuments / roads / city → final Portugal map.
  * Adjacent windows are gapless (chapter[i].endTime === chapter[i+1].startTime)
- * so the rAF lookup never falls into a no-overlay frame.
+ * so the rAF lookup never falls into a no-overlay frame. Soft 1.45s
+ * cross-fade between overlays gives a premium dissolve, not a hard cut.
  *
- *   1. PORTUGAL OPENS    ( 0.000s –  3.400s)   — eyebrow + H1 only
- *   2. HIDDEN GEMS       ( 3.400s –  7.600s)   — market → azulejos, trimmed
- *   3. PRIVATE DAY       ( 7.600s – 10.200s)   — private table
- *   4. CELEBRATIONS      (10.200s – 12.600s)   — vineyards / celebration
- *   5. CORPORATE         (12.600s – 14.800s)   — corporate table
- *   6. PERFECT DAY       (14.800s – 18.200s)   — couple → boat
- *   7. PORTUGAL JOURNEY  (18.200s – 24.600s)   — monument / city / live map
- *   8. CTA CLOSE         (24.600s – 27.633s)   — buttons on final map
+ *   1. PORTUGAL OPENS    ( 0.000s –  3.400s)   — eyebrow + H1 only (coast)
+ *   2. HIDDEN GEMS       ( 3.400s –  7.600s)   — market → azulejos, smooth dissolve
+ *   3. PRIVATE DAY       ( 7.600s – 10.000s)   — intimate table at tiles
+ *   4. CELEBRATIONS      (10.000s – 11.600s)   — vineyards / raised glasses
+ *   5. CORPORATE         (11.600s – 13.000s)   — vineyards continues, copy crossfades
+ *   6. PERFECT DAY       (13.000s – 16.800s)   — couple → boat
+ *   7. PORTUGAL JOURNEY  (16.800s – 24.600s)   — monuments / roads / city / map
+ *   8. CTA CLOSE         (24.600s – 27.633s)   — buttons on final Portugal map
  */
 export const HERO_SCENES: readonly HeroScene[] = [
   {
