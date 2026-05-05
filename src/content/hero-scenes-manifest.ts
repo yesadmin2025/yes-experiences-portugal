@@ -111,8 +111,8 @@ const filmCredit: HeroAssetCredit = {
  *   3. PRIVATE DAY       (14.000s – 17.200s)   — group at the table
  *   4. MOMENTS           (17.200s – 25.000s)   — vineyards + proposal
  *   5. CORPORATE/JOURNEY (25.000s – 35.600s)   — route + corporate group
- *   6. FINAL PHRASE      (35.600s – 37.850s)   — map / live builder line
- *   7. CTA CLOSE         (37.850s – 39.633s)   — buttons only
+ *   6. FINAL PHRASE      (35.600s – 37.200s)   — map / live builder line
+ *   7. CTA CLOSE         (37.200s – 39.633s)   — buttons only
  */
 export const HERO_SCENES: readonly HeroScene[] = [
   {
@@ -182,7 +182,7 @@ export const HERO_SCENES: readonly HeroScene[] = [
     position: { mobile: "50% 50%", tablet: "50% 50%", desktop: "50% 50%" },
     pan: "push-in",
     startTime: 35.6,
-    endTime: 37.85,
+    endTime: 37.2,
     main: ["Build your journey."],
     support: "See it take shape live.",
     credits: [filmCredit],
@@ -193,7 +193,7 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 50%", tablet: "50% 50%", desktop: "50% 50%" },
     pan: "push-in",
-    startTime: 37.85,
+    startTime: 37.2,
     endTime: 39.633333,
     main: [],
     support: undefined,
