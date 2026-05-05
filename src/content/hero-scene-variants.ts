@@ -59,10 +59,10 @@ const controlScenes: Record<string, SceneCopyOverride> = Object.fromEntries(
  * `cta_click` + `builder_start` downstream.
  */
 export const HERO_COPY_EXPERIMENT: HeroExperiment = {
-  // Stable analytics key. Bumped to v5 when the trimmed final-map master
-  // timings were re-locked so returning visitors are not pinned to older
-  // local assignments with stale copy cadence.
-  key: "hero_copy_v5",
+  // Stable analytics key. Bumped to v3 when the market/azulejos timing and
+  // separate final CTA slide became canonical, so returning visitors are not
+  // pinned to an older localStorage copy sequence.
+  key: "hero_copy_v3",
   // 100% weight on `control` for now — the cinematic spine IS the
   // approved hero. `benefit` and `question` remain defined so we can
   // re-enable the split (e.g. 60/20/20) later without rewiring any
@@ -87,28 +87,28 @@ export const HERO_COPY_EXPERIMENT: HeroExperiment = {
           support: "Built around how you want to feel.",
         },
         choose: {
-          main: ["Hidden gems,", "only known by locals."],
-          support: "Markets and azulejos, without the rush.",
+          main: ["Pick the route.", "We drive it."],
+          support: "Coast, vine, ruins, river — your call.",
         },
         taste: {
-          main: ["A private day,", "crafted for you."],
-          support: "Your people, your timing, your table.",
+          main: ["Taste estates", "tours skip."],
+          support: "Hosted by the people who run them.",
         },
         celebrate: {
-          main: ["Celebrate", "without effort."],
-          support: "Milestones handled with calm precision.",
+          main: ["Mark the day", "the right way."],
+          support: "Birthdays, anniversaries, big yeses.",
         },
         corporate: {
-          main: ["Teams together,", "properly hosted."],
-          support: "Corporate moments, quietly coordinated.",
+          main: ["Corporate groups,", "private retreats."],
+          support: "Carefully coordinated. Locally guided.",
         },
         journey: {
-          main: ["One perfect day", "to remember."],
-          support: "A couple, a coast, a story in motion.",
+          main: ["One day,", "or many."],
+          support: "Multi-day Portugal, your rhythm.",
         },
         build: {
-          main: ["A journey", "across Portugal."],
-          support: "From landmark to route, designed as one flow.",
+          main: ["Start writing", "your story."],
+          support: "Build it live. Confirm instantly.",
         },
         confirm: {
           main: [],
@@ -127,28 +127,28 @@ export const HERO_COPY_EXPERIMENT: HeroExperiment = {
           support: "Tell us how you want it to feel.",
         },
         choose: {
-          main: ["Hidden gems,", "only known by locals?"],
-          support: "Markets, azulejos, the places between.",
+          main: ["Coast or", "vineyards first?"],
+          support: "Your route, drawn live.",
         },
         taste: {
-          main: ["How private", "should it feel?"],
-          support: "Your day, crafted around your people.",
+          main: ["Wine, food,", "or both today?"],
+          support: "Hosted by real families.",
         },
         celebrate: {
-          main: ["What are you", "celebrating?"],
-          support: "Milestones shaped with care.",
+          main: ["Marking a", "moment soon?"],
+          support: "Birthdays, anniversaries, proposals.",
         },
         corporate: {
-          main: ["A team day", "with purpose?"],
-          support: "Corporate tables, privately orchestrated.",
+          main: ["Team day", "or retreat?"],
+          support: "Coordinated end to end.",
         },
         journey: {
-          main: ["One perfect day", "to remember?"],
-          support: "A couple, a coast, a story in motion.",
+          main: ["One day,", "or a journey?"],
+          support: "Across Portugal, your rhythm.",
         },
         build: {
-          main: ["How far", "across Portugal?"],
-          support: "From landmark to route, designed as one flow.",
+          main: ["Start writing", "your story."],
+          support: "Build it live. Confirm instantly.",
         },
         confirm: {
           main: [],

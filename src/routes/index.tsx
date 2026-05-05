@@ -68,9 +68,10 @@ const FEATURED_TOUR_IDS = [
  * photography. AI is not used to shape any of these strings.
  * ────────────────────────────────────────────────────────────── */
 const HERO_SCENE_DURATION_MS = 5200;
-// Premium pacing: the film itself is now trimmed, so playback stays natural —
-// no dragged azulejo hold, no delayed private / corporate beats.
-const HERO_FILM_PLAYBACK_RATE = 1;
+// Slowed further (0.86 → 0.78) so the closing "Build it live / Confirm
+// instantly" beat holds visibly through the Portugal-map close instead
+// of finishing before it. Same media element governs every viewport.
+const HERO_FILM_PLAYBACK_RATE = 0.6;
 
 /* ──────────────────────────────────────────────────────────────────
  * Cinematic horizontal storytelling hero — 5 scenes, each a short
@@ -405,7 +406,7 @@ function HomePage() {
   }, []);
 
   // Auto-synced chapter timeline. The manifest declares chapter windows
-  // for the canonical 27.633s film, but the actual `<video>` may differ
+  // for the canonical 41.5s film, but the actual `<video>` may differ
   // (re-encode, alternate source). On `loadedmetadata` we read the real
   // duration and scale every chapter's startTime/endTime proportionally
   // so overlays NEVER desync from the underlying playback. If the
@@ -953,7 +954,7 @@ function HomePage() {
                 <h1
                   data-hero-field="headlineLine1 headlineLine2"
                   data-hero-anchor="spotlight"
-                 className="hero-h1 hero-h1-cinematic serif mt-3.5 md:mt-6 text-[1.6rem] xs:text-[1.7rem] sm:text-[2.25rem] md:text-[3.1rem] lg:text-[3.6rem] leading-[1.12] sm:leading-[1.06] md:leading-[1.02] tracking-[-0.02em] text-[color:var(--ivory)] text-left opacity-0 animate-[heroFadeFromRight_1s_ease-out_0.55s_forwards] [text-shadow:0_2px_22px_rgba(0,0,0,0.4)]"
+                 className="hero-h1 hero-h1-cinematic serif mt-3.5 md:mt-6 text-[1.4rem] xs:text-[1.6rem] sm:text-[2.15rem] md:text-[2.95rem] lg:text-[3.4rem] leading-[1.16] sm:leading-[1.08] md:leading-[1.04] tracking-[-0.02em] text-[color:var(--ivory)] text-left opacity-0 animate-[heroFadeFromRight_1s_ease-out_0.55s_forwards] [text-shadow:0_2px_22px_rgba(0,0,0,0.4)]"
                >
                  <span
                    data-hero-field="headlineLine1"
@@ -1004,8 +1005,6 @@ function HomePage() {
                {HERO_COPY.subheadline}
              </p>
 
-
-
               {/* Cross-faded scene-message stack. During a chapter
                   boundary we render the OUTGOING and INCOMING messages
                   together for ~600ms with eased opacity (cosine S-curve)
@@ -1016,13 +1015,7 @@ function HomePage() {
                   On scene 1 the canonical H1 already carries the message,
                   so the active block stays sr-only — the cross-fade only
                   matters from scene 2 onwards. */}
-              <div
-                className="hero-scene-message-stack relative max-w-[18rem] xs:max-w-[20rem] sm:max-w-xl"
-                role="group"
-                aria-live="polite"
-                aria-atomic="true"
-                aria-label="Hero storytelling captions"
-              >
+              <div className="hero-scene-message-stack relative max-w-[18rem] xs:max-w-[20rem] sm:max-w-xl">
                 {heroPrevIndex !== null && heroPrevIndex !== heroSceneIndex
                   ? (() => {
                       const prevScene = heroScenes[heroPrevIndex];
@@ -1032,7 +1025,7 @@ function HomePage() {
                           key={`scene-msg-prev-${prevScene.id}`}
                           aria-hidden="true"
                           data-hero-overlay="prev"
-                          className="hero-scene-message hero-caption is-on absolute inset-0 mt-3.5 md:mt-6 pointer-events-none"
+                          className="hero-scene-message is-on absolute inset-0 mt-3.5 md:mt-6 pointer-events-none"
                           style={{
                             opacity: 1 - heroFadeAlpha,
                             transform: `translate3d(0, ${(-4 * heroFadeAlpha).toFixed(2)}px, 0)`,
@@ -1076,7 +1069,7 @@ function HomePage() {
                   key={`scene-msg-${heroScene.id}`}
                   data-hero-overlay="current"
                   data-hero-enter-dir={heroSceneIndex % 2 === 0 ? "left" : "right"}
-                  className={`hero-scene-message hero-caption hero-scene-enter is-on relative ${
+                  className={`hero-scene-message hero-scene-enter is-on relative ${
                     heroSceneIndex === 0 ? "sr-only" : "mt-3.5 md:mt-6"
                   } ${
                     heroPrevIndex !== null && heroPrevIndex !== heroSceneIndex
