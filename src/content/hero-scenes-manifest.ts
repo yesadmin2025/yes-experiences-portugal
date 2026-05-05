@@ -106,10 +106,10 @@ const filmCredit: HeroAssetCredit = {
  *
  *   1. PORTUGAL OPENS    ( 0.000s –  2.900s)   — coast opening, no duplicate later
  *   2. HIDDEN GEMS       ( 2.900s –  7.000s)   — market → azulejos, same message
- *   3. PRIVATE DAY       ( 7.000s –  9.800s)   — intimate table at tiles
- *   4. CELEBRATIONS      ( 9.800s – 11.700s)   — vineyards / raised glasses
- *   5. CORPORATE         (11.700s – 13.200s)   — corporate table
- *   6. PERFECT DAY       (13.200s – 16.900s)   — couple → boat
+ *   3. PRIVATE DAY       ( 7.000s –  9.600s)   — intimate table at tiles
+ *   4. CELEBRATIONS      ( 9.600s – 11.750s)   — vineyards / raised glasses
+ *   5. CORPORATE         (11.750s – 13.900s)   — corporate table
+ *   6. PERFECT DAY       (13.900s – 16.900s)   — couple → boat
  *   7. PORTUGAL JOURNEY  (16.900s – 24.700s)   — monuments / roads / city / first map
  *   8. CTA CLOSE         (24.700s – 27.633s)   — computer map → final Portugal map
  */
@@ -145,7 +145,7 @@ export const HERO_SCENES: readonly HeroScene[] = [
     position: { mobile: "50% 45%", tablet: "50% 45%", desktop: "50% 45%" },
     pan: "drift-right",
     startTime: 7.0,
-    endTime: 9.8,
+    endTime: 9.6,
     main: ["Your private day,", "shaped around you."],
     support: "Your people. Your pace. Your Portugal.",
     credits: [filmCredit],
@@ -156,8 +156,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 45%", tablet: "50% 45%", desktop: "50% 45%" },
     pan: "push-in",
-    startTime: 9.8,
-    endTime: 11.7,
+    startTime: 9.6,
+    endTime: 11.75,
     main: ["Celebrations,", "made effortless."],
     support: "Milestones shaped with care.",
     credits: [filmCredit],
@@ -168,8 +168,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 50%", tablet: "50% 50%", desktop: "50% 50%" },
     pan: "drift-left",
-    startTime: 11.7,
-    endTime: 13.2,
+    startTime: 11.75,
+    endTime: 13.9,
     main: ["For teams", "with purpose."],
     support: "Corporate tables, privately orchestrated.",
     credits: [filmCredit],
@@ -180,7 +180,7 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 50%", tablet: "50% 50%", desktop: "50% 50%" },
     pan: "push-in",
-    startTime: 13.2,
+    startTime: 13.9,
     endTime: 16.9,
     main: ["One perfect day", "to remember."],
     support: "A couple, a coast, a story in motion.",
