@@ -868,7 +868,7 @@ function HomePage() {
                 the first frame for context). */}
             <video
               data-hero-film="true"
-              src={saveDataMode ? HERO_FILM.src720 : HERO_FILM.src1080}
+              src={HERO_FILM.src1080}
               poster={HERO_FILM.poster}
               // translate3d/will-change promote the <video> to its own
               // compositor layer so frame blits never trigger paint of
