@@ -1947,18 +1947,16 @@
   animation: heroSceneAlightMain 1500ms cubic-bezier(0.19, 1, 0.22, 1) both;
 }
 .hero-scene-message.is-on .hero-scene-main > span {
-  /* Each line of the main message alights individually, staggered by
-     index, so the headline reads as a sequenced reveal rather than a
-     block fade. */
+  /* All lines of the phrase enter together as one block — no per-line
+     stagger — so the eye reads "Hidden gems, only known by locals."
+     as one continuous sentence instead of word-by-word cuts. */
   display: block;
-  animation: heroSceneAlightLine 1250ms cubic-bezier(0.19, 1, 0.22, 1) both;
+  opacity: 1;
+  transform: none;
 }
-.hero-scene-message.is-on .hero-scene-main > span:nth-child(1) { animation-delay: 220ms; }
-.hero-scene-message.is-on .hero-scene-main > span:nth-child(2) { animation-delay: 520ms; }
-.hero-scene-message.is-on .hero-scene-main > span:nth-child(3) { animation-delay: 820ms; }
 .hero-scene-message.is-on .hero-scene-supporting {
   animation: heroSceneAlightSupport 1150ms cubic-bezier(0.19, 1, 0.22, 1) both;
-  animation-delay: 1050ms;
+  animation-delay: 280ms;
 }
 .hero-scene-message.is-crossfading .hero-scene-main,
 .hero-scene-message.is-crossfading .hero-scene-main > span,
