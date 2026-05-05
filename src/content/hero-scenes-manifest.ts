@@ -216,7 +216,7 @@ export const HERO_ALL_CREDITS = HERO_SCENES.flatMap((scene) =>
 
 /**
  * Canonical film duration the manifest is authored against. The
- * uploaded master is 27.133s (premium remaster); if a re-encode
+ * uploaded master is 39.633s (restored original-map master); if a re-encode
  * changes the real duration we proportionally scale every chapter's
  * start/end so overlays stay locked to playback.
  */
@@ -235,10 +235,10 @@ export type HeroChapterWindow = {
  * Scale the manifest chapter timeline to a different total duration.
  *
  * Returns the manifest verbatim when `actualDuration` is within
- * `HERO_FILM_CANONICAL_TOLERANCE_S` of the canonical 41.5s (avoids
+ * `HERO_FILM_CANONICAL_TOLERANCE_S` of the canonical 39.633s (avoids
  * floating-point drift on the canonical asset). For any other finite
  * positive duration, every chapter's `startTime`/`endTime` is
- * multiplied by `actualDuration / 41.5`. Invalid or non-positive
+ * multiplied by `actualDuration / 39.633`. Invalid or non-positive
  * inputs fall back to the manifest unchanged.
  *
  * Invariants enforced by the unit test suite:
