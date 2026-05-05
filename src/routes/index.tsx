@@ -1136,7 +1136,7 @@ function HomePage() {
                         });
                         trackHeroEvent("builder_start", { sceneId: heroScene.id });
                       }}
-                      className="hero-cta-button hero-cta-button--compact cta-primary he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left"
+                      className="hero-cta-button hero-cta-button--compact cta-primary cta-attract he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left"
                     >
                       <span className="block text-[color:var(--gold-soft)]">{HERO_COPY.primaryCta}</span>
                       <ArrowRight
@@ -1156,7 +1156,7 @@ function HomePage() {
                         });
                         trackHeroEvent("view_signature", { sceneId: heroScene.id });
                       }}
-                      className="hero-cta-button hero-cta-button--compact cta-secondary-dark he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left"
+                      className="hero-cta-button hero-cta-button--compact cta-secondary-dark cta-attract he-glow he-sheen group relative inline-flex w-full sm:flex-1 sm:basis-0 items-center justify-between gap-3 text-left"
                     >
                       <span className="block text-[color:var(--gold-soft)]">{HERO_COPY.secondaryCta}</span>
                       <ArrowRight
