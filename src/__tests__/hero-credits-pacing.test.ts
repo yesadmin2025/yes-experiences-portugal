@@ -18,7 +18,7 @@ import { describe, it, expect } from "vitest";
 import { HERO_SCENES, HERO_FILM } from "../content/hero-scenes-manifest";
 
 // Must match src/routes/index.tsx
-const HERO_FILM_PLAYBACK_RATE = 0.7;
+const HERO_FILM_PLAYBACK_RATE = 0.6;
 
 const MIN_VISIBLE_CHAPTER_SECONDS = 5.0;
 
