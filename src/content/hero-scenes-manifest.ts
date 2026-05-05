@@ -108,9 +108,10 @@ const filmCredit: HeroAssetCredit = {
  *   3. PRIVATE DAY       ( 6.600s –  9.300s)   — private table
  *   4. CELEBRATIONS      ( 9.300s – 11.700s)   — celebration / vineyards
  *   5. CORPORATE         (11.700s – 14.200s)   — corporate table
- *   6. JOURNEY           (14.200s – 21.100s)   — couple → road → city
- *   7. FINAL PHRASE      (21.100s – 24.100s)   — map / live builder line
- *   8. CTA CLOSE         (24.100s – 27.133s)   — buttons only on map
+  *   6. JOURNEY DAY       (14.200s – 17.650s)   — couple / one perfect day
+  *   7. JOURNEY PORTUGAL  (17.650s – 21.100s)   — road / city across Portugal
+  *   8. FINAL PHRASE      (21.100s – 24.100s)   — map / live builder line
+  *   9. CTA CLOSE         (24.100s – 27.133s)   — buttons only on map
  */
 export const HERO_SCENES: readonly HeroScene[] = [
   {
