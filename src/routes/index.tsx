@@ -1119,7 +1119,7 @@ function HomePage() {
              {/* Action block — CTAs + microcopy + brand signature appear
                  ONLY on scene 5 per the storytelling brief. */}
               {isHeroActionScene ? (
-                <div key="hero-action" className="hero-action-block mt-6 md:mt-9">
+                <div key="hero-action" className="hero-action-block hero-action-reveal mt-6 md:mt-9">
                   <div
                     role="group"
                     aria-label="Hero actions — start designing your day or browse signature experiences"
