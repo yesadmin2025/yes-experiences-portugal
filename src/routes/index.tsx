@@ -1016,7 +1016,13 @@ function HomePage() {
                   On scene 1 the canonical H1 already carries the message,
                   so the active block stays sr-only — the cross-fade only
                   matters from scene 2 onwards. */}
-              <div className="hero-scene-message-stack relative max-w-[18rem] xs:max-w-[20rem] sm:max-w-xl">
+              <div
+                className="hero-scene-message-stack relative max-w-[18rem] xs:max-w-[20rem] sm:max-w-xl"
+                role="group"
+                aria-live="polite"
+                aria-atomic="true"
+                aria-label="Hero storytelling captions"
+              >
                 {heroPrevIndex !== null && heroPrevIndex !== heroSceneIndex
                   ? (() => {
                       const prevScene = heroScenes[heroPrevIndex];
