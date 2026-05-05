@@ -134,7 +134,7 @@ export const HERO_SCENES: readonly HeroScene[] = [
     pan: "drift-left",
     startTime: 2.9,
     endTime: 7.0,
-    main: ["Hidden gems,", "known by locals."],
+    main: ["Hidden gems,", "only known by locals."],
     support: "Markets, azulejos, local rhythm.",
     credits: [filmCredit],
   },
