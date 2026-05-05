@@ -147,7 +147,11 @@ export const HERO_COPY_EXPERIMENT: HeroExperiment = {
           support: "Coordinated end to end.",
         },
         journey: {
-          main: ["One day,", "or a journey?"],
+          main: ["One perfect day…"],
+          support: "Your rhythm, your pace.",
+        },
+        "journey-portugal": {
+          main: ["…or a journey", "across Portugal?"],
           support: "Across Portugal, your rhythm.",
         },
         build: {
