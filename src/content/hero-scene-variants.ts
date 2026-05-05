@@ -59,10 +59,10 @@ const controlScenes: Record<string, SceneCopyOverride> = Object.fromEntries(
  * `cta_click` + `builder_start` downstream.
  */
 export const HERO_COPY_EXPERIMENT: HeroExperiment = {
-  // Stable analytics key. Bumped to v3 when the market/azulejos timing and
-  // separate final CTA slide became canonical, so returning visitors are not
-  // pinned to an older localStorage copy sequence.
-  key: "hero_copy_v3",
+  // Stable analytics key. Bumped to v4 when the restored original-map master
+  // became canonical, so returning visitors are not pinned to an older cached
+  // copy order where corporate / private / celebrations were mis-sequenced.
+  key: "hero_copy_v4",
   // 100% weight on `control` for now — the cinematic spine IS the
   // approved hero. `benefit` and `question` remain defined so we can
   // re-enable the split (e.g. 60/20/20) later without rewiring any
