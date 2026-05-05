@@ -108,9 +108,10 @@ const filmCredit: HeroAssetCredit = {
  *   3. PRIVATE DAY       ( 6.600s –  9.300s)   — private table
  *   4. CELEBRATIONS      ( 9.300s – 11.700s)   — celebration / vineyards
  *   5. CORPORATE         (11.700s – 14.200s)   — corporate table
- *   6. JOURNEY           (14.200s – 21.100s)   — couple → road → city
- *   7. FINAL PHRASE      (21.100s – 24.100s)   — map / live builder line
- *   8. CTA CLOSE         (24.100s – 27.133s)   — buttons only on map
+  *   6. JOURNEY DAY       (14.200s – 17.650s)   — couple / one perfect day
+  *   7. JOURNEY PORTUGAL  (17.650s – 21.100s)   — road / city across Portugal
+  *   8. FINAL PHRASE      (21.100s – 24.100s)   — map / live builder line
+  *   9. CTA CLOSE         (24.100s – 27.133s)   — buttons only on map
  */
 export const HERO_SCENES: readonly HeroScene[] = [
   {
@@ -180,9 +181,21 @@ export const HERO_SCENES: readonly HeroScene[] = [
     position: { mobile: "50% 50%", tablet: "50% 50%", desktop: "50% 50%" },
     pan: "push-in",
     startTime: 14.2,
+    endTime: 17.65,
+    main: ["From one perfect day…"],
+    support: "Your rhythm, your pace.",
+    credits: [filmCredit],
+  },
+  {
+    id: "journey-portugal",
+    image: FILM_POSTER,
+    video: FILM_1080,
+    position: { mobile: "50% 50%", tablet: "50% 50%", desktop: "50% 50%" },
+    pan: "drift-right",
+    startTime: 17.65,
     endTime: 21.1,
-    main: ["From one perfect day", "to a journey across Portugal."],
-    support: "Multi-day, multi-region — your rhythm.",
+    main: ["…to a journey", "across Portugal."],
+    support: "Multi-day, multi-region.",
     credits: [filmCredit],
   },
   {
