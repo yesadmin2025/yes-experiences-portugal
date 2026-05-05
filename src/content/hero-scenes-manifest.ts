@@ -175,8 +175,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     pan: "drift-left",
     startTime: 22.167,
     endTime: 27.6,
-    main: ["From one perfect day", "to a journey across Portugal."],
-    support: "Multi-day experiences, designed around you.",
+    main: ["For corporate groups", "and private journeys."],
+    support: "Carefully coordinated. Locally guided.",
     credits: [filmCredit],
   },
   {
