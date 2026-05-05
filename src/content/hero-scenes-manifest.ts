@@ -14,14 +14,9 @@
  * keep working — they all point at the SAME film, on purpose: there is
  * only one source of motion.
  *
- * Story spine — six chapter overlays locked to the SIX real scene cuts
- * detected at 4.900 / 11.933 / 17.200 / 22.167 / 27.600 / 39.633:
- *   1. PORTUGAL OPENS    ( 0.000s –  4.900s)
- *   2. PRIVATE DAYS      ( 4.900s – 11.933s)
- *   3. PROPOSALS         (11.933s – 17.200s)
- *   4. CORPORATE/GROUPS  (17.200s – 22.167s)
- *   5. MULTI-DAY JOURNEY (22.167s – 27.600s)
- *   6. BUILDER + CTA     (27.600s – 39.633s)
+ * Story spine — chapter overlays locked to the real visual beats in the
+ * continuous master: coast → market → azulejos → private table → vineyards /
+ * proposal → corporate street → map / live builder → CTA close.
  *
  * No invented locations or partners. AI was used only as a tonal
  * connective tissue between real YES poster frames — every starting
@@ -111,12 +106,13 @@ const filmCredit: HeroAssetCredit = {
  * component cross-fades the copy itself (≈600ms) for a smooth handoff
  * across each visual cut.
  *
- *   1. PORTUGAL OPENS    ( 0.000s –  4.900s)   — eyebrow + H1 only
- *   2. PRIVATE DAYS      ( 4.900s – 11.933s)
- *   3. PROPOSALS         (11.933s – 17.200s)
- *   4. CORPORATE/GROUPS  (17.200s – 22.167s)
- *   5. MULTI-DAY JOURNEY (22.167s – 27.600s)
- *   6. BUILDER + CTA     (27.600s – 39.633s)   — action scene, longest hold
+ *   1. PORTUGAL OPENS    ( 0.000s –  3.850s)   — eyebrow + H1 only
+ *   2. HIDDEN GEMS       ( 3.850s – 14.000s)   — market girls + azulejos
+ *   3. PRIVATE DAY       (14.000s – 17.200s)   — group at the table
+ *   4. MOMENTS           (17.200s – 25.000s)   — vineyards + proposal
+ *   5. CORPORATE/JOURNEY (25.000s – 35.600s)   — route + corporate group
+ *   6. FINAL PHRASE      (35.600s – 37.850s)   — map / live builder line
+ *   7. CTA CLOSE         (37.850s – 39.633s)   — buttons only
  */
 export const HERO_SCENES: readonly HeroScene[] = [
   {
@@ -126,7 +122,7 @@ export const HERO_SCENES: readonly HeroScene[] = [
     position: { mobile: "50% 55%", tablet: "50% 50%", desktop: "50% 50%" },
     pan: "pull-back",
     startTime: 0.0,
-    endTime: 4.9,
+    endTime: 3.85,
     main: [],
     support: "Private experiences, shaped around you.",
     credits: [filmCredit],
@@ -137,8 +133,8 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 45%", tablet: "50% 45%", desktop: "50% 45%" },
     pan: "drift-left",
-    startTime: 4.9,
-    endTime: 11.933,
+    startTime: 3.85,
+    endTime: 14,
     main: ["Find the hidden gems", "only locals know."],
     support: "Markets, backstreets, family kitchens.",
     credits: [filmCredit],
@@ -149,9 +145,9 @@ export const HERO_SCENES: readonly HeroScene[] = [
     video: FILM_1080,
     position: { mobile: "50% 45%", tablet: "50% 45%", desktop: "50% 45%" },
     pan: "drift-right",
-    startTime: 11.933,
+    startTime: 14,
     endTime: 17.2,
-    main: ["Design your private day."],
+    main: ["Private, shaped", "around you."],
     support: "Your people. Your pace.",
     credits: [filmCredit],
   },
