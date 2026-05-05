@@ -87,7 +87,7 @@ export const HERO_COPY_EXPERIMENT: HeroExperiment = {
           support: "Built around how you want to feel.",
         },
         choose: {
-          main: ["Hidden gems,", "known by locals."],
+          main: ["Hidden gems,", "only known by locals."],
           support: "Markets and azulejos, without the rush.",
         },
         taste: {
@@ -127,7 +127,7 @@ export const HERO_COPY_EXPERIMENT: HeroExperiment = {
           support: "Tell us how you want it to feel.",
         },
         choose: {
-          main: ["Hidden gems,", "known by locals?"],
+          main: ["Hidden gems,", "only known by locals?"],
           support: "Markets, azulejos, the places between.",
         },
         taste: {

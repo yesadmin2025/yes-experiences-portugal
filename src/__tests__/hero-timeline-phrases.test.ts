@@ -24,7 +24,7 @@ const EXPECTED_PHRASES: ReadonlyArray<{
   supportIncludes?: string;
 }> = [
   { id: "imagine", main: [], supportIncludes: "Private experiences" },
-  { id: "choose", main: ["Hidden gems,", "known by locals."] },
+  { id: "choose", main: ["Hidden gems,", "only known by locals."] },
   { id: "taste", main: ["Your private day,", "shaped around you."] },
   { id: "celebrate", main: ["Celebrations,", "made effortless."] },
   { id: "corporate", main: ["For teams", "with purpose."] },
