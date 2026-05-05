@@ -239,10 +239,17 @@ export function HeroChapterDebugOverlay() {
             <div className="absolute inset-y-0 left-1/2 w-px bg-white/30" />
           </div>
           <div className="flex justify-between mt-0.5 text-[9px] text-white/40 tabular-nums">
-            <span>prev opacity</span>
-            <span>curr opacity</span>
           </div>
         </div>
+
+        {/* Easing curve graph — smootherstep opacity over time */}
+        <EasingCurveGraph
+          progress={
+            snap.fadeElapsedMs === null
+              ? null
+              : Math.min(1, Math.max(0, snap.fadeElapsedMs / snap.fadeTotalMs))
+          }
+        />
 
         {/* Full chapter timeline — start/end of every overlay + image
             window. The text window IS the image window by design (one
