@@ -883,7 +883,7 @@ function HomePage() {
                 imageRendering: "auto",
                 WebkitFontSmoothing: "antialiased",
               }}
-              className="absolute inset-0 w-full h-full object-cover [filter:contrast(1.04)_saturate(1.06)]"
+              className="absolute inset-0 w-full h-full object-cover [filter:contrast(1.06)_saturate(1.08)_brightness(1.02)]"
               aria-label="Cinematic film of Portugal — coastal roads, local tables, hidden coves and estate gardens. Decorative; full description provided alongside."
               autoPlay={!reducedMotion}
               muted
