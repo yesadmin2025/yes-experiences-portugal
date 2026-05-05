@@ -87,28 +87,28 @@ export const HERO_COPY_EXPERIMENT: HeroExperiment = {
           support: "Built around how you want to feel.",
         },
         choose: {
-          main: ["Pick the route.", "We drive it."],
-          support: "Coast, vine, ruins, river — your call.",
+          main: ["Hidden gems,", "made yours."],
+          support: "Markets and azulejos, without the rush.",
         },
         taste: {
-          main: ["Taste estates", "tours skip."],
-          support: "Hosted by the people who run them.",
+          main: ["A private day,", "crafted for you."],
+          support: "Your people, your timing, your table.",
         },
         celebrate: {
-          main: ["Mark the day", "the right way."],
-          support: "Birthdays, anniversaries, big yeses.",
+          main: ["Celebrate", "without effort."],
+          support: "Milestones handled with calm precision.",
         },
         corporate: {
-          main: ["Corporate groups,", "private retreats."],
-          support: "Carefully coordinated. Locally guided.",
+          main: ["Teams together,", "properly hosted."],
+          support: "Corporate moments, quietly coordinated.",
         },
         journey: {
-          main: ["One day,", "or many."],
-          support: "Multi-day Portugal, your rhythm.",
+          main: ["One perfect day", "to remember."],
+          support: "A couple, a coast, a story in motion.",
         },
         build: {
-          main: ["Start writing", "your story."],
-          support: "Build it live. Confirm instantly.",
+          main: ["A journey", "across Portugal."],
+          support: "From landmark to route, designed as one flow.",
         },
         confirm: {
           main: [],
@@ -127,28 +127,28 @@ export const HERO_COPY_EXPERIMENT: HeroExperiment = {
           support: "Tell us how you want it to feel.",
         },
         choose: {
-          main: ["Coast or", "vineyards first?"],
-          support: "Your route, drawn live.",
+          main: ["What will", "you discover?"],
+          support: "Markets, azulejos, the places between.",
         },
         taste: {
-          main: ["Wine, food,", "or both today?"],
-          support: "Hosted by real families.",
+          main: ["How private", "should it feel?"],
+          support: "Your day, crafted around your people.",
         },
         celebrate: {
-          main: ["Marking a", "moment soon?"],
-          support: "Birthdays, anniversaries, proposals.",
+          main: ["What are you", "celebrating?"],
+          support: "Milestones shaped with care.",
         },
         corporate: {
-          main: ["Team day", "or retreat?"],
-          support: "Coordinated end to end.",
+          main: ["A team day", "with purpose?"],
+          support: "Corporate tables, privately orchestrated.",
         },
         journey: {
-          main: ["One day,", "or a journey?"],
-          support: "Across Portugal, your rhythm.",
+          main: ["One perfect day", "to remember?"],
+          support: "A couple, a coast, a story in motion.",
         },
         build: {
-          main: ["Start writing", "your story."],
-          support: "Build it live. Confirm instantly.",
+          main: ["How far", "across Portugal?"],
+          support: "From landmark to route, designed as one flow.",
         },
         confirm: {
           main: [],
