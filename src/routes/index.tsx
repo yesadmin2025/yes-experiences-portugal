@@ -1268,42 +1268,8 @@ function HomePage() {
           />
         </section>
 
-      {/* 1.5 — AUDIENCE BRIDGE
-          Soft editorial bridge between the cinematic hero and the trust
-          strip. Names the use cases the hero hinted at (one private day,
-          a proposal/celebration, a group escape, a full Portugal
-          journey) so the audience never has to guess "is this for me?".
-          No CTAs, no images, no buttons — calm + premium, then proof. */}
-      <section
-        id="audience-bridge"
-        aria-labelledby="audience-bridge-title"
-        className="section-enter bg-[color:var(--ivory)] border-b border-[color:var(--border)] py-12 md:py-20"
-      >
-        <div className="container-x">
-          <div className="reveal max-w-2xl mx-auto text-center px-2">
-            <h2
-              id="audience-bridge-title"
-              className="serif text-[1.05rem] xs:text-[1.12rem] sm:text-[1.5rem] md:text-[2rem] leading-[1.42] sm:leading-[1.3] md:leading-[1.22] tracking-[-0.012em] text-[color:var(--charcoal)] font-normal"
-            >
-              Some come for one private day.
-              <br />
-              Some for a <span className="italic text-[color:var(--teal)]">proposal</span>, a celebration, or a group escape.
-              <br />
-              Some are planning a full <span className="italic">journey across Portugal</span>.
-            </h2>
-            {/* Champagne gold hairline divider */}
-            <div
-              aria-hidden="true"
-              className="mx-auto my-6 md:my-9 h-px w-16 md:w-28 bg-gradient-to-r from-transparent via-[color:var(--gold)]/60 to-transparent"
-            />
-            <p className="text-[12px] md:text-[14.5px] leading-[1.65] tracking-[0.005em] text-[color:var(--charcoal-soft)]">
-              However your story begins,
-              <br className="hidden sm:block" />
-              {" "}we shape it with local knowledge.
-            </p>
-          </div>
-        </div>
-      </section>
+      {/* Audience-bridge section removed — hero flows directly into
+          social proof per latest editorial brief. */}
 
       {/* 2 — TRUST STRIP
           Restrained: review count, real platforms, one short line about
