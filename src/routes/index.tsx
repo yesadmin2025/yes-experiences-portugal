@@ -71,7 +71,7 @@ const HERO_SCENE_DURATION_MS = 5200;
 // Slowed further (0.86 → 0.78) so the closing "Build it live / Confirm
 // instantly" beat holds visibly through the Portugal-map close instead
 // of finishing before it. Same media element governs every viewport.
-const HERO_FILM_PLAYBACK_RATE = 0.78;
+const HERO_FILM_PLAYBACK_RATE = 0.7;
 
 /* ──────────────────────────────────────────────────────────────────
  * Cinematic horizontal storytelling hero — 5 scenes, each a short
@@ -794,7 +794,7 @@ function HomePage() {
            Slide 1 is the SSR/static fallback. Reduced-motion freezes
            on slide 1 with all copy at full opacity. */}
         <section
-          className="hero-stage relative min-h-[max(85svh,640px)] md:min-h-[90vh] landscape:max-md:min-h-[680px] flex items-end overflow-hidden"
+          className="hero-stage relative min-h-[max(76svh,580px)] md:min-h-[82vh] landscape:max-md:min-h-[620px] flex items-end overflow-hidden"
           data-hero-scene={heroScene.id}
           data-hero-scene-index={heroSceneIndex}
           aria-roledescription="cinematic hero film"
