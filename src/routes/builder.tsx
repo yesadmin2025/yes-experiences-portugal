@@ -888,6 +888,14 @@ function CheckoutModal({
           <p className="mt-1 text-[12.5px] text-[color:var(--charcoal)]/70">
             {stops.length} stops · {route.pace} pace · €{route.pricePerPersonEur * guests}
           </p>
+          {selectedElements.length > 0 && (
+            <p className="mt-2 text-[11.5px] text-[color:var(--charcoal)]/70">
+              <span className="text-[color:var(--gold)] font-bold uppercase tracking-[0.22em] text-[10px] mr-1.5">
+                Concierge confirms
+              </span>
+              {selectedElements.map(elementLabel).join(" · ")}
+            </p>
+          )}
           <div className="mt-5">
             {error && <p className="text-[13px] text-red-700">{error}</p>}
             {!error && !clientSecret && (
