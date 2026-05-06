@@ -531,6 +531,7 @@ function BuilderPage() {
               guests={guests}
               narrative={narrative}
               reviewThumbs={routeImages.reviewThumbs}
+              selectedElementLabels={selectedElements.map(elementLabel)}
               onConfirm={() => setCheckoutOpen(true)}
               onBack={() => setStep(6)}
             />
