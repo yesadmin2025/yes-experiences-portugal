@@ -32,6 +32,15 @@ import {
   TRANSITION_MICROCOPY,
   WHOS,
 } from "@/components/builder/catalogue";
+
+/** Resolve a human label for current selections, used by the live header. */
+function labelFor<T extends { id: string; label: string }>(
+  list: readonly T[],
+  id: string | undefined,
+): string | null {
+  if (!id) return null;
+  return list.find((x) => x.id === id)?.label ?? null;
+}
 import type {
   Intention,
   Mood,
