@@ -58,6 +58,8 @@ export function JourneyPanel({
   storyImage,
   routeLoading = false,
   imagesLoading = false,
+  selectedElements,
+  onToggleElement,
 }: Props) {
   if (!route) return null;
   const totalMin = route.totals.experienceMinutes;
