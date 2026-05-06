@@ -3475,13 +3475,21 @@ html.motion-ready [data-motion].motion-in {
 .builder-toast-in  { animation: builderToastIn 220ms cubic-bezier(0.22, 0.61, 0.36, 1) both; }
 .builder-toast-out { animation: builderToastOut 260ms ease-in both; }
 
+/* Phase 2 — cinematic split: gentle crossfade + lift on map / build / story panes */
+@keyframes builderPaneFade {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.builder-pane-fade { animation: builderPaneFade 320ms cubic-bezier(0.22, 0.61, 0.36, 1) both; }
+
 @media (prefers-reduced-motion: reduce) {
   .builder-reveal,
   .builder-microcopy,
   .builder-step-in,
   .builder-card-press,
   .builder-toast-in,
-  .builder-toast-out { animation: none !important; }
+  .builder-toast-out,
+  .builder-pane-fade { animation: none !important; }
   .builder-entry-line,
   .builder-predictive-line { animation: none !important; }
 }
