@@ -13,6 +13,7 @@ import { PredictiveMoment } from "@/components/builder/PredictiveMoment";
 import { ElementsShelf } from "@/components/builder/ElementsShelf";
 import { elementLabel, type ElementKey } from "@/components/builder/elements";
 import { useBuilderPersistence } from "@/hooks/useBuilderPersistence";
+import { trackBuilderEvent } from "@/lib/builder-analytics";
 // Leaflet touches `window` at module load — lazy-load to keep it out of SSR.
 const BuilderMap = lazy(() =>
   import("@/components/builder/BuilderMap").then((m) => ({ default: m.BuilderMap })),
