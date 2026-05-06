@@ -8,7 +8,7 @@ import { EmbeddedCheckoutProvider, EmbeddedCheckout } from "@stripe/react-stripe
 import { getStripe, getStripeEnvironment } from "@/lib/stripe";
 import { CtaButton } from "@/components/ui/CtaButton";
 
-import { EntryScreen } from "@/components/builder/EntryScreen";
+import { TripTypeEntry, type TripPreset } from "@/components/builder/TripTypeEntry";
 import { PredictiveMoment } from "@/components/builder/PredictiveMoment";
 // Leaflet touches `window` at module load — lazy-load to keep it out of SSR.
 const BuilderMap = lazy(() =>
