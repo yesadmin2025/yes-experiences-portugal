@@ -657,7 +657,6 @@ function LiveBuilder({
         <div className="grid gap-6 lg:grid-cols-[1.25fr_1fr]">
           {/* MAP */}
           <div
-            key={`map-${mobileTab}`}
             className={[
               "group relative overflow-hidden rounded-[2px] border border-[color:var(--charcoal)]/12 bg-[color:var(--sand)] shadow-[0_18px_40px_-24px_rgba(46,46,46,0.35)]",
               "h-[58svh] sm:h-[62svh] lg:h-[74svh] lg:sticky lg:top-20",
