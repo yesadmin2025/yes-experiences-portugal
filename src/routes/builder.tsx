@@ -722,6 +722,8 @@ function LiveBuilder({
               storyImage={storyImage}
               routeLoading={routeLoading}
               imagesLoading={imagesLoading}
+              selectedElements={selectedElements}
+              onToggleElement={onToggleElement}
             />
           </div>
 
