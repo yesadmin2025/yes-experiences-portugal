@@ -821,11 +821,13 @@ function CheckoutModal({
   route,
   stops,
   guests,
+  selectedElements,
   onClose,
 }: {
   route: RouteUI;
   stops: RoutedStopUI[];
   guests: number;
+  selectedElements: ElementKey[];
   onClose: () => void;
 }) {
   const [clientSecret, setClientSecret] = useState<string | null>(null);
@@ -842,6 +844,7 @@ function CheckoutModal({
           regionLabel: route.region.label,
           stopLabels: stops.map((s) => s.label),
           pace: route.pace,
+          elements: selectedElements,
           returnUrl: `${window.location.origin}/builder?status=success`,
           environment: getStripeEnvironment(),
         },
