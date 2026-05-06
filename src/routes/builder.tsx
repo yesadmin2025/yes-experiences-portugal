@@ -11,7 +11,7 @@ import { CtaButton } from "@/components/ui/CtaButton";
 import { TripTypeEntry, type TripPreset } from "@/components/builder/TripTypeEntry";
 import { PredictiveMoment } from "@/components/builder/PredictiveMoment";
 import { ElementsShelf } from "@/components/builder/ElementsShelf";
-import { BUILDER_ELEMENTS, elementLabel, type ElementKey } from "@/components/builder/elements";
+import { elementLabel, type ElementKey } from "@/components/builder/elements";
 import { useBuilderPersistence } from "@/hooks/useBuilderPersistence";
 // Leaflet touches `window` at module load — lazy-load to keep it out of SSR.
 const BuilderMap = lazy(() =>
