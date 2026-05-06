@@ -18,7 +18,7 @@ export async function trackBuilderEvent(
         anonymous_id: anonId,
         event,
         route: window.location.pathname,
-        meta: meta ? (JSON.parse(JSON.stringify(meta)) as Record<string, unknown>) : null,
+        meta: meta ? (JSON.parse(JSON.stringify(meta)) as Json) : null,
       },
     ]);
   } catch {
