@@ -55,6 +55,7 @@ export function ReviewScreen({
   selectedElementLabels,
   onConfirm,
   onBack,
+  onReset,
   onToneReady,
 }: Props) {
   const thumbs = (reviewThumbs ?? []).slice(0, 4);
