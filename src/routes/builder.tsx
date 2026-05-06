@@ -11,7 +11,8 @@ import { CtaButton } from "@/components/ui/CtaButton";
 import { TripTypeEntry, type TripPreset } from "@/components/builder/TripTypeEntry";
 import { PredictiveMoment } from "@/components/builder/PredictiveMoment";
 import { ElementsShelf } from "@/components/builder/ElementsShelf";
-import { BUILDER_ELEMENTS, elementLabel, type ElementKey } from "@/components/builder/elements";
+import { elementLabel, type ElementKey } from "@/components/builder/elements";
+import { useBuilderPersistence } from "@/hooks/useBuilderPersistence";
 // Leaflet touches `window` at module load — lazy-load to keep it out of SSR.
 const BuilderMap = lazy(() =>
   import("@/components/builder/BuilderMap").then((m) => ({ default: m.BuilderMap })),
@@ -119,9 +120,29 @@ function BuilderPage() {
 
 
   const [route, setRoute] = useState<RouteUI | null>(null);
-  const [excluded, setExcluded] = useState<string[]>([]);
   const [pinned] = useState<string[]>([]);
-  const [orderOverride, setOrderOverride] = useState<string[] | null>(null);
+
+  // Persisted slice (localStorage): excluded stops, manual order, guests, elements.
+  // URL keeps step/mood/who/intention/pace; this hook keeps everything else
+  // across refresh / return-visits.
+  const { state: persisted, setState: setPersisted, hydrated } = useBuilderPersistence();
+  const excluded = persisted.excluded;
+  const orderOverride = persisted.orderOverride;
+  const guests = persisted.guests;
+  const selectedElements = persisted.selectedElements;
+
+  const setExcluded = useCallback(
+    (next: string[]) => setPersisted((p) => ({ ...p, excluded: next })),
+    [setPersisted],
+  );
+  const setOrderOverride = useCallback(
+    (next: string[] | null) => setPersisted((p) => ({ ...p, orderOverride: next })),
+    [setPersisted],
+  );
+  const setGuests = useCallback(
+    (n: number) => setPersisted((p) => ({ ...p, guests: n })),
+    [setPersisted],
+  );
 
   const [routeLoading, setRouteLoading] = useState(false);
   const [routeError, setRouteError] = useState<string | null>(null);
@@ -129,16 +150,20 @@ function BuilderPage() {
   const [narrative, setNarrative] = useState<string>("");
   const [narrativeLoading, setNarrativeLoading] = useState(false);
 
-  const [guests, setGuests] = useState(2);
   const [mobileTab, setMobileTab] = useState<MobileTab>("build");
   const [checkoutOpen, setCheckoutOpen] = useState(false);
-  const [selectedElements, setSelectedElements] = useState<ElementKey[]>([]);
 
-  const toggleElement = useCallback((key: ElementKey) => {
-    setSelectedElements((prev) =>
-      prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key],
-    );
-  }, []);
+  const toggleElement = useCallback(
+    (key: ElementKey) => {
+      setPersisted((p) => ({
+        ...p,
+        selectedElements: p.selectedElements.includes(key)
+          ? p.selectedElements.filter((k) => k !== key)
+          : [...p.selectedElements, key],
+      }));
+    },
+    [setPersisted],
+  );
 
   const fetchRoute = useCallback(
     async (opts?: { nextExcluded?: string[]; nextPace?: Pace }) => {
@@ -168,12 +193,15 @@ function BuilderPage() {
     [mood, who, intention, pace, excluded, pinned],
   );
 
-  // Trigger initial generation when entering predictive moment
+  // Trigger initial generation when entering predictive moment / live builder.
+  // Wait for persistence to hydrate so a refreshed user keeps their excluded
+  // stops on the very first route fetch.
   useEffect(() => {
-    if (step === 5 && mood && who && intention && !route && !routeLoading) {
+    if (!hydrated) return;
+    if ((step === 5 || step === 6 || step === 7) && mood && who && intention && !route && !routeLoading) {
       void fetchRoute();
     }
-  }, [step, mood, who, intention, route, routeLoading, fetchRoute]);
+  }, [hydrated, step, mood, who, intention, route, routeLoading, fetchRoute]);
 
   // Apply user-driven reordering on top of engine stops
   const stops: RoutedStopUI[] = useMemo(() => {
@@ -503,6 +531,7 @@ function BuilderPage() {
               guests={guests}
               narrative={narrative}
               reviewThumbs={routeImages.reviewThumbs}
+              selectedElementLabels={selectedElements.map(elementLabel)}
               onConfirm={() => setCheckoutOpen(true)}
               onBack={() => setStep(6)}
             />
@@ -730,47 +759,93 @@ function LiveBuilder({
           {/* PANEL — Story (mobile-only focused narrative view) */}
           <div
             className={[
-              "lg:hidden rounded-[2px] border border-[color:var(--charcoal)]/12 bg-[color:var(--sand)]/40 min-h-[60svh] p-5 builder-pane-fade",
+              "lg:hidden rounded-[2px] border border-[color:var(--charcoal)]/12 bg-[color:var(--sand)]/40 min-h-[60svh] p-6 builder-pane-fade",
               mobileTab === "story" ? "block" : "hidden",
             ].join(" ")}
           >
             <span className="inline-flex items-center gap-2 text-[10.5px] uppercase tracking-[0.28em] font-semibold text-[color:var(--gold)]">
-              Story
+              <Sparkles size={12} aria-hidden="true" />
+              The story so far
             </span>
-            <h3 className="serif mt-3 text-[1.6rem] leading-[1.1] font-semibold text-[color:var(--charcoal)]">
-              {stops.length >= 2
-                ? `${stops[0].label} → ${stops[stops.length - 1].label}`
-                : route.region.label}
+
+            <h3 className="serif mt-4 text-[1.7rem] leading-[1.08] tracking-[-0.01em] font-semibold text-[color:var(--charcoal)]">
+              {route.region.label}
             </h3>
+            {stops.length >= 2 && (
+              <p className="mt-1.5 text-[12.5px] uppercase tracking-[0.22em] font-bold text-[color:var(--charcoal)]/70">
+                {stops[0].label}
+                <span className="mx-2 text-[color:var(--gold)]">→</span>
+                {stops[stops.length - 1].label}
+              </p>
+            )}
+
+            {/* Gold rule — micro-detail editorial separator */}
+            <span aria-hidden="true" className="mt-5 block h-px w-10 bg-[color:var(--gold)]" />
+
             <p
               className={[
-                "mt-4 serif italic leading-[1.45] text-[1.05rem] text-[color:var(--charcoal)]/85 transition-opacity duration-300",
+                "mt-5 serif italic leading-[1.5] text-[1.08rem] text-[color:var(--charcoal)]/90 transition-opacity duration-300",
                 narrativeLoading ? "opacity-50" : "opacity-100",
               ].join(" ")}
             >
               {narrative ||
                 "A real, achievable day in Portugal — shaped from your choices, ready to adjust."}
             </p>
-            <dl className="mt-6 grid grid-cols-3 gap-3">
+
+            <dl className="mt-7 grid grid-cols-3 gap-4 border-t border-[color:var(--charcoal)]/10 pt-5">
               <div>
-                <dt className="text-[9.5px] uppercase tracking-[0.24em] font-semibold text-[color:var(--charcoal)]/55">Stops</dt>
-                <dd className="mt-1 serif text-[1.15rem] font-semibold tabular-nums">{stops.length}</dd>
+                <dt className="text-[9.5px] uppercase tracking-[0.24em] font-semibold text-[color:var(--charcoal)]/55">
+                  Stops
+                </dt>
+                <dd className="mt-1.5 serif text-[1.25rem] font-semibold tabular-nums text-[color:var(--charcoal)]">
+                  {stops.length}
+                </dd>
               </div>
               <div>
-                <dt className="text-[9.5px] uppercase tracking-[0.24em] font-semibold text-[color:var(--charcoal)]/55">Duration</dt>
-                <dd className="mt-1 serif text-[1.15rem] font-semibold tabular-nums">{Math.floor(route.totals.experienceMinutes / 60)}h{route.totals.experienceMinutes % 60 ? String(route.totals.experienceMinutes % 60).padStart(2, "0") : ""}</dd>
+                <dt className="text-[9.5px] uppercase tracking-[0.24em] font-semibold text-[color:var(--charcoal)]/55">
+                  Duration
+                </dt>
+                <dd className="mt-1.5 serif text-[1.25rem] font-semibold tabular-nums text-[color:var(--charcoal)]">
+                  {Math.floor(route.totals.experienceMinutes / 60)}h
+                  {route.totals.experienceMinutes % 60
+                    ? String(route.totals.experienceMinutes % 60).padStart(2, "0")
+                    : ""}
+                </dd>
               </div>
               <div>
-                <dt className="text-[9.5px] uppercase tracking-[0.24em] font-semibold text-[color:var(--charcoal)]/55">Pace</dt>
-                <dd className="mt-1 serif text-[1.15rem] font-semibold capitalize">{route.pace}</dd>
+                <dt className="text-[9.5px] uppercase tracking-[0.24em] font-semibold text-[color:var(--charcoal)]/55">
+                  Pace
+                </dt>
+                <dd className="mt-1.5 serif text-[1.25rem] font-semibold capitalize text-[color:var(--charcoal)]">
+                  {route.pace}
+                </dd>
               </div>
             </dl>
+
+            {/* Concierge selections — surface what they added in story view */}
+            {selectedElements.length > 0 && (
+              <div className="mt-6 rounded-[2px] border border-[color:var(--gold)]/40 bg-[color:var(--gold)]/8 p-4">
+                <div className="flex items-baseline justify-between gap-3">
+                  <p className="text-[10px] uppercase tracking-[0.26em] font-bold text-[color:var(--gold)]">
+                    Added to your day
+                  </p>
+                  <p className="text-[9.5px] uppercase tracking-[0.22em] font-bold text-[color:var(--charcoal)]/55">
+                    Concierge confirms
+                  </p>
+                </div>
+                <p className="mt-2 text-[13px] leading-snug text-[color:var(--charcoal)]/85">
+                  {selectedElements.map(elementLabel).join(" · ")}
+                </p>
+              </div>
+            )}
+
             <button
               type="button"
               onClick={() => setMobileTab("build")}
-              className="mt-6 inline-flex items-center gap-2 text-[12px] uppercase tracking-[0.2em] font-bold text-[color:var(--teal)] hover:text-[color:var(--charcoal)]"
+              className="mt-7 inline-flex items-center gap-2 text-[11.5px] uppercase tracking-[0.22em] font-bold text-[color:var(--teal)] hover:text-[color:var(--charcoal)] transition-colors"
             >
-              Adjust the journey →
+              Adjust the journey
+              <span aria-hidden="true">→</span>
             </button>
           </div>
         </div>

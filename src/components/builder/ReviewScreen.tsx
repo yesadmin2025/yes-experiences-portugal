@@ -12,6 +12,8 @@ interface Props {
   guests: number;
   narrative: string;
   reviewThumbs?: BuilderImageRef[];
+  /** Labels of bounded "Add to your day" elements selected by the user. */
+  selectedElementLabels?: string[];
   onConfirm: () => void;
   onBack: () => void;
   onToneReady?: (tone: ToneResult) => void;
@@ -43,7 +45,17 @@ const FLEXIBLE = [
  * one clean editorial layout, surfaces trust, and offers a final call to
  * either confirm (Stripe) or talk to a local first (WhatsApp).
  */
-export function ReviewScreen({ route, stops, guests, narrative, reviewThumbs, onConfirm, onBack, onToneReady }: Props) {
+export function ReviewScreen({
+  route,
+  stops,
+  guests,
+  narrative,
+  reviewThumbs,
+  selectedElementLabels,
+  onConfirm,
+  onBack,
+  onToneReady,
+}: Props) {
   const thumbs = (reviewThumbs ?? []).slice(0, 4);
   const totalEur = route.pricePerPersonEur * guests;
   const sessionId = useBuilderSessionId();
@@ -68,16 +80,28 @@ export function ReviewScreen({ route, stops, guests, narrative, reviewThumbs, on
           <div className="flex flex-col gap-6">
             <div className="rounded-[2px] border border-[color:var(--charcoal)]/12 bg-[color:var(--ivory)] p-5">
               <p className="text-[10px] uppercase tracking-[0.28em] font-bold text-[color:var(--gold)]">
-                Route
+                Your route
               </p>
-              <p className="mt-1 serif text-[1.2rem] font-semibold leading-[1.15]">
+              <p className="mt-1 serif text-[1.25rem] font-semibold leading-[1.15] text-[color:var(--charcoal)]">
                 {route.region.label}
               </p>
-              <ol className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-[color:var(--charcoal)]/80">
+              <ol className="mt-4 flex flex-col gap-2.5">
                 {stops.map((s, i) => (
-                  <li key={s.key} className="inline-flex items-center gap-2">
-                    {i > 0 && <span className="text-[color:var(--charcoal)]/30">→</span>}
-                    <span className="font-semibold">{s.label}</span>
+                  <li key={s.key} className="flex items-start gap-3">
+                    <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[color:var(--teal)] text-[11px] font-bold text-[color:var(--ivory)] tabular-nums">
+                      {i + 1}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-[13.5px] font-semibold leading-tight text-[color:var(--charcoal)]">
+                        {s.label}
+                      </p>
+                      <p className="mt-0.5 text-[11.5px] text-[color:var(--charcoal)]/60">
+                        {fmtMinutes(s.duration_minutes)} on stop
+                        {i > 0 && s.driveMinutesFromPrev > 0
+                          ? ` · ${fmtMinutes(s.driveMinutesFromPrev)} drive`
+                          : ""}
+                      </p>
+                    </div>
                   </li>
                 ))}
               </ol>
@@ -104,6 +128,38 @@ export function ReviewScreen({ route, stops, guests, narrative, reviewThumbs, on
               <Stat label="Pace" value={route.pace} capitalize />
               <Stat label="Guests" value={String(guests)} />
             </div>
+
+            {/* Concierge-confirmed elements — only shown if user picked any */}
+            {selectedElementLabels && selectedElementLabels.length > 0 && (
+              <div className="rounded-[2px] border border-[color:var(--gold)]/40 bg-[color:var(--gold)]/8 p-5">
+                <div className="flex items-baseline justify-between">
+                  <p className="text-[10px] uppercase tracking-[0.28em] font-bold text-[color:var(--gold)]">
+                    Added to your day
+                  </p>
+                  <p className="text-[10px] uppercase tracking-[0.22em] font-bold text-[color:var(--charcoal)]/55">
+                    Concierge confirms
+                  </p>
+                </div>
+                <ul className="mt-3 flex flex-col gap-1.5">
+                  {selectedElementLabels.map((label) => (
+                    <li
+                      key={label}
+                      className="inline-flex items-start gap-2 text-[13.5px] text-[color:var(--charcoal)]/90"
+                    >
+                      <Check
+                        size={14}
+                        strokeWidth={2.5}
+                        className="mt-0.5 shrink-0 text-[color:var(--gold)]"
+                      />
+                      <span className="font-semibold">{label}</span>
+                    </li>
+                  ))}
+                </ul>
+                <p className="mt-3 text-[11.5px] leading-snug text-[color:var(--charcoal)]/65">
+                  Pricing & availability for these are confirmed by our concierge after you book — no surprises.
+                </p>
+              </div>
+            )}
 
             <div className="grid gap-5 sm:grid-cols-2">
               <Block title="What's included" items={INCLUDED} />
