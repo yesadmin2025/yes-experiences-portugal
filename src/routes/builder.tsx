@@ -712,7 +712,7 @@ function LiveBuilder({
           {/* PANEL — Story (mobile-only focused narrative view) */}
           <div
             className={[
-              "lg:hidden rounded-[2px] border border-[color:var(--charcoal)]/12 bg-[color:var(--sand)]/40 min-h-[60svh] p-5",
+              "lg:hidden rounded-[2px] border border-[color:var(--charcoal)]/12 bg-[color:var(--sand)]/40 min-h-[60svh] p-5 builder-pane-fade",
               mobileTab === "story" ? "block" : "hidden",
             ].join(" ")}
           >
