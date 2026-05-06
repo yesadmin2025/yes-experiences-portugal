@@ -2,6 +2,8 @@ import { ArrowDown, ArrowUp, Clock, Leaf, MessageCircle, Plus, X, Zap } from "lu
 import { fmtMinutes, type Pace, type RouteUI, type RoutedStopUI, builderWaHref } from "./types";
 import { BuilderImage } from "./BuilderImage";
 import { StopListSkeleton } from "./Skeletons";
+import { ElementsShelf } from "./ElementsShelf";
+import type { ElementKey } from "./elements";
 
 interface StopImageRef {
   url: string;
