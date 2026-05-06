@@ -119,9 +119,29 @@ function BuilderPage() {
 
 
   const [route, setRoute] = useState<RouteUI | null>(null);
-  const [excluded, setExcluded] = useState<string[]>([]);
   const [pinned] = useState<string[]>([]);
-  const [orderOverride, setOrderOverride] = useState<string[] | null>(null);
+
+  // Persisted slice (localStorage): excluded stops, manual order, guests, elements.
+  // URL keeps step/mood/who/intention/pace; this hook keeps everything else
+  // across refresh / return-visits.
+  const { state: persisted, setState: setPersisted, hydrated } = useBuilderPersistence();
+  const excluded = persisted.excluded;
+  const orderOverride = persisted.orderOverride;
+  const guests = persisted.guests;
+  const selectedElements = persisted.selectedElements;
+
+  const setExcluded = useCallback(
+    (next: string[]) => setPersisted((p) => ({ ...p, excluded: next })),
+    [setPersisted],
+  );
+  const setOrderOverride = useCallback(
+    (next: string[] | null) => setPersisted((p) => ({ ...p, orderOverride: next })),
+    [setPersisted],
+  );
+  const setGuests = useCallback(
+    (n: number) => setPersisted((p) => ({ ...p, guests: n })),
+    [setPersisted],
+  );
 
   const [routeLoading, setRouteLoading] = useState(false);
   const [routeError, setRouteError] = useState<string | null>(null);
@@ -129,16 +149,20 @@ function BuilderPage() {
   const [narrative, setNarrative] = useState<string>("");
   const [narrativeLoading, setNarrativeLoading] = useState(false);
 
-  const [guests, setGuests] = useState(2);
   const [mobileTab, setMobileTab] = useState<MobileTab>("build");
   const [checkoutOpen, setCheckoutOpen] = useState(false);
-  const [selectedElements, setSelectedElements] = useState<ElementKey[]>([]);
 
-  const toggleElement = useCallback((key: ElementKey) => {
-    setSelectedElements((prev) =>
-      prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key],
-    );
-  }, []);
+  const toggleElement = useCallback(
+    (key: ElementKey) => {
+      setPersisted((p) => ({
+        ...p,
+        selectedElements: p.selectedElements.includes(key)
+          ? p.selectedElements.filter((k) => k !== key)
+          : [...p.selectedElements, key],
+      }));
+    },
+    [setPersisted],
+  );
 
   const fetchRoute = useCallback(
     async (opts?: { nextExcluded?: string[]; nextPace?: Pace }) => {
