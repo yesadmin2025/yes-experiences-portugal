@@ -125,7 +125,7 @@ function BuilderPage() {
   // Persisted slice (localStorage): excluded stops, manual order, guests, elements.
   // URL keeps step/mood/who/intention/pace; this hook keeps everything else
   // across refresh / return-visits.
-  const { state: persisted, setState: setPersisted, hydrated } = useBuilderPersistence();
+  const { state: persisted, setState: setPersisted, hydrated, reset: resetPersisted } = useBuilderPersistence();
   const excluded = persisted.excluded;
   const orderOverride = persisted.orderOverride;
   const guests = persisted.guests;
