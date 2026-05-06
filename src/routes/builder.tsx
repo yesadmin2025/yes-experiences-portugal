@@ -523,6 +523,7 @@ function BuilderPage() {
             route={route}
             stops={stops}
             guests={guests}
+            selectedElements={selectedElements}
             onClose={() => setCheckoutOpen(false)}
           />
         )}
