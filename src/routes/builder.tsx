@@ -539,6 +539,7 @@ function BuilderPage() {
             intentionLabel={labelFor(INTENTIONS, intention)}
             selectedElements={selectedElements}
             onToggleElement={toggleElement}
+            onReset={resetBuilder}
           />
         )}
 
