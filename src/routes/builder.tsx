@@ -489,6 +489,8 @@ function BuilderPage() {
             moodLabel={labelFor(MOODS, mood)}
             whoLabel={labelFor(WHOS, who)}
             intentionLabel={labelFor(INTENTIONS, intention)}
+            selectedElements={selectedElements}
+            onToggleElement={toggleElement}
           />
         )}
 
