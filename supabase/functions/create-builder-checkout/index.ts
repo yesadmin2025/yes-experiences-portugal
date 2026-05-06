@@ -43,11 +43,16 @@ Deno.serve(async (req) => {
     if (body.environment !== "sandbox" && body.environment !== "live")
       return jsonError("Invalid environment", 400);
 
+    const elements = Array.isArray(body.elements)
+      ? body.elements.filter((e) => typeof e === "string" && e.length <= 40).slice(0, 10)
+      : [];
+
     const stripe = createStripeClient(body.environment);
 
     const stopsSummary = body.stopLabels.slice(0, 6).join(" · ");
+    const elementsSummary = elements.length > 0 ? ` · concierge: ${elements.join(", ")}` : "";
     const productName = `Private experience — ${body.regionLabel}`;
-    const description = `${body.guests} guest${body.guests > 1 ? "s" : ""} · ${body.pace} pace · ${stopsSummary}`.slice(0, 500);
+    const description = `${body.guests} guest${body.guests > 1 ? "s" : ""} · ${body.pace} pace · ${stopsSummary}${elementsSummary}`.slice(0, 500);
 
     const session = await stripe.checkout.sessions.create({
       line_items: [
@@ -73,6 +78,7 @@ Deno.serve(async (req) => {
         guests: String(body.guests),
         pace: body.pace,
         stops: body.stopLabels.slice(0, 8).join("|").slice(0, 480),
+        ...(elements.length > 0 && { elements: elements.join("|").slice(0, 200) }),
       },
     });
 
