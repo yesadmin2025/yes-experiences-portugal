@@ -579,8 +579,27 @@ function LiveBuilder({
 }: LiveBuilderProps) {
   const regionCenter = { lat: Number(route.region.lat), lng: Number(route.region.lng) };
 
+  // Eyebrow facets shown above the live split.
+  const facets = [moodLabel, whoLabel, intentionLabel].filter(Boolean) as string[];
+
   return (
     <>
+      {/* Editorial header — adaptive eyebrow + region title */}
+      <header className="container-x pt-5 md:pt-8 pb-1 md:pb-2 builder-step-in">
+        <span className="inline-flex items-center gap-2 text-[10.5px] uppercase tracking-[0.28em] font-semibold text-[color:var(--gold)]">
+          <Sparkles size={12} aria-hidden="true" />
+          Now shaping
+        </span>
+        <h2 className="serif mt-2 text-[1.7rem] sm:text-[2rem] md:text-[2.4rem] leading-[1.05] tracking-[-0.01em] font-semibold text-[color:var(--charcoal)]">
+          {route.region.label}
+          {facets.length > 0 && (
+            <span className="serif italic font-normal text-[color:var(--charcoal)]/70">
+              {" "}— {facets.join(" · ").toLowerCase()}
+            </span>
+          )}
+        </h2>
+      </header>
+
       {/* Mobile tab bar */}
       <div className="lg:hidden sticky top-0 z-30 border-b border-[color:var(--charcoal)]/10 bg-[color:var(--ivory)]/95 backdrop-blur">
         <div className="container-x flex items-center gap-1 py-2" role="tablist">
@@ -592,7 +611,7 @@ function LiveBuilder({
               aria-selected={mobileTab === t}
               onClick={() => setMobileTab(t)}
               className={[
-                "flex-1 px-3 py-2 text-[11px] uppercase tracking-[0.22em] font-bold transition-colors",
+                "flex-1 px-3 py-2 text-[11px] uppercase tracking-[0.22em] font-bold transition-colors capitalize",
                 mobileTab === t
                   ? "text-[color:var(--charcoal)] border-b-2 border-[color:var(--gold)]"
                   : "text-[color:var(--charcoal)]/50 border-b-2 border-transparent",
