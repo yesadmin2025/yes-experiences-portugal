@@ -195,6 +195,7 @@ function listCtaScanFiles(): string[] {
     "src/components/SimpleTailorForm.tsx",
     "src/components/builder/StickyBar.tsx",
     "src/components/builder/EntryScreen.tsx",
+    "src/components/builder/TripTypeEntry.tsx",
     "src/components/builder/ReviewScreen.tsx",
     "src/components/home/TheDifferenceSection.tsx",
   ].map((p) => resolve(__dirname, "..", "..", p));

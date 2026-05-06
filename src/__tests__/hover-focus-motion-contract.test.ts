@@ -38,6 +38,7 @@ const TARGETS = [
   "components/home/TheDifferenceSection.tsx",
   "components/builder/Choices.tsx",
   "components/builder/EntryScreen.tsx",
+  "components/builder/TripTypeEntry.tsx",
   "components/builder/StickyBar.tsx",
   "components/builder/JourneyPanel.tsx",
   "components/builder/ReviewScreen.tsx",
