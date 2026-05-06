@@ -1,4 +1,4 @@
-import { Check, MessageCircle } from "lucide-react";
+import { Check, MessageCircle, X } from "lucide-react";
 import { fmtMinutes, type RouteUI, type RoutedStopUI, builderWaHref } from "./types";
 import type { BuilderImageRef } from "@/hooks/useBuilderImages";
 import { BuilderImage } from "./BuilderImage";
@@ -16,6 +16,7 @@ interface Props {
   selectedElementLabels?: string[];
   onConfirm: () => void;
   onBack: () => void;
+  onReset?: () => void;
   onToneReady?: (tone: ToneResult) => void;
 }
 
@@ -54,6 +55,7 @@ export function ReviewScreen({
   selectedElementLabels,
   onConfirm,
   onBack,
+  onReset,
   onToneReady,
 }: Props) {
   const thumbs = (reviewThumbs ?? []).slice(0, 4);
@@ -228,13 +230,26 @@ export function ReviewScreen({
               Talk to a local before confirming
             </CtaButton>
 
-            <button
-              type="button"
-              onClick={onBack}
-              className="self-start text-[12px] underline underline-offset-4 text-[color:var(--charcoal)]/55 hover:text-[color:var(--charcoal)]"
-            >
-              ← Keep adjusting
-            </button>
+            <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+              <button
+                type="button"
+                onClick={onBack}
+                className="text-[12px] underline underline-offset-4 text-[color:var(--charcoal)]/55 hover:text-[color:var(--charcoal)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] rounded-sm px-1 py-0.5"
+              >
+                ← Keep adjusting
+              </button>
+              {onReset && (
+                <button
+                  type="button"
+                  onClick={onReset}
+                  aria-label="Start over — clears your selections"
+                  className="inline-flex items-center gap-1.5 text-[10.5px] uppercase tracking-[0.24em] font-bold text-[color:var(--charcoal)]/55 hover:text-[color:var(--teal)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] rounded-sm px-1 py-0.5 transition-colors"
+                >
+                  <X size={12} aria-hidden="true" />
+                  Start over
+                </button>
+              )}
+            </div>
           </aside>
         </div>
       </div>
