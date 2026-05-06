@@ -2,6 +2,8 @@ import { ArrowDown, ArrowUp, Clock, Leaf, MessageCircle, Plus, X, Zap } from "lu
 import { fmtMinutes, type Pace, type RouteUI, type RoutedStopUI, builderWaHref } from "./types";
 import { BuilderImage } from "./BuilderImage";
 import { StopListSkeleton } from "./Skeletons";
+import { ElementsShelf } from "./ElementsShelf";
+import type { ElementKey } from "./elements";
 
 interface StopImageRef {
   url: string;
@@ -29,6 +31,9 @@ interface Props {
   routeLoading?: boolean;
   /** True while real images for stops are still being fetched from the DB. */
   imagesLoading?: boolean;
+  /** Bounded "Add to your day" element selection. */
+  selectedElements?: ElementKey[];
+  onToggleElement?: (key: ElementKey) => void;
 }
 
 const PACE_META: Record<Pace, { label: string; sub: string; icon: typeof Leaf }> = {
@@ -53,6 +58,8 @@ export function JourneyPanel({
   storyImage,
   routeLoading = false,
   imagesLoading = false,
+  selectedElements,
+  onToggleElement,
 }: Props) {
   if (!route) return null;
   const totalMin = route.totals.experienceMinutes;
@@ -238,6 +245,14 @@ export function JourneyPanel({
           </div>
         )}
       </section>
+
+      {/* Bounded "Add to your day" rail — concierge-confirmed, no invented prices */}
+      {onToggleElement && (
+        <ElementsShelf
+          selected={selectedElements ?? []}
+          onToggle={onToggleElement}
+        />
+      )}
 
       {/* Pace control */}
       <section>

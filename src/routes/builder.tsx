@@ -10,6 +10,8 @@ import { CtaButton } from "@/components/ui/CtaButton";
 
 import { TripTypeEntry, type TripPreset } from "@/components/builder/TripTypeEntry";
 import { PredictiveMoment } from "@/components/builder/PredictiveMoment";
+import { ElementsShelf } from "@/components/builder/ElementsShelf";
+import { BUILDER_ELEMENTS, elementLabel, type ElementKey } from "@/components/builder/elements";
 // Leaflet touches `window` at module load — lazy-load to keep it out of SSR.
 const BuilderMap = lazy(() =>
   import("@/components/builder/BuilderMap").then((m) => ({ default: m.BuilderMap })),
@@ -130,6 +132,13 @@ function BuilderPage() {
   const [guests, setGuests] = useState(2);
   const [mobileTab, setMobileTab] = useState<MobileTab>("build");
   const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [selectedElements, setSelectedElements] = useState<ElementKey[]>([]);
+
+  const toggleElement = useCallback((key: ElementKey) => {
+    setSelectedElements((prev) =>
+      prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key],
+    );
+  }, []);
 
   const fetchRoute = useCallback(
     async (opts?: { nextExcluded?: string[]; nextPace?: Pace }) => {
@@ -480,6 +489,8 @@ function BuilderPage() {
             moodLabel={labelFor(MOODS, mood)}
             whoLabel={labelFor(WHOS, who)}
             intentionLabel={labelFor(INTENTIONS, intention)}
+            selectedElements={selectedElements}
+            onToggleElement={toggleElement}
           />
         )}
 
@@ -512,6 +523,7 @@ function BuilderPage() {
             route={route}
             stops={stops}
             guests={guests}
+            selectedElements={selectedElements}
             onClose={() => setCheckoutOpen(false)}
           />
         )}
@@ -548,6 +560,8 @@ interface LiveBuilderProps {
   moodLabel: string | null;
   whoLabel: string | null;
   intentionLabel: string | null;
+  selectedElements: ElementKey[];
+  onToggleElement: (key: ElementKey) => void;
 }
 
 function LiveBuilder({
@@ -576,6 +590,8 @@ function LiveBuilder({
   moodLabel,
   whoLabel,
   intentionLabel,
+  selectedElements,
+  onToggleElement,
 }: LiveBuilderProps) {
   const regionCenter = { lat: Number(route.region.lat), lng: Number(route.region.lng) };
 
@@ -706,6 +722,8 @@ function LiveBuilder({
               storyImage={storyImage}
               routeLoading={routeLoading}
               imagesLoading={imagesLoading}
+              selectedElements={selectedElements}
+              onToggleElement={onToggleElement}
             />
           </div>
 
@@ -805,11 +823,13 @@ function CheckoutModal({
   route,
   stops,
   guests,
+  selectedElements,
   onClose,
 }: {
   route: RouteUI;
   stops: RoutedStopUI[];
   guests: number;
+  selectedElements: ElementKey[];
   onClose: () => void;
 }) {
   const [clientSecret, setClientSecret] = useState<string | null>(null);
@@ -826,6 +846,7 @@ function CheckoutModal({
           regionLabel: route.region.label,
           stopLabels: stops.map((s) => s.label),
           pace: route.pace,
+          elements: selectedElements,
           returnUrl: `${window.location.origin}/builder?status=success`,
           environment: getStripeEnvironment(),
         },
@@ -846,7 +867,7 @@ function CheckoutModal({
     return () => {
       cancelled = true;
     };
-  }, [route, stops, guests]);
+  }, [route, stops, guests, selectedElements]);
 
   return (
     <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/60 p-4">
@@ -869,6 +890,14 @@ function CheckoutModal({
           <p className="mt-1 text-[12.5px] text-[color:var(--charcoal)]/70">
             {stops.length} stops · {route.pace} pace · €{route.pricePerPersonEur * guests}
           </p>
+          {selectedElements.length > 0 && (
+            <p className="mt-2 text-[11.5px] text-[color:var(--charcoal)]/70">
+              <span className="text-[color:var(--gold)] font-bold uppercase tracking-[0.22em] text-[10px] mr-1.5">
+                Concierge confirms
+              </span>
+              {selectedElements.map(elementLabel).join(" · ")}
+            </p>
+          )}
           <div className="mt-5">
             {error && <p className="text-[13px] text-red-700">{error}</p>}
             {!error && !clientSecret && (
