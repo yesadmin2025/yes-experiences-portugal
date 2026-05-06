@@ -759,47 +759,93 @@ function LiveBuilder({
           {/* PANEL — Story (mobile-only focused narrative view) */}
           <div
             className={[
-              "lg:hidden rounded-[2px] border border-[color:var(--charcoal)]/12 bg-[color:var(--sand)]/40 min-h-[60svh] p-5 builder-pane-fade",
+              "lg:hidden rounded-[2px] border border-[color:var(--charcoal)]/12 bg-[color:var(--sand)]/40 min-h-[60svh] p-6 builder-pane-fade",
               mobileTab === "story" ? "block" : "hidden",
             ].join(" ")}
           >
             <span className="inline-flex items-center gap-2 text-[10.5px] uppercase tracking-[0.28em] font-semibold text-[color:var(--gold)]">
-              Story
+              <Sparkles size={12} aria-hidden="true" />
+              The story so far
             </span>
-            <h3 className="serif mt-3 text-[1.6rem] leading-[1.1] font-semibold text-[color:var(--charcoal)]">
-              {stops.length >= 2
-                ? `${stops[0].label} → ${stops[stops.length - 1].label}`
-                : route.region.label}
+
+            <h3 className="serif mt-4 text-[1.7rem] leading-[1.08] tracking-[-0.01em] font-semibold text-[color:var(--charcoal)]">
+              {route.region.label}
             </h3>
+            {stops.length >= 2 && (
+              <p className="mt-1.5 text-[12.5px] uppercase tracking-[0.22em] font-bold text-[color:var(--charcoal)]/70">
+                {stops[0].label}
+                <span className="mx-2 text-[color:var(--gold)]">→</span>
+                {stops[stops.length - 1].label}
+              </p>
+            )}
+
+            {/* Gold rule — micro-detail editorial separator */}
+            <span aria-hidden="true" className="mt-5 block h-px w-10 bg-[color:var(--gold)]" />
+
             <p
               className={[
-                "mt-4 serif italic leading-[1.45] text-[1.05rem] text-[color:var(--charcoal)]/85 transition-opacity duration-300",
+                "mt-5 serif italic leading-[1.5] text-[1.08rem] text-[color:var(--charcoal)]/90 transition-opacity duration-300",
                 narrativeLoading ? "opacity-50" : "opacity-100",
               ].join(" ")}
             >
               {narrative ||
                 "A real, achievable day in Portugal — shaped from your choices, ready to adjust."}
             </p>
-            <dl className="mt-6 grid grid-cols-3 gap-3">
+
+            <dl className="mt-7 grid grid-cols-3 gap-4 border-t border-[color:var(--charcoal)]/10 pt-5">
               <div>
-                <dt className="text-[9.5px] uppercase tracking-[0.24em] font-semibold text-[color:var(--charcoal)]/55">Stops</dt>
-                <dd className="mt-1 serif text-[1.15rem] font-semibold tabular-nums">{stops.length}</dd>
+                <dt className="text-[9.5px] uppercase tracking-[0.24em] font-semibold text-[color:var(--charcoal)]/55">
+                  Stops
+                </dt>
+                <dd className="mt-1.5 serif text-[1.25rem] font-semibold tabular-nums text-[color:var(--charcoal)]">
+                  {stops.length}
+                </dd>
               </div>
               <div>
-                <dt className="text-[9.5px] uppercase tracking-[0.24em] font-semibold text-[color:var(--charcoal)]/55">Duration</dt>
-                <dd className="mt-1 serif text-[1.15rem] font-semibold tabular-nums">{Math.floor(route.totals.experienceMinutes / 60)}h{route.totals.experienceMinutes % 60 ? String(route.totals.experienceMinutes % 60).padStart(2, "0") : ""}</dd>
+                <dt className="text-[9.5px] uppercase tracking-[0.24em] font-semibold text-[color:var(--charcoal)]/55">
+                  Duration
+                </dt>
+                <dd className="mt-1.5 serif text-[1.25rem] font-semibold tabular-nums text-[color:var(--charcoal)]">
+                  {Math.floor(route.totals.experienceMinutes / 60)}h
+                  {route.totals.experienceMinutes % 60
+                    ? String(route.totals.experienceMinutes % 60).padStart(2, "0")
+                    : ""}
+                </dd>
               </div>
               <div>
-                <dt className="text-[9.5px] uppercase tracking-[0.24em] font-semibold text-[color:var(--charcoal)]/55">Pace</dt>
-                <dd className="mt-1 serif text-[1.15rem] font-semibold capitalize">{route.pace}</dd>
+                <dt className="text-[9.5px] uppercase tracking-[0.24em] font-semibold text-[color:var(--charcoal)]/55">
+                  Pace
+                </dt>
+                <dd className="mt-1.5 serif text-[1.25rem] font-semibold capitalize text-[color:var(--charcoal)]">
+                  {route.pace}
+                </dd>
               </div>
             </dl>
+
+            {/* Concierge selections — surface what they added in story view */}
+            {selectedElements.length > 0 && (
+              <div className="mt-6 rounded-[2px] border border-[color:var(--gold)]/40 bg-[color:var(--gold)]/8 p-4">
+                <div className="flex items-baseline justify-between gap-3">
+                  <p className="text-[10px] uppercase tracking-[0.26em] font-bold text-[color:var(--gold)]">
+                    Added to your day
+                  </p>
+                  <p className="text-[9.5px] uppercase tracking-[0.22em] font-bold text-[color:var(--charcoal)]/55">
+                    Concierge confirms
+                  </p>
+                </div>
+                <p className="mt-2 text-[13px] leading-snug text-[color:var(--charcoal)]/85">
+                  {selectedElements.map(elementLabel).join(" · ")}
+                </p>
+              </div>
+            )}
+
             <button
               type="button"
               onClick={() => setMobileTab("build")}
-              className="mt-6 inline-flex items-center gap-2 text-[12px] uppercase tracking-[0.2em] font-bold text-[color:var(--teal)] hover:text-[color:var(--charcoal)]"
+              className="mt-7 inline-flex items-center gap-2 text-[11.5px] uppercase tracking-[0.22em] font-bold text-[color:var(--teal)] hover:text-[color:var(--charcoal)] transition-colors"
             >
-              Adjust the journey →
+              Adjust the journey
+              <span aria-hidden="true">→</span>
             </button>
           </div>
         </div>
