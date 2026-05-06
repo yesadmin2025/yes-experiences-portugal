@@ -246,6 +246,14 @@ export function JourneyPanel({
         )}
       </section>
 
+      {/* Bounded "Add to your day" rail — concierge-confirmed, no invented prices */}
+      {onToggleElement && (
+        <ElementsShelf
+          selected={selectedElements ?? []}
+          onToggle={onToggleElement}
+        />
+      )}
+
       {/* Pace control */}
       <section>
         <span className="text-[10px] uppercase tracking-[0.28em] font-bold text-[color:var(--gold)]">
