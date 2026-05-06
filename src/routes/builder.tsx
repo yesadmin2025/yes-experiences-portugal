@@ -612,6 +612,7 @@ interface LiveBuilderProps {
   intentionLabel: string | null;
   selectedElements: ElementKey[];
   onToggleElement: (key: ElementKey) => void;
+  onReset: () => void;
 }
 
 function LiveBuilder({
