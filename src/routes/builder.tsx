@@ -132,6 +132,13 @@ function BuilderPage() {
   const [guests, setGuests] = useState(2);
   const [mobileTab, setMobileTab] = useState<MobileTab>("build");
   const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [selectedElements, setSelectedElements] = useState<ElementKey[]>([]);
+
+  const toggleElement = useCallback((key: ElementKey) => {
+    setSelectedElements((prev) =>
+      prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key],
+    );
+  }, []);
 
   const fetchRoute = useCallback(
     async (opts?: { nextExcluded?: string[]; nextPace?: Pace }) => {
