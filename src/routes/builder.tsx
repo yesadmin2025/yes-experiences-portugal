@@ -32,6 +32,15 @@ import {
   TRANSITION_MICROCOPY,
   WHOS,
 } from "@/components/builder/catalogue";
+
+/** Resolve a human label for current selections, used by the live header. */
+function labelFor<T extends { id: string; label: string }>(
+  list: readonly T[],
+  id: string | undefined,
+): string | null {
+  if (!id) return null;
+  return list.find((x) => x.id === id)?.label ?? null;
+}
 import type {
   Intention,
   Mood,
@@ -468,6 +477,9 @@ function BuilderPage() {
             stopImages={routeImages.stopImages}
             storyImage={routeImages.storyImage}
             imagesLoading={routeImages.loading}
+            moodLabel={labelFor(MOODS, mood)}
+            whoLabel={labelFor(WHOS, who)}
+            intentionLabel={labelFor(INTENTIONS, intention)}
           />
         )}
 
@@ -533,6 +545,9 @@ interface LiveBuilderProps {
   stopImages: Record<string, { url: string; alt: string } | null>;
   storyImage: { url: string; alt: string } | null;
   imagesLoading: boolean;
+  moodLabel: string | null;
+  whoLabel: string | null;
+  intentionLabel: string | null;
 }
 
 function LiveBuilder({
@@ -558,11 +573,33 @@ function LiveBuilder({
   stopImages,
   storyImage,
   imagesLoading,
+  moodLabel,
+  whoLabel,
+  intentionLabel,
 }: LiveBuilderProps) {
   const regionCenter = { lat: Number(route.region.lat), lng: Number(route.region.lng) };
 
+  // Eyebrow facets shown above the live split.
+  const facets = [moodLabel, whoLabel, intentionLabel].filter(Boolean) as string[];
+
   return (
     <>
+      {/* Editorial header — adaptive eyebrow + region title */}
+      <header className="container-x pt-5 md:pt-8 pb-1 md:pb-2 builder-step-in">
+        <span className="inline-flex items-center gap-2 text-[10.5px] uppercase tracking-[0.28em] font-semibold text-[color:var(--gold)]">
+          <Sparkles size={12} aria-hidden="true" />
+          Now shaping
+        </span>
+        <h2 className="serif mt-2 text-[1.7rem] sm:text-[2rem] md:text-[2.4rem] leading-[1.05] tracking-[-0.01em] font-semibold text-[color:var(--charcoal)]">
+          {route.region.label}
+          {facets.length > 0 && (
+            <span className="serif italic font-normal text-[color:var(--charcoal)]/70">
+              {" "}— {facets.join(" · ").toLowerCase()}
+            </span>
+          )}
+        </h2>
+      </header>
+
       {/* Mobile tab bar */}
       <div className="lg:hidden sticky top-0 z-30 border-b border-[color:var(--charcoal)]/10 bg-[color:var(--ivory)]/95 backdrop-blur">
         <div className="container-x flex items-center gap-1 py-2" role="tablist">
@@ -574,7 +611,7 @@ function LiveBuilder({
               aria-selected={mobileTab === t}
               onClick={() => setMobileTab(t)}
               className={[
-                "flex-1 px-3 py-2 text-[11px] uppercase tracking-[0.22em] font-bold transition-colors",
+                "flex-1 px-3 py-2 text-[11px] uppercase tracking-[0.22em] font-bold transition-colors capitalize",
                 mobileTab === t
                   ? "text-[color:var(--charcoal)] border-b-2 border-[color:var(--gold)]"
                   : "text-[color:var(--charcoal)]/50 border-b-2 border-transparent",
@@ -617,12 +654,13 @@ function LiveBuilder({
 
       {/* Desktop split / mobile tab content */}
       <section className="container-x py-6 md:py-10">
-        <div className="grid gap-6 lg:grid-cols-[1.2fr_1fr]">
+        <div className="grid gap-6 lg:grid-cols-[1.25fr_1fr]">
           {/* MAP */}
           <div
             className={[
-              "relative overflow-hidden rounded-[2px] border border-[color:var(--charcoal)]/12 bg-[color:var(--sand)]",
-              "h-[58svh] sm:h-[62svh] lg:h-[72svh] lg:sticky lg:top-20",
+              "group relative overflow-hidden rounded-[2px] border border-[color:var(--charcoal)]/12 bg-[color:var(--sand)] shadow-[0_18px_40px_-24px_rgba(46,46,46,0.35)]",
+              "h-[58svh] sm:h-[62svh] lg:h-[74svh] lg:sticky lg:top-20",
+              "builder-pane-fade",
               mobileTab === "map" ? "block" : "hidden lg:block",
             ].join(" ")}
           >
@@ -633,12 +671,22 @@ function LiveBuilder({
                 regionKey={route.region.key}
               />
             </Suspense>
+
+            {/* Gold corner accents — micro-detail only */}
+            <span aria-hidden="true" className="pointer-events-none absolute top-0 left-0 h-5 w-5 border-t border-l border-[color:var(--gold)]" />
+            <span aria-hidden="true" className="pointer-events-none absolute bottom-0 right-0 h-5 w-5 border-b border-r border-[color:var(--gold)]" />
+
+            {/* Live route label */}
+            <span className="pointer-events-none absolute top-3 left-3 inline-flex items-center gap-1.5 rounded-full bg-[color:var(--ivory)]/90 px-2.5 py-1 text-[9.5px] uppercase tracking-[0.24em] font-bold text-[color:var(--charcoal)] shadow-[0_4px_14px_-6px_rgba(46,46,46,0.4)] backdrop-blur">
+              <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--gold)]" />
+              Live route
+            </span>
           </div>
 
           {/* PANEL — Build (controls) */}
           <div
             className={[
-              "rounded-[2px] border border-[color:var(--charcoal)]/12 bg-[color:var(--ivory)] min-h-[60svh]",
+              "rounded-[2px] border border-[color:var(--charcoal)]/12 bg-[color:var(--ivory)] min-h-[60svh] builder-pane-fade",
               mobileTab === "build" ? "block" : "hidden lg:block",
             ].join(" ")}
           >
@@ -664,7 +712,7 @@ function LiveBuilder({
           {/* PANEL — Story (mobile-only focused narrative view) */}
           <div
             className={[
-              "lg:hidden rounded-[2px] border border-[color:var(--charcoal)]/12 bg-[color:var(--sand)]/40 min-h-[60svh] p-5",
+              "lg:hidden rounded-[2px] border border-[color:var(--charcoal)]/12 bg-[color:var(--sand)]/40 min-h-[60svh] p-5 builder-pane-fade",
               mobileTab === "story" ? "block" : "hidden",
             ].join(" ")}
           >
