@@ -13,6 +13,8 @@ interface BuilderCheckoutBody {
   regionLabel: string;
   stopLabels: string[];
   pace: string;
+  /** Optional bounded "Add to your day" element keys (concierge-confirmed). */
+  elements?: string[];
   customerEmail?: string;
   returnUrl: string;
   environment: StripeEnv;
