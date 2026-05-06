@@ -193,12 +193,15 @@ function BuilderPage() {
     [mood, who, intention, pace, excluded, pinned],
   );
 
-  // Trigger initial generation when entering predictive moment
+  // Trigger initial generation when entering predictive moment / live builder.
+  // Wait for persistence to hydrate so a refreshed user keeps their excluded
+  // stops on the very first route fetch.
   useEffect(() => {
-    if (step === 5 && mood && who && intention && !route && !routeLoading) {
+    if (!hydrated) return;
+    if ((step === 5 || step === 6 || step === 7) && mood && who && intention && !route && !routeLoading) {
       void fetchRoute();
     }
-  }, [step, mood, who, intention, route, routeLoading, fetchRoute]);
+  }, [hydrated, step, mood, who, intention, route, routeLoading, fetchRoute]);
 
   // Apply user-driven reordering on top of engine stops
   const stops: RoutedStopUI[] = useMemo(() => {
