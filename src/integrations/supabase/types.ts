@@ -143,6 +143,33 @@ export type Database = {
         }
         Relationships: []
       }
+      builder_events: {
+        Row: {
+          anonymous_id: string
+          event: string
+          id: string
+          meta: Json | null
+          occurred_at: string
+          route: string | null
+        }
+        Insert: {
+          anonymous_id: string
+          event: string
+          id?: string
+          meta?: Json | null
+          occurred_at?: string
+          route?: string | null
+        }
+        Update: {
+          anonymous_id?: string
+          event?: string
+          id?: string
+          meta?: Json | null
+          occurred_at?: string
+          route?: string | null
+        }
+        Relationships: []
+      }
       builder_experience_types: {
         Row: {
           blurb: string | null
