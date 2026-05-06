@@ -16,6 +16,7 @@ interface Props {
   selectedElementLabels?: string[];
   onConfirm: () => void;
   onBack: () => void;
+  onReset?: () => void;
   onToneReady?: (tone: ToneResult) => void;
 }
 
