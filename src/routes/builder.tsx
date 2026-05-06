@@ -545,6 +545,9 @@ interface LiveBuilderProps {
   stopImages: Record<string, { url: string; alt: string } | null>;
   storyImage: { url: string; alt: string } | null;
   imagesLoading: boolean;
+  moodLabel: string | null;
+  whoLabel: string | null;
+  intentionLabel: string | null;
 }
 
 function LiveBuilder({
