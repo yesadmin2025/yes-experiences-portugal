@@ -165,6 +165,26 @@ function BuilderPage() {
     [setPersisted],
   );
 
+  /** Wipe persisted slice + URL state and return to entry. */
+  const resetBuilder = useCallback(() => {
+    if (typeof window !== "undefined") {
+      const ok = window.confirm(
+        "Start over? This clears your selected stops, pace, elements, and guests.",
+      );
+      if (!ok) return;
+    }
+    resetPersisted();
+    setRoute(null);
+    setNarrative("");
+    setRouteError(null);
+    setMobileTab("build");
+    setCheckoutOpen(false);
+    void navigate({
+      search: () => ({ step: 0 }) as BuilderSearch,
+      replace: true,
+    });
+  }, [resetPersisted, navigate]);
+
   const fetchRoute = useCallback(
     async (opts?: { nextExcluded?: string[]; nextPace?: Pace }) => {
       if (!mood || !who || !intention) return;
