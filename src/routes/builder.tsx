@@ -643,6 +643,7 @@ function LiveBuilder({
   intentionLabel,
   selectedElements,
   onToggleElement,
+  onReset,
 }: LiveBuilderProps) {
   const regionCenter = { lat: Number(route.region.lat), lng: Number(route.region.lng) };
 
