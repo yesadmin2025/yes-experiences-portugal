@@ -298,8 +298,23 @@ function BuilderPage() {
           </div>
         )}
 
-        {/* STEP 0 — Entry */}
-        {step === 0 && <EntryScreen onStart={() => setStep(1)} />}
+        {/* STEP 0 — Trip type entry (8 cards · concierge gating · always book instantly) */}
+        {step === 0 && (
+          <TripTypeEntry
+            onChoose={(preset: TripPreset) => {
+              // Apply preset selections, then jump to the first unset step.
+              const next: Partial<BuilderSearch> = { ...preset };
+              const nextMood = preset.mood ?? mood;
+              const nextWho = preset.who ?? who;
+              const nextIntention = preset.intention ?? intention;
+              if (!nextMood) next.step = 1;
+              else if (!nextWho) next.step = 2;
+              else if (!nextIntention) next.step = 3;
+              else next.step = 4;
+              setSearch(next);
+            }}
+          />
+        )}
 
         {/* STEPS 1–4 — selection flow */}
         {step >= 1 && step <= 4 && (
