@@ -686,7 +686,7 @@ function LiveBuilder({
           {/* PANEL — Build (controls) */}
           <div
             className={[
-              "rounded-[2px] border border-[color:var(--charcoal)]/12 bg-[color:var(--ivory)] min-h-[60svh]",
+              "rounded-[2px] border border-[color:var(--charcoal)]/12 bg-[color:var(--ivory)] min-h-[60svh] builder-pane-fade",
               mobileTab === "build" ? "block" : "hidden lg:block",
             ].join(" ")}
           >
