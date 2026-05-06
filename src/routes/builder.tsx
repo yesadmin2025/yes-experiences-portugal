@@ -865,7 +865,7 @@ function CheckoutModal({
     return () => {
       cancelled = true;
     };
-  }, [route, stops, guests]);
+  }, [route, stops, guests, selectedElements]);
 
   return (
     <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/60 p-4">
