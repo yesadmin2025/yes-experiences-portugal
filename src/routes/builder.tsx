@@ -546,7 +546,7 @@ function BuilderPage() {
             intentionLabel={labelFor(INTENTIONS, intention)}
             selectedElements={selectedElements}
             onToggleElement={toggleElement}
-            onReset={resetBuilder}
+            onReset={() => resetBuilder("header")}
           />
         )}
 
@@ -562,6 +562,7 @@ function BuilderPage() {
               selectedElementLabels={selectedElements.map(elementLabel)}
               onConfirm={() => setCheckoutOpen(true)}
               onBack={() => setStep(6)}
+              onReset={() => resetBuilder("review")}
             />
             <StickyBar
               totalMinutes={route.totals.experienceMinutes}
