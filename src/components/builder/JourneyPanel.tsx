@@ -31,6 +31,9 @@ interface Props {
   routeLoading?: boolean;
   /** True while real images for stops are still being fetched from the DB. */
   imagesLoading?: boolean;
+  /** Bounded "Add to your day" element selection. */
+  selectedElements?: ElementKey[];
+  onToggleElement?: (key: ElementKey) => void;
 }
 
 const PACE_META: Record<Pace, { label: string; sub: string; icon: typeof Leaf }> = {
