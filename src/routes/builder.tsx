@@ -560,6 +560,8 @@ interface LiveBuilderProps {
   moodLabel: string | null;
   whoLabel: string | null;
   intentionLabel: string | null;
+  selectedElements: ElementKey[];
+  onToggleElement: (key: ElementKey) => void;
 }
 
 function LiveBuilder({
