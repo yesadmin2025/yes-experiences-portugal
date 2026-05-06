@@ -64,7 +64,12 @@ export function useBuilderPersistence() {
     }
   }, [state, hydrated]);
 
-  return { state, setState, hydrated };
+  const reset = () => {
+    clearBuilderPersistence();
+    setState(DEFAULTS);
+  };
+
+  return { state, setState, hydrated, reset };
 }
 
 export function clearBuilderPersistence() {

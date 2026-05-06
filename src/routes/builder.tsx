@@ -125,7 +125,7 @@ function BuilderPage() {
   // Persisted slice (localStorage): excluded stops, manual order, guests, elements.
   // URL keeps step/mood/who/intention/pace; this hook keeps everything else
   // across refresh / return-visits.
-  const { state: persisted, setState: setPersisted, hydrated } = useBuilderPersistence();
+  const { state: persisted, setState: setPersisted, hydrated, reset: resetPersisted } = useBuilderPersistence();
   const excluded = persisted.excluded;
   const orderOverride = persisted.orderOverride;
   const guests = persisted.guests;
@@ -164,6 +164,26 @@ function BuilderPage() {
     },
     [setPersisted],
   );
+
+  /** Wipe persisted slice + URL state and return to entry. */
+  const resetBuilder = useCallback(() => {
+    if (typeof window !== "undefined") {
+      const ok = window.confirm(
+        "Start over? This clears your selected stops, pace, elements, and guests.",
+      );
+      if (!ok) return;
+    }
+    resetPersisted();
+    setRoute(null);
+    setNarrative("");
+    setRouteError(null);
+    setMobileTab("build");
+    setCheckoutOpen(false);
+    void navigate({
+      search: () => ({ step: 0 }) as BuilderSearch,
+      replace: true,
+    });
+  }, [resetPersisted, navigate]);
 
   const fetchRoute = useCallback(
     async (opts?: { nextExcluded?: string[]; nextPace?: Pace }) => {
@@ -519,6 +539,7 @@ function BuilderPage() {
             intentionLabel={labelFor(INTENTIONS, intention)}
             selectedElements={selectedElements}
             onToggleElement={toggleElement}
+            onReset={resetBuilder}
           />
         )}
 
@@ -591,6 +612,7 @@ interface LiveBuilderProps {
   intentionLabel: string | null;
   selectedElements: ElementKey[];
   onToggleElement: (key: ElementKey) => void;
+  onReset: () => void;
 }
 
 function LiveBuilder({
@@ -621,6 +643,7 @@ function LiveBuilder({
   intentionLabel,
   selectedElements,
   onToggleElement,
+  onReset,
 }: LiveBuilderProps) {
   const regionCenter = { lat: Number(route.region.lat), lng: Number(route.region.lng) };
 
@@ -631,10 +654,21 @@ function LiveBuilder({
     <>
       {/* Editorial header — adaptive eyebrow + region title */}
       <header className="container-x pt-5 md:pt-8 pb-1 md:pb-2 builder-step-in">
-        <span className="inline-flex items-center gap-2 text-[10.5px] uppercase tracking-[0.28em] font-semibold text-[color:var(--gold)]">
-          <Sparkles size={12} aria-hidden="true" />
-          Now shaping
-        </span>
+        <div className="flex items-start justify-between gap-4">
+          <span className="inline-flex items-center gap-2 text-[10.5px] uppercase tracking-[0.28em] font-semibold text-[color:var(--gold)]">
+            <Sparkles size={12} aria-hidden="true" />
+            Now shaping
+          </span>
+          <button
+            type="button"
+            onClick={onReset}
+            className="inline-flex items-center gap-1.5 text-[10.5px] uppercase tracking-[0.24em] font-bold text-[color:var(--charcoal)]/55 hover:text-[color:var(--teal)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] rounded-sm px-1 py-0.5 transition-colors"
+            aria-label="Start over — clears your selections"
+          >
+            <X size={12} aria-hidden="true" />
+            Start over
+          </button>
+        </div>
         <h2 className="serif mt-2 text-[1.7rem] sm:text-[2rem] md:text-[2.4rem] leading-[1.05] tracking-[-0.01em] font-semibold text-[color:var(--charcoal)]">
           {route.region.label}
           {facets.length > 0 && (
