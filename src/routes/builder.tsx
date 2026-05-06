@@ -13,6 +13,7 @@ import { PredictiveMoment } from "@/components/builder/PredictiveMoment";
 import { ElementsShelf } from "@/components/builder/ElementsShelf";
 import { elementLabel, type ElementKey } from "@/components/builder/elements";
 import { useBuilderPersistence } from "@/hooks/useBuilderPersistence";
+import { trackBuilderEvent } from "@/lib/builder-analytics";
 // Leaflet touches `window` at module load — lazy-load to keep it out of SSR.
 const BuilderMap = lazy(() =>
   import("@/components/builder/BuilderMap").then((m) => ({ default: m.BuilderMap })),
@@ -166,24 +167,30 @@ function BuilderPage() {
   );
 
   /** Wipe persisted slice + URL state and return to entry. */
-  const resetBuilder = useCallback(() => {
-    if (typeof window !== "undefined") {
-      const ok = window.confirm(
-        "Start over? This clears your selected stops, pace, elements, and guests.",
-      );
-      if (!ok) return;
-    }
-    resetPersisted();
-    setRoute(null);
-    setNarrative("");
-    setRouteError(null);
-    setMobileTab("build");
-    setCheckoutOpen(false);
-    void navigate({
-      search: () => ({ step: 0 }) as BuilderSearch,
-      replace: true,
-    });
-  }, [resetPersisted, navigate]);
+  const resetBuilder = useCallback(
+    (source: "header" | "review" = "header") => {
+      if (typeof window !== "undefined") {
+        const ok = window.confirm(
+          "Start over? This clears your selected stops, pace, elements, and guests.",
+        );
+        if (!ok) return;
+      }
+      void trackBuilderEvent(source === "review" ? "review_reset" : "reset", {
+        source,
+      });
+      resetPersisted();
+      setRoute(null);
+      setNarrative("");
+      setRouteError(null);
+      setMobileTab("build");
+      setCheckoutOpen(false);
+      void navigate({
+        search: () => ({ step: 0 }) as BuilderSearch,
+        replace: true,
+      });
+    },
+    [resetPersisted, navigate],
+  );
 
   const fetchRoute = useCallback(
     async (opts?: { nextExcluded?: string[]; nextPace?: Pace }) => {
@@ -539,7 +546,7 @@ function BuilderPage() {
             intentionLabel={labelFor(INTENTIONS, intention)}
             selectedElements={selectedElements}
             onToggleElement={toggleElement}
-            onReset={resetBuilder}
+            onReset={() => resetBuilder("header")}
           />
         )}
 
@@ -555,6 +562,7 @@ function BuilderPage() {
               selectedElementLabels={selectedElements.map(elementLabel)}
               onConfirm={() => setCheckoutOpen(true)}
               onBack={() => setStep(6)}
+              onReset={() => resetBuilder("review")}
             />
             <StickyBar
               totalMinutes={route.totals.experienceMinutes}
