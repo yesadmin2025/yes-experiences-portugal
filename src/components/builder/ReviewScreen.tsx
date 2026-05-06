@@ -12,6 +12,8 @@ interface Props {
   guests: number;
   narrative: string;
   reviewThumbs?: BuilderImageRef[];
+  /** Labels of bounded "Add to your day" elements selected by the user. */
+  selectedElementLabels?: string[];
   onConfirm: () => void;
   onBack: () => void;
   onToneReady?: (tone: ToneResult) => void;
@@ -43,7 +45,17 @@ const FLEXIBLE = [
  * one clean editorial layout, surfaces trust, and offers a final call to
  * either confirm (Stripe) or talk to a local first (WhatsApp).
  */
-export function ReviewScreen({ route, stops, guests, narrative, reviewThumbs, onConfirm, onBack, onToneReady }: Props) {
+export function ReviewScreen({
+  route,
+  stops,
+  guests,
+  narrative,
+  reviewThumbs,
+  selectedElementLabels,
+  onConfirm,
+  onBack,
+  onToneReady,
+}: Props) {
   const thumbs = (reviewThumbs ?? []).slice(0, 4);
   const totalEur = route.pricePerPersonEur * guests;
   const sessionId = useBuilderSessionId();
