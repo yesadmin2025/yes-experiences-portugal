@@ -654,12 +654,13 @@ function LiveBuilder({
 
       {/* Desktop split / mobile tab content */}
       <section className="container-x py-6 md:py-10">
-        <div className="grid gap-6 lg:grid-cols-[1.2fr_1fr]">
+        <div className="grid gap-6 lg:grid-cols-[1.25fr_1fr]">
           {/* MAP */}
           <div
             className={[
-              "relative overflow-hidden rounded-[2px] border border-[color:var(--charcoal)]/12 bg-[color:var(--sand)]",
-              "h-[58svh] sm:h-[62svh] lg:h-[72svh] lg:sticky lg:top-20",
+              "group relative overflow-hidden rounded-[2px] border border-[color:var(--charcoal)]/12 bg-[color:var(--sand)] shadow-[0_18px_40px_-24px_rgba(46,46,46,0.35)]",
+              "h-[58svh] sm:h-[62svh] lg:h-[74svh] lg:sticky lg:top-20",
+              "builder-pane-fade",
               mobileTab === "map" ? "block" : "hidden lg:block",
             ].join(" ")}
           >
@@ -670,6 +671,16 @@ function LiveBuilder({
                 regionKey={route.region.key}
               />
             </Suspense>
+
+            {/* Gold corner accents — micro-detail only */}
+            <span aria-hidden="true" className="pointer-events-none absolute top-0 left-0 h-5 w-5 border-t border-l border-[color:var(--gold)]" />
+            <span aria-hidden="true" className="pointer-events-none absolute bottom-0 right-0 h-5 w-5 border-b border-r border-[color:var(--gold)]" />
+
+            {/* Live route label */}
+            <span className="pointer-events-none absolute top-3 left-3 inline-flex items-center gap-1.5 rounded-full bg-[color:var(--ivory)]/90 px-2.5 py-1 text-[9.5px] uppercase tracking-[0.24em] font-bold text-[color:var(--charcoal)] shadow-[0_4px_14px_-6px_rgba(46,46,46,0.4)] backdrop-blur">
+              <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--gold)]" />
+              Live route
+            </span>
           </div>
 
           {/* PANEL — Build (controls) */}
