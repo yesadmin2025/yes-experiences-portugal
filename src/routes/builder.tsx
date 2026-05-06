@@ -477,6 +477,9 @@ function BuilderPage() {
             stopImages={routeImages.stopImages}
             storyImage={routeImages.storyImage}
             imagesLoading={routeImages.loading}
+            moodLabel={labelFor(MOODS, mood)}
+            whoLabel={labelFor(WHOS, who)}
+            intentionLabel={labelFor(INTENTIONS, intention)}
           />
         )}
 
