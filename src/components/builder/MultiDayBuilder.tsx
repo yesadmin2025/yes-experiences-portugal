@@ -64,7 +64,7 @@ export function MultiDayBuilder({
   const [eligLoading, setEligLoading] = useState(false);
   const [rules, setRules] = useState<{ max_km_between_stops: number; max_total_km_per_day: number } | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
-  const [tab, setTab] = useState<"build" | "map">("build");
+  // Mobile no longer toggles between map/build — they share one scroll.
   const [liveToast, setLiveToast] = useState<string | null>(null);
 
   const flashLive = useCallback((t: string) => {
