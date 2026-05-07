@@ -179,6 +179,11 @@ export function AddStopSheet({
                       <div className="min-w-0 flex-1">
                         <p className="text-[13.5px] font-semibold leading-tight text-[color:var(--charcoal)]">
                           {s.label}
+                          {suggestedSet.has(s.key) && (
+                            <span className="ml-2 inline-flex items-center rounded-full bg-[color:var(--gold)]/15 px-1.5 py-0.5 text-[9px] uppercase tracking-[0.18em] font-bold text-[color:var(--gold)] align-middle">
+                              Suggested
+                            </span>
+                          )}
                         </p>
                         {s.tag && (
                           <p className="mt-0.5 text-[10.5px] uppercase tracking-[0.18em] text-[color:var(--gold)]">
