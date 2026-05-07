@@ -146,8 +146,8 @@ function BuilderPage() {
     [setPersisted],
   );
   const setGuests = useCallback(
-    (n: number) => setPersisted((p) => ({ ...p, guests: n })),
-    [setPersisted],
+    (n: number) => md.setGuests(n),
+    [md],
   );
 
   const [routeLoading, setRouteLoading] = useState(false);
