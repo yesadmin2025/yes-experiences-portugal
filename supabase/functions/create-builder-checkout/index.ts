@@ -1,4 +1,5 @@
 import { type StripeEnv, createStripeClient } from "../_shared/stripe.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -8,7 +9,8 @@ const corsHeaders = {
 };
 
 interface BuilderCheckoutBody {
-  amountInCents: number;
+  // amountInCents is no longer accepted from the client. Price is computed
+  // server-side from builder_routing_rules to prevent price manipulation.
   guests: number;
   regionLabel: string;
   stopLabels: string[];
