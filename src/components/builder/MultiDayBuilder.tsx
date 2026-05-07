@@ -1,5 +1,5 @@
 import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Check, Copy, Eye, Loader2, Map as MapIcon, Plus, Share2, Sparkles, Trash2, Wand2, X } from "lucide-react";
+import { Check, Copy, Eye, Loader2, Plus, Share2, Sparkles, Trash2, Wand2, X } from "lucide-react";
 import {
   buildDayRoute,
   computeAddStopEligibility,
