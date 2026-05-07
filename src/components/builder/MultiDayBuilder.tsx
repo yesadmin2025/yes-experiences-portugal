@@ -1,10 +1,11 @@
 import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Loader2, Map as MapIcon, Plus, Sparkles, Trash2, X } from "lucide-react";
+import { Check, Copy, Eye, Loader2, Map as MapIcon, Plus, Share2, Sparkles, Trash2, Wand2, X } from "lucide-react";
 import {
   buildDayRoute,
   computeAddStopEligibility,
   listRegionStops,
 } from "@/server/builderEngine.functions";
+import { suggestFromIntent } from "@/server/builderIntent.functions";
 import { fmtMinutes, type Pace, type RouteUI, type RoutedStopUI } from "@/components/builder/types";
 import { AddStopSheet, type RegionStop, type StopEligibility } from "@/components/builder/AddStopSheet";
 import { CtaButton } from "@/components/ui/CtaButton";
