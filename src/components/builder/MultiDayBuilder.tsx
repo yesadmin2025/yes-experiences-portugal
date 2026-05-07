@@ -382,17 +382,11 @@ export function MultiDayBuilder({
 
       {/* Mobile tab bar removed — map and build now share one scroll */}
 
-      {/* Main split */}
+      {/* Main split — mobile: map stacked above build (one scroll, no tabs) */}
       <section className="container-x py-6 md:py-10">
-        <div className="grid gap-6 lg:grid-cols-[1.25fr_1fr]">
+        <div className="grid gap-4 lg:gap-6 lg:grid-cols-[1.25fr_1fr]">
           {/* MAP */}
-          <div
-            className={[
-              "relative overflow-hidden rounded-[2px] border border-[color:var(--charcoal)]/12 bg-[color:var(--sand)] shadow-[0_18px_40px_-24px_rgba(46,46,46,0.35)]",
-              "h-[58svh] sm:h-[62svh] lg:h-[74svh] lg:sticky lg:top-20",
-              tab === "map" ? "block" : "hidden lg:block",
-            ].join(" ")}
-          >
+          <div className="relative overflow-hidden rounded-[2px] border border-[color:var(--charcoal)]/12 bg-[color:var(--sand)] shadow-[0_18px_40px_-24px_rgba(46,46,46,0.35)] h-[42svh] sm:h-[52svh] lg:h-[74svh] lg:sticky lg:top-20">
             <Suspense fallback={<div className="h-full w-full bg-[color:var(--sand)]" aria-hidden="true" />}>
               <BuilderMap
                 stops={activeRoute?.stops ?? []}
@@ -403,7 +397,7 @@ export function MultiDayBuilder({
               />
             </Suspense>
             {/* Map legend */}
-            <div className="pointer-events-none absolute bottom-3 left-3 right-3 flex flex-wrap items-center gap-3 rounded-[2px] bg-[color:var(--ivory)]/95 px-3 py-2 text-[10px] uppercase tracking-[0.22em] font-bold text-[color:var(--charcoal)]/75 backdrop-blur shadow-sm">
+            <div className="pointer-events-none absolute bottom-3 left-3 right-3 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-[2px] bg-[color:var(--ivory)]/95 px-3 py-2 text-[9.5px] sm:text-[10px] uppercase tracking-[0.22em] font-bold text-[color:var(--charcoal)]/75 backdrop-blur shadow-sm">
               <span className="inline-flex items-center gap-1.5"><span className="inline-block h-2.5 w-2.5 rounded-full bg-[color:var(--teal)]" /> In your day</span>
               <span className="inline-flex items-center gap-1.5"><span className="inline-block h-2.5 w-2.5 rounded-full bg-[color:var(--gold)]" /> Reachable</span>
               <span className="inline-flex items-center gap-1.5"><span className="inline-block h-2.5 w-2.5 rounded-full bg-[#9a8f80] opacity-60" /> Out of range</span>
