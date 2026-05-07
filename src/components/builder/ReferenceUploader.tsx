@@ -121,23 +121,20 @@ export function ReferenceUploader({ sessionId, onToneReady }: Props) {
           data: { publicUrl },
         } = supabase.storage.from("builder-references").getPublicUrl(path);
 
-        const { data: inserted, error: insErr } = await supabase
+        const { error: insErr } = await supabase
           .from("builder_reference_uploads")
           .insert({
             session_id: sessionId,
             file_path: path,
+            // file_url is legacy/NOT NULL — store storage path reference
+            // only; clients now read via short-lived signed URLs.
             file_url: publicUrl,
             file_name: file.name.slice(0, 200),
             mime_type: file.type,
             file_size_bytes: file.size,
-          })
-          .select(
-            "id,file_path,file_url,file_name,mime_type,file_size_bytes,tone_summary,tone_keywords,analyzed_at,created_at",
-          )
-          .single();
-        if (insErr || !inserted) {
+          });
+        if (insErr) {
           console.error(insErr);
-          // Best-effort cleanup of the storage object.
           await supabase.storage
             .from("builder-references")
             .remove([path])
@@ -145,12 +142,16 @@ export function ReferenceUploader({ sessionId, onToneReady }: Props) {
           toast.error(`Couldn't save ${file.name}`);
           continue;
         }
-        newRows.push(inserted as ReferenceRow);
       }
-      if (newRows.length > 0) {
-        setRows((prev) => [...prev, ...newRows]);
-        // Tone becomes stale after new uploads.
-        setTone(null);
+      // Re-list via server function to pick up signed URLs.
+      try {
+        const refreshed = await listBuilderReferences({ data: { sessionId } });
+        if (refreshed.ok) {
+          setRows(refreshed.rows as ReferenceRow[]);
+          setTone(null);
+        }
+      } catch (err) {
+        console.warn("Failed to refresh references", err);
       }
     } finally {
       setUploading(false);
