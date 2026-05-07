@@ -405,12 +405,8 @@ export function MultiDayBuilder({
           </div>
 
           {/* BUILD PANEL */}
-          <div
-            className={[
-              "rounded-[2px] border border-[color:var(--charcoal)]/12 bg-[color:var(--ivory)] min-h-[60svh] flex flex-col",
-              tab === "build" ? "block" : "hidden lg:block",
-            ].join(" ")}
-          >
+          <div className="rounded-[2px] border border-[color:var(--charcoal)]/12 bg-[color:var(--ivory)] min-h-[40svh] flex flex-col">
+
             <div className="p-5 md:p-6 flex flex-col gap-5 flex-1">
               {/* Day header w/ remove */}
               <header className="flex items-start justify-between gap-3">
