@@ -419,6 +419,23 @@ export function MultiDayBuilder({
             </button>
           </div>
         )}
+        {!readOnly && aiSuggested.length > 0 && (
+          <div className="mt-2 flex items-center justify-between gap-2 rounded-[2px] border border-[color:var(--gold)]/30 bg-[color:var(--gold)]/5 px-3 py-2">
+            <p className="text-[11.5px] text-[color:var(--charcoal)]/80">
+              <span className="font-semibold">{aiSuggested.length}</span> AI suggestion{aiSuggested.length === 1 ? "" : "s"} ·{" "}
+              <span className="text-[color:var(--charcoal)]/60">{eligibleSuggestedCount} fit this day's rules</span>
+            </p>
+            <button
+              type="button"
+              onClick={applySuggested}
+              disabled={eligibleSuggestedCount === 0}
+              className="shrink-0 inline-flex items-center gap-1.5 rounded-[2px] bg-[color:var(--teal)] px-3 py-1.5 text-[10.5px] uppercase tracking-[0.22em] font-bold text-[color:var(--ivory)] hover:bg-[color:var(--teal-2)] disabled:opacity-40"
+            >
+              <Sparkles size={11} />
+              Apply suggested
+            </button>
+          </div>
+        )}
       </header>
 
       {/* Day tabs */}
