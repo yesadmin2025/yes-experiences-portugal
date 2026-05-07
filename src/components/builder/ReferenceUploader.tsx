@@ -186,11 +186,7 @@ export function ReferenceUploader({ sessionId, onToneReady }: Props) {
         {
           body: {
             sessionId,
-            files: rows.map((r) => ({
-              url: r.file_url,
-              mimeType: r.mime_type,
-              name: r.file_name,
-            })),
+            fileIds: rows.map((r) => r.id),
           },
         },
       );
