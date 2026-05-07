@@ -1,5 +1,5 @@
 import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Check, Copy, Eye, Loader2, Map as MapIcon, Plus, Share2, Sparkles, Trash2, Wand2, X } from "lucide-react";
+import { Check, Copy, Eye, Loader2, Plus, Share2, Sparkles, Trash2, Wand2, X } from "lucide-react";
 import {
   buildDayRoute,
   computeAddStopEligibility,
@@ -64,7 +64,7 @@ export function MultiDayBuilder({
   const [eligLoading, setEligLoading] = useState(false);
   const [rules, setRules] = useState<{ max_km_between_stops: number; max_total_km_per_day: number } | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
-  const [tab, setTab] = useState<"build" | "map">("build");
+  // Mobile no longer toggles between map/build — they share one scroll.
   const [liveToast, setLiveToast] = useState<string | null>(null);
 
   const flashLive = useCallback((t: string) => {
@@ -380,38 +380,13 @@ export function MultiDayBuilder({
         </div>
       </div>
 
-      {/* Mobile tab bar */}
-      <div className="lg:hidden sticky top-0 z-30 mt-3 border-y border-[color:var(--charcoal)]/10 bg-[color:var(--ivory)]/95 backdrop-blur">
-        <div className="container-x flex items-center gap-1 py-2">
-          {(["build", "map"] as const).map((t) => (
-            <button
-              key={t}
-              type="button"
-              onClick={() => setTab(t)}
-              className={[
-                "flex-1 px-3 py-2 text-[11px] uppercase tracking-[0.22em] font-bold transition-colors capitalize",
-                tab === t
-                  ? "text-[color:var(--charcoal)] border-b-2 border-[color:var(--gold)]"
-                  : "text-[color:var(--charcoal)]/50 border-b-2 border-transparent",
-              ].join(" ")}
-            >
-              {t}
-            </button>
-          ))}
-        </div>
-      </div>
+      {/* Mobile tab bar removed — map and build now share one scroll */}
 
-      {/* Main split */}
+      {/* Main split — mobile: map stacked above build (one scroll, no tabs) */}
       <section className="container-x py-6 md:py-10">
-        <div className="grid gap-6 lg:grid-cols-[1.25fr_1fr]">
+        <div className="grid gap-4 lg:gap-6 lg:grid-cols-[1.25fr_1fr]">
           {/* MAP */}
-          <div
-            className={[
-              "relative overflow-hidden rounded-[2px] border border-[color:var(--charcoal)]/12 bg-[color:var(--sand)] shadow-[0_18px_40px_-24px_rgba(46,46,46,0.35)]",
-              "h-[58svh] sm:h-[62svh] lg:h-[74svh] lg:sticky lg:top-20",
-              tab === "map" ? "block" : "hidden lg:block",
-            ].join(" ")}
-          >
+          <div className="relative overflow-hidden rounded-[2px] border border-[color:var(--charcoal)]/12 bg-[color:var(--sand)] shadow-[0_18px_40px_-24px_rgba(46,46,46,0.35)] h-[42svh] sm:h-[52svh] lg:h-[74svh] lg:sticky lg:top-20">
             <Suspense fallback={<div className="h-full w-full bg-[color:var(--sand)]" aria-hidden="true" />}>
               <BuilderMap
                 stops={activeRoute?.stops ?? []}
@@ -422,7 +397,7 @@ export function MultiDayBuilder({
               />
             </Suspense>
             {/* Map legend */}
-            <div className="pointer-events-none absolute bottom-3 left-3 right-3 flex flex-wrap items-center gap-3 rounded-[2px] bg-[color:var(--ivory)]/95 px-3 py-2 text-[10px] uppercase tracking-[0.22em] font-bold text-[color:var(--charcoal)]/75 backdrop-blur shadow-sm">
+            <div className="pointer-events-none absolute bottom-3 left-3 right-3 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-[2px] bg-[color:var(--ivory)]/95 px-3 py-2 text-[9.5px] sm:text-[10px] uppercase tracking-[0.22em] font-bold text-[color:var(--charcoal)]/75 backdrop-blur shadow-sm">
               <span className="inline-flex items-center gap-1.5"><span className="inline-block h-2.5 w-2.5 rounded-full bg-[color:var(--teal)]" /> In your day</span>
               <span className="inline-flex items-center gap-1.5"><span className="inline-block h-2.5 w-2.5 rounded-full bg-[color:var(--gold)]" /> Reachable</span>
               <span className="inline-flex items-center gap-1.5"><span className="inline-block h-2.5 w-2.5 rounded-full bg-[#9a8f80] opacity-60" /> Out of range</span>
@@ -430,12 +405,8 @@ export function MultiDayBuilder({
           </div>
 
           {/* BUILD PANEL */}
-          <div
-            className={[
-              "rounded-[2px] border border-[color:var(--charcoal)]/12 bg-[color:var(--ivory)] min-h-[60svh] flex flex-col",
-              tab === "build" ? "block" : "hidden lg:block",
-            ].join(" ")}
-          >
+          <div className="rounded-[2px] border border-[color:var(--charcoal)]/12 bg-[color:var(--ivory)] min-h-[40svh] flex flex-col">
+
             <div className="p-5 md:p-6 flex flex-col gap-5 flex-1">
               {/* Day header w/ remove */}
               <header className="flex items-start justify-between gap-3">
@@ -658,18 +629,7 @@ export function MultiDayBuilder({
         ctaLabel="Review & confirm"
       />
 
-      {/* Floating map shortcut on mobile */}
-      <button
-        type="button"
-        onClick={() => setTab("map")}
-        aria-label="Show map"
-        className={[
-          "lg:hidden fixed bottom-20 right-4 z-30 inline-flex h-12 w-12 items-center justify-center rounded-full bg-[color:var(--charcoal)] text-[color:var(--ivory)] shadow-[0_10px_24px_-8px_rgba(0,0,0,0.4)]",
-          tab === "map" ? "hidden" : "flex",
-        ].join(" ")}
-      >
-        <MapIcon size={18} strokeWidth={1.75} />
-      </button>
+
 
       <AddStopSheet
         open={sheetOpen}

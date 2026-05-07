@@ -657,9 +657,35 @@ export function buildRouteFromStopKeys(
   const maxDriveMin = rules.max_driving_hours * 60;
 
   const warnings: string[] = [];
+  // Per-segment radius check (catches infeasible reorders)
+  let cursor: { lat: number; lng: number } = region;
+  for (let i = 0; i < stopsInOrder.length; i++) {
+    const s = stopsInOrder[i];
+    const segKm = haversineKm(cursor, s) * 1.25;
+    if (segKm > rules.max_km_between_stops) {
+      const fromLabel = i === 0 ? region.label : stopsInOrder[i - 1].label;
+      warnings.push(
+        `${s.label} is ${Math.round(segKm)} km from ${fromLabel} — over the ${rules.max_km_between_stops} km radius. Try reordering or removing it.`,
+      );
+    }
+    cursor = s;
+  }
   if (routedStops.length < rules.min_stops) warnings.push("Fewer stops than ideal for this pace.");
-  if (drive > maxDriveMin) warnings.push("Driving time exceeds the comfortable maximum.");
-  if (driveKm > rules.max_total_km_per_day) warnings.push(`Day driving distance exceeds ${rules.max_total_km_per_day} km.`);
+  if (drive > maxDriveMin) {
+    warnings.push(
+      `Driving time is ${Math.round(drive / 60 * 10) / 10}h — over the ${rules.max_driving_hours}h daily comfort limit. Remove a stop or split into another day.`,
+    );
+  }
+  if (drive + stay > maxExpMin) {
+    warnings.push(
+      `This day runs ${Math.round((drive + stay) / 60 * 10) / 10}h — over the ${rules.max_experience_hours}h limit. Try a lighter pace or fewer stops.`,
+    );
+  }
+  if (driveKm > rules.max_total_km_per_day) {
+    warnings.push(
+      `Day driving distance is ${Math.round(driveKm)} km — over the ${rules.max_total_km_per_day} km daily limit.`,
+    );
+  }
 
   return {
     region,
@@ -675,7 +701,8 @@ export function buildRouteFromStopKeys(
       drive + stay <= maxExpMin &&
       drive <= maxDriveMin &&
       driveKm <= rules.max_total_km_per_day &&
-      routedStops.length >= 1,
+      routedStops.length >= 1 &&
+      warnings.length === 0,
     warnings,
   };
 }
