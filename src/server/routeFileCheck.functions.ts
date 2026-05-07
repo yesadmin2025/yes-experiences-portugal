@@ -15,18 +15,39 @@ export type RouteFileCheckResult = {
   routeTreeContainsExpected: boolean;
 };
 
+/**
+ * Dev-only diagnostic. Reads a project file by relative path to verify the
+ * createFileRoute literal matches the expected path.
+ *
+ * Hard-gated against production AND against path traversal: the resolved
+ * absolute path must remain inside process.cwd().
+ */
 export const checkRouteFile = createServerFn({ method: "POST" })
   .inputValidator((data) =>
     z
       .object({
-        relativeFilePath: z.string(),
-        expectedRoutePath: z.string(),
+        relativeFilePath: z
+          .string()
+          .min(1)
+          .max(300)
+          .refine((p) => !p.includes("\0"), "invalid path")
+          .refine(
+            (p) => !p.split(/[\\/]/).includes(".."),
+            "path traversal not allowed",
+          ),
+        expectedRoutePath: z.string().min(1).max(300),
       })
       .parse(data),
   )
   .handler(async ({ data }): Promise<RouteFileCheckResult> => {
+    if (process.env.NODE_ENV === "production") {
+      throw new Error("Route file check is disabled in production builds.");
+    }
     const root = process.cwd();
-    const abs = path.join(root, data.relativeFilePath);
+    const abs = path.resolve(root, data.relativeFilePath);
+    if (!abs.startsWith(root + path.sep) && abs !== root) {
+      throw new Error("Resolved path escapes project root.");
+    }
     let source = "";
     let exists = false;
     try {
