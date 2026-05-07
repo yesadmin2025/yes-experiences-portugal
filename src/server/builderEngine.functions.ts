@@ -281,7 +281,6 @@ export const computeAddStopEligibility = createServerFn({ method: "POST" })
     if (!region) {
       return { eligibility: [], rules: null };
     }
-    const { computeDayEligibility } = await import("./builderEngine.server");
     const eligibility = computeDayEligibility(
       { stopKeys: data.stopKeys },
       data.regionKey,
