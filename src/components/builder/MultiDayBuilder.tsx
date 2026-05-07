@@ -1,5 +1,5 @@
 import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Check, Copy, Eye, Loader2, Plus, Share2, Sparkles, Trash2, Wand2, X } from "lucide-react";
+import { Check, Copy, Eye, Loader2, Plus, RefreshCw, Share2, Sparkles, Trash2, Wand2, X } from "lucide-react";
 import {
   buildDayRoute,
   computeAddStopEligibility,
@@ -29,6 +29,9 @@ interface Props {
   onSetPace: (p: Pace) => void;
   onSetIntent: (intent: string) => void;
   onShare: () => Promise<string>;
+  onRotateLink?: () => Promise<string | null>;
+  onRevokeLink?: () => Promise<boolean>;
+  sessionId?: string | null;
   readOnly?: boolean;
   syncing?: boolean;
   shareToken?: string | null;
