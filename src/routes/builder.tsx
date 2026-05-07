@@ -548,6 +548,9 @@ function BuilderPage() {
             onSetPace={(p) => { md.setPace(p); setPace(p); }}
             onSetIntent={md.setIntent}
             onShare={md.share}
+            onRotateLink={md.rotateLink}
+            onRevokeLink={md.revokeLink}
+            sessionId={md.sessionId}
             readOnly={md.readOnly}
             syncing={md.syncing}
             shareToken={md.shareToken}
