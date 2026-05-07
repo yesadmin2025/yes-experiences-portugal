@@ -380,26 +380,7 @@ export function MultiDayBuilder({
         </div>
       </div>
 
-      {/* Mobile tab bar */}
-      <div className="lg:hidden sticky top-0 z-30 mt-3 border-y border-[color:var(--charcoal)]/10 bg-[color:var(--ivory)]/95 backdrop-blur">
-        <div className="container-x flex items-center gap-1 py-2">
-          {(["build", "map"] as const).map((t) => (
-            <button
-              key={t}
-              type="button"
-              onClick={() => setTab(t)}
-              className={[
-                "flex-1 px-3 py-2 text-[11px] uppercase tracking-[0.22em] font-bold transition-colors capitalize",
-                tab === t
-                  ? "text-[color:var(--charcoal)] border-b-2 border-[color:var(--gold)]"
-                  : "text-[color:var(--charcoal)]/50 border-b-2 border-transparent",
-              ].join(" ")}
-            >
-              {t}
-            </button>
-          ))}
-        </div>
-      </div>
+      {/* Mobile tab bar removed — map and build now share one scroll */}
 
       {/* Main split */}
       <section className="container-x py-6 md:py-10">
