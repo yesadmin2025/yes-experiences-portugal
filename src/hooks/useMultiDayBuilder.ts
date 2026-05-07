@@ -117,6 +117,7 @@ function writeOwnerToken(shareToken: string, ownerToken: string) {
 }
 
 export function useMultiDayBuilder() {
+  const sessionId = useBuilderSessionId();
   const [hydrated, setHydrated] = useState(false);
   const [state, setState] = useState<MultiDayState>(() => defaults());
   const [shareToken, setShareToken] = useState<string | null>(null);
