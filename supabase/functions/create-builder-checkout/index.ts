@@ -32,8 +32,6 @@ Deno.serve(async (req) => {
 
     if (!body || typeof body !== "object")
       return jsonError("Invalid body", 400);
-    if (!Number.isInteger(body.amountInCents) || body.amountInCents < 5000)
-      return jsonError("Amount must be at least 50 EUR", 400);
     if (!Number.isInteger(body.guests) || body.guests < 1 || body.guests > 12)
       return jsonError("Guests must be between 1 and 12", 400);
     if (!body.regionLabel || typeof body.regionLabel !== "string" || body.regionLabel.length > 80)
@@ -44,10 +42,44 @@ Deno.serve(async (req) => {
       return jsonError("Invalid return URL", 400);
     if (body.environment !== "sandbox" && body.environment !== "live")
       return jsonError("Invalid environment", 400);
+    if (!["relaxed", "balanced", "full"].includes(body.pace))
+      return jsonError("Invalid pace", 400);
 
     const elements = Array.isArray(body.elements)
       ? body.elements.filter((e) => typeof e === "string" && e.length <= 40).slice(0, 10)
       : [];
+
+    // Authoritative server-side pricing from builder_routing_rules.
+    // Mirrors src/server/builderEngine.server.ts price formula:
+    //   base * paceMult * (1 + (stops - min_stops) * 0.08)
+    const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
+    const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const admin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
+      auth: { persistSession: false },
+    });
+    const { data: rules, error: rulesErr } = await admin
+      .from("builder_routing_rules")
+      .select("base_price_per_person_eur,pace_multiplier_relaxed,pace_multiplier_balanced,pace_multiplier_full,min_stops")
+      .eq("is_active", true)
+      .limit(1)
+      .maybeSingle();
+    if (rulesErr) {
+      console.error("Failed to load routing rules", rulesErr);
+      return jsonError("Pricing unavailable", 500);
+    }
+    const base = rules?.base_price_per_person_eur ?? 180;
+    const minStops = rules?.min_stops ?? 3;
+    const paceMult =
+      body.pace === "relaxed"
+        ? Number(rules?.pace_multiplier_relaxed ?? 0.85)
+        : body.pace === "full"
+          ? Number(rules?.pace_multiplier_full ?? 1.2)
+          : Number(rules?.pace_multiplier_balanced ?? 1);
+    const stopFactor = 1 + Math.max(0, body.stopLabels.length - minStops) * 0.08;
+    const pricePerPersonEur = Math.round(base * paceMult * stopFactor);
+    const amountInCents = pricePerPersonEur * body.guests * 100;
+    if (amountInCents < 5000)
+      return jsonError("Computed amount below minimum", 400);
 
     const stripe = createStripeClient(body.environment);
 
@@ -65,7 +97,7 @@ Deno.serve(async (req) => {
               name: productName,
               description,
             },
-            unit_amount: body.amountInCents,
+            unit_amount: amountInCents,
           },
           quantity: 1,
         },
