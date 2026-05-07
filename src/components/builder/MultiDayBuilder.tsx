@@ -348,6 +348,28 @@ export function MultiDayBuilder({
                 {copied ? "Copied" : shareToken ? "Copy link" : "Share"}
               </button>
             )}
+            {!readOnly && shareToken && onRotateLink && (
+              <button
+                type="button"
+                onClick={handleRotate}
+                disabled={rotating}
+                title="Disable old link, generate a new one"
+                className="inline-flex items-center gap-1.5 rounded-sm px-2 py-1 text-[10.5px] uppercase tracking-[0.24em] font-bold text-[color:var(--teal)] hover:bg-[color:var(--teal)]/8 disabled:opacity-50"
+              >
+                {rotating ? <Loader2 size={12} className="animate-spin" /> : <RefreshCw size={12} />}
+                Regenerate
+              </button>
+            )}
+            {!readOnly && shareToken && onRevokeLink && (
+              <button
+                type="button"
+                onClick={handleRevoke}
+                className="inline-flex items-center gap-1.5 rounded-sm px-2 py-1 text-[10.5px] uppercase tracking-[0.24em] font-bold text-[color:var(--charcoal)]/60 hover:text-red-700 hover:bg-red-50"
+              >
+                <X size={12} />
+                Revoke
+              </button>
+            )}
             {!readOnly && (
               <button
                 type="button"
