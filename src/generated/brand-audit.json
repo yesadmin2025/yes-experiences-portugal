@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-07T00:37:19.114Z",
+  "generatedAt": "2026-05-07T00:54:01.676Z",
   "filesScanned": 186,
   "approvedPalette": {
     "teal": "#295B61",
@@ -737,7 +737,7 @@
     },
     {
       "file": "src/components/builder/MultiDayBuilder.tsx",
-      "line": 428,
+      "line": 403,
       "col": 125,
       "raw": "#9a8f80",
       "normalized": "#9a8f80",
