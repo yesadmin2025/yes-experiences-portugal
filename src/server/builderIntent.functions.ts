@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { hashConfig, logAiUsage } from "./aiAuditLog.server";
+import { rateLimit } from "./rateLimit.server";
 
 /**
  * AI user-intent helper for the live builder.
@@ -20,11 +21,29 @@ const inputSchema = z.object({
   intent: z.string().min(2).max(500),
   regionKey: z.string().min(1).max(64),
   excludedKeys: z.array(z.string().min(1).max(64)).max(40).default([]),
+  sessionId: z.string().min(8).max(64),
 });
 
 export const suggestFromIntent = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => inputSchema.parse(input))
   .handler(async ({ data }) => {
+    // Throttle anon AI calls per session: max 12 calls / 5 min.
+    const rl = await rateLimit({
+      sessionId: data.sessionId,
+      bucket: "builder_intent",
+      limit: 12,
+      windowSec: 300,
+    });
+    if (!rl.ok) {
+      return {
+        suggestedStopKeys: [],
+        rankedKeys: [],
+        paceHint: null,
+        source: "rate_limited" as const,
+        retryInSec: rl.resetInSec,
+      };
+    }
+
     const lovableKey = process.env.LOVABLE_API_KEY;
 
     const { data: stops, error } = await supabaseAdmin

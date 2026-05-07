@@ -1,8 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Pace } from "@/components/builder/types";
+import { useBuilderSessionId } from "@/hooks/useBuilderSessionId";
 import {
   createJourney,
   loadJourney,
+  rotateShareToken,
+  revokeShareToken,
   saveJourney,
 } from "@/server/builderJourneys.functions";
 
@@ -114,6 +117,7 @@ function writeOwnerToken(shareToken: string, ownerToken: string) {
 }
 
 export function useMultiDayBuilder() {
+  const sessionId = useBuilderSessionId();
   const [hydrated, setHydrated] = useState(false);
   const [state, setState] = useState<MultiDayState>(() => defaults());
   const [shareToken, setShareToken] = useState<string | null>(null);
@@ -322,7 +326,8 @@ export function useMultiDayBuilder() {
       u.searchParams.set("j", shareToken);
       return u.toString();
     }
-    const res = await createJourney({ data: { state } });
+    if (!sessionId) throw new Error("Session not ready");
+    const res = await createJourney({ data: { state, sessionId } });
     writeOwnerToken(res.shareToken, res.ownerToken);
     setShareToken(res.shareToken);
     setOwnerToken(res.ownerToken);
@@ -330,12 +335,43 @@ export function useMultiDayBuilder() {
     u.searchParams.set("j", res.shareToken);
     window.history.replaceState({}, "", u.toString());
     return u.toString();
-  }, [shareToken, state]);
+  }, [shareToken, state, sessionId]);
+
+  const rotateLink = useCallback(async (): Promise<string | null> => {
+    if (!shareToken || !ownerToken) return null;
+    const res = await rotateShareToken({ data: { shareToken, ownerToken } });
+    if (!res.ok) return null;
+    try {
+      window.localStorage.removeItem(TOKEN_KEY_PREFIX + shareToken);
+    } catch { /* ignore */ }
+    writeOwnerToken(res.shareToken, ownerToken);
+    setShareToken(res.shareToken);
+    const u = new URL(window.location.href);
+    u.searchParams.set("j", res.shareToken);
+    window.history.replaceState({}, "", u.toString());
+    return u.toString();
+  }, [shareToken, ownerToken]);
+
+  const revokeLink = useCallback(async (): Promise<boolean> => {
+    if (!shareToken || !ownerToken) return false;
+    const res = await revokeShareToken({ data: { shareToken, ownerToken } });
+    if (!res.ok) return false;
+    try {
+      window.localStorage.removeItem(TOKEN_KEY_PREFIX + shareToken);
+    } catch { /* ignore */ }
+    setShareToken(null);
+    setOwnerToken(null);
+    const u = new URL(window.location.href);
+    u.searchParams.delete("j");
+    window.history.replaceState({}, "", u.toString());
+    return true;
+  }, [shareToken, ownerToken]);
 
   return {
     state,
     hydrated,
     activeDay,
+    sessionId,
     addDay,
     removeDay,
     setActiveDay,
@@ -350,6 +386,8 @@ export function useMultiDayBuilder() {
     setIntent,
     reset,
     share,
+    rotateLink,
+    revokeLink,
     shareToken,
     readOnly,
     syncing,

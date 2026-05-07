@@ -165,12 +165,13 @@ export async function recordAssignment(
     /* ignore */
   }
   try {
+    // Privacy: do NOT collect user agent. Anonymous_id + variant is enough
+    // to compute conversion rates without device fingerprinting.
     await supabase.from("hero_ab_assignments").insert([
       {
         anonymous_id: anonId,
         experiment_key: experiment.key,
         variant: variant.id,
-        user_agent: navigator.userAgent.slice(0, 250),
       },
     ]);
   } catch {

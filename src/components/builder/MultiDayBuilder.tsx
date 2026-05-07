@@ -1,5 +1,5 @@
 import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Check, Copy, Eye, Loader2, Plus, Share2, Sparkles, Trash2, Wand2, X } from "lucide-react";
+import { Check, Copy, Eye, Loader2, Plus, RefreshCw, Share2, Sparkles, Trash2, Wand2, X } from "lucide-react";
 import {
   buildDayRoute,
   computeAddStopEligibility,
@@ -29,6 +29,9 @@ interface Props {
   onSetPace: (p: Pace) => void;
   onSetIntent: (intent: string) => void;
   onShare: () => Promise<string>;
+  onRotateLink?: () => Promise<string | null>;
+  onRevokeLink?: () => Promise<boolean>;
+  sessionId?: string | null;
   readOnly?: boolean;
   syncing?: boolean;
   shareToken?: string | null;
@@ -49,6 +52,9 @@ export function MultiDayBuilder({
   onSetPace,
   onSetIntent,
   onShare,
+  onRotateLink,
+  onRevokeLink,
+  sessionId = null,
   readOnly = false,
   syncing = false,
   shareToken = null,
@@ -157,6 +163,7 @@ export function MultiDayBuilder({
     if (!activeDay) return;
     const text = intentDraft.trim();
     if (text.length < 2) return;
+    if (!sessionId) return;
     onSetIntent(text);
     setAiLoading(true);
     try {
@@ -165,18 +172,50 @@ export function MultiDayBuilder({
           intent: text,
           regionKey: activeDay.regionKey,
           excludedKeys: activeDay.stopKeys,
+          sessionId,
         },
       });
       setAiSuggested(res.suggestedStopKeys);
       setAiRanked(res.rankedKeys);
-      flashLive("AI shaped this day · review suggestions");
-      setSheetOpen(true);
+      if (res.source === "rate_limited") {
+        flashLive("Easy now — try again in a moment");
+      } else {
+        flashLive("AI shaped this day · review suggestions");
+        setSheetOpen(true);
+      }
     } catch (e) {
       console.error("[builder] suggestFromIntent", e);
     } finally {
       setAiLoading(false);
     }
-  }, [activeDay, intentDraft, onSetIntent, flashLive]);
+  }, [activeDay, intentDraft, onSetIntent, flashLive, sessionId]);
+
+  /** Apply the AI's top-suggested stops to the current day, in order,
+   *  filtered by live eligibility (radius/timing/already-added). */
+  const applySuggested = useCallback(() => {
+    if (!activeDay || readOnly) return;
+    let added = 0;
+    for (const key of aiSuggested) {
+      if (activeDay.stopKeys.includes(key)) continue;
+      const e = eligibility[key];
+      if (e && !e.eligible) continue;
+      onAddStop(key);
+      added += 1;
+    }
+    if (added > 0) {
+      flashLive(`Added ${added} suggested stop${added === 1 ? "" : "s"}`);
+      setSheetOpen(false);
+    } else {
+      flashLive("No suggestions fit the current day's rules");
+    }
+  }, [activeDay, aiSuggested, eligibility, onAddStop, readOnly, flashLive]);
+
+  const eligibleSuggestedCount = useMemo(() => {
+    if (!activeDay) return 0;
+    return aiSuggested.filter(
+      (k) => !activeDay.stopKeys.includes(k) && (eligibility[k]?.eligible ?? false),
+    ).length;
+  }, [aiSuggested, activeDay, eligibility]);
 
   // Aggregate trip totals across all days
   const tripTotals = useMemo(() => {
@@ -248,6 +287,29 @@ export function MultiDayBuilder({
     }
   }, [onShare, flashLive]);
 
+  const [rotating, setRotating] = useState(false);
+  const handleRotate = useCallback(async () => {
+    if (!onRotateLink) return;
+    if (!window.confirm("Generate a new share link? The old link will stop working.")) return;
+    setRotating(true);
+    try {
+      const url = await onRotateLink();
+      if (url) {
+        try { await navigator.clipboard.writeText(url); } catch { /* ignore */ }
+        flashLive("New link generated · old link disabled");
+      }
+    } finally {
+      setRotating(false);
+    }
+  }, [onRotateLink, flashLive]);
+
+  const handleRevoke = useCallback(async () => {
+    if (!onRevokeLink) return;
+    if (!window.confirm("Disable the public link? Anyone with the old link will lose access.")) return;
+    const ok = await onRevokeLink();
+    if (ok) flashLive("Share link revoked");
+  }, [onRevokeLink, flashLive]);
+
   const dayIndex = activeDay ? state.days.findIndex((d) => d.id === activeDay.id) : 0;
 
   return (
@@ -284,6 +346,28 @@ export function MultiDayBuilder({
               >
                 {copied ? <Check size={12} /> : sharing ? <Loader2 size={12} className="animate-spin" /> : shareToken ? <Copy size={12} /> : <Share2 size={12} />}
                 {copied ? "Copied" : shareToken ? "Copy link" : "Share"}
+              </button>
+            )}
+            {!readOnly && shareToken && onRotateLink && (
+              <button
+                type="button"
+                onClick={handleRotate}
+                disabled={rotating}
+                title="Disable old link, generate a new one"
+                className="inline-flex items-center gap-1.5 rounded-sm px-2 py-1 text-[10.5px] uppercase tracking-[0.24em] font-bold text-[color:var(--teal)] hover:bg-[color:var(--teal)]/8 disabled:opacity-50"
+              >
+                {rotating ? <Loader2 size={12} className="animate-spin" /> : <RefreshCw size={12} />}
+                Regenerate
+              </button>
+            )}
+            {!readOnly && shareToken && onRevokeLink && (
+              <button
+                type="button"
+                onClick={handleRevoke}
+                className="inline-flex items-center gap-1.5 rounded-sm px-2 py-1 text-[10.5px] uppercase tracking-[0.24em] font-bold text-[color:var(--charcoal)]/60 hover:text-red-700 hover:bg-red-50"
+              >
+                <X size={12} />
+                Revoke
               </button>
             )}
             {!readOnly && (
@@ -332,6 +416,23 @@ export function MultiDayBuilder({
             >
               {aiLoading ? <Loader2 size={13} className="animate-spin" /> : <Wand2 size={13} />}
               Suggest
+            </button>
+          </div>
+        )}
+        {!readOnly && aiSuggested.length > 0 && (
+          <div className="mt-2 flex items-center justify-between gap-2 rounded-[2px] border border-[color:var(--gold)]/30 bg-[color:var(--gold)]/5 px-3 py-2">
+            <p className="text-[11.5px] text-[color:var(--charcoal)]/80">
+              <span className="font-semibold">{aiSuggested.length}</span> AI suggestion{aiSuggested.length === 1 ? "" : "s"} ·{" "}
+              <span className="text-[color:var(--charcoal)]/60">{eligibleSuggestedCount} fit this day's rules</span>
+            </p>
+            <button
+              type="button"
+              onClick={applySuggested}
+              disabled={eligibleSuggestedCount === 0}
+              className="shrink-0 inline-flex items-center gap-1.5 rounded-[2px] bg-[color:var(--teal)] px-3 py-1.5 text-[10.5px] uppercase tracking-[0.22em] font-bold text-[color:var(--ivory)] hover:bg-[color:var(--teal-2)] disabled:opacity-40"
+            >
+              <Sparkles size={11} />
+              Apply suggested
             </button>
           </div>
         )}
