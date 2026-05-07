@@ -163,6 +163,7 @@ export function MultiDayBuilder({
     if (!activeDay) return;
     const text = intentDraft.trim();
     if (text.length < 2) return;
+    if (!sessionId) return;
     onSetIntent(text);
     setAiLoading(true);
     try {
@@ -171,18 +172,50 @@ export function MultiDayBuilder({
           intent: text,
           regionKey: activeDay.regionKey,
           excludedKeys: activeDay.stopKeys,
+          sessionId,
         },
       });
       setAiSuggested(res.suggestedStopKeys);
       setAiRanked(res.rankedKeys);
-      flashLive("AI shaped this day · review suggestions");
-      setSheetOpen(true);
+      if (res.source === "rate_limited") {
+        flashLive("Easy now — try again in a moment");
+      } else {
+        flashLive("AI shaped this day · review suggestions");
+        setSheetOpen(true);
+      }
     } catch (e) {
       console.error("[builder] suggestFromIntent", e);
     } finally {
       setAiLoading(false);
     }
-  }, [activeDay, intentDraft, onSetIntent, flashLive]);
+  }, [activeDay, intentDraft, onSetIntent, flashLive, sessionId]);
+
+  /** Apply the AI's top-suggested stops to the current day, in order,
+   *  filtered by live eligibility (radius/timing/already-added). */
+  const applySuggested = useCallback(() => {
+    if (!activeDay || readOnly) return;
+    let added = 0;
+    for (const key of aiSuggested) {
+      if (activeDay.stopKeys.includes(key)) continue;
+      const e = eligibility[key];
+      if (e && !e.eligible) continue;
+      onAddStop(key);
+      added += 1;
+    }
+    if (added > 0) {
+      flashLive(`Added ${added} suggested stop${added === 1 ? "" : "s"}`);
+      setSheetOpen(false);
+    } else {
+      flashLive("No suggestions fit the current day's rules");
+    }
+  }, [activeDay, aiSuggested, eligibility, onAddStop, readOnly, flashLive]);
+
+  const eligibleSuggestedCount = useMemo(() => {
+    if (!activeDay) return 0;
+    return aiSuggested.filter(
+      (k) => !activeDay.stopKeys.includes(k) && (eligibility[k]?.eligible ?? false),
+    ).length;
+  }, [aiSuggested, activeDay, eligibility]);
 
   // Aggregate trip totals across all days
   const tripTotals = useMemo(() => {
