@@ -183,6 +183,35 @@ export function BuilderMap({ stops, regionCenter, regionKey, candidates, onCandi
       }
     }
 
+    // Candidate pins (gold for eligible, dimmed grey for not)
+    if (candidates && candidates.length) {
+      const candidateIcon = (eligible: boolean) =>
+        L.divIcon({
+          className: "yes-candidate-pin",
+          html: `<div style="
+            width:18px;height:18px;border-radius:50%;
+            background:${eligible ? gold : "#9a8f80"};
+            border:2px solid ${ivory};
+            opacity:${eligible ? 1 : 0.55};
+            box-shadow:0 4px 10px rgba(0,0,0,0.25);
+            cursor:${eligible ? "pointer" : "not-allowed"};"></div>`,
+          iconSize: [18, 18],
+          iconAnchor: [9, 9],
+        });
+      for (const c of candidates) {
+        if (!Number.isFinite(c.lat) || !Number.isFinite(c.lng)) continue;
+        const m = L.marker([c.lat, c.lng], { icon: candidateIcon(c.eligible) });
+        m.bindTooltip(
+          c.eligible ? c.label : `${c.label} — ${c.reason ?? "out of range"}`,
+          { direction: "top", offset: [0, -10] },
+        );
+        if (c.eligible && onCandidateClick) {
+          m.on("click", () => onCandidateClick(c.key));
+        }
+        layer.addLayer(m);
+      }
+    }
+
     const bounds = L.latLngBounds(points).pad(0.35);
     lastBoundsRef.current = bounds;
     if (visible) {
@@ -194,7 +223,7 @@ export function BuilderMap({ stops, regionCenter, regionKey, candidates, onCandi
       const first = points[0];
       map.setView(first, 9);
     }
-  }, [stops, regionCenter]);
+  }, [stops, regionCenter, candidates, onCandidateClick]);
 
   return (
     <div className="relative h-full w-full">
