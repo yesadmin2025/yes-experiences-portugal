@@ -1,0 +1,546 @@
+import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Loader2, Map as MapIcon, Plus, Sparkles, Trash2, X } from "lucide-react";
+import {
+  buildDayRoute,
+  computeAddStopEligibility,
+  listRegionStops,
+} from "@/server/builderEngine.functions";
+import { fmtMinutes, type Pace, type RouteUI, type RoutedStopUI } from "@/components/builder/types";
+import { AddStopSheet, type RegionStop, type StopEligibility } from "@/components/builder/AddStopSheet";
+import { CtaButton } from "@/components/ui/CtaButton";
+import { StickyBar } from "@/components/builder/StickyBar";
+import type { DayState, MultiDayState } from "@/hooks/useMultiDayBuilder";
+
+const BuilderMap = lazy(() =>
+  import("@/components/builder/BuilderMap").then((m) => ({ default: m.BuilderMap })),
+);
+
+interface Props {
+  state: MultiDayState;
+  activeDay: DayState;
+  onSetActiveDay: (id: string) => void;
+  onAddDay: () => void;
+  onRemoveDay: (id: string) => void;
+  onMoveStop: (idx: number, dir: -1 | 1) => void;
+  onRemoveStop: (key: string) => void;
+  onAddStop: (key: string) => void;
+  onSetGuests: (n: number) => void;
+  onSetPace: (p: Pace) => void;
+  onConfirm: () => void;
+  onReset: () => void;
+}
+
+export function MultiDayBuilder({
+  state,
+  activeDay,
+  onSetActiveDay,
+  onAddDay,
+  onRemoveDay,
+  onMoveStop,
+  onRemoveStop,
+  onAddStop,
+  onSetGuests,
+  onSetPace,
+  onConfirm,
+  onReset,
+}: Props) {
+  // Per-day route + eligibility — recomputed live on every change.
+  const [dayRoutes, setDayRoutes] = useState<Record<string, RouteUI | null>>({});
+  const [routeLoadingId, setRouteLoadingId] = useState<string | null>(null);
+  const [regionStops, setRegionStops] = useState<RegionStop[]>([]);
+  const [regionCenter, setRegionCenter] = useState<{ lat: number; lng: number } | null>(null);
+  const [eligibility, setEligibility] = useState<Record<string, StopEligibility>>({});
+  const [eligLoading, setEligLoading] = useState(false);
+  const [rules, setRules] = useState<{ max_km_between_stops: number; max_total_km_per_day: number } | null>(null);
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const [tab, setTab] = useState<"build" | "map">("build");
+  const [liveToast, setLiveToast] = useState<string | null>(null);
+
+  const flashLive = useCallback((t: string) => {
+    setLiveToast(t);
+    window.setTimeout(() => setLiveToast(null), 1300);
+  }, []);
+
+  // Load region stops + center whenever active region changes.
+  const lastRegionRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (!activeDay) return;
+    if (lastRegionRef.current === activeDay.regionKey) return;
+    lastRegionRef.current = activeDay.regionKey;
+    let cancelled = false;
+    void listRegionStops({ data: { regionKey: activeDay.regionKey } }).then((r) => {
+      if (cancelled) return;
+      setRegionStops(r.stops);
+      setRegionCenter(
+        r.region ? { lat: Number(r.region.lat), lng: Number(r.region.lng) } : null,
+      );
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [activeDay?.regionKey]);
+
+  // Recompute route + eligibility for the active day whenever its stops/pace change.
+  // Debounced minimally with the request id pattern to avoid stale overwrites.
+  const reqIdRef = useRef(0);
+  useEffect(() => {
+    if (!activeDay) return;
+    const id = ++reqIdRef.current;
+    setRouteLoadingId(activeDay.id);
+    setEligLoading(true);
+
+    const payload = {
+      data: {
+        regionKey: activeDay.regionKey,
+        pace: state.pace,
+        stopKeys: activeDay.stopKeys,
+      },
+    };
+
+    Promise.all([buildDayRoute(payload), computeAddStopEligibility(payload)])
+      .then(([routeRes, eligRes]) => {
+        if (reqIdRef.current !== id) return;
+        setDayRoutes((prev) => ({ ...prev, [activeDay.id]: routeRes.route as RouteUI }));
+        const map: Record<string, StopEligibility> = {};
+        for (const e of eligRes.eligibility) map[e.key] = e;
+        setEligibility(map);
+        if (eligRes.rules) setRules(eligRes.rules);
+      })
+      .catch((e) => {
+        console.error("[multi-day-builder] recalc failed", e);
+      })
+      .finally(() => {
+        if (reqIdRef.current !== id) return;
+        setRouteLoadingId(null);
+        setEligLoading(false);
+      });
+  }, [activeDay?.id, activeDay?.stopKeys, activeDay?.regionKey, state.pace]);
+
+  const activeRoute = activeDay ? dayRoutes[activeDay.id] ?? null : null;
+
+  // Aggregate trip totals across all days
+  const tripTotals = useMemo(() => {
+    let mins = 0;
+    let perPerson = 0;
+    let stops = 0;
+    for (const d of state.days) {
+      const r = dayRoutes[d.id];
+      if (r) {
+        mins += r.totals.experienceMinutes;
+        perPerson += r.pricePerPersonEur;
+        stops += r.stops.length;
+      }
+    }
+    return { mins, perPerson, stops };
+  }, [state.days, dayRoutes]);
+
+  const candidatesForMap = useMemo(() => {
+    return regionStops.map((s) => {
+      const e = eligibility[s.key];
+      // hide stops already in the day from candidate layer (they're in the route)
+      if (activeDay?.stopKeys.includes(s.key)) return null;
+      return {
+        key: s.key,
+        label: s.label,
+        lat: s.lat,
+        lng: s.lng,
+        eligible: e?.eligible ?? false,
+        reason: e?.reason,
+      };
+    }).filter(Boolean) as { key: string; label: string; lat: number; lng: number; eligible: boolean; reason?: string }[];
+  }, [regionStops, eligibility, activeDay?.stopKeys]);
+
+  const handleAdd = (k: string) => {
+    onAddStop(k);
+    flashLive("Adding stop · reshaping the day");
+    setSheetOpen(false);
+  };
+
+  const dayIndex = activeDay ? state.days.findIndex((d) => d.id === activeDay.id) : 0;
+
+  return (
+    <>
+      {liveToast && (
+        <div
+          aria-live="polite"
+          className="fixed top-20 left-1/2 z-[60] -translate-x-1/2"
+        >
+          <span className="inline-flex items-center gap-2 rounded-full border border-[color:var(--gold)]/40 bg-[color:var(--ivory)]/95 px-3.5 py-1.5 text-[11.5px] uppercase tracking-[0.22em] font-bold text-[color:var(--charcoal)] shadow-[0_8px_22px_-10px_rgba(46,46,46,0.35)] backdrop-blur">
+            <Sparkles size={11} className="text-[color:var(--gold)]" />
+            {liveToast}
+          </span>
+        </div>
+      )}
+
+      {/* Editorial header */}
+      <header className="container-x pt-5 md:pt-8 pb-1 md:pb-2">
+        <div className="flex items-start justify-between gap-4">
+          <span className="inline-flex items-center gap-2 text-[10.5px] uppercase tracking-[0.28em] font-semibold text-[color:var(--gold)]">
+            <Sparkles size={12} aria-hidden="true" />
+            Now shaping
+          </span>
+          <button
+            type="button"
+            onClick={onReset}
+            className="inline-flex items-center gap-1.5 text-[10.5px] uppercase tracking-[0.24em] font-bold text-[color:var(--charcoal)]/55 hover:text-[color:var(--teal)] rounded-sm px-1 py-0.5 transition-colors"
+          >
+            <X size={12} aria-hidden="true" />
+            Start over
+          </button>
+        </div>
+        <h2 className="serif mt-2 text-[1.7rem] sm:text-[2rem] md:text-[2.4rem] leading-[1.05] tracking-[-0.01em] font-semibold text-[color:var(--charcoal)]">
+          Your journey
+          {state.days.length > 1 && (
+            <span className="serif italic font-normal text-[color:var(--charcoal)]/70">
+              {" "}— {state.days.length} days · {tripTotals.stops} stops
+            </span>
+          )}
+        </h2>
+      </header>
+
+      {/* Day tabs */}
+      <div className="container-x mt-4">
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 -mx-1 px-1" role="tablist">
+          {state.days.map((d, idx) => {
+            const r = dayRoutes[d.id];
+            const active = d.id === activeDay?.id;
+            return (
+              <button
+                key={d.id}
+                type="button"
+                role="tab"
+                aria-selected={active}
+                onClick={() => onSetActiveDay(d.id)}
+                className={[
+                  "shrink-0 flex flex-col items-start rounded-[2px] border px-3 py-2 text-left transition-colors min-w-[88px]",
+                  active
+                    ? "border-[color:var(--gold)] bg-[color:var(--gold)]/8"
+                    : "border-[color:var(--charcoal)]/12 hover:border-[color:var(--charcoal)]/30 bg-[color:var(--ivory)]",
+                ].join(" ")}
+              >
+                <span className="text-[9.5px] uppercase tracking-[0.24em] font-bold text-[color:var(--gold)]">
+                  Day {idx + 1}
+                </span>
+                <span className="mt-0.5 text-[12px] font-semibold text-[color:var(--charcoal)] tabular-nums">
+                  {r ? `${r.stops.length} stop${r.stops.length === 1 ? "" : "s"}` : "—"}
+                </span>
+                <span className="text-[10.5px] text-[color:var(--charcoal)]/60 tabular-nums">
+                  {r ? fmtMinutes(r.totals.experienceMinutes) : "·"}
+                </span>
+              </button>
+            );
+          })}
+          <button
+            type="button"
+            onClick={onAddDay}
+            className="shrink-0 inline-flex items-center gap-1.5 rounded-[2px] border border-dashed border-[color:var(--charcoal)]/25 px-3 py-2 text-[11px] uppercase tracking-[0.22em] font-bold text-[color:var(--charcoal)]/70 hover:text-[color:var(--charcoal)] hover:border-[color:var(--charcoal)]/50 min-h-[58px]"
+          >
+            <Plus size={13} />
+            Add day
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile tab bar */}
+      <div className="lg:hidden sticky top-0 z-30 mt-3 border-y border-[color:var(--charcoal)]/10 bg-[color:var(--ivory)]/95 backdrop-blur">
+        <div className="container-x flex items-center gap-1 py-2">
+          {(["build", "map"] as const).map((t) => (
+            <button
+              key={t}
+              type="button"
+              onClick={() => setTab(t)}
+              className={[
+                "flex-1 px-3 py-2 text-[11px] uppercase tracking-[0.22em] font-bold transition-colors capitalize",
+                tab === t
+                  ? "text-[color:var(--charcoal)] border-b-2 border-[color:var(--gold)]"
+                  : "text-[color:var(--charcoal)]/50 border-b-2 border-transparent",
+              ].join(" ")}
+            >
+              {t}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Main split */}
+      <section className="container-x py-6 md:py-10">
+        <div className="grid gap-6 lg:grid-cols-[1.25fr_1fr]">
+          {/* MAP */}
+          <div
+            className={[
+              "relative overflow-hidden rounded-[2px] border border-[color:var(--charcoal)]/12 bg-[color:var(--sand)] shadow-[0_18px_40px_-24px_rgba(46,46,46,0.35)]",
+              "h-[58svh] sm:h-[62svh] lg:h-[74svh] lg:sticky lg:top-20",
+              tab === "map" ? "block" : "hidden lg:block",
+            ].join(" ")}
+          >
+            <Suspense fallback={<div className="h-full w-full bg-[color:var(--sand)]" aria-hidden="true" />}>
+              <BuilderMap
+                stops={activeRoute?.stops ?? []}
+                regionCenter={regionCenter}
+                regionKey={activeDay?.regionKey}
+                candidates={candidatesForMap}
+                onCandidateClick={(k) => handleAdd(k)}
+              />
+            </Suspense>
+            {/* Map legend */}
+            <div className="pointer-events-none absolute bottom-3 left-3 right-3 flex flex-wrap items-center gap-3 rounded-[2px] bg-[color:var(--ivory)]/95 px-3 py-2 text-[10px] uppercase tracking-[0.22em] font-bold text-[color:var(--charcoal)]/75 backdrop-blur shadow-sm">
+              <span className="inline-flex items-center gap-1.5"><span className="inline-block h-2.5 w-2.5 rounded-full bg-[color:var(--teal)]" /> In your day</span>
+              <span className="inline-flex items-center gap-1.5"><span className="inline-block h-2.5 w-2.5 rounded-full bg-[color:var(--gold)]" /> Reachable</span>
+              <span className="inline-flex items-center gap-1.5"><span className="inline-block h-2.5 w-2.5 rounded-full bg-[#9a8f80] opacity-60" /> Out of range</span>
+            </div>
+          </div>
+
+          {/* BUILD PANEL */}
+          <div
+            className={[
+              "rounded-[2px] border border-[color:var(--charcoal)]/12 bg-[color:var(--ivory)] min-h-[60svh] flex flex-col",
+              tab === "build" ? "block" : "hidden lg:block",
+            ].join(" ")}
+          >
+            <div className="p-5 md:p-6 flex flex-col gap-5 flex-1">
+              {/* Day header w/ remove */}
+              <header className="flex items-start justify-between gap-3">
+                <div>
+                  <span className="text-[10px] uppercase tracking-[0.28em] font-bold text-[color:var(--gold)]">
+                    Day {dayIndex + 1}
+                  </span>
+                  <h3 className="serif mt-1 text-[1.4rem] leading-[1.1] font-semibold text-[color:var(--charcoal)]">
+                    {activeRoute?.region.label ?? "Loading…"}
+                  </h3>
+                  {activeRoute && (
+                    <p className="mt-1 text-[12px] text-[color:var(--charcoal)]/60">
+                      {fmtMinutes(activeRoute.totals.experienceMinutes)} total ·{" "}
+                      {fmtMinutes(activeRoute.totals.drivingMinutes)} drive ·{" "}
+                      €{activeRoute.pricePerPersonEur} pp
+                    </p>
+                  )}
+                </div>
+                {state.days.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => activeDay && onRemoveDay(activeDay.id)}
+                    aria-label="Remove this day"
+                    className="inline-flex h-8 w-8 items-center justify-center rounded-full text-[color:var(--charcoal)]/45 hover:text-red-700 hover:bg-red-50"
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                )}
+              </header>
+
+              {routeLoadingId === activeDay?.id && (
+                <div className="inline-flex items-center gap-2 text-[12px] text-[color:var(--charcoal)]/70">
+                  <Loader2 size={13} className="animate-spin text-[color:var(--gold)]" />
+                  Recalculating distance, time and price…
+                </div>
+              )}
+
+              {activeRoute?.warnings && activeRoute.warnings.length > 0 && (
+                <ul className="rounded-[2px] border border-amber-300/50 bg-amber-50/60 p-3 text-[12px] text-amber-900">
+                  {activeRoute.warnings.map((w, i) => (
+                    <li key={i}>· {w}</li>
+                  ))}
+                </ul>
+              )}
+
+              {/* Stops list */}
+              <section>
+                <div className="flex items-baseline justify-between">
+                  <span className="text-[10px] uppercase tracking-[0.28em] font-bold text-[color:var(--gold)]">
+                    Selected moments
+                  </span>
+                  <span className="text-[11px] text-[color:var(--charcoal)]/50 tabular-nums">
+                    {activeDay?.stopKeys.length ?? 0} stop{(activeDay?.stopKeys.length ?? 0) === 1 ? "" : "s"}
+                  </span>
+                </div>
+                {(!activeDay || activeDay.stopKeys.length === 0) ? (
+                  <p className="mt-3 rounded-[2px] border border-dashed border-[color:var(--charcoal)]/15 p-4 text-[12.5px] text-[color:var(--charcoal)]/65">
+                    Empty day. Tap a gold pin on the map, or use Add stop below to pick from what's reachable here.
+                  </p>
+                ) : (
+                  <ol className="mt-3 flex flex-col gap-2">
+                    {(activeRoute?.stops ?? []).map((s: RoutedStopUI, i) => (
+                      <li
+                        key={s.key}
+                        className="flex items-start gap-3 rounded-[2px] border border-[color:var(--charcoal)]/10 bg-[color:var(--ivory)] p-3"
+                      >
+                        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[color:var(--teal)] text-[11px] font-bold text-[color:var(--ivory)] tabular-nums">
+                          {i + 1}
+                        </span>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-[13.5px] font-semibold leading-tight text-[color:var(--charcoal)]">
+                            {s.label}
+                          </p>
+                          {s.tag && (
+                            <p className="mt-0.5 text-[11px] uppercase tracking-wider text-[color:var(--gold)]">
+                              {s.tag}
+                            </p>
+                          )}
+                          <p className="mt-1 text-[12px] text-[color:var(--charcoal)]/60 tabular-nums">
+                            {fmtMinutes(s.duration_minutes)} on stop
+                            {i > 0 && s.driveMinutesFromPrev > 0
+                              ? ` · ${fmtMinutes(s.driveMinutesFromPrev)} drive`
+                              : ""}
+                          </p>
+                        </div>
+                        <div className="flex shrink-0 items-center gap-1">
+                          <button
+                            type="button"
+                            onClick={() => onMoveStop(i, -1)}
+                            disabled={i === 0}
+                            aria-label="Move earlier"
+                            className="inline-flex h-7 w-7 items-center justify-center rounded-full text-[color:var(--charcoal)]/45 hover:text-[color:var(--charcoal)] hover:bg-[color:var(--charcoal)]/5 disabled:opacity-25"
+                          >↑</button>
+                          <button
+                            type="button"
+                            onClick={() => onMoveStop(i, 1)}
+                            disabled={i === (activeRoute?.stops.length ?? 0) - 1}
+                            aria-label="Move later"
+                            className="inline-flex h-7 w-7 items-center justify-center rounded-full text-[color:var(--charcoal)]/45 hover:text-[color:var(--charcoal)] hover:bg-[color:var(--charcoal)]/5 disabled:opacity-25"
+                          >↓</button>
+                          <button
+                            type="button"
+                            onClick={() => onRemoveStop(s.key)}
+                            aria-label={`Remove ${s.label}`}
+                            className="inline-flex h-7 w-7 items-center justify-center rounded-full text-[color:var(--charcoal)]/45 hover:text-red-700 hover:bg-red-50"
+                          >
+                            <X size={13} />
+                          </button>
+                        </div>
+                      </li>
+                    ))}
+                  </ol>
+                )}
+
+                <button
+                  type="button"
+                  onClick={() => setSheetOpen(true)}
+                  className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-[2px] border border-[color:var(--gold)]/60 bg-[color:var(--gold)]/8 px-3 py-2.5 text-[12px] uppercase tracking-[0.22em] font-bold text-[color:var(--charcoal)] hover:bg-[color:var(--gold)]/15"
+                >
+                  <Plus size={14} />
+                  Add stop to Day {dayIndex + 1}
+                </button>
+              </section>
+
+              {/* Pace + guests */}
+              <section className="mt-auto grid grid-cols-2 gap-3 border-t border-[color:var(--charcoal)]/10 pt-4">
+                <div>
+                  <span className="text-[10px] uppercase tracking-[0.28em] font-bold text-[color:var(--gold)]">
+                    Rhythm (all days)
+                  </span>
+                  <div className="mt-2 grid grid-cols-3 gap-1.5">
+                    {(["relaxed", "balanced", "full"] as Pace[]).map((p) => (
+                      <button
+                        key={p}
+                        type="button"
+                        onClick={() => onSetPace(p)}
+                        aria-pressed={state.pace === p}
+                        className={[
+                          "rounded-[2px] border py-1.5 text-[10.5px] uppercase tracking-[0.18em] font-bold capitalize",
+                          state.pace === p
+                            ? "border-[color:var(--gold)] bg-[color:var(--gold)]/10 text-[color:var(--charcoal)]"
+                            : "border-[color:var(--charcoal)]/15 text-[color:var(--charcoal)]/65",
+                        ].join(" ")}
+                      >
+                        {p}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <span className="text-[10px] uppercase tracking-[0.28em] font-bold text-[color:var(--gold)]">
+                    Guests
+                  </span>
+                  <div className="mt-2 inline-flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => onSetGuests(state.guests - 1)}
+                      disabled={state.guests <= 1}
+                      className="h-9 w-9 rounded-full border border-[color:var(--charcoal)]/15 text-[14px] disabled:opacity-30"
+                    >
+                      –
+                    </button>
+                    <span className="serif text-[1.1rem] font-semibold tabular-nums w-7 text-center">
+                      {state.guests}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => onSetGuests(state.guests + 1)}
+                      disabled={state.guests >= 12}
+                      className="h-9 w-9 rounded-full border border-[color:var(--charcoal)]/15 text-[14px] disabled:opacity-30"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+        </div>
+
+        {/* Trip totals row */}
+        {state.days.length > 0 && (
+          <div className="mt-6 grid grid-cols-3 gap-3 rounded-[2px] border border-[color:var(--charcoal)]/12 bg-[color:var(--sand)]/40 p-4">
+            <div>
+              <p className="text-[9.5px] uppercase tracking-[0.24em] font-bold text-[color:var(--charcoal)]/55">Days</p>
+              <p className="serif mt-1 text-[1.25rem] font-semibold tabular-nums">{state.days.length}</p>
+            </div>
+            <div>
+              <p className="text-[9.5px] uppercase tracking-[0.24em] font-bold text-[color:var(--charcoal)]/55">Total time</p>
+              <p className="serif mt-1 text-[1.25rem] font-semibold tabular-nums">{fmtMinutes(tripTotals.mins)}</p>
+            </div>
+            <div>
+              <p className="text-[9.5px] uppercase tracking-[0.24em] font-bold text-[color:var(--charcoal)]/55">Per person</p>
+              <p className="serif mt-1 text-[1.25rem] font-semibold tabular-nums">€{tripTotals.perPerson}</p>
+            </div>
+          </div>
+        )}
+
+        {/* Confirm */}
+        <div className="mt-6 flex justify-end">
+          <CtaButton
+            type="button"
+            onClick={onConfirm}
+            disabled={tripTotals.stops === 0}
+            variant="primary"
+            size="sm"
+          >
+            Review &amp; confirm
+          </CtaButton>
+        </div>
+      </section>
+
+      <StickyBar
+        totalMinutes={tripTotals.mins}
+        pricePerPersonEur={tripTotals.perPerson}
+        guests={state.guests}
+        setGuests={onSetGuests}
+        onConfirm={onConfirm}
+        disabled={tripTotals.stops === 0}
+        ctaLabel="Review & confirm"
+      />
+
+      {/* Floating map shortcut on mobile */}
+      <button
+        type="button"
+        onClick={() => setTab("map")}
+        aria-label="Show map"
+        className={[
+          "lg:hidden fixed bottom-20 right-4 z-30 inline-flex h-12 w-12 items-center justify-center rounded-full bg-[color:var(--charcoal)] text-[color:var(--ivory)] shadow-[0_10px_24px_-8px_rgba(0,0,0,0.4)]",
+          tab === "map" ? "hidden" : "flex",
+        ].join(" ")}
+      >
+        <MapIcon size={18} strokeWidth={1.75} />
+      </button>
+
+      <AddStopSheet
+        open={sheetOpen}
+        onClose={() => setSheetOpen(false)}
+        loading={eligLoading}
+        stops={regionStops}
+        eligibility={eligibility}
+        onAdd={handleAdd}
+        rules={rules}
+      />
+    </>
+  );
+}
