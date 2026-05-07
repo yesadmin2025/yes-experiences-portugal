@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-05-07T00:15:56.813Z",
-  "filesScanned": 181,
+  "generatedAt": "2026-05-07T00:26:37.763Z",
+  "filesScanned": 184,
   "approvedPalette": {
     "teal": "#295B61",
     "teal-2": "#2A7C82",
@@ -18,10 +18,10 @@
     "#cccccc"
   ],
   "counts": {
-    "total": 156,
+    "total": 159,
     "approved": 34,
     "allowlisted": 25,
-    "mismatch": 97
+    "mismatch": 100
   },
   "findings": [
     {
@@ -715,6 +715,33 @@
       "raw": "#1a1a1a",
       "normalized": "#1a1a1a",
       "snippet": "<div style=\"font-weight:700;color:#1a1a1a;\">${escapeHtml(m.label)}</div>",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/builder/BuilderMap.tsx",
+      "line": 131,
+      "col": 106,
+      "raw": "#9a8f80",
+      "normalized": "#9a8f80",
+      "snippet": "html: `<div style=\"width:18px;height:18px;border-radius:50%;background:${eligible ? gold0 : \"#9a8f80\"};border:2px solid ${ivory0};opacity:${eligible ? 1 : 0.55}",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/builder/BuilderMap.tsx",
+      "line": 223,
+      "col": 45,
+      "raw": "#9a8f80",
+      "normalized": "#9a8f80",
+      "snippet": "background:${eligible ? gold : \"#9a8f80\"};",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/builder/MultiDayBuilder.tsx",
+      "line": 289,
+      "col": 125,
+      "raw": "#9a8f80",
+      "normalized": "#9a8f80",
+      "snippet": "<span className=\"inline-flex items-center gap-1.5\"><span className=\"inline-block h-2.5 w-2.5 rounded-full bg-[#9a8f80] opacity-60\" /> Out of range</span>",
       "status": "mismatch"
     },
     {
