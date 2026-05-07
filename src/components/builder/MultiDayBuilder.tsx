@@ -629,18 +629,7 @@ export function MultiDayBuilder({
         ctaLabel="Review & confirm"
       />
 
-      {/* Floating map shortcut on mobile */}
-      <button
-        type="button"
-        onClick={() => setTab("map")}
-        aria-label="Show map"
-        className={[
-          "lg:hidden fixed bottom-20 right-4 z-30 inline-flex h-12 w-12 items-center justify-center rounded-full bg-[color:var(--charcoal)] text-[color:var(--ivory)] shadow-[0_10px_24px_-8px_rgba(0,0,0,0.4)]",
-          tab === "map" ? "hidden" : "flex",
-        ].join(" ")}
-      >
-        <MapIcon size={18} strokeWidth={1.75} />
-      </button>
+
 
       <AddStopSheet
         open={sheetOpen}
