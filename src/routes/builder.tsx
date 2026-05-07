@@ -131,8 +131,11 @@ function BuilderPage() {
   const { state: persisted, setState: setPersisted, hydrated, reset: resetPersisted } = useBuilderPersistence();
   const excluded = persisted.excluded;
   const orderOverride = persisted.orderOverride;
-  const guests = persisted.guests;
   const selectedElements = persisted.selectedElements;
+
+  // Multi-day state (replaces single-day in step 6+)
+  const md = useMultiDayBuilder();
+  const guests = md.state.guests;
 
   const setExcluded = useCallback(
     (next: string[]) => setPersisted((p) => ({ ...p, excluded: next })),
