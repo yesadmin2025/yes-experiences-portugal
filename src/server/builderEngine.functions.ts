@@ -13,6 +13,8 @@ import {
   type RoutingRules,
   type StopRow,
   type Who,
+  buildRouteFromStopKeys,
+  computeDayEligibility,
   fallbackNarrative,
   generateRoute,
 } from "./builderEngine.server";
