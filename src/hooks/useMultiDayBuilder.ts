@@ -25,6 +25,8 @@ export interface MultiDayState {
   activeDayId: string | null;
   guests: number;
   pace: Pace;
+  /** Free-text user intent — feeds AI suggest + biases the picker. */
+  intent?: string;
 }
 
 function makeId(): string {
