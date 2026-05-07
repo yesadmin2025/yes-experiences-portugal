@@ -51,33 +51,28 @@ export function ReferenceUploader({ sessionId, onToneReady }: Props) {
   const [analyzing, setAnalyzing] = useState(false);
   const [tone, setTone] = useState<ToneResult | null>(null);
 
-  // Hydrate previous uploads for this session.
+  // Hydrate previous uploads for this session via server function (RLS no
+  // longer permits anonymous SELECT on builder_reference_uploads).
   useEffect(() => {
     let cancelled = false;
     void (async () => {
-      const { data, error } = await supabase
-        .from("builder_reference_uploads")
-        .select(
-          "id,file_path,file_url,file_name,mime_type,file_size_bytes,tone_summary,tone_keywords,analyzed_at,created_at",
-        )
-        .eq("session_id", sessionId)
-        .order("created_at", { ascending: true })
-        .limit(MAX_FILES);
-      if (cancelled) return;
-      if (error) {
-        console.warn("Failed to load existing references", error.message);
-        return;
-      }
-      setRows((data as ReferenceRow[]) ?? []);
-      // Restore tone if we already have one.
-      const last = (data as ReferenceRow[] | null)?.find((r) => r.tone_summary);
-      if (last?.tone_summary) {
-        const restored: ToneResult = {
-          toneSummary: last.tone_summary,
-          toneKeywords: last.tone_keywords ?? [],
-        };
-        setTone(restored);
-        onToneReady?.(restored);
+      try {
+        const result = await listBuilderReferences({ data: { sessionId } });
+        if (cancelled) return;
+        if (!result.ok) return;
+        const data = result.rows;
+        setRows(data as ReferenceRow[]);
+        const last = data.find((r) => r.tone_summary);
+        if (last?.tone_summary) {
+          const restored: ToneResult = {
+            toneSummary: last.tone_summary,
+            toneKeywords: last.tone_keywords ?? [],
+          };
+          setTone(restored);
+          onToneReady?.(restored);
+        }
+      } catch (err) {
+        console.warn("Failed to load existing references", err);
       }
     })();
     return () => {
