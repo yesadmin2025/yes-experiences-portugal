@@ -31,6 +31,8 @@ interface Props {
   rules: { max_km_between_stops: number; max_total_km_per_day: number } | null;
   /** Initial selection of "showOnly eligible" toggle. Default true. */
   defaultEligibleOnly?: boolean;
+  /** AI-suggested keys (badge + boosted to the top). */
+  suggestedKeys?: string[];
 }
 
 export function AddStopSheet({
@@ -42,9 +44,17 @@ export function AddStopSheet({
   onAdd,
   rules,
   defaultEligibleOnly = true,
+  suggestedKeys = [],
 }: Props) {
   const [query, setQuery] = useState("");
   const [eligibleOnly, setEligibleOnly] = useState(defaultEligibleOnly);
+
+  const suggestedSet = useMemo(() => new Set(suggestedKeys), [suggestedKeys]);
+  const suggestedRank = useMemo(() => {
+    const m = new Map<string, number>();
+    suggestedKeys.forEach((k, i) => m.set(k, i));
+    return m;
+  }, [suggestedKeys]);
 
   const sorted = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -53,12 +63,18 @@ export function AddStopSheet({
       .map((s) => ({ s, e: eligibility[s.key] }))
       .filter(({ e }) => (eligibleOnly ? e?.eligible : true))
       .sort((a, b) => {
+        const sa = suggestedRank.has(a.s.key) ? 0 : 1;
+        const sb = suggestedRank.has(b.s.key) ? 0 : 1;
+        if (sa !== sb) return sa - sb;
+        if (sa === 0) {
+          return (suggestedRank.get(a.s.key) ?? 0) - (suggestedRank.get(b.s.key) ?? 0);
+        }
         const ae = a.e?.eligible ? 0 : 1;
         const be = b.e?.eligible ? 0 : 1;
         if (ae !== be) return ae - be;
         return (a.e?.kmFromLastStop ?? 999) - (b.e?.kmFromLastStop ?? 999);
       });
-  }, [stops, eligibility, query, eligibleOnly]);
+  }, [stops, eligibility, query, eligibleOnly, suggestedRank]);
 
   if (!open) return null;
 
