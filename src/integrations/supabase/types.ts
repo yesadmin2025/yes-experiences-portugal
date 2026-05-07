@@ -212,6 +212,7 @@ export type Database = {
           id: string
           intent: string | null
           owner_token_hash: string
+          revoked_at: string | null
           share_token: string
           state: Json
           updated_at: string
@@ -221,6 +222,7 @@ export type Database = {
           id?: string
           intent?: string | null
           owner_token_hash: string
+          revoked_at?: string | null
           share_token: string
           state?: Json
           updated_at?: string
@@ -230,9 +232,37 @@ export type Database = {
           id?: string
           intent?: string | null
           owner_token_hash?: string
+          revoked_at?: string | null
           share_token?: string
           state?: Json
           updated_at?: string
+        }
+        Relationships: []
+      }
+      builder_rate_limits: {
+        Row: {
+          bucket: string
+          call_count: number
+          created_at: string
+          id: string
+          last_call_at: string
+          session_id: string
+        }
+        Insert: {
+          bucket: string
+          call_count?: number
+          created_at?: string
+          id?: string
+          last_call_at?: string
+          session_id: string
+        }
+        Update: {
+          bucket?: string
+          call_count?: number
+          created_at?: string
+          id?: string
+          last_call_at?: string
+          session_id?: string
         }
         Relationships: []
       }
