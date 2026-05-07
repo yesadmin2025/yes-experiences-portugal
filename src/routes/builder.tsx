@@ -21,6 +21,8 @@ const BuilderMap = lazy(() =>
 import { JourneyPanel } from "@/components/builder/JourneyPanel";
 import { StickyBar } from "@/components/builder/StickyBar";
 import { ReviewScreen } from "@/components/builder/ReviewScreen";
+import { MultiDayBuilder } from "@/components/builder/MultiDayBuilder";
+import { useMultiDayBuilder } from "@/hooks/useMultiDayBuilder";
 import {
   ChoiceRow,
   ChoiceTile,
