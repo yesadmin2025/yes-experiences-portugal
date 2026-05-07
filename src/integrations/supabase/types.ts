@@ -206,6 +206,36 @@ export type Database = {
         }
         Relationships: []
       }
+      builder_journeys: {
+        Row: {
+          created_at: string
+          id: string
+          intent: string | null
+          owner_token_hash: string
+          share_token: string
+          state: Json
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          intent?: string | null
+          owner_token_hash: string
+          share_token: string
+          state?: Json
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          intent?: string | null
+          owner_token_hash?: string
+          share_token?: string
+          state?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
       builder_reference_uploads: {
         Row: {
           analyzed_at: string | null

@@ -546,6 +546,11 @@ function BuilderPage() {
             onAddStop={md.addStopToActive}
             onSetGuests={md.setGuests}
             onSetPace={(p) => { md.setPace(p); setPace(p); }}
+            onSetIntent={md.setIntent}
+            onShare={md.share}
+            readOnly={md.readOnly}
+            syncing={md.syncing}
+            shareToken={md.shareToken}
             onConfirm={() => setStep(7)}
             onReset={() => { md.reset(); resetBuilder("header"); }}
           />
