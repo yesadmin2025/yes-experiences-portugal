@@ -1,7 +1,13 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { Pace } from "@/components/builder/types";
+import {
+  createJourney,
+  loadJourney,
+  saveJourney,
+} from "@/server/builderJourneys.functions";
 
 const KEY = "yes.builder.multiday.v1";
+const TOKEN_KEY_PREFIX = "yes.builder.owner.";
 
 export interface DayState {
   /** Stable id (e.g. crypto.randomUUID) so UI keys are stable across reorders. */
