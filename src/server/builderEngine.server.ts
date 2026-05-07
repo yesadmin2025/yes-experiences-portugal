@@ -88,6 +88,10 @@ export interface RoutingRules {
   pace_multiplier_relaxed: number;
   pace_multiplier_balanced: number;
   pace_multiplier_full: number;
+  /** Max km between any two consecutive stops in a day. */
+  max_km_between_stops: number;
+  /** Max total driving km for one day. */
+  max_total_km_per_day: number;
 }
 
 export interface RoutedStop extends StopRow {
