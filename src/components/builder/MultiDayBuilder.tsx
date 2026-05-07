@@ -27,6 +27,11 @@ interface Props {
   onAddStop: (key: string) => void;
   onSetGuests: (n: number) => void;
   onSetPace: (p: Pace) => void;
+  onSetIntent: (intent: string) => void;
+  onShare: () => Promise<string>;
+  readOnly?: boolean;
+  syncing?: boolean;
+  shareToken?: string | null;
   onConfirm: () => void;
   onReset: () => void;
 }
@@ -42,6 +47,11 @@ export function MultiDayBuilder({
   onAddStop,
   onSetGuests,
   onSetPace,
+  onSetIntent,
+  onShare,
+  readOnly = false,
+  syncing = false,
+  shareToken = null,
   onConfirm,
   onReset,
 }: Props) {
