@@ -127,7 +127,56 @@ export function MultiDayBuilder({
       });
   }, [activeDay?.id, activeDay?.stopKeys, activeDay?.regionKey, state.pace]);
 
+  // Live recompute every OTHER day's route for accurate trip totals + tabs.
+  useEffect(() => {
+    let cancelled = false;
+    for (const d of state.days) {
+      if (activeDay?.id === d.id) continue;
+      void buildDayRoute({
+        data: { regionKey: d.regionKey, pace: state.pace, stopKeys: d.stopKeys },
+      })
+        .then((r) => {
+          if (cancelled) return;
+          setDayRoutes((prev) => ({ ...prev, [d.id]: r.route as RouteUI }));
+        })
+        .catch(() => { /* ignore */ });
+    }
+    return () => { cancelled = true; };
+  }, [state.days, state.pace, activeDay?.id]);
+
   const activeRoute = activeDay ? dayRoutes[activeDay.id] ?? null : null;
+
+  // ─── AI user intent ─────────────────────────────────────────────
+  const [intentDraft, setIntentDraft] = useState(state.intent ?? "");
+  useEffect(() => { setIntentDraft(state.intent ?? ""); }, [state.intent]);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiSuggested, setAiSuggested] = useState<string[]>([]);
+  const [aiRanked, setAiRanked] = useState<string[]>([]);
+
+  const runIntent = useCallback(async () => {
+    if (!activeDay) return;
+    const text = intentDraft.trim();
+    if (text.length < 2) return;
+    onSetIntent(text);
+    setAiLoading(true);
+    try {
+      const res = await suggestFromIntent({
+        data: {
+          intent: text,
+          regionKey: activeDay.regionKey,
+          excludedKeys: activeDay.stopKeys,
+        },
+      });
+      setAiSuggested(res.suggestedStopKeys);
+      setAiRanked(res.rankedKeys);
+      flashLive("AI shaped this day · review suggestions");
+      setSheetOpen(true);
+    } catch (e) {
+      console.error("[builder] suggestFromIntent", e);
+    } finally {
+      setAiLoading(false);
+    }
+  }, [activeDay, intentDraft, onSetIntent, flashLive]);
 
   // Aggregate trip totals across all days
   const tripTotals = useMemo(() => {
@@ -148,7 +197,6 @@ export function MultiDayBuilder({
   const candidatesForMap = useMemo(() => {
     return regionStops.map((s) => {
       const e = eligibility[s.key];
-      // hide stops already in the day from candidate layer (they're in the route)
       if (activeDay?.stopKeys.includes(s.key)) return null;
       return {
         key: s.key,
@@ -161,11 +209,44 @@ export function MultiDayBuilder({
     }).filter(Boolean) as { key: string; label: string; lat: number; lng: number; eligible: boolean; reason?: string }[];
   }, [regionStops, eligibility, activeDay?.stopKeys]);
 
+  // Re-order region stops by AI ranking when present.
+  const orderedRegionStops = useMemo(() => {
+    if (aiRanked.length === 0) return regionStops;
+    const idx = new Map(aiRanked.map((k, i) => [k, i]));
+    return [...regionStops].sort((a, b) => {
+      const ia = idx.has(a.key) ? (idx.get(a.key) as number) : 9999;
+      const ib = idx.has(b.key) ? (idx.get(b.key) as number) : 9999;
+      return ia - ib;
+    });
+  }, [regionStops, aiRanked]);
+
   const handleAdd = (k: string) => {
     onAddStop(k);
     flashLive("Adding stop · reshaping the day");
     setSheetOpen(false);
   };
+
+  // ─── Share link ─────────────────────────────────────────────────
+  const [sharing, setSharing] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const handleShare = useCallback(async () => {
+    setSharing(true);
+    try {
+      const url = await onShare();
+      try {
+        await navigator.clipboard.writeText(url);
+        setCopied(true);
+        flashLive("Share link copied");
+        window.setTimeout(() => setCopied(false), 1800);
+      } catch {
+        window.prompt("Copy this link to share your journey:", url);
+      }
+    } catch (e) {
+      console.error("[builder] share failed", e);
+    } finally {
+      setSharing(false);
+    }
+  }, [onShare, flashLive]);
 
   const dayIndex = activeDay ? state.days.findIndex((d) => d.id === activeDay.id) : 0;
 
