@@ -4,10 +4,23 @@ import { useEffect, useRef } from "react";
 import { MapPin } from "lucide-react";
 import type { RoutedStopUI } from "./types";
 
+interface CandidatePin {
+  key: string;
+  label: string;
+  lat: number;
+  lng: number;
+  eligible: boolean;
+  reason?: string;
+}
+
 interface Props {
   stops: RoutedStopUI[];
   regionCenter: { lat: number; lng: number } | null;
   regionKey?: string;
+  /** Candidate stops shown as additional pins (gold = eligible, dimmed = not). */
+  candidates?: CandidatePin[];
+  /** Tap a candidate pin to add it (only fired when eligible). */
+  onCandidateClick?: (key: string) => void;
 }
 
 /**
