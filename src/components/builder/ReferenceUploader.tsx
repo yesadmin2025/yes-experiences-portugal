@@ -14,6 +14,7 @@ import { Plus, X, ImageIcon, FileText, Loader2, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { deleteBuilderReference } from "@/server/builderReferences.functions";
+import { listBuilderReferences } from "@/server/builderReferences.list.functions";
 
 const MAX_FILES = 5;
 const MAX_BYTES = 10 * 1024 * 1024;
@@ -23,7 +24,7 @@ const ACCEPT =
 interface ReferenceRow {
   id: string;
   file_path: string;
-  file_url: string;
+  signed_url: string | null;
   file_name: string;
   mime_type: string;
   file_size_bytes: number;
@@ -50,33 +51,28 @@ export function ReferenceUploader({ sessionId, onToneReady }: Props) {
   const [analyzing, setAnalyzing] = useState(false);
   const [tone, setTone] = useState<ToneResult | null>(null);
 
-  // Hydrate previous uploads for this session.
+  // Hydrate previous uploads for this session via server function (RLS no
+  // longer permits anonymous SELECT on builder_reference_uploads).
   useEffect(() => {
     let cancelled = false;
     void (async () => {
-      const { data, error } = await supabase
-        .from("builder_reference_uploads")
-        .select(
-          "id,file_path,file_url,file_name,mime_type,file_size_bytes,tone_summary,tone_keywords,analyzed_at,created_at",
-        )
-        .eq("session_id", sessionId)
-        .order("created_at", { ascending: true })
-        .limit(MAX_FILES);
-      if (cancelled) return;
-      if (error) {
-        console.warn("Failed to load existing references", error.message);
-        return;
-      }
-      setRows((data as ReferenceRow[]) ?? []);
-      // Restore tone if we already have one.
-      const last = (data as ReferenceRow[] | null)?.find((r) => r.tone_summary);
-      if (last?.tone_summary) {
-        const restored: ToneResult = {
-          toneSummary: last.tone_summary,
-          toneKeywords: last.tone_keywords ?? [],
-        };
-        setTone(restored);
-        onToneReady?.(restored);
+      try {
+        const result = await listBuilderReferences({ data: { sessionId } });
+        if (cancelled) return;
+        if (!result.ok) return;
+        const data = result.rows;
+        setRows(data as ReferenceRow[]);
+        const last = data.find((r) => r.tone_summary);
+        if (last?.tone_summary) {
+          const restored: ToneResult = {
+            toneSummary: last.tone_summary,
+            toneKeywords: last.tone_keywords ?? [],
+          };
+          setTone(restored);
+          onToneReady?.(restored);
+        }
+      } catch (err) {
+        console.warn("Failed to load existing references", err);
       }
     })();
     return () => {
@@ -125,23 +121,20 @@ export function ReferenceUploader({ sessionId, onToneReady }: Props) {
           data: { publicUrl },
         } = supabase.storage.from("builder-references").getPublicUrl(path);
 
-        const { data: inserted, error: insErr } = await supabase
+        const { error: insErr } = await supabase
           .from("builder_reference_uploads")
           .insert({
             session_id: sessionId,
             file_path: path,
+            // file_url is legacy/NOT NULL — store storage path reference
+            // only; clients now read via short-lived signed URLs.
             file_url: publicUrl,
             file_name: file.name.slice(0, 200),
             mime_type: file.type,
             file_size_bytes: file.size,
-          })
-          .select(
-            "id,file_path,file_url,file_name,mime_type,file_size_bytes,tone_summary,tone_keywords,analyzed_at,created_at",
-          )
-          .single();
-        if (insErr || !inserted) {
+          });
+        if (insErr) {
           console.error(insErr);
-          // Best-effort cleanup of the storage object.
           await supabase.storage
             .from("builder-references")
             .remove([path])
@@ -149,12 +142,16 @@ export function ReferenceUploader({ sessionId, onToneReady }: Props) {
           toast.error(`Couldn't save ${file.name}`);
           continue;
         }
-        newRows.push(inserted as ReferenceRow);
       }
-      if (newRows.length > 0) {
-        setRows((prev) => [...prev, ...newRows]);
-        // Tone becomes stale after new uploads.
-        setTone(null);
+      // Re-list via server function to pick up signed URLs.
+      try {
+        const refreshed = await listBuilderReferences({ data: { sessionId } });
+        if (refreshed.ok) {
+          setRows(refreshed.rows as ReferenceRow[]);
+          setTone(null);
+        }
+      } catch (err) {
+        console.warn("Failed to refresh references", err);
       }
     } finally {
       setUploading(false);
@@ -189,11 +186,7 @@ export function ReferenceUploader({ sessionId, onToneReady }: Props) {
         {
           body: {
             sessionId,
-            files: rows.map((r) => ({
-              url: r.file_url,
-              mimeType: r.mime_type,
-              name: r.file_name,
-            })),
+            fileIds: rows.map((r) => r.id),
           },
         },
       );
@@ -259,7 +252,7 @@ export function ReferenceUploader({ sessionId, onToneReady }: Props) {
           >
             {r.mime_type.startsWith("image/") ? (
               <img
-                src={r.file_url}
+                src={r.signed_url ?? ""}
                 alt={r.file_name}
                 loading="lazy"
                 className="absolute inset-0 h-full w-full object-cover"

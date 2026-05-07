@@ -70,17 +70,18 @@ let lastStageDetail: string | undefined;
 let lastStageAt: string = new Date().toISOString();
 
 function buildPayload(stageOverride?: Stage, detailOverride?: string) {
+  // Public liveness probe: do NOT leak build identity (commit / version /
+  // build timestamp / NODE_ENV) to anonymous callers — that data
+  // fingerprints the deployment and helps attackers map known CVEs.
+  // Build identity is still embedded in source via BUILD_* constants for
+  // server-side logging if needed.
+  void BUILD_VERSION;
+  void BUILD_COMMIT;
+  void BUILD_AT;
   return {
     ok: true,
     service: "yes-experiences-portugal",
     ts: new Date().toISOString(),
-    env: process.env.NODE_ENV ?? "unknown",
-    build: {
-      version: BUILD_VERSION,
-      commit: BUILD_COMMIT,
-      builtAt: BUILD_AT,
-      mode: process.env.NODE_ENV === "production" ? "production" : "development",
-    },
     uptimeMs: Date.now() - BOOT_AT,
     stage: stageOverride ?? lastStage,
     stageDetail: detailOverride ?? lastStageDetail,

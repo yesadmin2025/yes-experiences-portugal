@@ -960,11 +960,9 @@ function CheckoutModal({
 
   useEffect(() => {
     let cancelled = false;
-    const totalCents = route.pricePerPersonEur * guests * 100;
     supabase.functions
       .invoke("create-builder-checkout", {
         body: {
-          amountInCents: totalCents,
           guests,
           regionLabel: route.region.label,
           stopLabels: stops.map((s) => s.label),

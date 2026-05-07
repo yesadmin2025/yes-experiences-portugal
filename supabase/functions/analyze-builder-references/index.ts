@@ -7,10 +7,15 @@
 //  - PDFs and images are passed as inline parts to Gemini Vision.
 //
 // Inputs (POST JSON):
-//   { sessionId: string, files: Array<{ url: string, mimeType: string, name: string }> }
+//   { sessionId: string, fileIds?: string[] }
+//
+// The server resolves files by sessionId from `builder_reference_uploads`
+// and downloads file contents directly from the (private) `builder-references`
+// storage bucket using the service-role client. The client never supplies a
+// URL — eliminating SSRF.
 //
 // Output:
-//   { toneSummary: string, toneKeywords: string[], analyzedFileIds: string[] }
+//   { toneSummary: string, toneKeywords: string[] }
 
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
@@ -53,15 +58,9 @@ STRICT RULES:
   one-line note that the references weren't readable as mood inspiration.
 - Output ONLY via the provided tool call. No extra prose.`;
 
-interface InputFile {
-  url: string;
-  mimeType: string;
-  name: string;
-}
-
 interface RequestBody {
   sessionId: string;
-  files: InputFile[];
+  fileIds?: string[];
 }
 
 function jsonResponse(body: unknown, status = 200) {
@@ -71,19 +70,11 @@ function jsonResponse(body: unknown, status = 200) {
   });
 }
 
-async function fetchAsBase64(url: string, mimeType: string): Promise<string> {
-  const res = await fetch(url);
-  if (!res.ok) {
-    throw new Error(`Failed to fetch reference (${res.status})`);
-  }
-  const buf = new Uint8Array(await res.arrayBuffer());
+async function blobToBase64(blob: Blob): Promise<string> {
+  const buf = new Uint8Array(await blob.arrayBuffer());
   if (buf.byteLength > MAX_BYTES_PER_FILE) {
-    throw new Error(`File exceeds 10 MB`);
+    throw new Error("File exceeds 10 MB");
   }
-  if (!ALLOWED_MIME.has(mimeType)) {
-    throw new Error(`Unsupported mime: ${mimeType}`);
-  }
-  // Base64 encode in chunks to avoid call-stack issues.
   let bin = "";
   const chunk = 0x8000;
   for (let i = 0; i < buf.length; i += chunk) {
@@ -108,30 +99,47 @@ serve(async (req) => {
   }
 
   const sessionId = (body.sessionId ?? "").trim();
-  const files = Array.isArray(body.files) ? body.files : [];
-
   if (!sessionId || sessionId.length < 8 || sessionId.length > 64) {
     return jsonResponse({ error: "Invalid sessionId" }, 400);
   }
-  if (files.length === 0) {
-    return jsonResponse({ error: "No files provided" }, 400);
-  }
-  if (files.length > MAX_FILES) {
-    return jsonResponse({ error: `Max ${MAX_FILES} files per analysis` }, 400);
-  }
-  for (const f of files) {
-    if (!f?.url || !f?.mimeType || !ALLOWED_MIME.has(f.mimeType)) {
-      return jsonResponse({ error: "Invalid file entry" }, 400);
-    }
-  }
+
+  const fileIds = Array.isArray(body.fileIds)
+    ? body.fileIds.filter((s): s is string => typeof s === "string").slice(0, MAX_FILES)
+    : null;
 
   const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
   if (!LOVABLE_API_KEY) {
     return jsonResponse({ error: "AI not configured" }, 500);
   }
 
-  // Fetch and base64-encode each file (we cannot rely on the AI gateway
-  // pulling URLs directly across providers).
+  const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
+  const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+  const admin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
+    auth: { persistSession: false },
+  });
+
+  // Resolve files server-side by sessionId. The client never supplies a URL.
+  let query = admin
+    .from("builder_reference_uploads")
+    .select("id, file_path, file_name, mime_type, file_size_bytes")
+    .eq("session_id", sessionId)
+    .order("created_at", { ascending: true })
+    .limit(MAX_FILES);
+  if (fileIds && fileIds.length > 0) {
+    query = query.in("id", fileIds);
+  }
+  const { data: rows, error: rowsErr } = await query;
+  if (rowsErr) {
+    console.error("Failed to load references", rowsErr);
+    return jsonResponse({ error: "Could not load your references" }, 500);
+  }
+  const files = (rows ?? []).filter(
+    (r) => ALLOWED_MIME.has(r.mime_type) && r.file_size_bytes <= MAX_BYTES_PER_FILE,
+  );
+  if (files.length === 0) {
+    return jsonResponse({ error: "No files to analyze" }, 400);
+  }
+
   const parts: Array<
     | { type: "text"; text: string }
     | { type: "image_url"; image_url: { url: string } }
@@ -146,14 +154,20 @@ serve(async (req) => {
 
   for (const f of files) {
     try {
-      const b64 = await fetchAsBase64(f.url, f.mimeType);
+      const { data: blob, error: dlErr } = await admin.storage
+        .from("builder-references")
+        .download(f.file_path);
+      if (dlErr || !blob) {
+        console.warn("Skipping unreadable file", f.file_path, dlErr?.message);
+        continue;
+      }
+      const b64 = await blobToBase64(blob);
       parts.push({
         type: "image_url",
-        image_url: { url: `data:${f.mimeType};base64,${b64}` },
+        image_url: { url: `data:${f.mime_type};base64,${b64}` },
       });
     } catch (e) {
-      console.error("Failed to encode file", f.name, e);
-      // Skip unreadable file; continue with the rest.
+      console.error("Failed to encode file", f.file_path, e);
     }
   }
 
@@ -234,7 +248,7 @@ serve(async (req) => {
   const toolCall =
     aiJson?.choices?.[0]?.message?.tool_calls?.[0]?.function?.arguments;
   if (!toolCall) {
-    console.error("No tool call in AI response", aiJson);
+    console.error("No tool call in AI response");
     return jsonResponse({ error: "Model did not return a tone summary" }, 502);
   }
 
@@ -242,11 +256,10 @@ serve(async (req) => {
   try {
     parsed = JSON.parse(toolCall);
   } catch (e) {
-    console.error("Bad tool call JSON", toolCall, e);
+    console.error("Bad tool call JSON", e);
     return jsonResponse({ error: "Malformed tone payload" }, 502);
   }
 
-  // Sanitize: keywords lowercase, single-word-ish, max 5.
   const keywords = (parsed.toneKeywords ?? [])
     .filter((k) => typeof k === "string")
     .map((k) => k.trim().toLowerCase())
@@ -254,17 +267,7 @@ serve(async (req) => {
     .slice(0, 5);
   const summary = (parsed.toneSummary ?? "").trim().slice(0, 220);
 
-  // Persist tone summary back to all uploaded rows for this session that
-  // match the URLs we just analyzed (so the UI can show it later).
-  const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
-  const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get(
-    "SUPABASE_SERVICE_ROLE_KEY",
-  )!;
-  const admin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
-    auth: { persistSession: false },
-  });
-
-  const fileUrls = files.map((f) => f.url);
+  const fileIdsToUpdate = files.map((f) => f.id);
   const { error: updateErr } = await admin
     .from("builder_reference_uploads")
     .update({
@@ -273,11 +276,10 @@ serve(async (req) => {
       analyzed_at: new Date().toISOString(),
     })
     .eq("session_id", sessionId)
-    .in("file_url", fileUrls);
+    .in("id", fileIdsToUpdate);
 
   if (updateErr) {
     console.error("Failed to persist tone summary", updateErr);
-    // Non-fatal — the client still gets the tone payload.
   }
 
   return jsonResponse({
