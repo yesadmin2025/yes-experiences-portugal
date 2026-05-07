@@ -77,6 +77,7 @@ function read(): MultiDayState {
       guests: typeof parsed.guests === "number" && parsed.guests >= 1 && parsed.guests <= 12 ? parsed.guests : 2,
       pace: (parsed.pace === "relaxed" || parsed.pace === "full" || parsed.pace === "balanced")
         ? parsed.pace : "balanced",
+      intent: typeof parsed.intent === "string" ? parsed.intent : undefined,
     };
   } catch {
     return defaults();
