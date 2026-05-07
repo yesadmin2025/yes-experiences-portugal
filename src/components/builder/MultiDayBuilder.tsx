@@ -266,20 +266,43 @@ export function MultiDayBuilder({
 
       {/* Editorial header */}
       <header className="container-x pt-5 md:pt-8 pb-1 md:pb-2">
-        <div className="flex items-start justify-between gap-4">
+        <div className="flex items-start justify-between gap-3 flex-wrap">
           <span className="inline-flex items-center gap-2 text-[10.5px] uppercase tracking-[0.28em] font-semibold text-[color:var(--gold)]">
             <Sparkles size={12} aria-hidden="true" />
-            Now shaping
+            {readOnly ? "Shared journey" : "Now shaping"}
+            {syncing && !readOnly && (
+              <Loader2 size={11} className="animate-spin text-[color:var(--charcoal)]/50" aria-label="Saving" />
+            )}
           </span>
-          <button
-            type="button"
-            onClick={onReset}
-            className="inline-flex items-center gap-1.5 text-[10.5px] uppercase tracking-[0.24em] font-bold text-[color:var(--charcoal)]/55 hover:text-[color:var(--teal)] rounded-sm px-1 py-0.5 transition-colors"
-          >
-            <X size={12} aria-hidden="true" />
-            Start over
-          </button>
+          <div className="flex items-center gap-1.5">
+            {!readOnly && (
+              <button
+                type="button"
+                onClick={handleShare}
+                disabled={sharing}
+                className="inline-flex items-center gap-1.5 rounded-sm px-2 py-1 text-[10.5px] uppercase tracking-[0.24em] font-bold text-[color:var(--teal)] hover:bg-[color:var(--teal)]/8 disabled:opacity-50"
+              >
+                {copied ? <Check size={12} /> : sharing ? <Loader2 size={12} className="animate-spin" /> : shareToken ? <Copy size={12} /> : <Share2 size={12} />}
+                {copied ? "Copied" : shareToken ? "Copy link" : "Share"}
+              </button>
+            )}
+            {!readOnly && (
+              <button
+                type="button"
+                onClick={onReset}
+                className="inline-flex items-center gap-1.5 text-[10.5px] uppercase tracking-[0.24em] font-bold text-[color:var(--charcoal)]/55 hover:text-[color:var(--teal)] rounded-sm px-1 py-0.5 transition-colors"
+              >
+                <X size={12} aria-hidden="true" />
+                Start over
+              </button>
+            )}
+          </div>
         </div>
+        {readOnly && (
+          <p className="mt-2 inline-flex items-center gap-2 rounded-[2px] border border-[color:var(--charcoal)]/12 bg-[color:var(--sand)]/50 px-3 py-1.5 text-[11px] text-[color:var(--charcoal)]/75">
+            <Eye size={12} aria-hidden="true" /> View only — only the original device can edit this journey.
+          </p>
+        )}
         <h2 className="serif mt-2 text-[1.7rem] sm:text-[2rem] md:text-[2.4rem] leading-[1.05] tracking-[-0.01em] font-semibold text-[color:var(--charcoal)]">
           Your journey
           {state.days.length > 1 && (
@@ -288,6 +311,30 @@ export function MultiDayBuilder({
             </span>
           )}
         </h2>
+
+        {/* AI user intent */}
+        {!readOnly && (
+          <div className="mt-4 flex items-stretch gap-2">
+            <input
+              type="text"
+              value={intentDraft}
+              onChange={(e) => setIntentDraft(e.target.value)}
+              onKeyDown={(e) => { if (e.key === "Enter") void runIntent(); }}
+              placeholder="Tell us the feeling — e.g. romantic slow weekend, wine + sea"
+              maxLength={500}
+              className="flex-1 min-w-0 rounded-[2px] border border-[color:var(--charcoal)]/15 bg-[color:var(--ivory)] px-3 py-2 text-[13px] text-[color:var(--charcoal)] placeholder:text-[color:var(--charcoal)]/40 focus:border-[color:var(--gold)] focus:outline-none"
+            />
+            <button
+              type="button"
+              onClick={() => void runIntent()}
+              disabled={aiLoading || intentDraft.trim().length < 2}
+              className="inline-flex items-center gap-1.5 rounded-[2px] border border-[color:var(--gold)] bg-[color:var(--gold)]/10 px-3 py-2 text-[11px] uppercase tracking-[0.22em] font-bold text-[color:var(--charcoal)] hover:bg-[color:var(--gold)]/20 disabled:opacity-40"
+            >
+              {aiLoading ? <Loader2 size={13} className="animate-spin" /> : <Wand2 size={13} />}
+              Suggest
+            </button>
+          </div>
+        )}
       </header>
 
       {/* Day tabs */}
