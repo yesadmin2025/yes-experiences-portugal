@@ -314,3 +314,23 @@ export const buildDayRoute = createServerFn({ method: "POST" })
     );
     return { route };
   });
+
+/** Return all active stops in a region — used by the live add-stop picker. */
+export const listRegionStops = createServerFn({ method: "POST" })
+  .inputValidator((input: unknown) => z.object({ regionKey: z.string().min(1).max(64) }).parse(input))
+  .handler(async ({ data }) => {
+    const { stops, regions } = await loadCatalog();
+    const region = regions.find((r) => r.key === data.regionKey);
+    const filtered = stops
+      .filter((s) => s.region_key === data.regionKey)
+      .map((s) => ({
+        key: s.key,
+        label: s.label,
+        blurb: s.blurb,
+        tag: s.tag,
+        lat: s.lat,
+        lng: s.lng,
+        duration_minutes: s.duration_minutes,
+      }));
+    return { stops: filtered, region: region ?? null };
+  });
