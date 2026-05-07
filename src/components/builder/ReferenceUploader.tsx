@@ -24,7 +24,7 @@ const ACCEPT =
 interface ReferenceRow {
   id: string;
   file_path: string;
-  file_url: string;
+  signed_url: string | null;
   file_name: string;
   mime_type: string;
   file_size_bytes: number;
