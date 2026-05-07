@@ -521,37 +521,21 @@ function BuilderPage() {
           />
         )}
 
-        {/* STEP 6 — Live builder */}
-        {step === 6 && route && (
-          <LiveBuilder
-            route={route}
-            stops={stops}
-            pace={pace}
-            excluded={excluded}
-            narrative={narrative}
-            narrativeLoading={narrativeLoading}
-            mobileTab={mobileTab}
-            setMobileTab={setMobileTab}
-            onPaceChange={onPaceChange}
-            onRemoveStop={onRemoveStop}
-            onAddBackStop={onAddBackStop}
-            onMove={onMove}
-            removablePool={removablePool}
-            guests={guests}
-            setGuests={setGuests}
-            routeLoading={routeLoading}
-            routeError={routeError}
-            onRetry={() => void fetchRoute()}
-            onReview={() => setStep(7)}
-            stopImages={routeImages.stopImages}
-            storyImage={routeImages.storyImage}
-            imagesLoading={routeImages.loading}
-            moodLabel={labelFor(MOODS, mood)}
-            whoLabel={labelFor(WHOS, who)}
-            intentionLabel={labelFor(INTENTIONS, intention)}
-            selectedElements={selectedElements}
-            onToggleElement={toggleElement}
-            onReset={() => resetBuilder("header")}
+        {/* STEP 6 — Multi-day live builder */}
+        {step === 6 && route && md.activeDay && (
+          <MultiDayBuilder
+            state={md.state}
+            activeDay={md.activeDay}
+            onSetActiveDay={md.setActiveDay}
+            onAddDay={() => md.addDay(route.region.key)}
+            onRemoveDay={md.removeDay}
+            onMoveStop={md.moveStopInActive}
+            onRemoveStop={md.removeStopFromActive}
+            onAddStop={md.addStopToActive}
+            onSetGuests={md.setGuests}
+            onSetPace={(p) => { md.setPace(p); setPace(p); }}
+            onConfirm={() => setStep(7)}
+            onReset={() => { md.reset(); resetBuilder("header"); }}
           />
         )}
 
