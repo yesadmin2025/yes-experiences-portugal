@@ -252,7 +252,7 @@ export function ReferenceUploader({ sessionId, onToneReady }: Props) {
           >
             {r.mime_type.startsWith("image/") ? (
               <img
-                src={r.file_url}
+                src={r.signed_url ?? ""}
                 alt={r.file_name}
                 loading="lazy"
                 className="absolute inset-0 h-full w-full object-cover"
