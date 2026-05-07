@@ -235,6 +235,18 @@ function BuilderPage() {
     }
   }, [hydrated, step, mood, who, intention, route, routeLoading, fetchRoute]);
 
+  // Seed Day 1 from the engine route once we land in the multi-day builder
+  // (only when the user hasn't already shaped a day themselves).
+  useEffect(() => {
+    if (step !== 6 || !route || !md.hydrated || !md.activeDay) return;
+    if (md.state.days.length === 1 && md.activeDay.stopKeys.length === 0) {
+      md.updateDay(md.activeDay.id, {
+        regionKey: route.region.key,
+        stopKeys: route.stops.map((s) => s.key),
+      });
+    }
+  }, [step, route, md.hydrated, md.activeDay, md.state.days.length, md.updateDay]);
+
   // Apply user-driven reordering on top of engine stops
   const stops: RoutedStopUI[] = useMemo(() => {
     if (!route) return [];
