@@ -287,6 +287,29 @@ export function MultiDayBuilder({
     }
   }, [onShare, flashLive]);
 
+  const [rotating, setRotating] = useState(false);
+  const handleRotate = useCallback(async () => {
+    if (!onRotateLink) return;
+    if (!window.confirm("Generate a new share link? The old link will stop working.")) return;
+    setRotating(true);
+    try {
+      const url = await onRotateLink();
+      if (url) {
+        try { await navigator.clipboard.writeText(url); } catch { /* ignore */ }
+        flashLive("New link generated · old link disabled");
+      }
+    } finally {
+      setRotating(false);
+    }
+  }, [onRotateLink, flashLive]);
+
+  const handleRevoke = useCallback(async () => {
+    if (!onRevokeLink) return;
+    if (!window.confirm("Disable the public link? Anyone with the old link will lose access.")) return;
+    const ok = await onRevokeLink();
+    if (ok) flashLive("Share link revoked");
+  }, [onRevokeLink, flashLive]);
+
   const dayIndex = activeDay ? state.days.findIndex((d) => d.id === activeDay.id) : 0;
 
   return (
