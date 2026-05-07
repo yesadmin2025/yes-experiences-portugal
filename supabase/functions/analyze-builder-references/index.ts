@@ -71,7 +71,37 @@ function jsonResponse(body: unknown, status = 200) {
   });
 }
 
+// Only fetch from the project's own Supabase storage host. Prevents SSRF
+// against cloud metadata IPs (169.254.169.254), RFC-1918 ranges, etc.
+const SUPABASE_URL_ENV = Deno.env.get("SUPABASE_URL") ?? "";
+const SUPABASE_HOST = (() => {
+  try {
+    return new URL(SUPABASE_URL_ENV).host;
+  } catch {
+    return "";
+  }
+})();
+
+function isAllowedReferenceUrl(raw: string): boolean {
+  let u: URL;
+  try {
+    u = new URL(raw);
+  } catch {
+    return false;
+  }
+  if (u.protocol !== "https:") return false;
+  if (!SUPABASE_HOST) return false;
+  // Only the project's own Supabase storage host, on the public storage path.
+  if (u.host !== SUPABASE_HOST) return false;
+  if (!u.pathname.startsWith("/storage/v1/object/")) return false;
+  if (!u.pathname.includes("/builder-references/")) return false;
+  return true;
+}
+
 async function fetchAsBase64(url: string, mimeType: string): Promise<string> {
+  if (!isAllowedReferenceUrl(url)) {
+    throw new Error("URL not in allowlist");
+  }
   const res = await fetch(url);
   if (!res.ok) {
     throw new Error(`Failed to fetch reference (${res.status})`);
