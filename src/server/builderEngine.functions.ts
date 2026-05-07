@@ -304,7 +304,6 @@ export const buildDayRoute = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => dayInputSchema.parse(input))
   .handler(async ({ data }) => {
     const { regions, stops, rules } = await loadCatalog();
-    const { buildRouteFromStopKeys } = await import("./builderEngine.server");
     const route = buildRouteFromStopKeys(
       data.stopKeys,
       data.regionKey,
