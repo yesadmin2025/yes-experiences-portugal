@@ -14,6 +14,7 @@ import { Plus, X, ImageIcon, FileText, Loader2, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { deleteBuilderReference } from "@/server/builderReferences.functions";
+import { listBuilderReferences } from "@/server/builderReferences.list.functions";
 
 const MAX_FILES = 5;
 const MAX_BYTES = 10 * 1024 * 1024;
