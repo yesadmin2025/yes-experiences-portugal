@@ -261,3 +261,56 @@ export const narrateBuilderRoute = createServerFn({ method: "POST" })
       return { narrative: fallback, source: "fallback" as const };
     }
   });
+
+/* ─── multi-day live builder server functions ──────────────────── */
+
+const dayInputSchema = z.object({
+  regionKey: z.string().min(1).max(64),
+  pace: z.enum(["relaxed", "balanced", "full"]).default("balanced"),
+  stopKeys: z.array(z.string().min(1).max(64)).max(20),
+});
+
+/** Compute eligibility (radius + timing) for every candidate stop. */
+export const computeAddStopEligibility = createServerFn({ method: "POST" })
+  .inputValidator((input: unknown) => dayInputSchema.parse(input))
+  .handler(async ({ data }) => {
+    const { regions, stops, rules } = await loadCatalog();
+    const region = regions.find((r) => r.key === data.regionKey);
+    if (!region) {
+      return { eligibility: [], rules: null };
+    }
+    const { computeDayEligibility } = await import("./builderEngine.server");
+    const eligibility = computeDayEligibility(
+      { stopKeys: data.stopKeys },
+      data.regionKey,
+      { lat: region.lat, lng: region.lng },
+      stops,
+      rules,
+    );
+    return {
+      eligibility,
+      rules: {
+        max_km_between_stops: rules.max_km_between_stops,
+        max_total_km_per_day: rules.max_total_km_per_day,
+        max_experience_hours: rules.max_experience_hours,
+        max_driving_hours: rules.max_driving_hours,
+      },
+    };
+  });
+
+/** Build a feasible BuilderRoute from the user-chosen ordered stop keys. */
+export const buildDayRoute = createServerFn({ method: "POST" })
+  .inputValidator((input: unknown) => dayInputSchema.parse(input))
+  .handler(async ({ data }) => {
+    const { regions, stops, rules } = await loadCatalog();
+    const { buildRouteFromStopKeys } = await import("./builderEngine.server");
+    const route = buildRouteFromStopKeys(
+      data.stopKeys,
+      data.regionKey,
+      data.pace,
+      regions,
+      stops,
+      rules,
+    );
+    return { route };
+  });
