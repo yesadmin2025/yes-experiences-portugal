@@ -674,11 +674,12 @@ export function MultiDayBuilder({
       <AddStopSheet
         open={sheetOpen}
         onClose={() => setSheetOpen(false)}
-        loading={eligLoading}
-        stops={regionStops}
+        loading={eligLoading || aiLoading}
+        stops={orderedRegionStops}
         eligibility={eligibility}
         onAdd={handleAdd}
         rules={rules}
+        suggestedKeys={aiSuggested}
       />
     </>
   );
