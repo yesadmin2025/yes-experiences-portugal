@@ -21,6 +21,8 @@ const BuilderMap = lazy(() =>
 import { JourneyPanel } from "@/components/builder/JourneyPanel";
 import { StickyBar } from "@/components/builder/StickyBar";
 import { ReviewScreen } from "@/components/builder/ReviewScreen";
+import { MultiDayBuilder } from "@/components/builder/MultiDayBuilder";
+import { useMultiDayBuilder } from "@/hooks/useMultiDayBuilder";
 import {
   ChoiceRow,
   ChoiceTile,
@@ -129,8 +131,11 @@ function BuilderPage() {
   const { state: persisted, setState: setPersisted, hydrated, reset: resetPersisted } = useBuilderPersistence();
   const excluded = persisted.excluded;
   const orderOverride = persisted.orderOverride;
-  const guests = persisted.guests;
   const selectedElements = persisted.selectedElements;
+
+  // Multi-day state (replaces single-day in step 6+)
+  const md = useMultiDayBuilder();
+  const guests = md.state.guests;
 
   const setExcluded = useCallback(
     (next: string[]) => setPersisted((p) => ({ ...p, excluded: next })),
@@ -141,8 +146,8 @@ function BuilderPage() {
     [setPersisted],
   );
   const setGuests = useCallback(
-    (n: number) => setPersisted((p) => ({ ...p, guests: n })),
-    [setPersisted],
+    (n: number) => md.setGuests(n),
+    [md],
   );
 
   const [routeLoading, setRouteLoading] = useState(false);
@@ -229,6 +234,18 @@ function BuilderPage() {
       void fetchRoute();
     }
   }, [hydrated, step, mood, who, intention, route, routeLoading, fetchRoute]);
+
+  // Seed Day 1 from the engine route once we land in the multi-day builder
+  // (only when the user hasn't already shaped a day themselves).
+  useEffect(() => {
+    if (step !== 6 || !route || !md.hydrated || !md.activeDay) return;
+    if (md.state.days.length === 1 && md.activeDay.stopKeys.length === 0) {
+      md.updateDay(md.activeDay.id, {
+        regionKey: route.region.key,
+        stopKeys: route.stops.map((s) => s.key),
+      });
+    }
+  }, [step, route, md.hydrated, md.activeDay, md.state.days.length, md.updateDay]);
 
   // Apply user-driven reordering on top of engine stops
   const stops: RoutedStopUI[] = useMemo(() => {
@@ -516,37 +533,21 @@ function BuilderPage() {
           />
         )}
 
-        {/* STEP 6 — Live builder */}
-        {step === 6 && route && (
-          <LiveBuilder
-            route={route}
-            stops={stops}
-            pace={pace}
-            excluded={excluded}
-            narrative={narrative}
-            narrativeLoading={narrativeLoading}
-            mobileTab={mobileTab}
-            setMobileTab={setMobileTab}
-            onPaceChange={onPaceChange}
-            onRemoveStop={onRemoveStop}
-            onAddBackStop={onAddBackStop}
-            onMove={onMove}
-            removablePool={removablePool}
-            guests={guests}
-            setGuests={setGuests}
-            routeLoading={routeLoading}
-            routeError={routeError}
-            onRetry={() => void fetchRoute()}
-            onReview={() => setStep(7)}
-            stopImages={routeImages.stopImages}
-            storyImage={routeImages.storyImage}
-            imagesLoading={routeImages.loading}
-            moodLabel={labelFor(MOODS, mood)}
-            whoLabel={labelFor(WHOS, who)}
-            intentionLabel={labelFor(INTENTIONS, intention)}
-            selectedElements={selectedElements}
-            onToggleElement={toggleElement}
-            onReset={() => resetBuilder("header")}
+        {/* STEP 6 — Multi-day live builder */}
+        {step === 6 && route && md.activeDay && (
+          <MultiDayBuilder
+            state={md.state}
+            activeDay={md.activeDay}
+            onSetActiveDay={md.setActiveDay}
+            onAddDay={() => md.addDay(route.region.key)}
+            onRemoveDay={md.removeDay}
+            onMoveStop={md.moveStopInActive}
+            onRemoveStop={md.removeStopFromActive}
+            onAddStop={md.addStopToActive}
+            onSetGuests={md.setGuests}
+            onSetPace={(p) => { md.setPace(p); setPace(p); }}
+            onConfirm={() => setStep(7)}
+            onReset={() => { md.reset(); resetBuilder("header"); }}
           />
         )}
 

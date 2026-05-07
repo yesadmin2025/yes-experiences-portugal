@@ -88,6 +88,10 @@ export interface RoutingRules {
   pace_multiplier_relaxed: number;
   pace_multiplier_balanced: number;
   pace_multiplier_full: number;
+  /** Max km between any two consecutive stops in a day. */
+  max_km_between_stops: number;
+  /** Max total driving km for one day. */
+  max_total_km_per_day: number;
 }
 
 export interface RoutedStop extends StopRow {
@@ -510,4 +514,168 @@ export function fallbackNarrative(route: BuilderRoute, input: BuilderInput): str
                   : "ease and silence";
   const placeList = route.stops.slice(0, 3).map((s) => s.label).join(", ");
   return `An ${moodWord} day across ${route.region.label} — built around ${intentionWord}. You'll move through ${placeList}${route.stops.length > 3 ? ", and a few more" : ""}, at a ${route.pace} rhythm.`;
+}
+
+// ---------- multi-day add-stop validation ----------
+
+export interface DayState {
+  /** Ordered stops currently in the day (already chosen by the user). */
+  stopKeys: string[];
+}
+
+export interface StopEligibility {
+  key: string;
+  eligible: boolean;
+  reason?: string;
+  kmFromLastStop: number;
+  driveMinutesFromLastStop: number;
+  projectedTotalKm: number;
+  projectedExperienceMinutes: number;
+}
+
+/**
+ * Compute eligibility of every candidate stop for being appended to the
+ * current day, given the routing rules. A stop is eligible when:
+ *  - in the same region as the day
+ *  - not already in the day
+ *  - within max_km_between_stops of the last stop (or region center if empty)
+ *  - adding it keeps total km <= max_total_km_per_day
+ *  - adding it keeps experience minutes <= max_experience_hours * 60
+ *  - adding it keeps driving minutes <= max_driving_hours * 60
+ */
+export function computeDayEligibility(
+  day: DayState,
+  regionKey: string,
+  region: { lat: number; lng: number },
+  allStops: StopRow[],
+  rules: RoutingRules,
+): StopEligibility[] {
+  const inDay = new Set(day.stopKeys);
+  const dayStops = day.stopKeys
+    .map((k) => allStops.find((s) => s.key === k))
+    .filter((s): s is StopRow => Boolean(s));
+
+  // Current totals
+  let currentDriveMin = 0;
+  let currentDriveKm = 0;
+  let currentStayMin = 0;
+  let cursor: { lat: number; lng: number } = region;
+  for (const s of dayStops) {
+    const km = haversineKm(cursor, s) * 1.25;
+    currentDriveKm += km;
+    currentDriveMin += Math.round((km / AVG_KMH) * 60);
+    currentStayMin += s.duration_minutes;
+    cursor = s;
+  }
+  const last = cursor;
+
+  const maxExpMin = rules.max_experience_hours * 60;
+  const maxDriveMin = rules.max_driving_hours * 60;
+
+  return allStops
+    .filter((s) => s.region_key === regionKey)
+    .map((s) => {
+      const km = haversineKm(last, s) * 1.25;
+      const driveMin = Math.round((km / AVG_KMH) * 60);
+      const projectedKm = currentDriveKm + km;
+      const projectedExp = currentDriveMin + driveMin + currentStayMin + s.duration_minutes;
+      const projectedDrive = currentDriveMin + driveMin;
+
+      let reason: string | undefined;
+      let eligible = true;
+      if (inDay.has(s.key)) {
+        eligible = false;
+        reason = "already in this day";
+      } else if (km > rules.max_km_between_stops) {
+        eligible = false;
+        reason = `${Math.round(km)} km from last stop — over ${rules.max_km_between_stops} km limit`;
+      } else if (projectedKm > rules.max_total_km_per_day) {
+        eligible = false;
+        reason = `would push the day past ${rules.max_total_km_per_day} km of driving`;
+      } else if (projectedExp > maxExpMin) {
+        eligible = false;
+        reason = `would exceed ${rules.max_experience_hours}h of experience time`;
+      } else if (projectedDrive > maxDriveMin) {
+        eligible = false;
+        reason = `would exceed ${rules.max_driving_hours}h of driving`;
+      }
+      return {
+        key: s.key,
+        eligible,
+        reason,
+        kmFromLastStop: Math.round(km * 10) / 10,
+        driveMinutesFromLastStop: driveMin,
+        projectedTotalKm: Math.round(projectedKm * 10) / 10,
+        projectedExperienceMinutes: projectedExp,
+      };
+    });
+}
+
+/**
+ * Build a feasible BuilderRoute from an arbitrary, user-chosen ordered list
+ * of stop keys. Used by the multi-day live builder where the user — not the
+ * engine — picks the stops. Computes drive times, totals, price, feasibility.
+ */
+export function buildRouteFromStopKeys(
+  stopKeys: string[],
+  regionKey: string,
+  pace: Pace,
+  regions: RegionRow[],
+  allStops: StopRow[],
+  rules: RoutingRules,
+): BuilderRoute {
+  const region =
+    regions.find((r) => r.key === regionKey) ?? regions[0];
+  const stopsInOrder = stopKeys
+    .map((k) => allStops.find((s) => s.key === k))
+    .filter((s): s is StopRow => Boolean(s));
+
+  let drive = 0;
+  let driveKm = 0;
+  let stay = 0;
+  let prev: { lat: number; lng: number } = region;
+  const routedStops: RoutedStop[] = stopsInOrder.map((s) => {
+    const km = haversineKm(prev, s) * 1.25;
+    const d = Math.round((km / AVG_KMH) * 60);
+    drive += d;
+    driveKm += km;
+    stay += s.duration_minutes;
+    prev = s;
+    return { ...s, driveMinutesFromPrev: d };
+  });
+
+  const paceMult =
+    pace === "relaxed"
+      ? rules.pace_multiplier_relaxed
+      : pace === "full"
+        ? rules.pace_multiplier_full
+        : rules.pace_multiplier_balanced;
+  const stopFactor = Math.max(1, 1 + (routedStops.length - rules.min_stops) * 0.08);
+  const pricePerPersonEur = Math.round(rules.base_price_per_person_eur * paceMult * stopFactor);
+
+  const maxExpMin = rules.max_experience_hours * 60;
+  const maxDriveMin = rules.max_driving_hours * 60;
+
+  const warnings: string[] = [];
+  if (routedStops.length < rules.min_stops) warnings.push("Fewer stops than ideal for this pace.");
+  if (drive > maxDriveMin) warnings.push("Driving time exceeds the comfortable maximum.");
+  if (driveKm > rules.max_total_km_per_day) warnings.push(`Day driving distance exceeds ${rules.max_total_km_per_day} km.`);
+
+  return {
+    region,
+    pace,
+    stops: routedStops,
+    totals: {
+      drivingMinutes: drive,
+      stopMinutes: stay,
+      experienceMinutes: drive + stay,
+    },
+    pricePerPersonEur,
+    feasible:
+      drive + stay <= maxExpMin &&
+      drive <= maxDriveMin &&
+      driveKm <= rules.max_total_km_per_day &&
+      routedStops.length >= 1,
+    warnings,
+  };
 }

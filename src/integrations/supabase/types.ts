@@ -299,7 +299,9 @@ export type Database = {
           is_active: boolean
           max_driving_hours: number
           max_experience_hours: number
+          max_km_between_stops: number
           max_stops: number
+          max_total_km_per_day: number
           min_stops: number
           pace_multiplier_balanced: number
           pace_multiplier_full: number
@@ -314,7 +316,9 @@ export type Database = {
           is_active?: boolean
           max_driving_hours?: number
           max_experience_hours?: number
+          max_km_between_stops?: number
           max_stops?: number
+          max_total_km_per_day?: number
           min_stops?: number
           pace_multiplier_balanced?: number
           pace_multiplier_full?: number
@@ -329,7 +333,9 @@ export type Database = {
           is_active?: boolean
           max_driving_hours?: number
           max_experience_hours?: number
+          max_km_between_stops?: number
           max_stops?: number
+          max_total_km_per_day?: number
           min_stops?: number
           pace_multiplier_balanced?: number
           pace_multiplier_full?: number

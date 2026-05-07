@@ -13,6 +13,8 @@ import {
   type RoutingRules,
   type StopRow,
   type Who,
+  buildRouteFromStopKeys,
+  computeDayEligibility,
   fallbackNarrative,
   generateRoute,
 } from "./builderEngine.server";
@@ -260,4 +262,75 @@ export const narrateBuilderRoute = createServerFn({ method: "POST" })
       });
       return { narrative: fallback, source: "fallback" as const };
     }
+  });
+
+/* ─── multi-day live builder server functions ──────────────────── */
+
+const dayInputSchema = z.object({
+  regionKey: z.string().min(1).max(64),
+  pace: z.enum(["relaxed", "balanced", "full"]).default("balanced"),
+  stopKeys: z.array(z.string().min(1).max(64)).max(20),
+});
+
+/** Compute eligibility (radius + timing) for every candidate stop. */
+export const computeAddStopEligibility = createServerFn({ method: "POST" })
+  .inputValidator((input: unknown) => dayInputSchema.parse(input))
+  .handler(async ({ data }) => {
+    const { regions, stops, rules } = await loadCatalog();
+    const region = regions.find((r) => r.key === data.regionKey);
+    if (!region) {
+      return { eligibility: [], rules: null };
+    }
+    const eligibility = computeDayEligibility(
+      { stopKeys: data.stopKeys },
+      data.regionKey,
+      { lat: region.lat, lng: region.lng },
+      stops,
+      rules,
+    );
+    return {
+      eligibility,
+      rules: {
+        max_km_between_stops: rules.max_km_between_stops,
+        max_total_km_per_day: rules.max_total_km_per_day,
+        max_experience_hours: rules.max_experience_hours,
+        max_driving_hours: rules.max_driving_hours,
+      },
+    };
+  });
+
+/** Build a feasible BuilderRoute from the user-chosen ordered stop keys. */
+export const buildDayRoute = createServerFn({ method: "POST" })
+  .inputValidator((input: unknown) => dayInputSchema.parse(input))
+  .handler(async ({ data }) => {
+    const { regions, stops, rules } = await loadCatalog();
+    const route = buildRouteFromStopKeys(
+      data.stopKeys,
+      data.regionKey,
+      data.pace,
+      regions,
+      stops,
+      rules,
+    );
+    return { route };
+  });
+
+/** Return all active stops in a region — used by the live add-stop picker. */
+export const listRegionStops = createServerFn({ method: "POST" })
+  .inputValidator((input: unknown) => z.object({ regionKey: z.string().min(1).max(64) }).parse(input))
+  .handler(async ({ data }) => {
+    const { stops, regions } = await loadCatalog();
+    const region = regions.find((r) => r.key === data.regionKey);
+    const filtered = stops
+      .filter((s) => s.region_key === data.regionKey)
+      .map((s) => ({
+        key: s.key,
+        label: s.label,
+        blurb: s.blurb,
+        tag: s.tag,
+        lat: s.lat,
+        lng: s.lng,
+        duration_minutes: s.duration_minutes,
+      }));
+    return { stops: filtered, region: region ?? null };
   });
