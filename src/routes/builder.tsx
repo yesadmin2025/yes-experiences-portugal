@@ -119,6 +119,33 @@ function BuilderPage() {
   const setIntention = useCallback((i: Intention) => setSearch({ intention: i }), [setSearch]);
   const setPace = useCallback((p: Pace) => setSearch({ pace: p }), [setSearch]);
 
+  // Step 3 supports multi-select. URL keeps the primary intention (first chosen)
+  // so the engine + share-links stay backwards compatible; the full set lives
+  // in component state and biases the picker / narrative tone.
+  const [intentions, setIntentions] = useState<Intention[]>(() =>
+    search.intention ? [search.intention] : [],
+  );
+  useEffect(() => {
+    if (search.intention && !intentions.includes(search.intention)) {
+      setIntentions((prev) => (prev.length === 0 ? [search.intention as Intention] : prev));
+    }
+    if (!search.intention && intentions.length > 0) {
+      setIntentions([]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search.intention]);
+  const toggleIntention = useCallback(
+    (id: Intention) => {
+      setIntentions((prev) => {
+        const next = prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id];
+        const primary = next[0];
+        if (primary !== search.intention) setSearch({ intention: primary });
+        return next;
+      });
+    },
+    [search.intention, setSearch],
+  );
+
   const [microcopy, setMicrocopy] = useState<string | null>(null);
 
 
