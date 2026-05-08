@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-05-07T01:04:41.548Z",
-  "filesScanned": 187,
+  "generatedAt": "2026-05-08T20:03:21.484Z",
+  "filesScanned": 188,
   "approvedPalette": {
     "teal": "#295B61",
     "teal-2": "#2A7C82",
@@ -737,7 +737,7 @@
     },
     {
       "file": "src/components/builder/MultiDayBuilder.tsx",
-      "line": 403,
+      "line": 504,
       "col": 125,
       "raw": "#9a8f80",
       "normalized": "#9a8f80",
