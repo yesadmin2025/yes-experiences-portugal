@@ -210,7 +210,20 @@ export function MultiDayBuilder({
     effMood,
     effWho,
     effIntention,
+    narrativeNonce,
   ]);
+
+  const handleCopyNarrative = useCallback(async () => {
+    const text = [narrative, tripSummary].filter(Boolean).join("\n\n");
+    if (!text) return;
+    try {
+      await navigator.clipboard.writeText(text);
+      setNarrativeCopied(true);
+      window.setTimeout(() => setNarrativeCopied(false), 1800);
+    } catch {
+      /* ignore */
+    }
+  }, [narrative, tripSummary]);
 
   // ─── AI user intent ─────────────────────────────────────────────
   const [intentDraft, setIntentDraft] = useState(state.intent ?? "");
