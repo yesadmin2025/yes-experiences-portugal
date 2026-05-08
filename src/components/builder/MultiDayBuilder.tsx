@@ -36,6 +36,9 @@ interface Props {
   readOnly?: boolean;
   syncing?: boolean;
   shareToken?: string | null;
+  mood?: Mood;
+  who?: Who;
+  intention?: Intention;
   onConfirm: () => void;
   onReset: () => void;
 }
