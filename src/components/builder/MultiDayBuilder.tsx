@@ -688,6 +688,49 @@ export function MultiDayBuilder({
                 </ul>
               )}
 
+              {/* Story — live narrative for this day, soft cross-fade on edits */}
+              {activeDay && activeDay.stopKeys.length > 0 && (
+                <section
+                  aria-live="polite"
+                  className="rounded-[2px] border border-[color:var(--gold)]/30 bg-[color:var(--sand)]/40 p-4"
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-[0.28em] font-bold text-[color:var(--gold)]">
+                      <Sparkles size={11} aria-hidden="true" />
+                      Day {dayIndex + 1} story
+                    </span>
+                    {narrativeLoading && (
+                      <Loader2
+                        size={11}
+                        className="animate-spin text-[color:var(--charcoal)]/40"
+                        aria-label="Rewriting"
+                      />
+                    )}
+                  </div>
+                  {narrative ? (
+                    <p
+                      className={[
+                        "mt-2 serif italic leading-[1.55] text-[14.5px] text-[color:var(--charcoal)]/85 transition-opacity duration-300",
+                        narrativeLoading ? "opacity-50" : "opacity-100",
+                      ].join(" ")}
+                    >
+                      {narrative}
+                    </p>
+                  ) : (
+                    <div className="mt-2 space-y-1.5" aria-hidden="true">
+                      <div className="h-3 w-[92%] animate-pulse rounded-sm bg-[color:var(--charcoal)]/8" />
+                      <div className="h-3 w-[78%] animate-pulse rounded-sm bg-[color:var(--charcoal)]/8" />
+                      <div className="h-3 w-[60%] animate-pulse rounded-sm bg-[color:var(--charcoal)]/8" />
+                    </div>
+                  )}
+                  {tripSummary && (
+                    <p className="mt-3 border-t border-[color:var(--charcoal)]/10 pt-2 text-[11px] uppercase tracking-[0.18em] font-semibold text-[color:var(--charcoal)]/55">
+                      {tripSummary}
+                    </p>
+                  )}
+                </section>
+              )}
+
               {/* Stops list */}
               <section>
                 <div className="flex items-baseline justify-between">
