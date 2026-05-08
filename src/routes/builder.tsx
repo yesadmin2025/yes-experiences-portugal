@@ -554,6 +554,9 @@ function BuilderPage() {
             readOnly={md.readOnly}
             syncing={md.syncing}
             shareToken={md.shareToken}
+            mood={mood}
+            who={who}
+            intention={intention}
             onConfirm={() => setStep(7)}
             onReset={() => { md.reset(); resetBuilder("header"); }}
           />
