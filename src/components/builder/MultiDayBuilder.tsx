@@ -62,6 +62,9 @@ export function MultiDayBuilder({
   readOnly = false,
   syncing = false,
   shareToken = null,
+  mood,
+  who,
+  intention,
   onConfirm,
   onReset,
 }: Props) {
