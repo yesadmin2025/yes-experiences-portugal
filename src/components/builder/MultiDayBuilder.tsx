@@ -6,7 +6,9 @@ import {
   listRegionStops,
 } from "@/server/builderEngine.functions";
 import { suggestFromIntent } from "@/server/builderIntent.functions";
+import { narrateBuilderRoute } from "@/server/builderEngine.functions";
 import { fmtMinutes, type Pace, type RouteUI, type RoutedStopUI } from "@/components/builder/types";
+import type { Mood, Who, Intention } from "@/components/builder/searchParams";
 import { AddStopSheet, type RegionStop, type StopEligibility } from "@/components/builder/AddStopSheet";
 import { CtaButton } from "@/components/ui/CtaButton";
 import { StickyBar } from "@/components/builder/StickyBar";
