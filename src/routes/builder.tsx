@@ -119,6 +119,33 @@ function BuilderPage() {
   const setIntention = useCallback((i: Intention) => setSearch({ intention: i }), [setSearch]);
   const setPace = useCallback((p: Pace) => setSearch({ pace: p }), [setSearch]);
 
+  // Step 3 supports multi-select. URL keeps the primary intention (first chosen)
+  // so the engine + share-links stay backwards compatible; the full set lives
+  // in component state and biases the picker / narrative tone.
+  const [intentions, setIntentions] = useState<Intention[]>(() =>
+    search.intention ? [search.intention] : [],
+  );
+  useEffect(() => {
+    if (search.intention && !intentions.includes(search.intention)) {
+      setIntentions((prev) => (prev.length === 0 ? [search.intention as Intention] : prev));
+    }
+    if (!search.intention && intentions.length > 0) {
+      setIntentions([]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search.intention]);
+  const toggleIntention = useCallback(
+    (id: Intention) => {
+      setIntentions((prev) => {
+        const next = prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id];
+        const primary = next[0];
+        if (primary !== search.intention) setSearch({ intention: primary });
+        return next;
+      });
+    },
+    [search.intention, setSearch],
+  );
+
   const [microcopy, setMicrocopy] = useState<string | null>(null);
 
 
@@ -479,19 +506,51 @@ function BuilderPage() {
                   title="What matters most?"
                   onBack={() => setStep(2)}
                 />
-                <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <p className="mt-3 text-[13px] text-[color:var(--charcoal)]/65 leading-relaxed">
+                  Choose one or more — we'll weave them together into your day.
+                  {intentions.length > 0 && (
+                    <span className="ml-2 inline-flex items-center gap-1.5 text-[11px] uppercase tracking-[0.18em] font-bold text-[color:var(--gold)]">
+                      <Sparkles size={11} aria-hidden="true" />
+                      {intentions.length} selected
+                    </span>
+                  )}
+                </p>
+                <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {INTENTIONS.map((it) => (
                     <ChoiceRow
                       key={it.id}
-                      selected={intention === it.id}
-                      onClick={() => {
-                        setIntention(it.id);
-                        flashAndAdvance(TRANSITION_MICROCOPY.intention, 4);
-                      }}
+                      selected={intentions.includes(it.id)}
+                      onClick={() => toggleIntention(it.id)}
                       label={it.label}
                       sub={it.sub}
                     />
                   ))}
+                </div>
+                <div className="mt-8 flex flex-wrap items-center gap-3">
+                  <CtaButton
+                    variant="primary"
+                    onClick={() => {
+                      if (intentions.length === 0) return;
+                      flashAndAdvance(TRANSITION_MICROCOPY.intention, 4);
+                    }}
+                    disabled={intentions.length === 0}
+                    aria-disabled={intentions.length === 0}
+                    className="min-h-11"
+                  >
+                    Continue
+                  </CtaButton>
+                  {intentions.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIntentions([]);
+                        setSearch({ intention: undefined });
+                      }}
+                      className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-[2px] px-3 text-[12px] uppercase tracking-[0.2em] font-bold text-[color:var(--charcoal)]/60 transition-colors hover:text-[color:var(--charcoal)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)]/50"
+                    >
+                      Clear
+                    </button>
+                  )}
                 </div>
               </div>
             )}
