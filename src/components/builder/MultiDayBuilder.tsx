@@ -291,6 +291,21 @@ export function MultiDayBuilder({
     return { mins, perPerson, stops };
   }, [state.days, dayRoutes]);
 
+  // Trip-level connecting summary (deterministic, no extra AI call).
+  const tripSummary = useMemo(() => {
+    if (state.days.length <= 1) return "";
+    const labels = state.days
+      .map((d) => dayRoutes[d.id]?.region.label)
+      .filter((l): l is string => Boolean(l));
+    if (labels.length === 0) return "";
+    const unique = Array.from(new Set(labels));
+    const arc =
+      unique.length === 1
+        ? `${unique[0]} unfolds across ${state.days.length} days`
+        : `${unique.slice(0, -1).join(", ")} into ${unique[unique.length - 1]}`;
+    return `${state.days.length} days · ${tripTotals.stops} stops · ${arc}.`;
+  }, [state.days, dayRoutes, tripTotals.stops]);
+
   const candidatesForMap = useMemo(() => {
     return regionStops.map((s) => {
       const e = eligibility[s.key];
