@@ -405,6 +405,50 @@ export function MultiDayBuilder({
             <Eye size={12} aria-hidden="true" /> View only — only the original device can edit this journey.
           </p>
         )}
+        {!readOnly && rotatedUrl && (
+          <div
+            role="status"
+            aria-live="polite"
+            className="mt-3 rounded-[3px] border border-[color:var(--gold)]/40 bg-[color:var(--ivory)] px-3 py-2.5 shadow-[0_8px_22px_-14px_rgba(46,46,46,0.25)]"
+          >
+            <div className="flex items-start gap-2">
+              <Sparkles size={13} className="mt-0.5 text-[color:var(--gold)] shrink-0" aria-hidden="true" />
+              <div className="min-w-0 flex-1">
+                <p className="text-[10.5px] uppercase tracking-[0.24em] font-bold text-[color:var(--charcoal)]">
+                  New share link ready
+                </p>
+                <p className="mt-0.5 text-[11px] text-[color:var(--charcoal)]/65">
+                  The old link is disabled. Send this one instead.
+                </p>
+                <div className="mt-2 flex items-stretch gap-1.5">
+                  <input
+                    readOnly
+                    value={rotatedUrl}
+                    onFocus={(e) => e.currentTarget.select()}
+                    aria-label="New share link"
+                    className="min-w-0 flex-1 rounded-[2px] border border-[color:var(--charcoal)]/15 bg-white px-2 py-1.5 font-mono text-[11px] text-[color:var(--charcoal)] focus:outline-none focus:ring-1 focus:ring-[color:var(--teal)]"
+                  />
+                  <button
+                    type="button"
+                    onClick={copyRotatedUrl}
+                    className="inline-flex min-h-[36px] items-center gap-1 rounded-[2px] bg-[color:var(--teal)] px-2.5 text-[10.5px] uppercase tracking-[0.22em] font-bold text-[color:var(--ivory)] hover:bg-[color:var(--teal-2)]"
+                  >
+                    {rotatedCopied ? <Check size={12} /> : <Copy size={12} />}
+                    {rotatedCopied ? "Copied" : "Copy"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setRotatedUrl(null)}
+                    aria-label="Dismiss"
+                    className="inline-flex min-h-[36px] items-center justify-center rounded-[2px] px-2 text-[color:var(--charcoal)]/55 hover:text-[color:var(--charcoal)] hover:bg-[color:var(--sand)]/60"
+                  >
+                    <X size={13} />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
         <h2 className="serif mt-2 text-[1.7rem] sm:text-[2rem] md:text-[2.4rem] leading-[1.05] tracking-[-0.01em] font-semibold text-[color:var(--charcoal)]">
           Your journey
           {state.days.length > 1 && (
