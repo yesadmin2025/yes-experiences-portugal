@@ -744,6 +744,29 @@ export function MultiDayBuilder({
                       {tripSummary}
                     </p>
                   )}
+                  {/* Controls — 44×44 tap targets, comfortable spacing on mobile */}
+                  <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-[color:var(--charcoal)]/10 pt-3">
+                    <button
+                      type="button"
+                      onClick={() => setNarrativeNonce((n) => n + 1)}
+                      disabled={narrativeLoading || !narrative}
+                      aria-label="Rewrite this day's story"
+                      className="inline-flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-[2px] border border-[color:var(--charcoal)]/15 bg-[color:var(--ivory)] px-3.5 text-[11.5px] uppercase tracking-[0.18em] font-bold text-[color:var(--charcoal)] transition-colors hover:border-[color:var(--gold)]/60 hover:text-[color:var(--gold)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)]/50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <RefreshCw size={13} className={narrativeLoading ? "animate-spin" : ""} aria-hidden="true" />
+                      Rewrite
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleCopyNarrative}
+                      disabled={!narrative}
+                      aria-label="Copy this day's story"
+                      className="inline-flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-[2px] border border-[color:var(--charcoal)]/15 bg-[color:var(--ivory)] px-3.5 text-[11.5px] uppercase tracking-[0.18em] font-bold text-[color:var(--charcoal)] transition-colors hover:border-[color:var(--gold)]/60 hover:text-[color:var(--gold)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)]/50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {narrativeCopied ? <Check size={13} aria-hidden="true" /> : <Copy size={13} aria-hidden="true" />}
+                      {narrativeCopied ? "Copied" : "Copy"}
+                    </button>
+                  </div>
                 </section>
               )}
 
