@@ -135,16 +135,29 @@ interface ChoiceRowProps {
   onClick: () => void;
   label: string;
   sub: string;
+  /** Optional override for the SR-announced label (defaults to `${label}. ${sub}`). */
+  ariaLabel?: string;
+  /** Optional id of an element that further describes this row. */
+  ariaDescribedBy?: string;
 }
 
-export function ChoiceRow({ selected, onClick, label, sub }: ChoiceRowProps) {
+export function ChoiceRow({
+  selected,
+  onClick,
+  label,
+  sub,
+  ariaLabel,
+  ariaDescribedBy,
+}: ChoiceRowProps) {
   return (
     <button
       type="button"
       onClick={onClick}
       aria-pressed={selected}
+      aria-label={ariaLabel ?? `${label}. ${sub}`}
+      aria-describedby={ariaDescribedBy}
       className={[
-        "relative flex items-center justify-between gap-4 rounded-[2px] p-4 sm:p-5 text-left transition-all duration-300 border bg-[color:var(--ivory)]",
+        "relative flex items-center justify-between gap-4 rounded-[2px] p-4 sm:p-5 text-left transition-all duration-300 border bg-[color:var(--ivory)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--ivory)]",
         selected
           ? "border-[color:var(--gold)] ring-2 ring-[color:var(--gold)]/35 -translate-y-[1px]"
           : "border-[color:var(--charcoal)]/12 hover:border-[color:var(--charcoal)]/30",
@@ -167,9 +180,12 @@ export function ChoiceRow({ selected, onClick, label, sub }: ChoiceRowProps) {
       >
         <Check size={13} strokeWidth={2.5} />
       </span>
+      {/* SR-only redundant status — aria-pressed already announces, this gives extra clarity in some readers */}
+      <span className="sr-only">{selected ? " — selected" : ""}</span>
     </button>
   );
 }
+
 
 /**
  * Step indicator rendered above each selection step.

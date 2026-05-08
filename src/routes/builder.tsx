@@ -499,23 +499,65 @@ function BuilderPage() {
             )}
 
             {step === 3 && (
-              <div key="step-3" className="builder-step-in">
+              <div key="step-3" className="builder-step-in pb-28 sm:pb-0">
                 <StepHead
                   num={3}
                   eyebrow="Intention"
                   title="What matters most?"
                   onBack={() => setStep(2)}
                 />
-                <p className="mt-3 text-[13px] text-[color:var(--charcoal)]/65 leading-relaxed">
-                  Choose one or more — we'll weave them together into your day.
-                  {intentions.length > 0 && (
-                    <span className="ml-2 inline-flex items-center gap-1.5 text-[11px] uppercase tracking-[0.18em] font-bold text-[color:var(--gold)]">
-                      <Sparkles size={11} aria-hidden="true" />
-                      {intentions.length} selected
-                    </span>
+                <p
+                  id="intentions-help"
+                  className="mt-3 text-[13.5px] sm:text-[13px] text-[color:var(--charcoal)]/70 leading-relaxed [text-wrap:pretty]"
+                >
+                  {intentions.length === 0 ? (
+                    <>
+                      Pick <span className="font-semibold text-[color:var(--charcoal)]">one or more</span>{" "}
+                      threads. Each one shapes the day's rhythm and the story we write —{" "}
+                      combine a few and we'll weave them together into a single, layered narrative.
+                    </>
+                  ) : intentions.length === 1 ? (
+                    <>
+                      Good — your day will lean into{" "}
+                      <span className="font-semibold text-[color:var(--charcoal)]">{
+                        INTENTIONS.find((it) => it.id === intentions[0])?.label.toLowerCase()
+                      }</span>. Add a second thread to layer the story.
+                    </>
+                  ) : (
+                    <>
+                      We'll braid{" "}
+                      <span className="font-semibold text-[color:var(--charcoal)]">
+                        {intentions
+                          .map((id) => INTENTIONS.find((it) => it.id === id)?.label.toLowerCase())
+                          .filter(Boolean)
+                          .join(" · ")}
+                      </span>{" "}
+                      into one layered day. The first you picked sets the lead voice of the story.
+                    </>
                   )}
                 </p>
-                <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div
+                  className="mt-3 flex items-center gap-2 text-[11px] uppercase tracking-[0.18em] font-bold"
+                  aria-live="polite"
+                >
+                  <span
+                    className={[
+                      "inline-flex items-center gap-1.5",
+                      intentions.length > 0 ? "text-[color:var(--gold)]" : "text-[color:var(--charcoal)]/45",
+                    ].join(" ")}
+                  >
+                    <Sparkles size={11} aria-hidden="true" />
+                    {intentions.length === 0
+                      ? "Nothing selected yet"
+                      : `${intentions.length} thread${intentions.length === 1 ? "" : "s"} selected`}
+                  </span>
+                </div>
+                <div
+                  role="group"
+                  aria-label="Interests — choose one or more"
+                  aria-describedby="intentions-help"
+                  className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3"
+                >
                   {INTENTIONS.map((it) => (
                     <ChoiceRow
                       key={it.id}
@@ -523,10 +565,12 @@ function BuilderPage() {
                       onClick={() => toggleIntention(it.id)}
                       label={it.label}
                       sub={it.sub}
+                      ariaLabel={`${it.label}. ${it.sub}.`}
                     />
                   ))}
                 </div>
-                <div className="mt-8 flex flex-wrap items-center gap-3">
+                {/* Inline desktop actions */}
+                <div className="mt-8 hidden sm:flex flex-wrap items-center gap-3">
                   <CtaButton
                     variant="primary"
                     onClick={() => {
@@ -552,8 +596,50 @@ function BuilderPage() {
                     </button>
                   )}
                 </div>
+
+                {/* Mobile sticky bottom action bar — always reachable */}
+                <div
+                  className="sm:hidden fixed inset-x-0 bottom-0 z-40 border-t border-[color:var(--charcoal)]/12 bg-[color:var(--ivory)]/95 backdrop-blur-sm shadow-[0_-8px_22px_-12px_rgba(46,46,46,0.18)]"
+                  style={{ paddingBottom: "max(env(safe-area-inset-bottom), 0px)" }}
+                  role="region"
+                  aria-label="Interests step actions"
+                >
+                  <div className="container-x flex items-center gap-3 py-3">
+                    <span className="flex-1 text-[11px] uppercase tracking-[0.18em] font-bold text-[color:var(--charcoal)]/55 truncate">
+                      {intentions.length === 0
+                        ? "Pick at least one"
+                        : `${intentions.length} selected`}
+                    </span>
+                    {intentions.length > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIntentions([]);
+                          setSearch({ intention: undefined });
+                        }}
+                        aria-label="Clear all selected interests"
+                        className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-[2px] px-3 text-[11.5px] uppercase tracking-[0.2em] font-bold text-[color:var(--charcoal)]/65 transition-colors hover:text-[color:var(--charcoal)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)]/50"
+                      >
+                        Clear
+                      </button>
+                    )}
+                    <CtaButton
+                      variant="primary"
+                      onClick={() => {
+                        if (intentions.length === 0) return;
+                        flashAndAdvance(TRANSITION_MICROCOPY.intention, 4);
+                      }}
+                      disabled={intentions.length === 0}
+                      aria-disabled={intentions.length === 0}
+                      className="min-h-11"
+                    >
+                      Continue
+                    </CtaButton>
+                  </div>
+                </div>
               </div>
             )}
+
 
             {step === 4 && (
               <div key="step-4" className="builder-step-in">
