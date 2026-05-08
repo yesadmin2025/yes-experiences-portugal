@@ -288,6 +288,8 @@ export function MultiDayBuilder({
   }, [onShare, flashLive]);
 
   const [rotating, setRotating] = useState(false);
+  const [rotatedUrl, setRotatedUrl] = useState<string | null>(null);
+  const [rotatedCopied, setRotatedCopied] = useState(false);
   const handleRotate = useCallback(async () => {
     if (!onRotateLink) return;
     if (!window.confirm("Generate a new share link? The old link will stop working.")) return;
@@ -295,7 +297,8 @@ export function MultiDayBuilder({
     try {
       const url = await onRotateLink();
       if (url) {
-        try { await navigator.clipboard.writeText(url); } catch { /* ignore */ }
+        try { await navigator.clipboard.writeText(url); setRotatedCopied(true); } catch { /* ignore */ }
+        setRotatedUrl(url);
         flashLive("New link generated · old link disabled");
       }
     } finally {
@@ -303,11 +306,26 @@ export function MultiDayBuilder({
     }
   }, [onRotateLink, flashLive]);
 
+  const copyRotatedUrl = useCallback(async () => {
+    if (!rotatedUrl) return;
+    try {
+      await navigator.clipboard.writeText(rotatedUrl);
+      setRotatedCopied(true);
+      flashLive("New link copied");
+      window.setTimeout(() => setRotatedCopied(false), 1800);
+    } catch {
+      window.prompt("Copy this link to share your journey:", rotatedUrl);
+    }
+  }, [rotatedUrl, flashLive]);
+
   const handleRevoke = useCallback(async () => {
     if (!onRevokeLink) return;
     if (!window.confirm("Disable the public link? Anyone with the old link will lose access.")) return;
     const ok = await onRevokeLink();
-    if (ok) flashLive("Share link revoked");
+    if (ok) {
+      setRotatedUrl(null);
+      flashLive("Share link revoked");
+    }
   }, [onRevokeLink, flashLive]);
 
   const dayIndex = activeDay ? state.days.findIndex((d) => d.id === activeDay.id) : 0;
