@@ -165,6 +165,8 @@ export function MultiDayBuilder({
   // narrativeLoading flag (kept truthy until the new text replaces).
   const [narrative, setNarrative] = useState<string>("");
   const [narrativeLoading, setNarrativeLoading] = useState(false);
+  const [narrativeNonce, setNarrativeNonce] = useState(0);
+  const [narrativeCopied, setNarrativeCopied] = useState(false);
   const narrativeReqRef = useRef(0);
   const effMood: Mood = mood ?? "slow";
   const effWho: Who = who ?? "couple";
