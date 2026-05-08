@@ -159,6 +159,57 @@ export function MultiDayBuilder({
 
   const activeRoute = activeDay ? dayRoutes[activeDay.id] ?? null : null;
 
+  // ─── Live storytelling ─────────────────────────────────────────
+  // Per-active-day narrative from narrateBuilderRoute. Debounced so
+  // users editing rapidly don't trigger a flood. Soft cross-fade via
+  // narrativeLoading flag (kept truthy until the new text replaces).
+  const [narrative, setNarrative] = useState<string>("");
+  const [narrativeLoading, setNarrativeLoading] = useState(false);
+  const narrativeReqRef = useRef(0);
+  const effMood: Mood = mood ?? "slow";
+  const effWho: Who = who ?? "couple";
+  const effIntention: Intention = intention ?? "hidden";
+
+  useEffect(() => {
+    if (!activeDay || activeDay.stopKeys.length === 0) {
+      setNarrative("");
+      setNarrativeLoading(false);
+      return;
+    }
+    setNarrativeLoading(true);
+    const id = ++narrativeReqRef.current;
+    const t = window.setTimeout(() => {
+      void narrateBuilderRoute({
+        data: {
+          routeStopKeys: activeDay.stopKeys,
+          mood: effMood,
+          who: effWho,
+          intention: effIntention,
+          pace: state.pace,
+          regionKey: activeDay.regionKey,
+        },
+      })
+        .then((res) => {
+          if (narrativeReqRef.current !== id) return;
+          setNarrative(res.narrative);
+        })
+        .catch(() => { /* keep previous narrative */ })
+        .finally(() => {
+          if (narrativeReqRef.current !== id) return;
+          setNarrativeLoading(false);
+        });
+    }, 550);
+    return () => window.clearTimeout(t);
+  }, [
+    activeDay?.id,
+    activeDay?.stopKeys,
+    activeDay?.regionKey,
+    state.pace,
+    effMood,
+    effWho,
+    effIntention,
+  ]);
+
   // ─── AI user intent ─────────────────────────────────────────────
   const [intentDraft, setIntentDraft] = useState(state.intent ?? "");
   useEffect(() => { setIntentDraft(state.intent ?? ""); }, [state.intent]);
