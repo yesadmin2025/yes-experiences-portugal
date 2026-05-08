@@ -6,7 +6,8 @@ import {
   listRegionStops,
 } from "@/server/builderEngine.functions";
 import { suggestFromIntent } from "@/server/builderIntent.functions";
-import { fmtMinutes, type Pace, type RouteUI, type RoutedStopUI } from "@/components/builder/types";
+import { narrateBuilderRoute } from "@/server/builderEngine.functions";
+import { fmtMinutes, type Pace, type RouteUI, type RoutedStopUI, type Mood, type Who, type Intention } from "@/components/builder/types";
 import { AddStopSheet, type RegionStop, type StopEligibility } from "@/components/builder/AddStopSheet";
 import { CtaButton } from "@/components/ui/CtaButton";
 import { StickyBar } from "@/components/builder/StickyBar";
@@ -35,6 +36,9 @@ interface Props {
   readOnly?: boolean;
   syncing?: boolean;
   shareToken?: string | null;
+  mood?: Mood;
+  who?: Who;
+  intention?: Intention;
   onConfirm: () => void;
   onReset: () => void;
 }
@@ -58,6 +62,9 @@ export function MultiDayBuilder({
   readOnly = false,
   syncing = false,
   shareToken = null,
+  mood,
+  who,
+  intention,
   onConfirm,
   onReset,
 }: Props) {
@@ -152,6 +159,57 @@ export function MultiDayBuilder({
 
   const activeRoute = activeDay ? dayRoutes[activeDay.id] ?? null : null;
 
+  // ─── Live storytelling ─────────────────────────────────────────
+  // Per-active-day narrative from narrateBuilderRoute. Debounced so
+  // users editing rapidly don't trigger a flood. Soft cross-fade via
+  // narrativeLoading flag (kept truthy until the new text replaces).
+  const [narrative, setNarrative] = useState<string>("");
+  const [narrativeLoading, setNarrativeLoading] = useState(false);
+  const narrativeReqRef = useRef(0);
+  const effMood: Mood = mood ?? "slow";
+  const effWho: Who = who ?? "couple";
+  const effIntention: Intention = intention ?? "hidden";
+
+  useEffect(() => {
+    if (!activeDay || activeDay.stopKeys.length === 0) {
+      setNarrative("");
+      setNarrativeLoading(false);
+      return;
+    }
+    setNarrativeLoading(true);
+    const id = ++narrativeReqRef.current;
+    const t = window.setTimeout(() => {
+      void narrateBuilderRoute({
+        data: {
+          routeStopKeys: activeDay.stopKeys,
+          mood: effMood,
+          who: effWho,
+          intention: effIntention,
+          pace: state.pace,
+          regionKey: activeDay.regionKey,
+        },
+      })
+        .then((res) => {
+          if (narrativeReqRef.current !== id) return;
+          setNarrative(res.narrative);
+        })
+        .catch(() => { /* keep previous narrative */ })
+        .finally(() => {
+          if (narrativeReqRef.current !== id) return;
+          setNarrativeLoading(false);
+        });
+    }, 550);
+    return () => window.clearTimeout(t);
+  }, [
+    activeDay?.id,
+    activeDay?.stopKeys,
+    activeDay?.regionKey,
+    state.pace,
+    effMood,
+    effWho,
+    effIntention,
+  ]);
+
   // ─── AI user intent ─────────────────────────────────────────────
   const [intentDraft, setIntentDraft] = useState(state.intent ?? "");
   useEffect(() => { setIntentDraft(state.intent ?? ""); }, [state.intent]);
@@ -232,6 +290,21 @@ export function MultiDayBuilder({
     }
     return { mins, perPerson, stops };
   }, [state.days, dayRoutes]);
+
+  // Trip-level connecting summary (deterministic, no extra AI call).
+  const tripSummary = useMemo(() => {
+    if (state.days.length <= 1) return "";
+    const labels = state.days
+      .map((d) => dayRoutes[d.id]?.region.label)
+      .filter((l): l is string => Boolean(l));
+    if (labels.length === 0) return "";
+    const unique = Array.from(new Set(labels));
+    const arc =
+      unique.length === 1
+        ? `${unique[0]} unfolds across ${state.days.length} days`
+        : `${unique.slice(0, -1).join(", ")} into ${unique[unique.length - 1]}`;
+    return `${state.days.length} days · ${tripTotals.stops} stops · ${arc}.`;
+  }, [state.days, dayRoutes, tripTotals.stops]);
 
   const candidatesForMap = useMemo(() => {
     return regionStops.map((s) => {
@@ -613,6 +686,49 @@ export function MultiDayBuilder({
                     <li key={i}>· {w}</li>
                   ))}
                 </ul>
+              )}
+
+              {/* Story — live narrative for this day, soft cross-fade on edits */}
+              {activeDay && activeDay.stopKeys.length > 0 && (
+                <section
+                  aria-live="polite"
+                  className="rounded-[2px] border border-[color:var(--gold)]/30 bg-[color:var(--sand)]/40 p-4"
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-[0.28em] font-bold text-[color:var(--gold)]">
+                      <Sparkles size={11} aria-hidden="true" />
+                      Day {dayIndex + 1} story
+                    </span>
+                    {narrativeLoading && (
+                      <Loader2
+                        size={11}
+                        className="animate-spin text-[color:var(--charcoal)]/40"
+                        aria-label="Rewriting"
+                      />
+                    )}
+                  </div>
+                  {narrative ? (
+                    <p
+                      className={[
+                        "mt-2 serif italic leading-[1.55] text-[14.5px] text-[color:var(--charcoal)]/85 transition-opacity duration-300",
+                        narrativeLoading ? "opacity-50" : "opacity-100",
+                      ].join(" ")}
+                    >
+                      {narrative}
+                    </p>
+                  ) : (
+                    <div className="mt-2 space-y-1.5" aria-hidden="true">
+                      <div className="h-3 w-[92%] animate-pulse rounded-sm bg-[color:var(--charcoal)]/8" />
+                      <div className="h-3 w-[78%] animate-pulse rounded-sm bg-[color:var(--charcoal)]/8" />
+                      <div className="h-3 w-[60%] animate-pulse rounded-sm bg-[color:var(--charcoal)]/8" />
+                    </div>
+                  )}
+                  {tripSummary && (
+                    <p className="mt-3 border-t border-[color:var(--charcoal)]/10 pt-2 text-[11px] uppercase tracking-[0.18em] font-semibold text-[color:var(--charcoal)]/55">
+                      {tripSummary}
+                    </p>
+                  )}
+                </section>
               )}
 
               {/* Stops list */}
