@@ -1839,7 +1839,6 @@
     z-index: 2;
     max-width: min(22rem, calc(100vw - 40px));
   }
-  }
 
   .hero-cinematic .he-eyebrow-bar {
     max-width: 100%;
