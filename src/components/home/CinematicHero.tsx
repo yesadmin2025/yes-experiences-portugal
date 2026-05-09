@@ -94,60 +94,166 @@ export function CinematicHero() {
     }
   };
 
+  // Beat schedule — anchored to video.currentTime in seconds. Falls back
+  // to wall-clock at the same offsets if the video can't play.
+  type BeatKey = "eyebrow" | "headlineLine1" | "headlineLine2" | "copy" | "microcopy" | "ctaPrimary" | "ctaSecondary";
+  const [revealed, setRevealed] = useState<Set<BeatKey>>(() => new Set());
+
+  const getSchedule = (): { key: BeatKey; t: number }[] => {
+    const w = typeof window !== "undefined" ? window.innerWidth : 768;
+    if (w >= 640) {
+      return [
+        { key: "eyebrow", t: 0.18 },
+        { key: "headlineLine1", t: 1.30 },
+        { key: "headlineLine2", t: 2.50 },
+        { key: "copy", t: 3.70 },
+        { key: "microcopy", t: 4.10 },
+        { key: "ctaPrimary", t: 4.70 },
+        { key: "ctaSecondary", t: 5.00 },
+      ];
+    }
+    if (w <= 379) {
+      return [
+        { key: "eyebrow", t: 0.24 },
+        { key: "headlineLine1", t: 1.70 },
+        { key: "headlineLine2", t: 3.20 },
+        { key: "copy", t: 4.70 },
+        { key: "microcopy", t: 5.10 },
+        { key: "ctaPrimary", t: 5.70 },
+        { key: "ctaSecondary", t: 6.00 },
+      ];
+    }
+    return [
+      { key: "eyebrow", t: 0.20 },
+      { key: "headlineLine1", t: 1.50 },
+      { key: "headlineLine2", t: 2.90 },
+      { key: "copy", t: 4.30 },
+      { key: "microcopy", t: 4.70 },
+      { key: "ctaPrimary", t: 5.30 },
+      { key: "ctaSecondary", t: 5.60 },
+    ];
+  };
+
   useEffect(() => {
     const node = sectionRef.current;
     if (!node) return;
 
-    let storyTimer: number | undefined;
+    let raf = 0;
+    let wallTimers: number[] = [];
     let safety: number | undefined;
     let onFirstTouch: (() => void) | undefined;
     let started = false;
+    let mode: "video" | "wall" | null = null;
+    const schedule = getSchedule();
+    const fired = new Set<BeatKey>();
 
-    // Story cascade is decoupled from the video. It always starts at the
-    // same moment relative to viewport entry, regardless of whether the
-    // video has loaded, succeeded, or failed.
-    const startStory = (origin: string) => {
+    const reveal = (key: BeatKey) => {
+      if (fired.has(key)) return;
+      fired.add(key);
+      setRevealed((prev) => {
+        if (prev.has(key)) return prev;
+        const next = new Set(prev);
+        next.add(key);
+        return next;
+      });
+      log("beat", key);
+    };
+
+    const runVideoLoop = () => {
+      const v = videoRef.current;
+      if (!v || mode !== "video") return;
+      const ct = v.currentTime;
+      for (const beat of schedule) {
+        if (ct >= beat.t) reveal(beat.key);
+      }
+      if (fired.size < schedule.length) {
+        raf = requestAnimationFrame(runVideoLoop);
+      }
+    };
+
+    const startVideoMode = (origin: string) => {
       if (started) return;
       started = true;
-      log("story-trigger", origin);
-      storyTimer = window.setTimeout(() => {
-        setStoryActive(true);
-        log("story-active", origin);
-      }, 120);
-      tryPlay(`story:${origin}`);
+      mode = "video";
+      setStoryActive(true);
+      log("story-trigger", `video:${origin}`);
+      raf = requestAnimationFrame(runVideoLoop);
+    };
+
+    const startWallMode = (origin: string) => {
+      if (started) return;
+      started = true;
+      mode = "wall";
+      setStoryActive(true);
+      log("story-trigger", `wall:${origin}`);
+      const t0 = performance.now();
+      for (const beat of schedule) {
+        const id = window.setTimeout(() => reveal(beat.key), Math.max(0, beat.t * 1000 - (performance.now() - t0)));
+        wallTimers.push(id);
+      }
+    };
+
+    // Bridge: try to play; once it actually plays, switch to video-time mode.
+    const armPlayBridge = () => {
+      const v = videoRef.current;
+      if (!v) return;
+      const onPlaying = () => startVideoMode("playing");
+      v.addEventListener("playing", onPlaying, { once: true });
+      const p = v.play();
+      log("play-attempt", "arm");
+      if (p && typeof p.then === "function") {
+        p.catch((err: unknown) => {
+          const name = err && typeof err === "object" && "name" in err ? String((err as { name: unknown }).name) : "Error";
+          log("play-failed", name);
+          setVideoFailed(true);
+          startWallMode("play-rejected");
+        });
+      }
+    };
+
+    const onIntersect = (entries: IntersectionObserverEntry[]) => {
+      for (const entry of entries) {
+        setIntersectionRatio(entry.intersectionRatio);
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.25) {
+          armPlayBridge();
+          // Safety net: if the video never starts within 1200ms, fall back
+          // to wall-clock so the cascade still runs in lock-step.
+          if (!safety) {
+            safety = window.setTimeout(() => {
+              if (!started) {
+                log("safety", "wall-fallback");
+                setVideoFailed((prev) => prev); // no-op, keep state
+                startWallMode("safety");
+              }
+            }, 1200);
+          }
+        }
+      }
     };
 
     if (typeof IntersectionObserver === "undefined") {
-      startStory("no-io");
+      armPlayBridge();
+      safety = window.setTimeout(() => { if (!started) startWallMode("no-io"); }, 1200);
     } else {
-      const observer = new IntersectionObserver(
-        (entries) => {
-          for (const entry of entries) {
-            setIntersectionRatio(entry.intersectionRatio);
-            if (entry.isIntersecting && entry.intersectionRatio >= 0.25 && !started) {
-              startStory("intersect");
-              observer.disconnect();
-              break;
-            }
-          }
-        },
-        { threshold: [0, 0.1, 0.25, 0.5, 0.75, 1], rootMargin: "0px 0px -10% 0px" },
-      );
+      const observer = new IntersectionObserver(onIntersect, {
+        threshold: [0, 0.1, 0.25, 0.5, 0.75, 1],
+        rootMargin: "0px 0px -10% 0px",
+      });
       observer.observe(node);
 
-      // Safety net so the cascade never depends on the video being ready.
-      safety = window.setTimeout(() => {
-        if (!started) startStory("safety-timeout");
-      }, 800);
-
-      onFirstTouch = () => tryPlay("user-gesture");
+      onFirstTouch = () => {
+        const v = videoRef.current;
+        if (v) v.play().catch(() => {});
+        log("user-gesture");
+      };
       window.addEventListener("touchstart", onFirstTouch, { once: true, passive: true });
       window.addEventListener("pointerdown", onFirstTouch, { once: true });
 
       return () => {
         observer.disconnect();
+        if (raf) cancelAnimationFrame(raf);
         if (safety) window.clearTimeout(safety);
-        if (storyTimer) window.clearTimeout(storyTimer);
+        for (const id of wallTimers) window.clearTimeout(id);
         if (onFirstTouch) {
           window.removeEventListener("touchstart", onFirstTouch);
           window.removeEventListener("pointerdown", onFirstTouch);
@@ -156,7 +262,9 @@ export function CinematicHero() {
     }
 
     return () => {
-      if (storyTimer) window.clearTimeout(storyTimer);
+      if (raf) cancelAnimationFrame(raf);
+      if (safety) window.clearTimeout(safety);
+      for (const id of wallTimers) window.clearTimeout(id);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -179,6 +287,7 @@ export function CinematicHero() {
       aria-label={`${HERO_COPY.headlineLine1} ${HERO_COPY.headlineLine2}`}
       data-hero-cinematic="true"
       data-story-active={storyActive ? "true" : "false"}
+      data-revealed={Array.from(revealed).join(" ")}
       data-video-fallback={videoFailed ? "true" : "false"}
     >
       {/* Continuous film — full bleed. If autoplay fails, the poster image

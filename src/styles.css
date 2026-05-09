@@ -1755,18 +1755,17 @@
   transform-origin: right center;
 }
 
-.hero-cinematic[data-story-active="true"] .hero-reveal {
+/* Per-beat reveal — each beat is gated by a data-revealed token that the
+   JS toggles either from real video.currentTime (preferred) or from a
+   wall-clock fallback when the video fails to play. Timing lives in JS,
+   so the cascade stays in lock-step with the film even when the video
+   is slow to load. */
+.hero-cinematic[data-revealed~="eyebrow"] [data-hero-reveal="eyebrow"],
+.hero-cinematic[data-revealed~="headlineLine1"] [data-hero-reveal="headlineLine1"],
+.hero-cinematic[data-revealed~="headlineLine2"] [data-hero-reveal="headlineLine2"] {
   opacity: 1 !important;
   transform: translate3d(0, 0, 0);
 }
-
-/* Hero storytelling rhythm — each phrase reads alone with the film, then
-   the supporting block (copy + microcopy) assembles, and the CTAs land
-   last as the final beat. Long gaps are intentional: the film should
-   carry the eye between phrases. */
-.hero-cinematic [data-hero-reveal="eyebrow"] { transition-delay: 200ms !important; }
-.hero-cinematic [data-hero-reveal="headlineLine1"] { transition-delay: 1500ms !important; }
-.hero-cinematic [data-hero-reveal="headlineLine2"] { transition-delay: 2900ms !important; }
 
 .hero-cinematic .hero-final-reveal {
   opacity: 1;
@@ -1783,13 +1782,10 @@
   will-change: opacity, transform;
   backface-visibility: hidden;
 }
-/* Final assembly: subhead + microcopy come together, CTAs land last. */
-.hero-cinematic .hero-story-step--copy { transition-delay: 4300ms !important; }
-.hero-cinematic .hero-story-step--microcopy { transition-delay: 4700ms !important; }
-.hero-cinematic .hero-story-step--cta-primary { transition-delay: 5300ms !important; }
-.hero-cinematic .hero-story-step--cta-secondary { transition-delay: 5600ms !important; }
-
-.hero-cinematic[data-story-active="true"] .hero-story-step {
+.hero-cinematic[data-revealed~="copy"] .hero-story-step--copy,
+.hero-cinematic[data-revealed~="microcopy"] .hero-story-step--microcopy,
+.hero-cinematic[data-revealed~="ctaPrimary"] .hero-story-step--cta-primary,
+.hero-cinematic[data-revealed~="ctaSecondary"] .hero-story-step--cta-secondary {
   opacity: 1;
   transform: translate3d(0, 0, 0);
 }
@@ -1806,18 +1802,6 @@
 }
 .hero-cinematic[data-video-fallback="true"] .hero-film-fallback {
   opacity: 1;
-}
-
-/* xs breakpoint — tighter screens get even more breathing room between
-   beats so each phrase truly reads alone before the next appears. */
-@media (max-width: 379px) {
-  .hero-cinematic [data-hero-reveal="eyebrow"] { transition-delay: 240ms !important; }
-  .hero-cinematic [data-hero-reveal="headlineLine1"] { transition-delay: 1700ms !important; }
-  .hero-cinematic [data-hero-reveal="headlineLine2"] { transition-delay: 3200ms !important; }
-  .hero-cinematic .hero-story-step--copy { transition-delay: 4700ms !important; }
-  .hero-cinematic .hero-story-step--microcopy { transition-delay: 5100ms !important; }
-  .hero-cinematic .hero-story-step--cta-primary { transition-delay: 5700ms !important; }
-  .hero-cinematic .hero-story-step--cta-secondary { transition-delay: 6000ms !important; }
 }
 
 @keyframes heroRevealFromLeftStable {
@@ -1902,13 +1886,8 @@
     transform: translate3d(0, 14px, 0);
   }
 
-  .hero-cinematic [data-hero-reveal="eyebrow"] { transition-delay: 180ms !important; }
-  .hero-cinematic [data-hero-reveal="headlineLine1"] { transition-delay: 1300ms !important; }
-  .hero-cinematic [data-hero-reveal="headlineLine2"] { transition-delay: 2500ms !important; }
-  .hero-cinematic .hero-story-step--copy { transition-delay: 3700ms !important; }
-  .hero-cinematic .hero-story-step--microcopy { transition-delay: 4100ms !important; }
-  .hero-cinematic .hero-story-step--cta-primary { transition-delay: 4700ms !important; }
-  .hero-cinematic .hero-story-step--cta-secondary { transition-delay: 5000ms !important; }
+  /* Per-beat timing is owned by JS (see CinematicHero.tsx) so it can sync
+     to real video.currentTime. CSS only controls duration + easing here. */
 
   .hero-cinematic .hero-final-reveal {
     position: relative;
