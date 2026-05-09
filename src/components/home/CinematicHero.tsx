@@ -143,9 +143,12 @@ export function CinematicHero() {
     }
   };
 
-  // Beat schedule — anchored to video.currentTime in seconds. Falls back
-  // to wall-clock at the same offsets if the video can't play.
-  type BeatKey = "eyebrow" | "headlineLine1" | "headlineLine2" | "copy" | "microcopy" | "ctaPrimary" | "ctaSecondary";
+  // Storytelling phases — each phrase appears ALONE, then yields to the
+  // next; "compose" brings the whole stanza back together; "cta" reveals
+  // the call-to-action pair + microcopy as the closing beat. Anchored to
+  // video.currentTime in seconds, with a wall-clock fallback at the same
+  // offsets when the video can't play.
+  type BeatKey = "eyebrow" | "h1" | "h2" | "sub" | "compose" | "cta";
   type BeatStamp = { wallMs: number; videoT: number; mode: "video" | "wall" | "step" };
   const [revealed, setRevealed] = useState<Set<BeatKey>>(() => new Set());
   const [beatStamps, setBeatStamps] = useState<Partial<Record<BeatKey, BeatStamp>>>({});
@@ -162,34 +165,31 @@ export function CinematicHero() {
     const w = typeof window !== "undefined" ? window.innerWidth : 768;
     if (w >= 640) {
       return [
-        { key: "eyebrow", t: 0.18 },
-        { key: "headlineLine1", t: 1.30 },
-        { key: "headlineLine2", t: 2.50 },
-        { key: "copy", t: 3.70 },
-        { key: "microcopy", t: 4.10 },
-        { key: "ctaPrimary", t: 4.70 },
-        { key: "ctaSecondary", t: 5.00 },
+        { key: "eyebrow", t: 0.30 },
+        { key: "h1",      t: 1.80 },
+        { key: "h2",      t: 3.40 },
+        { key: "sub",     t: 5.00 },
+        { key: "compose", t: 6.60 },
+        { key: "cta",     t: 7.40 },
       ];
     }
     if (w <= 379) {
       return [
-        { key: "eyebrow", t: 0.24 },
-        { key: "headlineLine1", t: 1.70 },
-        { key: "headlineLine2", t: 3.20 },
-        { key: "copy", t: 4.70 },
-        { key: "microcopy", t: 5.10 },
-        { key: "ctaPrimary", t: 5.70 },
-        { key: "ctaSecondary", t: 6.00 },
+        { key: "eyebrow", t: 0.40 },
+        { key: "h1",      t: 2.20 },
+        { key: "h2",      t: 4.10 },
+        { key: "sub",     t: 5.90 },
+        { key: "compose", t: 7.70 },
+        { key: "cta",     t: 8.60 },
       ];
     }
     return [
-      { key: "eyebrow", t: 0.20 },
-      { key: "headlineLine1", t: 1.50 },
-      { key: "headlineLine2", t: 2.90 },
-      { key: "copy", t: 4.30 },
-      { key: "microcopy", t: 4.70 },
-      { key: "ctaPrimary", t: 5.30 },
-      { key: "ctaSecondary", t: 5.60 },
+      { key: "eyebrow", t: 0.35 },
+      { key: "h1",      t: 2.00 },
+      { key: "h2",      t: 3.80 },
+      { key: "sub",     t: 5.50 },
+      { key: "compose", t: 7.20 },
+      { key: "cta",     t: 8.10 },
     ];
   };
 
@@ -408,6 +408,25 @@ export function CinematicHero() {
     }
   };
 
+  // Derive the current storytelling phase from fired beats. Each prior
+  // solo phrase fades out as the next fires; "compose" brings the full
+  // stanza back together; "cta" is the closing beat (CTAs + microcopy).
+  const composed = revealed.has("compose") || revealed.has("cta");
+  const phase: "idle" | "eyebrow" | "h1" | "h2" | "sub" | "compose" | "cta" =
+    revealed.has("cta") ? "cta"
+    : revealed.has("compose") ? "compose"
+    : revealed.has("sub") ? "sub"
+    : revealed.has("h2") ? "h2"
+    : revealed.has("h1") ? "h1"
+    : revealed.has("eyebrow") ? "eyebrow"
+    : "idle";
+
+  const showEyebrow = composed || phase === "eyebrow";
+  const showH1     = composed || phase === "h1";
+  const showH2     = composed || phase === "h2";
+  const showSub    = composed || phase === "sub";
+  const showCta    = revealed.has("cta");
+
   return (
     <section
       ref={sectionRef}
@@ -417,6 +436,7 @@ export function CinematicHero() {
       data-hero-cinematic="true"
       data-story-active={storyActive ? "true" : "false"}
       data-revealed={Array.from(revealed).join(" ")}
+      data-hero-phase={phase}
       data-video-fallback={videoFailed ? "true" : "false"}
     >
       {/* Continuous film — full bleed. If autoplay fails, the poster image
@@ -466,10 +486,8 @@ export function CinematicHero() {
             tone="onDark"
             data-hero-field="eyebrow"
             data-hero-reveal="eyebrow"
-            data-hero-reveal-order="1"
-            data-hero-reveal-duration-ms="220"
-            data-hero-reveal-ease="ease-out"
-            className="hero-eyebrow hero-reveal hero-reveal--from-left hero-story-beat"
+            data-hero-beat-show={showEyebrow ? "true" : "false"}
+            className="hero-eyebrow hero-beat hero-beat--from-left"
           >
             {HERO_COPY.eyebrow}
           </Eyebrow>
@@ -481,10 +499,8 @@ export function CinematicHero() {
             <span
               data-hero-field="headlineLine1"
               data-hero-reveal="headlineLine1"
-              data-hero-reveal-order="2"
-              data-hero-reveal-duration-ms="220"
-              data-hero-reveal-ease="ease-out"
-              className="hero-reveal hero-reveal--from-left hero-story-beat block max-w-full whitespace-normal font-[400] text-[color:var(--ivory)] [text-shadow:none]"
+              data-hero-beat-show={showH1 ? "true" : "false"}
+              className="hero-beat hero-beat--from-left block max-w-full whitespace-normal font-[400] text-[color:var(--ivory)] [text-shadow:none]"
             >
               <span
                 data-hero-field="headlineLine1Portugal"
@@ -497,44 +513,41 @@ export function CinematicHero() {
             <span
               data-hero-field="headlineLine2"
               data-hero-reveal="headlineLine2"
-              data-hero-reveal-order="3"
-              data-hero-reveal-duration-ms="220"
-              data-hero-reveal-ease="ease-out"
-              className="hero-reveal hero-reveal--from-right hero-story-beat block mt-1.5 xs:mt-2 sm:mt-5 md:mt-6 max-w-full whitespace-normal [font-family:var(--font-serif)] italic font-normal [letter-spacing:0] md:[letter-spacing:-0.005em] [line-height:1.04] md:[line-height:1.02] text-[color:var(--gold-soft)] [text-shadow:none]"
+              data-hero-beat-show={showH2 ? "true" : "false"}
+              className="hero-beat hero-beat--from-right block mt-1.5 xs:mt-2 sm:mt-5 md:mt-6 max-w-full whitespace-normal [font-family:var(--font-serif)] italic font-normal [letter-spacing:0] md:[letter-spacing:-0.005em] [line-height:1.04] md:[line-height:1.02] text-[color:var(--gold-soft)] [text-shadow:none]"
             >
               {HERO_COPY.headlineLine2}
             </span>
           </h1>
 
-          <div
-            data-hero-reveal="finalBlock"
-            data-hero-reveal-order="4"
-            data-hero-reveal-duration-ms="220"
-            data-hero-reveal-ease="ease-out"
-            className="hero-final-reveal transition-[opacity,transform] duration-[420ms] ease-[var(--ease-premium)] transform-gpu will-change-transform"
+          <p
+            data-hero-field="subheadline"
+            data-hero-beat-show={showSub ? "true" : "false"}
+            className="hero-beat hero-beat--rise mt-3 xs:mt-4 sm:mt-9 md:mt-12 max-w-[31rem] text-[13.5px] xs:text-[14px] sm:text-[17px] md:text-[18px] leading-[1.5] sm:leading-[1.6] md:leading-[1.7] tracking-[0] text-[color:var(--ivory)] text-pretty [text-shadow:none]"
           >
-            <p
-              data-hero-field="subheadline"
-              className="hero-story-step hero-story-step--copy mt-3 xs:mt-4 sm:mt-9 md:mt-12 max-w-[31rem] text-[13.5px] xs:text-[14px] sm:text-[17px] md:text-[18px] leading-[1.5] sm:leading-[1.6] md:leading-[1.7] tracking-[0] text-[color:var(--ivory)] text-pretty [text-shadow:none]"
-            >
-              {HERO_COPY.subheadline}
-            </p>
+            {HERO_COPY.subheadline}
+          </p>
 
+          <div className="hero-cta-block">
             <div className="hero-cta-flow mt-5 xs:mt-6 sm:mt-9 md:mt-10 flex flex-col sm:flex-row gap-2.5 sm:gap-4 items-stretch sm:items-center">
               <CtaButton
                 to="/builder"
                 variant="primary"
-                className="hero-story-step hero-story-step--cta-primary hero-cta-button hero-cta-button--primary cta-primary min-h-[48px] py-3 text-[11px] tracking-[0.12em] xs:min-h-[50px] xs:text-[11.75px] sm:text-[13px]"
+                className="hero-beat hero-beat--rise hero-cta-button hero-cta-button--primary cta-primary min-h-[48px] py-3 text-[11px] tracking-[0.12em] xs:min-h-[50px] xs:text-[11.75px] sm:text-[13px]"
                 data-hero-field="primaryCta"
+                data-hero-beat-show={showCta ? "true" : "false"}
+                data-hero-beat-delay="0"
               >
                 {HERO_COPY.primaryCta}
               </CtaButton>
               <CtaButton
                 to="/experiences"
                 variant="ghostDark"
-                className="hero-story-step hero-story-step--cta-secondary hero-cta-button hero-cta-button--secondary cta-secondary-dark min-h-[48px] py-3 text-[10.75px] tracking-[0.105em] xs:min-h-[50px] xs:text-[11.25px] sm:text-[13px]"
+                className="hero-beat hero-beat--rise hero-cta-button hero-cta-button--secondary cta-secondary-dark min-h-[48px] py-3 text-[10.75px] tracking-[0.105em] xs:min-h-[50px] xs:text-[11.25px] sm:text-[13px]"
                 data-hero-field="secondaryCta"
                 data-cta-stagger="true"
+                data-hero-beat-show={showCta ? "true" : "false"}
+                data-hero-beat-delay="160"
               >
                 {HERO_COPY.secondaryCta}
               </CtaButton>
@@ -542,7 +555,9 @@ export function CinematicHero() {
 
             <p
               data-hero-field="microcopy"
-              className="hero-story-step hero-story-step--microcopy mt-3.5 xs:mt-4 sm:mt-6 text-[11.75px] xs:text-[12px] sm:text-[13px] leading-[1.45] tracking-[0.02em] text-[color:var(--ivory)] [text-shadow:none]"
+              data-hero-beat-show={showCta ? "true" : "false"}
+              data-hero-beat-delay="320"
+              className="hero-beat hero-beat--rise mt-3.5 xs:mt-4 sm:mt-6 text-[11.75px] xs:text-[12px] sm:text-[13px] leading-[1.45] tracking-[0.02em] text-[color:var(--ivory)] [text-shadow:none]"
             >
               {HERO_COPY.microcopy}
             </p>
