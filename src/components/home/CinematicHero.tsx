@@ -139,7 +139,7 @@ export function CinematicHero() {
           </p>
 
           <h1
-            className="mt-4 sm:mt-5 font-display font-bold leading-[1.02] tracking-[-0.02em] text-[2.4rem] xs:text-[2.7rem] sm:text-[3.2rem] md:text-[4rem] lg:text-[4.6rem] text-balance"
+            className="mt-4 sm:mt-5 font-display font-bold leading-[1.04] tracking-[-0.015em] text-[2rem] xs:text-[2.4rem] sm:text-[3.2rem] md:text-[4rem] lg:text-[4.6rem] text-balance"
             data-hero-field="headlineLine1 headlineLine2"
           >
             <span
