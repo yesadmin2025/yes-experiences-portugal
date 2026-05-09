@@ -101,7 +101,7 @@ export function CinematicHero() {
             data-hero-reveal-order="1"
             data-hero-reveal-duration-ms="220"
             data-hero-reveal-ease="ease-out"
-            className="hero-eyebrow hero-reveal hero-reveal--from-left"
+            className="hero-eyebrow hero-reveal hero-reveal--from-left hero-story-beat"
           >
             {HERO_COPY.eyebrow}
           </Eyebrow>
@@ -116,7 +116,7 @@ export function CinematicHero() {
               data-hero-reveal-order="2"
               data-hero-reveal-duration-ms="220"
               data-hero-reveal-ease="ease-out"
-              className="hero-reveal hero-reveal--from-left block max-w-full whitespace-normal font-[400] text-[color:var(--ivory)] [text-shadow:none]"
+              className="hero-reveal hero-reveal--from-left hero-story-beat block max-w-full whitespace-normal font-[400] text-[color:var(--ivory)] [text-shadow:none]"
             >
               <span
                 data-hero-field="headlineLine1Portugal"
@@ -132,7 +132,7 @@ export function CinematicHero() {
               data-hero-reveal-order="3"
               data-hero-reveal-duration-ms="220"
               data-hero-reveal-ease="ease-out"
-              className="hero-reveal hero-reveal--from-right block mt-1.5 xs:mt-2 sm:mt-5 md:mt-6 max-w-full whitespace-normal [font-family:var(--font-serif)] italic font-normal [letter-spacing:0] md:[letter-spacing:-0.005em] [line-height:1.04] md:[line-height:1.02] text-[color:var(--gold-soft)] [text-shadow:none]"
+              className="hero-reveal hero-reveal--from-right hero-story-beat block mt-1.5 xs:mt-2 sm:mt-5 md:mt-6 max-w-full whitespace-normal [font-family:var(--font-serif)] italic font-normal [letter-spacing:0] md:[letter-spacing:-0.005em] [line-height:1.04] md:[line-height:1.02] text-[color:var(--gold-soft)] [text-shadow:none]"
             >
               {HERO_COPY.headlineLine2}
             </span>
@@ -143,7 +143,7 @@ export function CinematicHero() {
             data-hero-reveal-order="4"
             data-hero-reveal-duration-ms="220"
             data-hero-reveal-ease="ease-out"
-            className="hero-final-reveal transition-[opacity,transform] duration-[220ms] ease-out transform-gpu will-change-transform"
+            className="hero-final-reveal transition-[opacity,transform] duration-[420ms] ease-[var(--ease-premium)] transform-gpu will-change-transform"
           >
             <p
               data-hero-field="subheadline"
@@ -152,11 +152,11 @@ export function CinematicHero() {
               {HERO_COPY.subheadline}
             </p>
 
-            <div className="hero-story-step hero-story-step--cta hero-cta-flow mt-4 xs:mt-5 sm:mt-9 md:mt-10 flex flex-col sm:flex-row gap-2 sm:gap-4 items-stretch sm:items-center">
+            <div className="hero-story-step hero-story-step--cta hero-cta-flow mt-5 xs:mt-6 sm:mt-9 md:mt-10 flex flex-col sm:flex-row gap-2.5 sm:gap-4 items-stretch sm:items-center">
               <CtaButton
                 to="/builder"
                 variant="primary"
-                className="hero-cta-button hero-cta-button--primary cta-primary min-h-[46px] py-3 text-[11px] tracking-[0.13em] xs:min-h-[48px] xs:text-[11.75px] sm:text-[13px]"
+                className="hero-cta-button hero-cta-button--primary cta-primary min-h-[48px] py-3 text-[11px] tracking-[0.12em] xs:min-h-[50px] xs:text-[11.75px] sm:text-[13px]"
                 data-hero-field="primaryCta"
               >
                 {HERO_COPY.primaryCta}
@@ -164,7 +164,7 @@ export function CinematicHero() {
               <CtaButton
                 to="/experiences"
                 variant="ghostDark"
-                className="hero-cta-button hero-cta-button--secondary cta-secondary-dark min-h-[46px] py-3 text-[10.75px] tracking-[0.11em] xs:min-h-[48px] xs:text-[11.25px] sm:text-[13px]"
+                className="hero-cta-button hero-cta-button--secondary cta-secondary-dark min-h-[48px] py-3 text-[10.75px] tracking-[0.105em] xs:min-h-[50px] xs:text-[11.25px] sm:text-[13px]"
                 data-hero-field="secondaryCta"
                 data-cta-stagger="true"
               >
