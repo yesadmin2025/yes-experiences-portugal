@@ -238,6 +238,31 @@ export function CinematicHero() {
         />
       </div>
 
+      {/* Smooth-scroll cue → first section after the hero. Visible on
+          tablet+ where there's vertical room beside the CTAs; hidden on
+          mobile to keep the storytelling stack uncluttered. Honors
+          prefers-reduced-motion (instant jump instead of smooth). */}
+      <a
+        href="#reviews"
+        onClick={handleScrollToNext}
+        aria-label="Scroll to next section"
+        data-hero-scroll-cue="true"
+        className="hero-scroll-cue hidden md:flex absolute z-[4] bottom-6 lg:bottom-8 right-6 lg:right-10 items-center gap-2 text-[11px] tracking-[0.22em] uppercase text-[color:var(--ivory)]/80 hover:text-[color:var(--gold-soft)] focus-visible:text-[color:var(--gold-soft)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--charcoal-deep)] rounded-sm px-1.5 py-1 transition-colors duration-[220ms] ease-[var(--ease-premium,cubic-bezier(0.22,0.61,0.36,1))]"
+      >
+        <span className="hero-scroll-cue__label">Scroll</span>
+        <span aria-hidden="true" className="hero-scroll-cue__line block h-px w-8 bg-[color:var(--gold-soft)]/70" />
+        <svg
+          aria-hidden="true"
+          width="10"
+          height="14"
+          viewBox="0 0 10 14"
+          fill="none"
+          className="hero-scroll-cue__chevron"
+        >
+          <path d="M1 1l4 5 4-5M1 7l4 5 4-5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </a>
+
       {/* Soft fade into the next section. Kept short on mobile so it
           never overlaps the CTAs/microcopy; full height on tablet+. */}
       <div
