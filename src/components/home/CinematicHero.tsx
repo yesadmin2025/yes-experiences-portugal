@@ -81,7 +81,8 @@ export function CinematicHero() {
     }
   });
   const [videoSrc, setVideoSrc] = useState<string>(HERO_FILM_SRC_720);
-  const [debug] = useState<boolean>(() => isHeroDebugEnabled());
+  const [stepMode] = useState<boolean>(() => isHeroStepMode());
+  const [debug] = useState<boolean>(() => isHeroDebugEnabled() || isHeroStepMode());
   const [slowMo] = useState<number>(() => getHeroSlowMo());
   const [debugEvents, setDebugEvents] = useState<HeroDebugEvent[]>([]);
   const [intersectionRatio, setIntersectionRatio] = useState<number>(0);
