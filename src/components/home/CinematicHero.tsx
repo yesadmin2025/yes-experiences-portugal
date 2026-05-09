@@ -87,7 +87,7 @@ export function CinematicHero() {
   return (
     <section
       ref={sectionRef}
-      className="hero-cinematic relative w-full min-h-[calc(100svh-65px)] md:min-h-screen overflow-hidden bg-[color:var(--charcoal-deep)] text-[color:var(--ivory)] flex items-end"
+      className="hero-cinematic relative isolate w-full min-h-[calc(100svh-65px)] md:min-h-screen overflow-hidden bg-[color:var(--charcoal-deep)] text-[color:var(--ivory)] flex items-end"
       aria-roledescription="cinematic hero film"
       aria-label={`${HERO_COPY.headlineLine1} ${HERO_COPY.headlineLine2}`}
       data-hero-cinematic="true"
@@ -98,7 +98,7 @@ export function CinematicHero() {
       {!reduced && (
         <video
           ref={videoRef}
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 z-0 w-full h-full object-cover"
           poster={HERO_FILM_POSTER}
           autoPlay
           muted
@@ -117,24 +117,24 @@ export function CinematicHero() {
           src={HERO_FILM_POSTER}
           alt=""
           aria-hidden="true"
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 z-0 w-full h-full object-cover"
         />
       )}
 
       {/* Bottom darken so copy stays AA against varied frames. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(15,12,9,0.28)_0%,rgba(15,12,9,0.38)_30%,rgba(15,12,9,0.68)_66%,rgba(15,12,9,0.92)_100%)]"
+        className="pointer-events-none absolute inset-0 z-[1] bg-[linear-gradient(180deg,rgba(15,12,9,0.28)_0%,rgba(15,12,9,0.38)_30%,rgba(15,12,9,0.68)_66%,rgba(15,12,9,0.92)_100%)]"
       />
       {/* Extra scrim directly behind copy block — guarantees AA on the brightest frames. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-[70%] bg-[radial-gradient(110%_78%_at_50%_84%,rgba(15,12,9,0.72)_0%,rgba(15,12,9,0.52)_46%,rgba(15,12,9,0)_100%)]"
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-[70%] bg-[radial-gradient(110%_78%_at_50%_84%,rgba(15,12,9,0.72)_0%,rgba(15,12,9,0.52)_46%,rgba(15,12,9,0)_100%)]"
       />
 
       {/* Copy column — full width on mobile with 20px gutters, capped on tablet+. */}
-      <div className="relative z-10 w-full px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-5 xs:px-6 xs:pb-7 xs:pt-7 sm:px-8 sm:pb-12 md:px-12 md:pb-20 md:pt-24 lg:px-16">
-        <div className="mx-auto max-w-[22rem] xs:max-w-[23.25rem] sm:max-w-[36rem] md:mx-0 md:ml-[6vw] md:max-w-[46rem] lg:ml-[8vw]">
+      <div className="hero-story-shell relative z-10 w-full px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-5 xs:px-6 xs:pb-7 xs:pt-7 sm:px-8 sm:pb-12 md:px-12 md:pb-20 md:pt-24 lg:px-16">
+        <div className="hero-story-column mx-auto max-w-[22rem] xs:max-w-[23.25rem] sm:max-w-[36rem] md:mx-0 md:ml-[6vw] md:max-w-[46rem] lg:ml-[8vw]">
           <Eyebrow
             tone="onDark"
             data-hero-field="eyebrow"
