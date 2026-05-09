@@ -589,55 +589,20 @@ function BuilderPage() {
                 </div>
 
                 {/* Builder progress — overall step + live interest fill within step 3 */}
-                {(() => {
-                  const totalSteps = 4;
-                  const stepShare = 100 / totalSteps;
-                  // Within-step fill: 0 → 0%, 1 → 55%, 2 → 80%, 3+ → 100%
-                  const within =
+                <BuilderProgressMeter
+                  step={step}
+                  selectedCount={intentions.length}
+                  hint={
                     intentions.length === 0
-                      ? 0
+                      ? "Pick an interest to move forward — two more steps after this."
                       : intentions.length === 1
-                        ? 0.55
+                        ? "Add another thread for a richer story, or continue."
                         : intentions.length === 2
-                          ? 0.8
-                          : 1;
-                  const pct = Math.min(
-                    100,
-                    Math.round((step - 1) * stepShare + within * stepShare),
-                  );
-                  return (
-                    <div className="mt-5" aria-live="polite">
-                      <div className="flex items-center justify-between text-[10.5px] uppercase tracking-[0.22em] font-bold text-[color:var(--charcoal)]/55">
-                        <span>Builder progress</span>
-                        <span className="tabular-nums text-[color:var(--charcoal)]/70">
-                          {pct}%
-                        </span>
-                      </div>
-                      <div
-                        role="progressbar"
-                        aria-valuemin={0}
-                        aria-valuemax={100}
-                        aria-valuenow={pct}
-                        aria-label={`Builder progress, ${pct} percent complete`}
-                        className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-[color:var(--charcoal)]/10"
-                      >
-                        <div
-                          className="h-full rounded-full bg-gradient-to-r from-[color:var(--gold-soft)] to-[color:var(--gold)] transition-[width] duration-300 ease-out"
-                          style={{ width: `${pct}%` }}
-                        />
-                      </div>
-                      <p className="mt-1.5 text-[11px] text-[color:var(--charcoal)]/55 leading-snug">
-                        {intentions.length === 0
-                          ? "Pick an interest to move forward — two more steps after this."
-                          : intentions.length === 1
-                            ? "Add another thread for a richer story, or continue."
-                            : intentions.length === 2
-                              ? "Nicely layered. One more step after rhythm."
-                              : "Beautifully layered. Continue when ready."}
-                      </p>
-                    </div>
-                  );
-                })()}
+                          ? "Nicely layered. One more step after rhythm."
+                          : "Beautifully layered. Continue when ready."
+                  }
+                />
+
                 <div
                   role="group"
                   aria-label="Interests — choose one or more"
