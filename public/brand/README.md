@@ -73,16 +73,10 @@ The teal matches the hero-CTA fill on the live site exactly.
   surface supports.
 - **PDF** — for print collateral, decks, signage, and hand-off to printers.
   Vector content preserved.
-
-## Honest note on EPS / .ai
-
-EPS and Adobe Illustrator (`.ai`) files are intentionally **not** included.
-A meaningful `.ai` file requires Adobe Illustrator to author, and shipping a
-"PDF-shell renamed to .ai" would be misleading. The included PDF files are
-fully vector and open editably in Illustrator, Affinity Designer, Inkscape
-and Sketch — for the vast majority of print workflows they substitute for
-EPS/AI directly. If your printer specifically requires `.eps`, open the PDF
-in Illustrator and re-save as `.eps`.
+- **EPS** — Encapsulated PostScript, for legacy print workflows that
+  specifically require `.eps` (older RIPs, embroidery / signage software).
+- **AI** — Adobe Illustrator-compatible. These are PDF-based files that open
+  fully editable in Illustrator, Affinity Designer, Inkscape and Sketch.
 
 ## Honest note on typographic fidelity
 
