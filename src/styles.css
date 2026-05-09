@@ -1168,6 +1168,37 @@
       0 0 0 4px var(--gold);
   }
 
+  /* Disabled state — applies to both <button disabled> and any element
+     with [aria-disabled="true"] (e.g. CtaButton rendered as <a>). The
+     button still renders, but loses interactive lift, glow and pointer
+     events so the visual contract matches the semantic state. */
+  .cta-primary:disabled,
+  .cta-primary[aria-disabled="true"],
+  .cta-secondary-dark:disabled,
+  .cta-secondary-dark[aria-disabled="true"],
+  .cta-secondary-light:disabled,
+  .cta-secondary-light[aria-disabled="true"] {
+    opacity: 0.55;
+    filter: saturate(0.7);
+    cursor: not-allowed;
+    pointer-events: none;
+    text-shadow: none !important;
+    transform: translate3d(0, 0, 0) scale(var(--cta-scroll-scale, 1)) !important;
+    box-shadow:
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.06),
+      inset 0 -1px 0 0 rgba(0, 0, 0, 0.18),
+      0 1px 2px rgba(15, 15, 15, 0.18) !important;
+  }
+  .cta-primary:disabled::before,
+  .cta-primary[aria-disabled="true"]::before,
+  .cta-secondary-dark:disabled::before,
+  .cta-secondary-dark[aria-disabled="true"]::before,
+  .cta-secondary-light:disabled::before,
+  .cta-secondary-light[aria-disabled="true"]::before {
+    opacity: 0 !important;
+    transform: scale(0.92) !important;
+  }
+
   /* Hero-only conversion finish: equal perceived weight, richer gold
      presence, and a smoother premium lift. The physical border remains
      identical (1px) on both CTAs; emphasis comes from light and shadow. */
