@@ -1781,8 +1781,9 @@
   backface-visibility: hidden;
 }
 .hero-cinematic .hero-story-step--copy { transition-delay: 1500ms !important; }
-.hero-cinematic .hero-story-step--cta { transition-delay: 2040ms !important; }
-.hero-cinematic .hero-story-step--microcopy { transition-delay: 2440ms !important; }
+.hero-cinematic .hero-story-step--cta-primary { transition-delay: 2040ms !important; }
+.hero-cinematic .hero-story-step--cta-secondary { transition-delay: 2280ms !important; }
+.hero-cinematic .hero-story-step--microcopy { transition-delay: 2620ms !important; }
 
 .hero-cinematic[data-story-active="true"] .hero-story-step {
   opacity: 1;
@@ -1882,8 +1883,9 @@
   .hero-cinematic [data-hero-reveal="headlineLine1"] { transition-delay: 720ms !important; }
   .hero-cinematic [data-hero-reveal="headlineLine2"] { transition-delay: 1160ms !important; }
   .hero-cinematic .hero-story-step--copy { transition-delay: 1680ms !important; }
-  .hero-cinematic .hero-story-step--cta { transition-delay: 2260ms !important; }
-  .hero-cinematic .hero-story-step--microcopy { transition-delay: 2680ms !important; }
+  .hero-cinematic .hero-story-step--cta-primary { transition-delay: 2260ms !important; }
+  .hero-cinematic .hero-story-step--cta-secondary { transition-delay: 2520ms !important; }
+  .hero-cinematic .hero-story-step--microcopy { transition-delay: 2880ms !important; }
 
   .hero-cinematic .hero-final-reveal {
     position: relative;

@@ -94,32 +94,24 @@ export function CinematicHero() {
       data-story-active={storyActive ? "true" : "false"}
       data-reduced-motion={reduced ? "true" : "false"}
     >
-      {/* Continuous film — full bleed, no inner box, no rounded corners. */}
-      {!reduced && (
-        <video
-          ref={videoRef}
-          className="absolute inset-0 z-0 w-full h-full object-cover"
-          poster={HERO_FILM_POSTER}
-          autoPlay
-          muted
-          playsInline
-          loop
-          preload="auto"
-          aria-hidden="true"
-          data-hero-film="true"
-        >
-          <source src={HERO_FILM_SRC_1080} type="video/mp4" media="(min-width: 768px)" />
-          <source src={HERO_FILM_SRC_720} type="video/mp4" />
-        </video>
-      )}
-      {reduced && (
-        <img
-          src={HERO_FILM_POSTER}
-          alt=""
-          aria-hidden="true"
-          className="absolute inset-0 z-0 w-full h-full object-cover"
-        />
-      )}
+      {/* Continuous film — full bleed, no inner box, no rounded corners.
+         Always rendered so mobile users see the film; reduced-motion users
+         simply see the poster frame (no autoplay) instead of motion. */}
+      <video
+        ref={videoRef}
+        className="absolute inset-0 z-0 w-full h-full object-cover"
+        poster={HERO_FILM_POSTER}
+        autoPlay={!reduced}
+        muted
+        playsInline
+        loop={!reduced}
+        preload="auto"
+        aria-hidden="true"
+        data-hero-film="true"
+      >
+        <source src={HERO_FILM_SRC_720} type="video/mp4" media="(max-width: 767px)" />
+        <source src={HERO_FILM_SRC_1080} type="video/mp4" />
+      </video>
 
       {/* Bottom darken so copy stays AA against varied frames. */}
       <div
@@ -193,11 +185,11 @@ export function CinematicHero() {
               {HERO_COPY.subheadline}
             </p>
 
-            <div className="hero-story-step hero-story-step--cta hero-cta-flow mt-5 xs:mt-6 sm:mt-9 md:mt-10 flex flex-col sm:flex-row gap-2.5 sm:gap-4 items-stretch sm:items-center">
+            <div className="hero-cta-flow mt-5 xs:mt-6 sm:mt-9 md:mt-10 flex flex-col sm:flex-row gap-2.5 sm:gap-4 items-stretch sm:items-center">
               <CtaButton
                 to="/builder"
                 variant="primary"
-                className="hero-cta-button hero-cta-button--primary cta-primary min-h-[48px] py-3 text-[11px] tracking-[0.12em] xs:min-h-[50px] xs:text-[11.75px] sm:text-[13px]"
+                className="hero-story-step hero-story-step--cta-primary hero-cta-button hero-cta-button--primary cta-primary min-h-[48px] py-3 text-[11px] tracking-[0.12em] xs:min-h-[50px] xs:text-[11.75px] sm:text-[13px]"
                 data-hero-field="primaryCta"
               >
                 {HERO_COPY.primaryCta}
@@ -205,7 +197,7 @@ export function CinematicHero() {
               <CtaButton
                 to="/experiences"
                 variant="ghostDark"
-                className="hero-cta-button hero-cta-button--secondary cta-secondary-dark min-h-[48px] py-3 text-[10.75px] tracking-[0.105em] xs:min-h-[50px] xs:text-[11.25px] sm:text-[13px]"
+                className="hero-story-step hero-story-step--cta-secondary hero-cta-button hero-cta-button--secondary cta-secondary-dark min-h-[48px] py-3 text-[10.75px] tracking-[0.105em] xs:min-h-[50px] xs:text-[11.25px] sm:text-[13px]"
                 data-hero-field="secondaryCta"
                 data-cta-stagger="true"
               >
