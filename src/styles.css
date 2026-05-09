@@ -1883,8 +1883,9 @@
   .hero-cinematic [data-hero-reveal="headlineLine1"] { transition-delay: 720ms !important; }
   .hero-cinematic [data-hero-reveal="headlineLine2"] { transition-delay: 1160ms !important; }
   .hero-cinematic .hero-story-step--copy { transition-delay: 1680ms !important; }
-  .hero-cinematic .hero-story-step--cta { transition-delay: 2260ms !important; }
-  .hero-cinematic .hero-story-step--microcopy { transition-delay: 2680ms !important; }
+  .hero-cinematic .hero-story-step--cta-primary { transition-delay: 2260ms !important; }
+  .hero-cinematic .hero-story-step--cta-secondary { transition-delay: 2520ms !important; }
+  .hero-cinematic .hero-story-step--microcopy { transition-delay: 2880ms !important; }
 
   .hero-cinematic .hero-final-reveal {
     position: relative;
