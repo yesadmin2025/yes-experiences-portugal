@@ -16,6 +16,10 @@ import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { CtaButton } from "@/components/ui/CtaButton";
 import { HeroColorDebugOverlay } from "@/components/HeroColorDebugOverlay";
+import {
+  HeroScrimRuler,
+  useHeroScrimRulerToggle,
+} from "@/components/home/HeroScrimRuler";
 
 const HERO_FILM_SRC_1080 = "/video/film/yes-hero-film-1080.mp4";
 const HERO_FILM_SRC_720 = "/video/film/yes-hero-film-720.mp4";
