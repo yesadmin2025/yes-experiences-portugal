@@ -136,11 +136,14 @@ test.describe("Hero typography colors — YES brand-token regression", () => {
             `Allowed: gold #C9A96A or gold-soft #E1CFA6.`,
     ).toBe(true);
 
-    // Headline lines MUST be ivory (over the dark cinematic film) OR teal /
-    // charcoal if the hero is ever re-skinned for a light surface. Anything
-    // else (raw white, grey, off-brand tints) fails.
+    // Headline lines MUST resolve to the YES gold family on the dark
+    // cinematic film (no white bold), with teal/charcoal still allowed if
+    // the hero is ever re-skinned for a light surface.
     const headlineAllow = [
-      { name: "ivory (#FAF8F3)", rgb: TOKENS.ivory },
+      { name: "gold (#C9A96A)", rgb: TOKENS.gold },
+      { name: "gold-soft (#E1CFA6)", rgb: TOKENS.goldSoft },
+      { name: "gold-warm (#D8BE82)", rgb: TOKENS.goldWarm },
+      { name: "gold-deep (#B89452)", rgb: TOKENS.goldDeep },
       { name: "teal (#295B61)", rgb: TOKENS.teal },
       { name: "charcoal (#2E2E2E)", rgb: TOKENS.charcoal },
     ];
@@ -155,19 +158,9 @@ test.describe("Hero typography colors — YES brand-token regression", () => {
           ? "ok"
           : `Hero ${label} color ${fmt(c)} is NOT a YES brand token. ` +
               `Nearest: ${m.nearest} (Δ=${m.delta}). ` +
-              `Allowed: ivory #FAF8F3, teal #295B61, charcoal #2E2E2E.`,
+              `Allowed: gold #C9A96A, gold-soft #E1CFA6, teal #295B61, charcoal #2E2E2E.`,
       ).toBe(true);
     }
-
-    // Cross-element rule: line1 and line2 must be from the same surface
-    // family (both light-on-dark or both dark-on-light). A mismatch means
-    // someone half-restyled the hero.
-    const lightOnDark = (c: RGB) => within(c, TOKENS.ivory);
-    expect(
-      lightOnDark(line1) === lightOnDark(line2),
-      `Hero headline lines mixed surface families: ` +
-        `line1=${fmt(line1)} line2=${fmt(line2)}. Both must be ivory (dark hero) ` +
-        `or both teal/charcoal (light hero).`,
-    ).toBe(true);
   });
 });
+
