@@ -92,10 +92,10 @@ export function CinematicHero() {
         ref={videoRef}
         className="absolute inset-0 z-0 w-full h-full object-cover"
         poster={HERO_FILM_POSTER}
-        autoPlay={!reduced}
+        autoPlay
         muted
         playsInline
-        loop={!reduced}
+        loop
         preload="auto"
         aria-hidden="true"
         data-hero-film="true"
