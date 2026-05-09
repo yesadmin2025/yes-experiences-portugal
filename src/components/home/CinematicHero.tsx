@@ -135,12 +135,12 @@ export function CinematicHero() {
           >
             <p
               data-hero-field="subheadline"
-              className="mt-3 xs:mt-4 sm:mt-9 md:mt-12 max-w-[31rem] text-[13.25px] xs:text-[13.75px] sm:text-[17px] md:text-[18px] leading-[1.44] xs:leading-[1.5] md:leading-[1.72] tracking-[0] text-[color:var(--ivory)] text-pretty [text-shadow:none]"
+              className="hero-story-step hero-story-step--copy mt-3 xs:mt-4 sm:mt-9 md:mt-12 max-w-[31rem] text-[13.25px] xs:text-[13.75px] sm:text-[17px] md:text-[18px] leading-[1.44] xs:leading-[1.5] md:leading-[1.72] tracking-[0] text-[color:var(--ivory)] text-pretty [text-shadow:none]"
             >
               {HERO_COPY.subheadline}
             </p>
 
-            <div className="hero-cta-flow mt-4 xs:mt-5 sm:mt-9 md:mt-10 flex flex-col sm:flex-row gap-2 sm:gap-4 items-stretch sm:items-center">
+            <div className="hero-story-step hero-story-step--cta hero-cta-flow mt-4 xs:mt-5 sm:mt-9 md:mt-10 flex flex-col sm:flex-row gap-2 sm:gap-4 items-stretch sm:items-center">
               <CtaButton
                 to="/builder"
                 variant="primary"
@@ -162,7 +162,7 @@ export function CinematicHero() {
 
             <p
               data-hero-field="microcopy"
-              className="mt-3.5 xs:mt-4 sm:mt-6 text-[11.75px] xs:text-[12px] sm:text-[13px] leading-[1.45] tracking-[0.02em] text-[color:var(--ivory)] [text-shadow:none]"
+              className="hero-story-step hero-story-step--microcopy mt-3.5 xs:mt-4 sm:mt-6 text-[11.75px] xs:text-[12px] sm:text-[13px] leading-[1.45] tracking-[0.02em] text-[color:var(--ivory)] [text-shadow:none]"
             >
               {HERO_COPY.microcopy}
             </p>
