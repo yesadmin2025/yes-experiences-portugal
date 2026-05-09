@@ -284,15 +284,8 @@ describe("Approved homepage structure (source lock)", () => {
       ).toBeGreaterThanOrEqual(floor);
     });
 
-    it("hero uses overflow-hidden so the slow zoom never causes horizontal scroll", () => {
-      const hero = findSections(SOURCE).find((s) =>
-        (markerAbove(SOURCE, s.index) ?? "").includes("HERO"),
-      );
-      expect(hero).toBeDefined();
-      expect(
-        /\boverflow-hidden\b/.test(hero!.className),
-        "Hero <section> must include `overflow-hidden` to satisfy the no-horizontal-scroll invariant at mobile widths.",
-      ).toBe(true);
+    it("hero is rendered as <CinematicHero /> (single full-bleed continuous film)", () => {
+      expect(/<CinematicHero\s*\/>/.test(SOURCE)).toBe(true);
     });
   });
 });
