@@ -139,7 +139,7 @@ export function CinematicHero() {
           <Eyebrow
             tone="onDark"
             data-hero-field="eyebrow"
-            className={`transition-opacity duration-700 ${showEyebrow ? "opacity-100" : "opacity-0"}`}
+            className={`transition-opacity duration-[220ms] ease-out ${showEyebrow ? "opacity-100" : "opacity-0"}`}
           >
             {HERO_COPY.eyebrow}
           </Eyebrow>
