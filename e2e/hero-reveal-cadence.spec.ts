@@ -48,31 +48,31 @@ async function measureTransition(page: Page, selector: string): Promise<number> 
       const el = document.querySelector(sel) as HTMLElement | null;
       if (!el) return reject(new Error(`not found: ${sel}`));
 
-      // Step 1 — drive opacity to 0 inline and wait long enough for the
-      // existing 220ms transition to fully complete at 0 (otherwise the
-      // next change interrupts mid-flight and `transitionend` may never
-      // fire). 400ms gives a safe buffer over the declared 220ms.
+      // Force opacity to 0 inline and let the existing 220ms transition
+      // settle (400ms buffer). Then poll computed opacity via rAF after
+      // releasing the inline override; the elapsed time between release
+      // and the moment opacity first reaches >= 0.99 is the measured
+      // transition duration. This avoids relying on transitionend, which
+      // can be skipped when a class-driven transition replaces an
+      // in-flight inline transition mid-frame.
       el.style.opacity = "0";
       window.setTimeout(() => {
-        // Step 2 — listen, then remove the inline override so the class
-        // opacity:1 re-applies and triggers a fresh measured transition.
-        const start = performance.now();
-        const onEnd = (ev: TransitionEvent) => {
-          if (ev.propertyName !== "opacity") return;
-          el.removeEventListener("transitionend", onEnd);
-          window.clearTimeout(timer);
-          el.style.opacity = "";
-          resolve(performance.now() - start);
-        };
-        el.addEventListener("transitionend", onEnd);
-        const timer = window.setTimeout(() => {
-          el.removeEventListener("transitionend", onEnd);
-          el.style.opacity = "";
-          reject(new Error(`transitionend timeout for ${sel}`));
-        }, 2000);
-        // Force a layout flush so the next style change is seen as a transition.
-        void el.offsetHeight;
+        void el.offsetHeight; // flush layout
         el.style.opacity = "";
+        const start = performance.now();
+        const tick = () => {
+          const op = parseFloat(window.getComputedStyle(el).opacity || "0");
+          if (op >= 0.99) {
+            resolve(performance.now() - start);
+            return;
+          }
+          if (performance.now() - start > 2000) {
+            reject(new Error(`opacity never reached 1 for ${sel} (last=${op})`));
+            return;
+          }
+          requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
       }, 400);
     });
   }, selector);
