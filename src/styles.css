@@ -1744,37 +1744,37 @@
   transform: translate3d(0, 0, 0);
 }
 
-/* Rhythm: 90ms uniform steps. Eyebrow → headline L1 (left) →
-   headline L2 (right) → final block (subheadline + CTAs + microcopy
-   each substepped 80ms). Single curve, no jitter, no overlap. */
-.hero-cinematic [data-hero-reveal="eyebrow"] { animation-delay: 0ms !important; }
-.hero-cinematic [data-hero-reveal="headlineLine1"] { animation-delay: 90ms !important; }
-.hero-cinematic [data-hero-reveal="headlineLine2"] { animation-delay: 180ms !important; }
+/* Hero storytelling rhythm: each beat has enough space to be perceived.
+   This replaces the old 90ms stack, which read as one block on mobile. */
+.hero-cinematic [data-hero-reveal="eyebrow"] { animation-delay: 90ms !important; }
+.hero-cinematic [data-hero-reveal="headlineLine1"] { animation-delay: 420ms !important; }
+.hero-cinematic [data-hero-reveal="headlineLine2"] { animation-delay: 760ms !important; }
 
 .hero-cinematic .hero-final-reveal {
-  animation: heroRevealFromLeftStable 240ms var(--ease-premium) 270ms both !important;
+  opacity: 1;
+  animation: none !important;
 }
 
 .hero-cinematic .hero-story-step {
   opacity: 0;
-  animation: heroRevealRisePremium 260ms var(--ease-premium) both !important;
+  animation: heroRevealRisePremium 620ms var(--ease-premium) both !important;
 }
-.hero-cinematic .hero-story-step--copy { animation-delay: 350ms !important; }
-.hero-cinematic .hero-story-step--cta { animation-delay: 440ms !important; }
-.hero-cinematic .hero-story-step--microcopy { animation-delay: 530ms !important; }
+.hero-cinematic .hero-story-step--copy { animation-delay: 1180ms !important; }
+.hero-cinematic .hero-story-step--cta { animation-delay: 1640ms !important; }
+.hero-cinematic .hero-story-step--microcopy { animation-delay: 1960ms !important; }
 
 @keyframes heroRevealFromLeftStable {
-  from { opacity: 0; transform: translate3d(-14px, 0, 0); }
+  from { opacity: 0; transform: translate3d(-18px, 0, 0); }
   to { opacity: 1; transform: translate3d(0, 0, 0); }
 }
 
 @keyframes heroRevealFromRightStable {
-  from { opacity: 0; transform: translate3d(14px, 0, 0); }
+  from { opacity: 0; transform: translate3d(18px, 0, 0); }
   to { opacity: 1; transform: translate3d(0, 0, 0); }
 }
 
 @keyframes heroRevealRisePremium {
-  from { opacity: 0; transform: translate3d(0, 10px, 0); }
+  from { opacity: 0; transform: translate3d(0, 16px, 0); }
   to { opacity: 1; transform: translate3d(0, 0, 0); }
 }
 
