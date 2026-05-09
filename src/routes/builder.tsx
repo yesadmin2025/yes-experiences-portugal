@@ -28,6 +28,11 @@ import {
   MoodCard,
   StepHead,
 } from "@/components/builder/Choices";
+import {
+  RegionStep,
+  BUILDER_REGIONS,
+  type BuilderRegionKey,
+} from "@/components/builder/RegionStep";
 import { BuilderStepper } from "@/components/builder/BuilderStepper";
 import { BuilderMobileStepSummary } from "@/components/builder/BuilderMobileStepSummary";
 import { BuilderDebugPanel } from "@/components/builder/BuilderDebugPanel";
