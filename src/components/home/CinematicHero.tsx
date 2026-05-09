@@ -22,9 +22,21 @@ const HERO_FILM_SRC_720 = "/video/film/yes-hero-film-720.mp4";
 const HERO_FILM_POSTER = "/video/film/yes-hero-poster.jpg";
 
 
+type HeroDebugEvent = { t: number; label: string; detail?: string };
+
+function isHeroDebugEnabled(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    const sp = new URLSearchParams(window.location.search);
+    if (sp.get("heroDebug") === "1") return true;
+  } catch {}
+  return false;
+}
+
 export function CinematicHero() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const sectionRef = useRef<HTMLElement | null>(null);
+  const mountedAtRef = useRef<number>(typeof performance !== "undefined" ? performance.now() : Date.now());
 
   const [storyActive, setStoryActive] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
