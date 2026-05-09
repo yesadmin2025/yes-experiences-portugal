@@ -1886,13 +1886,8 @@
     transform: translate3d(0, 14px, 0);
   }
 
-  .hero-cinematic [data-hero-reveal="eyebrow"] { transition-delay: 180ms !important; }
-  .hero-cinematic [data-hero-reveal="headlineLine1"] { transition-delay: 1300ms !important; }
-  .hero-cinematic [data-hero-reveal="headlineLine2"] { transition-delay: 2500ms !important; }
-  .hero-cinematic .hero-story-step--copy { transition-delay: 3700ms !important; }
-  .hero-cinematic .hero-story-step--microcopy { transition-delay: 4100ms !important; }
-  .hero-cinematic .hero-story-step--cta-primary { transition-delay: 4700ms !important; }
-  .hero-cinematic .hero-story-step--cta-secondary { transition-delay: 5000ms !important; }
+  /* Per-beat timing is owned by JS (see CinematicHero.tsx) so it can sync
+     to real video.currentTime. CSS only controls duration + easing here. */
 
   .hero-cinematic .hero-final-reveal {
     position: relative;
