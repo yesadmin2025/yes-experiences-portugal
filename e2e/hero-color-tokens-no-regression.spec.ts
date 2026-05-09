@@ -6,7 +6,7 @@
  *
  *   • eyebrow        → gold       #C9A96A
  *   • headlineLine1  → ivory      #FAF8F3   (Montserrat 400, no italic)
- *   • headlineLine2  → gold       #C9A96A   (Georgia italic 400)
+ *   • headlineLine2  → gold-soft  #E1CFA6   (Georgia italic 400)
  *
  * The existing `hero-typography-colors.spec.ts` covers a wider surface
  * (debug overlay, opacity, text-shadow). This file is intentionally
@@ -99,14 +99,14 @@ test.describe("Hero color tokens — non-regression", () => {
     expect(field.fontWeight, "headlineLine1 must stay weight 400").toBe("400");
   });
 
-  test("headline line 2 remains brand gold #C9A96A, Georgia italic 400", async ({
+  test("headline line 2 remains gold-soft #E1CFA6, Georgia italic 400", async ({
     page,
   }) => {
     const field = await readField(page, '[data-hero-field="headlineLine2"]');
     const actual = parseColor(field.color);
     expect(
-      within(actual, TOKENS.gold),
-      `Hero italic line drifted: got ${fmt(actual)}, expected gold ${fmt(TOKENS.gold)}`,
+      within(actual, { r: 0xe1, g: 0xcf, b: 0xa6 }),
+      `Hero italic line drifted: got ${fmt(actual)}, expected gold-soft rgb(225,207,166) / #e1cfa6`,
     ).toBe(true);
     expect(field.fontStyle, "headlineLine2 must remain italic").toBe("italic");
     expect(field.fontWeight, "headlineLine2 must stay weight 400").toBe("400");
