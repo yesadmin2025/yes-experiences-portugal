@@ -1,0 +1,72 @@
+{
+  "viewport": {
+    "width": 1366,
+    "height": 768
+  },
+  "hero": {
+    "widthPx": 1366,
+    "heightPx": 768
+  },
+  "metrics": {
+    "eyebrow": {
+      "fontFamily": "Inter, system-ui, sans-serif",
+      "fontWeight": "700",
+      "fontStyle": "normal",
+      "fontSizePx": 11,
+      "lineHeightPx": 11,
+      "letterSpacingEm": 0.28,
+      "topPx": 194.46875,
+      "bottomPx": 205.46875,
+      "baselinePx": 203.26875,
+      "heightPx": 11
+    },
+    "headlineLine1": {
+      "fontFamily": "Montserrat, system-ui, sans-serif",
+      "fontWeight": "600",
+      "fontStyle": "normal",
+      "fontSizePx": 73.6,
+      "lineHeightPx": 73.6,
+      "letterSpacingEm": -0.022000000000000002,
+      "topPx": 246.71875,
+      "bottomPx": 393.90625,
+      "baselinePx": 305.59875,
+      "heightPx": 147.1875
+    },
+    "headlineLine2": {
+      "fontFamily": "Georgia, \"Cormorant Garamond\", Newsreader, serif",
+      "fontWeight": "400",
+      "fontStyle": "italic",
+      "fontSizePx": 73.6,
+      "lineHeightPx": 73.6,
+      "letterSpacingEm": -0.014,
+      "topPx": 399.90625,
+      "bottomPx": 473.5,
+      "baselinePx": 458.78625,
+      "heightPx": 73.59375
+    },
+    "subheadline": {
+      "fontFamily": "Inter, system-ui, sans-serif",
+      "fontWeight": "410",
+      "fontStyle": "normal",
+      "fontSizePx": 18,
+      "lineHeightPx": 27,
+      "letterSpacingEm": 0.0044444444444444444,
+      "topPx": 497.5,
+      "bottomPx": 578.5,
+      "baselinePx": 519.1,
+      "heightPx": 81
+    },
+    "microcopy": {
+      "fontFamily": "Inter, system-ui, sans-serif",
+      "fontWeight": "410",
+      "fontStyle": "normal",
+      "fontSizePx": 13,
+      "lineHeightPx": 19.5,
+      "letterSpacingEm": 0.025,
+      "topPx": 680.5,
+      "bottomPx": 700,
+      "baselinePx": 696.1,
+      "heightPx": 19.5
+    }
+  }
+}
