@@ -1826,7 +1826,10 @@
   transform-origin: right center;
 }
 .hero-cinematic .hero-beat--rise {
-  transform: translate3d(0, 14px, 0);
+  transform: translate3d(0, 18px, 0) scale(0.985);
+}
+.hero-cinematic .hero-beat--rise[data-hero-beat-show="true"] {
+  transform: translate3d(0, 0, 0) scale(1);
 }
 .hero-cinematic .hero-beat[data-hero-beat-show="true"] {
   opacity: 1;
