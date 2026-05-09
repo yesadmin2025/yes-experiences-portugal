@@ -234,7 +234,8 @@ export function CinematicHero() {
       log("story-trigger", `wall:${origin}`);
       const t0 = performance.now();
       for (const beat of schedule) {
-        const id = window.setTimeout(() => reveal(beat.key), Math.max(0, beat.t * 1000 - (performance.now() - t0)));
+        const target = beat.t * 1000 * slowMo;
+        const id = window.setTimeout(() => reveal(beat.key), Math.max(0, target - (performance.now() - t0)));
         wallTimers.push(id);
       }
     };
