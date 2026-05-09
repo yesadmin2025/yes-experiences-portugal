@@ -24,7 +24,6 @@ import { ReviewScreen } from "@/components/builder/ReviewScreen";
 import { MultiDayBuilder } from "@/components/builder/MultiDayBuilder";
 import { useMultiDayBuilder } from "@/hooks/useMultiDayBuilder";
 import {
-  ChoiceRow,
   ChoiceTile,
   MoodCard,
   StepHead,
