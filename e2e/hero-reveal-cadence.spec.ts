@@ -48,30 +48,32 @@ async function measureTransition(page: Page, selector: string): Promise<number> 
       const el = document.querySelector(sel) as HTMLElement | null;
       if (!el) return reject(new Error(`not found: ${sel}`));
 
-      // Force a fresh transition: drop to opacity 0 inline, wait two
-      // animation frames so the browser commits the new style, then
-      // remove the inline override so the class-driven opacity:1
-      // re-applies and triggers the 220ms transition.
+      // Step 1 — drive opacity to 0 inline and wait long enough for the
+      // existing 220ms transition to fully complete at 0 (otherwise the
+      // next change interrupts mid-flight and `transitionend` may never
+      // fire). 400ms gives a safe buffer over the declared 220ms.
       el.style.opacity = "0";
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          const start = performance.now();
-          const onEnd = (ev: TransitionEvent) => {
-            if (ev.propertyName !== "opacity") return;
-            el.removeEventListener("transitionend", onEnd);
-            window.clearTimeout(timer);
-            el.style.opacity = "";
-            resolve(performance.now() - start);
-          };
-          el.addEventListener("transitionend", onEnd);
-          const timer = window.setTimeout(() => {
-            el.removeEventListener("transitionend", onEnd);
-            el.style.opacity = "";
-            reject(new Error(`transitionend timeout for ${sel}`));
-          }, 2000);
+      window.setTimeout(() => {
+        // Step 2 — listen, then remove the inline override so the class
+        // opacity:1 re-applies and triggers a fresh measured transition.
+        const start = performance.now();
+        const onEnd = (ev: TransitionEvent) => {
+          if (ev.propertyName !== "opacity") return;
+          el.removeEventListener("transitionend", onEnd);
+          window.clearTimeout(timer);
           el.style.opacity = "";
-        });
-      });
+          resolve(performance.now() - start);
+        };
+        el.addEventListener("transitionend", onEnd);
+        const timer = window.setTimeout(() => {
+          el.removeEventListener("transitionend", onEnd);
+          el.style.opacity = "";
+          reject(new Error(`transitionend timeout for ${sel}`));
+        }, 2000);
+        // Force a layout flush so the next style change is seen as a transition.
+        void el.offsetHeight;
+        el.style.opacity = "";
+      }, 400);
     });
   }, selector);
 }
