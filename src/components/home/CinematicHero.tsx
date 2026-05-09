@@ -145,7 +145,7 @@ export function CinematicHero() {
           </Eyebrow>
 
           <h1
-            className="t-display mt-5 md:mt-7 text-balance text-[color:var(--ivory)] [font-weight:600] [letter-spacing:-0.022em] md:[letter-spacing:-0.026em] lg:[letter-spacing:-0.03em] [line-height:1.04] md:[line-height:1] lg:[line-height:0.96]"
+            className="t-display mt-4 sm:mt-5 md:mt-6 text-balance text-[color:var(--ivory)] [font-weight:600] [letter-spacing:-0.022em] md:[letter-spacing:-0.026em] lg:[letter-spacing:-0.03em] [line-height:1.04] md:[line-height:1] lg:[line-height:0.96]"
             data-hero-field="headlineLine1 headlineLine2"
           >
             <span
@@ -156,7 +156,7 @@ export function CinematicHero() {
             </span>
             <span
               data-hero-field="headlineLine2"
-              className={`block mt-1.5 md:mt-2 [font-family:var(--font-serif)] italic font-normal [letter-spacing:-0.014em] md:[letter-spacing:-0.018em] text-[color:var(--ivory)] transition-all duration-700 ${showLine2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}
+              className={`block mt-1 sm:mt-1.5 md:mt-2 [font-family:var(--font-serif)] italic font-normal [letter-spacing:-0.014em] md:[letter-spacing:-0.018em] text-[color:var(--ivory)] transition-all duration-700 ${showLine2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}
             >
               {HERO_COPY.headlineLine2}
             </span>
@@ -169,12 +169,12 @@ export function CinematicHero() {
           >
             <p
               data-hero-field="subheadline"
-              className="mt-5 sm:mt-6 max-w-[36rem] text-[15px] sm:text-[17px] md:text-[18px] leading-[1.55] tracking-[0.003em] text-[color:var(--ivory)] text-pretty"
+              className="mt-5 sm:mt-6 md:mt-7 max-w-[36rem] text-[15px] sm:text-[17px] md:text-[18px] leading-[1.55] tracking-[0.003em] text-[color:var(--ivory)] text-pretty"
             >
               {HERO_COPY.subheadline}
             </p>
 
-            <div className="mt-7 sm:mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center">
+            <div className="mt-6 sm:mt-7 md:mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center">
               <CtaButton
                 to="/builder"
                 variant="primary"
