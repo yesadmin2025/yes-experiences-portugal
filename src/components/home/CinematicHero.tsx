@@ -146,18 +146,18 @@ export function CinematicHero() {
           </Eyebrow>
 
           <h1
-            className="mt-5 md:mt-7 font-display font-bold leading-[1.05] md:leading-[0.98] tracking-[-0.02em] text-[2.05rem] xs:text-[2.4rem] sm:text-[2.95rem] md:text-[4rem] lg:text-[4.6rem] text-balance"
+            className="mt-5 md:mt-7 font-display leading-[1.06] md:leading-[1.0] tracking-[-0.022em] text-[2.15rem] xs:text-[2.5rem] sm:text-[3.05rem] md:text-[4.05rem] lg:text-[4.6rem] text-balance"
             data-hero-field="headlineLine1 headlineLine2"
           >
             <span
               data-hero-field="headlineLine1"
-              className={`block text-[color:var(--ivory)] [text-shadow:0_2px_10px_rgba(0,0,0,0.72)] transition-all duration-700 ${showLine1 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}
+              className={`block font-semibold text-[color:var(--ivory)] [text-shadow:0_2px_10px_rgba(0,0,0,0.72)] transition-all duration-700 ${showLine1 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}
             >
               {HERO_COPY.headlineLine1}
             </span>
             <span
               data-hero-field="headlineLine2"
-              className={`block font-serif italic font-normal tracking-[-0.012em] text-[color:var(--gold-soft)] [text-shadow:0_2px_10px_rgba(0,0,0,0.7)] transition-all duration-700 ${showLine2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}
+              className={`block mt-1 md:mt-1.5 font-serif italic font-normal tracking-[-0.014em] text-[color:var(--gold-soft)] [text-shadow:0_2px_10px_rgba(0,0,0,0.7)] transition-all duration-700 ${showLine2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}
             >
               {HERO_COPY.headlineLine2}
             </span>
