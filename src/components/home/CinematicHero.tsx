@@ -484,13 +484,15 @@ export function CinematicHero() {
          Peaks gently behind the headline/sub block, fades cleanly at both ends so the video
          still breathes above and below. Position-only; no animation logic touched.
          Gradient stops live in --hero-scrim-mobile-radial / --hero-scrim-mobile-vertical. */}
+      {/* svh units (small viewport height) lock the scrim against iOS/Chrome
+         URL-bar resize — % units would drift as the section reflows. */}
       <div
         aria-hidden="true"
-        className="hero-scrim--mobile-radial pointer-events-none absolute inset-x-0 z-[2] md:hidden top-[10%] bottom-[8%]"
+        className="hero-scrim--mobile-radial pointer-events-none absolute inset-x-0 z-[2] md:hidden top-[10svh] bottom-[8svh]"
       />
       <div
         aria-hidden="true"
-        className="hero-scrim--mobile-vertical pointer-events-none absolute inset-x-0 z-[2] md:hidden top-[12%] bottom-[10%]"
+        className="hero-scrim--mobile-vertical pointer-events-none absolute inset-x-0 z-[2] md:hidden top-[12svh] bottom-[10svh]"
       />
 
       {/* Copy column — full width on mobile with 20px gutters, capped on tablet+. */}
