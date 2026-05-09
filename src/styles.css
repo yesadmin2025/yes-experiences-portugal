@@ -1693,6 +1693,7 @@
    220ms ease-out motion path without SSR/client state drift. */
 .hero-cinematic .hero-reveal {
   opacity: 1 !important;
+  animation: heroRevealFromLeftStable 220ms ease-out both !important;
   transition-property: opacity, transform;
   transition-duration: 220ms;
   transition-timing-function: ease-out;
@@ -1702,7 +1703,22 @@
 }
 
 .hero-cinematic .hero-reveal--from-right {
+  animation-name: heroRevealFromRightStable !important;
   transform: translate3d(0, 0, 0);
+}
+
+.hero-cinematic .hero-final-reveal {
+  animation: heroRevealFromLeftStable 220ms ease-out 120ms both !important;
+}
+
+@keyframes heroRevealFromLeftStable {
+  from { opacity: 0; transform: translate3d(-12px, 0, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@keyframes heroRevealFromRightStable {
+  from { opacity: 0; transform: translate3d(12px, 0, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
 }
 
 @media (max-width: 379px) {
