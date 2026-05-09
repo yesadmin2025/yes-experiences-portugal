@@ -30,6 +30,7 @@ import {
   ProgressDots,
   StepHead,
 } from "@/components/builder/Choices";
+import { BuilderStepper } from "@/components/builder/BuilderStepper";
 import { MoodGridSkeleton } from "@/components/builder/Skeletons";
 import {
   INTENTIONS,
