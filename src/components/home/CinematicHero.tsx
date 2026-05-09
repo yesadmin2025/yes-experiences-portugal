@@ -72,7 +72,7 @@ export function CinematicHero() {
 
   return (
     <section
-      className="hero-cinematic relative w-full min-h-[calc(100svh-65px)] md:min-h-screen overflow-hidden bg-[color:var(--charcoal-deep)] text-[color:var(--ivory)] flex items-end"
+      className="hero-cinematic relative w-full min-h-[calc(100svh-65px)] md:min-h-screen overflow-hidden bg-[color:var(--charcoal-deep)] text-[color:var(--ivory)] flex items-center md:items-end"
       aria-roledescription="cinematic hero film"
       aria-label={`${HERO_COPY.headlineLine1} ${HERO_COPY.headlineLine2}`}
       data-hero-cinematic="true"
@@ -116,7 +116,7 @@ export function CinematicHero() {
       />
 
       {/* Copy column — full width on mobile with 20px gutters, capped on tablet+. */}
-      <div className="relative z-10 w-full px-6 pb-12 pt-24 sm:px-8 sm:pb-16 md:px-12 md:pb-20 lg:px-16">
+      <div className="relative z-10 w-full px-6 pb-8 pt-10 sm:px-8 sm:pb-12 md:px-12 md:pb-20 md:pt-24 lg:px-16">
         <div className="mx-auto max-w-[46rem] md:mx-0 md:ml-[6vw] lg:ml-[8vw]">
           <Eyebrow
             tone="onDark"
@@ -131,7 +131,7 @@ export function CinematicHero() {
           </Eyebrow>
 
           <h1
-            className="hero-h1 t-display mt-8 sm:mt-9 md:mt-11 max-w-[12ch] sm:max-w-[13ch] md:max-w-[14ch] text-balance text-[color:var(--ivory)] [font-weight:400] [letter-spacing:0] [line-height:1.08] md:[line-height:1.04] lg:[line-height:1] [text-shadow:none]"
+            className="hero-h1 t-display mt-8 sm:mt-9 md:mt-11 max-w-[12ch] sm:max-w-[13ch] md:max-w-[14ch] text-balance text-[color:var(--ivory)] [font-weight:400] [font-size:2.125rem] sm:[font-size:2.35rem] md:[font-size:4rem] lg:[font-size:4.75rem] [letter-spacing:0] [line-height:1.08] md:[line-height:1.04] lg:[line-height:1] [text-shadow:none]"
             data-hero-field="headlineLine1 headlineLine2"
           >
             <span
@@ -167,7 +167,7 @@ export function CinematicHero() {
           >
             <p
               data-hero-field="subheadline"
-              className="mt-9 sm:mt-10 md:mt-12 max-w-[34rem] text-[15px] sm:text-[17px] md:text-[18px] leading-[1.72] tracking-[0] text-[color:var(--ivory)] text-pretty [text-shadow:none]"
+              className="mt-8 sm:mt-9 md:mt-12 max-w-[34rem] text-[14.5px] sm:text-[17px] md:text-[18px] leading-[1.68] md:leading-[1.72] tracking-[0] text-[color:var(--ivory)] text-pretty [text-shadow:none]"
             >
               {HERO_COPY.subheadline}
             </p>
