@@ -163,7 +163,7 @@ export function CinematicHero() {
           </h1>
 
           <div
-            className={`transition-all duration-700 ${showFinal ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}
+            className={`transition-all duration-[220ms] ease-out ${showFinal ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}
             // Pointer-events gating so CTAs aren't clickable before they reveal.
             style={{ pointerEvents: showFinal ? "auto" : "none" }}
           >
