@@ -97,7 +97,13 @@ export function CinematicHero() {
   // Beat schedule — anchored to video.currentTime in seconds. Falls back
   // to wall-clock at the same offsets if the video can't play.
   type BeatKey = "eyebrow" | "headlineLine1" | "headlineLine2" | "copy" | "microcopy" | "ctaPrimary" | "ctaSecondary";
+  type BeatStamp = { wallMs: number; videoT: number; mode: "video" | "wall" };
   const [revealed, setRevealed] = useState<Set<BeatKey>>(() => new Set());
+  const [beatStamps, setBeatStamps] = useState<Partial<Record<BeatKey, BeatStamp>>>({});
+  const [liveVideoT, setLiveVideoT] = useState<number>(0);
+  const [liveWallMs, setLiveWallMs] = useState<number>(0);
+  const [activeMode, setActiveMode] = useState<"video" | "wall" | null>(null);
+  const [activeSchedule, setActiveSchedule] = useState<{ key: BeatKey; t: number }[]>([]);
 
   const getSchedule = (): { key: BeatKey; t: number }[] => {
     const w = typeof window !== "undefined" ? window.innerWidth : 768;
