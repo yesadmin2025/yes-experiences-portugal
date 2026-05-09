@@ -45,6 +45,12 @@ export const getLastCrawlerError = createServerFn({ method: "GET" })
     }),
   )
   .handler(async ({ data }): Promise<CrawlerErrorInfo> => {
+    // Production guard: this endpoint reads server log tails and is for
+    // local dev / preview debugging only. Match the guard used by sibling
+    // dev-only server functions (checkRouteFile, auditTourLinks).
+    if (process.env.NODE_ENV === "production") {
+      throw new Error("Disabled in production.");
+    }
     // Disable any caching so reloads always re-scan the log.
     setResponseHeaders(
       new Headers({
