@@ -145,15 +145,18 @@ export function CinematicHero() {
     let started = false;
     let mode: "video" | "wall" | null = null;
     const schedule = getSchedule();
+    const fired = new Set<BeatKey>();
 
     const reveal = (key: BeatKey) => {
+      if (fired.has(key)) return;
+      fired.add(key);
       setRevealed((prev) => {
         if (prev.has(key)) return prev;
         const next = new Set(prev);
         next.add(key);
-        log("beat", key);
         return next;
       });
+      log("beat", key);
     };
 
     const runVideoLoop = () => {
@@ -163,7 +166,7 @@ export function CinematicHero() {
       for (const beat of schedule) {
         if (ct >= beat.t) reveal(beat.key);
       }
-      if (revealed.size < schedule.length) {
+      if (fired.size < schedule.length) {
         raf = requestAnimationFrame(runVideoLoop);
       }
     };
