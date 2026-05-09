@@ -426,7 +426,7 @@ export function CinematicHero() {
         key={videoSrc}
         className="absolute inset-0 z-0 w-full h-full object-cover hero-film-video"
         poster={HERO_FILM_POSTER}
-        autoPlay
+        autoPlay={!stepMode}
         muted
         playsInline
         loop
