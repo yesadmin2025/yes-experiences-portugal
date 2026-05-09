@@ -139,42 +139,58 @@ export function CinematicHero() {
           <Eyebrow
             tone="onDark"
             data-hero-field="eyebrow"
-            className={`transition-opacity duration-[220ms] ease-out ${showEyebrow ? "opacity-100" : "opacity-0"}`}
+            data-hero-reveal="eyebrow"
+            data-hero-reveal-order="1"
+            data-hero-reveal-duration-ms="220"
+            data-hero-reveal-ease="ease-out"
+            className={`hero-eyebrow transition-opacity duration-[220ms] ease-out ${showEyebrow ? "opacity-100" : "opacity-0"}`}
           >
             {HERO_COPY.eyebrow}
           </Eyebrow>
 
           <h1
-            className="t-display mt-4 sm:mt-5 md:mt-6 text-balance text-[color:var(--ivory)] [font-weight:400] [letter-spacing:-0.028em] md:[letter-spacing:-0.032em] lg:[letter-spacing:-0.036em] [line-height:1.04] md:[line-height:1] lg:[line-height:0.96]"
+            className="hero-h1 t-display mt-7 sm:mt-8 md:mt-10 text-balance text-[color:var(--ivory)] [font-weight:400] [letter-spacing:-0.012em] md:[letter-spacing:-0.016em] lg:[letter-spacing:-0.02em] [line-height:1.08] md:[line-height:1.04] lg:[line-height:1] [text-shadow:none]"
             data-hero-field="headlineLine1 headlineLine2"
           >
             <span
               data-hero-field="headlineLine1"
-              className={`block font-[400] text-[color:var(--ivory)] transition-all duration-[220ms] ease-out ${showLine1 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}
+              data-hero-reveal="headlineLine1"
+              data-hero-reveal-order="2"
+              data-hero-reveal-duration-ms="220"
+              data-hero-reveal-ease="ease-out"
+              className={`block font-[400] text-[color:var(--ivory)] [text-shadow:none] transition-all duration-[220ms] ease-out ${showLine1 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}
             >
               {HERO_COPY.headlineLine1}
             </span>
             <span
               data-hero-field="headlineLine2"
-              className={`block mt-1 sm:mt-1.5 md:mt-2 [font-family:var(--font-serif)] italic font-normal [letter-spacing:-0.014em] md:[letter-spacing:-0.018em] text-[color:var(--gold-soft)] transition-all duration-[220ms] ease-out ${showLine2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}
+              data-hero-reveal="headlineLine2"
+              data-hero-reveal-order="3"
+              data-hero-reveal-duration-ms="220"
+              data-hero-reveal-ease="ease-out"
+              className={`block mt-4 sm:mt-5 md:mt-6 [font-family:var(--font-serif)] italic font-normal [letter-spacing:-0.008em] md:[letter-spacing:-0.01em] [line-height:1.08] text-[color:var(--gold)] [text-shadow:none] transition-all duration-[220ms] ease-out ${showLine2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}
             >
               {HERO_COPY.headlineLine2}
             </span>
           </h1>
 
           <div
+            data-hero-reveal="finalBlock"
+            data-hero-reveal-order="4"
+            data-hero-reveal-duration-ms="220"
+            data-hero-reveal-ease="ease-out"
             className={`transition-all duration-[220ms] ease-out ${showFinal ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}
             // Pointer-events gating so CTAs aren't clickable before they reveal.
             style={{ pointerEvents: showFinal ? "auto" : "none" }}
           >
             <p
               data-hero-field="subheadline"
-              className="mt-5 sm:mt-6 md:mt-7 max-w-[36rem] text-[15px] sm:text-[17px] md:text-[18px] leading-[1.55] tracking-[0.003em] text-[color:var(--ivory)] text-pretty"
+              className="mt-8 sm:mt-9 md:mt-10 max-w-[36rem] text-[15px] sm:text-[17px] md:text-[18px] leading-[1.62] tracking-[0.003em] text-[color:var(--ivory)] text-pretty [text-shadow:none]"
             >
               {HERO_COPY.subheadline}
             </p>
 
-            <div className="mt-6 sm:mt-7 md:mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center">
+            <div className="mt-8 sm:mt-9 md:mt-10 flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center">
               <CtaButton
                 to="/builder"
                 variant="primary"
@@ -193,7 +209,7 @@ export function CinematicHero() {
 
             <p
               data-hero-field="microcopy"
-              className="mt-4 text-[12.5px] sm:text-[13px] leading-[1.5] tracking-[0.04em] text-[color:var(--ivory)]"
+              className="mt-5 sm:mt-6 text-[12.5px] sm:text-[13px] leading-[1.5] tracking-[0.04em] text-[color:var(--ivory)] [text-shadow:none]"
             >
               {HERO_COPY.microcopy}
             </p>
