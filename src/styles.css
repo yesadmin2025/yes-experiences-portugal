@@ -1825,6 +1825,20 @@
 @media (max-width: 767px) {
   .hero-cinematic {
     min-height: calc(100svh - 65px);
+    overflow: hidden;
+    overflow: clip;
+  }
+
+  .hero-cinematic .hero-story-shell {
+    z-index: 10;
+    padding-bottom: max(1.35rem, env(safe-area-inset-bottom));
+  }
+
+  .hero-cinematic .hero-story-column {
+    position: relative;
+    z-index: 2;
+    max-width: min(22rem, calc(100vw - 40px));
+  }
   }
 
   .hero-cinematic .he-eyebrow-bar {
@@ -1856,12 +1870,26 @@
     max-width: min(21.75rem, calc(100vw - 2.5rem));
   }
 
+  .hero-cinematic .hero-reveal {
+    transition-duration: 820ms;
+  }
+
+  .hero-cinematic .hero-story-step {
+    transition-duration: 760ms;
+    transform: translate3d(0, 14px, 0);
+  }
+
+  .hero-cinematic [data-hero-reveal="eyebrow"] { transition-delay: 140ms !important; }
+  .hero-cinematic [data-hero-reveal="headlineLine1"] { transition-delay: 720ms !important; }
+  .hero-cinematic [data-hero-reveal="headlineLine2"] { transition-delay: 1160ms !important; }
+  .hero-cinematic .hero-story-step--copy { transition-delay: 1680ms !important; }
+  .hero-cinematic .hero-story-step--cta { transition-delay: 2260ms !important; }
+  .hero-cinematic .hero-story-step--microcopy { transition-delay: 2680ms !important; }
+
   .hero-cinematic .hero-final-reveal {
-    transition-property: opacity, transform;
-    transition-duration: 220ms;
-    transition-timing-function: ease-out;
-    will-change: opacity, transform;
-    backface-visibility: hidden;
+    position: relative;
+    z-index: 3;
+    overflow: visible;
   }
 
   .hero-cinematic .hero-cta-button {
