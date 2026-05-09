@@ -11,11 +11,16 @@
  */
 
 import type { Intention, Mood, Pace, Who } from "@/components/builder/types";
+import {
+  BUILDER_REGION_KEYS,
+  type BuilderRegionKey,
+} from "@/components/builder/RegionStep";
 
 export type BuilderStep = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
 export interface BuilderSearch {
   step?: BuilderStep;
+  region?: BuilderRegionKey;
   mood?: Mood;
   who?: Who;
   intention?: Intention;
@@ -45,6 +50,7 @@ function pick<T extends string | number>(value: unknown, allowed: readonly T[]):
 export function parseBuilderSearch(search: Record<string, unknown>): BuilderSearch {
   return {
     step: (pick<BuilderStep>(Number(search.step), BUILDER_STEP_VALUES) ?? 0) as BuilderStep,
+    region: pick<BuilderRegionKey>(search.region as BuilderRegionKey, BUILDER_REGION_KEYS),
     mood: pick<Mood>(search.mood as Mood, BUILDER_MOOD_VALUES),
     who: pick<Who>(search.who as Who, BUILDER_WHO_VALUES),
     intention: pick<Intention>(search.intention as Intention, BUILDER_INTENTION_VALUES),
