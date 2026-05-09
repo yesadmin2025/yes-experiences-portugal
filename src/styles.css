@@ -1836,6 +1836,16 @@
   overflow: visible;
   isolation: isolate;
 }
+
+/* Hero scrim utility classes — pull from the tokens above so we can
+   retune contrast in one place. JSX uses className, never inline
+   gradient strings. Position + z-index handled by Tailwind utilities. */
+.hero-scrim--base { background-image: var(--hero-scrim-base); }
+.hero-scrim--focus { background-image: var(--hero-scrim-focus); }
+.hero-scrim--mobile-radial { background-image: var(--hero-scrim-mobile-radial); }
+.hero-scrim--mobile-vertical { background-image: var(--hero-scrim-mobile-vertical); }
+  isolation: isolate;
+}
 .hero-cinematic .hero-reveal {
   opacity: 0 !important;
   transform: translate3d(-14px, 0, 0);
