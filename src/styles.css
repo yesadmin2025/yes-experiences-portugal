@@ -60,6 +60,11 @@
 :root {
   --radius: 0.5rem;
 
+  /* Single premium easing token — used by hero reveals, scroll reveals,
+     and CTA hover/active so the whole experience moves on one curve.
+     Reference everywhere via var(--ease-premium); fallback kept inline. */
+  --ease-premium: cubic-bezier(0.22, 0.61, 0.36, 1);
+
   /* Brand — locked palette, used site-wide. */
   --teal: #295B61;
   --teal-2: #2A7C82;
