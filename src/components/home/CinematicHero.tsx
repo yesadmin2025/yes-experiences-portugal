@@ -80,6 +80,20 @@ export function CinematicHero() {
     return () => window.removeEventListener("resize", onResize);
   }, [debug]);
 
+  // Live ticker for debug timeline (video.currentTime + wall-clock since mount).
+  useEffect(() => {
+    if (!debug) return;
+    let raf = 0;
+    const tick = () => {
+      const v = videoRef.current;
+      setLiveVideoT(v ? v.currentTime : 0);
+      setLiveWallMs(Math.round(performance.now() - mountedAtRef.current));
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [debug]);
+
   const tryPlay = (origin: string) => {
     const v = videoRef.current;
     if (!v) return;
