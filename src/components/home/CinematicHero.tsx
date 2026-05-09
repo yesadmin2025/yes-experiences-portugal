@@ -146,13 +146,17 @@ export function CinematicHero() {
   // Beat schedule — anchored to video.currentTime in seconds. Falls back
   // to wall-clock at the same offsets if the video can't play.
   type BeatKey = "eyebrow" | "headlineLine1" | "headlineLine2" | "copy" | "microcopy" | "ctaPrimary" | "ctaSecondary";
-  type BeatStamp = { wallMs: number; videoT: number; mode: "video" | "wall" };
+  type BeatStamp = { wallMs: number; videoT: number; mode: "video" | "wall" | "step" };
   const [revealed, setRevealed] = useState<Set<BeatKey>>(() => new Set());
   const [beatStamps, setBeatStamps] = useState<Partial<Record<BeatKey, BeatStamp>>>({});
   const [liveVideoT, setLiveVideoT] = useState<number>(0);
   const [liveWallMs, setLiveWallMs] = useState<number>(0);
-  const [activeMode, setActiveMode] = useState<"video" | "wall" | null>(null);
+  const [activeMode, setActiveMode] = useState<"video" | "wall" | "step" | null>(null);
   const [activeSchedule, setActiveSchedule] = useState<{ key: BeatKey; t: number }[]>([]);
+  const [stepIndex, setStepIndex] = useState<number>(0);
+
+  const firedRef = useRef<Set<BeatKey>>(new Set());
+  const modeRef = useRef<"video" | "wall" | "step" | null>(null);
 
   const getSchedule = (): { key: BeatKey; t: number }[] => {
     const w = typeof window !== "undefined" ? window.innerWidth : 768;
@@ -189,6 +193,55 @@ export function CinematicHero() {
     ];
   };
 
+  const revealBeat = (key: BeatKey) => {
+    if (firedRef.current.has(key)) return;
+    firedRef.current.add(key);
+    const wallMs = Math.round(performance.now() - mountedAtRef.current);
+    const videoT = videoRef.current ? videoRef.current.currentTime : 0;
+    const stampMode: "video" | "wall" | "step" = modeRef.current ?? "wall";
+    setRevealed((prev) => {
+      if (prev.has(key)) return prev;
+      const next = new Set(prev);
+      next.add(key);
+      return next;
+    });
+    setBeatStamps((prev) => (prev[key] ? prev : { ...prev, [key]: { wallMs, videoT, mode: stampMode } }));
+    log("beat", `${key} @ wall=${wallMs}ms video=${videoT.toFixed(2)}s mode=${stampMode}`);
+  };
+
+  // Step-by-step controls: advance one beat per call, seeking the video
+  // frame to that beat's `t` so the visible frame matches the reveal.
+  const stepNext = () => {
+    const schedule = activeSchedule.length ? activeSchedule : getSchedule();
+    if (!activeSchedule.length) setActiveSchedule(schedule);
+    setStepIndex((idx) => {
+      if (idx >= schedule.length) return idx;
+      const beat = schedule[idx];
+      const v = videoRef.current;
+      if (v) {
+        try { v.pause(); } catch {}
+        try { v.currentTime = beat.t; } catch {}
+      }
+      revealBeat(beat.key);
+      log("step-next", `${beat.key} → seek ${beat.t.toFixed(2)}s`);
+      return idx + 1;
+    });
+  };
+
+  const stepReset = () => {
+    firedRef.current = new Set();
+    setRevealed(new Set());
+    setBeatStamps({});
+    setStepIndex(0);
+    setStoryActive(false);
+    const v = videoRef.current;
+    if (v) {
+      try { v.pause(); } catch {}
+      try { v.currentTime = 0; } catch {}
+    }
+    log("step-reset");
+  };
+
   useEffect(() => {
     const node = sectionRef.current;
     if (!node) return;
@@ -198,35 +251,49 @@ export function CinematicHero() {
     let safety: number | undefined;
     let onFirstTouch: (() => void) | undefined;
     let started = false;
-    let mode: "video" | "wall" | null = null;
     const schedule = getSchedule();
     setActiveSchedule(schedule);
-    const fired = new Set<BeatKey>();
+    firedRef.current = new Set();
 
-    const reveal = (key: BeatKey) => {
-      if (fired.has(key)) return;
-      fired.add(key);
-      const wallMs = Math.round(performance.now() - mountedAtRef.current);
-      const videoT = videoRef.current ? videoRef.current.currentTime : 0;
-      const stampMode: "video" | "wall" = mode === "video" ? "video" : "wall";
-      setRevealed((prev) => {
-        if (prev.has(key)) return prev;
-        const next = new Set(prev);
-        next.add(key);
-        return next;
-      });
-      setBeatStamps((prev) => (prev[key] ? prev : { ...prev, [key]: { wallMs, videoT, mode: stampMode } }));
-      log("beat", `${key} @ wall=${wallMs}ms video=${videoT.toFixed(2)}s`);
-    };
+    // Step-by-step mode: suspend automatic triggers entirely. The user
+    // advances each beat via the debug panel buttons or keyboard shortcuts
+    // (→/Space/N = next, ←/Backspace/R = reset).
+    if (stepMode) {
+      modeRef.current = "step";
+      setActiveMode("step");
+      setStoryActive(true);
+      log("step-mode", "suspended auto-triggers");
+      const v = videoRef.current;
+      if (v) {
+        const onMeta = () => { try { v.pause(); } catch {} try { v.currentTime = 0; } catch {} };
+        if (v.readyState >= 1) onMeta();
+        else v.addEventListener("loadedmetadata", onMeta, { once: true });
+      }
+      const onKey = (e: KeyboardEvent) => {
+        if (e.key === "ArrowRight" || e.key === " " || e.key === "n" || e.key === "N") {
+          e.preventDefault();
+          stepNext();
+        } else if (e.key === "ArrowLeft" || e.key === "Backspace" || e.key === "r" || e.key === "R") {
+          e.preventDefault();
+          stepReset();
+        }
+      };
+      window.addEventListener("keydown", onKey);
+      return () => {
+        window.removeEventListener("keydown", onKey);
+      };
+    }
+
+    const reveal = (key: BeatKey) => revealBeat(key);
 
     const runVideoLoop = () => {
       const v = videoRef.current;
-      if (!v || mode !== "video") return;
+      if (!v || modeRef.current !== "video") return;
       const ct = v.currentTime;
       for (const beat of schedule) {
         if (ct >= beat.t) reveal(beat.key);
       }
-      if (fired.size < schedule.length) {
+      if (firedRef.current.size < schedule.length) {
         raf = requestAnimationFrame(runVideoLoop);
       }
     };
@@ -234,7 +301,7 @@ export function CinematicHero() {
     const startVideoMode = (origin: string) => {
       if (started) return;
       started = true;
-      mode = "video";
+      modeRef.current = "video";
       setActiveMode("video");
       setStoryActive(true);
       log("story-trigger", `video:${origin}`);
@@ -244,7 +311,7 @@ export function CinematicHero() {
     const startWallMode = (origin: string) => {
       if (started) return;
       started = true;
-      mode = "wall";
+      modeRef.current = "wall";
       setActiveMode("wall");
       setStoryActive(true);
       log("story-trigger", `wall:${origin}`);
@@ -280,13 +347,11 @@ export function CinematicHero() {
         setIntersectionRatio(entry.intersectionRatio);
         if (entry.isIntersecting && entry.intersectionRatio >= 0.25) {
           armPlayBridge();
-          // Safety net: if the video never starts within 1200ms, fall back
-          // to wall-clock so the cascade still runs in lock-step.
           if (!safety) {
             safety = window.setTimeout(() => {
               if (!started) {
                 log("safety", "wall-fallback");
-                setVideoFailed((prev) => prev); // no-op, keep state
+                setVideoFailed((prev) => prev);
                 startWallMode("safety");
               }
             }, 1200);
