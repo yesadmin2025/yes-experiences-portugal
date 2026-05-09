@@ -1687,6 +1687,22 @@
   animation: none !important;
 }
 
+/* Hard-reset the legacy mobile `opacity: 0` rule on the headline spans
+   (see @media (max-width: 767px) block above). React drives the reveal
+   via the `opacity-{0,100}` utilities on the same element, so the static
+   override silently kept the cinematic H1 invisible on mobile even after
+   showLine1/showLine2 flipped to true. Specificity matches the legacy
+   selector so source order alone isn't enough — we use !important to
+   ensure React's class-driven opacity wins inside .hero-cinematic. */
+.hero-cinematic [data-hero-field="headlineLine1"],
+.hero-cinematic [data-hero-field="headlineLine2"],
+.hero-cinematic [data-hero-field="eyebrow"],
+.hero-cinematic [data-hero-field="subheadline"],
+.hero-cinematic .hero-cta-button[data-hero-field="primaryCta"],
+.hero-cinematic .hero-cta-button[data-hero-field="secondaryCta"] {
+  opacity: revert !important;
+}
+
 /* Cinematic hero story sequence — React state controls the active scene, so
    the image, message and CTA visibility are never stacked together.
 
