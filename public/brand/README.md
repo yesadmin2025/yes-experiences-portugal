@@ -34,7 +34,7 @@ designers, or partners as the source of truth.
 | `--gold`          | `#C9A96A` | Accent (rules, dividers)        |
 | `--gold-soft`     | `#E1CFA6` | Soft accent (microcopy)         |
 | `--charcoal`      | `#2E2E2E` | Primary text / dark surface     |
-| `--charcoal-soft` | `#6B6B6B` | Secondary text                  |
+| `--charcoal-soft` | `#555555` | Secondary text                  |
 | `--ivory`         | `#FAF8F3` | Primary background              |
 | `--sand`          | `#F4EFE7` | Quiet surface                   |
 
