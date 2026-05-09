@@ -33,6 +33,24 @@ function isHeroDebugEnabled(): boolean {
   return false;
 }
 
+/**
+ * Slow-mo factor from `?heroSlowMo=N` (e.g. 2 = half-speed, 4 = quarter,
+ * 0.5 = double-speed). Clamped to [0.25, 8]. 1 = normal. Always returns 1
+ * when the URL param is missing or invalid.
+ */
+function getHeroSlowMo(): number {
+  if (typeof window === "undefined") return 1;
+  try {
+    const raw = new URLSearchParams(window.location.search).get("heroSlowMo");
+    if (!raw) return 1;
+    const n = Number(raw);
+    if (!Number.isFinite(n) || n <= 0) return 1;
+    return Math.min(8, Math.max(0.25, n));
+  } catch {
+    return 1;
+  }
+}
+
 export function CinematicHero() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const sectionRef = useRef<HTMLElement | null>(null);
@@ -49,6 +67,7 @@ export function CinematicHero() {
   });
   const [videoSrc, setVideoSrc] = useState<string>(HERO_FILM_SRC_720);
   const [debug] = useState<boolean>(() => isHeroDebugEnabled());
+  const [slowMo] = useState<number>(() => getHeroSlowMo());
   const [debugEvents, setDebugEvents] = useState<HeroDebugEvent[]>([]);
   const [intersectionRatio, setIntersectionRatio] = useState<number>(0);
   const [viewportW, setViewportW] = useState<number>(typeof window !== "undefined" ? window.innerWidth : 0);
@@ -215,7 +234,8 @@ export function CinematicHero() {
       log("story-trigger", `wall:${origin}`);
       const t0 = performance.now();
       for (const beat of schedule) {
-        const id = window.setTimeout(() => reveal(beat.key), Math.max(0, beat.t * 1000 - (performance.now() - t0)));
+        const target = beat.t * 1000 * slowMo;
+        const id = window.setTimeout(() => reveal(beat.key), Math.max(0, target - (performance.now() - t0)));
         wallTimers.push(id);
       }
     };
@@ -226,8 +246,9 @@ export function CinematicHero() {
       if (!v) return;
       const onPlaying = () => startVideoMode("playing");
       v.addEventListener("playing", onPlaying, { once: true });
+      try { v.playbackRate = 1 / slowMo; } catch {}
       const p = v.play();
-      log("play-attempt", "arm");
+      log("play-attempt", `arm slowMo=${slowMo}`);
       if (p && typeof p.then === "function") {
         p.catch((err: unknown) => {
           const name = err && typeof err === "object" && "name" in err ? String((err as { name: unknown }).name) : "Error";
@@ -554,7 +575,7 @@ export function CinematicHero() {
             data-hero-debug-panel="true"
           >
             <div className="mb-1.5 flex items-center justify-between gap-2 font-mono text-[10px] uppercase tracking-wider text-white/70">
-              <span>hero debug · {bp}</span>
+              <span>hero debug · {bp}{slowMo !== 1 ? ` · ${slowMo}× slow` : ""}</span>
               <span>{viewportW}px</span>
             </div>
             <ul className="mb-2 space-y-0.5 font-mono text-[10px]">
