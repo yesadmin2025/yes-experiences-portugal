@@ -568,7 +568,7 @@
   .hero-cta-button svg {
     color: var(--gold-soft);
     filter: drop-shadow(0 0 8px color-mix(in oklab, var(--gold) 45%, transparent));
-    transition: color 300ms cubic-bezier(0.22, 0.61, 0.36, 1), transform 300ms cubic-bezier(0.22, 0.61, 0.36, 1);
+    transition: color 300ms var(--ease-premium), transform 300ms var(--ease-premium);
   }
   .hero-cta-button:hover svg {
     color: var(--gold);
