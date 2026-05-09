@@ -21,10 +21,6 @@ const HERO_FILM_SRC_1080 = "/video/film/yes-hero-film-1080.mp4";
 const HERO_FILM_SRC_720 = "/video/film/yes-hero-film-720.mp4";
 const HERO_FILM_POSTER = "/video/film/yes-hero-poster.jpg";
 
-function prefersReducedMotion(): boolean {
-  if (typeof window === "undefined") return false;
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-}
 
 export function CinematicHero() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
