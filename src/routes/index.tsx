@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import { PlatformBadge } from "@/components/PlatformBadge";
 import { StudioLivePreview } from "@/components/home/StudioLivePreview";
+import { CinematicHero } from "@/components/home/CinematicHero";
 import { getScrollDebugFlags, useScrollDebugFlags } from "@/lib/scroll-debug";
 
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
