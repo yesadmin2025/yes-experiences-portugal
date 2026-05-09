@@ -40,9 +40,20 @@ export function CinematicHero() {
 
   const [storyActive, setStoryActive] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
-  // Pick source synchronously based on viewport so mobile never tries to
-  // download the 1080p file. We default to 720p during SSR / before hydration.
   const [videoSrc, setVideoSrc] = useState<string>(HERO_FILM_SRC_720);
+  const [debug] = useState<boolean>(() => isHeroDebugEnabled());
+  const [debugEvents, setDebugEvents] = useState<HeroDebugEvent[]>([]);
+  const [intersectionRatio, setIntersectionRatio] = useState<number>(0);
+  const [viewportW, setViewportW] = useState<number>(typeof window !== "undefined" ? window.innerWidth : 0);
+
+  const log = (label: string, detail?: string) => {
+    const t = Math.round((typeof performance !== "undefined" ? performance.now() : Date.now()) - mountedAtRef.current);
+    if (debug) {
+      // eslint-disable-next-line no-console
+      console.info(`[hero] +${t}ms ${label}${detail ? ` — ${detail}` : ""}`);
+      setDebugEvents((prev) => [...prev.slice(-19), { t, label, detail }]);
+    }
+  };
 
   // Resolve source on the client.
   useEffect(() => {
@@ -50,17 +61,29 @@ export function CinematicHero() {
       typeof window !== "undefined" &&
       window.matchMedia("(min-width: 768px)").matches;
     setVideoSrc(isDesktop ? HERO_FILM_SRC_1080 : HERO_FILM_SRC_720);
+    log("source-resolved", isDesktop ? "1080p" : "720p");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Try to play the film — fall back to poster if autoplay is blocked or
-  // the file fails. The story sequence runs independently so the cascade
-  // stays in sync either way.
-  const tryPlay = () => {
+  // Track viewport width while debug overlay is open.
+  useEffect(() => {
+    if (!debug) return;
+    const onResize = () => setViewportW(window.innerWidth);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [debug]);
+
+  const tryPlay = (origin: string) => {
     const v = videoRef.current;
     if (!v) return;
     const p = v.play();
+    log("play-attempt", origin);
     if (p && typeof p.then === "function") {
-      p.catch(() => setVideoFailed(true));
+      p.then(() => log("play-success", origin)).catch((err: unknown) => {
+        const name = err && typeof err === "object" && "name" in err ? String((err as { name: unknown }).name) : "Error";
+        log("play-failed", `${origin}: ${name}`);
+        setVideoFailed(true);
+      });
     }
   };
 
@@ -69,39 +92,54 @@ export function CinematicHero() {
     if (!node) return;
 
     let storyTimer: number | undefined;
+    let safety: number | undefined;
     let onFirstTouch: (() => void) | undefined;
+    let started = false;
 
-    const triggerStory = () => {
-      storyTimer = window.setTimeout(() => setStoryActive(true), 120);
-      tryPlay();
+    // Story cascade is decoupled from the video. It always starts at the
+    // same moment relative to viewport entry, regardless of whether the
+    // video has loaded, succeeded, or failed.
+    const startStory = (origin: string) => {
+      if (started) return;
+      started = true;
+      log("story-trigger", origin);
+      storyTimer = window.setTimeout(() => {
+        setStoryActive(true);
+        log("story-active", origin);
+      }, 120);
+      tryPlay(`story:${origin}`);
     };
 
     if (typeof IntersectionObserver === "undefined") {
-      triggerStory();
+      startStory("no-io");
     } else {
       const observer = new IntersectionObserver(
         (entries) => {
           for (const entry of entries) {
-            if (entry.isIntersecting && entry.intersectionRatio >= 0.25) {
-              triggerStory();
+            setIntersectionRatio(entry.intersectionRatio);
+            if (entry.isIntersecting && entry.intersectionRatio >= 0.25 && !started) {
+              startStory("intersect");
               observer.disconnect();
               break;
             }
           }
         },
-        { threshold: [0, 0.25, 0.5], rootMargin: "0px 0px -10% 0px" },
+        { threshold: [0, 0.1, 0.25, 0.5, 0.75, 1], rootMargin: "0px 0px -10% 0px" },
       );
       observer.observe(node);
 
-      // First user interaction unlocks autoplay on iOS Low Power Mode etc.
-      onFirstTouch = () => {
-        tryPlay();
-      };
+      // Safety net so the cascade never depends on the video being ready.
+      safety = window.setTimeout(() => {
+        if (!started) startStory("safety-timeout");
+      }, 800);
+
+      onFirstTouch = () => tryPlay("user-gesture");
       window.addEventListener("touchstart", onFirstTouch, { once: true, passive: true });
       window.addEventListener("pointerdown", onFirstTouch, { once: true });
 
       return () => {
         observer.disconnect();
+        if (safety) window.clearTimeout(safety);
         if (storyTimer) window.clearTimeout(storyTimer);
         if (onFirstTouch) {
           window.removeEventListener("touchstart", onFirstTouch);
@@ -113,6 +151,7 @@ export function CinematicHero() {
     return () => {
       if (storyTimer) window.clearTimeout(storyTimer);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleScrollToNext = (e: React.MouseEvent<HTMLAnchorElement>) => {
