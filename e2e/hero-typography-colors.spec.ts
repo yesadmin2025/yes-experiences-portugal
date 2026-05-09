@@ -136,14 +136,12 @@ test.describe("Hero typography colors — YES brand-token regression", () => {
             `Allowed: gold #C9A96A or gold-soft #E1CFA6.`,
     ).toBe(true);
 
-    // Headline lines MUST resolve to the YES gold family on the dark
-    // cinematic film (no white bold), with teal/charcoal still allowed if
-    // the hero is ever re-skinned for a light surface.
+    // Headline lines MUST be ivory over the dark cinematic film (matches
+    // the rest of the site's headline system — Montserrat + Georgia italic
+    // in ivory/charcoal). Teal/charcoal allowed only for a future light
+    // re-skin. Gold is reserved as a micro-detail accent (eyebrow only).
     const headlineAllow = [
-      { name: "gold (#C9A96A)", rgb: TOKENS.gold },
-      { name: "gold-soft (#E1CFA6)", rgb: TOKENS.goldSoft },
-      { name: "gold-warm (#D8BE82)", rgb: TOKENS.goldWarm },
-      { name: "gold-deep (#B89452)", rgb: TOKENS.goldDeep },
+      { name: "ivory (#FAF8F3)", rgb: TOKENS.ivory },
       { name: "teal (#295B61)", rgb: TOKENS.teal },
       { name: "charcoal (#2E2E2E)", rgb: TOKENS.charcoal },
     ];
@@ -158,7 +156,7 @@ test.describe("Hero typography colors — YES brand-token regression", () => {
           ? "ok"
           : `Hero ${label} color ${fmt(c)} is NOT a YES brand token. ` +
               `Nearest: ${m.nearest} (Δ=${m.delta}). ` +
-              `Allowed: gold #C9A96A, gold-soft #E1CFA6, teal #295B61, charcoal #2E2E2E.`,
+              `Allowed: ivory #FAF8F3, teal #295B61, charcoal #2E2E2E.`,
       ).toBe(true);
     }
   });
