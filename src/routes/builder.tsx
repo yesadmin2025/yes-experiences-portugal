@@ -436,6 +436,22 @@ function BuilderPage() {
   return (
     <SiteLayout>
       <article className="bg-[color:var(--ivory)] text-[color:var(--charcoal)]">
+        <BuilderDebugPanel
+          state={{
+            urlStep: step,
+            urlMood: mood,
+            urlWho: who,
+            urlIntention: intention,
+            urlPace: pace,
+            intentions,
+            furthestStep: persisted.furthestStep,
+            excluded: persisted.excluded,
+            orderOverride: persisted.orderOverride,
+            guests: persisted.guests,
+            selectedElements: persisted.selectedElements,
+            hydrated,
+          }}
+        />
         {/* Live-feedback toast — visible during step 6 interactions */}
         {liveToast && step === 6 && (
           <div
