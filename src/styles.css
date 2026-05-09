@@ -3143,8 +3143,11 @@ html.motion-ready [data-motion].motion-in {
     line-height: 1;
   }
   .he-eyebrow-bar--dark {
-    color: var(--ivory);
-    text-shadow: 0 2px 10px color-mix(in oklab, var(--charcoal-deep) 78%, transparent);
+    /* Champagne Gold (contained micro-detail) on dark hero — matches
+       the YES brand rule of gold = accent only, while keeping AA on
+       a darkened video frame. */
+    color: var(--gold-soft);
+    text-shadow: 0 2px 10px color-mix(in oklab, var(--charcoal-deep) 80%, transparent);
   }
   .he-eyebrow-bar::before {
     content: "";
