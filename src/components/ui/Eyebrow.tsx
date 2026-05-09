@@ -42,7 +42,7 @@ export const Eyebrow = React.forwardRef<HTMLSpanElement, EyebrowProps>(
         className={cn(
           "he-eyebrow-bar",
           flank && "flank",
-          tone === "onDark" && "text-[color:var(--gold-soft)]",
+          tone === "onDark" && "he-eyebrow-bar--dark",
           className,
         )}
         {...rest}
