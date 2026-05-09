@@ -433,7 +433,7 @@ export function CinematicHero() {
         preload="auto"
         aria-hidden="true"
         data-hero-film="true"
-        onCanPlay={() => { log("video-canplay"); tryPlay("canplay"); }}
+        onCanPlay={() => { log("video-canplay"); if (!stepMode) tryPlay("canplay"); }}
         onPlaying={() => { setVideoFailed(false); log("video-playing"); }}
         onError={() => { setVideoFailed(true); log("video-error"); }}
         onStalled={() => { setVideoFailed(true); log("video-stalled"); }}
