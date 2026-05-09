@@ -145,18 +145,18 @@ export function CinematicHero() {
           </Eyebrow>
 
           <h1
-            className="t-display mt-5 md:mt-7 text-balance"
+            className="t-display mt-5 md:mt-7 text-balance text-[color:var(--ivory)]"
             data-hero-field="headlineLine1 headlineLine2"
           >
             <span
               data-hero-field="headlineLine1"
-              className={`block text-[color:var(--gold)] transition-all duration-700 ${showLine1 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}
+              className={`block font-[600] tracking-[-0.018em] text-[color:var(--ivory)] transition-all duration-700 ${showLine1 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}
             >
               {HERO_COPY.headlineLine1}
             </span>
             <span
               data-hero-field="headlineLine2"
-              className={`block mt-1 md:mt-1.5 italic font-normal tracking-[-0.014em] text-[color:var(--gold-soft)] transition-all duration-700 ${showLine2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}
+              className={`block mt-1 md:mt-1.5 font-serif italic font-normal tracking-[-0.012em] text-[color:var(--ivory)] transition-all duration-700 ${showLine2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}
             >
               {HERO_COPY.headlineLine2}
             </span>
