@@ -902,6 +902,9 @@ function HomePage() {
               loop
               playsInline
               preload="auto"
+              // LCP element — hint the browser to prioritize the poster
+              // fetch so paint can begin before the .mp4 is parsed.
+              {...({ fetchpriority: "high" } as Record<string, string>)}
               ref={(el) => {
                 if (!el) return;
                 // Premium pacing: keep the authored chapter cut-points intact,
