@@ -1835,13 +1835,13 @@
     width: 100%;
     justify-content: center;
     color: var(--ivory);
-    min-height: 52px;
-    padding-inline: 18px;
+    min-height: 50px;
+    padding: 14px 18px;
     border-radius: 2px;
     background: linear-gradient(180deg, color-mix(in oklab, var(--teal-2) 28%, var(--teal)) 0%, var(--teal) 100%);
-    transition-property: opacity, transform, background-color, border-color, box-shadow;
-    transition-duration: 220ms;
-    transition-timing-function: ease-out;
+    transition-property: opacity, transform, background-color, border-color, box-shadow, text-shadow;
+    transition-duration: 360ms;
+    transition-timing-function: var(--ease-premium);
   }
 
   .hero-cinematic .hero-cta-button > span {
