@@ -43,7 +43,6 @@ function prefersReducedMotion(): boolean {
 
 export function CinematicHero() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const primaryCtaRef = useRef<HTMLAnchorElement | null>(null);
   const [reduced] = useState(prefersReducedMotion);
   const [freezeLast] = useState(shouldFreezeOnLast);
 
