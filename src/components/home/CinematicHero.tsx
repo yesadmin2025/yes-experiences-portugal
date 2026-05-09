@@ -17,12 +17,14 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { CtaButton } from "@/components/ui/CtaButton";
 import { HeroColorDebugOverlay } from "@/components/HeroColorDebugOverlay";
 
-// Reveal beats keyed to film timestamps (seconds). The last beat
-// (subheadline + CTAs + microcopy) intentionally lands together.
-const BEAT_EYEBROW = 0.4;
-const BEAT_H1_LINE_1 = 1.6;
-const BEAT_H1_LINE_2 = 3.2;
-const BEAT_FINAL = 8.5; // subheadline + CTAs + microcopy
+// Editorial reveal: each item transitions for 220ms ease-out, then the
+// next beat starts. This keeps the hero premium and readable immediately.
+const HERO_REVEAL_DELAYS_MS = {
+  eyebrow: 0,
+  line1: 220,
+  line2: 440,
+  final: 660,
+} as const;
 
 const HERO_FILM_SRC_1080 = "/video/film/yes-hero-film-1080.mp4";
 const HERO_FILM_SRC_720 = "/video/film/yes-hero-film-720.mp4";
@@ -52,39 +54,19 @@ export function CinematicHero() {
   const [showLine2, setShowLine2] = useState(initialAll);
   const [showFinal, setShowFinal] = useState(initialAll);
 
-  // Drive reveals from the actual video currentTime so the cadence
-  // tracks the film, not wall-clock drift.
+  // Drive reveals with a strict 220ms sequential cadence. The film stays
+  // atmospheric; typography timing stays deterministic and testable.
   useEffect(() => {
     if (initialAll) return;
-    const v = videoRef.current;
-    if (!v) return;
-
-    let rafId = 0;
-    const tick = () => {
-      const t = v.currentTime;
-      if (t >= BEAT_EYEBROW) setShowEyebrow(true);
-      if (t >= BEAT_H1_LINE_1) setShowLine1(true);
-      if (t >= BEAT_H1_LINE_2) setShowLine2(true);
-      if (t >= BEAT_FINAL) {
-        setShowFinal(true);
-        return; // all reveals done — stop the loop
-      }
-      rafId = requestAnimationFrame(tick);
-    };
-    rafId = requestAnimationFrame(tick);
-
-    // Safety net — if the video stalls or is blocked, reveal everything
-    // after a wall-clock fallback so the page is never copy-less.
-    const fallback = window.setTimeout(() => {
-      setShowEyebrow(true);
-      setShowLine1(true);
-      setShowLine2(true);
-      setShowFinal(true);
-    }, 9500);
+    const timers = [
+      window.setTimeout(() => setShowEyebrow(true), HERO_REVEAL_DELAYS_MS.eyebrow),
+      window.setTimeout(() => setShowLine1(true), HERO_REVEAL_DELAYS_MS.line1),
+      window.setTimeout(() => setShowLine2(true), HERO_REVEAL_DELAYS_MS.line2),
+      window.setTimeout(() => setShowFinal(true), HERO_REVEAL_DELAYS_MS.final),
+    ];
 
     return () => {
-      cancelAnimationFrame(rafId);
-      window.clearTimeout(fallback);
+      timers.forEach((timer) => window.clearTimeout(timer));
     };
   }, [initialAll]);
 
