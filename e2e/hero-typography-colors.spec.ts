@@ -14,7 +14,7 @@
  * Per-element contract (locked to brand guardrails):
  *   eyebrow        → gold #C9A96A, no shadow, fully opaque
  *   headlineLine1  → ivory #FAF8F3, no shadow, fully opaque
- *   headlineLine2  → gold #C9A96A, Georgia italic, no shadow, fully opaque
+ *   headlineLine2  → gold-soft #E1CFA6, Georgia italic, no shadow, fully opaque
  *   reveal cadence → 220ms ease-out, ordered eyebrow → line1 → line2 → final
  *
  * Tolerance: ΔE-ish per-channel ±10/255 to absorb sub-pixel anti-alias
@@ -183,16 +183,16 @@ test.describe("Hero typography colors — YES brand-token regression", () => {
             `Allowed: gold #C9A96A only.`,
     ).toBe(true);
 
-    // Headline line 1 stays quiet ivory; line 2 MUST be approved brand gold.
+    // Headline line 1 stays quiet ivory; line 2 MUST be approved gold-soft.
     const line1Allow = [{ name: "ivory (#FAF8F3)", rgb: TOKENS.ivory }];
-    const line2Allow = [{ name: "gold (#C9A96A)", rgb: TOKENS.gold }];
+    const line2Allow = [{ name: "gold-soft (#E1CFA6)", rgb: TOKENS.goldSoft }];
     for (const [label, c, allow, allowedDesc] of [
       ["headlineLine1", line1, line1Allow, "ivory #FAF8F3 only"],
       [
         "headlineLine2 (italic)",
         line2,
         line2Allow,
-        "gold #C9A96A only",
+        "gold-soft #E1CFA6 only",
       ],
     ] as const) {
       const m = matchesAny(c, allow);

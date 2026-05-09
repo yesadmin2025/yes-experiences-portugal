@@ -17,12 +17,14 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { CtaButton } from "@/components/ui/CtaButton";
 import { HeroColorDebugOverlay } from "@/components/HeroColorDebugOverlay";
 
-// Reveal beats keyed to film timestamps (seconds). The last beat
-// (subheadline + CTAs + microcopy) intentionally lands together.
-const BEAT_EYEBROW = 0.4;
-const BEAT_H1_LINE_1 = 1.6;
-const BEAT_H1_LINE_2 = 3.2;
-const BEAT_FINAL = 8.5; // subheadline + CTAs + microcopy
+// Editorial reveal: each item transitions for 220ms ease-out, then the
+// next beat starts. This keeps the hero premium and readable immediately.
+const HERO_REVEAL_DELAYS_MS = {
+  eyebrow: 0,
+  line1: 220,
+  line2: 440,
+  final: 660,
+} as const;
 
 const HERO_FILM_SRC_1080 = "/video/film/yes-hero-film-1080.mp4";
 const HERO_FILM_SRC_720 = "/video/film/yes-hero-film-720.mp4";
@@ -52,45 +54,25 @@ export function CinematicHero() {
   const [showLine2, setShowLine2] = useState(initialAll);
   const [showFinal, setShowFinal] = useState(initialAll);
 
-  // Drive reveals from the actual video currentTime so the cadence
-  // tracks the film, not wall-clock drift.
+  // Drive reveals with a strict 220ms sequential cadence. The film stays
+  // atmospheric; typography timing stays deterministic and testable.
   useEffect(() => {
     if (initialAll) return;
-    const v = videoRef.current;
-    if (!v) return;
-
-    let rafId = 0;
-    const tick = () => {
-      const t = v.currentTime;
-      if (t >= BEAT_EYEBROW) setShowEyebrow(true);
-      if (t >= BEAT_H1_LINE_1) setShowLine1(true);
-      if (t >= BEAT_H1_LINE_2) setShowLine2(true);
-      if (t >= BEAT_FINAL) {
-        setShowFinal(true);
-        return; // all reveals done — stop the loop
-      }
-      rafId = requestAnimationFrame(tick);
-    };
-    rafId = requestAnimationFrame(tick);
-
-    // Safety net — if the video stalls or is blocked, reveal everything
-    // after a wall-clock fallback so the page is never copy-less.
-    const fallback = window.setTimeout(() => {
-      setShowEyebrow(true);
-      setShowLine1(true);
-      setShowLine2(true);
-      setShowFinal(true);
-    }, 9500);
+    const timers = [
+      window.setTimeout(() => setShowEyebrow(true), HERO_REVEAL_DELAYS_MS.eyebrow),
+      window.setTimeout(() => setShowLine1(true), HERO_REVEAL_DELAYS_MS.line1),
+      window.setTimeout(() => setShowLine2(true), HERO_REVEAL_DELAYS_MS.line2),
+      window.setTimeout(() => setShowFinal(true), HERO_REVEAL_DELAYS_MS.final),
+    ];
 
     return () => {
-      cancelAnimationFrame(rafId);
-      window.clearTimeout(fallback);
+      timers.forEach((timer) => window.clearTimeout(timer));
     };
   }, [initialAll]);
 
   return (
     <section
-      className="hero-cinematic relative w-full min-h-[100svh] overflow-hidden bg-[color:var(--charcoal)] text-[color:var(--ivory)] flex items-end"
+      className="hero-cinematic relative w-full min-h-[calc(100svh-65px)] md:min-h-screen overflow-hidden bg-[color:var(--charcoal-deep)] text-[color:var(--ivory)] flex items-center md:items-end"
       aria-roledescription="cinematic hero film"
       aria-label={`${HERO_COPY.headlineLine1} ${HERO_COPY.headlineLine2}`}
       data-hero-cinematic="true"
@@ -125,17 +107,17 @@ export function CinematicHero() {
       {/* Bottom darken so copy stays AA against varied frames. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(15,12,9,0.44)_0%,rgba(15,12,9,0.56)_36%,rgba(15,12,9,0.82)_70%,rgba(15,12,9,0.94)_100%)]"
+        className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(15,12,9,0.28)_0%,rgba(15,12,9,0.38)_30%,rgba(15,12,9,0.68)_66%,rgba(15,12,9,0.92)_100%)]"
       />
       {/* Extra scrim directly behind copy block — guarantees AA on the brightest frames. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-[76%] bg-[radial-gradient(120%_90%_at_50%_82%,rgba(15,12,9,0.88)_0%,rgba(15,12,9,0.68)_48%,rgba(15,12,9,0)_100%)]"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-[70%] bg-[radial-gradient(110%_78%_at_50%_84%,rgba(15,12,9,0.72)_0%,rgba(15,12,9,0.52)_46%,rgba(15,12,9,0)_100%)]"
       />
 
       {/* Copy column — full width on mobile with 20px gutters, capped on tablet+. */}
-      <div className="relative z-10 w-full px-5 pb-10 pt-24 sm:px-8 sm:pb-14 md:px-12 md:pb-20 lg:px-16">
-        <div className="mx-auto max-w-[44rem]">
+      <div className="relative z-10 w-full px-6 pb-8 pt-10 sm:px-8 sm:pb-12 md:px-12 md:pb-20 md:pt-24 lg:px-16">
+        <div className="mx-auto max-w-[46rem] md:mx-0 md:ml-[6vw] lg:ml-[8vw]">
           <Eyebrow
             tone="onDark"
             data-hero-field="eyebrow"
@@ -143,13 +125,13 @@ export function CinematicHero() {
             data-hero-reveal-order="1"
             data-hero-reveal-duration-ms="220"
             data-hero-reveal-ease="ease-out"
-            className={`hero-eyebrow transition-opacity duration-[220ms] ease-out ${showEyebrow ? "opacity-100" : "opacity-0"}`}
+            className={`hero-eyebrow transition-all duration-[220ms] ease-out ${showEyebrow ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
           >
             {HERO_COPY.eyebrow}
           </Eyebrow>
 
           <h1
-            className="hero-h1 t-display mt-7 sm:mt-8 md:mt-10 text-balance text-[color:var(--ivory)] [font-weight:400] [letter-spacing:-0.012em] md:[letter-spacing:-0.016em] lg:[letter-spacing:-0.02em] [line-height:1.08] md:[line-height:1.04] lg:[line-height:1] [text-shadow:none]"
+            className="hero-h1 t-display mt-8 sm:mt-9 md:mt-11 max-w-[12ch] sm:max-w-[13ch] md:max-w-[14ch] text-balance text-[color:var(--ivory)] [font-weight:400] [font-size:2.125rem] sm:[font-size:2.35rem] md:[font-size:4rem] lg:[font-size:4.75rem] [letter-spacing:0] [line-height:1.08] md:[line-height:1.04] lg:[line-height:1] [text-shadow:none]"
             data-hero-field="headlineLine1 headlineLine2"
           >
             <span
@@ -158,7 +140,7 @@ export function CinematicHero() {
               data-hero-reveal-order="2"
               data-hero-reveal-duration-ms="220"
               data-hero-reveal-ease="ease-out"
-              className={`block font-[400] text-[color:var(--ivory)] [text-shadow:none] transition-all duration-[220ms] ease-out ${showLine1 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}
+              className={`block font-[400] text-[color:var(--ivory)] [text-shadow:none] transition-all duration-[220ms] ease-out ${showLine1 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
             >
               {HERO_COPY.headlineLine1}
             </span>
@@ -168,7 +150,7 @@ export function CinematicHero() {
               data-hero-reveal-order="3"
               data-hero-reveal-duration-ms="220"
               data-hero-reveal-ease="ease-out"
-              className={`block mt-4 sm:mt-5 md:mt-6 [font-family:var(--font-serif)] italic font-normal [letter-spacing:-0.008em] md:[letter-spacing:-0.01em] [line-height:1.08] text-[color:var(--gold)] [text-shadow:none] transition-all duration-[220ms] ease-out ${showLine2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}
+              className={`block mt-5 sm:mt-6 md:mt-7 [font-family:var(--font-serif)] italic font-normal [letter-spacing:0] [line-height:1.04] text-[color:var(--gold-soft)] [text-shadow:none] transition-all duration-[220ms] ease-out ${showLine2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
             >
               {HERO_COPY.headlineLine2}
             </span>
@@ -179,13 +161,13 @@ export function CinematicHero() {
             data-hero-reveal-order="4"
             data-hero-reveal-duration-ms="220"
             data-hero-reveal-ease="ease-out"
-            className={`transition-all duration-[220ms] ease-out ${showFinal ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}
+            className={`transition-all duration-[220ms] ease-out ${showFinal ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
             // Pointer-events gating so CTAs aren't clickable before they reveal.
             style={{ pointerEvents: showFinal ? "auto" : "none" }}
           >
             <p
               data-hero-field="subheadline"
-              className="mt-8 sm:mt-9 md:mt-10 max-w-[36rem] text-[15px] sm:text-[17px] md:text-[18px] leading-[1.62] tracking-[0.003em] text-[color:var(--ivory)] text-pretty [text-shadow:none]"
+              className="mt-8 sm:mt-9 md:mt-12 max-w-[34rem] text-[14.5px] sm:text-[17px] md:text-[18px] leading-[1.68] md:leading-[1.72] tracking-[0] text-[color:var(--ivory)] text-pretty [text-shadow:none]"
             >
               {HERO_COPY.subheadline}
             </p>
@@ -194,6 +176,7 @@ export function CinematicHero() {
               <CtaButton
                 to="/builder"
                 variant="primary"
+                className="hero-cta-button"
                 data-hero-field="primaryCta"
               >
                 {HERO_COPY.primaryCta}
@@ -201,6 +184,7 @@ export function CinematicHero() {
               <CtaButton
                 to="/experiences"
                 variant="ghostDark"
+                className="hero-cta-button"
                 data-hero-field="secondaryCta"
               >
                 {HERO_COPY.secondaryCta}
