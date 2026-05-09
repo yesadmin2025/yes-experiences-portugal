@@ -13,7 +13,9 @@ public/brand/
 ├── yes-brand-board.png    ← same brand-color reference, hi-res raster
 ├── svg/                   ← vector master files (recommended for web + print)
 ├── png/                   ← rasterized exports at @1x / @2x / @3x
-└── pdf/                   ← single-page print-ready PDFs
+├── pdf/                   ← single-page print-ready PDFs
+├── eps/                   ← Encapsulated PostScript (legacy print workflows)
+└── ai/                    ← Adobe Illustrator-compatible (PDF-based, opens editably)
 ```
 
 ## The brand board
