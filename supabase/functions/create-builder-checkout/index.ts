@@ -38,8 +38,34 @@ Deno.serve(async (req) => {
       return jsonError("Invalid region", 400);
     if (!Array.isArray(body.stopLabels) || body.stopLabels.length === 0 || body.stopLabels.length > 10)
       return jsonError("Invalid stops", 400);
-    if (!body.returnUrl || !/^https?:\/\//.test(body.returnUrl))
+    // Validate returnUrl origin against an allowlist to prevent open-redirect
+    // post-checkout. Allow yesexperiences.pt, lovable.app domains, and an
+    // optional RETURN_URL_ORIGIN env override (comma-separated).
+    if (!body.returnUrl || typeof body.returnUrl !== "string")
       return jsonError("Invalid return URL", 400);
+    let returnOrigin: string;
+    try {
+      const u = new URL(body.returnUrl);
+      if (u.protocol !== "https:" && u.protocol !== "http:")
+        return jsonError("Invalid return URL", 400);
+      returnOrigin = u.origin;
+    } catch {
+      return jsonError("Invalid return URL", 400);
+    }
+    const envAllow = (Deno.env.get("RETURN_URL_ORIGIN") ?? "")
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+    const staticAllow = new Set<string>([
+      "https://yesexperiences.pt",
+      "https://www.yesexperiences.pt",
+      "https://dreamscape-builder-co.lovable.app",
+      ...envAllow,
+    ]);
+    const isLovableHost = /^https:\/\/[a-z0-9-]+\.lovable\.app$/.test(returnOrigin);
+    const isLocalhost = /^http:\/\/localhost(:\d+)?$/.test(returnOrigin);
+    if (!staticAllow.has(returnOrigin) && !isLovableHost && !isLocalhost)
+      return jsonError("Return URL not allowed", 400);
     if (body.environment !== "sandbox" && body.environment !== "live")
       return jsonError("Invalid environment", 400);
     if (!["relaxed", "balanced", "full"].includes(body.pace))
