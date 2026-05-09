@@ -136,27 +136,38 @@ test.describe("Hero typography colors — YES brand-token regression", () => {
             `Allowed: gold #C9A96A or gold-soft #E1CFA6.`,
     ).toBe(true);
 
-    // Headline lines MUST be ivory over the dark cinematic film (matches
-    // the rest of the site's headline system — Montserrat + Georgia italic
-    // in ivory/charcoal). Teal/charcoal allowed only for a future light
-    // re-skin. Gold is reserved as a micro-detail accent (eyebrow only).
-    const headlineAllow = [
+    // Headline lines MUST resolve to YES brand tokens. Line 1 stays ivory
+    // (or teal/charcoal on a future light skin). Line 2 (Georgia italic)
+    // is the approved champagne accent — gold-soft on the dark hero film.
+    const line1Allow = [
       { name: "ivory (#FAF8F3)", rgb: TOKENS.ivory },
       { name: "teal (#295B61)", rgb: TOKENS.teal },
       { name: "charcoal (#2E2E2E)", rgb: TOKENS.charcoal },
     ];
-    for (const [label, c] of [
-      ["headlineLine1", line1],
-      ["headlineLine2 (italic)", line2],
+    const line2Allow = [
+      { name: "ivory (#FAF8F3)", rgb: TOKENS.ivory },
+      { name: "gold-soft (#E1CFA6)", rgb: TOKENS.goldSoft },
+      { name: "gold (#C9A96A)", rgb: TOKENS.gold },
+      { name: "teal (#295B61)", rgb: TOKENS.teal },
+      { name: "charcoal (#2E2E2E)", rgb: TOKENS.charcoal },
+    ];
+    for (const [label, c, allow, allowedDesc] of [
+      ["headlineLine1", line1, line1Allow, "ivory #FAF8F3, teal #295B61, charcoal #2E2E2E"],
+      [
+        "headlineLine2 (italic)",
+        line2,
+        line2Allow,
+        "ivory #FAF8F3, gold-soft #E1CFA6, gold #C9A96A, teal #295B61, charcoal #2E2E2E",
+      ],
     ] as const) {
-      const m = matchesAny(c, headlineAllow);
+      const m = matchesAny(c, allow);
       expect(
         m.ok,
         m.ok
           ? "ok"
           : `Hero ${label} color ${fmt(c)} is NOT a YES brand token. ` +
               `Nearest: ${m.nearest} (Δ=${m.delta}). ` +
-              `Allowed: ivory #FAF8F3, teal #295B61, charcoal #2E2E2E.`,
+              `Allowed: ${allowedDesc}.`,
       ).toBe(true);
     }
   });
