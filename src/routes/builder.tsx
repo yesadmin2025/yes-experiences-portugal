@@ -469,7 +469,11 @@ function BuilderPage() {
         {step >= 1 && step <= 4 && (
           <section className="container-x pt-6 pb-10 md:pt-10 md:pb-16">
             <div className="mb-5 builder-reveal">
-              <ProgressDots step={step} total={4} />
+              <BuilderStepper
+                step={step}
+                furthestCompleted={furthestCompleted}
+                onStepClick={(n) => setStep(n as Step)}
+              />
             </div>
 
             {/* Microcopy ribbon */}
