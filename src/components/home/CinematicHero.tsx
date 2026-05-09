@@ -29,9 +29,27 @@ function prefersReducedMotion(): boolean {
 export function CinematicHero() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [reduced, setReduced] = useState(false);
+  const [storyActive, setStoryActive] = useState(false);
 
   useEffect(() => {
-    setReduced(prefersReducedMotion());
+    const shouldReduce = prefersReducedMotion();
+    setReduced(shouldReduce);
+
+    if (shouldReduce) {
+      setStoryActive(true);
+      return;
+    }
+
+    setStoryActive(false);
+    let timer: number | undefined;
+    const frame = window.requestAnimationFrame(() => {
+      timer = window.setTimeout(() => setStoryActive(true), 120);
+    });
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      if (timer) window.clearTimeout(timer);
+    };
   }, []);
 
   const handleScrollToNext = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -52,6 +70,8 @@ export function CinematicHero() {
       aria-roledescription="cinematic hero film"
       aria-label={`${HERO_COPY.headlineLine1} ${HERO_COPY.headlineLine2}`}
       data-hero-cinematic="true"
+      data-story-active={storyActive ? "true" : "false"}
+      data-reduced-motion={reduced ? "true" : "false"}
     >
       {/* Continuous film — full bleed, no inner box, no rounded corners. */}
       {!reduced && (
