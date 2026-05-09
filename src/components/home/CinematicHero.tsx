@@ -171,9 +171,13 @@ export function CinematicHero() {
             data-hero-reveal-order="4"
             data-hero-reveal-duration-ms="220"
             data-hero-reveal-ease="ease-out"
-            className="hero-reveal hero-reveal--from-left"
+            className="transition-[opacity,transform] duration-[220ms] ease-out transform-gpu will-change-transform"
             // Pointer-events gating so CTAs aren't clickable before they reveal.
-            style={{ pointerEvents: showFinal ? "auto" : "none" }}
+            style={{
+              opacity: showFinal ? 1 : 0,
+              transform: showFinal ? "translate3d(0,0,0)" : "translate3d(-14px,0,0)",
+              pointerEvents: showFinal ? "auto" : "none",
+            }}
           >
             <p
               data-hero-field="subheadline"
