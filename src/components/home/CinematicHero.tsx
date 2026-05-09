@@ -131,7 +131,7 @@ export function CinematicHero() {
           </Eyebrow>
 
           <h1
-            className="hero-h1 t-display mt-8 sm:mt-9 md:mt-11 max-w-[12ch] sm:max-w-[13ch] md:max-w-[14ch] text-balance text-[color:var(--ivory)] [font-weight:400] [font-size:2.125rem] sm:[font-size:2.35rem] md:[font-size:4rem] lg:[font-size:4.75rem] [letter-spacing:0] [line-height:1.08] md:[line-height:1.04] lg:[line-height:1] [text-shadow:none]"
+            className="hero-h1 t-display mt-8 sm:mt-9 md:mt-11 max-w-[13ch] sm:max-w-[13ch] md:max-w-[14ch] text-balance text-[color:var(--ivory)] [font-weight:400] [font-size:2.4rem] sm:[font-size:2.85rem] md:[font-size:4.25rem] lg:[font-size:5rem] [letter-spacing:-0.005em] [line-height:1.06] md:[line-height:1.02] lg:[line-height:0.98] [text-shadow:none] overflow-hidden"
             data-hero-field="headlineLine1 headlineLine2"
           >
             <span
@@ -140,9 +140,15 @@ export function CinematicHero() {
               data-hero-reveal-order="2"
               data-hero-reveal-duration-ms="220"
               data-hero-reveal-ease="ease-out"
-              className={`block font-[400] text-[color:var(--ivory)] [text-shadow:none] transition-all duration-[220ms] ease-out ${showLine1 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+              className={`block font-[400] text-[color:var(--ivory)] [text-shadow:none] transition-all duration-[220ms] ease-out will-change-transform ${showLine1 ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-8"}`}
             >
-              {HERO_COPY.headlineLine1}
+              <span
+                data-hero-field="headlineLine1Portugal"
+                className="[font-family:var(--font-serif)] italic font-normal text-[color:var(--gold-soft)] [letter-spacing:-0.01em] pr-[0.06em]"
+              >
+                Portugal
+              </span>
+              {HERO_COPY.headlineLine1.replace(/^Portugal/, "")}
             </span>
             <span
               data-hero-field="headlineLine2"
@@ -150,7 +156,7 @@ export function CinematicHero() {
               data-hero-reveal-order="3"
               data-hero-reveal-duration-ms="220"
               data-hero-reveal-ease="ease-out"
-              className={`block mt-5 sm:mt-6 md:mt-7 [font-family:var(--font-serif)] italic font-normal [letter-spacing:0] [line-height:1.04] text-[color:var(--gold-soft)] [text-shadow:none] transition-all duration-[220ms] ease-out ${showLine2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+              className={`block mt-4 sm:mt-5 md:mt-6 [font-family:var(--font-serif)] italic font-normal [letter-spacing:-0.005em] [line-height:1.02] text-[color:var(--gold-soft)] [text-shadow:none] transition-all duration-[220ms] ease-out will-change-transform ${showLine2 ? "opacity-100 translate-x-0" : "opacity-0 translate-x-8"}`}
             >
               {HERO_COPY.headlineLine2}
             </span>
