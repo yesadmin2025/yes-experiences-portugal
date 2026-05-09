@@ -104,11 +104,17 @@ test.describe("Hero reveal cadence — measured 220ms ease-out", () => {
 
     for (const sel of REVEAL_SELECTORS) {
       const easing = await readTimingFunction(page, sel);
-      // Chromium serializes `ease-out` as `cubic-bezier(0, 0, 0.58, 1)`.
-      // Both forms are accepted; nothing else (linear / cubic-bezier
-      // with custom control points / spring) is.
+      // Tailwind's `ease-out` utility compiles to `cubic-bezier(0,0,0.2,1)`;
+      // the CSS keyword `ease-out` serializes as `cubic-bezier(0,0,0.58,1)`.
+      // Both are accepted "ease-out" curves — anything else (linear, spring,
+      // custom control points) is a regression.
+      const ALLOWED_EASE = [
+        "ease-out",
+        "cubic-bezier(0, 0, 0.58, 1)",
+        "cubic-bezier(0, 0, 0.2, 1)",
+      ];
       expect(
-        ["ease-out", "cubic-bezier(0, 0, 0.58, 1)"].includes(easing),
+        ALLOWED_EASE.includes(easing),
         `${sel} must transition with ease-out, got "${easing}"`,
       ).toBe(true);
 
