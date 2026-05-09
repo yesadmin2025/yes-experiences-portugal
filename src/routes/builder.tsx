@@ -27,9 +27,10 @@ import {
   ChoiceRow,
   ChoiceTile,
   MoodCard,
-  ProgressDots,
   StepHead,
 } from "@/components/builder/Choices";
+import { BuilderStepper } from "@/components/builder/BuilderStepper";
+import { BuilderProgressMeter } from "@/components/builder/BuilderProgressMeter";
 import { MoodGridSkeleton } from "@/components/builder/Skeletons";
 import {
   INTENTIONS,
@@ -122,6 +123,7 @@ function BuilderPage() {
   // Step 3 supports multi-select. URL keeps the primary intention (first chosen)
   // so the engine + share-links stay backwards compatible; the full set lives
   // in component state and biases the picker / narrative tone.
+  // Hydrated from persistence below so it survives refresh / return visits.
   const [intentions, setIntentions] = useState<Intention[]>(() =>
     search.intention ? [search.intention] : [],
   );
@@ -152,13 +154,43 @@ function BuilderPage() {
   const [route, setRoute] = useState<RouteUI | null>(null);
   const [pinned] = useState<string[]>([]);
 
-  // Persisted slice (localStorage): excluded stops, manual order, guests, elements.
+  // Persisted slice (localStorage): excluded stops, manual order, guests, elements,
+  // intentions (multi-select), and furthest step reached.
   // URL keeps step/mood/who/intention/pace; this hook keeps everything else
   // across refresh / return-visits.
   const { state: persisted, setState: setPersisted, hydrated, reset: resetPersisted } = useBuilderPersistence();
   const excluded = persisted.excluded;
   const orderOverride = persisted.orderOverride;
   const selectedElements = persisted.selectedElements;
+
+  // Hydrate intentions from persistence once (only if URL didn't already supply one).
+  const hydratedIntentionsRef = useRef(false);
+  useEffect(() => {
+    if (!hydrated || hydratedIntentionsRef.current) return;
+    hydratedIntentionsRef.current = true;
+    if (!search.intention && persisted.intentions.length > 0) {
+      setIntentions(persisted.intentions);
+      setSearch({ intention: persisted.intentions[0] });
+    }
+  }, [hydrated, persisted.intentions, search.intention, setSearch]);
+
+  // Persist intentions on change (after hydration to avoid clobbering on first paint).
+  useEffect(() => {
+    if (!hydrated) return;
+    setPersisted((p) =>
+      p.intentions.length === intentions.length &&
+      p.intentions.every((v, i) => v === intentions[i])
+        ? p
+        : { ...p, intentions },
+    );
+  }, [intentions, hydrated, setPersisted]);
+
+  // Track furthest step reached (for stepper "completed" visuals after refresh).
+  useEffect(() => {
+    if (!hydrated) return;
+    setPersisted((p) => (step > p.furthestStep ? { ...p, furthestStep: step } : p));
+  }, [step, hydrated, setPersisted]);
+  const furthestCompleted = Math.max(0, persisted.furthestStep - 1);
 
   // Multi-day state (replaces single-day in step 6+)
   const md = useMultiDayBuilder();
@@ -437,7 +469,11 @@ function BuilderPage() {
         {step >= 1 && step <= 4 && (
           <section className="container-x pt-6 pb-10 md:pt-10 md:pb-16">
             <div className="mb-5 builder-reveal">
-              <ProgressDots step={step} total={4} />
+              <BuilderStepper
+                step={step}
+                furthestCompleted={furthestCompleted}
+                onStepClick={(n) => setStep(n as Step)}
+              />
             </div>
 
             {/* Microcopy ribbon */}
@@ -554,55 +590,20 @@ function BuilderPage() {
                 </div>
 
                 {/* Builder progress — overall step + live interest fill within step 3 */}
-                {(() => {
-                  const totalSteps = 4;
-                  const stepShare = 100 / totalSteps;
-                  // Within-step fill: 0 → 0%, 1 → 55%, 2 → 80%, 3+ → 100%
-                  const within =
+                <BuilderProgressMeter
+                  step={step}
+                  selectedCount={intentions.length}
+                  hint={
                     intentions.length === 0
-                      ? 0
+                      ? "Pick an interest to move forward — two more steps after this."
                       : intentions.length === 1
-                        ? 0.55
+                        ? "Add another thread for a richer story, or continue."
                         : intentions.length === 2
-                          ? 0.8
-                          : 1;
-                  const pct = Math.min(
-                    100,
-                    Math.round((step - 1) * stepShare + within * stepShare),
-                  );
-                  return (
-                    <div className="mt-5" aria-live="polite">
-                      <div className="flex items-center justify-between text-[10.5px] uppercase tracking-[0.22em] font-bold text-[color:var(--charcoal)]/55">
-                        <span>Builder progress</span>
-                        <span className="tabular-nums text-[color:var(--charcoal)]/70">
-                          {pct}%
-                        </span>
-                      </div>
-                      <div
-                        role="progressbar"
-                        aria-valuemin={0}
-                        aria-valuemax={100}
-                        aria-valuenow={pct}
-                        aria-label={`Builder progress, ${pct} percent complete`}
-                        className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-[color:var(--charcoal)]/10"
-                      >
-                        <div
-                          className="h-full rounded-full bg-gradient-to-r from-[color:var(--gold-soft)] to-[color:var(--gold)] transition-[width] duration-300 ease-out"
-                          style={{ width: `${pct}%` }}
-                        />
-                      </div>
-                      <p className="mt-1.5 text-[11px] text-[color:var(--charcoal)]/55 leading-snug">
-                        {intentions.length === 0
-                          ? "Pick an interest to move forward — two more steps after this."
-                          : intentions.length === 1
-                            ? "Add another thread for a richer story, or continue."
-                            : intentions.length === 2
-                              ? "Nicely layered. One more step after rhythm."
-                              : "Beautifully layered. Continue when ready."}
-                      </p>
-                    </div>
-                  );
-                })()}
+                          ? "Nicely layered. One more step after rhythm."
+                          : "Beautifully layered. Continue when ready."
+                  }
+                />
+
                 <div
                   role="group"
                   aria-label="Interests — choose one or more"

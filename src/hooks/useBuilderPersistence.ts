@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import type { ElementKey } from "@/components/builder/elements";
+import type { Intention } from "@/components/builder/types";
+import { BUILDER_INTENTION_VALUES } from "@/components/builder/searchParams";
 
 const KEY = "yes.builder.state.v1";
 
@@ -8,6 +10,10 @@ export interface PersistedBuilderState {
   orderOverride: string[] | null;
   guests: number;
   selectedElements: ElementKey[];
+  /** Multi-select interests carried across refresh / return-visits. */
+  intentions: Intention[];
+  /** Furthest step (1..7) the user has reached so completed-step UI restores. */
+  furthestStep: number;
 }
 
 const DEFAULTS: PersistedBuilderState = {
@@ -15,6 +21,8 @@ const DEFAULTS: PersistedBuilderState = {
   orderOverride: null,
   guests: 2,
   selectedElements: [],
+  intentions: [],
+  furthestStep: 0,
 };
 
 function read(): PersistedBuilderState {
@@ -33,6 +41,16 @@ function read(): PersistedBuilderState {
       selectedElements: Array.isArray(parsed.selectedElements)
         ? (parsed.selectedElements.filter((x) => typeof x === "string") as ElementKey[])
         : [],
+      intentions: Array.isArray(parsed.intentions)
+        ? (parsed.intentions.filter(
+            (x): x is Intention =>
+              typeof x === "string" && (BUILDER_INTENTION_VALUES as readonly string[]).includes(x),
+          ))
+        : [],
+      furthestStep:
+        typeof parsed.furthestStep === "number" && parsed.furthestStep >= 0 && parsed.furthestStep <= 7
+          ? parsed.furthestStep
+          : 0,
     };
   } catch {
     return DEFAULTS;
