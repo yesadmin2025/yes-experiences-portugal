@@ -33,7 +33,7 @@ const TOKENS: Array<{ name: string; hex: string; rgb: RGB }> = [
 const SLOT_ALLOW: Record<string, string[]> = {
   eyebrow: ["gold", "gold-soft", "gold-warm", "gold-deep"],
   headlineLine1: ["ivory", "teal", "charcoal"],
-  headlineLine2: ["ivory", "teal", "charcoal"],
+  headlineLine2: ["ivory", "gold-soft", "gold", "teal", "charcoal"],
 };
 
 const TARGETS: Array<{ key: keyof typeof SLOT_ALLOW; selector: string; label: string }> = [
