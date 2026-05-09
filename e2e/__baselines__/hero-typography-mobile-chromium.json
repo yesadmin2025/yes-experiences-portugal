@@ -15,9 +15,9 @@
       "fontSizePx": 11,
       "lineHeightPx": 11,
       "letterSpacingEm": 0.28,
-      "topPx": 251.28125,
-      "bottomPx": 262.28125,
-      "baselinePx": 260.08125,
+      "topPx": 159.28125,
+      "bottomPx": 170.28125,
+      "baselinePx": 168.08125,
       "heightPx": 11
     },
     "headlineLine1": {
@@ -27,9 +27,9 @@
       "fontSizePx": 36,
       "lineHeightPx": 38.16,
       "letterSpacingEm": -0.022000000000000002,
-      "topPx": 305.53125,
-      "bottomPx": 381.84375,
-      "baselinePx": 336.05925,
+      "topPx": 213.53125,
+      "bottomPx": 289.84375,
+      "baselinePx": 244.05925,
       "heightPx": 76.3125
     },
     "headlineLine2": {
@@ -39,9 +39,9 @@
       "fontSizePx": 36,
       "lineHeightPx": 38.16,
       "letterSpacingEm": -0.014,
-      "topPx": 385.84375,
-      "bottomPx": 424,
-      "baselinePx": 416.37175,
+      "topPx": 293.84375,
+      "bottomPx": 332,
+      "baselinePx": 324.37175,
       "heightPx": 38.15625
     },
     "subheadline": {
@@ -51,9 +51,9 @@
       "fontSizePx": 15,
       "lineHeightPx": 22.5,
       "letterSpacingEm": 0.005333333333333333,
-      "topPx": 444,
-      "bottomPx": 534,
-      "baselinePx": 462,
+      "topPx": 352,
+      "bottomPx": 442,
+      "baselinePx": 370,
       "heightPx": 90
     },
     "microcopy": {
@@ -63,9 +63,9 @@
       "fontSizePx": 12.5,
       "lineHeightPx": 20,
       "letterSpacingEm": 0.025,
-      "topPx": 679,
-      "bottomPx": 699,
-      "baselinePx": 695,
+      "topPx": 587,
+      "bottomPx": 607,
+      "baselinePx": 603,
       "heightPx": 20
     }
   }
