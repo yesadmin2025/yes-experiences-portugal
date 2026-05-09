@@ -1695,7 +1695,11 @@
    selector so source order alone isn't enough — we use !important to
    ensure React's class-driven opacity wins inside .hero-cinematic. */
 .hero-cinematic [data-hero-field="headlineLine1"],
-.hero-cinematic [data-hero-field="headlineLine2"] {
+.hero-cinematic [data-hero-field="headlineLine2"],
+.hero-cinematic [data-hero-field="eyebrow"],
+.hero-cinematic [data-hero-field="subheadline"],
+.hero-cinematic .hero-cta-button[data-hero-field="primaryCta"],
+.hero-cinematic .hero-cta-button[data-hero-field="secondaryCta"] {
   opacity: revert !important;
 }
 
