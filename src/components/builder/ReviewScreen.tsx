@@ -2,6 +2,7 @@ import { Check, MessageCircle, X } from "lucide-react";
 import { fmtMinutes, type RouteUI, type RoutedStopUI, builderWaHref } from "./types";
 import type { BuilderImageRef } from "@/hooks/useBuilderImages";
 import { BuilderImage } from "./BuilderImage";
+import { BuilderMap } from "./BuilderMap";
 import { CtaButton } from "@/components/ui/CtaButton";
 import { ReferenceUploader, type ToneResult } from "./ReferenceUploader";
 import { useBuilderSessionId } from "@/hooks/useBuilderSessionId";
@@ -64,6 +65,33 @@ export function ReviewScreen({
 
   return (
     <section className="bg-[color:var(--ivory)] text-[color:var(--charcoal)]">
+      {/* Full-bleed map hero — leads the review with the actual route */}
+      <div className="relative h-[52vh] min-h-[360px] w-full overflow-hidden border-b border-[color:var(--charcoal)]/10">
+        <BuilderMap
+          stops={stops}
+          regionCenter={{ lat: route.region.lat, lng: route.region.lng }}
+          regionKey={route.region.key}
+        />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-[color:var(--ivory)] via-[color:var(--ivory)]/70 to-transparent h-24" />
+        <div className="absolute left-0 right-0 bottom-3 px-4 sm:px-6">
+          <div className="container-x">
+            <div className="flex flex-wrap gap-1.5">
+              {stops.map((s, i) => (
+                <span
+                  key={s.key}
+                  className="inline-flex items-center gap-1.5 rounded-full bg-[color:var(--ivory)] border border-[color:var(--charcoal)]/12 px-2.5 py-1 text-[11.5px] font-semibold text-[color:var(--charcoal)] shadow-sm"
+                >
+                  <span className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-[color:var(--teal)] text-[9.5px] text-[color:var(--ivory)] tabular-nums">
+                    {i + 1}
+                  </span>
+                  {s.label}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="container-x py-10 md:py-16 builder-reveal">
         <span className="inline-flex items-center gap-2 text-[10.5px] uppercase tracking-[0.28em] font-semibold text-[color:var(--gold)]">
           Final review
