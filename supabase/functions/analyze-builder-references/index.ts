@@ -118,56 +118,6 @@ serve(async (req) => {
     auth: { persistSession: false },
   });
 
-  // Per-session rate limit to prevent AI credit abuse. Mirrors the
-  // builder_rate_limits pattern used by other AI server functions.
-  // Allow 3 analyse calls per hour per session.
-  const RL_BUCKET = "analyze_refs";
-  const RL_LIMIT = 3;
-  const RL_WINDOW_SEC = 60 * 60;
-  try {
-    const { data: rlRow } = await admin
-      .from("builder_rate_limits")
-      .select("call_count,last_call_at")
-      .eq("session_id", sessionId)
-      .eq("bucket", RL_BUCKET)
-      .maybeSingle();
-    const now = Date.now();
-    if (!rlRow) {
-      await admin
-        .from("builder_rate_limits")
-        .insert({ session_id: sessionId, bucket: RL_BUCKET, call_count: 1 });
-    } else {
-      const elapsed = (now - new Date(rlRow.last_call_at).getTime()) / 1000;
-      if (elapsed >= RL_WINDOW_SEC) {
-        await admin
-          .from("builder_rate_limits")
-          .update({ call_count: 1, last_call_at: new Date(now).toISOString() })
-          .eq("session_id", sessionId)
-          .eq("bucket", RL_BUCKET);
-      } else if (rlRow.call_count >= RL_LIMIT) {
-        return jsonResponse(
-          {
-            error: "Too many analysis requests, please try again later.",
-            retryAfter: Math.max(1, Math.ceil(RL_WINDOW_SEC - elapsed)),
-          },
-          429,
-        );
-      } else {
-        await admin
-          .from("builder_rate_limits")
-          .update({
-            call_count: rlRow.call_count + 1,
-            last_call_at: new Date(now).toISOString(),
-          })
-          .eq("session_id", sessionId)
-          .eq("bucket", RL_BUCKET);
-      }
-    }
-  } catch (e) {
-    // Fail-open on transient DB blip — log only.
-    console.warn("rate-limit check failed", e);
-  }
-
   // Resolve files server-side by sessionId. The client never supplies a URL.
   let query = admin
     .from("builder_reference_uploads")
