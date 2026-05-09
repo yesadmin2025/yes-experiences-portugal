@@ -140,7 +140,7 @@ export function CinematicHero() {
               data-hero-reveal-order="2"
               data-hero-reveal-duration-ms="220"
               data-hero-reveal-ease="ease-out"
-              className={`block font-[400] text-[color:var(--ivory)] [text-shadow:none] transition-all duration-[220ms] ease-out will-change-transform ${showLine1 ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-8"}`}
+              className={`block font-[400] text-[color:var(--ivory)] [text-shadow:none] transition-all duration-[480ms] ease-out will-change-transform ${showLine1 ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-6"}`}
             >
               <span
                 data-hero-field="headlineLine1Portugal"
