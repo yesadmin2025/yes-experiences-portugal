@@ -523,13 +523,7 @@ export function CinematicHero() {
               data-hero-beat-show={showH1 ? "true" : "false"}
               className="hero-beat hero-beat--from-left block max-w-full whitespace-normal font-[400] text-[color:var(--ivory)] [text-shadow:none]"
             >
-              <span
-                data-hero-field="headlineLine1Portugal"
-                className="[font-family:var(--font-serif)] italic font-normal text-[color:var(--gold-soft)] [letter-spacing:-0.01em] pr-[0.06em]"
-              >
-                Portugal
-              </span>
-              {HERO_COPY.headlineLine1.replace(/^Portugal/, "")}
+              {HERO_COPY.headlineLine1}
             </span>
             <span
               data-hero-field="headlineLine2"
