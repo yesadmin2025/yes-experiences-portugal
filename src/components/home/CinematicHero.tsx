@@ -51,6 +51,21 @@ function getHeroSlowMo(): number {
   }
 }
 
+/**
+ * Step-by-step mode from `?heroStep=1`. When enabled, automatic triggers
+ * (video-time + wall-clock) are suspended. Each beat is revealed by user
+ * action (button click or keyboard: →/Space/N for next, ←/R for reset).
+ * The video is paused and seeked to each beat's `t` so the frame matches.
+ */
+function isHeroStepMode(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    return new URLSearchParams(window.location.search).get("heroStep") === "1";
+  } catch {
+    return false;
+  }
+}
+
 export function CinematicHero() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const sectionRef = useRef<HTMLElement | null>(null);
