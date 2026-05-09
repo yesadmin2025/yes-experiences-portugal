@@ -656,13 +656,34 @@ export function CinematicHero() {
             data-hero-debug-panel="true"
           >
             <div className="mb-1.5 flex items-center justify-between gap-2 font-mono text-[10px] uppercase tracking-wider text-white/70">
-              <span>hero debug · {bp}{slowMo !== 1 ? ` · ${slowMo}× slow` : ""}</span>
+              <span>hero debug · {bp}{slowMo !== 1 ? ` · ${slowMo}× slow` : ""}{stepMode ? " · step" : ""}</span>
               <span>{viewportW}px</span>
             </div>
+            {stepMode && (
+              <div className="mb-2 flex items-center gap-1.5">
+                <button
+                  type="button"
+                  onClick={stepNext}
+                  disabled={stepIndex >= activeSchedule.length}
+                  className="rounded border border-[color:var(--gold-soft)]/60 bg-[color:var(--gold)]/15 px-2 py-1 font-mono text-[10px] text-[color:var(--gold-soft)] hover:bg-[color:var(--gold)]/25 disabled:opacity-40"
+                >
+                  Next ▶ ({stepIndex}/{activeSchedule.length})
+                </button>
+                <button
+                  type="button"
+                  onClick={stepReset}
+                  className="rounded border border-white/20 bg-white/5 px-2 py-1 font-mono text-[10px] text-white/80 hover:bg-white/10"
+                >
+                  Reset
+                </button>
+                <span className="ml-auto font-mono text-[9.5px] text-white/50">→/Space · ←/R</span>
+              </div>
+            )}
             <ul className="mb-2 space-y-0.5 font-mono text-[10px]">
               <li>mode: <b>{activeMode ?? "idle"}</b> · video: <b>{videoFailed ? "poster" : "ok"}</b> · src: <b>{videoSrc.endsWith("1080.mp4") ? "1080p" : "720p"}</b></li>
               <li>video.currentTime: <b>{liveVideoT.toFixed(2)}s</b> · wall: <b>{liveWallMs}ms</b> · intersect: <b>{intersectionRatio.toFixed(2)}</b></li>
             </ul>
+
 
             {/* Visual timeline: scheduled marks (gold tick), fired stamps
                 (filled gold dot), live cursor (teal line). */}
