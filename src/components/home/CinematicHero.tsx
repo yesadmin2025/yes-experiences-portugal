@@ -151,18 +151,23 @@ export function CinematicHero() {
     let started = false;
     let mode: "video" | "wall" | null = null;
     const schedule = getSchedule();
+    setActiveSchedule(schedule);
     const fired = new Set<BeatKey>();
 
     const reveal = (key: BeatKey) => {
       if (fired.has(key)) return;
       fired.add(key);
+      const wallMs = Math.round(performance.now() - mountedAtRef.current);
+      const videoT = videoRef.current ? videoRef.current.currentTime : 0;
+      const stampMode: "video" | "wall" = mode === "video" ? "video" : "wall";
       setRevealed((prev) => {
         if (prev.has(key)) return prev;
         const next = new Set(prev);
         next.add(key);
         return next;
       });
-      log("beat", key);
+      setBeatStamps((prev) => (prev[key] ? prev : { ...prev, [key]: { wallMs, videoT, mode: stampMode } }));
+      log("beat", `${key} @ wall=${wallMs}ms video=${videoT.toFixed(2)}s`);
     };
 
     const runVideoLoop = () => {
@@ -181,6 +186,7 @@ export function CinematicHero() {
       if (started) return;
       started = true;
       mode = "video";
+      setActiveMode("video");
       setStoryActive(true);
       log("story-trigger", `video:${origin}`);
       raf = requestAnimationFrame(runVideoLoop);
@@ -190,6 +196,7 @@ export function CinematicHero() {
       if (started) return;
       started = true;
       mode = "wall";
+      setActiveMode("wall");
       setStoryActive(true);
       log("story-trigger", `wall:${origin}`);
       const t0 = performance.now();
