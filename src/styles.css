@@ -1781,8 +1781,9 @@
   backface-visibility: hidden;
 }
 .hero-cinematic .hero-story-step--copy { transition-delay: 1500ms !important; }
-.hero-cinematic .hero-story-step--cta { transition-delay: 2040ms !important; }
-.hero-cinematic .hero-story-step--microcopy { transition-delay: 2440ms !important; }
+.hero-cinematic .hero-story-step--cta-primary { transition-delay: 2040ms !important; }
+.hero-cinematic .hero-story-step--cta-secondary { transition-delay: 2280ms !important; }
+.hero-cinematic .hero-story-step--microcopy { transition-delay: 2620ms !important; }
 
 .hero-cinematic[data-story-active="true"] .hero-story-step {
   opacity: 1;
