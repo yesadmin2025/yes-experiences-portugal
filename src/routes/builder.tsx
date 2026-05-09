@@ -27,7 +27,6 @@ import {
   ChoiceRow,
   ChoiceTile,
   MoodCard,
-  ProgressDots,
   StepHead,
 } from "@/components/builder/Choices";
 import { BuilderStepper } from "@/components/builder/BuilderStepper";
