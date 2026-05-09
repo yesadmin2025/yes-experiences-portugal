@@ -246,8 +246,9 @@ export function CinematicHero() {
       if (!v) return;
       const onPlaying = () => startVideoMode("playing");
       v.addEventListener("playing", onPlaying, { once: true });
+      try { v.playbackRate = 1 / slowMo; } catch {}
       const p = v.play();
-      log("play-attempt", "arm");
+      log("play-attempt", `arm slowMo=${slowMo}`);
       if (p && typeof p.then === "function") {
         p.catch((err: unknown) => {
           const name = err && typeof err === "object" && "name" in err ? String((err as { name: unknown }).name) : "Error";
