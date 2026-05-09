@@ -151,13 +151,13 @@ export function CinematicHero() {
           >
             <span
               data-hero-field="headlineLine1"
-              className={`block text-[color:var(--ivory)] [text-shadow:0_2px_12px_rgba(15,12,9,0.76)] transition-all duration-700 ${showLine1 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}
+              className={`block text-[color:var(--ivory)] [text-shadow:0_2px_12px_color-mix(in_oklab,var(--charcoal-deep)_76%,transparent)] transition-all duration-700 ${showLine1 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}
             >
               {HERO_COPY.headlineLine1}
             </span>
             <span
               data-hero-field="headlineLine2"
-              className={`block mt-1 md:mt-1.5 italic font-normal tracking-[-0.014em] text-[color:var(--ivory)]/90 [text-shadow:0_2px_12px_rgba(15,12,9,0.74)] transition-all duration-700 ${showLine2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}
+              className={`block mt-1 md:mt-1.5 italic font-normal tracking-[-0.014em] text-[color:var(--ivory)] [text-shadow:0_2px_12px_color-mix(in_oklab,var(--charcoal-deep)_74%,transparent)] transition-all duration-700 ${showLine2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}
             >
               {HERO_COPY.headlineLine2}
             </span>
@@ -170,7 +170,7 @@ export function CinematicHero() {
           >
             <p
               data-hero-field="subheadline"
-              className="mt-5 sm:mt-6 max-w-[36rem] text-[15px] sm:text-[17px] md:text-[18px] leading-[1.5] text-[color:var(--ivory)] text-pretty [text-shadow:0_2px_8px_rgba(0,0,0,0.72)]"
+              className="mt-5 sm:mt-6 max-w-[36rem] text-[15px] sm:text-[17px] md:text-[18px] leading-[1.5] text-[color:var(--ivory)] text-pretty [text-shadow:0_2px_8px_color-mix(in_oklab,var(--charcoal-deep)_72%,transparent)]"
             >
               {HERO_COPY.subheadline}
             </p>
@@ -196,7 +196,7 @@ export function CinematicHero() {
 
             <p
               data-hero-field="microcopy"
-              className="mt-4 text-[12.5px] sm:text-[13px] tracking-wide text-[color:var(--ivory)] [text-shadow:0_2px_8px_rgba(0,0,0,0.7)]"
+              className="mt-4 text-[12.5px] sm:text-[13px] tracking-wide text-[color:var(--ivory)] [text-shadow:0_2px_8px_color-mix(in_oklab,var(--charcoal-deep)_70%,transparent)]"
             >
               {HERO_COPY.microcopy}
             </p>
