@@ -539,37 +539,98 @@ export function CinematicHero() {
       {/* Opt-in dev overlay — `?heroColorDebug=1`. Renders nothing otherwise. */}
       <HeroColorDebugOverlay />
 
-      {debug && (
-        <div
-          role="status"
-          aria-live="polite"
-          className="pointer-events-auto fixed top-2 right-2 z-[60] max-w-[260px] rounded-md border border-white/15 bg-black/80 p-2.5 text-[10.5px] leading-snug text-white shadow-lg backdrop-blur"
-          data-hero-debug-panel="true"
-        >
-          <div className="mb-1 flex items-center justify-between gap-2 font-mono text-[10px] uppercase tracking-wider text-white/70">
-            <span>hero debug</span>
-            <span>{viewportW}px</span>
+      {debug && (() => {
+        const maxT = activeSchedule.length
+          ? Math.max(...activeSchedule.map((b) => b.t)) + 0.6
+          : 6.5;
+        const liveT = activeMode === "wall" ? liveWallMs / 1000 : liveVideoT;
+        const livePct = Math.min(100, Math.max(0, (liveT / maxT) * 100));
+        const bp = viewportW <= 379 ? "xs" : viewportW >= 640 ? "sm+" : "default";
+        return (
+          <div
+            role="status"
+            aria-live="polite"
+            className="pointer-events-auto fixed top-2 right-2 z-[60] w-[300px] max-w-[calc(100vw-1rem)] rounded-md border border-white/15 bg-black/85 p-2.5 text-[10.5px] leading-snug text-white shadow-lg backdrop-blur"
+            data-hero-debug-panel="true"
+          >
+            <div className="mb-1.5 flex items-center justify-between gap-2 font-mono text-[10px] uppercase tracking-wider text-white/70">
+              <span>hero debug · {bp}</span>
+              <span>{viewportW}px</span>
+            </div>
+            <ul className="mb-2 space-y-0.5 font-mono text-[10px]">
+              <li>mode: <b>{activeMode ?? "idle"}</b> · video: <b>{videoFailed ? "poster" : "ok"}</b> · src: <b>{videoSrc.endsWith("1080.mp4") ? "1080p" : "720p"}</b></li>
+              <li>video.currentTime: <b>{liveVideoT.toFixed(2)}s</b> · wall: <b>{liveWallMs}ms</b> · intersect: <b>{intersectionRatio.toFixed(2)}</b></li>
+            </ul>
+
+            {/* Visual timeline: scheduled marks (gold tick), fired stamps
+                (filled gold dot), live cursor (teal line). */}
+            <div className="mb-1 flex items-center justify-between font-mono text-[9px] text-white/55">
+              <span>0s</span>
+              <span>timeline ({activeMode === "wall" ? "wall" : "video.currentTime"})</span>
+              <span>{maxT.toFixed(1)}s</span>
+            </div>
+            <div className="relative h-12 rounded border border-white/10 bg-white/[0.04]">
+              {/* second gridlines */}
+              {Array.from({ length: Math.ceil(maxT) + 1 }).map((_, s) => (
+                <span
+                  key={`g-${s}`}
+                  className="absolute top-0 bottom-0 w-px bg-white/10"
+                  style={{ left: `${Math.min(100, (s / maxT) * 100)}%` }}
+                />
+              ))}
+              {/* scheduled beats */}
+              {activeSchedule.map((b) => {
+                const left = (b.t / maxT) * 100;
+                const stamp = beatStamps[b.key];
+                return (
+                  <span key={`s-${b.key}`} className="absolute" style={{ left: `${left}%`, top: 0, bottom: 0 }}>
+                    <span className="absolute top-1 -translate-x-1/2 h-3 w-px bg-[color:var(--gold-soft)]/70" />
+                    <span
+                      className={`absolute top-[18px] -translate-x-1/2 h-2 w-2 rounded-full border ${stamp ? "bg-[color:var(--gold)] border-[color:var(--gold)]" : "border-[color:var(--gold-soft)]/60 bg-transparent"}`}
+                    />
+                  </span>
+                );
+              })}
+              {/* live cursor */}
+              <span
+                className="absolute top-0 bottom-0 w-px bg-[color:var(--teal-2,#3a7a82)]"
+                style={{ left: `${livePct}%` }}
+              />
+              <span
+                className="absolute top-0 -translate-x-1/2 -translate-y-1 rounded-sm bg-[color:var(--teal-2,#3a7a82)] px-1 font-mono text-[8.5px] text-white"
+                style={{ left: `${livePct}%` }}
+              >
+                {liveT.toFixed(2)}s
+              </span>
+            </div>
+
+            {/* Per-beat readout: scheduled vs actual fire (wall + video). */}
+            <table className="mt-2 w-full font-mono text-[9.5px]">
+              <thead className="text-white/50">
+                <tr>
+                  <th className="text-left font-normal">beat</th>
+                  <th className="text-right font-normal">sched</th>
+                  <th className="text-right font-normal">video</th>
+                  <th className="text-right font-normal">wall</th>
+                </tr>
+              </thead>
+              <tbody>
+                {activeSchedule.map((b) => {
+                  const s = beatStamps[b.key];
+                  return (
+                    <tr key={b.key} className={s ? "text-white" : "text-white/40"}>
+                      <td className="py-[1px]">{b.key}</td>
+                      <td className="text-right tabular-nums">{b.t.toFixed(2)}s</td>
+                      <td className="text-right tabular-nums">{s ? `${s.videoT.toFixed(2)}s` : "—"}</td>
+                      <td className="text-right tabular-nums">{s ? `${s.wallMs}ms` : "—"}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
           </div>
-          <ul className="space-y-0.5 font-mono">
-            <li>story: <b>{storyActive ? "active" : "idle"}</b></li>
-            <li>video: <b>{videoFailed ? "fallback (poster)" : "playing/loading"}</b></li>
-            <li>src: <b>{videoSrc.endsWith("1080.mp4") ? "1080p" : "720p"}</b></li>
-            <li>intersect: <b>{intersectionRatio.toFixed(2)}</b></li>
-          </ul>
-          <div className="mt-1.5 max-h-[140px] overflow-auto border-t border-white/10 pt-1.5 font-mono text-[10px] text-white/85">
-            {debugEvents.length === 0 ? (
-              <div className="text-white/50">no events yet</div>
-            ) : (
-              debugEvents.map((e, i) => (
-                <div key={i}>
-                  +{e.t}ms {e.label}
-                  {e.detail ? <span className="text-white/60"> · {e.detail}</span> : null}
-                </div>
-              ))
-            )}
-          </div>
-        </div>
-      )}
+        );
+      })()}
     </section>
   );
 }
