@@ -16,17 +16,17 @@ import { useEffect, useState } from "react";
 type RGB = { r: number; g: number; b: number };
 
 const TOKENS: Array<{ name: string; hex: string; rgb: RGB }> = [
-  { name: "teal", hex: "#295B61", rgb: { r: 41, g: 91, b: 97 } },
-  { name: "teal-2", hex: "#2A7C82", rgb: { r: 42, g: 124, b: 130 } },
-  { name: "gold", hex: "#C9A96A", rgb: { r: 201, g: 169, b: 106 } },
-  { name: "gold-soft", hex: "#E1CFA6", rgb: { r: 225, g: 207, b: 166 } },
+  { name: "teal", hex: "color:var(--teal)", rgb: { r: 41, g: 91, b: 97 } },
+  { name: "teal-2", hex: "color:var(--teal-2)", rgb: { r: 42, g: 124, b: 130 } },
+  { name: "gold", hex: "var(--gold)", rgb: { r: 201, g: 169, b: 106 } },
+  { name: "gold-soft", hex: "var(--gold-soft)", rgb: { r: 225, g: 207, b: 166 } },
   { name: "gold-warm", hex: "#D8BE82", rgb: { r: 216, g: 190, b: 130 } },
   { name: "gold-deep", hex: "#B89452", rgb: { r: 184, g: 148, b: 82 } },
-  { name: "ivory", hex: "#FAF8F3", rgb: { r: 250, g: 248, b: 243 } },
-  { name: "sand", hex: "#F4EFE7", rgb: { r: 244, g: 239, b: 231 } },
-  { name: "charcoal", hex: "#2E2E2E", rgb: { r: 46, g: 46, b: 46 } },
+  { name: "ivory", hex: "var(--ivory)", rgb: { r: 250, g: 248, b: 243 } },
+  { name: "sand", hex: "var(--sand)", rgb: { r: 244, g: 239, b: 231 } },
+  { name: "charcoal", hex: "var(--charcoal)", rgb: { r: 46, g: 46, b: 46 } },
   { name: "charcoal-soft", hex: "#555555", rgb: { r: 85, g: 85, b: 85 } },
-  { name: "charcoal-deep", hex: "#1F1F1F", rgb: { r: 31, g: 31, b: 31 } },
+  { name: "charcoal-deep", hex: "var(--charcoal-deep)", rgb: { r: 31, g: 31, b: 31 } },
 ];
 
 /** Allow-list per slot — matches the regression spec. */
@@ -153,7 +153,7 @@ export function HeroColorDebugOverlay() {
         zIndex: 9999,
         maxWidth: "min(360px, calc(100vw - 24px))",
         background: "rgba(15,12,9,0.92)",
-        color: "#FAF8F3",
+        color: "var(--ivory)",
         font: "11px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace",
         border: "1px solid rgba(201,169,106,0.5)",
         borderRadius: 10,
@@ -174,7 +174,7 @@ export function HeroColorDebugOverlay() {
           justifyContent: "space-between",
           width: "100%",
           gap: 8,
-          color: "#C9A96A",
+          color: "var(--gold)",
           fontWeight: 700,
           letterSpacing: "0.08em",
           textTransform: "uppercase",
@@ -215,10 +215,10 @@ export function HeroColorDebugOverlay() {
                 }}
               />
               <span style={{ display: "grid", gap: 2, minWidth: 0 }}>
-                <span style={{ color: "#FAF8F3", fontWeight: 600 }}>{s.label}</span>
+                <span style={{ color: "var(--ivory)", fontWeight: 600 }}>{s.label}</span>
                 <span style={{ color: "rgba(250,248,243,0.75)" }}>
                   {s.rgb ? fmtHex(s.rgb) : "not found"} ·{" "}
-                  <span style={{ color: s.inAllowList ? "#E1CFA6" : "#F2A9A9" }}>
+                  <span style={{ color: s.inAllowList ? "var(--gold-soft)" : "#F2A9A9" }}>
                     {s.nearestName} {s.nearestHex} (Δ{Number.isFinite(s.delta) ? s.delta : "—"})
                   </span>
                 </span>

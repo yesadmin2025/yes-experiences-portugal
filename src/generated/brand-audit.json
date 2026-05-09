@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-05-09T09:13:35.516Z",
-  "filesScanned": 190,
+  "generatedAt": "2026-05-09T09:18:23.190Z",
+  "filesScanned": 191,
   "approvedPalette": {
     "teal": "#295B61",
     "teal-2": "#2A7C82",
@@ -18,10 +18,10 @@
     "#cccccc"
   ],
   "counts": {
-    "total": 159,
+    "total": 165,
     "approved": 34,
     "allowlisted": 25,
-    "mismatch": 100
+    "mismatch": 106
   },
   "findings": [
     {
@@ -319,6 +319,60 @@
       "raw": "#8a8a8a",
       "normalized": "#8a8a8a",
       "snippet": ".empty { color: #8a8a8a; padding: 20px; text-align: center; }",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/HeroColorDebugOverlay.tsx",
+      "line": 23,
+      "col": 30,
+      "raw": "#D8BE82",
+      "normalized": "#d8be82",
+      "snippet": "{ name: \"gold-warm\", hex: \"#D8BE82\", rgb: { r: 216, g: 190, b: 130 } },",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/HeroColorDebugOverlay.tsx",
+      "line": 24,
+      "col": 30,
+      "raw": "#B89452",
+      "normalized": "#b89452",
+      "snippet": "{ name: \"gold-deep\", hex: \"#B89452\", rgb: { r: 184, g: 148, b: 82 } },",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/HeroColorDebugOverlay.tsx",
+      "line": 28,
+      "col": 34,
+      "raw": "#555555",
+      "normalized": "#555555",
+      "snippet": "{ name: \"charcoal-soft\", hex: \"#555555\", rgb: { r: 85, g: 85, b: 85 } },",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/HeroColorDebugOverlay.tsx",
+      "line": 221,
+      "col": 79,
+      "raw": "#F2A9A9",
+      "normalized": "#f2a9a9",
+      "snippet": "<span style={{ color: s.inAllowList ? \"var(--gold-soft)\" : \"#F2A9A9\" }}>",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/HeroColorDebugOverlay.tsx",
+      "line": 231,
+      "col": 43,
+      "raw": "#A9E1B6",
+      "normalized": "#a9e1b6",
+      "snippet": "color: s.inAllowList ? \"#A9E1B6\" : \"#F2A9A9\",",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/HeroColorDebugOverlay.tsx",
+      "line": 231,
+      "col": 55,
+      "raw": "#F2A9A9",
+      "normalized": "#f2a9a9",
+      "snippet": "color: s.inAllowList ? \"#A9E1B6\" : \"#F2A9A9\",",
       "status": "mismatch"
     },
     {
