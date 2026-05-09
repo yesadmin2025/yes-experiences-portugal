@@ -1,56 +1,77 @@
-[
-  {
-    "name": "yes-experiences-portugal-centered-full",
-    "layout": "centered",
-    "description": "Centered stacked, full color, transparent",
-    "yes": "#295B61",
-    "experiences": "#2E2E2E",
-    "accent": "#C9A96A",
-    "background": "transparent"
-  },
-  {
-    "name": "yes-experiences-portugal-centered-mono-dark",
-    "layout": "centered",
-    "description": "Centered stacked, mono charcoal, transparent (use on light bg)",
-    "yes": "#2E2E2E",
-    "experiences": "#2E2E2E",
-    "accent": "#2E2E2E",
-    "background": "transparent"
-  },
-  {
-    "name": "yes-experiences-portugal-centered-mono-light",
-    "layout": "centered",
-    "description": "Centered stacked, mono ivory, transparent (use on dark bg)",
-    "yes": "#FAF8F3",
-    "experiences": "#FAF8F3",
-    "accent": "#FAF8F3",
-    "background": "transparent"
-  },
-  {
-    "name": "yes-experiences-portugal-horizontal-full",
-    "layout": "horizontal",
-    "description": "Horizontal lockup, full color, transparent",
-    "yes": "#295B61",
-    "experiences": "#2E2E2E",
-    "accent": "#C9A96A",
-    "background": "transparent"
-  },
-  {
-    "name": "yes-experiences-portugal-horizontal-mono-dark",
-    "layout": "horizontal",
-    "description": "Horizontal lockup, mono charcoal, transparent",
-    "yes": "#2E2E2E",
-    "experiences": "#2E2E2E",
-    "accent": "#2E2E2E",
-    "background": "transparent"
-  },
-  {
-    "name": "yes-experiences-portugal-horizontal-mono-light",
-    "layout": "horizontal",
-    "description": "Horizontal lockup, mono ivory, transparent",
-    "yes": "#FAF8F3",
-    "experiences": "#FAF8F3",
-    "accent": "#FAF8F3",
-    "background": "transparent"
-  }
-]
+{
+  "version": "1.1",
+  "updated": "2026-05-09",
+  "logoLockups": [
+    {
+      "name": "yes-experiences-portugal-centered-full",
+      "layout": "centered",
+      "description": "Centered stacked, full color, transparent",
+      "yes": "#295B61",
+      "experiences": "#2E2E2E",
+      "accent": "#C9A96A",
+      "background": "transparent",
+      "files": ["svg", "pdf", "ai", "eps", "png@1x", "png@2x", "png@3x"]
+    },
+    {
+      "name": "yes-experiences-portugal-centered-mono-dark",
+      "layout": "centered",
+      "description": "Centered stacked, mono charcoal, transparent (use on light bg)",
+      "yes": "#2E2E2E",
+      "experiences": "#2E2E2E",
+      "accent": "#2E2E2E",
+      "background": "transparent",
+      "files": ["svg", "pdf", "ai", "eps", "png@1x", "png@2x", "png@3x"]
+    },
+    {
+      "name": "yes-experiences-portugal-centered-mono-light",
+      "layout": "centered",
+      "description": "Centered stacked, mono ivory, transparent (use on dark bg)",
+      "yes": "#FAF8F3",
+      "experiences": "#FAF8F3",
+      "accent": "#FAF8F3",
+      "background": "transparent",
+      "files": ["svg", "pdf", "ai", "eps", "png@1x", "png@2x", "png@3x"]
+    },
+    {
+      "name": "yes-experiences-portugal-horizontal-full",
+      "layout": "horizontal",
+      "description": "Horizontal lockup, full color, transparent",
+      "yes": "#295B61",
+      "experiences": "#2E2E2E",
+      "accent": "#C9A96A",
+      "background": "transparent",
+      "files": ["svg", "pdf", "ai", "eps", "png@1x", "png@2x", "png@3x"]
+    },
+    {
+      "name": "yes-experiences-portugal-horizontal-mono-dark",
+      "layout": "horizontal",
+      "description": "Horizontal lockup, mono charcoal, transparent",
+      "yes": "#2E2E2E",
+      "experiences": "#2E2E2E",
+      "accent": "#2E2E2E",
+      "background": "transparent",
+      "files": ["svg", "pdf", "ai", "eps", "png@1x", "png@2x", "png@3x"]
+    },
+    {
+      "name": "yes-experiences-portugal-horizontal-mono-light",
+      "layout": "horizontal",
+      "description": "Horizontal lockup, mono ivory, transparent",
+      "yes": "#FAF8F3",
+      "experiences": "#FAF8F3",
+      "accent": "#FAF8F3",
+      "background": "transparent",
+      "files": ["svg", "pdf", "ai", "eps", "png@1x", "png@2x", "png@3x"]
+    }
+  ],
+  "palette": [
+    { "name": "YES Teal",        "token": "--teal",          "hex": "#295B61", "role": "Primary brand color"  },
+    { "name": "Champagne Gold",  "token": "--gold",          "hex": "#C9A96A", "role": "Accent"               },
+    { "name": "Charcoal",        "token": "--charcoal",      "hex": "#2E2E2E", "role": "Primary text"         },
+    { "name": "Warm Ivory",      "token": "--ivory",         "hex": "#FAF8F3", "role": "Primary background"   },
+    { "name": "Teal — Soft",     "token": "--teal-2",        "hex": "#2A7C82", "role": "Secondary teal"       },
+    { "name": "Gold — Soft",     "token": "--gold-soft",     "hex": "#E1CFA6", "role": "Soft accent"          },
+    { "name": "Sand",            "token": "--sand",          "hex": "#F4EFE7", "role": "Quiet surface"        },
+    { "name": "Charcoal — Soft", "token": "--charcoal-soft", "hex": "#555555", "role": "Secondary text"       }
+  ],
+  "sourceOfTruth": "src/styles.css"
+}
