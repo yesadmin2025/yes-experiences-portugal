@@ -110,31 +110,36 @@ test.describe("Hero reveal cadence — measured 220ms ease-out", () => {
       if (f?.ready) await f.ready;
     });
 
+    const ALLOWED_EASE = [
+      "ease-out",
+      "cubic-bezier(0, 0, 0.58, 1)",
+      "cubic-bezier(0, 0, 0.2, 1)",
+    ];
+
     for (const sel of REVEAL_SELECTORS) {
-      const easing = await readTimingFunction(page, sel);
-      // Tailwind's `ease-out` utility compiles to `cubic-bezier(0,0,0.2,1)`;
-      // the CSS keyword `ease-out` serializes as `cubic-bezier(0,0,0.58,1)`.
-      // Both are accepted "ease-out" curves — anything else (linear, spring,
-      // custom control points) is a regression.
-      const ALLOWED_EASE = [
-        "ease-out",
-        "cubic-bezier(0, 0, 0.58, 1)",
-        "cubic-bezier(0, 0, 0.2, 1)",
-      ];
+      // Static check: computed transition-timing-function (read straight
+      // off the element) must be one of the approved ease-out curves.
+      const computedEasing = await readTimingFunction(page, sel);
       expect(
-        ALLOWED_EASE.includes(easing),
-        `${sel} must transition with ease-out, got "${easing}"`,
+        ALLOWED_EASE.includes(computedEasing),
+        `${sel} computed timing-function must be ease-out, got "${computedEasing}"`,
       ).toBe(true);
 
-      const measured = await measureTransition(page, sel);
+      // Runtime measurement: force a fresh transition and read the active
+      // CSSTransition's effect timing — this is what the browser will play.
+      const { durationMs, easing } = await measureTransition(page, sel);
       expect(
-        measured,
-        `${sel} measured transition ${measured.toFixed(1)}ms is outside ` +
+        ALLOWED_EASE.includes(easing),
+        `${sel} active transition easing must be ease-out, got "${easing}"`,
+      ).toBe(true);
+      expect(
+        durationMs,
+        `${sel} measured transition ${durationMs.toFixed(1)}ms is outside ` +
           `${TARGET_MS}ms ± ${TOLERANCE_MS}ms`,
       ).toBeGreaterThanOrEqual(TARGET_MS - TOLERANCE_MS);
       expect(
-        measured,
-        `${sel} measured transition ${measured.toFixed(1)}ms is outside ` +
+        durationMs,
+        `${sel} measured transition ${durationMs.toFixed(1)}ms is outside ` +
           `${TARGET_MS}ms ± ${TOLERANCE_MS}ms`,
       ).toBeLessThanOrEqual(TARGET_MS + TOLERANCE_MS);
     }
