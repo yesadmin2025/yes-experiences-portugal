@@ -262,6 +262,18 @@ export const Route = createFileRoute("/")({
       { property: "og:image", content: heroImg },
       { property: "twitter:image", content: heroImg },
     ],
+    links: [
+      // Preload the hero film poster — it's the LCP element on the
+      // homepage. Marking it fetchpriority=high lets the browser pull
+      // the bytes in parallel with critical CSS instead of waiting for
+      // the <video> tag to be discovered during layout.
+      {
+        rel: "preload",
+        as: "image",
+        href: "/video/film/yes-hero-poster.jpg",
+        fetchpriority: "high",
+      },
+    ],
   }),
   component: HomePage,
 });
@@ -890,6 +902,9 @@ function HomePage() {
               loop
               playsInline
               preload="auto"
+              // LCP element — hint the browser to prioritize the poster
+              // fetch so paint can begin before the .mp4 is parsed.
+              {...({ fetchpriority: "high" } as Record<string, string>)}
               ref={(el) => {
                 if (!el) return;
                 // Premium pacing: keep the authored chapter cut-points intact,
