@@ -520,9 +520,32 @@ function BuilderPage() {
               </p>
             )}
 
-            {step === 1 && (
+            {step === 1 && !region && (
+              <div key="step-1-region" className="builder-step-in">
+                <RegionStep
+                  selected={region}
+                  onChoose={(r) => {
+                    setRegion(r);
+                  }}
+                />
+              </div>
+            )}
+
+            {step === 1 && region && (
               <div key="step-1" className="builder-step-in">
-                <StepHead num={1} eyebrow="Mood" title="What are you in the mood for?" />
+                <div className="flex items-center justify-between gap-3 flex-wrap mb-2">
+                  <StepHead num={1} eyebrow="Mood" title="What are you in the mood for?" />
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setSearch({ region: undefined })}
+                  className="mt-2 inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.22em] font-semibold text-[color:var(--charcoal)]/70 hover:text-[color:var(--gold)] transition-colors"
+                  aria-label="Change region"
+                >
+                  <span className="inline-flex h-1.5 w-1.5 rounded-full bg-[color:var(--gold)]" />
+                  {BUILDER_REGIONS.find((r) => r.key === region)?.label ?? region}
+                  <span className="text-[color:var(--charcoal)]/40">· change</span>
+                </button>
                 {moodImagesLoading && Object.keys(moodImages).length === 0 ? (
                   <MoodGridSkeleton count={MOODS.length} />
                 ) : (
