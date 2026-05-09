@@ -33,6 +33,24 @@ function isHeroDebugEnabled(): boolean {
   return false;
 }
 
+/**
+ * Slow-mo factor from `?heroSlowMo=N` (e.g. 2 = half-speed, 4 = quarter,
+ * 0.5 = double-speed). Clamped to [0.25, 8]. 1 = normal. Always returns 1
+ * when the URL param is missing or invalid.
+ */
+function getHeroSlowMo(): number {
+  if (typeof window === "undefined") return 1;
+  try {
+    const raw = new URLSearchParams(window.location.search).get("heroSlowMo");
+    if (!raw) return 1;
+    const n = Number(raw);
+    if (!Number.isFinite(n) || n <= 0) return 1;
+    return Math.min(8, Math.max(0.25, n));
+  } catch {
+    return 1;
+  }
+}
+
 export function CinematicHero() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const sectionRef = useRef<HTMLElement | null>(null);
