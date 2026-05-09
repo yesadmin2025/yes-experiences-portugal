@@ -2182,6 +2182,7 @@
   [data-hero-field="headlineLine1"],
   [data-hero-field="headlineLine2"],
   [data-hero-field="subheadline"],
+  .hero-cinematic .hero-story-step,
   .hero-cta-button[data-hero-field="primaryCta"],
   .hero-cta-button[data-hero-field="secondaryCta"],
   .hero-rhythm-microcopy-to-signature [data-hero-field="brandLine"] > span:nth-child(2) {
