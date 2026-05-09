@@ -21,12 +21,25 @@
  * regression.
  */
 import { execFileSync, spawnSync } from "node:child_process";
-import { existsSync, statSync } from "node:fs";
-import { resolve } from "node:path";
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
+import { resolve, join, relative } from "node:path";
 
 // --- Config: source of truth pulled from CinematicHero.tsx + styles.css. ----
-const VIDEO = resolve("public/video/film/yes-hero-film-720.mp4");
-const SAMPLES = 8; // frames evenly spread across the loop
+// Every MP4 under public/video/film/ is treated as a hero film candidate by
+// default — this catches both the 720p and 1080p renders the <video> tag
+// references and any new resolution we drop in next to them.
+//
+// Alternate hero videos that live elsewhere (e.g. seasonal A/B films, an
+// experimental coast loop) can be registered in public/video/hero-films.json
+// as a JSON array of repo-root-relative paths. They will be audited the
+// same way without further script changes.
+//
+// Per-invocation overrides:
+//   --video <path>     repeatable; takes precedence over discovery
+//   --samples <n>      override SAMPLES (default 8)
+const FILM_DIR = resolve("public/video/film");
+const ALT_MANIFEST = resolve("public/video/hero-films.json");
+const DEFAULT_SAMPLES = 8;
 
 // Text colors actually rendered (mirrors CinematicHero.tsx).
 const TEXT = {
