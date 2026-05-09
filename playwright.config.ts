@@ -63,6 +63,10 @@ export default defineConfig({
       use: { ...devices["Pixel 5"] },
     },
     {
+      name: "tablet-chromium",
+      use: { ...devices["Desktop Chrome"], viewport: { width: 834, height: 1112 } },
+    },
+    {
       name: "desktop-chromium",
       use: { ...devices["Desktop Chrome"], viewport: { width: 1366, height: 768 } },
     },
