@@ -151,13 +151,13 @@ export function CinematicHero() {
           >
             <span
               data-hero-field="headlineLine1"
-              className={`block text-[color:var(--ivory)] [text-shadow:0_2px_12px_rgba(15,12,9,0.76)] transition-all duration-700 ${showLine1 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}
+              className={`block text-[color:var(--ivory)] [text-shadow:0_2px_12px_color-mix(in_oklab,var(--charcoal-deep)_76%,transparent)] transition-all duration-700 ${showLine1 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}
             >
               {HERO_COPY.headlineLine1}
             </span>
             <span
               data-hero-field="headlineLine2"
-              className={`block mt-1 md:mt-1.5 italic font-normal tracking-[-0.014em] text-[color:var(--ivory)]/90 [text-shadow:0_2px_12px_rgba(15,12,9,0.74)] transition-all duration-700 ${showLine2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}
+              className={`block mt-1 md:mt-1.5 italic font-normal tracking-[-0.014em] text-[color:var(--ivory)] [text-shadow:0_2px_12px_color-mix(in_oklab,var(--charcoal-deep)_74%,transparent)] transition-all duration-700 ${showLine2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}
             >
               {HERO_COPY.headlineLine2}
             </span>
