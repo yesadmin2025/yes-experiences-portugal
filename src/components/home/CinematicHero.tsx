@@ -74,6 +74,7 @@ export function CinematicHero() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const sectionRef = useRef<HTMLElement | null>(null);
   const mountedAtRef = useRef<number>(typeof performance !== "undefined" ? performance.now() : Date.now());
+  const showScrimRuler = useHeroScrimRulerToggle();
 
   const [storyActive, setStoryActive] = useState(false);
   const [videoFailed, setVideoFailed] = useState<boolean>(() => {
