@@ -16,6 +16,7 @@ import { ArrowRight } from "lucide-react";
 
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
 import { Eyebrow } from "@/components/ui/Eyebrow";
+import { HeroColorDebugOverlay } from "@/components/HeroColorDebugOverlay";
 
 // Reveal beats keyed to film timestamps (seconds). The last beat
 // (subheadline + CTAs + microcopy) intentionally lands together.
@@ -265,6 +266,9 @@ export function CinematicHero() {
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 bottom-0 h-24 z-[3] bg-[linear-gradient(180deg,rgba(250,248,243,0)_0%,rgba(250,248,243,0.55)_70%,var(--ivory)_100%)]"
       />
+
+      {/* Opt-in dev overlay — `?heroColorDebug=1`. Renders nothing otherwise. */}
+      <HeroColorDebugOverlay />
     </section>
   );
 }
