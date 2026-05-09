@@ -168,7 +168,7 @@ export function CinematicHero() {
           >
             <p
               data-hero-field="subheadline"
-              className="mt-5 sm:mt-6 max-w-[36rem] text-[15px] sm:text-[17px] md:text-[18px] leading-[1.5] text-[color:var(--ivory)]/92 text-pretty"
+              className="mt-5 sm:mt-6 max-w-[36rem] text-[15px] sm:text-[17px] md:text-[18px] leading-[1.5] text-[color:var(--ivory)] text-pretty [text-shadow:0_1px_2px_rgba(0,0,0,0.55)]"
             >
               {HERO_COPY.subheadline}
             </p>
@@ -194,7 +194,7 @@ export function CinematicHero() {
 
             <p
               data-hero-field="microcopy"
-              className="mt-4 text-[12.5px] sm:text-[13px] tracking-wide text-[color:var(--ivory)]/72"
+              className="mt-4 text-[12.5px] sm:text-[13px] tracking-wide text-[color:var(--ivory)]/90 [text-shadow:0_1px_2px_rgba(0,0,0,0.5)]"
             >
               {HERO_COPY.microcopy}
             </p>
