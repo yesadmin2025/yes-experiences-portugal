@@ -11,11 +11,10 @@
  *   Local guidance is available on demand, never required.
  */
 export const HERO_COPY = {
-  eyebrow: "PRIVATE · BY LOCALS · YOUR WAY",
-  headlineLine1: "Portugal is the stage.",
-  headlineLine2: "You write the story.",
-  subheadline:
-    "Choose the places, pace and moments that feel right — from private days to celebrations, groups and full journeys — with local guidance whenever you want it. Confirm instantly.",
+  eyebrow: "BUILD IT LIVE",
+  headlineLine1: "Build it live.",
+  headlineLine2: "Confirm instantly.",
+  subheadline: "Real local guidance whenever you want it.",
   primaryCta: "Create Your Story",
   secondaryCta: "Explore Signature Experiences",
   microcopy: "Instant booking. No forms. No waiting.",
