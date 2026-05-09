@@ -170,7 +170,7 @@ export function CinematicHero() {
           >
             <p
               data-hero-field="subheadline"
-              className="mt-5 sm:mt-6 max-w-[36rem] text-[15px] sm:text-[17px] md:text-[18px] leading-[1.5] text-[color:var(--ivory)] text-pretty [text-shadow:0_2px_8px_rgba(0,0,0,0.72)]"
+              className="mt-5 sm:mt-6 max-w-[36rem] text-[15px] sm:text-[17px] md:text-[18px] leading-[1.5] text-[color:var(--ivory)] text-pretty [text-shadow:0_2px_8px_color-mix(in_oklab,var(--charcoal-deep)_72%,transparent)]"
             >
               {HERO_COPY.subheadline}
             </p>
@@ -196,7 +196,7 @@ export function CinematicHero() {
 
             <p
               data-hero-field="microcopy"
-              className="mt-4 text-[12.5px] sm:text-[13px] tracking-wide text-[color:var(--ivory)] [text-shadow:0_2px_8px_rgba(0,0,0,0.7)]"
+              className="mt-4 text-[12.5px] sm:text-[13px] tracking-wide text-[color:var(--ivory)] [text-shadow:0_2px_8px_color-mix(in_oklab,var(--charcoal-deep)_70%,transparent)]"
             >
               {HERO_COPY.microcopy}
             </p>
