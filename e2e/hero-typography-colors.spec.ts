@@ -161,4 +161,6 @@ test.describe("Hero typography colors — YES brand-token regression", () => {
               `Allowed: gold #C9A96A, gold-soft #E1CFA6, teal #295B61, charcoal #2E2E2E.`,
       ).toBe(true);
     }
+  });
+});
 
