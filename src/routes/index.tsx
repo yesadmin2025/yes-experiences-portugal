@@ -31,6 +31,7 @@ import { CinematicHero } from "@/components/home/CinematicHero";
 import { getScrollDebugFlags, useScrollDebugFlags } from "@/lib/scroll-debug";
 
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
+import { signatureTours, isValidTourId } from "@/data/signatureTours";
 
 /* ──────────────────────────────────────────────────────────────────
  * Featured Signature tours — exactly 4 real tours, in display order.
