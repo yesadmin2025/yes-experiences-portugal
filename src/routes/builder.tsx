@@ -1266,7 +1266,7 @@ function CheckoutModal({
               </p>
             )}
             {clientSecret && (
-              <EmbeddedCheckoutProvider stripe={stripePromise} options={{ clientSecret }}>
+              <EmbeddedCheckoutProvider stripe={stripePromiseLazy()} options={{ clientSecret }}>
                 <EmbeddedCheckout />
               </EmbeddedCheckoutProvider>
             )}
