@@ -118,6 +118,67 @@ serve(async (req) => {
     auth: { persistSession: false },
   });
 
+  // ------------------------------------------------------------------
+  // Rate limit (ad-hoc, DB-backed). Anonymous flow keyed by sessionId.
+  // Bucket = "analyze_refs", limit = 5 calls per 60s window.
+  // Fail-open on transient DB errors so a blip doesn't break UX, but
+  // the unique (session_id, bucket) row + service-role write still
+  // caps abuse at the DB layer.
+  // ------------------------------------------------------------------
+  {
+    const RL_LIMIT = 5;
+    const RL_WINDOW_SEC = 60;
+    const now = Date.now();
+    try {
+      const { data: row } = await admin
+        .from("builder_rate_limits")
+        .select("call_count,last_call_at")
+        .eq("session_id", sessionId)
+        .eq("bucket", "analyze_refs")
+        .maybeSingle();
+
+      if (!row) {
+        await admin
+          .from("builder_rate_limits")
+          .insert({ session_id: sessionId, bucket: "analyze_refs", call_count: 1 });
+      } else {
+        const elapsed = (now - new Date(row.last_call_at).getTime()) / 1000;
+        if (elapsed >= RL_WINDOW_SEC) {
+          await admin
+            .from("builder_rate_limits")
+            .update({ call_count: 1, last_call_at: new Date(now).toISOString() })
+            .eq("session_id", sessionId)
+            .eq("bucket", "analyze_refs");
+        } else if (row.call_count >= RL_LIMIT) {
+          return new Response(
+            JSON.stringify({
+              error: "Too many requests, please wait a moment.",
+            }),
+            {
+              status: 429,
+              headers: {
+                ...corsHeaders,
+                "Content-Type": "application/json",
+                "Retry-After": String(Math.max(1, Math.ceil(RL_WINDOW_SEC - elapsed))),
+              },
+            },
+          );
+        } else {
+          await admin
+            .from("builder_rate_limits")
+            .update({
+              call_count: row.call_count + 1,
+              last_call_at: new Date(now).toISOString(),
+            })
+            .eq("session_id", sessionId)
+            .eq("bucket", "analyze_refs");
+        }
+      }
+    } catch (e) {
+      console.warn("[analyze-builder-references] rate-limit check failed (fail-open):", e);
+    }
+  }
+
   // Resolve files server-side by sessionId. The client never supplies a URL.
   let query = admin
     .from("builder_reference_uploads")
