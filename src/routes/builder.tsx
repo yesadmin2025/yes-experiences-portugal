@@ -100,6 +100,7 @@ function BuilderPage() {
   const navigate = useNavigate({ from: "/builder" });
 
   const step = search.step ?? 0;
+  const region = search.region;
   const mood = search.mood;
   const who = search.who;
   const intention = search.intention;
@@ -116,6 +117,10 @@ function BuilderPage() {
   );
 
   const setStep = useCallback((s: Step) => setSearch({ step: s }), [setSearch]);
+  const setRegion = useCallback(
+    (r: BuilderRegionKey) => setSearch({ region: r }),
+    [setSearch],
+  );
   const setMood = useCallback((m: Mood) => setSearch({ mood: m }), [setSearch]);
   const setWho = useCallback((w: Who) => setSearch({ who: w }), [setSearch]);
   const setIntention = useCallback((i: Intention) => setSearch({ intention: i }), [setSearch]);
@@ -268,6 +273,7 @@ function BuilderPage() {
             mood,
             who,
             intention,
+            regionKey: region,
             pace: opts?.nextPace ?? pace,
             excludedStopKeys: opts?.nextExcluded ?? excluded,
             pinnedStopKeys: pinned,
@@ -282,7 +288,7 @@ function BuilderPage() {
         setRouteLoading(false);
       }
     },
-    [mood, who, intention, pace, excluded, pinned],
+    [mood, who, intention, region, pace, excluded, pinned],
   );
 
   // Trigger initial generation when entering predictive moment / live builder.
