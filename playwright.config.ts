@@ -16,6 +16,10 @@ export default defineConfig({
   timeout: 30_000,
   fullyParallel: false,
   workers: 1,
+  // Pre-flight: warn if the Playwright Chromium binary is missing system
+  // libs (libglib, libnss, …) so headless-shell crashes get a clear hint
+  // instead of an opaque "browser has been closed" trace.
+  globalSetup: "./e2e/global-setup.ts",
   // Reporters: console output (github on CI / list locally), HTML report
   // for trace/diff drill-down on CI, and the custom CTA parity summary
   // that writes a per-viewport pass/fail + deltas table to
