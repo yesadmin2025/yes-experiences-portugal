@@ -1,11 +1,20 @@
 import {
   Briefcase,
   Clock,
+  Compass,
+  GlassWater,
   Heart,
   Landmark,
+  Leaf,
   Mountain,
+  PartyPopper,
+  Sparkles,
   Sprout,
+  Sun,
+  Trees,
   Users,
+  Utensils,
+  Waves,
   Wine,
   Zap,
 } from "lucide-react";
@@ -37,15 +46,15 @@ export const WHOS: { id: Who; label: string; sub: string; icon: typeof Users }[]
 
 // Intention — what matters most. Engine IDs stay; labels and subtitles
 // realigned to the brief's "what matters" vocabulary.
-export const INTENTIONS: { id: Intention; label: string; sub: string }[] = [
-  { id: "hidden", label: "Discovering places", sub: "Off the postcard, found in person" },
-  { id: "gastronomy", label: "Enjoying the moment", sub: "Real lunch, slow tasca, long table" },
-  { id: "wonder", label: "Celebrating something", sub: "A day that lifts the occasion" },
-  { id: "heritage", label: "Learning and exploring", sub: "Old stones that still talk" },
-  { id: "wellness", label: "Taking it slow", sub: "Breath room, quiet rhythm" },
-  { id: "coast", label: "Coast & views", sub: "Cove, salt wind, sea light" },
-  { id: "wine", label: "Wine country", sub: "Cellars, talha, long table" },
-  { id: "nature", label: "Nature & wild edges", sub: "Cliffs, dunes, lagoons" },
+export const INTENTIONS: { id: Intention; label: string; sub: string; icon: typeof Compass }[] = [
+  { id: "hidden", label: "Discovering places", sub: "Off the postcard, found in person", icon: Compass },
+  { id: "gastronomy", label: "Enjoying the moment", sub: "Real lunch, slow tasca, long table", icon: Utensils },
+  { id: "wonder", label: "Celebrating something", sub: "A day that lifts the occasion", icon: PartyPopper },
+  { id: "heritage", label: "Learning and exploring", sub: "Old stones that still talk", icon: Landmark },
+  { id: "wellness", label: "Taking it slow", sub: "Breath room, quiet rhythm", icon: Leaf },
+  { id: "coast", label: "Coast & views", sub: "Cove, salt wind, sea light", icon: Waves },
+  { id: "wine", label: "Wine country", sub: "Cellars, talha, long table", icon: GlassWater },
+  { id: "nature", label: "Nature & wild edges", sub: "Cliffs, dunes, lagoons", icon: Trees },
 ];
 
 export const PACES: { id: Pace; label: string; sub: string; icon: typeof Sprout }[] = [

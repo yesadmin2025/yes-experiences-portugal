@@ -631,16 +631,16 @@ function BuilderPage() {
                   role="group"
                   aria-label="Interests — choose one or more"
                   aria-describedby="intentions-help"
-                  className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3"
+                  className="mt-6 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3"
                 >
                   {INTENTIONS.map((it) => (
-                    <ChoiceRow
+                    <ChoiceTile
                       key={it.id}
                       selected={intentions.includes(it.id)}
                       onClick={() => toggleIntention(it.id)}
                       label={it.label}
                       sub={it.sub}
-                      ariaLabel={`${it.label}. ${it.sub}.`}
+                      Icon={it.icon}
                     />
                   ))}
                 </div>
