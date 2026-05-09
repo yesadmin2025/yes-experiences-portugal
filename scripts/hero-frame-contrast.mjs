@@ -50,19 +50,19 @@ const TEXT = {
 };
 
 // Scrim characterisation. CinematicHero.tsx renders TWO overlays:
-//   1. Linear bottom darken: 0% → 0.20a, 40% → 0.35a, 72% → 0.78a, 100% → 0.92a, color rgb(18,14,10).
-//   2. Radial backdrop directly behind the copy column (bottom 62%, peaks at 0.78a, edges 0).
+//   1. Linear darken: 0% → 0.44a, 36% → 0.56a, 70% → 0.82a, 100% → 0.94a, color rgb(15,12,9).
+//   2. Radial backdrop directly behind the copy column (bottom 76%, peaks at 0.88a, edges 0).
 // We sample the LINEAR overlay only — the radial is bonus headroom we keep as a safety margin so
 // the test does not green-light marginal frames that only pass thanks to the radial.
-const SCRIM_RGB = [18, 14, 10];
+const SCRIM_RGB = [15, 12, 9];
 
 // Regions in normalised frame coordinates [y0, y1] full width. These mirror
 // where the text sits at the mobile viewport (393×587, items-end + pb-10).
 // Headline is the largest text → uses the AA-large threshold (3:1).
 // Subheadline + microcopy are body text → AA-normal (4.5:1).
 const REGIONS = [
-  { id: "headline", y0: 0.58, y1: 0.78, scrimAlpha: 0.6, level: "large", colors: ["headlineLine1", "headlineLine2"] },
-  { id: "subheadline", y0: 0.78, y1: 0.93, scrimAlpha: 0.82, level: "normal", colors: ["subheadline"] },
+  { id: "headline", y0: 0.58, y1: 0.78, scrimAlpha: 0.72, level: "large", colors: ["headlineLine1", "headlineLine2"] },
+  { id: "subheadline", y0: 0.78, y1: 0.93, scrimAlpha: 0.84, level: "normal", colors: ["subheadline"] },
   { id: "microcopy", y0: 0.93, y1: 1.0, scrimAlpha: 0.9, level: "normal", colors: ["microcopy"] },
 ];
 

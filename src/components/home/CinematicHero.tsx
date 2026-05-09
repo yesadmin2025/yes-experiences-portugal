@@ -125,12 +125,12 @@ export function CinematicHero() {
       {/* Bottom darken so copy stays AA against varied frames. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(20,16,12,0.20)_0%,rgba(20,16,12,0.35)_40%,rgba(20,16,12,0.78)_72%,rgba(15,12,9,0.92)_100%)]"
+        className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(15,12,9,0.44)_0%,rgba(15,12,9,0.56)_36%,rgba(15,12,9,0.82)_70%,rgba(15,12,9,0.94)_100%)]"
       />
       {/* Extra scrim directly behind copy block — guarantees AA on the brightest frames. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-[62%] bg-[radial-gradient(120%_85%_at_50%_100%,rgba(15,12,9,0.78)_0%,rgba(15,12,9,0.55)_45%,rgba(15,12,9,0)_100%)]"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-[76%] bg-[radial-gradient(120%_90%_at_50%_82%,rgba(15,12,9,0.88)_0%,rgba(15,12,9,0.68)_48%,rgba(15,12,9,0)_100%)]"
       />
 
       {/* Copy column — full width on mobile with 20px gutters, capped on tablet+. */}
@@ -149,13 +149,13 @@ export function CinematicHero() {
           >
             <span
               data-hero-field="headlineLine1"
-              className={`block transition-all duration-700 ${showLine1 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}
+              className={`block text-[color:var(--ivory)] [text-shadow:0_2px_10px_rgba(0,0,0,0.72)] transition-all duration-700 ${showLine1 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}
             >
               {HERO_COPY.headlineLine1}
             </span>
             <span
               data-hero-field="headlineLine2"
-              className={`block font-serif italic font-normal text-[color:var(--gold-soft)] transition-all duration-700 ${showLine2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}
+              className={`block font-serif italic font-normal text-[color:var(--gold-soft)] [text-shadow:0_2px_10px_rgba(0,0,0,0.7)] transition-all duration-700 ${showLine2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}
             >
               {HERO_COPY.headlineLine2}
             </span>
@@ -168,7 +168,7 @@ export function CinematicHero() {
           >
             <p
               data-hero-field="subheadline"
-              className="mt-5 sm:mt-6 max-w-[36rem] text-[15px] sm:text-[17px] md:text-[18px] leading-[1.5] text-[color:var(--ivory)] text-pretty [text-shadow:0_1px_2px_rgba(0,0,0,0.55)]"
+              className="mt-5 sm:mt-6 max-w-[36rem] text-[15px] sm:text-[17px] md:text-[18px] leading-[1.5] text-[color:var(--ivory)] text-pretty [text-shadow:0_2px_8px_rgba(0,0,0,0.72)]"
             >
               {HERO_COPY.subheadline}
             </p>
@@ -194,7 +194,7 @@ export function CinematicHero() {
 
             <p
               data-hero-field="microcopy"
-              className="mt-4 text-[12.5px] sm:text-[13px] tracking-wide text-[color:var(--ivory)]/90 [text-shadow:0_1px_2px_rgba(0,0,0,0.5)]"
+              className="mt-4 text-[12.5px] sm:text-[13px] tracking-wide text-[color:var(--ivory)] [text-shadow:0_2px_8px_rgba(0,0,0,0.7)]"
             >
               {HERO_COPY.microcopy}
             </p>
