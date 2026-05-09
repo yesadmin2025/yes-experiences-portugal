@@ -87,9 +87,10 @@ export interface ApprovedSection {
 export const APPROVED_HOMEPAGE_SECTIONS: readonly ApprovedSection[] = [
   {
     order: 1,
-    name: "Hero",
-    marker: "HERO",
-    requiredSpacing: { kind: "min-h-vh", minVh: 80 },
+    name: "Hero (cinematic continuous film)",
+    componentTag: "CinematicHero",
+    inComponent: true,
+    requiredSpacing: null,
   },
   {
     order: 2,

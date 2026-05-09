@@ -405,8 +405,31 @@
 }
 
 @layer components {
+  /* Native mobile gutters: 20px edge padding, full width.
+     Tablet/desktop reintroduce a centered max width. */
   .container-x {
-    @apply mx-auto w-full max-w-[1240px] px-6 md:px-10;
+    @apply w-full max-w-full mx-auto;
+    padding-inline: 20px;
+  }
+  @media (min-width: 640px) {
+    .container-x {
+      padding-inline: 24px;
+    }
+  }
+  @media (min-width: 1024px) {
+    .container-x {
+      padding-inline: 32px;
+      max-width: 1240px;
+    }
+  }
+  /* Prevent word-by-word breaks on narrow mobile columns. */
+  .container-x h1,
+  .container-x h2,
+  .container-x h3,
+  .container-x p {
+    overflow-wrap: normal;
+    word-break: normal;
+    hyphens: manual;
   }
   /* SHARED VERTICAL RHYTHM — one token controls the breathing room
      between every section so the whole page reads as one calm cadence.
