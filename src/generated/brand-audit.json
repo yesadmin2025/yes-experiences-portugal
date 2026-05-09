@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-09T16:49:53.243Z",
+  "generatedAt": "2026-05-09T17:23:59.953Z",
   "filesScanned": 191,
   "approvedPalette": {
     "teal": "#295B61",
@@ -1475,7 +1475,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 2762,
+      "line": 2829,
       "col": 23,
       "raw": "#000",
       "normalized": "#000000",
@@ -1484,7 +1484,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 3093,
+      "line": 3160,
       "col": 41,
       "raw": "#000",
       "normalized": "#000000",
@@ -1493,7 +1493,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 3093,
+      "line": 3160,
       "col": 47,
       "raw": "#000",
       "normalized": "#000000",
@@ -1502,7 +1502,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 3586,
+      "line": 3653,
       "col": 7,
       "raw": "#555",
       "normalized": "#555555",
