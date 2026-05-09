@@ -31,9 +31,9 @@ const TOKENS: Array<{ name: string; hex: string; rgb: RGB }> = [
 
 /** Allow-list per slot — matches the regression spec. */
 const SLOT_ALLOW: Record<string, string[]> = {
-  eyebrow: ["gold", "gold-soft", "gold-warm", "gold-deep"],
-  headlineLine1: ["ivory", "teal", "charcoal"],
-  headlineLine2: ["ivory", "gold-soft", "gold", "teal", "charcoal"],
+  eyebrow: ["gold"],
+  headlineLine1: ["ivory"],
+  headlineLine2: ["gold"],
 };
 
 const TARGETS: Array<{ key: keyof typeof SLOT_ALLOW; selector: string; label: string }> = [
