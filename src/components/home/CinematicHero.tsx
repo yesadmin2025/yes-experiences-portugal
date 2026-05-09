@@ -137,15 +137,16 @@ export function CinematicHero() {
       {/* Copy column — full width on mobile with 20px gutters, capped on tablet+. */}
       <div className="relative z-10 w-full px-5 pb-10 pt-24 sm:px-8 sm:pb-14 md:px-12 md:pb-20 lg:px-16">
         <div className="mx-auto max-w-[44rem]">
-          <p
+          <Eyebrow
+            tone="onDark"
             data-hero-field="eyebrow"
-            className={`text-[10.5px] sm:text-[11.5px] uppercase tracking-[0.32em] font-semibold text-[color:var(--gold)] transition-opacity duration-700 ${showEyebrow ? "opacity-100" : "opacity-0"}`}
+            className={`transition-opacity duration-700 ${showEyebrow ? "opacity-100" : "opacity-0"}`}
           >
             {HERO_COPY.eyebrow}
-          </p>
+          </Eyebrow>
 
           <h1
-            className="mt-4 sm:mt-5 font-display font-bold leading-[1.04] tracking-[-0.015em] text-[2rem] xs:text-[2.4rem] sm:text-[3.2rem] md:text-[4rem] lg:text-[4.6rem] text-balance"
+            className="mt-5 md:mt-7 font-display font-bold leading-[1.05] md:leading-[0.98] tracking-[-0.02em] text-[2.05rem] xs:text-[2.4rem] sm:text-[2.95rem] md:text-[4rem] lg:text-[4.6rem] text-balance"
             data-hero-field="headlineLine1 headlineLine2"
           >
             <span
@@ -156,7 +157,7 @@ export function CinematicHero() {
             </span>
             <span
               data-hero-field="headlineLine2"
-              className={`block font-serif italic font-normal text-[color:var(--gold-soft)] [text-shadow:0_2px_10px_rgba(0,0,0,0.7)] transition-all duration-700 ${showLine2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}
+              className={`block font-serif italic font-normal tracking-[-0.012em] text-[color:var(--gold-soft)] [text-shadow:0_2px_10px_rgba(0,0,0,0.7)] transition-all duration-700 ${showLine2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}
             >
               {HERO_COPY.headlineLine2}
             </span>
