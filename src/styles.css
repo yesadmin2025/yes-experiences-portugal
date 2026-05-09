@@ -1937,7 +1937,7 @@
 
   .hero-cinematic .hero-story-shell {
     z-index: 10;
-    padding-bottom: calc(clamp(6.25rem, 16svh, 8rem) + env(safe-area-inset-bottom));
+    padding-bottom: calc(clamp(8.5rem, 20svh, 10.75rem) + env(safe-area-inset-bottom));
   }
 
   .hero-cinematic .hero-story-column {
