@@ -42,38 +42,44 @@ function firstCssListItem(value: string): string {
   return (value.split(/,(?![^()]*\))/)[0] ?? "").trim();
 }
 
-async function measureTransition(page: Page, selector: string): Promise<number> {
+type Measurement = { durationMs: number; easing: string };
+
+async function measureTransition(page: Page, selector: string): Promise<Measurement> {
   return page.evaluate((sel) => {
-    return new Promise<number>((resolve, reject) => {
+    return new Promise<Measurement>((resolve, reject) => {
       const el = document.querySelector(sel) as HTMLElement | null;
       if (!el) return reject(new Error(`not found: ${sel}`));
 
-      // Force opacity to 0 inline and let the existing 220ms transition
-      // settle (400ms buffer). Then poll computed opacity via rAF after
-      // releasing the inline override; the elapsed time between release
-      // and the moment opacity first reaches >= 0.99 is the measured
-      // transition duration. This avoids relying on transitionend, which
-      // can be skipped when a class-driven transition replaces an
-      // in-flight inline transition mid-frame.
+      // Force a fresh CSSTransition by toggling opacity inline. After the
+      // change is committed, Element.getAnimations() exposes the active
+      // transition with its configured `duration` and `easing` — this is
+      // exactly what the browser will play, regardless of any in-flight
+      // class re-renders that complicate transitionend / opacity polling.
       el.style.opacity = "0";
-      window.setTimeout(() => {
-        void el.offsetHeight; // flush layout
-        el.style.opacity = "";
-        const start = performance.now();
-        const tick = () => {
-          const op = parseFloat(window.getComputedStyle(el).opacity || "0");
-          if (op >= 0.99) {
-            resolve(performance.now() - start);
-            return;
+      void el.offsetHeight;
+      el.style.opacity = "";
+      requestAnimationFrame(() => {
+        // Two RAFs — one to commit the style change, a second to let the
+        // browser register the transition in getAnimations().
+        requestAnimationFrame(() => {
+          const anims = (el.getAnimations?.() ?? []).filter((a) => {
+            const t = (a as unknown as { transitionProperty?: string }).transitionProperty;
+            return t === "opacity" || t === undefined;
+          });
+          const opacityAnim = anims.find(
+            (a) => (a as unknown as { transitionProperty?: string }).transitionProperty === "opacity",
+          ) ?? anims[0];
+          if (!opacityAnim) {
+            return reject(new Error(`no active transition on ${sel}`));
           }
-          if (performance.now() - start > 2000) {
-            reject(new Error(`opacity never reached 1 for ${sel} (last=${op})`));
-            return;
-          }
-          requestAnimationFrame(tick);
-        };
-        requestAnimationFrame(tick);
-      }, 400);
+          const timing = opacityAnim.effect?.getTiming();
+          if (!timing) return reject(new Error(`no timing for ${sel}`));
+          const durationMs =
+            typeof timing.duration === "number" ? timing.duration : 0;
+          const easing = timing.easing ?? "";
+          resolve({ durationMs, easing });
+        });
+      });
     });
   }, selector);
 }
