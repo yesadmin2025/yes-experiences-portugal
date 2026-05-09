@@ -188,10 +188,11 @@ export function CinematicHero() {
         preload="auto"
         aria-hidden="true"
         data-hero-film="true"
-        onCanPlay={tryPlay}
-        onPlaying={() => setVideoFailed(false)}
-        onError={() => setVideoFailed(true)}
-        onStalled={() => setVideoFailed(true)}
+        onCanPlay={() => { log("video-canplay"); tryPlay("canplay"); }}
+        onPlaying={() => { setVideoFailed(false); log("video-playing"); }}
+        onError={() => { setVideoFailed(true); log("video-error"); }}
+        onStalled={() => { setVideoFailed(true); log("video-stalled"); }}
+        onLoadedData={() => log("video-loadeddata")}
         src={videoSrc}
       />
       {/* Static poster fallback — only painted if the video fails. */}
