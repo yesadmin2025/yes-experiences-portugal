@@ -28,6 +28,7 @@ function prefersReducedMotion(): boolean {
 
 export function CinematicHero() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const sectionRef = useRef<HTMLElement | null>(null);
   const [reduced, setReduced] = useState(false);
   const [storyActive, setStoryActive] = useState(false);
 
@@ -40,14 +41,33 @@ export function CinematicHero() {
       return;
     }
 
-    setStoryActive(false);
+    const node = sectionRef.current;
+    if (!node) return;
+
+    // Fallback if IntersectionObserver is unavailable.
+    if (typeof IntersectionObserver === "undefined") {
+      const t = window.setTimeout(() => setStoryActive(true), 120);
+      return () => window.clearTimeout(t);
+    }
+
     let timer: number | undefined;
-    const frame = window.requestAnimationFrame(() => {
-      timer = window.setTimeout(() => setStoryActive(true), 120);
-    });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.25) {
+            // Small delay so the first frame paints before the cascade begins.
+            timer = window.setTimeout(() => setStoryActive(true), 120);
+            observer.disconnect();
+            break;
+          }
+        }
+      },
+      { threshold: [0, 0.25, 0.5], rootMargin: "0px 0px -10% 0px" },
+    );
+    observer.observe(node);
 
     return () => {
-      window.cancelAnimationFrame(frame);
+      observer.disconnect();
       if (timer) window.clearTimeout(timer);
     };
   }, []);
