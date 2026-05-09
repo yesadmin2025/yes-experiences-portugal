@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-05-09T03:52:25.922Z",
-  "filesScanned": 192,
+  "generatedAt": "2026-05-09T04:42:52.323Z",
+  "filesScanned": 188,
   "approvedPalette": {
     "teal": "#295B61",
     "teal-2": "#2A7C82",
@@ -1196,7 +1196,7 @@
     },
     {
       "file": "src/routes/index.tsx",
-      "line": 1394,
+      "line": 655,
       "col": 108,
       "raw": "#EAE2D6",
       "normalized": "#eae2d6",
@@ -1205,7 +1205,7 @@
     },
     {
       "file": "src/routes/index.tsx",
-      "line": 1548,
+      "line": 809,
       "col": 114,
       "raw": "#EAE2D6",
       "normalized": "#eae2d6",
@@ -1376,7 +1376,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 585,
+      "line": 608,
       "col": 33,
       "raw": "#C9A96A",
       "normalized": "#c9a96a",
@@ -1385,7 +1385,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 586,
+      "line": 609,
       "col": 21,
       "raw": "#B89452",
       "normalized": "#b89452",
@@ -1394,7 +1394,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 912,
+      "line": 935,
       "col": 12,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -1403,7 +1403,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 1099,
+      "line": 1122,
       "col": 12,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -1412,7 +1412,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 1352,
+      "line": 1375,
       "col": 12,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -1421,7 +1421,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 2713,
+      "line": 2736,
       "col": 23,
       "raw": "#000",
       "normalized": "#000000",
@@ -1430,7 +1430,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 3044,
+      "line": 3067,
       "col": 41,
       "raw": "#000",
       "normalized": "#000000",
@@ -1439,7 +1439,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 3044,
+      "line": 3067,
       "col": 47,
       "raw": "#000",
       "normalized": "#000000",
@@ -1448,7 +1448,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 3526,
+      "line": 3549,
       "col": 7,
       "raw": "#555",
       "normalized": "#555555",
