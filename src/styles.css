@@ -568,7 +568,7 @@
   .hero-cta-button svg {
     color: var(--gold-soft);
     filter: drop-shadow(0 0 8px color-mix(in oklab, var(--gold) 45%, transparent));
-    transition: color 300ms cubic-bezier(0.22, 0.61, 0.36, 1), transform 300ms cubic-bezier(0.22, 0.61, 0.36, 1);
+    transition: color 300ms var(--ease-premium), transform 300ms var(--ease-premium);
   }
   .hero-cta-button:hover svg {
     color: var(--gold);
@@ -1729,52 +1729,79 @@
    hiding the first line on phones. CSS owns a consistent GPU-friendly
    220ms ease-out motion path without SSR/client state drift. */
 .hero-cinematic .hero-reveal {
-  opacity: 1 !important;
-  animation: heroRevealFromLeftStable 240ms var(--ease-premium) both !important;
+  opacity: 0 !important;
+  transform: translate3d(-18px, 0, 0);
+  animation: none !important;
   transition-property: opacity, transform;
-  transition-duration: 240ms;
+  transition-duration: 680ms;
   transition-timing-function: var(--ease-premium);
-  transform: translate3d(0, 0, 0);
   will-change: opacity, transform;
   backface-visibility: hidden;
 }
 
 .hero-cinematic .hero-reveal--from-right {
-  animation-name: heroRevealFromRightStable !important;
+  transform: translate3d(18px, 0, 0);
+}
+
+.hero-cinematic[data-story-active="true"] .hero-reveal {
+  opacity: 1 !important;
   transform: translate3d(0, 0, 0);
 }
 
-/* Rhythm: 90ms uniform steps. Eyebrow → headline L1 (left) →
-   headline L2 (right) → final block (subheadline + CTAs + microcopy
-   each substepped 80ms). Single curve, no jitter, no overlap. */
-.hero-cinematic [data-hero-reveal="eyebrow"] { animation-delay: 0ms !important; }
-.hero-cinematic [data-hero-reveal="headlineLine1"] { animation-delay: 90ms !important; }
-.hero-cinematic [data-hero-reveal="headlineLine2"] { animation-delay: 180ms !important; }
+/* Hero storytelling rhythm: each beat has enough space to be perceived.
+   This replaces the old 90ms stack, which read as one block on mobile. */
+.hero-cinematic [data-hero-reveal="eyebrow"] { animation-delay: 90ms !important; }
+.hero-cinematic [data-hero-reveal="headlineLine1"] { animation-delay: 420ms !important; }
+.hero-cinematic [data-hero-reveal="headlineLine2"] { animation-delay: 760ms !important; }
+.hero-cinematic [data-hero-reveal="eyebrow"] { transition-delay: 90ms !important; }
+.hero-cinematic [data-hero-reveal="headlineLine1"] { transition-delay: 420ms !important; }
+.hero-cinematic [data-hero-reveal="headlineLine2"] { transition-delay: 760ms !important; }
 
 .hero-cinematic .hero-final-reveal {
-  animation: heroRevealFromLeftStable 240ms var(--ease-premium) 270ms both !important;
+  opacity: 1;
+  animation: none !important;
 }
 
 .hero-cinematic .hero-story-step {
   opacity: 0;
-  animation: heroRevealRisePremium 260ms var(--ease-premium) both !important;
+  transform: translate3d(0, 16px, 0);
+  animation: none !important;
+  transition-property: opacity, transform;
+  transition-duration: 620ms;
+  transition-timing-function: var(--ease-premium);
+  will-change: opacity, transform;
 }
-.hero-cinematic .hero-story-step--copy { animation-delay: 350ms !important; }
-.hero-cinematic .hero-story-step--cta { animation-delay: 440ms !important; }
-.hero-cinematic .hero-story-step--microcopy { animation-delay: 530ms !important; }
+.hero-cinematic .hero-story-step--copy { animation-delay: 1180ms !important; }
+.hero-cinematic .hero-story-step--cta { animation-delay: 1640ms !important; }
+.hero-cinematic .hero-story-step--microcopy { animation-delay: 1960ms !important; }
+.hero-cinematic .hero-story-step--copy { transition-delay: 1180ms !important; }
+.hero-cinematic .hero-story-step--cta { transition-delay: 1640ms !important; }
+.hero-cinematic .hero-story-step--microcopy { transition-delay: 1960ms !important; }
+
+.hero-cinematic[data-story-active="true"] .hero-story-step {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.hero-cinematic[data-reduced-motion="true"] .hero-reveal,
+.hero-cinematic[data-reduced-motion="true"] .hero-story-step {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+}
 
 @keyframes heroRevealFromLeftStable {
-  from { opacity: 0; transform: translate3d(-14px, 0, 0); }
+  from { opacity: 0; transform: translate3d(-18px, 0, 0); }
   to { opacity: 1; transform: translate3d(0, 0, 0); }
 }
 
 @keyframes heroRevealFromRightStable {
-  from { opacity: 0; transform: translate3d(14px, 0, 0); }
+  from { opacity: 0; transform: translate3d(18px, 0, 0); }
   to { opacity: 1; transform: translate3d(0, 0, 0); }
 }
 
 @keyframes heroRevealRisePremium {
-  from { opacity: 0; transform: translate3d(0, 10px, 0); }
+  from { opacity: 0; transform: translate3d(0, 16px, 0); }
   to { opacity: 1; transform: translate3d(0, 0, 0); }
 }
 
@@ -1835,13 +1862,13 @@
     width: 100%;
     justify-content: center;
     color: var(--ivory);
-    min-height: 52px;
-    padding-inline: 18px;
+    min-height: 50px;
+    padding: 14px 18px;
     border-radius: 2px;
     background: linear-gradient(180deg, color-mix(in oklab, var(--teal-2) 28%, var(--teal)) 0%, var(--teal) 100%);
-    transition-property: opacity, transform, background-color, border-color, box-shadow;
-    transition-duration: 220ms;
-    transition-timing-function: ease-out;
+    transition-property: opacity, transform, background-color, border-color, box-shadow, text-shadow;
+    transition-duration: 360ms;
+    transition-timing-function: var(--ease-premium);
   }
 
   .hero-cinematic .hero-cta-button > span {

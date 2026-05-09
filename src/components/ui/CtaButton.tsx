@@ -126,7 +126,7 @@ export function CtaButton(props: CtaButtonProps) {
   const content = (
     <>
       {iconLeading}
-      {children}
+      <span className="cta-label">{children}</span>
       {trailing}
     </>
   );
@@ -137,7 +137,7 @@ export function CtaButton(props: CtaButtonProps) {
     variantClasses[variant],
     className,
   );
-  const sharedStyle = variantStyle[variant];
+  const sharedStyle = className?.includes("hero-cta-button") ? undefined : variantStyle[variant];
 
   if ("href" in props && props.href !== undefined) {
     const { href, variant: _v, size: _s, icon: _i, iconLeading: _il, className: _c, children: _ch, ...rest } = props;
