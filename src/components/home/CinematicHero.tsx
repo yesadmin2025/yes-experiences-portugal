@@ -468,26 +468,29 @@ export function CinematicHero() {
         className="hero-film-fallback absolute inset-0 z-0 w-full h-full object-cover"
       />
 
-      {/* Bottom darken so copy stays AA against varied frames. */}
+      {/* Bottom darken so copy stays AA against varied frames.
+         Gradient stops live in --hero-scrim-base (src/styles.css). */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-[1] bg-[linear-gradient(180deg,rgba(15,12,9,0.28)_0%,rgba(15,12,9,0.38)_30%,rgba(15,12,9,0.68)_66%,rgba(15,12,9,0.92)_100%)]"
+        className="hero-scrim--base pointer-events-none absolute inset-0 z-[1]"
       />
-      {/* Extra scrim directly behind copy block — guarantees AA on the brightest frames. */}
+      {/* Extra scrim directly behind copy block — guarantees AA on the brightest frames.
+         Gradient stops live in --hero-scrim-focus (src/styles.css). */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-[70%] bg-[radial-gradient(110%_78%_at_50%_84%,rgba(15,12,9,0.72)_0%,rgba(15,12,9,0.52)_46%,rgba(15,12,9,0)_100%)]"
+        className="hero-scrim--focus pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-[70%]"
       />
       {/* Mobile-only editorial scrim — soft bell curve aligned with the lifted text group.
          Peaks gently behind the headline/sub block, fades cleanly at both ends so the video
-         still breathes above and below. Position-only; no animation logic touched. */}
+         still breathes above and below. Position-only; no animation logic touched.
+         Gradient stops live in --hero-scrim-mobile-radial / --hero-scrim-mobile-vertical. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 z-[2] md:hidden top-[10%] bottom-[8%] bg-[radial-gradient(120%_70%_at_50%_48%,rgba(12,10,8,0.62)_0%,rgba(12,10,8,0.46)_38%,rgba(12,10,8,0.22)_72%,rgba(12,10,8,0)_100%)]"
+        className="hero-scrim--mobile-radial pointer-events-none absolute inset-x-0 z-[2] md:hidden top-[10%] bottom-[8%]"
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 z-[2] md:hidden top-[12%] bottom-[10%] bg-[linear-gradient(180deg,rgba(12,10,8,0)_0%,rgba(12,10,8,0.18)_18%,rgba(12,10,8,0.32)_42%,rgba(12,10,8,0.32)_64%,rgba(12,10,8,0.16)_85%,rgba(12,10,8,0)_100%)]"
+        className="hero-scrim--mobile-vertical pointer-events-none absolute inset-x-0 z-[2] md:hidden top-[12%] bottom-[10%]"
       />
 
       {/* Copy column — full width on mobile with 20px gutters, capped on tablet+. */}
