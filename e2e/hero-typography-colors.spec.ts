@@ -1,8 +1,9 @@
 /**
  * Hero typography colors — brand-token regression.
  *
- * Validates that the *computed* foreground colors of the hero eyebrow
- * and headline resolve to the canonical YES brand palette:
+ * Validates that the *computed* foreground colors, opacity, shadow and
+ * reveal cadence of the hero eyebrow/headline resolve to the approved
+ * YES brand contract:
  *
  *   • Teal      #295B61   (--teal)
  *   • Gold      #C9A96A   (--gold)        ← contained accent
@@ -11,9 +12,10 @@
  *   • Charcoal  #2E2E2E   (--charcoal)    ← headline on light surfaces
  *
  * Per-element contract (locked to brand guardrails):
- *   eyebrow        → gold OR gold-soft (champagne accent, contained use)
- *   headlineLine1  → ivory  (over dark hero film) OR teal/charcoal (light)
- *   headlineLine2  → ivory  (over dark hero film) OR teal           (light)
+ *   eyebrow        → gold #C9A96A, no shadow, fully opaque
+ *   headlineLine1  → ivory #FAF8F3, no shadow, fully opaque
+ *   headlineLine2  → gold #C9A96A, Georgia italic, no shadow, fully opaque
+ *   reveal cadence → 220ms ease-out, ordered eyebrow → line1 → line2 → final
  *
  * Tolerance: ΔE-ish per-channel ±10/255 to absorb sub-pixel anti-alias
  * and color-mix compositing jitter. Text-shadows are *not* part of the
@@ -98,11 +100,55 @@ async function getColor(page: Page, selector: string): Promise<RGB> {
   return parseColor(raw);
 }
 
+type HeroStyleSnapshot = {
+  color: RGB;
+  opacity: number;
+  textShadow: string;
+  fontStyle: string;
+  fontWeight: string;
+  fontFamily: string;
+  transitionDurationMs: number;
+  transitionTimingFunction: string;
+  revealOrder: number | null;
+  revealDurationAttr: string | null;
+  revealEaseAttr: string | null;
+};
+
+async function getHeroStyle(page: Page, selector: string): Promise<HeroStyleSnapshot> {
+  return page.evaluate((sel) => {
+    const el = document.querySelector(sel) as HTMLElement | null;
+    if (!el) throw new Error(`not found: ${sel}`);
+    const cs = window.getComputedStyle(el);
+    const durationSeconds = cs.transitionDuration
+      .split(",")
+      .map((v) => v.trim())
+      .find(Boolean) ?? "0s";
+    const durationMs = durationSeconds.endsWith("ms")
+      ? parseFloat(durationSeconds)
+      : parseFloat(durationSeconds) * 1000;
+    const m = cs.color.replace(/\s+/g, "").match(/^rgba?\((\d+),(\d+),(\d+)(?:,([0-9.]+))?\)$/i);
+    if (!m) throw new Error(`Unparseable color: "${cs.color}"`);
+    return {
+      color: { r: +m[1], g: +m[2], b: +m[3] },
+      opacity: parseFloat(cs.opacity),
+      textShadow: cs.textShadow,
+      fontStyle: cs.fontStyle,
+      fontWeight: cs.fontWeight,
+      fontFamily: cs.fontFamily,
+      transitionDurationMs: durationMs,
+      transitionTimingFunction: cs.transitionTimingFunction.split(",")[0]?.trim() ?? "",
+      revealOrder: el.dataset.heroRevealOrder ? Number(el.dataset.heroRevealOrder) : null,
+      revealDurationAttr: el.dataset.heroRevealDurationMs ?? null,
+      revealEaseAttr: el.dataset.heroRevealEase ?? null,
+    };
+  }, selector);
+}
+
 test.describe("Hero typography colors — YES brand-token regression", () => {
   test("eyebrow + headline computed colors match canonical tokens", async ({
     page,
   }) => {
-    await page.goto("/?hero=last", { waitUntil: "domcontentloaded" });
+    await page.goto("/?hero=last&heroColorDebug=1", { waitUntil: "domcontentloaded" });
     await page.locator('[data-hero-cinematic="true"]').waitFor({ state: "visible" });
     await page
       .locator('[data-hero-field="headlineLine1"]:not(h1)')
@@ -115,17 +161,18 @@ test.describe("Hero typography colors — YES brand-token regression", () => {
       if (f?.ready) await f.ready;
     });
 
-    const eyebrow = await getColor(page, '[data-hero-field="eyebrow"]');
-    const line1 = await getColor(page, '[data-hero-field="headlineLine1"]:not(h1)');
-    const line2 = await getColor(page, '[data-hero-field="headlineLine2"]');
+    await expect(page.locator('[data-hero-color-debug="true"]')).toBeVisible();
 
-    // Eyebrow MUST be in the gold family (Champagne Gold, contained accent).
-    const eyebrowAllow = [
-      { name: "gold (#C9A96A)", rgb: TOKENS.gold },
-      { name: "gold-soft (#E1CFA6)", rgb: TOKENS.goldSoft },
-      { name: "gold-warm (#D8BE82)", rgb: TOKENS.goldWarm },
-      { name: "gold-deep (#B89452)", rgb: TOKENS.goldDeep },
-    ];
+    const eyebrowSel = '[data-hero-field="eyebrow"]';
+    const line1Sel = '[data-hero-field="headlineLine1"]:not(h1)';
+    const line2Sel = '[data-hero-field="headlineLine2"]';
+
+    const eyebrow = await getColor(page, eyebrowSel);
+    const line1 = await getColor(page, line1Sel);
+    const line2 = await getColor(page, line2Sel);
+
+    // Eyebrow MUST be the approved brand gold, not white/ivory/gold-soft.
+    const eyebrowAllow = [{ name: "gold (#C9A96A)", rgb: TOKENS.gold }];
     const eyebrowMatch = matchesAny(eyebrow, eyebrowAllow);
     expect(
       eyebrowMatch.ok,
@@ -133,31 +180,19 @@ test.describe("Hero typography colors — YES brand-token regression", () => {
         ? "ok"
         : `Hero eyebrow color ${fmt(eyebrow)} is NOT in the gold family. ` +
             `Nearest token: ${eyebrowMatch.nearest} (Δ=${eyebrowMatch.delta}). ` +
-            `Allowed: gold #C9A96A or gold-soft #E1CFA6.`,
+            `Allowed: gold #C9A96A only.`,
     ).toBe(true);
 
-    // Headline lines MUST resolve to YES brand tokens. Line 1 stays ivory
-    // (or teal/charcoal on a future light skin). Line 2 (Georgia italic)
-    // is the approved champagne accent — gold-soft on the dark hero film.
-    const line1Allow = [
-      { name: "ivory (#FAF8F3)", rgb: TOKENS.ivory },
-      { name: "teal (#295B61)", rgb: TOKENS.teal },
-      { name: "charcoal (#2E2E2E)", rgb: TOKENS.charcoal },
-    ];
-    const line2Allow = [
-      { name: "ivory (#FAF8F3)", rgb: TOKENS.ivory },
-      { name: "gold-soft (#E1CFA6)", rgb: TOKENS.goldSoft },
-      { name: "gold (#C9A96A)", rgb: TOKENS.gold },
-      { name: "teal (#295B61)", rgb: TOKENS.teal },
-      { name: "charcoal (#2E2E2E)", rgb: TOKENS.charcoal },
-    ];
+    // Headline line 1 stays quiet ivory; line 2 MUST be approved brand gold.
+    const line1Allow = [{ name: "ivory (#FAF8F3)", rgb: TOKENS.ivory }];
+    const line2Allow = [{ name: "gold (#C9A96A)", rgb: TOKENS.gold }];
     for (const [label, c, allow, allowedDesc] of [
-      ["headlineLine1", line1, line1Allow, "ivory #FAF8F3, teal #295B61, charcoal #2E2E2E"],
+      ["headlineLine1", line1, line1Allow, "ivory #FAF8F3 only"],
       [
         "headlineLine2 (italic)",
         line2,
         line2Allow,
-        "ivory #FAF8F3, gold-soft #E1CFA6, gold #C9A96A, teal #295B61, charcoal #2E2E2E",
+        "gold #C9A96A only",
       ],
     ] as const) {
       const m = matchesAny(c, allow);
@@ -168,6 +203,50 @@ test.describe("Hero typography colors — YES brand-token regression", () => {
           : `Hero ${label} color ${fmt(c)} is NOT a YES brand token. ` +
               `Nearest: ${m.nearest} (Δ=${m.delta}). ` +
               `Allowed: ${allowedDesc}.`,
+      ).toBe(true);
+    }
+
+    for (const [label, sel] of [
+      ["eyebrow", eyebrowSel],
+      ["headlineLine1", line1Sel],
+      ["headlineLine2", line2Sel],
+    ] as const) {
+      const s = await getHeroStyle(page, sel);
+      expect(s.opacity, `${label} must be fully opaque at final state`).toBe(1);
+      expect(s.textShadow, `${label} must not use residual text-shadow overrides`).toBe("none");
+    }
+
+    const line2Style = await getHeroStyle(page, line2Sel);
+    expect(line2Style.fontStyle, "headlineLine2 must remain italic").toBe("italic");
+    expect(line2Style.fontWeight, "headlineLine2 must stay regular/refined").toBe("400");
+    expect(line2Style.fontFamily.toLowerCase(), "headlineLine2 must use the serif italic token").toContain("georgia");
+
+    await expect(page.locator('[data-hero-color-debug="true"] li >> text=OFF')).toHaveCount(0);
+  });
+
+  test("hero reveal cadence is locked to 220ms ease-out and sequential order", async ({ page }) => {
+    await page.goto("/?hero=last&heroColorDebug=1", { waitUntil: "domcontentloaded" });
+    await page.locator('[data-hero-cinematic="true"]').waitFor({ state: "visible" });
+
+    const revealSelectors = [
+      '[data-hero-reveal="eyebrow"]',
+      '[data-hero-reveal="headlineLine1"]',
+      '[data-hero-reveal="headlineLine2"]',
+      '[data-hero-reveal="finalBlock"]',
+    ];
+
+    const snapshots = [];
+    for (const sel of revealSelectors) snapshots.push(await getHeroStyle(page, sel));
+
+    expect(snapshots.map((s) => s.revealOrder)).toEqual([1, 2, 3, 4]);
+    for (const [index, s] of snapshots.entries()) {
+      const label = revealSelectors[index];
+      expect(s.revealDurationAttr, `${label} must declare the approved duration`).toBe("220");
+      expect(s.revealEaseAttr, `${label} must declare the approved easing`).toBe("ease-out");
+      expect(s.transitionDurationMs, `${label} transition duration`).toBeCloseTo(220, 0);
+      expect(
+        ["ease-out", "cubic-bezier(0, 0, 0.58, 1)"].includes(s.transitionTimingFunction),
+        `${label} transition timing must be ease-out, got ${s.transitionTimingFunction}`,
       ).toBe(true);
     }
   });
