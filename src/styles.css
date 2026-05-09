@@ -1811,25 +1811,43 @@
   opacity: 0;
   transform: translate3d(0, 10px, 0);
   animation: none !important;
-  transition-property: opacity, transform;
-  transition-duration: 820ms;
-  transition-timing-function: var(--ease-premium);
+  transition-property: opacity, transform, filter;
+  /* Slightly longer base on mobile for a softer settle; bumped on
+     desktop for a more cinematic, drawn-out reveal. */
+  transition-duration: 880ms;
+  /* Custom cinematic ease — slow start, gentle overshoot-free landing.
+     Equivalent to a refined cubic-out with a softer entry than the
+     default --ease-premium, which keeps headlines from "snapping in". */
+  transition-timing-function: cubic-bezier(0.22, 0.61, 0.18, 1);
   will-change: opacity, transform;
   backface-visibility: hidden;
 }
+@media (min-width: 768px) {
+  .hero-cinematic .hero-beat {
+    transition-duration: 1040ms;
+  }
+}
 .hero-cinematic .hero-beat--from-left {
-  transform: translate3d(-14px, 0, 0);
+  transform: translate3d(-16px, 0, 0);
   transform-origin: left center;
 }
 .hero-cinematic .hero-beat--from-right {
-  transform: translate3d(14px, 0, 0);
+  transform: translate3d(16px, 0, 0);
   transform-origin: right center;
 }
 .hero-cinematic .hero-beat--rise {
-  transform: translate3d(0, 18px, 0) scale(0.985);
+  transform: translate3d(0, 20px, 0) scale(0.982);
+  filter: blur(2px);
+}
+@media (min-width: 768px) {
+  .hero-cinematic .hero-beat--rise {
+    transform: translate3d(0, 26px, 0) scale(0.978);
+    filter: blur(2.5px);
+  }
 }
 .hero-cinematic .hero-beat--rise[data-hero-beat-show="true"] {
   transform: translate3d(0, 0, 0) scale(1);
+  filter: blur(0);
 }
 .hero-cinematic .hero-beat[data-hero-beat-show="true"] {
   opacity: 1;
@@ -1838,9 +1856,14 @@
 .hero-cinematic .hero-beat[data-hero-beat-show="false"] {
   pointer-events: none;
 }
-/* Stagger CTAs + microcopy off the same "cta" trigger. */
-.hero-cinematic .hero-beat[data-hero-beat-delay="160"] { transition-delay: 160ms; }
-.hero-cinematic .hero-beat[data-hero-beat-delay="320"] { transition-delay: 320ms; }
+/* Stagger CTAs + microcopy off the same "cta" trigger.
+   Slightly wider gaps so each element lands on its own beat. */
+.hero-cinematic .hero-beat[data-hero-beat-delay="160"] { transition-delay: 200ms; }
+.hero-cinematic .hero-beat[data-hero-beat-delay="320"] { transition-delay: 420ms; }
+@media (min-width: 768px) {
+  .hero-cinematic .hero-beat[data-hero-beat-delay="160"] { transition-delay: 240ms; }
+  .hero-cinematic .hero-beat[data-hero-beat-delay="320"] { transition-delay: 500ms; }
+}
 
 /* Reduced-motion: snap to final composed state, no transitions. */
 @media (prefers-reduced-motion: reduce) {

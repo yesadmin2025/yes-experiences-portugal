@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-09T21:02:37.496Z",
+  "generatedAt": "2026-05-09T21:06:04.428Z",
   "filesScanned": 192,
   "approvedPalette": {
     "teal": "#295B61",
@@ -1466,7 +1466,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 614,
+      "line": 662,
       "col": 33,
       "raw": "#C9A96A",
       "normalized": "#c9a96a",
@@ -1475,7 +1475,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 615,
+      "line": 663,
       "col": 21,
       "raw": "#B89452",
       "normalized": "#b89452",
@@ -1484,7 +1484,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 941,
+      "line": 989,
       "col": 12,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -1493,7 +1493,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 1128,
+      "line": 1176,
       "col": 12,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -1502,7 +1502,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 1412,
+      "line": 1460,
       "col": 12,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -1511,7 +1511,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 3008,
+      "line": 3059,
       "col": 23,
       "raw": "#000",
       "normalized": "#000000",
@@ -1520,7 +1520,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 3339,
+      "line": 3390,
       "col": 41,
       "raw": "#000",
       "normalized": "#000000",
@@ -1529,7 +1529,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 3339,
+      "line": 3390,
       "col": 47,
       "raw": "#000",
       "normalized": "#000000",
@@ -1538,7 +1538,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 3832,
+      "line": 3883,
       "col": 7,
       "raw": "#555",
       "normalized": "#555555",
