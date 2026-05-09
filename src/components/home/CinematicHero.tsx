@@ -743,29 +743,73 @@ export function CinematicHero() {
             </div>
 
             {/* Per-beat readout: scheduled vs actual fire (wall + video). */}
-            <table className="mt-2 w-full font-mono text-[9.5px]">
-              <thead className="text-white/50">
-                <tr>
-                  <th className="text-left font-normal">beat</th>
-                  <th className="text-right font-normal">sched</th>
-                  <th className="text-right font-normal">video</th>
-                  <th className="text-right font-normal">wall</th>
-                </tr>
-              </thead>
-              <tbody>
-                {activeSchedule.map((b) => {
-                  const s = beatStamps[b.key];
-                  return (
-                    <tr key={b.key} className={s ? "text-white" : "text-white/40"}>
-                      <td className="py-[1px]">{b.key}</td>
-                      <td className="text-right tabular-nums">{b.t.toFixed(2)}s</td>
-                      <td className="text-right tabular-nums">{s ? `${s.videoT.toFixed(2)}s` : "—"}</td>
-                      <td className="text-right tabular-nums">{s ? `${s.wallMs}ms` : "—"}</td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+            {/* Phase mapping: which storytelling state each beat puts the
+                hero into. solo = phrase visible by itself; compose = stanza
+                re-assembled; cta = CTAs + microcopy revealed. */}
+            {(() => {
+              const phaseFor = (k: BeatKey): "solo" | "compose" | "cta" =>
+                k === "compose" ? "compose" : k === "cta" ? "cta" : "solo";
+              const phaseTone: Record<"solo" | "compose" | "cta", string> = {
+                solo: "text-[color:var(--ivory)]/90 bg-white/10",
+                compose: "text-[color:var(--gold-soft)] bg-[color:var(--gold)]/15",
+                cta: "text-[color:var(--teal-2,#3a7a82)] bg-[color:var(--teal-2,#3a7a82)]/15",
+              };
+              const currentBeat = stepMode
+                ? activeSchedule[Math.max(0, stepIndex - 1)]
+                : [...activeSchedule].reverse().find((b) => beatStamps[b.key]);
+              const currentPhase = currentBeat ? phaseFor(currentBeat.key) : "solo";
+              return (
+                <>
+                  <div className="mt-2 flex items-center justify-between font-mono text-[9.5px]">
+                    <span className="text-white/55">phase now</span>
+                    <span className={`rounded px-1.5 py-[1px] uppercase tracking-wider ${phaseTone[currentPhase]}`}>
+                      {currentPhase}
+                      {currentBeat ? ` · ${currentBeat.key} @ ${currentBeat.t.toFixed(2)}s` : ""}
+                    </span>
+                  </div>
+                  <table className="mt-1.5 w-full font-mono text-[9.5px]">
+                    <thead className="text-white/50">
+                      <tr>
+                        <th className="text-left font-normal">#</th>
+                        <th className="text-left font-normal">beat</th>
+                        <th className="text-left font-normal">phase</th>
+                        <th className="text-right font-normal">sched</th>
+                        <th className="text-right font-normal">video</th>
+                        <th className="text-right font-normal">wall</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {activeSchedule.map((b, i) => {
+                        const s = beatStamps[b.key];
+                        const ph = phaseFor(b.key);
+                        const isCurrent = stepMode && i === stepIndex - 1;
+                        const isNext = stepMode && i === stepIndex;
+                        return (
+                          <tr
+                            key={b.key}
+                            className={`${s ? "text-white" : "text-white/40"} ${isCurrent ? "bg-[color:var(--gold)]/15" : isNext ? "bg-white/5" : ""}`}
+                          >
+                            <td className="py-[1px] pr-1 text-white/50">{i + 1}</td>
+                            <td className="py-[1px]">
+                              {isCurrent ? "▸ " : isNext ? "· " : "  "}
+                              {b.key}
+                            </td>
+                            <td>
+                              <span className={`rounded px-1 py-[0.5px] text-[8.5px] uppercase tracking-wider ${phaseTone[ph]}`}>
+                                {ph}
+                              </span>
+                            </td>
+                            <td className="text-right tabular-nums">{b.t.toFixed(2)}s</td>
+                            <td className="text-right tabular-nums">{s ? `${s.videoT.toFixed(2)}s` : "—"}</td>
+                            <td className="text-right tabular-nums">{s ? `${s.wallMs}ms` : "—"}</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </>
+              );
+            })()}
           </div>
         );
       })()}
