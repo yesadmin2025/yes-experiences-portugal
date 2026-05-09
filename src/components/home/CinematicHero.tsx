@@ -94,32 +94,24 @@ export function CinematicHero() {
       data-story-active={storyActive ? "true" : "false"}
       data-reduced-motion={reduced ? "true" : "false"}
     >
-      {/* Continuous film — full bleed, no inner box, no rounded corners. */}
-      {!reduced && (
-        <video
-          ref={videoRef}
-          className="absolute inset-0 z-0 w-full h-full object-cover"
-          poster={HERO_FILM_POSTER}
-          autoPlay
-          muted
-          playsInline
-          loop
-          preload="auto"
-          aria-hidden="true"
-          data-hero-film="true"
-        >
-          <source src={HERO_FILM_SRC_1080} type="video/mp4" media="(min-width: 768px)" />
-          <source src={HERO_FILM_SRC_720} type="video/mp4" />
-        </video>
-      )}
-      {reduced && (
-        <img
-          src={HERO_FILM_POSTER}
-          alt=""
-          aria-hidden="true"
-          className="absolute inset-0 z-0 w-full h-full object-cover"
-        />
-      )}
+      {/* Continuous film — full bleed, no inner box, no rounded corners.
+         Always rendered so mobile users see the film; reduced-motion users
+         simply see the poster frame (no autoplay) instead of motion. */}
+      <video
+        ref={videoRef}
+        className="absolute inset-0 z-0 w-full h-full object-cover"
+        poster={HERO_FILM_POSTER}
+        autoPlay={!reduced}
+        muted
+        playsInline
+        loop={!reduced}
+        preload="auto"
+        aria-hidden="true"
+        data-hero-film="true"
+      >
+        <source src={HERO_FILM_SRC_720} type="video/mp4" media="(max-width: 767px)" />
+        <source src={HERO_FILM_SRC_1080} type="video/mp4" />
+      </video>
 
       {/* Bottom darken so copy stays AA against varied frames. */}
       <div
