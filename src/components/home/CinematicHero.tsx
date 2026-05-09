@@ -175,23 +175,21 @@ export function CinematicHero() {
               {HERO_COPY.subheadline}
             </p>
 
-            <div className="mt-6 sm:mt-7 flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center">
-              <Link
-                ref={primaryCtaRef}
+            <div className="mt-7 sm:mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center">
+              <CtaButton
                 to="/builder"
+                variant="primary"
                 data-hero-field="primaryCta"
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-[color:var(--gold)] text-[color:var(--charcoal)] px-6 py-3.5 sm:px-7 sm:py-4 font-semibold tracking-tight text-[15px] sm:text-[16px] min-h-[48px] hover:bg-[color:var(--gold-soft)] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--gold)]"
               >
                 {HERO_COPY.primaryCta}
-                <ArrowRight size={18} aria-hidden="true" />
-              </Link>
-              <Link
+              </CtaButton>
+              <CtaButton
                 to="/experiences"
+                variant="ghostDark"
                 data-hero-field="secondaryCta"
-                className="inline-flex items-center justify-center gap-2 rounded-full border border-[color:var(--ivory)]/45 bg-[color:var(--ivory)]/8 backdrop-blur-[2px] text-[color:var(--ivory)] px-6 py-3.5 sm:px-7 sm:py-4 font-medium tracking-tight text-[15px] sm:text-[16px] min-h-[48px] hover:bg-[color:var(--ivory)]/14 hover:border-[color:var(--ivory)]/65 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--ivory)]"
               >
                 {HERO_COPY.secondaryCta}
-              </Link>
+              </CtaButton>
             </div>
 
             <p
