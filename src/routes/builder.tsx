@@ -1166,7 +1166,20 @@ function LiveBuilder({
 
 /* ─── Stripe checkout modal (TEST MODE) ───────────────────────── */
 
-const stripePromise = getStripe();
+// Lazy: only call getStripe() when the checkout modal actually mounts.
+// Calling it at module scope crashes the entire builder route in any
+// build where VITE_PAYMENTS_CLIENT_TOKEN is missing (e.g. published).
+let _stripePromise: ReturnType<typeof getStripe> | null = null;
+function stripePromiseLazy() {
+  if (!_stripePromise) {
+    try {
+      _stripePromise = getStripe();
+    } catch {
+      _stripePromise = Promise.resolve(null);
+    }
+  }
+  return _stripePromise;
+}
 
 function CheckoutModal({
   route,
