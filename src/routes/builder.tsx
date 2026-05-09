@@ -474,7 +474,7 @@ function BuilderPage() {
               <BuilderMobileStepSummary
                 step={step}
                 furthestCompleted={furthestCompleted}
-                onJump={(n) => setStep(n as Step)}
+                onJump={(n: 1 | 2 | 3 | 4) => setStep(n as Step)}
               />
               <BuilderStepper
                 step={step}
