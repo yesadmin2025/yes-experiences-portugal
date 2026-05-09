@@ -2,6 +2,7 @@ import { Check, MessageCircle, X } from "lucide-react";
 import { fmtMinutes, type RouteUI, type RoutedStopUI, builderWaHref } from "./types";
 import type { BuilderImageRef } from "@/hooks/useBuilderImages";
 import { BuilderImage } from "./BuilderImage";
+import { BuilderMap } from "./BuilderMap";
 import { CtaButton } from "@/components/ui/CtaButton";
 import { ReferenceUploader, type ToneResult } from "./ReferenceUploader";
 import { useBuilderSessionId } from "@/hooks/useBuilderSessionId";
