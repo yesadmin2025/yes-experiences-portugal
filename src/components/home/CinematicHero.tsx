@@ -193,7 +193,7 @@ export function CinematicHero() {
 
             <p
               data-hero-field="microcopy"
-              className="mt-4 text-[12.5px] sm:text-[13px] tracking-wide text-[color:var(--ivory)]"
+              className="mt-4 text-[12.5px] sm:text-[13px] leading-[1.5] tracking-[0.04em] text-[color:var(--ivory)]"
             >
               {HERO_COPY.microcopy}
             </p>
