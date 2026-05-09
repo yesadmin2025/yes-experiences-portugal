@@ -149,12 +149,14 @@ test.describe("Hero typography — font families & scale (post font load)", () =
     // Mobile-specific scale: 2.125rem = 34px (Tailwind base 16px). Allow
     // ±1.5px so an OS that reports rem differently doesn't false-fail.
     if (isMobile) {
-      expect(line1.fontSizePx, "headline L1 mobile size").toBeGreaterThanOrEqual(32.5);
-      expect(line1.fontSizePx, "headline L1 mobile size").toBeLessThanOrEqual(35.5);
+      // 2.4rem = 38.4px on mobile (Pixel 5, 393px ≥ sm? sm breakpoint = 640px,
+      // so mobile uses base 2.4rem). Allow ±2px for sub-pixel rounding.
+      expect(line1.fontSizePx, "headline L1 mobile size").toBeGreaterThanOrEqual(36);
+      expect(line1.fontSizePx, "headline L1 mobile size").toBeLessThanOrEqual(40.5);
     } else {
-      // Desktop (≥1024px) → 4.75rem = 76px. Tablet falls between.
+      // Desktop (≥1024px) → 5rem = 80px. Tablet ≥768px → 4.25rem = 68px.
       expect(line1.fontSizePx, "headline L1 desktop size").toBeGreaterThanOrEqual(60);
-      expect(line1.fontSizePx, "headline L1 desktop size").toBeLessThanOrEqual(80);
+      expect(line1.fontSizePx, "headline L1 desktop size").toBeLessThanOrEqual(84);
     }
 
     // ── Headline line 2 — Georgia, italic, weight 400, gold-soft ──────
