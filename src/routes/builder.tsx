@@ -30,6 +30,8 @@ import {
   StepHead,
 } from "@/components/builder/Choices";
 import { BuilderStepper } from "@/components/builder/BuilderStepper";
+import { BuilderMobileStepSummary } from "@/components/builder/BuilderMobileStepSummary";
+import { BuilderDebugPanel } from "@/components/builder/BuilderDebugPanel";
 import { BuilderProgressMeter } from "@/components/builder/BuilderProgressMeter";
 import { MoodGridSkeleton } from "@/components/builder/Skeletons";
 import {
