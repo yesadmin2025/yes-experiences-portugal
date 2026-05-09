@@ -72,7 +72,7 @@ export function CinematicHero() {
 
   return (
     <section
-      className="hero-cinematic relative w-full min-h-[calc(100svh-65px)] md:min-h-screen overflow-hidden bg-[color:var(--charcoal-deep)] text-[color:var(--ivory)] flex items-center md:items-end"
+      className="hero-cinematic relative w-full min-h-[calc(100svh-65px)] md:min-h-screen overflow-hidden bg-[color:var(--charcoal-deep)] text-[color:var(--ivory)] flex items-start xs:items-center md:items-end"
       aria-roledescription="cinematic hero film"
       aria-label={`${HERO_COPY.headlineLine1} ${HERO_COPY.headlineLine2}`}
       data-hero-cinematic="true"
@@ -116,31 +116,33 @@ export function CinematicHero() {
       />
 
       {/* Copy column — full width on mobile with 20px gutters, capped on tablet+. */}
-      <div className="relative z-10 w-full px-6 pb-8 pt-10 sm:px-8 sm:pb-12 md:px-12 md:pb-20 md:pt-24 lg:px-16">
-        <div className="mx-auto max-w-[46rem] md:mx-0 md:ml-[6vw] lg:ml-[8vw]">
+      <div className="relative z-10 w-full px-5 pb-7 pt-7 xs:px-6 xs:pb-8 xs:pt-10 sm:px-8 sm:pb-12 md:px-12 md:pb-20 md:pt-24 lg:px-16">
+        <div className="mx-auto max-w-[36rem] md:mx-0 md:ml-[6vw] md:max-w-[46rem] lg:ml-[8vw]">
           <Eyebrow
             tone="onDark"
             data-hero-field="eyebrow"
             data-hero-reveal="eyebrow"
+            data-hero-visible={showEyebrow ? "true" : "false"}
             data-hero-reveal-order="1"
             data-hero-reveal-duration-ms="220"
             data-hero-reveal-ease="ease-out"
-            className={`hero-eyebrow transition-[opacity,transform] duration-[220ms] ease-out transform-gpu will-change-transform ${showEyebrow ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4"}`}
+            className="hero-eyebrow hero-reveal hero-reveal--from-left"
           >
             {HERO_COPY.eyebrow}
           </Eyebrow>
 
           <h1
-            className="hero-h1 t-display mt-8 sm:mt-9 md:mt-11 max-w-[16ch] sm:max-w-[15ch] md:max-w-[15ch] text-pretty md:text-balance text-[color:var(--ivory)] [font-weight:400] [font-size:2.125rem] sm:[font-size:2.4rem] md:[font-size:4rem] lg:[font-size:4.75rem] [letter-spacing:-0.005em] [line-height:1.06] md:[line-height:1.02] lg:[line-height:0.98] [text-shadow:none] [overflow-wrap:break-word]"
+            className="hero-h1 t-display mt-5 xs:mt-7 sm:mt-9 md:mt-11 max-w-[18rem] xs:max-w-[21.5rem] sm:max-w-[32rem] md:max-w-[15ch] text-pretty md:text-balance text-[color:var(--ivory)] [font-weight:400] [font-size:2rem] xs:[font-size:2.125rem] sm:[font-size:2.4rem] md:[font-size:4rem] lg:[font-size:4.75rem] [letter-spacing:0] md:[letter-spacing:-0.005em] [line-height:1.04] md:[line-height:1.02] lg:[line-height:0.98] [text-shadow:none] [overflow-wrap:normal]"
             data-hero-field="headlineLine1 headlineLine2"
           >
             <span
               data-hero-field="headlineLine1"
               data-hero-reveal="headlineLine1"
+              data-hero-visible={showLine1 ? "true" : "false"}
               data-hero-reveal-order="2"
               data-hero-reveal-duration-ms="220"
               data-hero-reveal-ease="ease-out"
-              className={`block font-[400] text-[color:var(--ivory)] [text-shadow:none] transition-[opacity,transform] duration-[220ms] ease-out transform-gpu will-change-transform ${showLine1 ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4"}`}
+              className="hero-reveal hero-reveal--from-left block font-[400] text-[color:var(--ivory)] [text-shadow:none]"
             >
               <span
                 data-hero-field="headlineLine1Portugal"
@@ -153,10 +155,11 @@ export function CinematicHero() {
             <span
               data-hero-field="headlineLine2"
               data-hero-reveal="headlineLine2"
+              data-hero-visible={showLine2 ? "true" : "false"}
               data-hero-reveal-order="3"
               data-hero-reveal-duration-ms="220"
               data-hero-reveal-ease="ease-out"
-              className={`block mt-4 sm:mt-5 md:mt-6 [font-family:var(--font-serif)] italic font-normal [letter-spacing:-0.005em] [line-height:1.02] text-[color:var(--gold-soft)] [text-shadow:none] transition-[opacity,transform] duration-[220ms] ease-out transform-gpu will-change-transform ${showLine2 ? "opacity-100 translate-x-0" : "opacity-0 translate-x-4"}`}
+              className="hero-reveal hero-reveal--from-right block mt-2.5 xs:mt-3 sm:mt-5 md:mt-6 [font-family:var(--font-serif)] italic font-normal [letter-spacing:0] md:[letter-spacing:-0.005em] [line-height:1.02] text-[color:var(--gold-soft)] [text-shadow:none]"
             >
               {HERO_COPY.headlineLine2}
             </span>
@@ -164,21 +167,22 @@ export function CinematicHero() {
 
           <div
             data-hero-reveal="finalBlock"
+            data-hero-visible={showFinal ? "true" : "false"}
             data-hero-reveal-order="4"
             data-hero-reveal-duration-ms="220"
             data-hero-reveal-ease="ease-out"
-            className={`transition-[opacity,transform] duration-[220ms] ease-out transform-gpu will-change-transform ${showFinal ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4"}`}
+            className="hero-reveal hero-reveal--from-left"
             // Pointer-events gating so CTAs aren't clickable before they reveal.
             style={{ pointerEvents: showFinal ? "auto" : "none" }}
           >
             <p
               data-hero-field="subheadline"
-              className="mt-8 sm:mt-9 md:mt-12 max-w-[34rem] text-[14.5px] sm:text-[17px] md:text-[18px] leading-[1.68] md:leading-[1.72] tracking-[0] text-[color:var(--ivory)] text-pretty [text-shadow:none]"
+              className="mt-5 xs:mt-6 sm:mt-9 md:mt-12 max-w-[33rem] text-[14px] xs:text-[14.5px] sm:text-[17px] md:text-[18px] leading-[1.58] xs:leading-[1.64] md:leading-[1.72] tracking-[0] text-[color:var(--ivory)] text-pretty [text-shadow:none]"
             >
               {HERO_COPY.subheadline}
             </p>
 
-            <div className="mt-8 sm:mt-9 md:mt-10 flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center">
+            <div className="mt-6 xs:mt-7 sm:mt-9 md:mt-10 flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center">
               <CtaButton
                 to="/builder"
                 variant="primary"
