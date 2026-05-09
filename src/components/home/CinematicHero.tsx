@@ -395,6 +395,38 @@ export function CinematicHero() {
 
       {/* Opt-in dev overlay — `?heroColorDebug=1`. Renders nothing otherwise. */}
       <HeroColorDebugOverlay />
+
+      {debug && (
+        <div
+          role="status"
+          aria-live="polite"
+          className="pointer-events-auto fixed top-2 right-2 z-[60] max-w-[260px] rounded-md border border-white/15 bg-black/80 p-2.5 text-[10.5px] leading-snug text-white shadow-lg backdrop-blur"
+          data-hero-debug-panel="true"
+        >
+          <div className="mb-1 flex items-center justify-between gap-2 font-mono text-[10px] uppercase tracking-wider text-white/70">
+            <span>hero debug</span>
+            <span>{viewportW}px</span>
+          </div>
+          <ul className="space-y-0.5 font-mono">
+            <li>story: <b>{storyActive ? "active" : "idle"}</b></li>
+            <li>video: <b>{videoFailed ? "fallback (poster)" : "playing/loading"}</b></li>
+            <li>src: <b>{videoSrc.endsWith("1080.mp4") ? "1080p" : "720p"}</b></li>
+            <li>intersect: <b>{intersectionRatio.toFixed(2)}</b></li>
+          </ul>
+          <div className="mt-1.5 max-h-[140px] overflow-auto border-t border-white/10 pt-1.5 font-mono text-[10px] text-white/85">
+            {debugEvents.length === 0 ? (
+              <div className="text-white/50">no events yet</div>
+            ) : (
+              debugEvents.map((e, i) => (
+                <div key={i}>
+                  +{e.t}ms {e.label}
+                  {e.detail ? <span className="text-white/60"> · {e.detail}</span> : null}
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      )}
     </section>
   );
 }
