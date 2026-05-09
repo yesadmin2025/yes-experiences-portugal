@@ -603,6 +603,54 @@
     }
   }
 
+  /* Hero-only premium polish: a slow gold sheen that sweeps across the
+     CTA on hover, layered over the existing radial halo (::before).
+     Scoped to .hero-cinematic so the rest of the site stays calm.
+     Disabled under prefers-reduced-motion via the wrapping query at
+     the end of this file. */
+  .hero-cinematic .hero-cta-button {
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-cinematic .hero-cta-button::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background: linear-gradient(
+      115deg,
+      transparent 0%,
+      transparent 38%,
+      color-mix(in oklab, var(--gold-soft) 55%, transparent) 50%,
+      transparent 62%,
+      transparent 100%
+    );
+    background-size: 220% 100%;
+    background-position: 120% 0;
+    opacity: 0;
+    transition:
+      opacity 320ms var(--ease-premium),
+      background-position 1100ms var(--ease-premium);
+    mix-blend-mode: screen;
+    z-index: 1;
+  }
+  .hero-cinematic .hero-cta-button:hover::after,
+  .hero-cinematic .hero-cta-button:focus-visible::after {
+    opacity: 0.85;
+    background-position: -20% 0;
+  }
+  .hero-cinematic .hero-cta-button > span,
+  .hero-cinematic .hero-cta-button > svg {
+    position: relative;
+    z-index: 2;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-cinematic .hero-cta-button::after {
+      display: none;
+    }
+  }
+
   .eyebrow {
     @apply inline-flex items-center gap-3 text-[11px] uppercase tracking-[0.28em] text-[color:var(--charcoal-soft)];
   }
@@ -1778,7 +1826,10 @@
   transform-origin: right center;
 }
 .hero-cinematic .hero-beat--rise {
-  transform: translate3d(0, 14px, 0);
+  transform: translate3d(0, 18px, 0) scale(0.985);
+}
+.hero-cinematic .hero-beat--rise[data-hero-beat-show="true"] {
+  transform: translate3d(0, 0, 0) scale(1);
 }
 .hero-cinematic .hero-beat[data-hero-beat-show="true"] {
   opacity: 1;
