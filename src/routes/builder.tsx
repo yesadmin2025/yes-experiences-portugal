@@ -28,6 +28,11 @@ import {
   MoodCard,
   StepHead,
 } from "@/components/builder/Choices";
+import {
+  RegionStep,
+  BUILDER_REGIONS,
+  type BuilderRegionKey,
+} from "@/components/builder/RegionStep";
 import { BuilderStepper } from "@/components/builder/BuilderStepper";
 import { BuilderMobileStepSummary } from "@/components/builder/BuilderMobileStepSummary";
 import { BuilderDebugPanel } from "@/components/builder/BuilderDebugPanel";
@@ -100,6 +105,7 @@ function BuilderPage() {
   const navigate = useNavigate({ from: "/builder" });
 
   const step = search.step ?? 0;
+  const region = search.region;
   const mood = search.mood;
   const who = search.who;
   const intention = search.intention;
@@ -116,6 +122,10 @@ function BuilderPage() {
   );
 
   const setStep = useCallback((s: Step) => setSearch({ step: s }), [setSearch]);
+  const setRegion = useCallback(
+    (r: BuilderRegionKey) => setSearch({ region: r }),
+    [setSearch],
+  );
   const setMood = useCallback((m: Mood) => setSearch({ mood: m }), [setSearch]);
   const setWho = useCallback((w: Who) => setSearch({ who: w }), [setSearch]);
   const setIntention = useCallback((i: Intention) => setSearch({ intention: i }), [setSearch]);
@@ -268,6 +278,7 @@ function BuilderPage() {
             mood,
             who,
             intention,
+            regionKey: region,
             pace: opts?.nextPace ?? pace,
             excludedStopKeys: opts?.nextExcluded ?? excluded,
             pinnedStopKeys: pinned,
@@ -282,7 +293,7 @@ function BuilderPage() {
         setRouteLoading(false);
       }
     },
-    [mood, who, intention, pace, excluded, pinned],
+    [mood, who, intention, region, pace, excluded, pinned],
   );
 
   // Trigger initial generation when entering predictive moment / live builder.
@@ -509,9 +520,32 @@ function BuilderPage() {
               </p>
             )}
 
-            {step === 1 && (
+            {step === 1 && !region && (
+              <div key="step-1-region" className="builder-step-in">
+                <RegionStep
+                  selected={region}
+                  onChoose={(r) => {
+                    setRegion(r);
+                  }}
+                />
+              </div>
+            )}
+
+            {step === 1 && region && (
               <div key="step-1" className="builder-step-in">
-                <StepHead num={1} eyebrow="Mood" title="What are you in the mood for?" />
+                <div className="flex items-center justify-between gap-3 flex-wrap mb-2">
+                  <StepHead num={1} eyebrow="Mood" title="What are you in the mood for?" />
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setSearch({ region: undefined })}
+                  className="mt-2 inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.22em] font-semibold text-[color:var(--charcoal)]/70 hover:text-[color:var(--gold)] transition-colors"
+                  aria-label="Change region"
+                >
+                  <span className="inline-flex h-1.5 w-1.5 rounded-full bg-[color:var(--gold)]" />
+                  {BUILDER_REGIONS.find((r) => r.key === region)?.label ?? region}
+                  <span className="text-[color:var(--charcoal)]/40">· change</span>
+                </button>
                 {moodImagesLoading && Object.keys(moodImages).length === 0 ? (
                   <MoodGridSkeleton count={MOODS.length} />
                 ) : (
