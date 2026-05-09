@@ -136,43 +136,59 @@ function averageBand(path, t, y0, y1) {
   return [buf[0], buf[1], buf[2]];
 }
 
+// --- Discovery ------------------------------------------------------------
+function parseCliArgs(argv) {
+  const out = { json: false, videos: [], samples: DEFAULT_SAMPLES };
+  for (let i = 0; i < argv.length; i++) {
+    const a = argv[i];
+    if (a === "--json") out.json = true;
+    else if (a === "--video") out.videos.push(resolve(argv[++i]));
+    else if (a === "--samples") out.samples = Math.max(1, parseInt(argv[++i], 10) || DEFAULT_SAMPLES);
+  }
+  return out;
+}
+
+function discoverVideos(cli) {
+  if (cli.videos.length > 0) return cli.videos;
+  const found = new Set();
+  if (existsSync(FILM_DIR)) {
+    for (const name of readdirSync(FILM_DIR)) {
+      if (name.toLowerCase().endsWith(".mp4")) found.add(join(FILM_DIR, name));
+    }
+  }
+  if (existsSync(ALT_MANIFEST)) {
+    try {
+      const list = JSON.parse(readFileSync(ALT_MANIFEST, "utf8"));
+      if (Array.isArray(list)) {
+        for (const p of list) {
+          if (typeof p === "string" && p.toLowerCase().endsWith(".mp4")) {
+            found.add(resolve(p));
+          }
+        }
+      }
+    } catch (e) {
+      console.warn(`hero-frame-contrast: ignoring malformed ${ALT_MANIFEST}: ${e.message}`);
+    }
+  }
+  return [...found].sort();
+}
+
+function isUsableVideo(p) {
+  return existsSync(p) && statSync(p).size > 10_000;
+}
+
 // --- Run ------------------------------------------------------------------
-function run() {
-  const json = process.argv.includes("--json");
-  const env = {
-    skipped: false,
-    reason: null,
-    samples: SAMPLES,
-    threshold: THRESHOLD,
-    frames: [],
-  };
-
-  if (!existsSync(VIDEO) || statSync(VIDEO).size < 10_000) {
-    env.skipped = true;
-    env.reason = `video missing: ${VIDEO}`;
-  } else if (!haveFfmpeg()) {
-    env.skipped = true;
-    env.reason = "ffmpeg not available";
-  }
-
-  if (env.skipped) {
-    if (json) process.stdout.write(JSON.stringify(env, null, 2));
-    else console.log(`hero-frame-contrast: skipped (${env.reason})`);
-    process.exit(0);
-  }
-
-  const duration = probeDuration(VIDEO);
-  // Spread evenly, but skip the very edges where keyframes/black flash can sit.
-  const times = Array.from({ length: SAMPLES }, (_, i) =>
-    duration * ((i + 0.5) / SAMPLES),
+function auditVideo(path, samples) {
+  const duration = probeDuration(path);
+  const times = Array.from({ length: samples }, (_, i) =>
+    duration * ((i + 0.5) / samples),
   );
-
+  const frames = [];
   const failures = [];
-
   for (const t of times) {
     const frame = { t: Number(t.toFixed(2)), regions: [] };
     for (const region of REGIONS) {
-      const avg = averageBand(VIDEO, t, region.y0, region.y1);
+      const avg = averageBand(path, t, region.y0, region.y1);
       const effectiveBg = composite(avg, SCRIM_RGB, region.scrimAlpha);
       const checks = region.colors.map((key) => {
         const fg = hexToRgb(TEXT[key]);
@@ -191,40 +207,97 @@ function run() {
         checks,
       });
     }
-    env.frames.push(frame);
+    frames.push(frame);
+  }
+  return { duration: Number(duration.toFixed(2)), frames, failures, passed: failures.length === 0 };
+}
+
+function run() {
+  const cli = parseCliArgs(process.argv.slice(2));
+  const env = {
+    skipped: false,
+    reason: null,
+    samples: cli.samples,
+    threshold: THRESHOLD,
+    videos: [],
+  };
+
+  if (!haveFfmpeg()) {
+    env.skipped = true;
+    env.reason = "ffmpeg not available";
+    if (cli.json) process.stdout.write(JSON.stringify(env, null, 2));
+    else console.log(`hero-frame-contrast: skipped (${env.reason})`);
+    process.exit(0);
   }
 
-  env.failures = failures;
-  env.passed = failures.length === 0;
+  const candidates = discoverVideos(cli);
+  const usable = candidates.filter(isUsableVideo);
+  const skippedFiles = candidates.filter((p) => !isUsableVideo(p));
 
-  if (json) {
+  if (usable.length === 0) {
+    env.skipped = true;
+    env.reason = candidates.length === 0
+      ? "no hero videos discovered (public/video/film/ empty and no manifest)"
+      : `no usable videos (all candidates missing or empty: ${candidates.map((p) => relative(process.cwd(), p)).join(", ")})`;
+    if (cli.json) process.stdout.write(JSON.stringify(env, null, 2));
+    else console.log(`hero-frame-contrast: skipped (${env.reason})`);
+    process.exit(0);
+  }
+
+  const allFailures = [];
+  for (const path of usable) {
+    const rel = relative(process.cwd(), path);
+    try {
+      const result = auditVideo(path, cli.samples);
+      env.videos.push({ path: rel, ...result });
+      for (const f of result.failures) allFailures.push({ video: rel, ...f });
+    } catch (e) {
+      env.videos.push({ path: rel, error: e.message, passed: false });
+      allFailures.push({ video: rel, error: e.message });
+    }
+  }
+  env.skippedFiles = skippedFiles.map((p) => relative(process.cwd(), p));
+  env.failures = allFailures;
+  env.passed = allFailures.length === 0;
+
+  if (cli.json) {
     process.stdout.write(JSON.stringify(env, null, 2));
     process.exit(env.passed ? 0 : 1);
   }
 
   // Human report
-  console.log(`Hero film contrast — ${SAMPLES} frames sampled across ${duration.toFixed(1)}s`);
+  console.log(`Hero film contrast — ${usable.length} video(s), ${cli.samples} frames each`);
   console.log("(bg = avg frame colour composited with linear scrim; AA: 4.5:1 normal, 3.0:1 large)\n");
-  for (const frame of env.frames) {
-    console.log(`  t=${frame.t.toFixed(2)}s`);
-    for (const r of frame.regions) {
-      const bg = `rgb(${r.effectiveBg.join(",")})`;
-      for (const c of r.checks) {
-        const mark = c.pass ? "✓" : "✗";
-        console.log(`    ${mark} ${r.id.padEnd(11)} ${c.color.padEnd(14)} ${bg}  ${c.ratio.toFixed(2)}:1 (need ≥${c.required}:1)`);
+  for (const v of env.videos) {
+    console.log(`▸ ${v.path}${v.duration ? ` (${v.duration}s)` : ""}`);
+    if (v.error) {
+      console.log(`    ⚠ ${v.error}`);
+      continue;
+    }
+    for (const frame of v.frames) {
+      console.log(`  t=${frame.t.toFixed(2)}s`);
+      for (const r of frame.regions) {
+        const bg = `rgb(${r.effectiveBg.join(",")})`;
+        for (const c of r.checks) {
+          const mark = c.pass ? "✓" : "✗";
+          console.log(`    ${mark} ${r.id.padEnd(11)} ${c.color.padEnd(14)} ${bg}  ${c.ratio.toFixed(2)}:1 (need ≥${c.required}:1)`);
+        }
       }
     }
   }
-  if (env.passed) {
-    console.log(`\n✅ All ${SAMPLES} frames pass WCAG AA across all hero text regions.`);
-    process.exit(0);
-  } else {
-    console.log(`\n❌ ${failures.length} contrast failure(s) detected:`);
-    for (const f of failures) {
-      console.log(`   t=${f.t}s ${f.region}/${f.color}: ${f.ratio.toFixed(2)}:1 < ${f.required}:1`);
-    }
-    process.exit(1);
+  if (skippedFiles.length > 0) {
+    console.log(`\n(skipped ${skippedFiles.length} unreadable candidate(s): ${env.skippedFiles.join(", ")})`);
   }
+  if (env.passed) {
+    console.log(`\n✅ All ${usable.length} hero video(s) pass WCAG AA across every sampled frame.`);
+    process.exit(0);
+  }
+  console.log(`\n❌ ${allFailures.length} contrast failure(s) detected:`);
+  for (const f of allFailures) {
+    if (f.error) console.log(`   ${f.video}: ${f.error}`);
+    else console.log(`   ${f.video} t=${f.t}s ${f.region}/${f.color}: ${f.ratio.toFixed(2)}:1 < ${f.required}:1`);
+  }
+  process.exit(1);
 }
 
 run();
