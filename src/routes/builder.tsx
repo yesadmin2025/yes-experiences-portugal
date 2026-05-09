@@ -123,6 +123,7 @@ function BuilderPage() {
   // Step 3 supports multi-select. URL keeps the primary intention (first chosen)
   // so the engine + share-links stay backwards compatible; the full set lives
   // in component state and biases the picker / narrative tone.
+  // Hydrated from persistence below so it survives refresh / return visits.
   const [intentions, setIntentions] = useState<Intention[]>(() =>
     search.intention ? [search.intention] : [],
   );
