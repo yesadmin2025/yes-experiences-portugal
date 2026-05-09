@@ -145,18 +145,18 @@ export function CinematicHero() {
           </Eyebrow>
 
           <h1
-            className="t-display mt-4 sm:mt-5 md:mt-6 text-balance text-[color:var(--ivory)] [font-weight:600] [letter-spacing:-0.022em] md:[letter-spacing:-0.026em] lg:[letter-spacing:-0.03em] [line-height:1.04] md:[line-height:1] lg:[line-height:0.96]"
+            className="t-display mt-4 sm:mt-5 md:mt-6 text-balance text-[color:var(--ivory)] [font-weight:400] [letter-spacing:-0.028em] md:[letter-spacing:-0.032em] lg:[letter-spacing:-0.036em] [line-height:1.04] md:[line-height:1] lg:[line-height:0.96]"
             data-hero-field="headlineLine1 headlineLine2"
           >
             <span
               data-hero-field="headlineLine1"
-              className={`block font-[600] text-[color:var(--ivory)] transition-all duration-700 ${showLine1 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}
+              className={`block font-[400] text-[color:var(--ivory)] transition-all duration-[220ms] ease-out ${showLine1 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}
             >
               {HERO_COPY.headlineLine1}
             </span>
             <span
               data-hero-field="headlineLine2"
-              className={`block mt-1 sm:mt-1.5 md:mt-2 [font-family:var(--font-serif)] italic font-normal [letter-spacing:-0.014em] md:[letter-spacing:-0.018em] text-[color:var(--ivory)] transition-all duration-700 ${showLine2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}
+              className={`block mt-1 sm:mt-1.5 md:mt-2 [font-family:var(--font-serif)] italic font-normal [letter-spacing:-0.014em] md:[letter-spacing:-0.018em] text-[color:var(--gold-soft)] transition-all duration-[220ms] ease-out ${showLine2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}
             >
               {HERO_COPY.headlineLine2}
             </span>
