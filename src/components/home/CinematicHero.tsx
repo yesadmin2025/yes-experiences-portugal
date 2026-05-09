@@ -125,7 +125,12 @@ export function CinematicHero() {
       {/* Bottom darken so copy stays AA against varied frames. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(20,16,12,0.10)_0%,rgba(20,16,12,0.20)_45%,rgba(20,16,12,0.62)_85%,rgba(20,16,12,0.78)_100%)]"
+        className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(20,16,12,0.20)_0%,rgba(20,16,12,0.35)_40%,rgba(20,16,12,0.78)_72%,rgba(15,12,9,0.92)_100%)]"
+      />
+      {/* Extra scrim directly behind copy block — guarantees AA on the brightest frames. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-[62%] bg-[radial-gradient(120%_85%_at_50%_100%,rgba(15,12,9,0.78)_0%,rgba(15,12,9,0.55)_45%,rgba(15,12,9,0)_100%)]"
       />
 
       {/* Copy column — full width on mobile with 20px gutters, capped on tablet+. */}
@@ -163,7 +168,7 @@ export function CinematicHero() {
           >
             <p
               data-hero-field="subheadline"
-              className="mt-5 sm:mt-6 max-w-[36rem] text-[15px] sm:text-[17px] md:text-[18px] leading-[1.5] text-[color:var(--ivory)]/92 text-pretty"
+              className="mt-5 sm:mt-6 max-w-[36rem] text-[15px] sm:text-[17px] md:text-[18px] leading-[1.5] text-[color:var(--ivory)] text-pretty [text-shadow:0_1px_2px_rgba(0,0,0,0.55)]"
             >
               {HERO_COPY.subheadline}
             </p>
@@ -189,7 +194,7 @@ export function CinematicHero() {
 
             <p
               data-hero-field="microcopy"
-              className="mt-4 text-[12.5px] sm:text-[13px] tracking-wide text-[color:var(--ivory)]/72"
+              className="mt-4 text-[12.5px] sm:text-[13px] tracking-wide text-[color:var(--ivory)]/90 [text-shadow:0_1px_2px_rgba(0,0,0,0.5)]"
             >
               {HERO_COPY.microcopy}
             </p>
