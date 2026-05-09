@@ -25,38 +25,81 @@ const HERO_FILM_POSTER = "/video/film/yes-hero-poster.jpg";
 export function CinematicHero() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const sectionRef = useRef<HTMLElement | null>(null);
-  
+
   const [storyActive, setStoryActive] = useState(false);
+  const [videoFailed, setVideoFailed] = useState(false);
+  // Pick source synchronously based on viewport so mobile never tries to
+  // download the 1080p file. We default to 720p during SSR / before hydration.
+  const [videoSrc, setVideoSrc] = useState<string>(HERO_FILM_SRC_720);
+
+  // Resolve source on the client.
+  useEffect(() => {
+    const isDesktop =
+      typeof window !== "undefined" &&
+      window.matchMedia("(min-width: 768px)").matches;
+    setVideoSrc(isDesktop ? HERO_FILM_SRC_1080 : HERO_FILM_SRC_720);
+  }, []);
+
+  // Try to play the film — fall back to poster if autoplay is blocked or
+  // the file fails. The story sequence runs independently so the cascade
+  // stays in sync either way.
+  const tryPlay = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    const p = v.play();
+    if (p && typeof p.then === "function") {
+      p.catch(() => setVideoFailed(true));
+    }
+  };
 
   useEffect(() => {
     const node = sectionRef.current;
     if (!node) return;
 
-    // Fallback if IntersectionObserver is unavailable.
+    let storyTimer: number | undefined;
+    let onFirstTouch: (() => void) | undefined;
+
+    const triggerStory = () => {
+      storyTimer = window.setTimeout(() => setStoryActive(true), 120);
+      tryPlay();
+    };
+
     if (typeof IntersectionObserver === "undefined") {
-      const t = window.setTimeout(() => setStoryActive(true), 120);
-      return () => window.clearTimeout(t);
+      triggerStory();
+    } else {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting && entry.intersectionRatio >= 0.25) {
+              triggerStory();
+              observer.disconnect();
+              break;
+            }
+          }
+        },
+        { threshold: [0, 0.25, 0.5], rootMargin: "0px 0px -10% 0px" },
+      );
+      observer.observe(node);
+
+      // First user interaction unlocks autoplay on iOS Low Power Mode etc.
+      onFirstTouch = () => {
+        tryPlay();
+      };
+      window.addEventListener("touchstart", onFirstTouch, { once: true, passive: true });
+      window.addEventListener("pointerdown", onFirstTouch, { once: true });
+
+      return () => {
+        observer.disconnect();
+        if (storyTimer) window.clearTimeout(storyTimer);
+        if (onFirstTouch) {
+          window.removeEventListener("touchstart", onFirstTouch);
+          window.removeEventListener("pointerdown", onFirstTouch);
+        }
+      };
     }
 
-    let timer: number | undefined;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting && entry.intersectionRatio >= 0.25) {
-            // Small delay so the first frame paints before the cascade begins.
-            timer = window.setTimeout(() => setStoryActive(true), 120);
-            observer.disconnect();
-            break;
-          }
-        }
-      },
-      { threshold: [0, 0.25, 0.5], rootMargin: "0px 0px -10% 0px" },
-    );
-    observer.observe(node);
-
     return () => {
-      observer.disconnect();
-      if (timer) window.clearTimeout(timer);
+      if (storyTimer) window.clearTimeout(storyTimer);
     };
   }, []);
 
@@ -65,7 +108,6 @@ export function CinematicHero() {
     const target = document.getElementById("reviews");
     if (!target) return;
     target.scrollIntoView({ behavior: "smooth", block: "start" });
-    // Update hash without jumping (smooth scroll already running).
     if (typeof window !== "undefined") {
       window.history.replaceState(null, "", "#reviews");
     }
@@ -79,14 +121,14 @@ export function CinematicHero() {
       aria-label={`${HERO_COPY.headlineLine1} ${HERO_COPY.headlineLine2}`}
       data-hero-cinematic="true"
       data-story-active={storyActive ? "true" : "false"}
-      
+      data-video-fallback={videoFailed ? "true" : "false"}
     >
-      {/* Continuous film — full bleed, no inner box, no rounded corners.
-         Always rendered so mobile users see the film; reduced-motion users
-         simply see the poster frame (no autoplay) instead of motion. */}
+      {/* Continuous film — full bleed. If autoplay fails, the poster image
+         below stays visible and the story cascade continues unchanged. */}
       <video
         ref={videoRef}
-        className="absolute inset-0 z-0 w-full h-full object-cover"
+        key={videoSrc}
+        className="absolute inset-0 z-0 w-full h-full object-cover hero-film-video"
         poster={HERO_FILM_POSTER}
         autoPlay
         muted
@@ -95,10 +137,19 @@ export function CinematicHero() {
         preload="auto"
         aria-hidden="true"
         data-hero-film="true"
-      >
-        <source src={HERO_FILM_SRC_720} type="video/mp4" media="(max-width: 767px)" />
-        <source src={HERO_FILM_SRC_1080} type="video/mp4" />
-      </video>
+        onCanPlay={tryPlay}
+        onPlaying={() => setVideoFailed(false)}
+        onError={() => setVideoFailed(true)}
+        onStalled={() => setVideoFailed(true)}
+        src={videoSrc}
+      />
+      {/* Static poster fallback — only painted if the video fails. */}
+      <img
+        src={HERO_FILM_POSTER}
+        alt=""
+        aria-hidden="true"
+        className="hero-film-fallback absolute inset-0 z-0 w-full h-full object-cover"
+      />
 
       {/* Bottom darken so copy stays AA against varied frames. */}
       <div

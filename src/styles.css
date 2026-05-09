@@ -1790,11 +1790,30 @@
   transform: translate3d(0, 0, 0);
 }
 
-.hero-cinematic[data-reduced-motion="true"] .hero-reveal,
-.hero-cinematic[data-reduced-motion="true"] .hero-story-step {
-  opacity: 1 !important;
-  transform: none !important;
-  transition: none !important;
+/* Video → poster fallback. Poster <img> stays painted only when autoplay
+   fails or the file errors; otherwise the live video covers it. */
+.hero-cinematic .hero-film-fallback {
+  opacity: 0;
+  transition: opacity 280ms var(--ease-premium);
+  pointer-events: none;
+}
+.hero-cinematic[data-video-fallback="true"] .hero-film-video {
+  opacity: 0;
+}
+.hero-cinematic[data-video-fallback="true"] .hero-film-fallback {
+  opacity: 1;
+}
+
+/* xs breakpoint — tighter screens get an extra bit of breathing room
+   between beats so they never read as simultaneous. */
+@media (max-width: 379px) {
+  .hero-cinematic [data-hero-reveal="eyebrow"] { transition-delay: 160ms !important; }
+  .hero-cinematic [data-hero-reveal="headlineLine1"] { transition-delay: 820ms !important; }
+  .hero-cinematic [data-hero-reveal="headlineLine2"] { transition-delay: 1320ms !important; }
+  .hero-cinematic .hero-story-step--copy { transition-delay: 1880ms !important; }
+  .hero-cinematic .hero-story-step--cta-primary { transition-delay: 2520ms !important; }
+  .hero-cinematic .hero-story-step--cta-secondary { transition-delay: 2820ms !important; }
+  .hero-cinematic .hero-story-step--microcopy { transition-delay: 3220ms !important; }
 }
 
 @keyframes heroRevealFromLeftStable {
