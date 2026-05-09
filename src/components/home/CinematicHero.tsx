@@ -86,6 +86,7 @@ export function CinematicHero() {
 
   return (
     <section
+      ref={sectionRef}
       className="hero-cinematic relative w-full min-h-[calc(100svh-65px)] md:min-h-screen overflow-hidden bg-[color:var(--charcoal-deep)] text-[color:var(--ivory)] flex items-end"
       aria-roledescription="cinematic hero film"
       aria-label={`${HERO_COPY.headlineLine1} ${HERO_COPY.headlineLine2}`}
