@@ -1730,9 +1730,9 @@
    220ms ease-out motion path without SSR/client state drift. */
 .hero-cinematic .hero-reveal {
   opacity: 1 !important;
-  animation: heroRevealFromLeftStable 240ms var(--ease-premium) both !important;
+  animation: heroRevealFromLeftStable 680ms var(--ease-premium) both !important;
   transition-property: opacity, transform;
-  transition-duration: 240ms;
+  transition-duration: 680ms;
   transition-timing-function: var(--ease-premium);
   transform: translate3d(0, 0, 0);
   will-change: opacity, transform;
