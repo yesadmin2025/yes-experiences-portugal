@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-05-09T22:21:53.456Z",
-  "filesScanned": 192,
+  "generatedAt": "2026-05-09T22:54:16.940Z",
+  "filesScanned": 193,
   "approvedPalette": {
     "teal": "#295B61",
     "teal-2": "#2A7C82",
@@ -18,10 +18,10 @@
     "#cccccc"
   ],
   "counts": {
-    "total": 169,
+    "total": 172,
     "approved": 34,
     "allowlisted": 25,
-    "mismatch": 110
+    "mismatch": 113
   },
   "findings": [
     {
@@ -980,7 +980,7 @@
     },
     {
       "file": "src/components/home/CinematicHero.tsx",
-      "line": 750,
+      "line": 755,
       "col": 80,
       "raw": "#3a7a82",
       "normalized": "#3a7a82",
@@ -989,7 +989,7 @@
     },
     {
       "file": "src/components/home/CinematicHero.tsx",
-      "line": 754,
+      "line": 759,
       "col": 109,
       "raw": "#3a7a82",
       "normalized": "#3a7a82",
@@ -998,7 +998,7 @@
     },
     {
       "file": "src/components/home/CinematicHero.tsx",
-      "line": 771,
+      "line": 776,
       "col": 48,
       "raw": "#3a7a82",
       "normalized": "#3a7a82",
@@ -1007,11 +1007,38 @@
     },
     {
       "file": "src/components/home/CinematicHero.tsx",
-      "line": 771,
+      "line": 776,
       "col": 81,
       "raw": "#3a7a82",
       "normalized": "#3a7a82",
       "snippet": "cta: \"text-[color:var(--teal-2,#3a7a82)] bg-[color:var(--teal-2,#3a7a82)]/15\",",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/home/HeroScrimRuler.tsx",
+      "line": 62,
+      "col": 58,
+      "raw": "#5BB0BA",
+      "normalized": "#5bb0ba",
+      "snippet": "{ label: \"vertical top · 12svh\", top: \"12svh\", color: \"#5BB0BA\", side: \"top\" },",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/home/HeroScrimRuler.tsx",
+      "line": 63,
+      "col": 74,
+      "raw": "#5BB0BA",
+      "normalized": "#5bb0ba",
+      "snippet": "{ label: \"vertical bottom · 10svh\", top: \"calc(100% - 10svh)\", color: \"#5BB0BA\", side: \"bottom\" },",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/home/HeroScrimRuler.tsx",
+      "line": 125,
+      "col": 63,
+      "raw": "#5BB0BA",
+      "normalized": "#5bb0ba",
+      "snippet": "<span className=\"h-1.5 w-2.5\" style={{ background: \"#5BB0BA\" }} />",
       "status": "mismatch"
     },
     {

@@ -57,8 +57,8 @@ type Edge = {
 };
 
 const EDGES: Edge[] = [
-  { label: "radial top · 10svh", top: "10svh", color: "#C9A96A", side: "top" },
-  { label: "radial bottom · 8svh", top: "calc(100% - 8svh)", color: "#C9A96A", side: "bottom" },
+  { label: "radial top · 10svh", top: "10svh", color: "color:var(--gold)", side: "top" },
+  { label: "radial bottom · 8svh", top: "calc(100% - 8svh)", color: "var(--gold)", side: "bottom" },
   { label: "vertical top · 12svh", top: "12svh", color: "#5BB0BA", side: "top" },
   { label: "vertical bottom · 10svh", top: "calc(100% - 10svh)", color: "#5BB0BA", side: "bottom" },
 ];
@@ -118,7 +118,7 @@ export function HeroScrimRuler() {
           Scrim ruler
         </div>
         <div className="flex items-center gap-1">
-          <span className="h-1.5 w-2.5" style={{ background: "#C9A96A" }} />
+          <span className="h-1.5 w-2.5" style={{ background: "var(--gold)" }} />
           radial
         </div>
         <div className="flex items-center gap-1">
