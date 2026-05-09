@@ -1760,10 +1760,13 @@
   transform: translate3d(0, 0, 0);
 }
 
-/* Hero storytelling rhythm — one visible beat at a time. */
-.hero-cinematic [data-hero-reveal="eyebrow"] { transition-delay: 120ms !important; }
-.hero-cinematic [data-hero-reveal="headlineLine1"] { transition-delay: 620ms !important; }
-.hero-cinematic [data-hero-reveal="headlineLine2"] { transition-delay: 1040ms !important; }
+/* Hero storytelling rhythm — each phrase reads alone with the film, then
+   the supporting block (copy + microcopy) assembles, and the CTAs land
+   last as the final beat. Long gaps are intentional: the film should
+   carry the eye between phrases. */
+.hero-cinematic [data-hero-reveal="eyebrow"] { transition-delay: 200ms !important; }
+.hero-cinematic [data-hero-reveal="headlineLine1"] { transition-delay: 1500ms !important; }
+.hero-cinematic [data-hero-reveal="headlineLine2"] { transition-delay: 2900ms !important; }
 
 .hero-cinematic .hero-final-reveal {
   opacity: 1;
@@ -1780,10 +1783,11 @@
   will-change: opacity, transform;
   backface-visibility: hidden;
 }
-.hero-cinematic .hero-story-step--copy { transition-delay: 1500ms !important; }
-.hero-cinematic .hero-story-step--cta-primary { transition-delay: 2040ms !important; }
-.hero-cinematic .hero-story-step--cta-secondary { transition-delay: 2280ms !important; }
-.hero-cinematic .hero-story-step--microcopy { transition-delay: 2620ms !important; }
+/* Final assembly: subhead + microcopy come together, CTAs land last. */
+.hero-cinematic .hero-story-step--copy { transition-delay: 4300ms !important; }
+.hero-cinematic .hero-story-step--microcopy { transition-delay: 4700ms !important; }
+.hero-cinematic .hero-story-step--cta-primary { transition-delay: 5300ms !important; }
+.hero-cinematic .hero-story-step--cta-secondary { transition-delay: 5600ms !important; }
 
 .hero-cinematic[data-story-active="true"] .hero-story-step {
   opacity: 1;
@@ -1804,16 +1808,16 @@
   opacity: 1;
 }
 
-/* xs breakpoint — tighter screens get an extra bit of breathing room
-   between beats so they never read as simultaneous. */
+/* xs breakpoint — tighter screens get even more breathing room between
+   beats so each phrase truly reads alone before the next appears. */
 @media (max-width: 379px) {
-  .hero-cinematic [data-hero-reveal="eyebrow"] { transition-delay: 160ms !important; }
-  .hero-cinematic [data-hero-reveal="headlineLine1"] { transition-delay: 820ms !important; }
-  .hero-cinematic [data-hero-reveal="headlineLine2"] { transition-delay: 1320ms !important; }
-  .hero-cinematic .hero-story-step--copy { transition-delay: 1880ms !important; }
-  .hero-cinematic .hero-story-step--cta-primary { transition-delay: 2520ms !important; }
-  .hero-cinematic .hero-story-step--cta-secondary { transition-delay: 2820ms !important; }
-  .hero-cinematic .hero-story-step--microcopy { transition-delay: 3220ms !important; }
+  .hero-cinematic [data-hero-reveal="eyebrow"] { transition-delay: 240ms !important; }
+  .hero-cinematic [data-hero-reveal="headlineLine1"] { transition-delay: 1700ms !important; }
+  .hero-cinematic [data-hero-reveal="headlineLine2"] { transition-delay: 3200ms !important; }
+  .hero-cinematic .hero-story-step--copy { transition-delay: 4700ms !important; }
+  .hero-cinematic .hero-story-step--microcopy { transition-delay: 5100ms !important; }
+  .hero-cinematic .hero-story-step--cta-primary { transition-delay: 5700ms !important; }
+  .hero-cinematic .hero-story-step--cta-secondary { transition-delay: 6000ms !important; }
 }
 
 @keyframes heroRevealFromLeftStable {
@@ -1898,13 +1902,13 @@
     transform: translate3d(0, 14px, 0);
   }
 
-  .hero-cinematic [data-hero-reveal="eyebrow"] { transition-delay: 140ms !important; }
-  .hero-cinematic [data-hero-reveal="headlineLine1"] { transition-delay: 720ms !important; }
-  .hero-cinematic [data-hero-reveal="headlineLine2"] { transition-delay: 1160ms !important; }
-  .hero-cinematic .hero-story-step--copy { transition-delay: 1680ms !important; }
-  .hero-cinematic .hero-story-step--cta-primary { transition-delay: 2260ms !important; }
-  .hero-cinematic .hero-story-step--cta-secondary { transition-delay: 2520ms !important; }
-  .hero-cinematic .hero-story-step--microcopy { transition-delay: 2880ms !important; }
+  .hero-cinematic [data-hero-reveal="eyebrow"] { transition-delay: 180ms !important; }
+  .hero-cinematic [data-hero-reveal="headlineLine1"] { transition-delay: 1300ms !important; }
+  .hero-cinematic [data-hero-reveal="headlineLine2"] { transition-delay: 2500ms !important; }
+  .hero-cinematic .hero-story-step--copy { transition-delay: 3700ms !important; }
+  .hero-cinematic .hero-story-step--microcopy { transition-delay: 4100ms !important; }
+  .hero-cinematic .hero-story-step--cta-primary { transition-delay: 4700ms !important; }
+  .hero-cinematic .hero-story-step--cta-secondary { transition-delay: 5000ms !important; }
 
   .hero-cinematic .hero-final-reveal {
     position: relative;
