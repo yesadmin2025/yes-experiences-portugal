@@ -39,7 +39,14 @@ export function CinematicHero() {
   const mountedAtRef = useRef<number>(typeof performance !== "undefined" ? performance.now() : Date.now());
 
   const [storyActive, setStoryActive] = useState(false);
-  const [videoFailed, setVideoFailed] = useState(false);
+  const [videoFailed, setVideoFailed] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    try {
+      return new URLSearchParams(window.location.search).get("heroVideoFail") === "1";
+    } catch {
+      return false;
+    }
+  });
   const [videoSrc, setVideoSrc] = useState<string>(HERO_FILM_SRC_720);
   const [debug] = useState<boolean>(() => isHeroDebugEnabled());
   const [debugEvents, setDebugEvents] = useState<HeroDebugEvent[]>([]);
