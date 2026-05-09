@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-09T18:41:05.072Z",
+  "generatedAt": "2026-05-09T18:49:58.072Z",
   "filesScanned": 192,
   "approvedPalette": {
     "teal": "#295B61",
@@ -980,7 +980,7 @@
     },
     {
       "file": "src/components/home/CinematicHero.tsx",
-      "line": 596,
+      "line": 617,
       "col": 80,
       "raw": "#3a7a82",
       "normalized": "#3a7a82",
@@ -989,7 +989,7 @@
     },
     {
       "file": "src/components/home/CinematicHero.tsx",
-      "line": 600,
+      "line": 621,
       "col": 109,
       "raw": "#3a7a82",
       "normalized": "#3a7a82",
