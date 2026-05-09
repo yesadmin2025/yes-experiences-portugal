@@ -143,9 +143,12 @@ export function CinematicHero() {
     }
   };
 
-  // Beat schedule — anchored to video.currentTime in seconds. Falls back
-  // to wall-clock at the same offsets if the video can't play.
-  type BeatKey = "eyebrow" | "headlineLine1" | "headlineLine2" | "copy" | "microcopy" | "ctaPrimary" | "ctaSecondary";
+  // Storytelling phases — each phrase appears ALONE, then yields to the
+  // next; "compose" brings the whole stanza back together; "cta" reveals
+  // the call-to-action pair + microcopy as the closing beat. Anchored to
+  // video.currentTime in seconds, with a wall-clock fallback at the same
+  // offsets when the video can't play.
+  type BeatKey = "eyebrow" | "h1" | "h2" | "sub" | "compose" | "cta";
   type BeatStamp = { wallMs: number; videoT: number; mode: "video" | "wall" | "step" };
   const [revealed, setRevealed] = useState<Set<BeatKey>>(() => new Set());
   const [beatStamps, setBeatStamps] = useState<Partial<Record<BeatKey, BeatStamp>>>({});
@@ -162,34 +165,31 @@ export function CinematicHero() {
     const w = typeof window !== "undefined" ? window.innerWidth : 768;
     if (w >= 640) {
       return [
-        { key: "eyebrow", t: 0.18 },
-        { key: "headlineLine1", t: 1.30 },
-        { key: "headlineLine2", t: 2.50 },
-        { key: "copy", t: 3.70 },
-        { key: "microcopy", t: 4.10 },
-        { key: "ctaPrimary", t: 4.70 },
-        { key: "ctaSecondary", t: 5.00 },
+        { key: "eyebrow", t: 0.30 },
+        { key: "h1",      t: 1.80 },
+        { key: "h2",      t: 3.40 },
+        { key: "sub",     t: 5.00 },
+        { key: "compose", t: 6.60 },
+        { key: "cta",     t: 7.40 },
       ];
     }
     if (w <= 379) {
       return [
-        { key: "eyebrow", t: 0.24 },
-        { key: "headlineLine1", t: 1.70 },
-        { key: "headlineLine2", t: 3.20 },
-        { key: "copy", t: 4.70 },
-        { key: "microcopy", t: 5.10 },
-        { key: "ctaPrimary", t: 5.70 },
-        { key: "ctaSecondary", t: 6.00 },
+        { key: "eyebrow", t: 0.40 },
+        { key: "h1",      t: 2.20 },
+        { key: "h2",      t: 4.10 },
+        { key: "sub",     t: 5.90 },
+        { key: "compose", t: 7.70 },
+        { key: "cta",     t: 8.60 },
       ];
     }
     return [
-      { key: "eyebrow", t: 0.20 },
-      { key: "headlineLine1", t: 1.50 },
-      { key: "headlineLine2", t: 2.90 },
-      { key: "copy", t: 4.30 },
-      { key: "microcopy", t: 4.70 },
-      { key: "ctaPrimary", t: 5.30 },
-      { key: "ctaSecondary", t: 5.60 },
+      { key: "eyebrow", t: 0.35 },
+      { key: "h1",      t: 2.00 },
+      { key: "h2",      t: 3.80 },
+      { key: "sub",     t: 5.50 },
+      { key: "compose", t: 7.20 },
+      { key: "cta",     t: 8.10 },
     ];
   };
 
