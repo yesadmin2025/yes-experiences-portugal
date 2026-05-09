@@ -1755,39 +1755,63 @@
   transform-origin: right center;
 }
 
-/* Per-beat reveal — each beat is gated by a data-revealed token that the
-   JS toggles either from real video.currentTime (preferred) or from a
-   wall-clock fallback when the video fails to play. Timing lives in JS,
-   so the cascade stays in lock-step with the film even when the video
-   is slow to load. */
+/* New phase-driven beat reveal. Each phrase appears alone, then fades
+   out as the next solo phrase fires. The "compose" phase brings the
+   whole stanza back together; "cta" reveals the CTAs + microcopy as
+   the closing beat. JS toggles `data-hero-beat-show` on each beat. */
+.hero-cinematic .hero-beat {
+  opacity: 0;
+  transform: translate3d(0, 10px, 0);
+  animation: none !important;
+  transition-property: opacity, transform;
+  transition-duration: 820ms;
+  transition-timing-function: var(--ease-premium);
+  will-change: opacity, transform;
+  backface-visibility: hidden;
+}
+.hero-cinematic .hero-beat--from-left {
+  transform: translate3d(-14px, 0, 0);
+  transform-origin: left center;
+}
+.hero-cinematic .hero-beat--from-right {
+  transform: translate3d(14px, 0, 0);
+  transform-origin: right center;
+}
+.hero-cinematic .hero-beat--rise {
+  transform: translate3d(0, 14px, 0);
+}
+.hero-cinematic .hero-beat[data-hero-beat-show="true"] {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+.hero-cinematic .hero-beat[data-hero-beat-show="false"] {
+  pointer-events: none;
+}
+/* Stagger CTAs + microcopy off the same "cta" trigger. */
+.hero-cinematic .hero-beat[data-hero-beat-delay="160"] { transition-delay: 160ms; }
+.hero-cinematic .hero-beat[data-hero-beat-delay="320"] { transition-delay: 320ms; }
+
+/* Reduced-motion: snap to final composed state, no transitions. */
+@media (prefers-reduced-motion: reduce) {
+  .hero-cinematic .hero-beat {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* Legacy data-revealed gates kept harmless: still show eyebrow/h1/h2
+   if any older code path fires them, but the new hero-beat rules above
+   take precedence via inline data-hero-beat-show. */
 .hero-cinematic[data-revealed~="eyebrow"] [data-hero-reveal="eyebrow"],
 .hero-cinematic[data-revealed~="headlineLine1"] [data-hero-reveal="headlineLine1"],
 .hero-cinematic[data-revealed~="headlineLine2"] [data-hero-reveal="headlineLine2"] {
-  opacity: 1 !important;
-  transform: translate3d(0, 0, 0);
+  /* no-op — controlled by hero-beat data attribute */
 }
 
 .hero-cinematic .hero-final-reveal {
   opacity: 1;
   animation: none !important;
-}
-
-.hero-cinematic .hero-story-step {
-  opacity: 0;
-  transform: translate3d(0, 16px, 0);
-  animation: none !important;
-  transition-property: opacity, transform;
-  transition-duration: 740ms;
-  transition-timing-function: var(--ease-premium);
-  will-change: opacity, transform;
-  backface-visibility: hidden;
-}
-.hero-cinematic[data-revealed~="copy"] .hero-story-step--copy,
-.hero-cinematic[data-revealed~="microcopy"] .hero-story-step--microcopy,
-.hero-cinematic[data-revealed~="ctaPrimary"] .hero-story-step--cta-primary,
-.hero-cinematic[data-revealed~="ctaSecondary"] .hero-story-step--cta-secondary {
-  opacity: 1;
-  transform: translate3d(0, 0, 0);
 }
 
 /* Video → poster fallback. Poster <img> stays painted only when autoplay
