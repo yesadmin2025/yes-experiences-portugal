@@ -15,6 +15,7 @@ import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 
 import { HERO_COPY, HERO_COPY_VERSION } from "@/content/hero-copy";
+import { Eyebrow } from "@/components/ui/Eyebrow";
 
 // Reveal beats keyed to film timestamps (seconds). The last beat
 // (subheadline + CTAs + microcopy) intentionally lands together.
