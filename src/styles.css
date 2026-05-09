@@ -1729,18 +1729,22 @@
    hiding the first line on phones. CSS owns a consistent GPU-friendly
    220ms ease-out motion path without SSR/client state drift. */
 .hero-cinematic .hero-reveal {
-  opacity: 1 !important;
-  animation: heroRevealFromLeftStable 680ms var(--ease-premium) both !important;
+  opacity: 0 !important;
+  transform: translate3d(-18px, 0, 0);
+  animation: none !important;
   transition-property: opacity, transform;
   transition-duration: 680ms;
   transition-timing-function: var(--ease-premium);
-  transform: translate3d(0, 0, 0);
   will-change: opacity, transform;
   backface-visibility: hidden;
 }
 
 .hero-cinematic .hero-reveal--from-right {
-  animation-name: heroRevealFromRightStable !important;
+  transform: translate3d(18px, 0, 0);
+}
+
+.hero-cinematic[data-story-active="true"] .hero-reveal {
+  opacity: 1 !important;
   transform: translate3d(0, 0, 0);
 }
 
@@ -1749,6 +1753,9 @@
 .hero-cinematic [data-hero-reveal="eyebrow"] { animation-delay: 90ms !important; }
 .hero-cinematic [data-hero-reveal="headlineLine1"] { animation-delay: 420ms !important; }
 .hero-cinematic [data-hero-reveal="headlineLine2"] { animation-delay: 760ms !important; }
+.hero-cinematic [data-hero-reveal="eyebrow"] { transition-delay: 90ms !important; }
+.hero-cinematic [data-hero-reveal="headlineLine1"] { transition-delay: 420ms !important; }
+.hero-cinematic [data-hero-reveal="headlineLine2"] { transition-delay: 760ms !important; }
 
 .hero-cinematic .hero-final-reveal {
   opacity: 1;
@@ -1757,11 +1764,31 @@
 
 .hero-cinematic .hero-story-step {
   opacity: 0;
-  animation: heroRevealRisePremium 620ms var(--ease-premium) both !important;
+  transform: translate3d(0, 16px, 0);
+  animation: none !important;
+  transition-property: opacity, transform;
+  transition-duration: 620ms;
+  transition-timing-function: var(--ease-premium);
+  will-change: opacity, transform;
 }
 .hero-cinematic .hero-story-step--copy { animation-delay: 1180ms !important; }
 .hero-cinematic .hero-story-step--cta { animation-delay: 1640ms !important; }
 .hero-cinematic .hero-story-step--microcopy { animation-delay: 1960ms !important; }
+.hero-cinematic .hero-story-step--copy { transition-delay: 1180ms !important; }
+.hero-cinematic .hero-story-step--cta { transition-delay: 1640ms !important; }
+.hero-cinematic .hero-story-step--microcopy { transition-delay: 1960ms !important; }
+
+.hero-cinematic[data-story-active="true"] .hero-story-step {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.hero-cinematic[data-reduced-motion="true"] .hero-reveal,
+.hero-cinematic[data-reduced-motion="true"] .hero-story-step {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+}
 
 @keyframes heroRevealFromLeftStable {
   from { opacity: 0; transform: translate3d(-18px, 0, 0); }
