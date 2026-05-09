@@ -1844,8 +1844,6 @@
 .hero-scrim--focus { background-image: var(--hero-scrim-focus); }
 .hero-scrim--mobile-radial { background-image: var(--hero-scrim-mobile-radial); }
 .hero-scrim--mobile-vertical { background-image: var(--hero-scrim-mobile-vertical); }
-  isolation: isolate;
-}
 .hero-cinematic .hero-reveal {
   opacity: 0 !important;
   transform: translate3d(-14px, 0, 0);
