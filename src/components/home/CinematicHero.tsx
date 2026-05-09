@@ -29,18 +29,10 @@ function prefersReducedMotion(): boolean {
 export function CinematicHero() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const sectionRef = useRef<HTMLElement | null>(null);
-  const [reduced, setReduced] = useState(false);
+  
   const [storyActive, setStoryActive] = useState(false);
 
   useEffect(() => {
-    const shouldReduce = prefersReducedMotion();
-    setReduced(shouldReduce);
-
-    if (shouldReduce) {
-      setStoryActive(true);
-      return;
-    }
-
     const node = sectionRef.current;
     if (!node) return;
 
@@ -76,8 +68,7 @@ export function CinematicHero() {
     e.preventDefault();
     const target = document.getElementById("reviews");
     if (!target) return;
-    const behavior: ScrollBehavior = prefersReducedMotion() ? "auto" : "smooth";
-    target.scrollIntoView({ behavior, block: "start" });
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
     // Update hash without jumping (smooth scroll already running).
     if (typeof window !== "undefined") {
       window.history.replaceState(null, "", "#reviews");
@@ -92,7 +83,7 @@ export function CinematicHero() {
       aria-label={`${HERO_COPY.headlineLine1} ${HERO_COPY.headlineLine2}`}
       data-hero-cinematic="true"
       data-story-active={storyActive ? "true" : "false"}
-      data-reduced-motion={reduced ? "true" : "false"}
+      
     >
       {/* Continuous film — full bleed, no inner box, no rounded corners.
          Always rendered so mobile users see the film; reduced-motion users
