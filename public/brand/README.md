@@ -13,7 +13,9 @@ public/brand/
 ├── yes-brand-board.png    ← same brand-color reference, hi-res raster
 ├── svg/                   ← vector master files (recommended for web + print)
 ├── png/                   ← rasterized exports at @1x / @2x / @3x
-└── pdf/                   ← single-page print-ready PDFs
+├── pdf/                   ← single-page print-ready PDFs
+├── eps/                   ← Encapsulated PostScript (legacy print workflows)
+└── ai/                    ← Adobe Illustrator-compatible (PDF-based, opens editably)
 ```
 
 ## The brand board
@@ -32,7 +34,7 @@ designers, or partners as the source of truth.
 | `--gold`          | `#C9A96A` | Accent (rules, dividers)        |
 | `--gold-soft`     | `#E1CFA6` | Soft accent (microcopy)         |
 | `--charcoal`      | `#2E2E2E` | Primary text / dark surface     |
-| `--charcoal-soft` | `#6B6B6B` | Secondary text                  |
+| `--charcoal-soft` | `#555555` | Secondary text                  |
 | `--ivory`         | `#FAF8F3` | Primary background              |
 | `--sand`          | `#F4EFE7` | Quiet surface                   |
 
@@ -71,16 +73,10 @@ The teal matches the hero-CTA fill on the live site exactly.
   surface supports.
 - **PDF** — for print collateral, decks, signage, and hand-off to printers.
   Vector content preserved.
-
-## Honest note on EPS / .ai
-
-EPS and Adobe Illustrator (`.ai`) files are intentionally **not** included.
-A meaningful `.ai` file requires Adobe Illustrator to author, and shipping a
-"PDF-shell renamed to .ai" would be misleading. The included PDF files are
-fully vector and open editably in Illustrator, Affinity Designer, Inkscape
-and Sketch — for the vast majority of print workflows they substitute for
-EPS/AI directly. If your printer specifically requires `.eps`, open the PDF
-in Illustrator and re-save as `.eps`.
+- **EPS** — Encapsulated PostScript, for legacy print workflows that
+  specifically require `.eps` (older RIPs, embroidery / signage software).
+- **AI** — Adobe Illustrator-compatible. These are PDF-based files that open
+  fully editable in Illustrator, Affinity Designer, Inkscape and Sketch.
 
 ## Honest note on typographic fidelity
 
