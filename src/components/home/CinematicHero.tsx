@@ -131,7 +131,7 @@ export function CinematicHero() {
           </Eyebrow>
 
           <h1
-            className="hero-h1 t-display mt-8 sm:mt-9 md:mt-11 max-w-[13ch] sm:max-w-[13ch] md:max-w-[14ch] text-balance text-[color:var(--ivory)] [font-weight:400] [font-size:2.4rem] sm:[font-size:2.85rem] md:[font-size:4.25rem] lg:[font-size:5rem] [letter-spacing:-0.005em] [line-height:1.06] md:[line-height:1.02] lg:[line-height:0.98] [text-shadow:none] overflow-hidden"
+            className="hero-h1 t-display mt-8 sm:mt-9 md:mt-11 max-w-[14ch] sm:max-w-[14ch] md:max-w-[15ch] text-balance text-[color:var(--ivory)] [font-weight:400] [font-size:2.15rem] sm:[font-size:2.6rem] md:[font-size:4.1rem] lg:[font-size:4.85rem] [letter-spacing:-0.005em] [line-height:1.06] md:[line-height:1.02] lg:[line-height:0.98] [text-shadow:none]"
             data-hero-field="headlineLine1 headlineLine2"
           >
             <span
