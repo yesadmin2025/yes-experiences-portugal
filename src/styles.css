@@ -4310,3 +4310,40 @@ html.motion-ready [data-motion].motion-in {
   .hero-journey-label { animation: none; opacity: 0.85; filter: none; }
   .hero-journey-label[class*="-b"] { display: none; }
 }
+
+/* Hero scroll cue — anchors the storytelling rhythm with a calm,
+   premium downward motion. Floats 3px on a 2.4s sine loop, paused
+   under prefers-reduced-motion. Sequenced into the hero reveal cadence
+   so it surfaces only after the CTAs have settled. */
+.hero-cinematic .hero-scroll-cue {
+  opacity: 0;
+  animation:
+    heroRevealRisePremium 260ms var(--ease-premium) 620ms both,
+    heroScrollCueFloat 2.4s ease-in-out 1.2s infinite;
+}
+.hero-cinematic .hero-scroll-cue:hover .hero-scroll-cue__chevron,
+.hero-cinematic .hero-scroll-cue:focus-visible .hero-scroll-cue__chevron {
+  transform: translate3d(0, 2px, 0);
+}
+.hero-cinematic .hero-scroll-cue__chevron {
+  transition: transform 220ms var(--ease-premium);
+}
+@keyframes heroScrollCueFloat {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, 3px, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-cinematic .hero-scroll-cue {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* Honor anchor smooth scroll site-wide unless the user prefers reduced
+   motion. Pairs with scroll-mt-* on each section so anchored landings
+   sit below the fixed nav. */
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
