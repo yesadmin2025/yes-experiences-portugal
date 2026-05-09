@@ -170,31 +170,31 @@ export function CinematicHero() {
     const w = typeof window !== "undefined" ? window.innerWidth : 768;
     if (w >= 640) {
       return [
-        { key: "eyebrow", t: 0.30 },
-        { key: "h1",      t: 1.80 },
-        { key: "h2",      t: 3.40 },
-        { key: "sub",     t: 5.00 },
-        { key: "compose", t: 6.60 },
-        { key: "cta",     t: 7.40 },
+        { key: "eyebrow", t: 0.15 },
+        { key: "h1",      t: 0.55 },
+        { key: "h2",      t: 1.45 },
+        { key: "sub",     t: 2.60 },
+        { key: "compose", t: 3.50 },
+        { key: "cta",     t: 4.40 },
       ];
     }
     if (w <= 379) {
       return [
-        { key: "eyebrow", t: 0.40 },
-        { key: "h1",      t: 2.20 },
-        { key: "h2",      t: 4.10 },
-        { key: "sub",     t: 5.90 },
-        { key: "compose", t: 7.70 },
-        { key: "cta",     t: 8.60 },
+        { key: "eyebrow", t: 0.20 },
+        { key: "h1",      t: 0.65 },
+        { key: "h2",      t: 1.65 },
+        { key: "sub",     t: 2.95 },
+        { key: "compose", t: 3.95 },
+        { key: "cta",     t: 4.90 },
       ];
     }
     return [
-      { key: "eyebrow", t: 0.35 },
-      { key: "h1",      t: 2.00 },
-      { key: "h2",      t: 3.80 },
-      { key: "sub",     t: 5.50 },
-      { key: "compose", t: 7.20 },
-      { key: "cta",     t: 8.10 },
+      { key: "eyebrow", t: 0.18 },
+      { key: "h1",      t: 0.60 },
+      { key: "h2",      t: 1.55 },
+      { key: "sub",     t: 2.80 },
+      { key: "compose", t: 3.75 },
+      { key: "cta",     t: 4.65 },
     ];
   };
 
