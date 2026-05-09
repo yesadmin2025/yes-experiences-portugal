@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-09T20:48:36.923Z",
+  "generatedAt": "2026-05-09T20:57:54.142Z",
   "filesScanned": 192,
   "approvedPalette": {
     "teal": "#295B61",
@@ -18,10 +18,10 @@
     "#cccccc"
   ],
   "counts": {
-    "total": 167,
+    "total": 169,
     "approved": 34,
     "allowlisted": 25,
-    "mismatch": 108
+    "mismatch": 110
   },
   "findings": [
     {
@@ -994,6 +994,24 @@
       "raw": "#3a7a82",
       "normalized": "#3a7a82",
       "snippet": "className=\"absolute top-0 -translate-x-1/2 -translate-y-1 rounded-sm bg-[color:var(--teal-2,#3a7a82)] px-1 font-mono text-[8.5px] text-white\"",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/home/CinematicHero.tsx",
+      "line": 755,
+      "col": 48,
+      "raw": "#3a7a82",
+      "normalized": "#3a7a82",
+      "snippet": "cta: \"text-[color:var(--teal-2,#3a7a82)] bg-[color:var(--teal-2,#3a7a82)]/15\",",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/home/CinematicHero.tsx",
+      "line": 755,
+      "col": 81,
+      "raw": "#3a7a82",
+      "normalized": "#3a7a82",
+      "snippet": "cta: \"text-[color:var(--teal-2,#3a7a82)] bg-[color:var(--teal-2,#3a7a82)]/15\",",
       "status": "mismatch"
     },
     {
