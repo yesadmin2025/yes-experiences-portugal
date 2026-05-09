@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-05-09T01:50:43.886Z",
-  "filesScanned": 188,
+  "generatedAt": "2026-05-09T01:56:47.698Z",
+  "filesScanned": 190,
   "approvedPalette": {
     "teal": "#295B61",
     "teal-2": "#2A7C82",
@@ -1448,7 +1448,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 3511,
+      "line": 3526,
       "col": 7,
       "raw": "#555",
       "normalized": "#555555",

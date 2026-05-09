@@ -1,18 +1,26 @@
 import { Check } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 /**
  * BuilderStepper — Step 1–4 indicator with completed / active / upcoming states.
  *
- * - Completed steps render a check icon and are clickable (jump back to edit).
+ * - Completed steps render a check icon and are interactive (jump back to edit).
  * - The active step is highlighted in gold with the step number.
  * - Upcoming steps are dimmed and non-interactive.
  *
- * Accessibility: rendered as an ordered list with `aria-current="step"` on the
- * active item. The visual ring + number is mirrored by readable labels for
- * screen readers ("Step 2 of 4 — Who, current step").
+ * Keyboard:
+ *   ArrowLeft  / ArrowUp    → focus previous interactive step
+ *   ArrowRight / ArrowDown  → focus next interactive step (active step is reachable)
+ *   Home                    → focus first step
+ *   End                     → focus active step
+ *   Enter / Space           → activate the focused step
+ *
+ * Accessibility: ordered list with `aria-current="step"` on the active item;
+ * roving tabindex so the whole stepper is one Tab stop.
  */
 
 export const BUILDER_STEP_LABELS = ["Mood", "Who", "Intention", "Rhythm"] as const;
+type StepNum = 1 | 2 | 3 | 4;
 
 interface Props {
   /** 1-indexed current step (1..4). */
@@ -20,23 +28,96 @@ interface Props {
   /** Highest step the user has completed (1-indexed). 0 = none. */
   furthestCompleted?: number;
   /** Optional click handler — receives 1-indexed step number. */
-  onStepClick?: (step: 1 | 2 | 3 | 4) => void;
+  onStepClick?: (step: StepNum) => void;
 }
 
 export function BuilderStepper({ step, furthestCompleted = 0, onStepClick }: Props) {
   const total = 4;
-  const current = Math.max(1, Math.min(step, total));
+  const current = Math.max(1, Math.min(step, total)) as StepNum;
+
+  // Roving tabindex — keeps the stepper a single Tab stop.
+  const [focusIndex, setFocusIndex] = useState<number>(current - 1);
+  useEffect(() => {
+    setFocusIndex(current - 1);
+  }, [current]);
+
+  const itemRefs = useRef<(HTMLButtonElement | HTMLSpanElement | null)[]>([]);
+  const pendingFocusRef = useRef<number | null>(null);
+
+  // Which steps are reachable via keyboard (completed OR active).
+  const isReachable = useCallback(
+    (n: number) => n === current || n < current || n <= furthestCompleted,
+    [current, furthestCompleted],
+  );
+
+  const focusItem = useCallback((idx: number) => {
+    pendingFocusRef.current = idx;
+    setFocusIndex(idx);
+  }, []);
+
+  useEffect(() => {
+    if (pendingFocusRef.current === null) return;
+    const idx = pendingFocusRef.current;
+    pendingFocusRef.current = null;
+    itemRefs.current[idx]?.focus();
+  }, [focusIndex]);
+
+  const moveFocus = useCallback(
+    (from: number, dir: -1 | 1) => {
+      let next = from;
+      for (let i = 0; i < total; i++) {
+        next = (next + dir + total) % total;
+        if (isReachable(next + 1)) {
+          focusItem(next);
+          return;
+        }
+      }
+    },
+    [isReachable, focusItem],
+  );
+
+  const handleKeyDown = (e: React.KeyboardEvent, idx: number, n: StepNum) => {
+    switch (e.key) {
+      case "ArrowLeft":
+      case "ArrowUp":
+        e.preventDefault();
+        moveFocus(idx, -1);
+        break;
+      case "ArrowRight":
+      case "ArrowDown":
+        e.preventDefault();
+        moveFocus(idx, 1);
+        break;
+      case "Home":
+        e.preventDefault();
+        for (let i = 0; i < total; i++)
+          if (isReachable(i + 1)) { focusItem(i); break; }
+        break;
+      case "End":
+        e.preventDefault();
+        focusItem(current - 1);
+        break;
+      case "Enter":
+      case " ":
+        if (onStepClick && isReachable(n) && n !== current) {
+          e.preventDefault();
+          onStepClick(n);
+        }
+        break;
+    }
+  };
 
   return (
     <nav aria-label="Builder steps" data-testid="builder-stepper">
       <ol className="flex items-center gap-1.5 sm:gap-2">
         {Array.from({ length: total }, (_, i) => {
-          const n = (i + 1) as 1 | 2 | 3 | 4;
+          const n = (i + 1) as StepNum;
           const isActive = n === current;
           const isComplete = n < current || n <= furthestCompleted;
-          const isUpcoming = !isActive && !isComplete;
-          const interactive = !!onStepClick && isComplete && !isActive;
+          const interactive = !!onStepClick && isReachable(n) && !isActive;
+          const reachable = isReachable(n);
           const label = BUILDER_STEP_LABELS[i];
+          const tabIndex = i === focusIndex ? 0 : -1;
 
           const dot = (
             <span
@@ -74,22 +155,35 @@ export function BuilderStepper({ step, furthestCompleted = 0, onStepClick }: Pro
             isActive ? ", current step" : isComplete ? ", completed" : ", upcoming"
           }`;
 
+          const sharedClass =
+            "inline-flex items-center gap-1.5 sm:gap-2 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)]/55";
+
           return (
             <li key={n} className="flex items-center gap-1.5 sm:gap-2">
               {interactive ? (
                 <button
                   type="button"
+                  ref={(el) => { itemRefs.current[i] = el; }}
                   onClick={() => onStepClick?.(n)}
+                  onKeyDown={(e) => handleKeyDown(e, i, n)}
+                  onFocus={() => setFocusIndex(i)}
+                  tabIndex={tabIndex}
                   aria-label={`Go back to ${srLabel}`}
-                  className="inline-flex items-center gap-1.5 sm:gap-2 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)]/50"
+                  className={sharedClass}
                 >
                   {dot}
                   {labelEl}
                 </button>
               ) : (
                 <span
-                  className="inline-flex items-center gap-1.5 sm:gap-2"
+                  ref={(el) => { itemRefs.current[i] = el; }}
+                  role={isActive ? "button" : undefined}
+                  tabIndex={isActive ? tabIndex : -1}
+                  onKeyDown={isActive ? (e) => handleKeyDown(e, i, n) : undefined}
+                  onFocus={isActive ? () => setFocusIndex(i) : undefined}
+                  className={sharedClass}
                   aria-current={isActive ? "step" : undefined}
+                  aria-disabled={!reachable || undefined}
                   aria-label={srLabel}
                 >
                   {dot}

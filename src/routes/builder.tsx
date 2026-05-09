@@ -30,6 +30,8 @@ import {
   StepHead,
 } from "@/components/builder/Choices";
 import { BuilderStepper } from "@/components/builder/BuilderStepper";
+import { BuilderMobileStepSummary } from "@/components/builder/BuilderMobileStepSummary";
+import { BuilderDebugPanel } from "@/components/builder/BuilderDebugPanel";
 import { BuilderProgressMeter } from "@/components/builder/BuilderProgressMeter";
 import { MoodGridSkeleton } from "@/components/builder/Skeletons";
 import {
@@ -434,6 +436,22 @@ function BuilderPage() {
   return (
     <SiteLayout>
       <article className="bg-[color:var(--ivory)] text-[color:var(--charcoal)]">
+        <BuilderDebugPanel
+          state={{
+            urlStep: step,
+            urlMood: mood,
+            urlWho: who,
+            urlIntention: intention,
+            urlPace: pace,
+            intentions,
+            furthestStep: persisted.furthestStep,
+            excluded: persisted.excluded,
+            orderOverride: persisted.orderOverride,
+            guests: persisted.guests,
+            selectedElements: persisted.selectedElements,
+            hydrated,
+          }}
+        />
         {/* Live-feedback toast — visible during step 6 interactions */}
         {liveToast && step === 6 && (
           <div
@@ -468,7 +486,12 @@ function BuilderPage() {
         {/* STEPS 1–4 — selection flow */}
         {step >= 1 && step <= 4 && (
           <section className="container-x pt-6 pb-10 md:pt-10 md:pb-16">
-            <div className="mb-5 builder-reveal">
+            <div className="mb-3 sm:mb-5 builder-reveal space-y-3">
+              <BuilderMobileStepSummary
+                step={step}
+                furthestCompleted={furthestCompleted}
+                onJump={(n: 1 | 2 | 3 | 4) => setStep(n as Step)}
+              />
               <BuilderStepper
                 step={step}
                 furthestCompleted={furthestCompleted}
