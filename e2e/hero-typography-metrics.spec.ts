@@ -104,7 +104,9 @@ test.describe("Hero typography metrics — leading / tracking / baseline regress
   }, testInfo) => {
     // ?hero=last freezes every reveal at its final visible state so we
     // measure the locked end position, not a transient mid-animation frame.
-    await page.goto("/?hero=last", { waitUntil: "networkidle" });
+    await page.goto("/?hero=last", { waitUntil: "domcontentloaded" });
+    await page.locator('[data-hero-cinematic="true"]').waitFor({ state: "visible" });
+    await page.locator('[data-hero-field="headlineLine1"]:not(h1)').waitFor({ state: "visible" });
 
     // Make absolutely sure web fonts have settled — otherwise font-size
     // and line-height can be off by the fallback metric.
