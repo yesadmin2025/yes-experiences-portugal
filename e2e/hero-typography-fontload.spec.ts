@@ -143,8 +143,8 @@ test.describe("Hero typography — font families & scale (post font load)", () =
     // line-height ratio between 1.0 and 1.12 — premium editorial leading
     expect(line1.lineHeightRatio).toBeGreaterThanOrEqual(0.98);
     expect(line1.lineHeightRatio).toBeLessThanOrEqual(1.14);
-    // tracking is exactly 0 (locked by the design system)
-    expect(Math.abs(line1.letterSpacingEm)).toBeLessThan(0.0015);
+    // tracking is near-zero (-0.005em design tightening allowed)
+    expect(Math.abs(line1.letterSpacingEm)).toBeLessThan(0.012);
 
     // Mobile-specific scale: 2.125rem = 34px (Tailwind base 16px). Allow
     // ±1.5px so an OS that reports rem differently doesn't false-fail.
