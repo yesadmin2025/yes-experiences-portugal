@@ -478,6 +478,12 @@ export function CinematicHero() {
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-[70%] bg-[radial-gradient(110%_78%_at_50%_84%,rgba(15,12,9,0.72)_0%,rgba(15,12,9,0.52)_46%,rgba(15,12,9,0)_100%)]"
       />
+      {/* Mobile-only soft scrim aligned with the lifted text group (~25%–80% of hero).
+         Boosts AA on bright video frames without altering desktop composition. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 z-[2] md:hidden top-[18%] bottom-[14%] bg-[linear-gradient(180deg,rgba(15,12,9,0)_0%,rgba(15,12,9,0.34)_22%,rgba(15,12,9,0.5)_55%,rgba(15,12,9,0.36)_82%,rgba(15,12,9,0)_100%)]"
+      />
 
       {/* Copy column — full width on mobile with 20px gutters, capped on tablet+. */}
       <div className="hero-story-shell relative z-10 w-full px-5 pb-[calc(7rem+env(safe-area-inset-bottom))] pt-5 xs:px-6 xs:pb-[calc(7.5rem+env(safe-area-inset-bottom))] xs:pt-7 sm:px-8 sm:pb-12 md:px-12 md:pb-20 md:pt-24 lg:px-16">
