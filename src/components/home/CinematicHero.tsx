@@ -156,7 +156,7 @@ export function CinematicHero() {
             </span>
             <span
               data-hero-field="headlineLine2"
-              className={`block mt-1 md:mt-1.5 font-serif italic font-normal tracking-[-0.012em] text-[color:var(--ivory)] transition-all duration-700 ${showLine2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}
+              className={`block mt-1 md:mt-1.5 [font-family:var(--font-serif)] italic font-normal tracking-[-0.012em] text-[color:var(--ivory)] transition-all duration-700 ${showLine2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}
             >
               {HERO_COPY.headlineLine2}
             </span>
