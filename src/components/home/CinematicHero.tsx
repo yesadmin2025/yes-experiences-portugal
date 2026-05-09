@@ -21,26 +21,14 @@ const HERO_FILM_SRC_1080 = "/video/film/yes-hero-film-1080.mp4";
 const HERO_FILM_SRC_720 = "/video/film/yes-hero-film-720.mp4";
 const HERO_FILM_POSTER = "/video/film/yes-hero-poster.jpg";
 
-function prefersReducedMotion(): boolean {
-  if (typeof window === "undefined") return false;
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-}
 
 export function CinematicHero() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const sectionRef = useRef<HTMLElement | null>(null);
-  const [reduced, setReduced] = useState(false);
+  
   const [storyActive, setStoryActive] = useState(false);
 
   useEffect(() => {
-    const shouldReduce = prefersReducedMotion();
-    setReduced(shouldReduce);
-
-    if (shouldReduce) {
-      setStoryActive(true);
-      return;
-    }
-
     const node = sectionRef.current;
     if (!node) return;
 
@@ -76,8 +64,7 @@ export function CinematicHero() {
     e.preventDefault();
     const target = document.getElementById("reviews");
     if (!target) return;
-    const behavior: ScrollBehavior = prefersReducedMotion() ? "auto" : "smooth";
-    target.scrollIntoView({ behavior, block: "start" });
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
     // Update hash without jumping (smooth scroll already running).
     if (typeof window !== "undefined") {
       window.history.replaceState(null, "", "#reviews");
@@ -92,7 +79,7 @@ export function CinematicHero() {
       aria-label={`${HERO_COPY.headlineLine1} ${HERO_COPY.headlineLine2}`}
       data-hero-cinematic="true"
       data-story-active={storyActive ? "true" : "false"}
-      data-reduced-motion={reduced ? "true" : "false"}
+      
     >
       {/* Continuous film — full bleed, no inner box, no rounded corners.
          Always rendered so mobile users see the film; reduced-motion users
@@ -101,10 +88,10 @@ export function CinematicHero() {
         ref={videoRef}
         className="absolute inset-0 z-0 w-full h-full object-cover"
         poster={HERO_FILM_POSTER}
-        autoPlay={!reduced}
+        autoPlay
         muted
         playsInline
-        loop={!reduced}
+        loop
         preload="auto"
         aria-hidden="true"
         data-hero-film="true"
