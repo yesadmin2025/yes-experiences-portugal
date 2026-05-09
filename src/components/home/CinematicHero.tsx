@@ -486,10 +486,8 @@ export function CinematicHero() {
             tone="onDark"
             data-hero-field="eyebrow"
             data-hero-reveal="eyebrow"
-            data-hero-reveal-order="1"
-            data-hero-reveal-duration-ms="220"
-            data-hero-reveal-ease="ease-out"
-            className="hero-eyebrow hero-reveal hero-reveal--from-left hero-story-beat"
+            data-hero-beat-show={showEyebrow ? "true" : "false"}
+            className="hero-eyebrow hero-beat hero-beat--from-left"
           >
             {HERO_COPY.eyebrow}
           </Eyebrow>
@@ -501,10 +499,8 @@ export function CinematicHero() {
             <span
               data-hero-field="headlineLine1"
               data-hero-reveal="headlineLine1"
-              data-hero-reveal-order="2"
-              data-hero-reveal-duration-ms="220"
-              data-hero-reveal-ease="ease-out"
-              className="hero-reveal hero-reveal--from-left hero-story-beat block max-w-full whitespace-normal font-[400] text-[color:var(--ivory)] [text-shadow:none]"
+              data-hero-beat-show={showH1 ? "true" : "false"}
+              className="hero-beat hero-beat--from-left block max-w-full whitespace-normal font-[400] text-[color:var(--ivory)] [text-shadow:none]"
             >
               <span
                 data-hero-field="headlineLine1Portugal"
@@ -517,44 +513,41 @@ export function CinematicHero() {
             <span
               data-hero-field="headlineLine2"
               data-hero-reveal="headlineLine2"
-              data-hero-reveal-order="3"
-              data-hero-reveal-duration-ms="220"
-              data-hero-reveal-ease="ease-out"
-              className="hero-reveal hero-reveal--from-right hero-story-beat block mt-1.5 xs:mt-2 sm:mt-5 md:mt-6 max-w-full whitespace-normal [font-family:var(--font-serif)] italic font-normal [letter-spacing:0] md:[letter-spacing:-0.005em] [line-height:1.04] md:[line-height:1.02] text-[color:var(--gold-soft)] [text-shadow:none]"
+              data-hero-beat-show={showH2 ? "true" : "false"}
+              className="hero-beat hero-beat--from-right block mt-1.5 xs:mt-2 sm:mt-5 md:mt-6 max-w-full whitespace-normal [font-family:var(--font-serif)] italic font-normal [letter-spacing:0] md:[letter-spacing:-0.005em] [line-height:1.04] md:[line-height:1.02] text-[color:var(--gold-soft)] [text-shadow:none]"
             >
               {HERO_COPY.headlineLine2}
             </span>
           </h1>
 
-          <div
-            data-hero-reveal="finalBlock"
-            data-hero-reveal-order="4"
-            data-hero-reveal-duration-ms="220"
-            data-hero-reveal-ease="ease-out"
-            className="hero-final-reveal transition-[opacity,transform] duration-[420ms] ease-[var(--ease-premium)] transform-gpu will-change-transform"
+          <p
+            data-hero-field="subheadline"
+            data-hero-beat-show={showSub ? "true" : "false"}
+            className="hero-beat hero-beat--rise mt-3 xs:mt-4 sm:mt-9 md:mt-12 max-w-[31rem] text-[13.5px] xs:text-[14px] sm:text-[17px] md:text-[18px] leading-[1.5] sm:leading-[1.6] md:leading-[1.7] tracking-[0] text-[color:var(--ivory)] text-pretty [text-shadow:none]"
           >
-            <p
-              data-hero-field="subheadline"
-              className="hero-story-step hero-story-step--copy mt-3 xs:mt-4 sm:mt-9 md:mt-12 max-w-[31rem] text-[13.5px] xs:text-[14px] sm:text-[17px] md:text-[18px] leading-[1.5] sm:leading-[1.6] md:leading-[1.7] tracking-[0] text-[color:var(--ivory)] text-pretty [text-shadow:none]"
-            >
-              {HERO_COPY.subheadline}
-            </p>
+            {HERO_COPY.subheadline}
+          </p>
 
+          <div className="hero-cta-block">
             <div className="hero-cta-flow mt-5 xs:mt-6 sm:mt-9 md:mt-10 flex flex-col sm:flex-row gap-2.5 sm:gap-4 items-stretch sm:items-center">
               <CtaButton
                 to="/builder"
                 variant="primary"
-                className="hero-story-step hero-story-step--cta-primary hero-cta-button hero-cta-button--primary cta-primary min-h-[48px] py-3 text-[11px] tracking-[0.12em] xs:min-h-[50px] xs:text-[11.75px] sm:text-[13px]"
+                className="hero-beat hero-beat--rise hero-cta-button hero-cta-button--primary cta-primary min-h-[48px] py-3 text-[11px] tracking-[0.12em] xs:min-h-[50px] xs:text-[11.75px] sm:text-[13px]"
                 data-hero-field="primaryCta"
+                data-hero-beat-show={showCta ? "true" : "false"}
+                data-hero-beat-delay="0"
               >
                 {HERO_COPY.primaryCta}
               </CtaButton>
               <CtaButton
                 to="/experiences"
                 variant="ghostDark"
-                className="hero-story-step hero-story-step--cta-secondary hero-cta-button hero-cta-button--secondary cta-secondary-dark min-h-[48px] py-3 text-[10.75px] tracking-[0.105em] xs:min-h-[50px] xs:text-[11.25px] sm:text-[13px]"
+                className="hero-beat hero-beat--rise hero-cta-button hero-cta-button--secondary cta-secondary-dark min-h-[48px] py-3 text-[10.75px] tracking-[0.105em] xs:min-h-[50px] xs:text-[11.25px] sm:text-[13px]"
                 data-hero-field="secondaryCta"
                 data-cta-stagger="true"
+                data-hero-beat-show={showCta ? "true" : "false"}
+                data-hero-beat-delay="160"
               >
                 {HERO_COPY.secondaryCta}
               </CtaButton>
@@ -562,7 +555,9 @@ export function CinematicHero() {
 
             <p
               data-hero-field="microcopy"
-              className="hero-story-step hero-story-step--microcopy mt-3.5 xs:mt-4 sm:mt-6 text-[11.75px] xs:text-[12px] sm:text-[13px] leading-[1.45] tracking-[0.02em] text-[color:var(--ivory)] [text-shadow:none]"
+              data-hero-beat-show={showCta ? "true" : "false"}
+              data-hero-beat-delay="320"
+              className="hero-beat hero-beat--rise mt-3.5 xs:mt-4 sm:mt-6 text-[11.75px] xs:text-[12px] sm:text-[13px] leading-[1.45] tracking-[0.02em] text-[color:var(--ivory)] [text-shadow:none]"
             >
               {HERO_COPY.microcopy}
             </p>
