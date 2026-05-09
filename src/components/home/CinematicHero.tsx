@@ -144,7 +144,7 @@ export function CinematicHero() {
               <CtaButton
                 to="/builder"
                 variant="primary"
-                className="hero-cta-button hero-cta-button--primary min-h-[46px] py-3 text-[11px] tracking-[0.13em] xs:min-h-[48px] xs:text-[11.75px] sm:text-[13px]"
+                className="hero-cta-button hero-cta-button--primary cta-primary min-h-[46px] py-3 text-[11px] tracking-[0.13em] xs:min-h-[48px] xs:text-[11.75px] sm:text-[13px]"
                 data-hero-field="primaryCta"
               >
                 {HERO_COPY.primaryCta}
@@ -152,8 +152,9 @@ export function CinematicHero() {
               <CtaButton
                 to="/experiences"
                 variant="ghostDark"
-                className="hero-cta-button hero-cta-button--secondary min-h-[46px] py-3 text-[10.75px] tracking-[0.11em] xs:min-h-[48px] xs:text-[11.25px] sm:text-[13px]"
+                className="hero-cta-button hero-cta-button--secondary cta-secondary-dark min-h-[46px] py-3 text-[10.75px] tracking-[0.11em] xs:min-h-[48px] xs:text-[11.25px] sm:text-[13px]"
                 data-hero-field="secondaryCta"
+                data-cta-stagger="true"
               >
                 {HERO_COPY.secondaryCta}
               </CtaButton>
