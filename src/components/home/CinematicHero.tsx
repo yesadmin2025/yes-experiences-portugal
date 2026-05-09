@@ -80,8 +80,8 @@ export function CinematicHero() {
       />
 
       {/* Copy column — full width on mobile with 20px gutters, capped on tablet+. */}
-      <div className="relative z-10 w-full px-5 pb-5 pt-6 xs:px-6 xs:pb-7 xs:pt-8 sm:px-8 sm:pb-12 md:px-12 md:pb-20 md:pt-24 lg:px-16">
-        <div className="mx-auto max-w-[36rem] md:mx-0 md:ml-[6vw] md:max-w-[46rem] lg:ml-[8vw]">
+      <div className="relative z-10 w-full px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-5 xs:px-6 xs:pb-7 xs:pt-7 sm:px-8 sm:pb-12 md:px-12 md:pb-20 md:pt-24 lg:px-16">
+        <div className="mx-auto max-w-[22rem] xs:max-w-[23.25rem] sm:max-w-[36rem] md:mx-0 md:ml-[6vw] md:max-w-[46rem] lg:ml-[8vw]">
           <Eyebrow
             tone="onDark"
             data-hero-field="eyebrow"
@@ -95,7 +95,7 @@ export function CinematicHero() {
           </Eyebrow>
 
           <h1
-            className="hero-h1 t-display mt-4 xs:mt-5 sm:mt-9 md:mt-11 max-w-[min(21.5rem,calc(100vw-2.5rem))] sm:max-w-[32rem] md:max-w-[15ch] text-wrap md:text-balance text-[color:var(--ivory)] [font-weight:400] [font-size:clamp(1.9rem,8.15vw,2.125rem)] sm:[font-size:2.4rem] md:[font-size:4rem] lg:[font-size:4.75rem] [letter-spacing:0] md:[letter-spacing:-0.005em] [line-height:1.02] md:[line-height:1.02] lg:[line-height:0.98] [text-shadow:none] [overflow-wrap:normal]"
+            className="hero-h1 t-display mt-3 xs:mt-4 sm:mt-9 md:mt-11 w-full max-w-[min(22rem,calc(100vw-2.25rem))] sm:max-w-[32rem] md:max-w-[15ch] text-wrap md:text-balance text-[color:var(--ivory)] [font-weight:400] [font-size:clamp(1.78rem,7.65vw,2.18rem)] sm:[font-size:2.4rem] md:[font-size:4rem] lg:[font-size:4.75rem] [letter-spacing:0] md:[letter-spacing:-0.005em] [line-height:1.04] md:[line-height:1.02] lg:[line-height:0.98] [text-shadow:none] [overflow-wrap:normal]"
             data-hero-field="headlineLine1 headlineLine2"
           >
             <span
@@ -120,7 +120,7 @@ export function CinematicHero() {
               data-hero-reveal-order="3"
               data-hero-reveal-duration-ms="220"
               data-hero-reveal-ease="ease-out"
-              className="hero-reveal hero-reveal--from-right block mt-2.5 xs:mt-3 sm:mt-5 md:mt-6 max-w-full whitespace-normal [font-family:var(--font-serif)] italic font-normal [letter-spacing:0] md:[letter-spacing:-0.005em] [line-height:1.02] text-[color:var(--gold-soft)] [text-shadow:none]"
+              className="hero-reveal hero-reveal--from-right block mt-1.5 xs:mt-2 sm:mt-5 md:mt-6 max-w-full whitespace-normal [font-family:var(--font-serif)] italic font-normal [letter-spacing:0] md:[letter-spacing:-0.005em] [line-height:1.04] md:[line-height:1.02] text-[color:var(--gold-soft)] [text-shadow:none]"
             >
               {HERO_COPY.headlineLine2}
             </span>
@@ -135,16 +135,16 @@ export function CinematicHero() {
           >
             <p
               data-hero-field="subheadline"
-              className="mt-4 xs:mt-5 sm:mt-9 md:mt-12 max-w-[33rem] text-[13.5px] xs:text-[14px] sm:text-[17px] md:text-[18px] leading-[1.5] xs:leading-[1.56] md:leading-[1.72] tracking-[0] text-[color:var(--ivory)] text-pretty [text-shadow:none]"
+              className="hero-story-step hero-story-step--copy mt-3 xs:mt-4 sm:mt-9 md:mt-12 max-w-[31rem] text-[13.25px] xs:text-[13.75px] sm:text-[17px] md:text-[18px] leading-[1.44] xs:leading-[1.5] md:leading-[1.72] tracking-[0] text-[color:var(--ivory)] text-pretty [text-shadow:none]"
             >
               {HERO_COPY.subheadline}
             </p>
 
-            <div className="mt-5 xs:mt-6 sm:mt-9 md:mt-10 flex flex-col sm:flex-row gap-2.5 sm:gap-4 items-stretch sm:items-center">
+            <div className="hero-story-step hero-story-step--cta hero-cta-flow mt-4 xs:mt-5 sm:mt-9 md:mt-10 flex flex-col sm:flex-row gap-2 sm:gap-4 items-stretch sm:items-center">
               <CtaButton
                 to="/builder"
                 variant="primary"
-                className="hero-cta-button min-h-[46px] py-3 text-[11px] tracking-[0.17em] xs:min-h-[48px] xs:text-[12px] sm:text-[13px]"
+                className="hero-cta-button hero-cta-button--primary cta-primary min-h-[46px] py-3 text-[11px] tracking-[0.13em] xs:min-h-[48px] xs:text-[11.75px] sm:text-[13px]"
                 data-hero-field="primaryCta"
               >
                 {HERO_COPY.primaryCta}
@@ -152,8 +152,9 @@ export function CinematicHero() {
               <CtaButton
                 to="/experiences"
                 variant="ghostDark"
-                className="hero-cta-button min-h-[46px] py-3 text-[10.75px] tracking-[0.15em] xs:min-h-[48px] xs:text-[11.5px] sm:text-[13px]"
+                className="hero-cta-button hero-cta-button--secondary cta-secondary-dark min-h-[46px] py-3 text-[10.75px] tracking-[0.11em] xs:min-h-[48px] xs:text-[11.25px] sm:text-[13px]"
                 data-hero-field="secondaryCta"
+                data-cta-stagger="true"
               >
                 {HERO_COPY.secondaryCta}
               </CtaButton>
@@ -161,7 +162,7 @@ export function CinematicHero() {
 
             <p
               data-hero-field="microcopy"
-              className="mt-4 sm:mt-6 text-[12px] sm:text-[13px] leading-[1.45] tracking-[0.04em] text-[color:var(--ivory)] [text-shadow:none]"
+              className="hero-story-step hero-story-step--microcopy mt-3.5 xs:mt-4 sm:mt-6 text-[11.75px] xs:text-[12px] sm:text-[13px] leading-[1.45] tracking-[0.02em] text-[color:var(--ivory)] [text-shadow:none]"
             >
               {HERO_COPY.microcopy}
             </p>
