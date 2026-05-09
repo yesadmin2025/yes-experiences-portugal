@@ -11,10 +11,10 @@
  * read at the same visual weight in a single row.
  */
 
-import googleLogo from "@/assets/platform-google.png";
-import tripadvisorLogo from "@/assets/platform-tripadvisor.png";
-import viatorLogo from "@/assets/platform-viator.png";
-import getyourguideLogo from "@/assets/platform-getyourguide.png";
+import googleLogo from "@/assets/platform-google.webp";
+import tripadvisorLogo from "@/assets/platform-tripadvisor.webp";
+import viatorLogo from "@/assets/platform-viator.webp";
+import getyourguideLogo from "@/assets/platform-getyourguide.webp";
 import trustpilotLogo from "@/assets/platform-trustpilot.svg";
 
 export type Platform = "google" | "tripadvisor" | "viator" | "getyourguide" | "trustpilot";
