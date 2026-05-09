@@ -262,6 +262,18 @@ export const Route = createFileRoute("/")({
       { property: "og:image", content: heroImg },
       { property: "twitter:image", content: heroImg },
     ],
+    links: [
+      // Preload the hero film poster — it's the LCP element on the
+      // homepage. Marking it fetchpriority=high lets the browser pull
+      // the bytes in parallel with critical CSS instead of waiting for
+      // the <video> tag to be discovered during layout.
+      {
+        rel: "preload",
+        as: "image",
+        href: "/video/film/yes-hero-poster.jpg",
+        fetchpriority: "high",
+      },
+    ],
   }),
   component: HomePage,
 });
