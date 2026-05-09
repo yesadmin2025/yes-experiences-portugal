@@ -575,7 +575,7 @@ export function CinematicHero() {
             data-hero-debug-panel="true"
           >
             <div className="mb-1.5 flex items-center justify-between gap-2 font-mono text-[10px] uppercase tracking-wider text-white/70">
-              <span>hero debug · {bp}</span>
+              <span>hero debug · {bp}{slowMo !== 1 ? ` · ${slowMo}× slow` : ""}</span>
               <span>{viewportW}px</span>
             </div>
             <ul className="mb-2 space-y-0.5 font-mono text-[10px]">
