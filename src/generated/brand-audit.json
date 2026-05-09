@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-09T17:37:17.977Z",
+  "generatedAt": "2026-05-09T17:42:09.851Z",
   "filesScanned": 191,
   "approvedPalette": {
     "teal": "#295B61",
@@ -1268,7 +1268,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 64,
+      "line": 69,
       "col": 11,
       "raw": "#295B61",
       "normalized": "#295b61",
@@ -1277,7 +1277,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 65,
+      "line": 70,
       "col": 13,
       "raw": "#2A7C82",
       "normalized": "#2a7c82",
@@ -1286,7 +1286,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 66,
+      "line": 71,
       "col": 11,
       "raw": "#C9A96A",
       "normalized": "#c9a96a",
@@ -1295,7 +1295,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 67,
+      "line": 72,
       "col": 16,
       "raw": "#E1CFA6",
       "normalized": "#e1cfa6",
@@ -1304,7 +1304,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 72,
+      "line": 77,
       "col": 16,
       "raw": "#D8BE82",
       "normalized": "#d8be82",
@@ -1313,7 +1313,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 73,
+      "line": 78,
       "col": 16,
       "raw": "#B89452",
       "normalized": "#b89452",
@@ -1322,7 +1322,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 74,
+      "line": 79,
       "col": 12,
       "raw": "#FAF8F3",
       "normalized": "#faf8f3",
@@ -1331,7 +1331,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 75,
+      "line": 80,
       "col": 11,
       "raw": "#F4EFE7",
       "normalized": "#f4efe7",
@@ -1340,7 +1340,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 76,
+      "line": 81,
       "col": 15,
       "raw": "#2E2E2E",
       "normalized": "#2e2e2e",
@@ -1349,7 +1349,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 77,
+      "line": 82,
       "col": 27,
       "raw": "#5A5A5A",
       "normalized": "#5a5a5a",
@@ -1358,7 +1358,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 77,
+      "line": 82,
       "col": 48,
       "raw": "#555555",
       "normalized": "#555555",
@@ -1367,7 +1367,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 79,
+      "line": 84,
       "col": 20,
       "raw": "#555555",
       "normalized": "#555555",
@@ -1376,7 +1376,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 80,
+      "line": 85,
       "col": 20,
       "raw": "#1F1F1F",
       "normalized": "#1f1f1f",
@@ -1385,7 +1385,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 152,
+      "line": 157,
       "col": 11,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -1394,7 +1394,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 154,
+      "line": 159,
       "col": 14,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -1403,7 +1403,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 165,
+      "line": 170,
       "col": 29,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -1412,7 +1412,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 287,
+      "line": 292,
       "col": 11,
       "raw": "#1f1f1f",
       "normalized": "#1f1f1f",
@@ -1421,7 +1421,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 339,
+      "line": 344,
       "col": 66,
       "raw": "#555",
       "normalized": "#555555",
@@ -1430,7 +1430,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 609,
+      "line": 614,
       "col": 33,
       "raw": "#C9A96A",
       "normalized": "#c9a96a",
@@ -1439,7 +1439,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 610,
+      "line": 615,
       "col": 21,
       "raw": "#B89452",
       "normalized": "#b89452",
@@ -1448,7 +1448,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 936,
+      "line": 941,
       "col": 12,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -1457,7 +1457,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 1123,
+      "line": 1128,
       "col": 12,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -1466,7 +1466,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 1376,
+      "line": 1412,
       "col": 12,
       "raw": "#ffffff",
       "normalized": "#ffffff",
@@ -1475,7 +1475,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 2880,
+      "line": 2920,
       "col": 23,
       "raw": "#000",
       "normalized": "#000000",
@@ -1484,7 +1484,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 3211,
+      "line": 3251,
       "col": 41,
       "raw": "#000",
       "normalized": "#000000",
@@ -1493,7 +1493,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 3211,
+      "line": 3251,
       "col": 47,
       "raw": "#000",
       "normalized": "#000000",
@@ -1502,7 +1502,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 3704,
+      "line": 3744,
       "col": 7,
       "raw": "#555",
       "normalized": "#555555",
