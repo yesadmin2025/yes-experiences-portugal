@@ -429,7 +429,7 @@ export function CinematicHero() {
   const showEyebrow = composed || phase === "eyebrow";
   const showH1     = composed || phase === "h1";
   const showH2     = composed || phase === "h2";
-  const showSub    = composed || phase === "sub";
+  const showSub    = revealed.has("cta");
   const showCta    = revealed.has("cta");
 
   return (
