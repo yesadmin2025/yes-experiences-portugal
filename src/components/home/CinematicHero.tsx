@@ -167,7 +167,7 @@ export function CinematicHero() {
           >
             <p
               data-hero-field="subheadline"
-              className="mt-8 sm:mt-9 md:mt-10 max-w-[36rem] text-[15px] sm:text-[17px] md:text-[18px] leading-[1.62] tracking-[0.003em] text-[color:var(--ivory)] text-pretty [text-shadow:none]"
+              className="mt-9 sm:mt-10 md:mt-12 max-w-[34rem] text-[15px] sm:text-[17px] md:text-[18px] leading-[1.72] tracking-[0] text-[color:var(--ivory)] text-pretty [text-shadow:none]"
             >
               {HERO_COPY.subheadline}
             </p>
@@ -176,6 +176,7 @@ export function CinematicHero() {
               <CtaButton
                 to="/builder"
                 variant="primary"
+                className="hero-cta-button"
                 data-hero-field="primaryCta"
               >
                 {HERO_COPY.primaryCta}
@@ -183,6 +184,7 @@ export function CinematicHero() {
               <CtaButton
                 to="/experiences"
                 variant="ghostDark"
+                className="hero-cta-button"
                 data-hero-field="secondaryCta"
               >
                 {HERO_COPY.secondaryCta}
