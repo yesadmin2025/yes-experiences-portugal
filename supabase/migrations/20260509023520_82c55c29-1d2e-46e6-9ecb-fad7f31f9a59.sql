@@ -1,0 +1,1 @@
+DROP POLICY IF EXISTS "Anon can upload builder references" ON storage.objects;
