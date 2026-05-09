@@ -408,6 +408,25 @@ export function CinematicHero() {
     }
   };
 
+  // Derive the current storytelling phase from fired beats. Each prior
+  // solo phrase fades out as the next fires; "compose" brings the full
+  // stanza back together; "cta" is the closing beat (CTAs + microcopy).
+  const composed = revealed.has("compose") || revealed.has("cta");
+  const phase: "idle" | "eyebrow" | "h1" | "h2" | "sub" | "compose" | "cta" =
+    revealed.has("cta") ? "cta"
+    : revealed.has("compose") ? "compose"
+    : revealed.has("sub") ? "sub"
+    : revealed.has("h2") ? "h2"
+    : revealed.has("h1") ? "h1"
+    : revealed.has("eyebrow") ? "eyebrow"
+    : "idle";
+
+  const showEyebrow = composed || phase === "eyebrow";
+  const showH1     = composed || phase === "h1";
+  const showH2     = composed || phase === "h2";
+  const showSub    = composed || phase === "sub";
+  const showCta    = revealed.has("cta");
+
   return (
     <section
       ref={sectionRef}
@@ -417,6 +436,7 @@ export function CinematicHero() {
       data-hero-cinematic="true"
       data-story-active={storyActive ? "true" : "false"}
       data-revealed={Array.from(revealed).join(" ")}
+      data-hero-phase={phase}
       data-video-fallback={videoFailed ? "true" : "false"}
     >
       {/* Continuous film — full bleed. If autoplay fails, the poster image
