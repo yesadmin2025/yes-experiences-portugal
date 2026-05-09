@@ -135,7 +135,7 @@ export function CinematicHero() {
           >
             <p
               data-hero-field="subheadline"
-              className="hero-story-step hero-story-step--copy mt-3 xs:mt-4 sm:mt-9 md:mt-12 max-w-[31rem] text-[13.25px] xs:text-[13.75px] sm:text-[17px] md:text-[18px] leading-[1.44] xs:leading-[1.5] md:leading-[1.72] tracking-[0] text-[color:var(--ivory)] text-pretty [text-shadow:none]"
+              className="hero-story-step hero-story-step--copy mt-3 xs:mt-4 sm:mt-9 md:mt-12 max-w-[31rem] text-[13.5px] xs:text-[14px] sm:text-[17px] md:text-[18px] leading-[1.5] sm:leading-[1.6] md:leading-[1.7] tracking-[0] text-[color:var(--ivory)] text-pretty [text-shadow:none]"
             >
               {HERO_COPY.subheadline}
             </p>
@@ -226,10 +226,11 @@ export function CinematicHero() {
         />
       </div>
 
-      {/* Soft fade into the next section. */}
+      {/* Soft fade into the next section. Kept short on mobile so it
+          never overlaps the CTAs/microcopy; full height on tablet+. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-24 z-[3] bg-[linear-gradient(180deg,rgba(250,248,243,0)_0%,rgba(250,248,243,0.55)_70%,var(--ivory)_100%)]"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-10 sm:h-20 md:h-24 z-[3] bg-[linear-gradient(180deg,rgba(250,248,243,0)_0%,rgba(250,248,243,0.4)_60%,var(--ivory)_100%)]"
       />
 
       {/* Opt-in dev overlay — `?heroColorDebug=1`. Renders nothing otherwise. */}

@@ -60,6 +60,11 @@
 :root {
   --radius: 0.5rem;
 
+  /* Single premium easing token — used by hero reveals, scroll reveals,
+     and CTA hover/active so the whole experience moves on one curve.
+     Reference everywhere via var(--ease-premium); fallback kept inline. */
+  --ease-premium: cubic-bezier(0.22, 0.61, 0.36, 1);
+
   /* Brand — locked palette, used site-wide. */
   --teal: #295B61;
   --teal-2: #2A7C82;
@@ -1163,6 +1168,37 @@
       0 0 0 4px var(--gold);
   }
 
+  /* Disabled state — applies to both <button disabled> and any element
+     with [aria-disabled="true"] (e.g. CtaButton rendered as <a>). The
+     button still renders, but loses interactive lift, glow and pointer
+     events so the visual contract matches the semantic state. */
+  .cta-primary:disabled,
+  .cta-primary[aria-disabled="true"],
+  .cta-secondary-dark:disabled,
+  .cta-secondary-dark[aria-disabled="true"],
+  .cta-secondary-light:disabled,
+  .cta-secondary-light[aria-disabled="true"] {
+    opacity: 0.55;
+    filter: saturate(0.7);
+    cursor: not-allowed;
+    pointer-events: none;
+    text-shadow: none !important;
+    transform: translate3d(0, 0, 0) scale(var(--cta-scroll-scale, 1)) !important;
+    box-shadow:
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.06),
+      inset 0 -1px 0 0 rgba(0, 0, 0, 0.18),
+      0 1px 2px rgba(15, 15, 15, 0.18) !important;
+  }
+  .cta-primary:disabled::before,
+  .cta-primary[aria-disabled="true"]::before,
+  .cta-secondary-dark:disabled::before,
+  .cta-secondary-dark[aria-disabled="true"]::before,
+  .cta-secondary-light:disabled::before,
+  .cta-secondary-light[aria-disabled="true"]::before {
+    opacity: 0 !important;
+    transform: scale(0.92) !important;
+  }
+
   /* Hero-only conversion finish: equal perceived weight, richer gold
      presence, and a smoother premium lift. The physical border remains
      identical (1px) on both CTAs; emphasis comes from light and shadow. */
@@ -1694,10 +1730,10 @@
    220ms ease-out motion path without SSR/client state drift. */
 .hero-cinematic .hero-reveal {
   opacity: 1 !important;
-  animation: heroRevealFromLeftStable 220ms cubic-bezier(0.22, 0.61, 0.36, 1) both !important;
+  animation: heroRevealFromLeftStable 240ms var(--ease-premium) both !important;
   transition-property: opacity, transform;
-  transition-duration: 220ms;
-  transition-timing-function: ease-out;
+  transition-duration: 240ms;
+  transition-timing-function: var(--ease-premium);
   transform: translate3d(0, 0, 0);
   will-change: opacity, transform;
   backface-visibility: hidden;
@@ -1708,20 +1744,24 @@
   transform: translate3d(0, 0, 0);
 }
 
-.hero-cinematic [data-hero-reveal="headlineLine1"] { animation-delay: 70ms !important; }
-.hero-cinematic [data-hero-reveal="headlineLine2"] { animation-delay: 140ms !important; }
+/* Rhythm: 90ms uniform steps. Eyebrow → headline L1 (left) →
+   headline L2 (right) → final block (subheadline + CTAs + microcopy
+   each substepped 80ms). Single curve, no jitter, no overlap. */
+.hero-cinematic [data-hero-reveal="eyebrow"] { animation-delay: 0ms !important; }
+.hero-cinematic [data-hero-reveal="headlineLine1"] { animation-delay: 90ms !important; }
+.hero-cinematic [data-hero-reveal="headlineLine2"] { animation-delay: 180ms !important; }
 
 .hero-cinematic .hero-final-reveal {
-  animation: heroRevealFromLeftStable 220ms cubic-bezier(0.22, 0.61, 0.36, 1) 220ms both !important;
+  animation: heroRevealFromLeftStable 240ms var(--ease-premium) 270ms both !important;
 }
 
 .hero-cinematic .hero-story-step {
   opacity: 0;
-  animation: heroRevealRisePremium 220ms cubic-bezier(0.22, 0.61, 0.36, 1) both !important;
+  animation: heroRevealRisePremium 260ms var(--ease-premium) both !important;
 }
-.hero-cinematic .hero-story-step--copy { animation-delay: 300ms !important; }
-.hero-cinematic .hero-story-step--cta { animation-delay: 380ms !important; }
-.hero-cinematic .hero-story-step--microcopy { animation-delay: 460ms !important; }
+.hero-cinematic .hero-story-step--copy { animation-delay: 350ms !important; }
+.hero-cinematic .hero-story-step--cta { animation-delay: 440ms !important; }
+.hero-cinematic .hero-story-step--microcopy { animation-delay: 530ms !important; }
 
 @keyframes heroRevealFromLeftStable {
   from { opacity: 0; transform: translate3d(-14px, 0, 0); }
@@ -1734,7 +1774,7 @@
 }
 
 @keyframes heroRevealRisePremium {
-  from { opacity: 0; transform: translate3d(0, 8px, 0); }
+  from { opacity: 0; transform: translate3d(0, 10px, 0); }
   to { opacity: 1; transform: translate3d(0, 0, 0); }
 }
 
