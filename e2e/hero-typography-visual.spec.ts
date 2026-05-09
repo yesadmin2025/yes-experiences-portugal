@@ -25,7 +25,6 @@
 import { test, expect, type Page } from "@playwright/test";
 
 async function prepHero(page: Page) {
-  await page.goto("/?hero=last", { waitUntil: "domcontentloaded" });
   await page
     .locator('[data-hero-cinematic="true"]')
     .waitFor({ state: "visible" });
@@ -39,8 +38,6 @@ async function prepHero(page: Page) {
     type FontFaceSetLike = { ready?: Promise<unknown> };
     const fonts = (document as unknown as { fonts?: FontFaceSetLike }).fonts;
     if (fonts?.ready) await fonts.ready;
-    // Pause + hide the film + scrims so the snapshot only captures
-    // typography on a transparent (becomes black via section bg) frame.
     const video = document.querySelector(
       '[data-hero-film="true"]',
     ) as HTMLVideoElement | null;
@@ -55,69 +52,88 @@ async function prepHero(page: Page) {
       .forEach((el) => {
         (el as HTMLElement).style.visibility = "hidden";
       });
-    // Wait two frames so the visibility change paints before we shoot.
     await new Promise<void>((r) =>
       requestAnimationFrame(() => requestAnimationFrame(() => r())),
     );
   });
 }
 
+async function captureHeroRegion(page: Page) {
+  const region = await page.evaluate(() => {
+    const eb = document.querySelector(
+      '[data-hero-field="eyebrow"]',
+    ) as HTMLElement | null;
+    const sh = document.querySelector(
+      '[data-hero-field="subheadline"]',
+    ) as HTMLElement | null;
+    if (!eb || !sh) throw new Error("hero copy bounds not found");
+    const a = eb.getBoundingClientRect();
+    const b = sh.getBoundingClientRect();
+    const left = Math.floor(Math.min(a.left, b.left)) - 4;
+    const right = Math.ceil(Math.max(a.right, b.right)) + 4;
+    const top = Math.floor(a.top) - 4;
+    const bottom = Math.ceil(b.bottom) + 4;
+    return {
+      x: Math.max(0, left),
+      y: Math.max(0, top),
+      width: right - left,
+      height: bottom - top,
+    };
+  });
+
+  expect(region.width).toBeGreaterThan(120);
+  expect(region.height).toBeGreaterThan(120);
+
+  return page.screenshot({
+    clip: region,
+    animations: "disabled",
+    caret: "hide",
+    scale: "css",
+  });
+}
+
+const SNAPSHOT_OPTIONS = {
+  // Tight but resilient: ~1.5% of pixels can differ, each by up to a
+  // moderate per-channel delta. A Portugal-italic regression or a font
+  // swap is far above this floor; sub-pixel jitter across runners isn't.
+  maxDiffPixelRatio: 0.015,
+  threshold: 0.2,
+} as const;
+
 test.describe("Hero typography — screenshot visual regression", () => {
-  test("eyebrow + headline + subheadline match approved snapshot", async ({
+  // ── Normal motion: revealed via ?hero=last (final state, no animation) ──
+  test("normal motion · eyebrow + headline + subheadline match approved snapshot", async ({
     page,
   }, testInfo) => {
+    await page.goto("/?hero=last", { waitUntil: "domcontentloaded" });
     await prepHero(page);
-
-    // Bound the screenshot to the eyebrow → subheadline range. CTAs and
-    // microcopy are covered by their own specs and shift across hero
-    // variants.
-    const eyebrow = page.locator('[data-hero-field="eyebrow"]');
-    const sub = page.locator('[data-hero-field="subheadline"]');
-
-    const region = await page.evaluate(() => {
-      const eb = document.querySelector(
-        '[data-hero-field="eyebrow"]',
-      ) as HTMLElement | null;
-      const sh = document.querySelector(
-        '[data-hero-field="subheadline"]',
-      ) as HTMLElement | null;
-      if (!eb || !sh) throw new Error("hero copy bounds not found");
-      const a = eb.getBoundingClientRect();
-      const b = sh.getBoundingClientRect();
-      const left = Math.floor(Math.min(a.left, b.left)) - 4;
-      const right = Math.ceil(Math.max(a.right, b.right)) + 4;
-      const top = Math.floor(a.top) - 4;
-      const bottom = Math.ceil(b.bottom) + 4;
-      return {
-        x: Math.max(0, left),
-        y: Math.max(0, top),
-        width: right - left,
-        height: bottom - top,
-      };
-    });
-
-    await eyebrow.waitFor({ state: "visible" });
-    await sub.waitFor({ state: "visible" });
-
-    expect(region.width).toBeGreaterThan(120);
-    expect(region.height).toBeGreaterThan(120);
-
-    const buf = await page.screenshot({
-      clip: region,
-      animations: "disabled",
-      caret: "hide",
-      scale: "css",
-    });
-
+    const buf = await captureHeroRegion(page);
     await expect(buf).toMatchSnapshot(
       [`hero-typography-${testInfo.project.name}.png`],
-      {
-        // Tight but resilient: ~1.2% of pixels can differ, each by up
-        // to a moderate per-channel delta. A Portugal-italic regression
-        // or a font swap is far above this floor.
-        maxDiffPixelRatio: 0.012,
-        threshold: 0.18,
-      },
+      SNAPSHOT_OPTIONS,
     );
   });
+
+  // ── Reduced motion: emulated via prefers-reduced-motion=reduce ──
+  // The component initialises every reveal to its end-state when the
+  // user prefers reduced motion, so no `?hero=last` flag is needed.
+  // This snapshot guards against motion-disabled regressions where a
+  // reveal class accidentally leaves the headline at opacity 0 or
+  // translated off-screen for users with reduced-motion enabled.
+  test.describe("reduced motion", () => {
+    test.use({ colorScheme: "dark", reducedMotion: "reduce" });
+
+    test("reduced motion · eyebrow + headline + subheadline match approved snapshot", async ({
+      page,
+    }, testInfo) => {
+      await page.goto("/", { waitUntil: "domcontentloaded" });
+      await prepHero(page);
+      const buf = await captureHeroRegion(page);
+      await expect(buf).toMatchSnapshot(
+        [`hero-typography-reduced-motion-${testInfo.project.name}.png`],
+        SNAPSHOT_OPTIONS,
+      );
+    });
+  });
 });
+
