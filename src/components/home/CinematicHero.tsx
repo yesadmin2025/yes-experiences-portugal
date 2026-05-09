@@ -284,6 +284,7 @@ export function CinematicHero() {
       aria-label={`${HERO_COPY.headlineLine1} ${HERO_COPY.headlineLine2}`}
       data-hero-cinematic="true"
       data-story-active={storyActive ? "true" : "false"}
+      data-revealed={Array.from(revealed).join(" ")}
       data-video-fallback={videoFailed ? "true" : "false"}
     >
       {/* Continuous film — full bleed. If autoplay fails, the poster image
