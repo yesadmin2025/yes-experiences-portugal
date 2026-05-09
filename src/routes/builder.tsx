@@ -154,13 +154,43 @@ function BuilderPage() {
   const [route, setRoute] = useState<RouteUI | null>(null);
   const [pinned] = useState<string[]>([]);
 
-  // Persisted slice (localStorage): excluded stops, manual order, guests, elements.
+  // Persisted slice (localStorage): excluded stops, manual order, guests, elements,
+  // intentions (multi-select), and furthest step reached.
   // URL keeps step/mood/who/intention/pace; this hook keeps everything else
   // across refresh / return-visits.
   const { state: persisted, setState: setPersisted, hydrated, reset: resetPersisted } = useBuilderPersistence();
   const excluded = persisted.excluded;
   const orderOverride = persisted.orderOverride;
   const selectedElements = persisted.selectedElements;
+
+  // Hydrate intentions from persistence once (only if URL didn't already supply one).
+  const hydratedIntentionsRef = useRef(false);
+  useEffect(() => {
+    if (!hydrated || hydratedIntentionsRef.current) return;
+    hydratedIntentionsRef.current = true;
+    if (!search.intention && persisted.intentions.length > 0) {
+      setIntentions(persisted.intentions);
+      setSearch({ intention: persisted.intentions[0] });
+    }
+  }, [hydrated, persisted.intentions, search.intention, setSearch]);
+
+  // Persist intentions on change (after hydration to avoid clobbering on first paint).
+  useEffect(() => {
+    if (!hydrated) return;
+    setPersisted((p) =>
+      p.intentions.length === intentions.length &&
+      p.intentions.every((v, i) => v === intentions[i])
+        ? p
+        : { ...p, intentions },
+    );
+  }, [intentions, hydrated, setPersisted]);
+
+  // Track furthest step reached (for stepper "completed" visuals after refresh).
+  useEffect(() => {
+    if (!hydrated) return;
+    setPersisted((p) => (step > p.furthestStep ? { ...p, furthestStep: step } : p));
+  }, [step, hydrated, setPersisted]);
+  const furthestCompleted = Math.max(0, persisted.furthestStep - 1);
 
   // Multi-day state (replaces single-day in step 6+)
   const md = useMultiDayBuilder();
