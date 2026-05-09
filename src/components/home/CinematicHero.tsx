@@ -49,7 +49,7 @@ export function CinematicHero() {
   const [freezeLast] = useState(shouldFreezeOnLast);
 
   const initialAll = reduced || freezeLast;
-  const [showEyebrow, setShowEyebrow] = useState(initialAll);
+  const [showEyebrow, setShowEyebrow] = useState(true);
   const [showLine1, setShowLine1] = useState(initialAll);
   const [showLine2, setShowLine2] = useState(initialAll);
   const [showFinal, setShowFinal] = useState(initialAll);
@@ -72,7 +72,7 @@ export function CinematicHero() {
 
   return (
     <section
-      className="hero-cinematic relative w-full min-h-[calc(100svh-65px)] md:min-h-screen overflow-hidden bg-[color:var(--charcoal-deep)] text-[color:var(--ivory)] flex items-start xs:items-center md:items-end"
+      className="hero-cinematic relative w-full min-h-[calc(100svh-65px)] md:min-h-screen overflow-hidden bg-[color:var(--charcoal-deep)] text-[color:var(--ivory)] flex items-end"
       aria-roledescription="cinematic hero film"
       aria-label={`${HERO_COPY.headlineLine1} ${HERO_COPY.headlineLine2}`}
       data-hero-cinematic="true"
