@@ -17,26 +17,9 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { CtaButton } from "@/components/ui/CtaButton";
 import { HeroColorDebugOverlay } from "@/components/HeroColorDebugOverlay";
 
-// Editorial reveal: each item transitions for 220ms ease-out, then the
-// next beat starts. This keeps the hero premium and readable immediately.
-const HERO_REVEAL_DELAYS_MS = {
-  eyebrow: 0,
-  line1: 220,
-  line2: 440,
-  final: 660,
-} as const;
-
 const HERO_FILM_SRC_1080 = "/video/film/yes-hero-film-1080.mp4";
 const HERO_FILM_SRC_720 = "/video/film/yes-hero-film-720.mp4";
 const HERO_FILM_POSTER = "/video/film/yes-hero-poster.jpg";
-
-// `?hero=last` is used by visual-regression / copy-lock specs to freeze
-// every reveal at its final visible state. We respect it by setting all
-// beats to "shown" on mount.
-function shouldFreezeOnLast(): boolean {
-  if (typeof window === "undefined") return false;
-  return /[?&]hero=last(?:&|$)/.test(window.location.search);
-}
 
 function prefersReducedMotion(): boolean {
   if (typeof window === "undefined") return false;
@@ -45,30 +28,11 @@ function prefersReducedMotion(): boolean {
 
 export function CinematicHero() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const [reduced] = useState(prefersReducedMotion);
-  const [freezeLast] = useState(shouldFreezeOnLast);
+  const [reduced, setReduced] = useState(false);
 
-  const initialAll = reduced || freezeLast;
-  const [showEyebrow, setShowEyebrow] = useState(true);
-  const [showLine1, setShowLine1] = useState(initialAll);
-  const [showLine2, setShowLine2] = useState(initialAll);
-  const [showFinal, setShowFinal] = useState(initialAll);
-
-  // Drive reveals with a strict 220ms sequential cadence. The film stays
-  // atmospheric; typography timing stays deterministic and testable.
   useEffect(() => {
-    if (initialAll) return;
-    const timers = [
-      window.setTimeout(() => setShowEyebrow(true), HERO_REVEAL_DELAYS_MS.eyebrow),
-      window.setTimeout(() => setShowLine1(true), HERO_REVEAL_DELAYS_MS.line1),
-      window.setTimeout(() => setShowLine2(true), HERO_REVEAL_DELAYS_MS.line2),
-      window.setTimeout(() => setShowFinal(true), HERO_REVEAL_DELAYS_MS.final),
-    ];
-
-    return () => {
-      timers.forEach((timer) => window.clearTimeout(timer));
-    };
-  }, [initialAll]);
+    setReduced(prefersReducedMotion());
+  }, []);
 
   return (
     <section
@@ -122,7 +86,6 @@ export function CinematicHero() {
             tone="onDark"
             data-hero-field="eyebrow"
             data-hero-reveal="eyebrow"
-            data-hero-visible={showEyebrow ? "true" : "false"}
             data-hero-reveal-order="1"
             data-hero-reveal-duration-ms="220"
             data-hero-reveal-ease="ease-out"
@@ -132,17 +95,16 @@ export function CinematicHero() {
           </Eyebrow>
 
           <h1
-            className="hero-h1 t-display mt-4 xs:mt-5 sm:mt-9 md:mt-11 max-w-[18rem] xs:max-w-[21.5rem] sm:max-w-[32rem] md:max-w-[15ch] text-pretty md:text-balance text-[color:var(--ivory)] [font-weight:400] [font-size:1.9rem] xs:[font-size:2.08rem] sm:[font-size:2.4rem] md:[font-size:4rem] lg:[font-size:4.75rem] [letter-spacing:0] md:[letter-spacing:-0.005em] [line-height:1.02] md:[line-height:1.02] lg:[line-height:0.98] [text-shadow:none] [overflow-wrap:normal]"
+            className="hero-h1 t-display mt-4 xs:mt-5 sm:mt-9 md:mt-11 max-w-[min(21.5rem,calc(100vw-2.5rem))] sm:max-w-[32rem] md:max-w-[15ch] text-wrap md:text-balance text-[color:var(--ivory)] [font-weight:400] [font-size:clamp(1.9rem,8.15vw,2.125rem)] sm:[font-size:2.4rem] md:[font-size:4rem] lg:[font-size:4.75rem] [letter-spacing:0] md:[letter-spacing:-0.005em] [line-height:1.02] md:[line-height:1.02] lg:[line-height:0.98] [text-shadow:none] [overflow-wrap:normal]"
             data-hero-field="headlineLine1 headlineLine2"
           >
             <span
               data-hero-field="headlineLine1"
               data-hero-reveal="headlineLine1"
-              data-hero-visible={showLine1 ? "true" : "false"}
               data-hero-reveal-order="2"
               data-hero-reveal-duration-ms="220"
               data-hero-reveal-ease="ease-out"
-              className="hero-reveal hero-reveal--from-left block font-[400] text-[color:var(--ivory)] [text-shadow:none]"
+              className="hero-reveal hero-reveal--from-left block max-w-full whitespace-normal font-[400] text-[color:var(--ivory)] [text-shadow:none]"
             >
               <span
                 data-hero-field="headlineLine1Portugal"
@@ -155,11 +117,10 @@ export function CinematicHero() {
             <span
               data-hero-field="headlineLine2"
               data-hero-reveal="headlineLine2"
-              data-hero-visible={showLine2 ? "true" : "false"}
               data-hero-reveal-order="3"
               data-hero-reveal-duration-ms="220"
               data-hero-reveal-ease="ease-out"
-              className="hero-reveal hero-reveal--from-right block mt-2.5 xs:mt-3 sm:mt-5 md:mt-6 [font-family:var(--font-serif)] italic font-normal [letter-spacing:0] md:[letter-spacing:-0.005em] [line-height:1.02] text-[color:var(--gold-soft)] [text-shadow:none]"
+              className="hero-reveal hero-reveal--from-right block mt-2.5 xs:mt-3 sm:mt-5 md:mt-6 max-w-full whitespace-normal [font-family:var(--font-serif)] italic font-normal [letter-spacing:0] md:[letter-spacing:-0.005em] [line-height:1.02] text-[color:var(--gold-soft)] [text-shadow:none]"
             >
               {HERO_COPY.headlineLine2}
             </span>
@@ -167,17 +128,10 @@ export function CinematicHero() {
 
           <div
             data-hero-reveal="finalBlock"
-            data-hero-visible={showFinal ? "true" : "false"}
             data-hero-reveal-order="4"
             data-hero-reveal-duration-ms="220"
             data-hero-reveal-ease="ease-out"
-            className="transition-[opacity,transform] duration-[220ms] ease-out transform-gpu will-change-transform"
-            // Pointer-events gating so CTAs aren't clickable before they reveal.
-            style={{
-              opacity: showFinal ? 1 : 0,
-              transform: showFinal ? "translate3d(0,0,0)" : "translate3d(-14px,0,0)",
-              pointerEvents: showFinal ? "auto" : "none",
-            }}
+            className="hero-final-reveal transition-[opacity,transform] duration-[220ms] ease-out transform-gpu will-change-transform"
           >
             <p
               data-hero-field="subheadline"
@@ -190,7 +144,7 @@ export function CinematicHero() {
               <CtaButton
                 to="/builder"
                 variant="primary"
-                className="hero-cta-button max-xs:min-h-[42px] max-xs:py-2.5 max-xs:text-[11px] max-xs:tracking-[0.16em]"
+                className="hero-cta-button min-h-[46px] py-3 text-[11px] tracking-[0.17em] xs:min-h-[48px] xs:text-[12px] sm:text-[13px]"
                 data-hero-field="primaryCta"
               >
                 {HERO_COPY.primaryCta}
@@ -198,7 +152,7 @@ export function CinematicHero() {
               <CtaButton
                 to="/experiences"
                 variant="ghostDark"
-                className="hero-cta-button max-xs:min-h-[42px] max-xs:py-2.5 max-xs:text-[10.5px] max-xs:tracking-[0.14em]"
+                className="hero-cta-button min-h-[46px] py-3 text-[10.75px] tracking-[0.15em] xs:min-h-[48px] xs:text-[11.5px] sm:text-[13px]"
                 data-hero-field="secondaryCta"
               >
                 {HERO_COPY.secondaryCta}

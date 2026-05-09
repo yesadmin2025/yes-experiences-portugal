@@ -1689,25 +1689,19 @@
 
 /* Cinematic hero reveal contract. Keep this stronger than the legacy
    mobile keyframe rules above: they set headline opacity to 0 and were
-   hiding the first line on phones. React only toggles data-hero-visible;
-   CSS owns a consistent GPU-friendly 220ms ease-out motion path. */
+   hiding the first line on phones. CSS owns a consistent GPU-friendly
+   220ms ease-out motion path without SSR/client state drift. */
 .hero-cinematic .hero-reveal {
-  opacity: 0 !important;
+  opacity: 1 !important;
   transition-property: opacity, transform;
   transition-duration: 220ms;
   transition-timing-function: ease-out;
-  transform: translate3d(-14px, 0, 0);
+  transform: translate3d(0, 0, 0);
   will-change: opacity, transform;
   backface-visibility: hidden;
-  contain: paint;
 }
 
 .hero-cinematic .hero-reveal--from-right {
-  transform: translate3d(14px, 0, 0);
-}
-
-.hero-cinematic .hero-reveal[data-hero-visible="true"] {
-  opacity: 1 !important;
   transform: translate3d(0, 0, 0);
 }
 
@@ -1719,6 +1713,44 @@
   }
   .hero-cinematic .he-eyebrow-bar::before {
     width: 18px;
+  }
+}
+
+@media (max-width: 767px) {
+  .hero-cinematic .he-eyebrow-bar {
+    max-width: 100%;
+    white-space: nowrap;
+    color: var(--gold);
+  }
+
+  .hero-cinematic .hero-h1,
+  .hero-cinematic [data-hero-field="headlineLine1"],
+  .hero-cinematic [data-hero-field="headlineLine2"] {
+    overflow: visible;
+    text-wrap: wrap;
+  }
+
+  .hero-cinematic .hero-final-reveal {
+    transition-property: opacity, transform;
+    transition-duration: 220ms;
+    transition-timing-function: ease-out;
+    will-change: opacity, transform;
+    backface-visibility: hidden;
+  }
+
+  .hero-cinematic .hero-cta-button {
+    width: 100%;
+    justify-content: center;
+    color: var(--ivory);
+    background: color-mix(in oklab, var(--teal) 94%, var(--charcoal-deep));
+    transition-property: opacity, transform, background-color, border-color, box-shadow;
+    transition-duration: 220ms;
+    transition-timing-function: ease-out;
+  }
+
+  .hero-cinematic .hero-cta-button[data-hero-field="secondaryCta"] {
+    background: color-mix(in oklab, var(--charcoal-deep) 62%, transparent);
+    color: var(--ivory);
   }
 }
 
