@@ -1951,40 +1951,76 @@
    drifts gently into the centre, holds, then fades out before the next
    phrase enters from the next corner — like turning the pages of a
    story. Slow editorial pacing, gold italic over the film. */
+/* Cinematic phrase lifecycle — pending → active → past.
+   Each phrase has its own scene (entry vector, rest anchor, exit vector)
+   set as inline CSS vars by CinematicHero. The transform combines the
+   rest anchor (translate %) with the directional offset (translate px),
+   so each phrase can come from / leave to a different direction —
+   like turning the pages of a story. Light, premium easing. */
 .hero-cinematic .hero-phrase {
-  /* Per-corner timing comes from inline CSS vars set by the component.
-     Defaults below act as a safety net when the vars are missing. */
-  --phrase-fade-in: 1400ms;
-  --phrase-fade-out: 1500ms;
-  --phrase-drift-x: 0px;
-  --phrase-drift-y: 0px;
-  --phrase-drift-x-md: 0px;
-  --phrase-drift-y-md: 0px;
+  --phrase-fade-in: 1700ms;
+  --phrase-fade-out: 1700ms;
+  --phrase-from-x: 0px;
+  --phrase-from-y: 0px;
+  --phrase-to-x: 0px;
+  --phrase-to-y: 0px;
+  --phrase-md-scale: 1.7;
+  --phrase-rest-x: 0%;
+  --phrase-rest-y: 0%;
+  /* offset-x/y combine the rest anchor (%) with directional drift (px) */
+  --phrase-offset-x: var(--phrase-from-x);
+  --phrase-offset-y: var(--phrase-from-y);
+
   opacity: 0;
-  /* When NOT visible we use fade-out timing (slow dissolve). */
-  transition:
-    opacity var(--phrase-fade-out) cubic-bezier(0.22, 0.61, 0.18, 1),
-    transform var(--phrase-fade-out) cubic-bezier(0.22, 0.61, 0.18, 1);
-  will-change: opacity, transform;
   pointer-events: none;
-  transform: translate3d(var(--phrase-drift-x), var(--phrase-drift-y), 0);
+  will-change: opacity, transform;
+  transform:
+    translate(var(--phrase-rest-x), var(--phrase-rest-y))
+    translate3d(var(--phrase-offset-x), var(--phrase-offset-y), 0);
+  /* Premium easing — gentle, no overshoot. */
+  transition:
+    opacity var(--phrase-fade-out) cubic-bezier(0.32, 0.08, 0.24, 1),
+    transform var(--phrase-fade-out) cubic-bezier(0.32, 0.08, 0.24, 1);
 }
+
+/* Active = settled at rest, fully opaque. Faster (fade-in) timing. */
+.hero-cinematic .hero-phrase[data-hero-phrase-state="active"] {
+  --phrase-offset-x: 0px;
+  --phrase-offset-y: 0px;
+  opacity: 1;
+  transition:
+    opacity var(--phrase-fade-in) cubic-bezier(0.22, 0.61, 0.2, 1),
+    transform var(--phrase-fade-in) cubic-bezier(0.22, 0.61, 0.2, 1);
+}
+
+/* Past = drifted out toward the exit vector, faded to 0. */
+.hero-cinematic .hero-phrase[data-hero-phrase-state="past"] {
+  --phrase-offset-x: var(--phrase-to-x);
+  --phrase-offset-y: var(--phrase-to-y);
+  opacity: 0;
+}
+
+/* Desktop: amplify the drift via the per-phrase scale factor. */
 @media (min-width: 768px) {
   .hero-cinematic .hero-phrase {
-    transform: translate3d(var(--phrase-drift-x-md), var(--phrase-drift-y-md), 0);
+    --phrase-from-x: calc(var(--_from-x, 0px) * var(--phrase-md-scale));
+  }
+  .hero-cinematic .hero-phrase[data-hero-phrase-state="pending"],
+  .hero-cinematic .hero-phrase[data-hero-phrase-state="past"] {
+    transform:
+      translate(var(--phrase-rest-x), var(--phrase-rest-y))
+      translate3d(
+        calc(var(--phrase-offset-x) * var(--phrase-md-scale)),
+        calc(var(--phrase-offset-y) * var(--phrase-md-scale)),
+        0
+      );
   }
 }
-.hero-cinematic .hero-phrase[data-hero-phrase-visible="true"] {
-  opacity: 1;
-  transform: translate3d(0, 0, 0);
-  /* When entering, swap to fade-in timing (the drift-in beat). */
-  transition:
-    opacity var(--phrase-fade-in) cubic-bezier(0.22, 0.61, 0.18, 1),
-    transform var(--phrase-fade-in) cubic-bezier(0.22, 0.61, 0.18, 1);
-}
+
 .hero-cinematic .hero-phrase-stage {
-  transition: opacity 720ms cubic-bezier(0.22, 0.61, 0.18, 1);
+  transition: opacity 820ms cubic-bezier(0.32, 0.08, 0.24, 1);
 }
+
 @media (prefers-reduced-motion: reduce) {
   .hero-cinematic .hero-phrase,
   .hero-cinematic .hero-phrase-stage {
