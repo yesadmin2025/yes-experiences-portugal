@@ -28,15 +28,50 @@ const HERO_FILM_SRC_1080 = "/video/film/yes-hero-film-1080.mp4";
 const HERO_FILM_SRC_720 = "/video/film/yes-hero-film-720.mp4";
 const HERO_FILM_POSTER = "/video/film/yes-hero-poster.jpg";
 
-/** Slower, story-like pacing — each phrase: 0.8s fade-in → ~2.1s hold → 0.7s fade-out. */
-const PHRASE_DURATION_MS = 3600;
-const PHRASE_FADE_MS = 760;
-/** Brief gap between the last phrase fading out and the CTA reveal. */
-const COMPOSE_GAP_MS = 480;
-
 /** Corners the phrases enter from — cycles TL → TR → BR → BL → … */
 const PHRASE_CORNERS = ["tl", "tr", "br", "bl"] as const;
 type PhraseCorner = (typeof PHRASE_CORNERS)[number];
+
+/**
+ * Per-corner cinematic timing. Tweak these to fine-tune the rhythm of
+ * each beat without touching the component logic. All values in ms /
+ * pixels. Total beat = fadeInMs + holdMs + fadeOutMs.
+ *
+ *  - fadeInMs   how long the phrase takes to drift in + fade up
+ *  - holdMs     how long it sits still at full opacity (the "read" beat)
+ *  - fadeOutMs  how slowly it dissolves before the next corner takes over
+ *  - driftX/Y   mobile drift offset in px (negative = up/left)
+ *  - driftXMd/YMd  desktop drift offset in px (≥768px)
+ */
+type PhraseTiming = {
+  fadeInMs: number;
+  holdMs: number;
+  fadeOutMs: number;
+  driftX: number;
+  driftY: number;
+  driftXMd: number;
+  driftYMd: number;
+};
+
+const PHRASE_TIMINGS: Record<PhraseCorner, PhraseTiming> = {
+  tl: { fadeInMs: 1400, holdMs: 2800, fadeOutMs: 1500, driftX: -32, driftY: -28, driftXMd: -56, driftYMd: -42 },
+  tr: { fadeInMs: 1400, holdMs: 2800, fadeOutMs: 1500, driftX:  32, driftY: -28, driftXMd:  56, driftYMd: -42 },
+  br: { fadeInMs: 1400, holdMs: 2800, fadeOutMs: 1500, driftX:  32, driftY:  28, driftXMd:  56, driftYMd:  42 },
+  bl: { fadeInMs: 1400, holdMs: 2800, fadeOutMs: 1500, driftX: -32, driftY:  28, driftXMd: -56, driftYMd:  42 },
+};
+
+/** Brief gap between the last phrase fading out and the CTA reveal. */
+const COMPOSE_GAP_MS = 700;
+/** Extra hold after closing headline settles before CTAs appear. */
+const CTA_REVEAL_DELAY_MS = 1400;
+
+function timingFor(i: number): PhraseTiming {
+  return PHRASE_TIMINGS[PHRASE_CORNERS[i % PHRASE_CORNERS.length]];
+}
+function beatDurationMs(i: number): number {
+  const t = timingFor(i);
+  return t.fadeInMs + t.holdMs + t.fadeOutMs;
+}
 
 function isHeroLastFlag(): boolean {
   if (typeof window === "undefined") return false;
@@ -122,38 +157,39 @@ export function CinematicHero() {
     let cancelled = false;
     const timers: number[] = [];
 
-    // Kick off phrase 0 immediately.
-    const start = window.setTimeout(() => {
-      if (cancelled) return;
-      setPhraseIndex(0);
-    }, 250);
-    timers.push(start);
+    // Compute cumulative start time of each phrase.
+    const startOffset = 250;
+    const startTimes: number[] = [];
+    let acc = startOffset;
+    for (let i = 0; i < HERO_PHRASES.length; i++) {
+      startTimes.push(acc);
+      acc += beatDurationMs(i);
+    }
+    const sequenceEnd = acc; // moment the last phrase finishes fading out
+    const lastFadeOut = timingFor(HERO_PHRASES.length - 1).fadeOutMs;
 
-    for (let i = 1; i < HERO_PHRASES.length; i++) {
+    for (let i = 0; i < HERO_PHRASES.length; i++) {
       const id = window.setTimeout(() => {
         if (!cancelled) setPhraseIndex(i);
-      }, 250 + i * PHRASE_DURATION_MS);
+      }, startTimes[i]);
       timers.push(id);
     }
 
-    // After the last phrase: fade it out, then reveal the composed stanza.
-    const fadeOutAt = 250 + HERO_PHRASES.length * PHRASE_DURATION_MS;
+    // After the last phrase: mark sequence done (fade it out), then reveal closing stanza, then CTAs.
     timers.push(
       window.setTimeout(() => {
         if (!cancelled) setPhraseIndex(HERO_PHRASES.length);
-      }, fadeOutAt),
+      }, sequenceEnd - lastFadeOut),
     );
     timers.push(
       window.setTimeout(() => {
         if (!cancelled) setComposed(true);
-      }, fadeOutAt + PHRASE_FADE_MS + COMPOSE_GAP_MS),
+      }, sequenceEnd + COMPOSE_GAP_MS),
     );
-    // CTAs appear ISOLATED at the very end — held back after the
-    // closing headline settles so it reads alone first.
     timers.push(
       window.setTimeout(() => {
         if (!cancelled) setCtaRevealed(true);
-      }, fadeOutAt + PHRASE_FADE_MS + COMPOSE_GAP_MS + 1100),
+      }, sequenceEnd + COMPOSE_GAP_MS + CTA_REVEAL_DELAY_MS),
     );
 
     return () => {
@@ -245,19 +281,29 @@ export function CinematicHero() {
           className="hero-phrase-stage pointer-events-none absolute inset-0 z-[5] flex items-center justify-center px-6 sm:px-10"
           data-hero-phrase-stage="true"
         >
-          <div className="relative w-full max-w-[20rem] xs:max-w-[22rem] sm:max-w-[34rem] md:max-w-[44rem] text-center">
+          <div className="relative w-full max-w-[22rem] xs:max-w-[24rem] sm:max-w-[38rem] md:max-w-[52rem] lg:max-w-[60rem] text-center">
             {HERO_PHRASES.map((phrase, i) => {
               const visible = i === phraseIndex;
               const corner: PhraseCorner = PHRASE_CORNERS[i % PHRASE_CORNERS.length];
+              const t = PHRASE_TIMINGS[corner];
+              const phraseStyle = {
+                "--phrase-fade-in": `${t.fadeInMs}ms`,
+                "--phrase-fade-out": `${t.fadeOutMs}ms`,
+                "--phrase-drift-x": `${t.driftX}px`,
+                "--phrase-drift-y": `${t.driftY}px`,
+                "--phrase-drift-x-md": `${t.driftXMd}px`,
+                "--phrase-drift-y-md": `${t.driftYMd}px`,
+              } as React.CSSProperties;
               return (
                 <p
                   key={i}
                   data-hero-phrase-index={i}
                   data-hero-phrase-visible={visible ? "true" : "false"}
                   data-hero-phrase-corner={corner}
-                  className="hero-phrase absolute inset-0 mx-auto flex items-center justify-center px-2 [font-family:var(--font-serif)] italic font-normal text-[color:var(--gold)] text-[18px] xs:text-[20px] sm:text-[30px] md:text-[40px] lg:text-[46px] leading-[1.22] xs:leading-[1.2] sm:leading-[1.16] tracking-[-0.005em] text-pretty text-balance [text-shadow:0_2px_22px_rgba(0,0,0,0.6)]"
+                  style={phraseStyle}
+                  className="hero-phrase absolute inset-0 mx-auto flex items-center justify-center px-2 [font-family:var(--font-serif)] italic font-normal text-[color:var(--gold)] text-[22px] xs:text-[26px] sm:text-[36px] md:text-[52px] lg:text-[60px] leading-[1.18] xs:leading-[1.16] sm:leading-[1.14] tracking-[-0.008em] text-pretty text-balance [text-shadow:0_2px_26px_rgba(0,0,0,0.65)]"
                 >
-                  <span className="block max-w-[24ch] xs:max-w-[26ch] sm:max-w-[28ch]">{phrase}</span>
+                  <span className="block max-w-[22ch] xs:max-w-[24ch] sm:max-w-[26ch]">{phrase}</span>
                 </p>
               );
             })}
