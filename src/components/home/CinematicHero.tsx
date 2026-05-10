@@ -281,19 +281,29 @@ export function CinematicHero() {
           className="hero-phrase-stage pointer-events-none absolute inset-0 z-[5] flex items-center justify-center px-6 sm:px-10"
           data-hero-phrase-stage="true"
         >
-          <div className="relative w-full max-w-[20rem] xs:max-w-[22rem] sm:max-w-[34rem] md:max-w-[44rem] text-center">
+          <div className="relative w-full max-w-[22rem] xs:max-w-[24rem] sm:max-w-[38rem] md:max-w-[52rem] lg:max-w-[60rem] text-center">
             {HERO_PHRASES.map((phrase, i) => {
               const visible = i === phraseIndex;
               const corner: PhraseCorner = PHRASE_CORNERS[i % PHRASE_CORNERS.length];
+              const t = PHRASE_TIMINGS[corner];
+              const phraseStyle = {
+                "--phrase-fade-in": `${t.fadeInMs}ms`,
+                "--phrase-fade-out": `${t.fadeOutMs}ms`,
+                "--phrase-drift-x": `${t.driftX}px`,
+                "--phrase-drift-y": `${t.driftY}px`,
+                "--phrase-drift-x-md": `${t.driftXMd}px`,
+                "--phrase-drift-y-md": `${t.driftYMd}px`,
+              } as React.CSSProperties;
               return (
                 <p
                   key={i}
                   data-hero-phrase-index={i}
                   data-hero-phrase-visible={visible ? "true" : "false"}
                   data-hero-phrase-corner={corner}
-                  className="hero-phrase absolute inset-0 mx-auto flex items-center justify-center px-2 [font-family:var(--font-serif)] italic font-normal text-[color:var(--gold)] text-[18px] xs:text-[20px] sm:text-[30px] md:text-[40px] lg:text-[46px] leading-[1.22] xs:leading-[1.2] sm:leading-[1.16] tracking-[-0.005em] text-pretty text-balance [text-shadow:0_2px_22px_rgba(0,0,0,0.6)]"
+                  style={phraseStyle}
+                  className="hero-phrase absolute inset-0 mx-auto flex items-center justify-center px-2 [font-family:var(--font-serif)] italic font-normal text-[color:var(--gold)] text-[22px] xs:text-[26px] sm:text-[36px] md:text-[52px] lg:text-[60px] leading-[1.18] xs:leading-[1.16] sm:leading-[1.14] tracking-[-0.008em] text-pretty text-balance [text-shadow:0_2px_26px_rgba(0,0,0,0.65)]"
                 >
-                  <span className="block max-w-[24ch] xs:max-w-[26ch] sm:max-w-[28ch]">{phrase}</span>
+                  <span className="block max-w-[22ch] xs:max-w-[24ch] sm:max-w-[26ch]">{phrase}</span>
                 </p>
               );
             })}
