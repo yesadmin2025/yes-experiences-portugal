@@ -296,7 +296,7 @@ export function CinematicHero() {
               data-hero-field="headlineLine2"
               data-hero-reveal="headlineLine2"
               data-hero-beat-show={showH2 ? "true" : "false"}
-              className="hero-beat hero-beat--from-right block mt-1.5 xs:mt-2 sm:mt-5 md:mt-6 max-w-full whitespace-normal [font-family:var(--font-serif)] italic font-normal [letter-spacing:0] md:[letter-spacing:-0.005em] [line-height:1.04] md:[line-height:1.02] text-[color:var(--gold-soft)] [text-shadow:none]"
+              className="hero-beat hero-beat--from-right block mt-1.5 xs:mt-2 sm:mt-5 md:mt-6 max-w-full whitespace-normal [font-family:var(--font-serif)] italic font-normal [letter-spacing:0] md:[letter-spacing:-0.005em] [line-height:1.04] md:[line-height:1.02] text-[color:var(--gold)] [text-shadow:none]"
             >
               {HERO_COPY.headlineLine2}
             </span>
