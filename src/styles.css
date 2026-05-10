@@ -1947,29 +1947,52 @@
 }
 
 /* ── Phrase-by-phrase cinematic intro ─────────────────────────────
-   Each phrase is absolutely stacked; only the active one slides in
-   gently from its side (alternating L↔R, like turning the page of a
-   story) and fades out before the next appears. */
+   Each phrase enters from one of the four image corners (TL/TR/BR/BL),
+   drifts gently into the centre, holds, then fades out before the next
+   phrase enters from the next corner — like turning the pages of a
+   story. Slow editorial pacing, gold italic over the film. */
 .hero-cinematic .hero-phrase {
   opacity: 0;
   transition:
-    opacity 620ms cubic-bezier(0.22, 0.61, 0.18, 1),
-    transform 760ms cubic-bezier(0.22, 0.61, 0.18, 1);
+    opacity 880ms cubic-bezier(0.22, 0.61, 0.18, 1),
+    transform 1100ms cubic-bezier(0.22, 0.61, 0.18, 1);
   will-change: opacity, transform;
   pointer-events: none;
 }
-.hero-cinematic .hero-phrase[data-hero-phrase-side="left"] {
-  transform: translate3d(-22px, 0, 0);
+/* Corner offsets — diagonal, capped to a soft drift on mobile so nothing
+   clips at the section edges. */
+.hero-cinematic .hero-phrase[data-hero-phrase-corner="tl"] {
+  transform: translate3d(-26px, -22px, 0);
 }
-.hero-cinematic .hero-phrase[data-hero-phrase-side="right"] {
-  transform: translate3d(22px, 0, 0);
+.hero-cinematic .hero-phrase[data-hero-phrase-corner="tr"] {
+  transform: translate3d(26px, -22px, 0);
+}
+.hero-cinematic .hero-phrase[data-hero-phrase-corner="br"] {
+  transform: translate3d(26px, 22px, 0);
+}
+.hero-cinematic .hero-phrase[data-hero-phrase-corner="bl"] {
+  transform: translate3d(-26px, 22px, 0);
+}
+@media (min-width: 768px) {
+  .hero-cinematic .hero-phrase[data-hero-phrase-corner="tl"] {
+    transform: translate3d(-44px, -34px, 0);
+  }
+  .hero-cinematic .hero-phrase[data-hero-phrase-corner="tr"] {
+    transform: translate3d(44px, -34px, 0);
+  }
+  .hero-cinematic .hero-phrase[data-hero-phrase-corner="br"] {
+    transform: translate3d(44px, 34px, 0);
+  }
+  .hero-cinematic .hero-phrase[data-hero-phrase-corner="bl"] {
+    transform: translate3d(-44px, 34px, 0);
+  }
 }
 .hero-cinematic .hero-phrase[data-hero-phrase-visible="true"] {
   opacity: 1;
   transform: translate3d(0, 0, 0);
 }
 .hero-cinematic .hero-phrase-stage {
-  transition: opacity 480ms cubic-bezier(0.22, 0.61, 0.18, 1);
+  transition: opacity 560ms cubic-bezier(0.22, 0.61, 0.18, 1);
 }
 @media (prefers-reduced-motion: reduce) {
   .hero-cinematic .hero-phrase,

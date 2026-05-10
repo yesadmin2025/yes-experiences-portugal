@@ -28,11 +28,15 @@ const HERO_FILM_SRC_1080 = "/video/film/yes-hero-film-1080.mp4";
 const HERO_FILM_SRC_720 = "/video/film/yes-hero-film-720.mp4";
 const HERO_FILM_POSTER = "/video/film/yes-hero-poster.jpg";
 
-/** Each phrase: 0.5s fade in → ~1.7s hold → 0.5s fade out. */
-const PHRASE_DURATION_MS = 2700;
-const PHRASE_FADE_MS = 520;
-/** Brief gap between the last phrase fading out and the closing stanza fading in. */
-const COMPOSE_GAP_MS = 320;
+/** Slower, story-like pacing — each phrase: 0.8s fade-in → ~2.1s hold → 0.7s fade-out. */
+const PHRASE_DURATION_MS = 3600;
+const PHRASE_FADE_MS = 760;
+/** Brief gap between the last phrase fading out and the CTA reveal. */
+const COMPOSE_GAP_MS = 480;
+
+/** Corners the phrases enter from — cycles TL → TR → BR → BL → … */
+const PHRASE_CORNERS = ["tl", "tr", "br", "bl"] as const;
+type PhraseCorner = (typeof PHRASE_CORNERS)[number];
 
 function isHeroLastFlag(): boolean {
   if (typeof window === "undefined") return false;
@@ -168,10 +172,6 @@ export function CinematicHero() {
     }
   };
 
-  const showEyebrow = composed;
-  const showH1 = composed;
-  const showH2 = composed;
-  const showSub = composed;
   const showCta = ctaRevealed;
 
   return (
@@ -248,14 +248,14 @@ export function CinematicHero() {
           <div className="relative w-full max-w-[20rem] xs:max-w-[22rem] sm:max-w-[34rem] md:max-w-[44rem] text-center">
             {HERO_PHRASES.map((phrase, i) => {
               const visible = i === phraseIndex;
-              const side = i % 2 === 0 ? "left" : "right";
+              const corner: PhraseCorner = PHRASE_CORNERS[i % PHRASE_CORNERS.length];
               return (
                 <p
                   key={i}
                   data-hero-phrase-index={i}
                   data-hero-phrase-visible={visible ? "true" : "false"}
-                  data-hero-phrase-side={side}
-                  className="hero-phrase absolute inset-0 mx-auto flex items-center justify-center px-2 [font-family:var(--font-serif)] italic font-normal text-[color:var(--ivory)] text-[18px] xs:text-[20px] sm:text-[30px] md:text-[40px] lg:text-[46px] leading-[1.22] xs:leading-[1.2] sm:leading-[1.16] tracking-[-0.005em] text-pretty text-balance [text-shadow:0_2px_22px_rgba(0,0,0,0.55)]"
+                  data-hero-phrase-corner={corner}
+                  className="hero-phrase absolute inset-0 mx-auto flex items-center justify-center px-2 [font-family:var(--font-serif)] italic font-normal text-[color:var(--gold)] text-[18px] xs:text-[20px] sm:text-[30px] md:text-[40px] lg:text-[46px] leading-[1.22] xs:leading-[1.2] sm:leading-[1.16] tracking-[-0.005em] text-pretty text-balance [text-shadow:0_2px_22px_rgba(0,0,0,0.6)]"
                 >
                   <span className="block max-w-[24ch] xs:max-w-[26ch] sm:max-w-[28ch]">{phrase}</span>
                 </p>
@@ -270,45 +270,18 @@ export function CinematicHero() {
         data-hero-composed={composed ? "true" : "false"}
       >
         <div className="hero-story-column mx-auto max-w-[22rem] xs:max-w-[23.25rem] sm:max-w-[36rem] md:mx-0 md:ml-[6vw] md:max-w-[46rem] lg:ml-[8vw]">
-          <Eyebrow
-            tone="onDark"
-            data-hero-field="eyebrow"
-            data-hero-reveal="eyebrow"
-            data-hero-beat-show={showEyebrow ? "true" : "false"}
-            className="hero-eyebrow hero-beat hero-beat--from-left"
-          >
-            {HERO_COPY.eyebrow}
-          </Eyebrow>
-
-          <h1
-            className="hero-h1 t-display mt-3 xs:mt-4 sm:mt-9 md:mt-11 w-full max-w-[min(22rem,calc(100vw-2.25rem))] sm:max-w-[32rem] md:max-w-[15ch] text-wrap md:text-balance text-[color:var(--ivory)] [font-weight:400] [font-size:clamp(1.78rem,7.65vw,2.18rem)] sm:[font-size:2.4rem] md:[font-size:4rem] lg:[font-size:4.75rem] [letter-spacing:0] md:[letter-spacing:-0.005em] [line-height:1.04] md:[line-height:1.02] lg:[line-height:0.98] [text-shadow:none] [overflow-wrap:normal]"
-            data-hero-field="headlineLine1 headlineLine2"
-          >
-            <span
-              data-hero-field="headlineLine1"
-              data-hero-reveal="headlineLine1"
-              data-hero-beat-show={showH1 ? "true" : "false"}
-              className="hero-beat hero-beat--from-left block max-w-full whitespace-normal font-[400] text-[color:var(--ivory)] [text-shadow:none]"
-            >
-              {HERO_COPY.headlineLine1}
-            </span>
-            <span
-              data-hero-field="headlineLine2"
-              data-hero-reveal="headlineLine2"
-              data-hero-beat-show={showH2 ? "true" : "false"}
-              className="hero-beat hero-beat--from-right block mt-1.5 xs:mt-2 sm:mt-5 md:mt-6 max-w-full whitespace-normal [font-family:var(--font-serif)] italic font-normal [letter-spacing:0] md:[letter-spacing:-0.005em] [line-height:1.04] md:[line-height:1.02] text-[color:var(--gold)] [text-shadow:none]"
-            >
-              {HERO_COPY.headlineLine2}
-            </span>
-          </h1>
-
-          <p
-            data-hero-field="subheadline"
-            data-hero-beat-show={showSub ? "true" : "false"}
-            className="hero-beat hero-beat--rise mt-3 xs:mt-4 sm:mt-9 md:mt-12 max-w-[31rem] text-[13.5px] xs:text-[14px] sm:text-[17px] md:text-[18px] leading-[1.5] sm:leading-[1.6] md:leading-[1.7] tracking-[0] text-[color:var(--ivory)] text-pretty [text-shadow:none]"
-          >
-            {HERO_COPY.subheadline}
-          </p>
+          {/* Story headline + sub kept in DOM (sr-only) for SEO / a11y /
+             SSR copy locks. The visible cinematic story is told entirely
+             through the corner-entering phrases above; only the CTAs +
+             microcopy remain visible at the closing beat. */}
+          <div className="sr-only">
+            <span data-hero-field="eyebrow">{HERO_COPY.eyebrow}</span>
+            <h1 data-hero-field="headlineLine1 headlineLine2">
+              <span data-hero-field="headlineLine1">{HERO_COPY.headlineLine1}</span>{" "}
+              <span data-hero-field="headlineLine2">{HERO_COPY.headlineLine2}</span>
+            </h1>
+            <p data-hero-field="subheadline">{HERO_COPY.subheadline}</p>
+          </div>
 
           <div className="hero-cta-block">
             <div className="hero-cta-flow mt-5 xs:mt-6 sm:mt-9 md:mt-10 flex flex-col sm:flex-row gap-2.5 sm:gap-4 items-stretch sm:items-center">
