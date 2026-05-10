@@ -33,49 +33,82 @@ const HERO_FILM_SRC_1080 = "/video/film/yes-hero-film-1080.mp4";
 const HERO_FILM_SRC_720 = "/video/film/yes-hero-film-720.mp4";
 const HERO_FILM_POSTER = "/video/film/yes-hero-poster.jpg";
 
-/** Corners the phrases enter from — cycles TL → TR → BR → BL → … */
-const PHRASE_CORNERS = ["tl", "tr", "br", "bl"] as const;
-type PhraseCorner = (typeof PHRASE_CORNERS)[number];
-
 /**
- * Per-corner cinematic timing. Tweak these to fine-tune the rhythm of
- * each beat without touching the component logic. All values in ms /
- * pixels. Total beat = fadeInMs + holdMs + fadeOutMs.
+ * Per-phrase cinematic scene.
  *
- *  - fadeInMs   how long the phrase takes to drift in + fade up
- *  - holdMs     how long it sits still at full opacity (the "read" beat)
- *  - fadeOutMs  how slowly it dissolves before the next corner takes over
- *  - driftX/Y   mobile drift offset in px (negative = up/left)
- *  - driftXMd/YMd  desktop drift offset in px (≥768px)
+ * Each phrase enters from `from`, settles at its rest anchor, then exits
+ * to `to`. This lets phrases tell a story across the frame — a phrase
+ * can come from upper-right and exit upper-left; the next can come from
+ * lower-left and exit lower-right. Pure offsets in px (mobile baseline).
+ *
+ *  - from  / to        entry & exit offset in px (negative = up/left)
+ *  - rest{X,Y}Pct      rest anchor offset, in % of the stage box
+ *                      (0 = centre, +12 = right/bottom, -12 = left/top)
+ *  - fadeInMs / holdMs / fadeOutMs   timing of the beat
+ *  - mdScale            multiplier applied to from/to on ≥768px
+ *
+ * NOTE: Total beat = fadeInMs + holdMs + fadeOutMs. Rest anchors are
+ * intentionally conservative on mobile so nothing clips at narrow widths.
  */
-type PhraseTiming = {
+type PhraseScene = {
+  from: { x: number; y: number };
+  to: { x: number; y: number };
+  restXPct: number;
+  restYPct: number;
   fadeInMs: number;
   holdMs: number;
   fadeOutMs: number;
-  driftX: number;
-  driftY: number;
-  driftXMd: number;
-  driftYMd: number;
+  mdScale: number;
 };
 
-const PHRASE_TIMINGS: Record<PhraseCorner, PhraseTiming> = {
-  tl: { fadeInMs: 1400, holdMs: 2800, fadeOutMs: 1500, driftX: -32, driftY: -28, driftXMd: -56, driftYMd: -42 },
-  tr: { fadeInMs: 1400, holdMs: 2800, fadeOutMs: 1500, driftX:  32, driftY: -28, driftXMd:  56, driftYMd: -42 },
-  br: { fadeInMs: 1400, holdMs: 2800, fadeOutMs: 1500, driftX:  32, driftY:  28, driftXMd:  56, driftYMd:  42 },
-  bl: { fadeInMs: 1400, holdMs: 2800, fadeOutMs: 1500, driftX: -32, driftY:  28, driftXMd: -56, driftYMd:  42 },
+/** Premium pacing default — long fades, short copy reads, big breath. */
+const SCENE_DEFAULT: Omit<PhraseScene, "from" | "to" | "restXPct" | "restYPct"> = {
+  fadeInMs: 1700,
+  holdMs: 2400,
+  fadeOutMs: 1700,
+  mdScale: 1.7,
 };
+
+/**
+ * 10 phrases, each with a unique trajectory. Read like a story:
+ * upper-right → upper-left → lower-left → lower-right …
+ * Tweak any single phrase here without touching the component logic.
+ */
+const PHRASE_SCENES: PhraseScene[] = [
+  // 0 — opens upper-right, drifts toward upper-left
+  { ...SCENE_DEFAULT, from: { x:  34, y: -22 }, to: { x: -28, y: -14 }, restXPct:  6, restYPct: -14 },
+  // 1 — slides from upper-left, settles upper-centre, exits down-left
+  { ...SCENE_DEFAULT, from: { x: -36, y: -18 }, to: { x: -22, y:  18 }, restXPct: -8, restYPct: -16 },
+  // 2 — comes from lower-left, lifts to mid-left, exits to mid-right
+  { ...SCENE_DEFAULT, from: { x: -34, y:  24 }, to: { x:  30, y:  10 }, restXPct: -6, restYPct:  -2 },
+  // 3 — enters lower-right, rests centre, exits upper-right
+  { ...SCENE_DEFAULT, from: { x:  32, y:  22 }, to: { x:  26, y: -22 }, restXPct:  4, restYPct:   2 },
+  // 4 — drifts in from above, sits high-right, exits low-left
+  { ...SCENE_DEFAULT, from: { x:  18, y: -30 }, to: { x: -28, y:  22 }, restXPct: 10, restYPct: -10 },
+  // 5 — comes from lower-centre, rises to centre, exits upper-left
+  { ...SCENE_DEFAULT, from: { x:  -8, y:  28 }, to: { x: -32, y: -18 }, restXPct:  0, restYPct:   4 },
+  // 6 — enters upper-left, holds mid-left, exits lower-right
+  { ...SCENE_DEFAULT, from: { x: -32, y: -20 }, to: { x:  30, y:  22 }, restXPct: -8, restYPct:  -4 },
+  // 7 — slides from right, sits low-centre, exits up
+  { ...SCENE_DEFAULT, from: { x:  34, y:   4 }, to: { x:   8, y: -28 }, restXPct:  4, restYPct:  10 },
+  // 8 — comes from lower-left, rises and exits to upper-right
+  { ...SCENE_DEFAULT, from: { x: -28, y:  26 }, to: { x:  30, y: -22 }, restXPct: -4, restYPct:   8 },
+  // 9 — closing breath: gentle drift in from below-centre, dissolves up
+  { ...SCENE_DEFAULT, fadeInMs: 1900, holdMs: 2800, fadeOutMs: 2000,
+    from: { x:   0, y:  18 }, to: { x:   0, y: -16 }, restXPct:  0, restYPct:   0 },
+];
 
 /** Brief gap between the last phrase fading out and the CTA reveal. */
 const COMPOSE_GAP_MS = 700;
 /** Extra hold after closing headline settles before CTAs appear. */
 const CTA_REVEAL_DELAY_MS = 1400;
 
-function timingFor(i: number): PhraseTiming {
-  return PHRASE_TIMINGS[PHRASE_CORNERS[i % PHRASE_CORNERS.length]];
+function sceneFor(i: number): PhraseScene {
+  return PHRASE_SCENES[Math.min(Math.max(i, 0), PHRASE_SCENES.length - 1)];
 }
 function beatDurationMs(i: number): number {
-  const t = timingFor(i);
-  return t.fadeInMs + t.holdMs + t.fadeOutMs;
+  const s = sceneFor(i);
+  return s.fadeInMs + s.holdMs + s.fadeOutMs;
 }
 
 function isHeroLastFlag(): boolean {
@@ -174,7 +207,7 @@ export function CinematicHero() {
       acc += beatDurationMs(i);
     }
     const sequenceEnd = acc; // moment the last phrase finishes fading out
-    const lastFadeOut = timingFor(HERO_PHRASES.length - 1).fadeOutMs;
+    const lastFadeOut = sceneFor(HERO_PHRASES.length - 1).fadeOutMs;
 
     for (let i = 0; i < HERO_PHRASES.length; i++) {
       const id = window.setTimeout(() => {
@@ -227,22 +260,21 @@ export function CinematicHero() {
     return () => window.cancelAnimationFrame(raf);
   }, [showPhraseDebug]);
 
-  // Derive current phase + active timing for the debug overlay.
+  // Derive current phase + active scene for the debug overlay.
   const debugInfo = useMemo(() => {
     const total = HERO_PHRASES.length;
     if (phraseIndex < 0) {
-      return { phase: "idle" as PhrasePhase, corner: null, t: PHRASE_TIMINGS.tl, elapsed: 0 };
+      return { phase: "idle" as PhrasePhase, index: -1, scene: PHRASE_SCENES[0], elapsed: 0 };
     }
     if (phraseIndex >= total) {
-      return { phase: "done" as PhrasePhase, corner: null, t: timingFor(total - 1), elapsed: 0 };
+      return { phase: "done" as PhrasePhase, index: total, scene: sceneFor(total - 1), elapsed: 0 };
     }
-    const corner = PHRASE_CORNERS[phraseIndex % PHRASE_CORNERS.length];
-    const t = PHRASE_TIMINGS[corner];
+    const scene = sceneFor(phraseIndex);
     const elapsed = phraseStartedAt != null ? Math.max(0, now - phraseStartedAt) : 0;
     let phase: PhrasePhase = "fadeIn";
-    if (elapsed > t.fadeInMs + t.holdMs) phase = "fadeOut";
-    else if (elapsed > t.fadeInMs) phase = "hold";
-    return { phase, corner, t, elapsed };
+    if (elapsed > scene.fadeInMs + scene.holdMs) phase = "fadeOut";
+    else if (elapsed > scene.fadeInMs) phase = "hold";
+    return { phase, index: phraseIndex, scene, elapsed };
   }, [phraseIndex, phraseStartedAt, now]);
 
   const handleScrollToNext = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -321,13 +353,16 @@ export function CinematicHero() {
         <HeroPhraseDebug
           phraseIndex={phraseIndex}
           total={HERO_PHRASES.length}
-          corner={debugInfo.corner}
           phase={debugInfo.phase}
-          fadeInMs={debugInfo.t.fadeInMs}
-          holdMs={debugInfo.t.holdMs}
-          fadeOutMs={debugInfo.t.fadeOutMs}
-          driftX={debugInfo.t.driftX}
-          driftY={debugInfo.t.driftY}
+          fadeInMs={debugInfo.scene.fadeInMs}
+          holdMs={debugInfo.scene.holdMs}
+          fadeOutMs={debugInfo.scene.fadeOutMs}
+          fromX={debugInfo.scene.from.x}
+          fromY={debugInfo.scene.from.y}
+          toX={debugInfo.scene.to.x}
+          toY={debugInfo.scene.to.y}
+          restXPct={debugInfo.scene.restXPct}
+          restYPct={debugInfo.scene.restYPct}
           elapsedMs={debugInfo.elapsed}
         />
       )}
@@ -344,23 +379,26 @@ export function CinematicHero() {
         >
           <div className="relative w-full max-w-[22rem] xs:max-w-[24rem] sm:max-w-[38rem] md:max-w-[52rem] lg:max-w-[60rem] text-center">
             {HERO_PHRASES.map((phrase, i) => {
-              const visible = i === phraseIndex;
-              const corner: PhraseCorner = PHRASE_CORNERS[i % PHRASE_CORNERS.length];
-              const t = PHRASE_TIMINGS[corner];
+              const state =
+                i === phraseIndex ? "active" : i < phraseIndex ? "past" : "pending";
+              const scene = sceneFor(i);
               const phraseStyle = {
-                "--phrase-fade-in": `${t.fadeInMs}ms`,
-                "--phrase-fade-out": `${t.fadeOutMs}ms`,
-                "--phrase-drift-x": `${t.driftX}px`,
-                "--phrase-drift-y": `${t.driftY}px`,
-                "--phrase-drift-x-md": `${t.driftXMd}px`,
-                "--phrase-drift-y-md": `${t.driftYMd}px`,
+                "--phrase-fade-in": `${scene.fadeInMs}ms`,
+                "--phrase-fade-out": `${scene.fadeOutMs}ms`,
+                "--phrase-from-x": `${scene.from.x}px`,
+                "--phrase-from-y": `${scene.from.y}px`,
+                "--phrase-to-x": `${scene.to.x}px`,
+                "--phrase-to-y": `${scene.to.y}px`,
+                "--phrase-md-scale": scene.mdScale,
+                "--phrase-rest-x": `${scene.restXPct}%`,
+                "--phrase-rest-y": `${scene.restYPct}%`,
               } as React.CSSProperties;
               return (
                 <p
                   key={i}
                   data-hero-phrase-index={i}
-                  data-hero-phrase-visible={visible ? "true" : "false"}
-                  data-hero-phrase-corner={corner}
+                  data-hero-phrase-state={state}
+                  data-hero-phrase-visible={state === "active" ? "true" : "false"}
                   style={phraseStyle}
                   className="hero-phrase absolute inset-0 mx-auto flex items-center justify-center px-2 [font-family:var(--font-serif)] italic font-normal text-[color:var(--gold)] text-[22px] xs:text-[26px] sm:text-[36px] md:text-[52px] lg:text-[60px] leading-[1.18] xs:leading-[1.16] sm:leading-[1.14] tracking-[-0.008em] text-pretty text-balance [text-shadow:0_2px_26px_rgba(0,0,0,0.65)]"
                 >
