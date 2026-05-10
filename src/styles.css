@@ -1947,30 +1947,35 @@
 }
 
 /* ── Phrase-by-phrase cinematic intro ─────────────────────────────
-   Each phrase is absolutely stacked; only the active one fades in
-   with a gentle rise. Soft fade out before the next appears.
-   `data-hero-phrase-visible="true"` toggles per-phrase. */
+   Each phrase is absolutely stacked; only the active one slides in
+   gently from its side (alternating L↔R, like turning the page of a
+   story) and fades out before the next appears. */
 .hero-cinematic .hero-phrase {
   opacity: 0;
-  transform: translate3d(0, 12px, 0);
   transition:
-    opacity 520ms cubic-bezier(0.22, 0.61, 0.18, 1),
-    transform 720ms cubic-bezier(0.22, 0.61, 0.18, 1);
+    opacity 620ms cubic-bezier(0.22, 0.61, 0.18, 1),
+    transform 760ms cubic-bezier(0.22, 0.61, 0.18, 1);
   will-change: opacity, transform;
   pointer-events: none;
+}
+.hero-cinematic .hero-phrase[data-hero-phrase-side="left"] {
+  transform: translate3d(-22px, 0, 0);
+}
+.hero-cinematic .hero-phrase[data-hero-phrase-side="right"] {
+  transform: translate3d(22px, 0, 0);
 }
 .hero-cinematic .hero-phrase[data-hero-phrase-visible="true"] {
   opacity: 1;
   transform: translate3d(0, 0, 0);
 }
 .hero-cinematic .hero-phrase-stage {
-  /* Soft fade-out of the entire stage when the closing stanza takes over. */
   transition: opacity 480ms cubic-bezier(0.22, 0.61, 0.18, 1);
 }
 @media (prefers-reduced-motion: reduce) {
   .hero-cinematic .hero-phrase,
   .hero-cinematic .hero-phrase-stage {
     transition: none !important;
+    transform: none !important;
   }
 }
 
