@@ -75,6 +75,7 @@ export function CinematicHero() {
   /** -1 = intro not started yet; 0..N-1 = phrase showing; N = sequence done. */
   const [phraseIndex, setPhraseIndex] = useState<number>(skipIntro ? HERO_PHRASES.length : -1);
   const [composed, setComposed] = useState<boolean>(skipIntro);
+  const [ctaRevealed, setCtaRevealed] = useState<boolean>(skipIntro);
 
   // Resolve source on the client by viewport.
   useEffect(() => {
@@ -143,6 +144,13 @@ export function CinematicHero() {
         if (!cancelled) setComposed(true);
       }, fadeOutAt + PHRASE_FADE_MS + COMPOSE_GAP_MS),
     );
+    // CTAs appear ISOLATED at the very end — held back after the
+    // closing headline settles so it reads alone first.
+    timers.push(
+      window.setTimeout(() => {
+        if (!cancelled) setCtaRevealed(true);
+      }, fadeOutAt + PHRASE_FADE_MS + COMPOSE_GAP_MS + 1100),
+    );
 
     return () => {
       cancelled = true;
@@ -164,7 +172,7 @@ export function CinematicHero() {
   const showH1 = composed;
   const showH2 = composed;
   const showSub = composed;
-  const showCta = composed;
+  const showCta = ctaRevealed;
 
   return (
     <section
@@ -237,17 +245,19 @@ export function CinematicHero() {
           className="hero-phrase-stage pointer-events-none absolute inset-0 z-[5] flex items-center justify-center px-6 sm:px-10"
           data-hero-phrase-stage="true"
         >
-          <div className="relative w-full max-w-[24rem] xs:max-w-[26rem] sm:max-w-[36rem] md:max-w-[44rem] text-center">
+          <div className="relative w-full max-w-[20rem] xs:max-w-[22rem] sm:max-w-[34rem] md:max-w-[44rem] text-center">
             {HERO_PHRASES.map((phrase, i) => {
               const visible = i === phraseIndex;
+              const side = i % 2 === 0 ? "left" : "right";
               return (
                 <p
                   key={i}
                   data-hero-phrase-index={i}
                   data-hero-phrase-visible={visible ? "true" : "false"}
-                  className="hero-phrase absolute inset-0 mx-auto flex items-center justify-center [font-family:var(--font-serif)] italic font-normal text-[color:var(--ivory)] text-[22px] xs:text-[24px] sm:text-[34px] md:text-[42px] lg:text-[48px] leading-[1.18] sm:leading-[1.16] tracking-[-0.005em] text-pretty [text-shadow:0_2px_18px_rgba(0,0,0,0.45)]"
+                  data-hero-phrase-side={side}
+                  className="hero-phrase absolute inset-0 mx-auto flex items-center justify-center px-2 [font-family:var(--font-serif)] italic font-normal text-[color:var(--ivory)] text-[18px] xs:text-[20px] sm:text-[30px] md:text-[40px] lg:text-[46px] leading-[1.22] xs:leading-[1.2] sm:leading-[1.16] tracking-[-0.005em] text-pretty text-balance [text-shadow:0_2px_22px_rgba(0,0,0,0.55)]"
                 >
-                  <span className="block max-w-[28ch]">{phrase}</span>
+                  <span className="block max-w-[24ch] xs:max-w-[26ch] sm:max-w-[28ch]">{phrase}</span>
                 </p>
               );
             })}
@@ -286,7 +296,7 @@ export function CinematicHero() {
               data-hero-field="headlineLine2"
               data-hero-reveal="headlineLine2"
               data-hero-beat-show={showH2 ? "true" : "false"}
-              className="hero-beat hero-beat--from-right block mt-1.5 xs:mt-2 sm:mt-5 md:mt-6 max-w-full whitespace-normal [font-family:var(--font-serif)] italic font-normal [letter-spacing:0] md:[letter-spacing:-0.005em] [line-height:1.04] md:[line-height:1.02] text-[color:var(--gold-soft)] [text-shadow:none]"
+              className="hero-beat hero-beat--from-right block mt-1.5 xs:mt-2 sm:mt-5 md:mt-6 max-w-full whitespace-normal [font-family:var(--font-serif)] italic font-normal [letter-spacing:0] md:[letter-spacing:-0.005em] [line-height:1.04] md:[line-height:1.02] text-[color:var(--gold)] [text-shadow:none]"
             >
               {HERO_COPY.headlineLine2}
             </span>

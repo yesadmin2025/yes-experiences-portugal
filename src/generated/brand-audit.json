@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-10T02:20:11.730Z",
+  "generatedAt": "2026-05-10T02:28:03.546Z",
   "filesScanned": 193,
   "approvedPalette": {
     "teal": "#295B61",
@@ -18,10 +18,10 @@
     "#cccccc"
   ],
   "counts": {
-    "total": 172,
+    "total": 168,
     "approved": 34,
     "allowlisted": 25,
-    "mismatch": 113
+    "mismatch": 109
   },
   "findings": [
     {
@@ -979,42 +979,6 @@
       "status": "mismatch"
     },
     {
-      "file": "src/components/home/CinematicHero.tsx",
-      "line": 749,
-      "col": 80,
-      "raw": "#3a7a82",
-      "normalized": "#3a7a82",
-      "snippet": "className=\"absolute top-0 bottom-0 w-px bg-[color:var(--teal-2,#3a7a82)]\"",
-      "status": "mismatch"
-    },
-    {
-      "file": "src/components/home/CinematicHero.tsx",
-      "line": 753,
-      "col": 109,
-      "raw": "#3a7a82",
-      "normalized": "#3a7a82",
-      "snippet": "className=\"absolute top-0 -translate-x-1/2 -translate-y-1 rounded-sm bg-[color:var(--teal-2,#3a7a82)] px-1 font-mono text-[8.5px] text-white\"",
-      "status": "mismatch"
-    },
-    {
-      "file": "src/components/home/CinematicHero.tsx",
-      "line": 770,
-      "col": 48,
-      "raw": "#3a7a82",
-      "normalized": "#3a7a82",
-      "snippet": "cta: \"text-[color:var(--teal-2,#3a7a82)] bg-[color:var(--teal-2,#3a7a82)]/15\",",
-      "status": "mismatch"
-    },
-    {
-      "file": "src/components/home/CinematicHero.tsx",
-      "line": 770,
-      "col": 81,
-      "raw": "#3a7a82",
-      "normalized": "#3a7a82",
-      "snippet": "cta: \"text-[color:var(--teal-2,#3a7a82)] bg-[color:var(--teal-2,#3a7a82)]/15\",",
-      "status": "mismatch"
-    },
-    {
       "file": "src/components/home/HeroScrimRuler.tsx",
       "line": 62,
       "col": 58,
@@ -1538,7 +1502,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 3140,
+      "line": 3168,
       "col": 23,
       "raw": "#000",
       "normalized": "#000000",
@@ -1547,7 +1511,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 3471,
+      "line": 3499,
       "col": 41,
       "raw": "#000",
       "normalized": "#000000",
@@ -1556,7 +1520,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 3471,
+      "line": 3499,
       "col": 47,
       "raw": "#000",
       "normalized": "#000000",
@@ -1565,7 +1529,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 3964,
+      "line": 3992,
       "col": 7,
       "raw": "#555",
       "normalized": "#555555",
