@@ -206,6 +206,45 @@ export function CinematicHero() {
     };
   }, [skipIntro]);
 
+  // Stamp when each phrase becomes active so the debug overlay can compute elapsed time.
+  useEffect(() => {
+    if (phraseIndex < 0) {
+      setPhraseStartedAt(null);
+      return;
+    }
+    setPhraseStartedAt(typeof performance !== "undefined" ? performance.now() : Date.now());
+  }, [phraseIndex]);
+
+  // Lightweight rAF tick — only runs while the debug overlay is visible.
+  useEffect(() => {
+    if (!showPhraseDebug) return;
+    let raf = 0;
+    const tick = () => {
+      setNow(typeof performance !== "undefined" ? performance.now() : Date.now());
+      raf = window.requestAnimationFrame(tick);
+    };
+    raf = window.requestAnimationFrame(tick);
+    return () => window.cancelAnimationFrame(raf);
+  }, [showPhraseDebug]);
+
+  // Derive current phase + active timing for the debug overlay.
+  const debugInfo = useMemo(() => {
+    const total = HERO_PHRASES.length;
+    if (phraseIndex < 0) {
+      return { phase: "idle" as PhrasePhase, corner: null, t: PHRASE_TIMINGS.tl, elapsed: 0 };
+    }
+    if (phraseIndex >= total) {
+      return { phase: "done" as PhrasePhase, corner: null, t: timingFor(total - 1), elapsed: 0 };
+    }
+    const corner = PHRASE_CORNERS[phraseIndex % PHRASE_CORNERS.length];
+    const t = PHRASE_TIMINGS[corner];
+    const elapsed = phraseStartedAt != null ? Math.max(0, now - phraseStartedAt) : 0;
+    let phase: PhrasePhase = "fadeIn";
+    if (elapsed > t.fadeInMs + t.holdMs) phase = "fadeOut";
+    else if (elapsed > t.fadeInMs) phase = "hold";
+    return { phase, corner, t, elapsed };
+  }, [phraseIndex, phraseStartedAt, now]);
+
   const handleScrollToNext = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     const target = document.getElementById("reviews");
