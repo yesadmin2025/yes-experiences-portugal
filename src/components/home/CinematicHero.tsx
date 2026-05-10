@@ -143,6 +143,13 @@ export function CinematicHero() {
         if (!cancelled) setComposed(true);
       }, fadeOutAt + PHRASE_FADE_MS + COMPOSE_GAP_MS),
     );
+    // CTAs appear ISOLATED at the very end — held back after the
+    // closing headline settles so it reads alone first.
+    timers.push(
+      window.setTimeout(() => {
+        if (!cancelled) setCtaRevealed(true);
+      }, fadeOutAt + PHRASE_FADE_MS + COMPOSE_GAP_MS + 1100),
+    );
 
     return () => {
       cancelled = true;
