@@ -28,11 +28,15 @@ const HERO_FILM_SRC_1080 = "/video/film/yes-hero-film-1080.mp4";
 const HERO_FILM_SRC_720 = "/video/film/yes-hero-film-720.mp4";
 const HERO_FILM_POSTER = "/video/film/yes-hero-poster.jpg";
 
-/** Each phrase: 0.5s fade in → ~1.7s hold → 0.5s fade out. */
-const PHRASE_DURATION_MS = 2700;
-const PHRASE_FADE_MS = 520;
-/** Brief gap between the last phrase fading out and the closing stanza fading in. */
-const COMPOSE_GAP_MS = 320;
+/** Slower, story-like pacing — each phrase: 0.8s fade-in → ~2.1s hold → 0.7s fade-out. */
+const PHRASE_DURATION_MS = 3600;
+const PHRASE_FADE_MS = 760;
+/** Brief gap between the last phrase fading out and the CTA reveal. */
+const COMPOSE_GAP_MS = 480;
+
+/** Corners the phrases enter from — cycles TL → TR → BR → BL → … */
+const PHRASE_CORNERS = ["tl", "tr", "br", "bl"] as const;
+type PhraseCorner = (typeof PHRASE_CORNERS)[number];
 
 function isHeroLastFlag(): boolean {
   if (typeof window === "undefined") return false;
