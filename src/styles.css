@@ -1952,47 +1952,38 @@
    phrase enters from the next corner — like turning the pages of a
    story. Slow editorial pacing, gold italic over the film. */
 .hero-cinematic .hero-phrase {
+  /* Per-corner timing comes from inline CSS vars set by the component.
+     Defaults below act as a safety net when the vars are missing. */
+  --phrase-fade-in: 1400ms;
+  --phrase-fade-out: 1500ms;
+  --phrase-drift-x: 0px;
+  --phrase-drift-y: 0px;
+  --phrase-drift-x-md: 0px;
+  --phrase-drift-y-md: 0px;
   opacity: 0;
+  /* When NOT visible we use fade-out timing (slow dissolve). */
   transition:
-    opacity 880ms cubic-bezier(0.22, 0.61, 0.18, 1),
-    transform 1100ms cubic-bezier(0.22, 0.61, 0.18, 1);
+    opacity var(--phrase-fade-out) cubic-bezier(0.22, 0.61, 0.18, 1),
+    transform var(--phrase-fade-out) cubic-bezier(0.22, 0.61, 0.18, 1);
   will-change: opacity, transform;
   pointer-events: none;
-}
-/* Corner offsets — diagonal, capped to a soft drift on mobile so nothing
-   clips at the section edges. */
-.hero-cinematic .hero-phrase[data-hero-phrase-corner="tl"] {
-  transform: translate3d(-26px, -22px, 0);
-}
-.hero-cinematic .hero-phrase[data-hero-phrase-corner="tr"] {
-  transform: translate3d(26px, -22px, 0);
-}
-.hero-cinematic .hero-phrase[data-hero-phrase-corner="br"] {
-  transform: translate3d(26px, 22px, 0);
-}
-.hero-cinematic .hero-phrase[data-hero-phrase-corner="bl"] {
-  transform: translate3d(-26px, 22px, 0);
+  transform: translate3d(var(--phrase-drift-x), var(--phrase-drift-y), 0);
 }
 @media (min-width: 768px) {
-  .hero-cinematic .hero-phrase[data-hero-phrase-corner="tl"] {
-    transform: translate3d(-44px, -34px, 0);
-  }
-  .hero-cinematic .hero-phrase[data-hero-phrase-corner="tr"] {
-    transform: translate3d(44px, -34px, 0);
-  }
-  .hero-cinematic .hero-phrase[data-hero-phrase-corner="br"] {
-    transform: translate3d(44px, 34px, 0);
-  }
-  .hero-cinematic .hero-phrase[data-hero-phrase-corner="bl"] {
-    transform: translate3d(-44px, 34px, 0);
+  .hero-cinematic .hero-phrase {
+    transform: translate3d(var(--phrase-drift-x-md), var(--phrase-drift-y-md), 0);
   }
 }
 .hero-cinematic .hero-phrase[data-hero-phrase-visible="true"] {
   opacity: 1;
   transform: translate3d(0, 0, 0);
+  /* When entering, swap to fade-in timing (the drift-in beat). */
+  transition:
+    opacity var(--phrase-fade-in) cubic-bezier(0.22, 0.61, 0.18, 1),
+    transform var(--phrase-fade-in) cubic-bezier(0.22, 0.61, 0.18, 1);
 }
 .hero-cinematic .hero-phrase-stage {
-  transition: opacity 560ms cubic-bezier(0.22, 0.61, 0.18, 1);
+  transition: opacity 720ms cubic-bezier(0.22, 0.61, 0.18, 1);
 }
 @media (prefers-reduced-motion: reduce) {
   .hero-cinematic .hero-phrase,
