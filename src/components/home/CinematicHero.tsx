@@ -28,15 +28,50 @@ const HERO_FILM_SRC_1080 = "/video/film/yes-hero-film-1080.mp4";
 const HERO_FILM_SRC_720 = "/video/film/yes-hero-film-720.mp4";
 const HERO_FILM_POSTER = "/video/film/yes-hero-poster.jpg";
 
-/** Slower, story-like pacing — each phrase: 0.8s fade-in → ~2.1s hold → 0.7s fade-out. */
-const PHRASE_DURATION_MS = 3600;
-const PHRASE_FADE_MS = 760;
-/** Brief gap between the last phrase fading out and the CTA reveal. */
-const COMPOSE_GAP_MS = 480;
-
 /** Corners the phrases enter from — cycles TL → TR → BR → BL → … */
 const PHRASE_CORNERS = ["tl", "tr", "br", "bl"] as const;
 type PhraseCorner = (typeof PHRASE_CORNERS)[number];
+
+/**
+ * Per-corner cinematic timing. Tweak these to fine-tune the rhythm of
+ * each beat without touching the component logic. All values in ms /
+ * pixels. Total beat = fadeInMs + holdMs + fadeOutMs.
+ *
+ *  - fadeInMs   how long the phrase takes to drift in + fade up
+ *  - holdMs     how long it sits still at full opacity (the "read" beat)
+ *  - fadeOutMs  how slowly it dissolves before the next corner takes over
+ *  - driftX/Y   mobile drift offset in px (negative = up/left)
+ *  - driftXMd/YMd  desktop drift offset in px (≥768px)
+ */
+type PhraseTiming = {
+  fadeInMs: number;
+  holdMs: number;
+  fadeOutMs: number;
+  driftX: number;
+  driftY: number;
+  driftXMd: number;
+  driftYMd: number;
+};
+
+const PHRASE_TIMINGS: Record<PhraseCorner, PhraseTiming> = {
+  tl: { fadeInMs: 1400, holdMs: 2800, fadeOutMs: 1500, driftX: -32, driftY: -28, driftXMd: -56, driftYMd: -42 },
+  tr: { fadeInMs: 1400, holdMs: 2800, fadeOutMs: 1500, driftX:  32, driftY: -28, driftXMd:  56, driftYMd: -42 },
+  br: { fadeInMs: 1400, holdMs: 2800, fadeOutMs: 1500, driftX:  32, driftY:  28, driftXMd:  56, driftYMd:  42 },
+  bl: { fadeInMs: 1400, holdMs: 2800, fadeOutMs: 1500, driftX: -32, driftY:  28, driftXMd: -56, driftYMd:  42 },
+};
+
+/** Brief gap between the last phrase fading out and the CTA reveal. */
+const COMPOSE_GAP_MS = 700;
+/** Extra hold after closing headline settles before CTAs appear. */
+const CTA_REVEAL_DELAY_MS = 1400;
+
+function timingFor(i: number): PhraseTiming {
+  return PHRASE_TIMINGS[PHRASE_CORNERS[i % PHRASE_CORNERS.length]];
+}
+function beatDurationMs(i: number): number {
+  const t = timingFor(i);
+  return t.fadeInMs + t.holdMs + t.fadeOutMs;
+}
 
 function isHeroLastFlag(): boolean {
   if (typeof window === "undefined") return false;
