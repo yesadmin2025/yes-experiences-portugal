@@ -317,6 +317,20 @@ export function CinematicHero() {
       />
 
       {showScrimRuler && <HeroScrimRuler />}
+      {showPhraseDebug && (
+        <HeroPhraseDebug
+          phraseIndex={phraseIndex}
+          total={HERO_PHRASES.length}
+          corner={debugInfo.corner}
+          phase={debugInfo.phase}
+          fadeInMs={debugInfo.t.fadeInMs}
+          holdMs={debugInfo.t.holdMs}
+          fadeOutMs={debugInfo.t.fadeOutMs}
+          driftX={debugInfo.t.driftX}
+          driftY={debugInfo.t.driftY}
+          elapsedMs={debugInfo.elapsed}
+        />
+      )}
 
       {/* ── Phrase-by-phrase cinematic intro ──────────────────────────
          One phrase visible at a time, centered over the film. Soft
