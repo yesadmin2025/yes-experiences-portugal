@@ -207,7 +207,7 @@ export function CinematicHero() {
       acc += beatDurationMs(i);
     }
     const sequenceEnd = acc; // moment the last phrase finishes fading out
-    const lastFadeOut = timingFor(HERO_PHRASES.length - 1).fadeOutMs;
+    const lastFadeOut = sceneFor(HERO_PHRASES.length - 1).fadeOutMs;
 
     for (let i = 0; i < HERO_PHRASES.length; i++) {
       const id = window.setTimeout(() => {
