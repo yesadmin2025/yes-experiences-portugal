@@ -157,38 +157,39 @@ export function CinematicHero() {
     let cancelled = false;
     const timers: number[] = [];
 
-    // Kick off phrase 0 immediately.
-    const start = window.setTimeout(() => {
-      if (cancelled) return;
-      setPhraseIndex(0);
-    }, 250);
-    timers.push(start);
+    // Compute cumulative start time of each phrase.
+    const startOffset = 250;
+    const startTimes: number[] = [];
+    let acc = startOffset;
+    for (let i = 0; i < HERO_PHRASES.length; i++) {
+      startTimes.push(acc);
+      acc += beatDurationMs(i);
+    }
+    const sequenceEnd = acc; // moment the last phrase finishes fading out
+    const lastFadeOut = timingFor(HERO_PHRASES.length - 1).fadeOutMs;
 
-    for (let i = 1; i < HERO_PHRASES.length; i++) {
+    for (let i = 0; i < HERO_PHRASES.length; i++) {
       const id = window.setTimeout(() => {
         if (!cancelled) setPhraseIndex(i);
-      }, 250 + i * PHRASE_DURATION_MS);
+      }, startTimes[i]);
       timers.push(id);
     }
 
-    // After the last phrase: fade it out, then reveal the composed stanza.
-    const fadeOutAt = 250 + HERO_PHRASES.length * PHRASE_DURATION_MS;
+    // After the last phrase: mark sequence done (fade it out), then reveal closing stanza, then CTAs.
     timers.push(
       window.setTimeout(() => {
         if (!cancelled) setPhraseIndex(HERO_PHRASES.length);
-      }, fadeOutAt),
+      }, sequenceEnd - lastFadeOut),
     );
     timers.push(
       window.setTimeout(() => {
         if (!cancelled) setComposed(true);
-      }, fadeOutAt + PHRASE_FADE_MS + COMPOSE_GAP_MS),
+      }, sequenceEnd + COMPOSE_GAP_MS),
     );
-    // CTAs appear ISOLATED at the very end — held back after the
-    // closing headline settles so it reads alone first.
     timers.push(
       window.setTimeout(() => {
         if (!cancelled) setCtaRevealed(true);
-      }, fadeOutAt + PHRASE_FADE_MS + COMPOSE_GAP_MS + 1100),
+      }, sequenceEnd + COMPOSE_GAP_MS + CTA_REVEAL_DELAY_MS),
     );
 
     return () => {
