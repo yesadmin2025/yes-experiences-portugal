@@ -379,23 +379,26 @@ export function CinematicHero() {
         >
           <div className="relative w-full max-w-[22rem] xs:max-w-[24rem] sm:max-w-[38rem] md:max-w-[52rem] lg:max-w-[60rem] text-center">
             {HERO_PHRASES.map((phrase, i) => {
-              const visible = i === phraseIndex;
-              const corner: PhraseCorner = PHRASE_CORNERS[i % PHRASE_CORNERS.length];
-              const t = PHRASE_TIMINGS[corner];
+              const state =
+                i === phraseIndex ? "active" : i < phraseIndex ? "past" : "pending";
+              const scene = sceneFor(i);
               const phraseStyle = {
-                "--phrase-fade-in": `${t.fadeInMs}ms`,
-                "--phrase-fade-out": `${t.fadeOutMs}ms`,
-                "--phrase-drift-x": `${t.driftX}px`,
-                "--phrase-drift-y": `${t.driftY}px`,
-                "--phrase-drift-x-md": `${t.driftXMd}px`,
-                "--phrase-drift-y-md": `${t.driftYMd}px`,
+                "--phrase-fade-in": `${scene.fadeInMs}ms`,
+                "--phrase-fade-out": `${scene.fadeOutMs}ms`,
+                "--phrase-from-x": `${scene.from.x}px`,
+                "--phrase-from-y": `${scene.from.y}px`,
+                "--phrase-to-x": `${scene.to.x}px`,
+                "--phrase-to-y": `${scene.to.y}px`,
+                "--phrase-md-scale": scene.mdScale,
+                "--phrase-rest-x": `${scene.restXPct}%`,
+                "--phrase-rest-y": `${scene.restYPct}%`,
               } as React.CSSProperties;
               return (
                 <p
                   key={i}
                   data-hero-phrase-index={i}
-                  data-hero-phrase-visible={visible ? "true" : "false"}
-                  data-hero-phrase-corner={corner}
+                  data-hero-phrase-state={state}
+                  data-hero-phrase-visible={state === "active" ? "true" : "false"}
                   style={phraseStyle}
                   className="hero-phrase absolute inset-0 mx-auto flex items-center justify-center px-2 [font-family:var(--font-serif)] italic font-normal text-[color:var(--gold)] text-[22px] xs:text-[26px] sm:text-[36px] md:text-[52px] lg:text-[60px] leading-[1.18] xs:leading-[1.16] sm:leading-[1.14] tracking-[-0.008em] text-pretty text-balance [text-shadow:0_2px_26px_rgba(0,0,0,0.65)]"
                 >
