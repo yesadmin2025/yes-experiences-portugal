@@ -172,10 +172,6 @@ export function CinematicHero() {
     }
   };
 
-  const showEyebrow = composed;
-  const showH1 = composed;
-  const showH2 = composed;
-  const showSub = composed;
   const showCta = ctaRevealed;
 
   return (
