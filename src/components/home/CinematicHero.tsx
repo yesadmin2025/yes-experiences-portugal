@@ -100,6 +100,9 @@ export function CinematicHero() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const sectionRef = useRef<HTMLElement | null>(null);
   const showScrimRuler = useHeroScrimRulerToggle();
+  const showPhraseDebug = useHeroPhraseDebugToggle();
+  const [phraseStartedAt, setPhraseStartedAt] = useState<number | null>(null);
+  const [now, setNow] = useState<number>(() => (typeof performance !== "undefined" ? performance.now() : 0));
 
   const skipIntro = useMemo(
     () => isHeroLastFlag() || prefersReducedMotion(),
