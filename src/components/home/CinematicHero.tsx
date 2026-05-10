@@ -75,6 +75,7 @@ export function CinematicHero() {
   /** -1 = intro not started yet; 0..N-1 = phrase showing; N = sequence done. */
   const [phraseIndex, setPhraseIndex] = useState<number>(skipIntro ? HERO_PHRASES.length : -1);
   const [composed, setComposed] = useState<boolean>(skipIntro);
+  const [ctaRevealed, setCtaRevealed] = useState<boolean>(skipIntro);
 
   // Resolve source on the client by viewport.
   useEffect(() => {
