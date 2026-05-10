@@ -23,6 +23,11 @@ import {
   HeroScrimRuler,
   useHeroScrimRulerToggle,
 } from "@/components/home/HeroScrimRuler";
+import {
+  HeroPhraseDebug,
+  useHeroPhraseDebugToggle,
+  type PhrasePhase,
+} from "@/components/home/HeroPhraseDebug";
 
 const HERO_FILM_SRC_1080 = "/video/film/yes-hero-film-1080.mp4";
 const HERO_FILM_SRC_720 = "/video/film/yes-hero-film-720.mp4";
@@ -95,6 +100,9 @@ export function CinematicHero() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const sectionRef = useRef<HTMLElement | null>(null);
   const showScrimRuler = useHeroScrimRulerToggle();
+  const showPhraseDebug = useHeroPhraseDebugToggle();
+  const [phraseStartedAt, setPhraseStartedAt] = useState<number | null>(null);
+  const [now, setNow] = useState<number>(() => (typeof performance !== "undefined" ? performance.now() : 0));
 
   const skipIntro = useMemo(
     () => isHeroLastFlag() || prefersReducedMotion(),
@@ -198,6 +206,45 @@ export function CinematicHero() {
     };
   }, [skipIntro]);
 
+  // Stamp when each phrase becomes active so the debug overlay can compute elapsed time.
+  useEffect(() => {
+    if (phraseIndex < 0) {
+      setPhraseStartedAt(null);
+      return;
+    }
+    setPhraseStartedAt(typeof performance !== "undefined" ? performance.now() : Date.now());
+  }, [phraseIndex]);
+
+  // Lightweight rAF tick — only runs while the debug overlay is visible.
+  useEffect(() => {
+    if (!showPhraseDebug) return;
+    let raf = 0;
+    const tick = () => {
+      setNow(typeof performance !== "undefined" ? performance.now() : Date.now());
+      raf = window.requestAnimationFrame(tick);
+    };
+    raf = window.requestAnimationFrame(tick);
+    return () => window.cancelAnimationFrame(raf);
+  }, [showPhraseDebug]);
+
+  // Derive current phase + active timing for the debug overlay.
+  const debugInfo = useMemo(() => {
+    const total = HERO_PHRASES.length;
+    if (phraseIndex < 0) {
+      return { phase: "idle" as PhrasePhase, corner: null, t: PHRASE_TIMINGS.tl, elapsed: 0 };
+    }
+    if (phraseIndex >= total) {
+      return { phase: "done" as PhrasePhase, corner: null, t: timingFor(total - 1), elapsed: 0 };
+    }
+    const corner = PHRASE_CORNERS[phraseIndex % PHRASE_CORNERS.length];
+    const t = PHRASE_TIMINGS[corner];
+    const elapsed = phraseStartedAt != null ? Math.max(0, now - phraseStartedAt) : 0;
+    let phase: PhrasePhase = "fadeIn";
+    if (elapsed > t.fadeInMs + t.holdMs) phase = "fadeOut";
+    else if (elapsed > t.fadeInMs) phase = "hold";
+    return { phase, corner, t, elapsed };
+  }, [phraseIndex, phraseStartedAt, now]);
+
   const handleScrollToNext = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     const target = document.getElementById("reviews");
@@ -270,6 +317,20 @@ export function CinematicHero() {
       />
 
       {showScrimRuler && <HeroScrimRuler />}
+      {showPhraseDebug && (
+        <HeroPhraseDebug
+          phraseIndex={phraseIndex}
+          total={HERO_PHRASES.length}
+          corner={debugInfo.corner}
+          phase={debugInfo.phase}
+          fadeInMs={debugInfo.t.fadeInMs}
+          holdMs={debugInfo.t.holdMs}
+          fadeOutMs={debugInfo.t.fadeOutMs}
+          driftX={debugInfo.t.driftX}
+          driftY={debugInfo.t.driftY}
+          elapsedMs={debugInfo.elapsed}
+        />
+      )}
 
       {/* ── Phrase-by-phrase cinematic intro ──────────────────────────
          One phrase visible at a time, centered over the film. Soft
