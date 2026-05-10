@@ -353,13 +353,16 @@ export function CinematicHero() {
         <HeroPhraseDebug
           phraseIndex={phraseIndex}
           total={HERO_PHRASES.length}
-          corner={debugInfo.corner}
           phase={debugInfo.phase}
-          fadeInMs={debugInfo.t.fadeInMs}
-          holdMs={debugInfo.t.holdMs}
-          fadeOutMs={debugInfo.t.fadeOutMs}
-          driftX={debugInfo.t.driftX}
-          driftY={debugInfo.t.driftY}
+          fadeInMs={debugInfo.scene.fadeInMs}
+          holdMs={debugInfo.scene.holdMs}
+          fadeOutMs={debugInfo.scene.fadeOutMs}
+          fromX={debugInfo.scene.from.x}
+          fromY={debugInfo.scene.from.y}
+          toX={debugInfo.scene.to.x}
+          toY={debugInfo.scene.to.y}
+          restXPct={debugInfo.scene.restXPct}
+          restYPct={debugInfo.scene.restYPct}
           elapsedMs={debugInfo.elapsed}
         />
       )}
