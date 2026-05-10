@@ -245,17 +245,19 @@ export function CinematicHero() {
           className="hero-phrase-stage pointer-events-none absolute inset-0 z-[5] flex items-center justify-center px-6 sm:px-10"
           data-hero-phrase-stage="true"
         >
-          <div className="relative w-full max-w-[24rem] xs:max-w-[26rem] sm:max-w-[36rem] md:max-w-[44rem] text-center">
+          <div className="relative w-full max-w-[20rem] xs:max-w-[22rem] sm:max-w-[34rem] md:max-w-[44rem] text-center">
             {HERO_PHRASES.map((phrase, i) => {
               const visible = i === phraseIndex;
+              const side = i % 2 === 0 ? "left" : "right";
               return (
                 <p
                   key={i}
                   data-hero-phrase-index={i}
                   data-hero-phrase-visible={visible ? "true" : "false"}
-                  className="hero-phrase absolute inset-0 mx-auto flex items-center justify-center [font-family:var(--font-serif)] italic font-normal text-[color:var(--ivory)] text-[22px] xs:text-[24px] sm:text-[34px] md:text-[42px] lg:text-[48px] leading-[1.18] sm:leading-[1.16] tracking-[-0.005em] text-pretty [text-shadow:0_2px_18px_rgba(0,0,0,0.45)]"
+                  data-hero-phrase-side={side}
+                  className="hero-phrase absolute inset-0 mx-auto flex items-center justify-center px-2 [font-family:var(--font-serif)] italic font-normal text-[color:var(--ivory)] text-[18px] xs:text-[20px] sm:text-[30px] md:text-[40px] lg:text-[46px] leading-[1.22] xs:leading-[1.2] sm:leading-[1.16] tracking-[-0.005em] text-pretty text-balance [text-shadow:0_2px_22px_rgba(0,0,0,0.55)]"
                 >
-                  <span className="block max-w-[28ch]">{phrase}</span>
+                  <span className="block max-w-[24ch] xs:max-w-[26ch] sm:max-w-[28ch]">{phrase}</span>
                 </p>
               );
             })}
