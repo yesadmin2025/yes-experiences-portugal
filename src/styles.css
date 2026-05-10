@@ -1946,6 +1946,34 @@
   animation: none !important;
 }
 
+/* ── Phrase-by-phrase cinematic intro ─────────────────────────────
+   Each phrase is absolutely stacked; only the active one fades in
+   with a gentle rise. Soft fade out before the next appears.
+   `data-hero-phrase-visible="true"` toggles per-phrase. */
+.hero-cinematic .hero-phrase {
+  opacity: 0;
+  transform: translate3d(0, 12px, 0);
+  transition:
+    opacity 520ms cubic-bezier(0.22, 0.61, 0.18, 1),
+    transform 720ms cubic-bezier(0.22, 0.61, 0.18, 1);
+  will-change: opacity, transform;
+  pointer-events: none;
+}
+.hero-cinematic .hero-phrase[data-hero-phrase-visible="true"] {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+.hero-cinematic .hero-phrase-stage {
+  /* Soft fade-out of the entire stage when the closing stanza takes over. */
+  transition: opacity 480ms cubic-bezier(0.22, 0.61, 0.18, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-cinematic .hero-phrase,
+  .hero-cinematic .hero-phrase-stage {
+    transition: none !important;
+  }
+}
+
 /* Video → poster fallback. Poster <img> stays painted only when autoplay
    fails or the file errors; otherwise the live video covers it. */
 .hero-cinematic .hero-film-fallback {
