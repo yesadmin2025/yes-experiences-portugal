@@ -1,23 +1,38 @@
 /**
  * Single source of truth for the home hero copy.
  *
- * Edit strings here ONLY. The home route (`src/routes/index.tsx`) and the
- * e2e snapshot spec (`e2e/hero-copy.spec.ts`) both import from this file,
- * so the rendered UI, the SSR meta tags, and the regression test cannot
- * drift apart.
+ * The hero now opens with a 10-phrase cinematic sequence (one phrase
+ * at a time, soft fade in/out) over a continuous film, before
+ * revealing the closing stanza + CTAs + microcopy. `HERO_PHRASES`
+ * drives the intro; `HERO_COPY` carries the closing scene strings
+ * (still locked for SEO, SSR, and byte-exact e2e).
  *
- * Approved positioning (locked):
- *   The client shapes the journey in real time and books instantly.
- *   Local guidance is available on demand, never required.
+ * Approved positioning:
+ *   Portugal is the stage. The guest writes their story. Locals know
+ *   where the hidden chapters begin. Booking is instant — no forms,
+ *   no waiting.
  */
+export const HERO_PHRASES = [
+  "Portugal is the stage.",
+  "You write your story.",
+  "Hidden chapters wait to unfold.",
+  "Locals know where they begin.",
+  "You decide how to live it.",
+  "A private day. A proposal. A celebration. A journey.",
+  "Every story is different.",
+  "So is yours.",
+  "Portugal is waiting to be lived.",
+  "You just have to start writing.",
+] as const;
+
 export const HERO_COPY = {
-  eyebrow: "BUILD IT LIVE",
-  headlineLine1: "Build it live.",
-  headlineLine2: "Confirm instantly.",
-  subheadline: "Real local guidance whenever you want it.",
+  eyebrow: "PORTUGAL IS THE STAGE",
+  headlineLine1: "Portugal is waiting to be lived.",
+  headlineLine2: "You just have to start writing.",
+  subheadline: "Every story is different. So is yours.",
   primaryCta: "Create Your Story",
   secondaryCta: "Explore Signature Experiences",
-  microcopy: "Instant booking. No forms. No waiting.",
+  microcopy: "Create it live. Confirm instantly. No forms. No waiting.",
   brandLine: "Whatever you have in mind, we say YES.",
 } as const;
 
@@ -27,7 +42,7 @@ export type HeroCopyKey = keyof typeof HERO_COPY;
  * Deterministic content-hash of every hero string. Used to bust SSR caches
  * and to expose a verifiable version on the rendered page.
  */
-export const HERO_COPY_VERSION = Object.values(HERO_COPY)
+export const HERO_COPY_VERSION = [...Object.values(HERO_COPY), ...HERO_PHRASES]
   .join("|")
   .split("")
   .reduce((hash, char) => (hash * 31 + char.charCodeAt(0)) >>> 0, 0)

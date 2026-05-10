@@ -1,14 +1,15 @@
 /**
- * FROZEN HERO COPY SPEC — approved wording for the final hero chapter.
+ * FROZEN HERO COPY SPEC — approved wording for the closing hero scene
+ * that follows the 10-phrase cinematic intro.
  */
 export const HERO_COPY_SPEC = {
-  eyebrow: "BUILD IT LIVE",
-  headlineLine1: "Build it live.",
-  headlineLine2: "Confirm instantly.",
-  subheadline: "Real local guidance whenever you want it.",
+  eyebrow: "PORTUGAL IS THE STAGE",
+  headlineLine1: "Portugal is waiting to be lived.",
+  headlineLine2: "You just have to start writing.",
+  subheadline: "Every story is different. So is yours.",
   primaryCta: "Create Your Story",
   secondaryCta: "Explore Signature Experiences",
-  microcopy: "Instant booking. No forms. No waiting.",
+  microcopy: "Create it live. Confirm instantly. No forms. No waiting.",
 } as const;
 
 export type HeroSpecKey = keyof typeof HERO_COPY_SPEC;
