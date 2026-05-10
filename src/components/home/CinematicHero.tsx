@@ -260,22 +260,21 @@ export function CinematicHero() {
     return () => window.cancelAnimationFrame(raf);
   }, [showPhraseDebug]);
 
-  // Derive current phase + active timing for the debug overlay.
+  // Derive current phase + active scene for the debug overlay.
   const debugInfo = useMemo(() => {
     const total = HERO_PHRASES.length;
     if (phraseIndex < 0) {
-      return { phase: "idle" as PhrasePhase, corner: null, t: PHRASE_TIMINGS.tl, elapsed: 0 };
+      return { phase: "idle" as PhrasePhase, index: -1, scene: PHRASE_SCENES[0], elapsed: 0 };
     }
     if (phraseIndex >= total) {
-      return { phase: "done" as PhrasePhase, corner: null, t: timingFor(total - 1), elapsed: 0 };
+      return { phase: "done" as PhrasePhase, index: total, scene: sceneFor(total - 1), elapsed: 0 };
     }
-    const corner = PHRASE_CORNERS[phraseIndex % PHRASE_CORNERS.length];
-    const t = PHRASE_TIMINGS[corner];
+    const scene = sceneFor(phraseIndex);
     const elapsed = phraseStartedAt != null ? Math.max(0, now - phraseStartedAt) : 0;
     let phase: PhrasePhase = "fadeIn";
-    if (elapsed > t.fadeInMs + t.holdMs) phase = "fadeOut";
-    else if (elapsed > t.fadeInMs) phase = "hold";
-    return { phase, corner, t, elapsed };
+    if (elapsed > scene.fadeInMs + scene.holdMs) phase = "fadeOut";
+    else if (elapsed > scene.fadeInMs) phase = "hold";
+    return { phase, index: phraseIndex, scene, elapsed };
   }, [phraseIndex, phraseStartedAt, now]);
 
   const handleScrollToNext = (e: React.MouseEvent<HTMLAnchorElement>) => {
