@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-05-10T02:42:09.752Z",
-  "filesScanned": 193,
+  "generatedAt": "2026-05-10T02:48:41.811Z",
+  "filesScanned": 194,
   "approvedPalette": {
     "teal": "#295B61",
     "teal-2": "#2A7C82",
@@ -18,10 +18,10 @@
     "#cccccc"
   ],
   "counts": {
-    "total": 168,
+    "total": 172,
     "approved": 34,
     "allowlisted": 25,
-    "mismatch": 109
+    "mismatch": 113
   },
   "findings": [
     {
@@ -976,6 +976,42 @@
       "raw": "#ff8a8a",
       "normalized": "#ff8a8a",
       "snippet": "<span style={{ color: \"#ff8a8a\" }}>pending</span>",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/home/HeroPhraseDebug.tsx",
+      "line": 62,
+      "col": 10,
+      "raw": "#888",
+      "normalized": "#888888",
+      "snippet": "idle: \"#888\",",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/home/HeroPhraseDebug.tsx",
+      "line": 63,
+      "col": 12,
+      "raw": "#7BD389",
+      "normalized": "#7bd389",
+      "snippet": "fadeIn: \"#7BD389\",",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/home/HeroPhraseDebug.tsx",
+      "line": 65,
+      "col": 13,
+      "raw": "#E58A6B",
+      "normalized": "#e58a6b",
+      "snippet": "fadeOut: \"#E58A6B\",",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/home/HeroPhraseDebug.tsx",
+      "line": 66,
+      "col": 10,
+      "raw": "#7AA7C7",
+      "normalized": "#7aa7c7",
+      "snippet": "done: \"#7AA7C7\",",
       "status": "mismatch"
     },
     {
