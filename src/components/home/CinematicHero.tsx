@@ -172,7 +172,7 @@ export function CinematicHero() {
   const showH1 = composed;
   const showH2 = composed;
   const showSub = composed;
-  const showCta = composed;
+  const showCta = ctaRevealed;
 
   return (
     <section
