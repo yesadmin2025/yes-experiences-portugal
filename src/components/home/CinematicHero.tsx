@@ -116,9 +116,32 @@ const CTA_REVEAL_DELAY_MS = 1400;
 function sceneFor(i: number): PhraseScene {
   return PHRASE_SCENES[Math.min(Math.max(i, 0), PHRASE_SCENES.length - 1)];
 }
-function beatDurationMs(i: number): number {
+function beatDurationMs(i: number, scale = 1): number {
   const s = sceneFor(i);
-  return s.fadeInMs + s.holdMs + s.fadeOutMs;
+  return Math.round((s.fadeInMs + s.holdMs + s.fadeOutMs) * scale);
+}
+/** Sum of all base beat durations (intensity = 1, no video fit). */
+function baseSequenceMs(): number {
+  let acc = 0;
+  for (let i = 0; i < PHRASE_SCENES.length; i++) acc += beatDurationMs(i, 1);
+  return acc;
+}
+
+/** Global animation intensity (debug-controlled). Shared by both this
+ *  component and HeroPhraseDebug via localStorage + a custom event. */
+const INTENSITY_KEY = "hero-phrase-debug:intensity";
+const INTENSITY_EVENT = "hero-phrase-intensity-change";
+function loadIntensity(): number {
+  if (typeof window === "undefined") return 1;
+  try {
+    const raw = window.localStorage.getItem(INTENSITY_KEY);
+    if (!raw) return 1;
+    const n = Number(raw);
+    if (!Number.isFinite(n)) return 1;
+    return Math.max(0.4, Math.min(2, n));
+  } catch {
+    return 1;
+  }
 }
 
 function isHeroLastFlag(): boolean {
