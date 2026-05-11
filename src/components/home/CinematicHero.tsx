@@ -250,17 +250,27 @@ export function CinematicHero() {
         p.catch(() => setVideoFailed(true));
       }
     };
+    const captureDuration = () => {
+      if (v.duration && Number.isFinite(v.duration) && v.duration > 0) {
+        setVideoDurationMs(Math.round(v.duration * 1000));
+      }
+    };
     if (v.readyState >= 2) tryPlay();
     else v.addEventListener("canplay", tryPlay, { once: true });
+    if (v.readyState >= 1) captureDuration();
+    v.addEventListener("loadedmetadata", captureDuration);
+    v.addEventListener("durationchange", captureDuration);
     const onTouch = () => v.play().catch(() => {});
     window.addEventListener("touchstart", onTouch, { once: true, passive: true });
     window.addEventListener("pointerdown", onTouch, { once: true });
     return () => {
       v.removeEventListener("canplay", tryPlay);
+      v.removeEventListener("loadedmetadata", captureDuration);
+      v.removeEventListener("durationchange", captureDuration);
       window.removeEventListener("touchstart", onTouch);
       window.removeEventListener("pointerdown", onTouch);
     };
-  }, []);
+  }, [videoSrc]);
 
   // Phrase-by-phrase intro sequence. Each phrase advances every
   // PHRASE_DURATION_MS; after the last, fade out and reveal the
