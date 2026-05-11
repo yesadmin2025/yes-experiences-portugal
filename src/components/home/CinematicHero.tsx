@@ -455,6 +455,9 @@ export function CinematicHero() {
           restXPct={debugInfo.scene.restXPct}
           restYPct={debugInfo.scene.restYPct}
           elapsedMs={debugInfo.elapsed}
+          intensity={intensity}
+          globalScale={globalScale}
+          videoDurationMs={videoDurationMs}
         />
       )}
 
