@@ -16,6 +16,41 @@ import { useEffect, useRef, useState } from "react";
 
 const STORAGE_KEY = "hero-phrase-debug";
 const RECT_KEY = "hero-phrase-debug:rect";
+const SNAP_KEY = "hero-phrase-debug:snap";
+
+type SnapConfig = {
+  on: boolean;
+  pxStep: number; // grid step in px for from/to vectors
+  pctStep: number; // grid step in % for rest anchor
+};
+const DEFAULT_SNAP: SnapConfig = { on: true, pxStep: 8, pctStep: 2 };
+const PX_STEPS = [4, 8, 12, 16, 24];
+const PCT_STEPS = [1, 2, 4, 5];
+
+function loadSnap(): SnapConfig {
+  if (typeof window === "undefined") return DEFAULT_SNAP;
+  try {
+    const raw = window.localStorage.getItem(SNAP_KEY);
+    if (!raw) return DEFAULT_SNAP;
+    const p = JSON.parse(raw) as Partial<SnapConfig>;
+    return {
+      on: typeof p.on === "boolean" ? p.on : DEFAULT_SNAP.on,
+      pxStep: typeof p.pxStep === "number" ? p.pxStep : DEFAULT_SNAP.pxStep,
+      pctStep: typeof p.pctStep === "number" ? p.pctStep : DEFAULT_SNAP.pctStep,
+    };
+  } catch {
+    return DEFAULT_SNAP;
+  }
+}
+function saveSnap(s: SnapConfig) {
+  try {
+    window.localStorage.setItem(SNAP_KEY, JSON.stringify(s));
+  } catch {
+    /* ignore */
+  }
+}
+const snapTo = (v: number, step: number) =>
+  step > 0 ? Math.round(v / step) * step : v;
 
 export function useHeroPhraseDebugToggle() {
   const [enabled, setEnabled] = useState(false);
