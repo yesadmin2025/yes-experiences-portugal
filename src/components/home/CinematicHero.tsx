@@ -345,22 +345,28 @@ export function CinematicHero() {
     return () => window.cancelAnimationFrame(raf);
   }, [showPhraseDebug]);
 
-  // Derive current phase + active scene for the debug overlay.
+  // Derive current phase + scaled scene for the debug overlay.
   const debugInfo = useMemo(() => {
     const total = HERO_PHRASES.length;
+    const scaleScene = (s: PhraseScene): PhraseScene => ({
+      ...s,
+      fadeInMs: Math.round(s.fadeInMs * globalScale),
+      holdMs: Math.round(s.holdMs * globalScale),
+      fadeOutMs: Math.round(s.fadeOutMs * globalScale),
+    });
     if (phraseIndex < 0) {
-      return { phase: "idle" as PhrasePhase, index: -1, scene: PHRASE_SCENES[0], elapsed: 0 };
+      return { phase: "idle" as PhrasePhase, index: -1, scene: scaleScene(PHRASE_SCENES[0]), elapsed: 0 };
     }
     if (phraseIndex >= total) {
-      return { phase: "done" as PhrasePhase, index: total, scene: sceneFor(total - 1), elapsed: 0 };
+      return { phase: "done" as PhrasePhase, index: total, scene: scaleScene(sceneFor(total - 1)), elapsed: 0 };
     }
-    const scene = sceneFor(phraseIndex);
+    const scene = scaleScene(sceneFor(phraseIndex));
     const elapsed = phraseStartedAt != null ? Math.max(0, now - phraseStartedAt) : 0;
     let phase: PhrasePhase = "fadeIn";
     if (elapsed > scene.fadeInMs + scene.holdMs) phase = "fadeOut";
     else if (elapsed > scene.fadeInMs) phase = "hold";
     return { phase, index: phraseIndex, scene, elapsed };
-  }, [phraseIndex, phraseStartedAt, now]);
+  }, [phraseIndex, phraseStartedAt, now, globalScale]);
 
   const handleScrollToNext = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
