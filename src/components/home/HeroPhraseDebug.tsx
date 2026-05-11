@@ -255,7 +255,62 @@ export function HeroPhraseDebug({
   };
 
   return (
-    <div
+    <>
+      {/* Grid overlay across the hero stage. The px grid maps directly to
+         from/to vector units; the % grid maps to the rest anchor. Toggle
+         and step sizes persist in localStorage. */}
+      {snap.on && (
+        <div
+          aria-hidden="true"
+          data-hero-phrase-grid="true"
+          style={{
+            position: "absolute",
+            inset: 0,
+            zIndex: 49,
+            pointerEvents: "none",
+            backgroundImage: [
+              // px grid (gold, fine)
+              `linear-gradient(to right, rgba(201,169,106,0.18) 1px, transparent 1px)`,
+              `linear-gradient(to bottom, rgba(201,169,106,0.18) 1px, transparent 1px)`,
+              // % grid (ivory, coarse) — center cross + stride
+              `linear-gradient(to right, rgba(250,248,243,0.12) 1px, transparent 1px)`,
+              `linear-gradient(to bottom, rgba(250,248,243,0.12) 1px, transparent 1px)`,
+            ].join(", "),
+            backgroundSize: [
+              `${snap.pxStep}px ${snap.pxStep}px`,
+              `${snap.pxStep}px ${snap.pxStep}px`,
+              `${snap.pctStep}% ${snap.pctStep}%`,
+              `${snap.pctStep}% ${snap.pctStep}%`,
+            ].join(", "),
+            backgroundPosition: "center center",
+            mixBlendMode: "screen",
+          }}
+        >
+          {/* Centre crosshair = stage origin (rest anchor 0%,0%). */}
+          <div
+            style={{
+              position: "absolute",
+              left: "50%",
+              top: 0,
+              bottom: 0,
+              width: 1,
+              background: "rgba(201,169,106,0.45)",
+            }}
+          />
+          <div
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: 0,
+              right: 0,
+              height: 1,
+              background: "rgba(201,169,106,0.45)",
+            }}
+          />
+        </div>
+      )}
+
+      <div
       data-hero-phrase-debug="true"
       style={{
         position: "absolute",
