@@ -184,11 +184,52 @@ export function CinematicHero() {
     }
   });
   const [videoSrc, setVideoSrc] = useState<string>(HERO_FILM_SRC_720);
+  const [videoDurationMs, setVideoDurationMs] = useState<number | null>(null);
+  const [intensity, setIntensity] = useState<number>(() => loadIntensity());
+
+  /**
+   * Global timing scale combines:
+   *  - user intensity (debug slider, 0.5–1.5×)
+   *  - video-fit: stretch/compress so the full phrase sequence completes
+   *    a touch before the video loop ends, keeping copy in sync with the
+   *    cinematic film. Clamped to avoid extreme speeds.
+   */
+  const globalScale = useMemo(() => {
+    const base = baseSequenceMs() + 250 /* start offset */ + COMPOSE_GAP_MS;
+    let fit = 1;
+    if (videoDurationMs && videoDurationMs > 4000) {
+      // Aim to finish phrases ~1.5s before the video loops.
+      const target = Math.max(6000, videoDurationMs - 1500);
+      fit = target / base;
+      fit = Math.max(0.7, Math.min(1.6, fit));
+    }
+    return intensity * fit;
+  }, [intensity, videoDurationMs]);
 
   /** -1 = intro not started yet; 0..N-1 = phrase showing; N = sequence done. */
   const [phraseIndex, setPhraseIndex] = useState<number>(skipIntro ? HERO_PHRASES.length : -1);
   const [composed, setComposed] = useState<boolean>(skipIntro);
   const [ctaRevealed, setCtaRevealed] = useState<boolean>(skipIntro);
+
+  // Listen for intensity changes from the debug overlay (same tab + cross tab).
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const sync = () => setIntensity(loadIntensity());
+    const onCustom = (e: Event) => {
+      const detail = (e as CustomEvent<number>).detail;
+      if (typeof detail === "number" && Number.isFinite(detail)) {
+        setIntensity(Math.max(0.4, Math.min(2, detail)));
+      } else {
+        sync();
+      }
+    };
+    window.addEventListener(INTENSITY_EVENT, onCustom as EventListener);
+    window.addEventListener("storage", sync);
+    return () => {
+      window.removeEventListener(INTENSITY_EVENT, onCustom as EventListener);
+      window.removeEventListener("storage", sync);
+    };
+  }, []);
 
   // Resolve source on the client by viewport.
   useEffect(() => {
