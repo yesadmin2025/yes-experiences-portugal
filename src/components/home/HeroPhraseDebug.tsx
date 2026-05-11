@@ -453,6 +453,108 @@ export function HeroPhraseDebug({
           />
         </div>
 
+        {/* Snap-to-grid controls */}
+        <div
+          style={{
+            marginTop: 8,
+            paddingTop: 6,
+            borderTop: "1px dashed rgba(250,248,243,0.18)",
+          }}
+        >
+          <label style={{ display: "flex", alignItems: "center", gap: 5, cursor: "pointer" }}>
+            <input
+              type="checkbox"
+              checked={snap.on}
+              onChange={(e) => updateSnap({ on: e.target.checked })}
+              onPointerDown={(e) => e.stopPropagation()}
+              style={{ accentColor: "var(--gold)" }}
+            />
+            <span style={{ letterSpacing: "0.06em", color: "var(--gold)", fontWeight: 600 }}>
+              SNAP-TO-GRID
+            </span>
+          </label>
+
+          <div
+            style={{
+              marginTop: 4,
+              display: "grid",
+              gridTemplateColumns: "auto 1fr",
+              gap: "3px 6px",
+              alignItems: "center",
+              opacity: snap.on ? 1 : 0.5,
+            }}
+          >
+            <span style={{ opacity: 0.75 }}>px:</span>
+            <div style={{ display: "flex", gap: 3, flexWrap: "wrap" }}>
+              {PX_STEPS.map((s) => (
+                <button
+                  key={s}
+                  type="button"
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onClick={() => updateSnap({ pxStep: s })}
+                  disabled={!snap.on}
+                  style={{
+                    fontFamily: "inherit",
+                    fontSize: 9.5,
+                    padding: "1px 5px",
+                    borderRadius: 3,
+                    cursor: snap.on ? "pointer" : "default",
+                    border: "1px solid rgba(201,169,106,0.45)",
+                    background:
+                      snap.pxStep === s ? "rgba(201,169,106,0.35)" : "transparent",
+                    color: "var(--ivory)",
+                  }}
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+            <span style={{ opacity: 0.75 }}>%:</span>
+            <div style={{ display: "flex", gap: 3, flexWrap: "wrap" }}>
+              {PCT_STEPS.map((s) => (
+                <button
+                  key={s}
+                  type="button"
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onClick={() => updateSnap({ pctStep: s })}
+                  disabled={!snap.on}
+                  style={{
+                    fontFamily: "inherit",
+                    fontSize: 9.5,
+                    padding: "1px 5px",
+                    borderRadius: 3,
+                    cursor: snap.on ? "pointer" : "default",
+                    border: "1px solid rgba(201,169,106,0.45)",
+                    background:
+                      snap.pctStep === s ? "rgba(201,169,106,0.35)" : "transparent",
+                    color: "var(--ivory)",
+                  }}
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {snap.on && (
+            <div
+              style={{
+                marginTop: 5,
+                padding: "4px 6px",
+                background: "rgba(201,169,106,0.08)",
+                borderRadius: 3,
+                fontSize: 9.5,
+                lineHeight: 1.5,
+              }}
+            >
+              <div style={{ opacity: 0.7, letterSpacing: "0.05em" }}>SNAPPED</div>
+              <div>
+                from ({snappedFromX},{snappedFromY}) → rest ({snappedRestX}%,{snappedRestY}%) → to ({snappedToX},{snappedToY})
+              </div>
+            </div>
+          )}
+        </div>
+
         <div style={{ marginTop: 4, opacity: 0.6, fontSize: 9.5 }}>
           drag header · resize ↘ · Shift+P toggle
         </div>
@@ -473,7 +575,8 @@ export function HeroPhraseDebug({
             "linear-gradient(135deg, transparent 50%, rgba(201,169,106,0.55) 50%, rgba(201,169,106,0.55) 60%, transparent 60%, transparent 70%, rgba(201,169,106,0.55) 70%, rgba(201,169,106,0.55) 80%, transparent 80%)",
         }}
       />
-    </div>
+      </div>
+    </>
   );
 }
 
