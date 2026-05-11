@@ -132,8 +132,8 @@ export const Route = createRootRoute({
       { name: "description", content: "YES Experiences Portugal crafts personalized Portuguese journeys with an interactive builder and dynamic storytelling." },
       { property: "og:description", content: "YES Experiences Portugal crafts personalized Portuguese journeys with an interactive builder and dynamic storytelling." },
       { name: "twitter:description", content: "YES Experiences Portugal crafts personalized Portuguese journeys with an interactive builder and dynamic storytelling." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/f1339bce-34a6-4ed1-ba7b-670c32b87751/id-preview-2c4d6f58--5351efc5-c55a-4e41-b282-a4a019690d38.lovable.app-1778295332393.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/f1339bce-34a6-4ed1-ba7b-670c32b87751/id-preview-2c4d6f58--5351efc5-c55a-4e41-b282-a4a019690d38.lovable.app-1778295332393.png" },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/e9e60a59-89f2-4ed5-b299-4288879a8674" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/e9e60a59-89f2-4ed5-b299-4288879a8674" },
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
