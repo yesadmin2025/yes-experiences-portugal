@@ -16,6 +16,41 @@ import { useEffect, useRef, useState } from "react";
 
 const STORAGE_KEY = "hero-phrase-debug";
 const RECT_KEY = "hero-phrase-debug:rect";
+const SNAP_KEY = "hero-phrase-debug:snap";
+
+type SnapConfig = {
+  on: boolean;
+  pxStep: number; // grid step in px for from/to vectors
+  pctStep: number; // grid step in % for rest anchor
+};
+const DEFAULT_SNAP: SnapConfig = { on: true, pxStep: 8, pctStep: 2 };
+const PX_STEPS = [4, 8, 12, 16, 24];
+const PCT_STEPS = [1, 2, 4, 5];
+
+function loadSnap(): SnapConfig {
+  if (typeof window === "undefined") return DEFAULT_SNAP;
+  try {
+    const raw = window.localStorage.getItem(SNAP_KEY);
+    if (!raw) return DEFAULT_SNAP;
+    const p = JSON.parse(raw) as Partial<SnapConfig>;
+    return {
+      on: typeof p.on === "boolean" ? p.on : DEFAULT_SNAP.on,
+      pxStep: typeof p.pxStep === "number" ? p.pxStep : DEFAULT_SNAP.pxStep,
+      pctStep: typeof p.pctStep === "number" ? p.pctStep : DEFAULT_SNAP.pctStep,
+    };
+  } catch {
+    return DEFAULT_SNAP;
+  }
+}
+function saveSnap(s: SnapConfig) {
+  try {
+    window.localStorage.setItem(SNAP_KEY, JSON.stringify(s));
+  } catch {
+    /* ignore */
+  }
+}
+const snapTo = (v: number, step: number) =>
+  step > 0 ? Math.round(v / step) * step : v;
 
 export function useHeroPhraseDebugToggle() {
   const [enabled, setEnabled] = useState(false);
@@ -68,7 +103,7 @@ export type HeroPhraseDebugProps = {
 const phaseColors: Record<PhrasePhase, string> = {
   idle: "#888",
   fadeIn: "#7BD389",
-  hold: "#C9A96A",
+  hold: "var(--gold)",
   fadeOut: "#E58A6B",
   done: "#7AA7C7",
 };
@@ -121,7 +156,24 @@ export function HeroPhraseDebug({
 }: HeroPhraseDebugProps) {
   const beat = fadeInMs + holdMs + fadeOutMs;
   const [rect, setRect] = useState<Rect>(() => loadRect());
+  const [snap, setSnap] = useState<SnapConfig>(() => loadSnap());
   const dragRef = useRef<{ kind: "move" | "resize"; sx: number; sy: number; sr: Rect } | null>(null);
+
+  const updateSnap = (patch: Partial<SnapConfig>) => {
+    setSnap((s) => {
+      const next = { ...s, ...patch };
+      saveSnap(next);
+      return next;
+    });
+  };
+
+  // Snapped values shown for copy/paste into PHRASE_SCENES.
+  const snappedFromX = snap.on ? snapTo(fromX, snap.pxStep) : fromX;
+  const snappedFromY = snap.on ? snapTo(fromY, snap.pxStep) : fromY;
+  const snappedToX = snap.on ? snapTo(toX, snap.pxStep) : toX;
+  const snappedToY = snap.on ? snapTo(toY, snap.pxStep) : toY;
+  const snappedRestX = snap.on ? snapTo(restXPct, snap.pctStep) : restXPct;
+  const snappedRestY = snap.on ? snapTo(restYPct, snap.pctStep) : restYPct;
 
   // Clamp into the section bounds whenever the parent resizes.
   useEffect(() => {
@@ -203,7 +255,62 @@ export function HeroPhraseDebug({
   };
 
   return (
-    <div
+    <>
+      {/* Grid overlay across the hero stage. The px grid maps directly to
+         from/to vector units; the % grid maps to the rest anchor. Toggle
+         and step sizes persist in localStorage. */}
+      {snap.on && (
+        <div
+          aria-hidden="true"
+          data-hero-phrase-grid="true"
+          style={{
+            position: "absolute",
+            inset: 0,
+            zIndex: 49,
+            pointerEvents: "none",
+            backgroundImage: [
+              // px grid (gold, fine)
+              `linear-gradient(to right, rgba(201,169,106,0.18) 1px, transparent 1px)`,
+              `linear-gradient(to bottom, rgba(201,169,106,0.18) 1px, transparent 1px)`,
+              // % grid (ivory, coarse) — center cross + stride
+              `linear-gradient(to right, rgba(250,248,243,0.12) 1px, transparent 1px)`,
+              `linear-gradient(to bottom, rgba(250,248,243,0.12) 1px, transparent 1px)`,
+            ].join(", "),
+            backgroundSize: [
+              `${snap.pxStep}px ${snap.pxStep}px`,
+              `${snap.pxStep}px ${snap.pxStep}px`,
+              `${snap.pctStep}% ${snap.pctStep}%`,
+              `${snap.pctStep}% ${snap.pctStep}%`,
+            ].join(", "),
+            backgroundPosition: "center center",
+            mixBlendMode: "screen",
+          }}
+        >
+          {/* Centre crosshair = stage origin (rest anchor 0%,0%). */}
+          <div
+            style={{
+              position: "absolute",
+              left: "50%",
+              top: 0,
+              bottom: 0,
+              width: 1,
+              background: "rgba(201,169,106,0.45)",
+            }}
+          />
+          <div
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: 0,
+              right: 0,
+              height: 1,
+              background: "rgba(201,169,106,0.45)",
+            }}
+          />
+        </div>
+      )}
+
+      <div
       data-hero-phrase-debug="true"
       style={{
         position: "absolute",
@@ -216,7 +323,7 @@ export function HeroPhraseDebug({
         fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
         fontSize: 10.5,
         lineHeight: 1.45,
-        color: "#FAF8F3",
+        color: "var(--ivory)",
         background: "rgba(20,20,22,0.82)",
         border: "1px solid rgba(201,169,106,0.45)",
         borderRadius: 6,
@@ -244,7 +351,7 @@ export function HeroPhraseDebug({
           gap: 6,
         }}
       >
-        <span style={{ fontWeight: 700, letterSpacing: "0.06em", color: "#C9A96A" }}>
+        <span style={{ fontWeight: 700, letterSpacing: "0.06em", color: "var(--gold)" }}>
           HERO · PHRASE DEBUG
         </span>
         <button
@@ -346,6 +453,108 @@ export function HeroPhraseDebug({
           />
         </div>
 
+        {/* Snap-to-grid controls */}
+        <div
+          style={{
+            marginTop: 8,
+            paddingTop: 6,
+            borderTop: "1px dashed rgba(250,248,243,0.18)",
+          }}
+        >
+          <label style={{ display: "flex", alignItems: "center", gap: 5, cursor: "pointer" }}>
+            <input
+              type="checkbox"
+              checked={snap.on}
+              onChange={(e) => updateSnap({ on: e.target.checked })}
+              onPointerDown={(e) => e.stopPropagation()}
+              style={{ accentColor: "var(--gold)" }}
+            />
+            <span style={{ letterSpacing: "0.06em", color: "var(--gold)", fontWeight: 600 }}>
+              SNAP-TO-GRID
+            </span>
+          </label>
+
+          <div
+            style={{
+              marginTop: 4,
+              display: "grid",
+              gridTemplateColumns: "auto 1fr",
+              gap: "3px 6px",
+              alignItems: "center",
+              opacity: snap.on ? 1 : 0.5,
+            }}
+          >
+            <span style={{ opacity: 0.75 }}>px:</span>
+            <div style={{ display: "flex", gap: 3, flexWrap: "wrap" }}>
+              {PX_STEPS.map((s) => (
+                <button
+                  key={s}
+                  type="button"
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onClick={() => updateSnap({ pxStep: s })}
+                  disabled={!snap.on}
+                  style={{
+                    fontFamily: "inherit",
+                    fontSize: 9.5,
+                    padding: "1px 5px",
+                    borderRadius: 3,
+                    cursor: snap.on ? "pointer" : "default",
+                    border: "1px solid rgba(201,169,106,0.45)",
+                    background:
+                      snap.pxStep === s ? "rgba(201,169,106,0.35)" : "transparent",
+                    color: "var(--ivory)",
+                  }}
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+            <span style={{ opacity: 0.75 }}>%:</span>
+            <div style={{ display: "flex", gap: 3, flexWrap: "wrap" }}>
+              {PCT_STEPS.map((s) => (
+                <button
+                  key={s}
+                  type="button"
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onClick={() => updateSnap({ pctStep: s })}
+                  disabled={!snap.on}
+                  style={{
+                    fontFamily: "inherit",
+                    fontSize: 9.5,
+                    padding: "1px 5px",
+                    borderRadius: 3,
+                    cursor: snap.on ? "pointer" : "default",
+                    border: "1px solid rgba(201,169,106,0.45)",
+                    background:
+                      snap.pctStep === s ? "rgba(201,169,106,0.35)" : "transparent",
+                    color: "var(--ivory)",
+                  }}
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {snap.on && (
+            <div
+              style={{
+                marginTop: 5,
+                padding: "4px 6px",
+                background: "rgba(201,169,106,0.08)",
+                borderRadius: 3,
+                fontSize: 9.5,
+                lineHeight: 1.5,
+              }}
+            >
+              <div style={{ opacity: 0.7, letterSpacing: "0.05em" }}>SNAPPED</div>
+              <div>
+                from ({snappedFromX},{snappedFromY}) → rest ({snappedRestX}%,{snappedRestY}%) → to ({snappedToX},{snappedToY})
+              </div>
+            </div>
+          )}
+        </div>
+
         <div style={{ marginTop: 4, opacity: 0.6, fontSize: 9.5 }}>
           drag header · resize ↘ · Shift+P toggle
         </div>
@@ -366,7 +575,8 @@ export function HeroPhraseDebug({
             "linear-gradient(135deg, transparent 50%, rgba(201,169,106,0.55) 50%, rgba(201,169,106,0.55) 60%, transparent 60%, transparent 70%, rgba(201,169,106,0.55) 70%, rgba(201,169,106,0.55) 80%, transparent 80%)",
         }}
       />
-    </div>
+      </div>
+    </>
   );
 }
 
