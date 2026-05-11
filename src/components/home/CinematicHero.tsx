@@ -474,8 +474,8 @@ export function CinematicHero() {
                 i === phraseIndex ? "active" : i < phraseIndex ? "past" : "pending";
               const scene = sceneFor(i);
               const phraseStyle = {
-                "--phrase-fade-in": `${scene.fadeInMs}ms`,
-                "--phrase-fade-out": `${scene.fadeOutMs}ms`,
+                "--phrase-fade-in": `${Math.round(scene.fadeInMs * globalScale)}ms`,
+                "--phrase-fade-out": `${Math.round(scene.fadeOutMs * globalScale)}ms`,
                 "--phrase-from-x": `${scene.from.x}px`,
                 "--phrase-from-y": `${scene.from.y}px`,
                 "--phrase-to-x": `${scene.to.x}px`,
