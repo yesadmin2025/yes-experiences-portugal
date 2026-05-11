@@ -164,11 +164,28 @@ export function HeroPhraseDebug({
   restXPct,
   restYPct,
   elapsedMs,
+  intensity = 1,
+  globalScale = 1,
+  videoDurationMs = null,
 }: HeroPhraseDebugProps) {
   const beat = fadeInMs + holdMs + fadeOutMs;
   const [rect, setRect] = useState<Rect>(() => loadRect());
   const [snap, setSnap] = useState<SnapConfig>(() => loadSnap());
   const dragRef = useRef<{ kind: "move" | "resize"; sx: number; sy: number; sr: Rect } | null>(null);
+
+  const setIntensity = (next: number) => {
+    const clamped = Math.max(INTENSITY_MIN, Math.min(INTENSITY_MAX, next));
+    try {
+      window.localStorage.setItem(INTENSITY_KEY, String(clamped));
+    } catch {
+      /* ignore */
+    }
+    try {
+      window.dispatchEvent(new CustomEvent(INTENSITY_EVENT, { detail: clamped }));
+    } catch {
+      /* ignore */
+    }
+  };
 
   const updateSnap = (patch: Partial<SnapConfig>) => {
     setSnap((s) => {
