@@ -282,16 +282,18 @@ export function CinematicHero() {
     let cancelled = false;
     const timers: number[] = [];
 
-    // Compute cumulative start time of each phrase.
+    // Compute cumulative start time of each phrase, scaled by globalScale.
     const startOffset = 250;
     const startTimes: number[] = [];
     let acc = startOffset;
     for (let i = 0; i < HERO_PHRASES.length; i++) {
       startTimes.push(acc);
-      acc += beatDurationMs(i);
+      acc += beatDurationMs(i, globalScale);
     }
-    const sequenceEnd = acc; // moment the last phrase finishes fading out
-    const lastFadeOut = sceneFor(HERO_PHRASES.length - 1).fadeOutMs;
+    const sequenceEnd = acc;
+    const lastFadeOut = Math.round(
+      sceneFor(HERO_PHRASES.length - 1).fadeOutMs * globalScale,
+    );
 
     for (let i = 0; i < HERO_PHRASES.length; i++) {
       const id = window.setTimeout(() => {
@@ -300,7 +302,6 @@ export function CinematicHero() {
       timers.push(id);
     }
 
-    // After the last phrase: mark sequence done (fade it out), then reveal closing stanza, then CTAs.
     timers.push(
       window.setTimeout(() => {
         if (!cancelled) setPhraseIndex(HERO_PHRASES.length);
@@ -321,7 +322,7 @@ export function CinematicHero() {
       cancelled = true;
       for (const id of timers) window.clearTimeout(id);
     };
-  }, [skipIntro]);
+  }, [skipIntro, globalScale]);
 
   // Stamp when each phrase becomes active so the debug overlay can compute elapsed time.
   useEffect(() => {
