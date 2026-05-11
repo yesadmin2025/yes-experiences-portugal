@@ -98,7 +98,18 @@ export type HeroPhraseDebugProps = {
   restXPct: number;
   restYPct: number;
   elapsedMs: number;
+  /** Current global animation intensity (0.5 – 1.5). Optional for back-compat. */
+  intensity?: number;
+  /** Effective scale applied (intensity × video-fit). Display-only. */
+  globalScale?: number;
+  /** Video duration in ms once metadata has loaded; null while unknown. */
+  videoDurationMs?: number | null;
 };
+
+const INTENSITY_KEY = "hero-phrase-debug:intensity";
+const INTENSITY_EVENT = "hero-phrase-intensity-change";
+const INTENSITY_MIN = 0.5;
+const INTENSITY_MAX = 1.5;
 
 const phaseColors: Record<PhrasePhase, string> = {
   idle: "#888",
