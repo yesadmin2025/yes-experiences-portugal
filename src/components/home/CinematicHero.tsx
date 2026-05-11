@@ -70,32 +70,42 @@ const SCENE_DEFAULT: Omit<PhraseScene, "from" | "to" | "restXPct" | "restYPct"> 
 };
 
 /**
- * 10 phrases, each with a unique trajectory. Read like a story:
- * upper-right → upper-left → lower-left → lower-right …
- * Tweak any single phrase here without touching the component logic.
+ * 10 phrases, each with a unique trajectory. Read like a story — every
+ * phrase enters from one of the four corners and exits to another corner,
+ * cycling TL → TR → BR → BL (then diagonals) so the eye is led across
+ * the frame. Tweak any single phrase here without touching component logic.
+ *
+ * Corner map (px offsets, mobile baseline; mdScale lifts them on desktop):
+ *   TL: x:-34, y:-26   TR: x: 34, y:-26
+ *   BL: x:-34, y: 26   BR: x: 34, y: 26
  */
+const TL = { x: -34, y: -26 };
+const TR = { x:  34, y: -26 };
+const BL = { x: -34, y:  26 };
+const BR = { x:  34, y:  26 };
+
 const PHRASE_SCENES: PhraseScene[] = [
-  // 0 — opens upper-right, drifts toward upper-left
-  { ...SCENE_DEFAULT, from: { x:  34, y: -22 }, to: { x: -28, y: -14 }, restXPct:  6, restYPct: -14 },
-  // 1 — slides from upper-left, settles upper-centre, exits down-left
-  { ...SCENE_DEFAULT, from: { x: -36, y: -18 }, to: { x: -22, y:  18 }, restXPct: -8, restYPct: -16 },
-  // 2 — comes from lower-left, lifts to mid-left, exits to mid-right
-  { ...SCENE_DEFAULT, from: { x: -34, y:  24 }, to: { x:  30, y:  10 }, restXPct: -6, restYPct:  -2 },
-  // 3 — enters lower-right, rests centre, exits upper-right
-  { ...SCENE_DEFAULT, from: { x:  32, y:  22 }, to: { x:  26, y: -22 }, restXPct:  4, restYPct:   2 },
-  // 4 — drifts in from above, sits high-right, exits low-left
-  { ...SCENE_DEFAULT, from: { x:  18, y: -30 }, to: { x: -28, y:  22 }, restXPct: 10, restYPct: -10 },
-  // 5 — comes from lower-centre, rises to centre, exits upper-left
-  { ...SCENE_DEFAULT, from: { x:  -8, y:  28 }, to: { x: -32, y: -18 }, restXPct:  0, restYPct:   4 },
-  // 6 — enters upper-left, holds mid-left, exits lower-right
-  { ...SCENE_DEFAULT, from: { x: -32, y: -20 }, to: { x:  30, y:  22 }, restXPct: -8, restYPct:  -4 },
-  // 7 — slides from right, sits low-centre, exits up
-  { ...SCENE_DEFAULT, from: { x:  34, y:   4 }, to: { x:   8, y: -28 }, restXPct:  4, restYPct:  10 },
-  // 8 — comes from lower-left, rises and exits to upper-right
-  { ...SCENE_DEFAULT, from: { x: -28, y:  26 }, to: { x:  30, y: -22 }, restXPct: -4, restYPct:   8 },
+  // 0 — TL → TR, settles upper-left
+  { ...SCENE_DEFAULT, from: TL, to: TR, restXPct: -6, restYPct: -14 },
+  // 1 — TR → BR, settles upper-right
+  { ...SCENE_DEFAULT, from: TR, to: BR, restXPct:  6, restYPct: -12 },
+  // 2 — BR → BL, settles lower-right
+  { ...SCENE_DEFAULT, from: BR, to: BL, restXPct:  6, restYPct:  10 },
+  // 3 — BL → TL, settles lower-left
+  { ...SCENE_DEFAULT, from: BL, to: TL, restXPct: -6, restYPct:  10 },
+  // 4 — TL → BR (diagonal), rests near centre-left
+  { ...SCENE_DEFAULT, from: TL, to: BR, restXPct: -4, restYPct:  -2 },
+  // 5 — TR → BL (diagonal), rests centre-right
+  { ...SCENE_DEFAULT, from: TR, to: BL, restXPct:  4, restYPct:  -2 },
+  // 6 — BL → TR (diagonal), rests centre-low-left
+  { ...SCENE_DEFAULT, from: BL, to: TR, restXPct: -4, restYPct:   4 },
+  // 7 — BR → TL (diagonal), rests centre-low-right
+  { ...SCENE_DEFAULT, from: BR, to: TL, restXPct:  4, restYPct:   4 },
+  // 8 — TL → TR again, lifted high for emphasis
+  { ...SCENE_DEFAULT, from: TL, to: TR, restXPct:  0, restYPct: -10 },
   // 9 — closing breath: gentle drift in from below-centre, dissolves up
   { ...SCENE_DEFAULT, fadeInMs: 1900, holdMs: 2800, fadeOutMs: 2000,
-    from: { x:   0, y:  18 }, to: { x:   0, y: -16 }, restXPct:  0, restYPct:   0 },
+    from: { x: 0, y: 18 }, to: { x: 0, y: -16 }, restXPct: 0, restYPct: 0 },
 ];
 
 /** Brief gap between the last phrase fading out and the CTA reveal. */
