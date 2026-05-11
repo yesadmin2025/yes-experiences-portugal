@@ -156,7 +156,24 @@ export function HeroPhraseDebug({
 }: HeroPhraseDebugProps) {
   const beat = fadeInMs + holdMs + fadeOutMs;
   const [rect, setRect] = useState<Rect>(() => loadRect());
+  const [snap, setSnap] = useState<SnapConfig>(() => loadSnap());
   const dragRef = useRef<{ kind: "move" | "resize"; sx: number; sy: number; sr: Rect } | null>(null);
+
+  const updateSnap = (patch: Partial<SnapConfig>) => {
+    setSnap((s) => {
+      const next = { ...s, ...patch };
+      saveSnap(next);
+      return next;
+    });
+  };
+
+  // Snapped values shown for copy/paste into PHRASE_SCENES.
+  const snappedFromX = snap.on ? snapTo(fromX, snap.pxStep) : fromX;
+  const snappedFromY = snap.on ? snapTo(fromY, snap.pxStep) : fromY;
+  const snappedToX = snap.on ? snapTo(toX, snap.pxStep) : toX;
+  const snappedToY = snap.on ? snapTo(toY, snap.pxStep) : toY;
+  const snappedRestX = snap.on ? snapTo(restXPct, snap.pctStep) : restXPct;
+  const snappedRestY = snap.on ? snapTo(restYPct, snap.pctStep) : restYPct;
 
   // Clamp into the section bounds whenever the parent resizes.
   useEffect(() => {
