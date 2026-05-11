@@ -98,7 +98,18 @@ export type HeroPhraseDebugProps = {
   restXPct: number;
   restYPct: number;
   elapsedMs: number;
+  /** Current global animation intensity (0.5 – 1.5). Optional for back-compat. */
+  intensity?: number;
+  /** Effective scale applied (intensity × video-fit). Display-only. */
+  globalScale?: number;
+  /** Video duration in ms once metadata has loaded; null while unknown. */
+  videoDurationMs?: number | null;
 };
+
+const INTENSITY_KEY = "hero-phrase-debug:intensity";
+const INTENSITY_EVENT = "hero-phrase-intensity-change";
+const INTENSITY_MIN = 0.5;
+const INTENSITY_MAX = 1.5;
 
 const phaseColors: Record<PhrasePhase, string> = {
   idle: "#888",
@@ -153,11 +164,28 @@ export function HeroPhraseDebug({
   restXPct,
   restYPct,
   elapsedMs,
+  intensity = 1,
+  globalScale = 1,
+  videoDurationMs = null,
 }: HeroPhraseDebugProps) {
   const beat = fadeInMs + holdMs + fadeOutMs;
   const [rect, setRect] = useState<Rect>(() => loadRect());
   const [snap, setSnap] = useState<SnapConfig>(() => loadSnap());
   const dragRef = useRef<{ kind: "move" | "resize"; sx: number; sy: number; sr: Rect } | null>(null);
+
+  const setIntensity = (next: number) => {
+    const clamped = Math.max(INTENSITY_MIN, Math.min(INTENSITY_MAX, next));
+    try {
+      window.localStorage.setItem(INTENSITY_KEY, String(clamped));
+    } catch {
+      /* ignore */
+    }
+    try {
+      window.dispatchEvent(new CustomEvent(INTENSITY_EVENT, { detail: clamped }));
+    } catch {
+      /* ignore */
+    }
+  };
 
   const updateSnap = (patch: Partial<SnapConfig>) => {
     setSnap((s) => {
@@ -451,6 +479,72 @@ export function HeroPhraseDebug({
             restYPct={restYPct}
             phase={phase}
           />
+        </div>
+
+        {/* Global animation intensity */}
+        <div
+          style={{
+            marginTop: 8,
+            paddingTop: 6,
+            borderTop: "1px dashed rgba(250,248,243,0.18)",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 6 }}>
+            <span style={{ letterSpacing: "0.06em", color: "var(--gold)", fontWeight: 600 }}>
+              INTENSITY
+            </span>
+            <span style={{ opacity: 0.8, fontVariantNumeric: "tabular-nums" }}>
+              {intensity.toFixed(2)}× · scale {globalScale.toFixed(2)}×
+            </span>
+          </div>
+          <input
+            type="range"
+            min={INTENSITY_MIN}
+            max={INTENSITY_MAX}
+            step={0.05}
+            value={intensity}
+            onPointerDown={(e) => e.stopPropagation()}
+            onChange={(e) => setIntensity(Number(e.currentTarget.value))}
+            style={{
+              width: "100%",
+              marginTop: 3,
+              accentColor: "var(--gold)",
+            }}
+            aria-label="Animation intensity"
+          />
+          <div style={{ display: "flex", justifyContent: "space-between", gap: 4, marginTop: 2 }}>
+            {[0.5, 0.75, 1, 1.25, 1.5].map((preset) => (
+              <button
+                key={preset}
+                type="button"
+                onPointerDown={(e) => e.stopPropagation()}
+                onClick={() => setIntensity(preset)}
+                style={{
+                  flex: 1,
+                  fontFamily: "inherit",
+                  fontSize: 9.5,
+                  padding: "1px 0",
+                  borderRadius: 3,
+                  cursor: "pointer",
+                  border: "1px solid rgba(201,169,106,0.45)",
+                  background:
+                    Math.abs(intensity - preset) < 0.025
+                      ? "rgba(201,169,106,0.35)"
+                      : "transparent",
+                  color: "var(--ivory)",
+                }}
+              >
+                {preset}×
+              </button>
+            ))}
+          </div>
+          <div style={{ marginTop: 3, opacity: 0.7, fontSize: 9.5 }}>
+            video:{" "}
+            {videoDurationMs == null
+              ? "—"
+              : `${(videoDurationMs / 1000).toFixed(1)}s`}{" "}
+            · fit auto
+          </div>
         </div>
 
         {/* Snap-to-grid controls */}

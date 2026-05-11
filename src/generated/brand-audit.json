@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-11T00:44:27.393Z",
+  "generatedAt": "2026-05-11T00:48:14.071Z",
   "filesScanned": 194,
   "approvedPalette": {
     "teal": "#295B61",
@@ -980,7 +980,7 @@
     },
     {
       "file": "src/components/home/HeroPhraseDebug.tsx",
-      "line": 69,
+      "line": 104,
       "col": 10,
       "raw": "#888",
       "normalized": "#888888",
@@ -989,7 +989,7 @@
     },
     {
       "file": "src/components/home/HeroPhraseDebug.tsx",
-      "line": 70,
+      "line": 105,
       "col": 12,
       "raw": "#7BD389",
       "normalized": "#7bd389",
@@ -998,7 +998,7 @@
     },
     {
       "file": "src/components/home/HeroPhraseDebug.tsx",
-      "line": 72,
+      "line": 107,
       "col": 13,
       "raw": "#E58A6B",
       "normalized": "#e58a6b",
@@ -1007,7 +1007,7 @@
     },
     {
       "file": "src/components/home/HeroPhraseDebug.tsx",
-      "line": 73,
+      "line": 108,
       "col": 10,
       "raw": "#7AA7C7",
       "normalized": "#7aa7c7",

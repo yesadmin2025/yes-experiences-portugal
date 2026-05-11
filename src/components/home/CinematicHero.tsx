@@ -70,32 +70,42 @@ const SCENE_DEFAULT: Omit<PhraseScene, "from" | "to" | "restXPct" | "restYPct"> 
 };
 
 /**
- * 10 phrases, each with a unique trajectory. Read like a story:
- * upper-right → upper-left → lower-left → lower-right …
- * Tweak any single phrase here without touching the component logic.
+ * 10 phrases, each with a unique trajectory. Read like a story — every
+ * phrase enters from one of the four corners and exits to another corner,
+ * cycling TL → TR → BR → BL (then diagonals) so the eye is led across
+ * the frame. Tweak any single phrase here without touching component logic.
+ *
+ * Corner map (px offsets, mobile baseline; mdScale lifts them on desktop):
+ *   TL: x:-34, y:-26   TR: x: 34, y:-26
+ *   BL: x:-34, y: 26   BR: x: 34, y: 26
  */
+const TL = { x: -34, y: -26 };
+const TR = { x:  34, y: -26 };
+const BL = { x: -34, y:  26 };
+const BR = { x:  34, y:  26 };
+
 const PHRASE_SCENES: PhraseScene[] = [
-  // 0 — opens upper-right, drifts toward upper-left
-  { ...SCENE_DEFAULT, from: { x:  34, y: -22 }, to: { x: -28, y: -14 }, restXPct:  6, restYPct: -14 },
-  // 1 — slides from upper-left, settles upper-centre, exits down-left
-  { ...SCENE_DEFAULT, from: { x: -36, y: -18 }, to: { x: -22, y:  18 }, restXPct: -8, restYPct: -16 },
-  // 2 — comes from lower-left, lifts to mid-left, exits to mid-right
-  { ...SCENE_DEFAULT, from: { x: -34, y:  24 }, to: { x:  30, y:  10 }, restXPct: -6, restYPct:  -2 },
-  // 3 — enters lower-right, rests centre, exits upper-right
-  { ...SCENE_DEFAULT, from: { x:  32, y:  22 }, to: { x:  26, y: -22 }, restXPct:  4, restYPct:   2 },
-  // 4 — drifts in from above, sits high-right, exits low-left
-  { ...SCENE_DEFAULT, from: { x:  18, y: -30 }, to: { x: -28, y:  22 }, restXPct: 10, restYPct: -10 },
-  // 5 — comes from lower-centre, rises to centre, exits upper-left
-  { ...SCENE_DEFAULT, from: { x:  -8, y:  28 }, to: { x: -32, y: -18 }, restXPct:  0, restYPct:   4 },
-  // 6 — enters upper-left, holds mid-left, exits lower-right
-  { ...SCENE_DEFAULT, from: { x: -32, y: -20 }, to: { x:  30, y:  22 }, restXPct: -8, restYPct:  -4 },
-  // 7 — slides from right, sits low-centre, exits up
-  { ...SCENE_DEFAULT, from: { x:  34, y:   4 }, to: { x:   8, y: -28 }, restXPct:  4, restYPct:  10 },
-  // 8 — comes from lower-left, rises and exits to upper-right
-  { ...SCENE_DEFAULT, from: { x: -28, y:  26 }, to: { x:  30, y: -22 }, restXPct: -4, restYPct:   8 },
+  // 0 — TL → TR, settles upper-left
+  { ...SCENE_DEFAULT, from: TL, to: TR, restXPct: -6, restYPct: -14 },
+  // 1 — TR → BR, settles upper-right
+  { ...SCENE_DEFAULT, from: TR, to: BR, restXPct:  6, restYPct: -12 },
+  // 2 — BR → BL, settles lower-right
+  { ...SCENE_DEFAULT, from: BR, to: BL, restXPct:  6, restYPct:  10 },
+  // 3 — BL → TL, settles lower-left
+  { ...SCENE_DEFAULT, from: BL, to: TL, restXPct: -6, restYPct:  10 },
+  // 4 — TL → BR (diagonal), rests near centre-left
+  { ...SCENE_DEFAULT, from: TL, to: BR, restXPct: -4, restYPct:  -2 },
+  // 5 — TR → BL (diagonal), rests centre-right
+  { ...SCENE_DEFAULT, from: TR, to: BL, restXPct:  4, restYPct:  -2 },
+  // 6 — BL → TR (diagonal), rests centre-low-left
+  { ...SCENE_DEFAULT, from: BL, to: TR, restXPct: -4, restYPct:   4 },
+  // 7 — BR → TL (diagonal), rests centre-low-right
+  { ...SCENE_DEFAULT, from: BR, to: TL, restXPct:  4, restYPct:   4 },
+  // 8 — TL → TR again, lifted high for emphasis
+  { ...SCENE_DEFAULT, from: TL, to: TR, restXPct:  0, restYPct: -10 },
   // 9 — closing breath: gentle drift in from below-centre, dissolves up
   { ...SCENE_DEFAULT, fadeInMs: 1900, holdMs: 2800, fadeOutMs: 2000,
-    from: { x:   0, y:  18 }, to: { x:   0, y: -16 }, restXPct:  0, restYPct:   0 },
+    from: { x: 0, y: 18 }, to: { x: 0, y: -16 }, restXPct: 0, restYPct: 0 },
 ];
 
 /** Brief gap between the last phrase fading out and the CTA reveal. */
@@ -106,9 +116,32 @@ const CTA_REVEAL_DELAY_MS = 1400;
 function sceneFor(i: number): PhraseScene {
   return PHRASE_SCENES[Math.min(Math.max(i, 0), PHRASE_SCENES.length - 1)];
 }
-function beatDurationMs(i: number): number {
+function beatDurationMs(i: number, scale = 1): number {
   const s = sceneFor(i);
-  return s.fadeInMs + s.holdMs + s.fadeOutMs;
+  return Math.round((s.fadeInMs + s.holdMs + s.fadeOutMs) * scale);
+}
+/** Sum of all base beat durations (intensity = 1, no video fit). */
+function baseSequenceMs(): number {
+  let acc = 0;
+  for (let i = 0; i < PHRASE_SCENES.length; i++) acc += beatDurationMs(i, 1);
+  return acc;
+}
+
+/** Global animation intensity (debug-controlled). Shared by both this
+ *  component and HeroPhraseDebug via localStorage + a custom event. */
+const INTENSITY_KEY = "hero-phrase-debug:intensity";
+const INTENSITY_EVENT = "hero-phrase-intensity-change";
+function loadIntensity(): number {
+  if (typeof window === "undefined") return 1;
+  try {
+    const raw = window.localStorage.getItem(INTENSITY_KEY);
+    if (!raw) return 1;
+    const n = Number(raw);
+    if (!Number.isFinite(n)) return 1;
+    return Math.max(0.4, Math.min(2, n));
+  } catch {
+    return 1;
+  }
 }
 
 function isHeroLastFlag(): boolean {
@@ -151,11 +184,52 @@ export function CinematicHero() {
     }
   });
   const [videoSrc, setVideoSrc] = useState<string>(HERO_FILM_SRC_720);
+  const [videoDurationMs, setVideoDurationMs] = useState<number | null>(null);
+  const [intensity, setIntensity] = useState<number>(() => loadIntensity());
+
+  /**
+   * Global timing scale combines:
+   *  - user intensity (debug slider, 0.5–1.5×)
+   *  - video-fit: stretch/compress so the full phrase sequence completes
+   *    a touch before the video loop ends, keeping copy in sync with the
+   *    cinematic film. Clamped to avoid extreme speeds.
+   */
+  const globalScale = useMemo(() => {
+    const base = baseSequenceMs() + 250 /* start offset */ + COMPOSE_GAP_MS;
+    let fit = 1;
+    if (videoDurationMs && videoDurationMs > 4000) {
+      // Aim to finish phrases ~1.5s before the video loops.
+      const target = Math.max(6000, videoDurationMs - 1500);
+      fit = target / base;
+      fit = Math.max(0.7, Math.min(1.6, fit));
+    }
+    return intensity * fit;
+  }, [intensity, videoDurationMs]);
 
   /** -1 = intro not started yet; 0..N-1 = phrase showing; N = sequence done. */
   const [phraseIndex, setPhraseIndex] = useState<number>(skipIntro ? HERO_PHRASES.length : -1);
   const [composed, setComposed] = useState<boolean>(skipIntro);
   const [ctaRevealed, setCtaRevealed] = useState<boolean>(skipIntro);
+
+  // Listen for intensity changes from the debug overlay (same tab + cross tab).
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const sync = () => setIntensity(loadIntensity());
+    const onCustom = (e: Event) => {
+      const detail = (e as CustomEvent<number>).detail;
+      if (typeof detail === "number" && Number.isFinite(detail)) {
+        setIntensity(Math.max(0.4, Math.min(2, detail)));
+      } else {
+        sync();
+      }
+    };
+    window.addEventListener(INTENSITY_EVENT, onCustom as EventListener);
+    window.addEventListener("storage", sync);
+    return () => {
+      window.removeEventListener(INTENSITY_EVENT, onCustom as EventListener);
+      window.removeEventListener("storage", sync);
+    };
+  }, []);
 
   // Resolve source on the client by viewport.
   useEffect(() => {
@@ -176,17 +250,27 @@ export function CinematicHero() {
         p.catch(() => setVideoFailed(true));
       }
     };
+    const captureDuration = () => {
+      if (v.duration && Number.isFinite(v.duration) && v.duration > 0) {
+        setVideoDurationMs(Math.round(v.duration * 1000));
+      }
+    };
     if (v.readyState >= 2) tryPlay();
     else v.addEventListener("canplay", tryPlay, { once: true });
+    if (v.readyState >= 1) captureDuration();
+    v.addEventListener("loadedmetadata", captureDuration);
+    v.addEventListener("durationchange", captureDuration);
     const onTouch = () => v.play().catch(() => {});
     window.addEventListener("touchstart", onTouch, { once: true, passive: true });
     window.addEventListener("pointerdown", onTouch, { once: true });
     return () => {
       v.removeEventListener("canplay", tryPlay);
+      v.removeEventListener("loadedmetadata", captureDuration);
+      v.removeEventListener("durationchange", captureDuration);
       window.removeEventListener("touchstart", onTouch);
       window.removeEventListener("pointerdown", onTouch);
     };
-  }, []);
+  }, [videoSrc]);
 
   // Phrase-by-phrase intro sequence. Each phrase advances every
   // PHRASE_DURATION_MS; after the last, fade out and reveal the
@@ -198,16 +282,18 @@ export function CinematicHero() {
     let cancelled = false;
     const timers: number[] = [];
 
-    // Compute cumulative start time of each phrase.
+    // Compute cumulative start time of each phrase, scaled by globalScale.
     const startOffset = 250;
     const startTimes: number[] = [];
     let acc = startOffset;
     for (let i = 0; i < HERO_PHRASES.length; i++) {
       startTimes.push(acc);
-      acc += beatDurationMs(i);
+      acc += beatDurationMs(i, globalScale);
     }
-    const sequenceEnd = acc; // moment the last phrase finishes fading out
-    const lastFadeOut = sceneFor(HERO_PHRASES.length - 1).fadeOutMs;
+    const sequenceEnd = acc;
+    const lastFadeOut = Math.round(
+      sceneFor(HERO_PHRASES.length - 1).fadeOutMs * globalScale,
+    );
 
     for (let i = 0; i < HERO_PHRASES.length; i++) {
       const id = window.setTimeout(() => {
@@ -216,7 +302,6 @@ export function CinematicHero() {
       timers.push(id);
     }
 
-    // After the last phrase: mark sequence done (fade it out), then reveal closing stanza, then CTAs.
     timers.push(
       window.setTimeout(() => {
         if (!cancelled) setPhraseIndex(HERO_PHRASES.length);
@@ -237,7 +322,7 @@ export function CinematicHero() {
       cancelled = true;
       for (const id of timers) window.clearTimeout(id);
     };
-  }, [skipIntro]);
+  }, [skipIntro, globalScale]);
 
   // Stamp when each phrase becomes active so the debug overlay can compute elapsed time.
   useEffect(() => {
@@ -260,22 +345,28 @@ export function CinematicHero() {
     return () => window.cancelAnimationFrame(raf);
   }, [showPhraseDebug]);
 
-  // Derive current phase + active scene for the debug overlay.
+  // Derive current phase + scaled scene for the debug overlay.
   const debugInfo = useMemo(() => {
     const total = HERO_PHRASES.length;
+    const scaleScene = (s: PhraseScene): PhraseScene => ({
+      ...s,
+      fadeInMs: Math.round(s.fadeInMs * globalScale),
+      holdMs: Math.round(s.holdMs * globalScale),
+      fadeOutMs: Math.round(s.fadeOutMs * globalScale),
+    });
     if (phraseIndex < 0) {
-      return { phase: "idle" as PhrasePhase, index: -1, scene: PHRASE_SCENES[0], elapsed: 0 };
+      return { phase: "idle" as PhrasePhase, index: -1, scene: scaleScene(PHRASE_SCENES[0]), elapsed: 0 };
     }
     if (phraseIndex >= total) {
-      return { phase: "done" as PhrasePhase, index: total, scene: sceneFor(total - 1), elapsed: 0 };
+      return { phase: "done" as PhrasePhase, index: total, scene: scaleScene(sceneFor(total - 1)), elapsed: 0 };
     }
-    const scene = sceneFor(phraseIndex);
+    const scene = scaleScene(sceneFor(phraseIndex));
     const elapsed = phraseStartedAt != null ? Math.max(0, now - phraseStartedAt) : 0;
     let phase: PhrasePhase = "fadeIn";
     if (elapsed > scene.fadeInMs + scene.holdMs) phase = "fadeOut";
     else if (elapsed > scene.fadeInMs) phase = "hold";
     return { phase, index: phraseIndex, scene, elapsed };
-  }, [phraseIndex, phraseStartedAt, now]);
+  }, [phraseIndex, phraseStartedAt, now, globalScale]);
 
   const handleScrollToNext = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
@@ -364,6 +455,9 @@ export function CinematicHero() {
           restXPct={debugInfo.scene.restXPct}
           restYPct={debugInfo.scene.restYPct}
           elapsedMs={debugInfo.elapsed}
+          intensity={intensity}
+          globalScale={globalScale}
+          videoDurationMs={videoDurationMs}
         />
       )}
 
@@ -383,8 +477,8 @@ export function CinematicHero() {
                 i === phraseIndex ? "active" : i < phraseIndex ? "past" : "pending";
               const scene = sceneFor(i);
               const phraseStyle = {
-                "--phrase-fade-in": `${scene.fadeInMs}ms`,
-                "--phrase-fade-out": `${scene.fadeOutMs}ms`,
+                "--phrase-fade-in": `${Math.round(scene.fadeInMs * globalScale)}ms`,
+                "--phrase-fade-out": `${Math.round(scene.fadeOutMs * globalScale)}ms`,
                 "--phrase-from-x": `${scene.from.x}px`,
                 "--phrase-from-y": `${scene.from.y}px`,
                 "--phrase-to-x": `${scene.to.x}px`,
