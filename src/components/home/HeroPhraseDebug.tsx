@@ -68,7 +68,7 @@ export type HeroPhraseDebugProps = {
 const phaseColors: Record<PhrasePhase, string> = {
   idle: "#888",
   fadeIn: "#7BD389",
-  hold: "#C9A96A",
+  hold: "var(--gold)",
   fadeOut: "#E58A6B",
   done: "#7AA7C7",
 };
@@ -216,7 +216,7 @@ export function HeroPhraseDebug({
         fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
         fontSize: 10.5,
         lineHeight: 1.45,
-        color: "#FAF8F3",
+        color: "var(--ivory)",
         background: "rgba(20,20,22,0.82)",
         border: "1px solid rgba(201,169,106,0.45)",
         borderRadius: 6,
@@ -244,7 +244,7 @@ export function HeroPhraseDebug({
           gap: 6,
         }}
       >
-        <span style={{ fontWeight: 700, letterSpacing: "0.06em", color: "#C9A96A" }}>
+        <span style={{ fontWeight: 700, letterSpacing: "0.06em", color: "var(--gold)" }}>
           HERO · PHRASE DEBUG
         </span>
         <button
