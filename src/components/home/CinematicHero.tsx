@@ -97,10 +97,10 @@ const PHRASE_SCENES: PhraseScene[] = [
   { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0, fadeInMs: 1100, holdMs: 2800, fadeOutMs: 900 },
 ];
 
-/** Brief gap between the last phrase fading out and the CTA reveal. */
-const COMPOSE_GAP_MS = 700;
-/** Extra hold after closing headline settles before CTAs appear. */
-const CTA_REVEAL_DELAY_MS = 1400;
+/** Pause between the last phrase fading out and the CTA reveal. */
+const COMPOSE_GAP_MS = 800;
+/** Extra hold after closing headline settles before CTAs land. */
+const CTA_REVEAL_DELAY_MS = 800;
 
 function sceneFor(i: number): PhraseScene {
   return PHRASE_SCENES[Math.min(Math.max(i, 0), PHRASE_SCENES.length - 1)];
