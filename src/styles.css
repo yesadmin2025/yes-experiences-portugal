@@ -2032,8 +2032,6 @@
   .hero-cinematic .hero-phrase-stage {
     transition: none !important;
     transform: none !important;
-    clip-path: inset(0 0 0 0) !important;
-    -webkit-clip-path: inset(0 0 0 0) !important;
   }
 }
 
