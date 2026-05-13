@@ -471,7 +471,7 @@ export function CinematicHero() {
             aria-hidden="true"
             className="hero-phrase-scrim pointer-events-none absolute inset-0"
           />
-          <div className="hero-phrase-frame absolute left-[28px] right-[28px] top-[22%] md:left-[8vw] md:right-auto md:top-[28%] md:max-w-[680px]">
+          <div className="hero-phrase-frame absolute left-[28px] right-[28px] top-[24svh] md:left-[8vw] md:right-auto md:top-[30vh] md:max-w-[700px]">
             {HERO_PHRASES.map((phrase, i) => {
               const state =
                 i === phraseIndex ? "active" : i < phraseIndex ? "past" : "pending";
