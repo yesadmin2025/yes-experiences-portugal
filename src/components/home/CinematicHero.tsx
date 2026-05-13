@@ -527,7 +527,7 @@ export function CinematicHero() {
               <CtaButton
                 to="/builder"
                 variant="primary"
-                className="hero-beat hero-beat--rise hero-cta-button hero-cta-button--primary cta-primary min-h-[48px] py-3 text-[11px] tracking-[0.12em] xs:min-h-[50px] xs:text-[11.75px] sm:text-[13px]"
+                className="hero-beat hero-beat--rise hero-cta-button hero-cta-button--primary cta-primary min-h-[44px] py-2.5 px-6 text-[11px] tracking-[0.14em] xs:min-h-[46px] xs:text-[11.5px] sm:text-[12.5px] sm:px-7"
                 data-hero-field="primaryCta"
                 data-hero-beat-show={showCta ? "true" : "false"}
                 data-hero-beat-delay="0"
@@ -537,7 +537,7 @@ export function CinematicHero() {
               <CtaButton
                 to="/experiences"
                 variant="ghostDark"
-                className="hero-beat hero-beat--rise hero-cta-button hero-cta-button--secondary cta-secondary-dark min-h-[48px] py-3 text-[10.75px] tracking-[0.105em] xs:min-h-[50px] xs:text-[11.25px] sm:text-[13px]"
+                className="hero-beat hero-beat--rise hero-cta-button hero-cta-button--secondary cta-secondary-dark min-h-[44px] py-2.5 px-6 text-[10.75px] tracking-[0.125em] xs:min-h-[46px] xs:text-[11.25px] sm:text-[12.5px] sm:px-7"
                 data-hero-field="secondaryCta"
                 data-cta-stagger="true"
                 data-hero-beat-show={showCta ? "true" : "false"}
@@ -551,7 +551,7 @@ export function CinematicHero() {
               data-hero-field="microcopy"
               data-hero-beat-show={showCta ? "true" : "false"}
               data-hero-beat-delay="320"
-              className="hero-beat hero-beat--rise mt-3.5 xs:mt-4 sm:mt-6 text-[11.75px] xs:text-[12px] sm:text-[13px] leading-[1.45] tracking-[0.02em] text-[color:var(--ivory)] [text-shadow:none]"
+              className="hero-beat hero-beat--rise mt-3.5 xs:mt-4 sm:mt-6 text-[11.75px] xs:text-[12px] sm:text-[13px] leading-[1.5] tracking-[0.025em] text-[color:var(--ivory)]/85 [text-shadow:none]"
             >
               {HERO_COPY.microcopy}
             </p>
