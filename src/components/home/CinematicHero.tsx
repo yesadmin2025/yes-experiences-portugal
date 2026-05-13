@@ -61,51 +61,37 @@ type PhraseScene = {
   mdScale: number;
 };
 
-/** Premium pacing default — long fades, short copy reads, big breath. */
+/**
+ * Premium editorial pacing — left→right reveal, gentle horizontal drift,
+ * soft fade. All phrases share the same cinematic motion; only timing
+ * varies (longer holds for two-line phrases). The clip-path mask reveal
+ * is handled in CSS via [data-hero-phrase-state].
+ */
 const SCENE_DEFAULT: Omit<PhraseScene, "from" | "to" | "restXPct" | "restYPct"> = {
-  fadeInMs: 1700,
+  fadeInMs: 900,
   holdMs: 2400,
-  fadeOutMs: 1700,
-  mdScale: 1.7,
+  fadeOutMs: 700,
+  mdScale: 1,
 };
 
-/**
- * 10 phrases, each with a unique trajectory. Read like a story — every
- * phrase enters from one of the four corners and exits to another corner,
- * cycling TL → TR → BR → BL (then diagonals) so the eye is led across
- * the frame. Tweak any single phrase here without touching component logic.
- *
- * Corner map (px offsets, mobile baseline; mdScale lifts them on desktop):
- *   TL: x:-34, y:-26   TR: x: 34, y:-26
- *   BL: x:-34, y: 26   BR: x: 34, y: 26
- */
-const TL = { x: -34, y: -26 };
-const TR = { x:  34, y: -26 };
-const BL = { x: -34, y:  26 };
-const BR = { x:  34, y:  26 };
+/** Subtle horizontal drift only — phrase opens from the left, dissolves to the right. */
+const DRIFT_FROM = { x: -18, y: 0 };
+const DRIFT_TO   = { x:  10, y: 0 };
 
 const PHRASE_SCENES: PhraseScene[] = [
-  // 0 — TL → TR, settles upper-left
-  { ...SCENE_DEFAULT, from: TL, to: TR, restXPct: -6, restYPct: -14 },
-  // 1 — TR → BR, settles upper-right
-  { ...SCENE_DEFAULT, from: TR, to: BR, restXPct:  6, restYPct: -12 },
-  // 2 — BR → BL, settles lower-right
-  { ...SCENE_DEFAULT, from: BR, to: BL, restXPct:  6, restYPct:  10 },
-  // 3 — BL → TL, settles lower-left
-  { ...SCENE_DEFAULT, from: BL, to: TL, restXPct: -6, restYPct:  10 },
-  // 4 — TL → BR (diagonal), rests near centre-left
-  { ...SCENE_DEFAULT, from: TL, to: BR, restXPct: -4, restYPct:  -2 },
-  // 5 — TR → BL (diagonal), rests centre-right
-  { ...SCENE_DEFAULT, from: TR, to: BL, restXPct:  4, restYPct:  -2 },
-  // 6 — BL → TR (diagonal), rests centre-low-left
-  { ...SCENE_DEFAULT, from: BL, to: TR, restXPct: -4, restYPct:   4 },
-  // 7 — BR → TL (diagonal), rests centre-low-right
-  { ...SCENE_DEFAULT, from: BR, to: TL, restXPct:  4, restYPct:   4 },
-  // 8 — TL → TR again, lifted high for emphasis
-  { ...SCENE_DEFAULT, from: TL, to: TR, restXPct:  0, restYPct: -10 },
-  // 9 — closing breath: gentle drift in from below-centre, dissolves up
-  { ...SCENE_DEFAULT, fadeInMs: 1900, holdMs: 2800, fadeOutMs: 2000,
-    from: { x: 0, y: 18 }, to: { x: 0, y: -16 }, restXPct: 0, restYPct: 0 },
+  // Single-line phrases — standard hold.
+  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0 }, // 0 Portugal is the stage.
+  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0 }, // 1 You write your story.
+  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0, holdMs: 2600 }, // 2 Hidden chapters wait to unfold.
+  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0, holdMs: 2600 }, // 3 Locals know where they begin.
+  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0, holdMs: 2600 }, // 4 You decide how to live it.
+  // 5 — long four-clause phrase, longer reveal + hold.
+  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0, fadeInMs: 1100, holdMs: 3200 },
+  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0 }, // 6 Every story is different.
+  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0, holdMs: 2200 }, // 7 So is yours.
+  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0, holdMs: 2600 }, // 8 Portugal is waiting to be lived.
+  // 9 — closing line, breathe before CTAs land.
+  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0, fadeInMs: 1100, holdMs: 2800, fadeOutMs: 900 },
 ];
 
 /** Brief gap between the last phrase fading out and the CTA reveal. */
@@ -468,10 +454,15 @@ export function CinematicHero() {
       {!composed && (
         <div
           aria-hidden={composed ? "true" : undefined}
-          className="hero-phrase-stage pointer-events-none absolute inset-0 z-[5] flex items-center justify-center px-6 sm:px-10"
+          className="hero-phrase-stage pointer-events-none absolute inset-0 z-[5]"
           data-hero-phrase-stage="true"
         >
-          <div className="relative w-full max-w-[22rem] xs:max-w-[24rem] sm:max-w-[38rem] md:max-w-[52rem] lg:max-w-[60rem] text-center">
+          {/* Left-side editorial scrim — keeps the phrase legible without muddying the film */}
+          <div
+            aria-hidden="true"
+            className="hero-phrase-scrim pointer-events-none absolute inset-0"
+          />
+          <div className="hero-phrase-frame absolute left-[28px] right-[28px] top-[22%] md:left-[8vw] md:right-auto md:top-[28%] md:max-w-[680px]">
             {HERO_PHRASES.map((phrase, i) => {
               const state =
                 i === phraseIndex ? "active" : i < phraseIndex ? "past" : "pending";
@@ -494,9 +485,9 @@ export function CinematicHero() {
                   data-hero-phrase-state={state}
                   data-hero-phrase-visible={state === "active" ? "true" : "false"}
                   style={phraseStyle}
-                  className="hero-phrase absolute inset-0 mx-auto flex items-center justify-center px-2 [font-family:var(--font-serif)] italic font-normal text-[color:var(--gold)] text-[22px] xs:text-[26px] sm:text-[36px] md:text-[52px] lg:text-[60px] leading-[1.18] xs:leading-[1.16] sm:leading-[1.14] tracking-[-0.008em] text-pretty text-balance [text-shadow:0_2px_26px_rgba(0,0,0,0.65)]"
+                  className="hero-phrase absolute inset-x-0 top-0 [font-family:var(--font-serif)] italic font-normal text-[color:var(--gold)] text-[36px] xs:text-[40px] sm:text-[52px] md:text-[64px] lg:text-[74px] leading-[1.08] md:leading-[1.04] tracking-[-0.012em] text-left text-pretty [text-shadow:0_2px_24px_rgba(0,0,0,0.55)]"
                 >
-                  <span className="block max-w-[22ch] xs:max-w-[24ch] sm:max-w-[26ch]">{phrase}</span>
+                  <span className="hero-phrase__text block max-w-[18ch] md:max-w-[20ch]">{phrase}</span>
                 </p>
               );
             })}
