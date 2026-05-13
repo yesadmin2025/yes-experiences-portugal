@@ -454,10 +454,15 @@ export function CinematicHero() {
       {!composed && (
         <div
           aria-hidden={composed ? "true" : undefined}
-          className="hero-phrase-stage pointer-events-none absolute inset-0 z-[5] flex items-center justify-center px-6 sm:px-10"
+          className="hero-phrase-stage pointer-events-none absolute inset-0 z-[5]"
           data-hero-phrase-stage="true"
         >
-          <div className="relative w-full max-w-[22rem] xs:max-w-[24rem] sm:max-w-[38rem] md:max-w-[52rem] lg:max-w-[60rem] text-center">
+          {/* Left-side editorial scrim — keeps the phrase legible without muddying the film */}
+          <div
+            aria-hidden="true"
+            className="hero-phrase-scrim pointer-events-none absolute inset-0"
+          />
+          <div className="hero-phrase-frame absolute left-[28px] right-[28px] top-[22%] md:left-[8vw] md:right-auto md:top-[28%] md:max-w-[680px]">
             {HERO_PHRASES.map((phrase, i) => {
               const state =
                 i === phraseIndex ? "active" : i < phraseIndex ? "past" : "pending";
@@ -480,9 +485,9 @@ export function CinematicHero() {
                   data-hero-phrase-state={state}
                   data-hero-phrase-visible={state === "active" ? "true" : "false"}
                   style={phraseStyle}
-                  className="hero-phrase absolute inset-0 mx-auto flex items-center justify-center px-2 [font-family:var(--font-serif)] italic font-normal text-[color:var(--gold)] text-[22px] xs:text-[26px] sm:text-[36px] md:text-[52px] lg:text-[60px] leading-[1.18] xs:leading-[1.16] sm:leading-[1.14] tracking-[-0.008em] text-pretty text-balance [text-shadow:0_2px_26px_rgba(0,0,0,0.65)]"
+                  className="hero-phrase absolute inset-x-0 top-0 [font-family:var(--font-serif)] italic font-normal text-[color:var(--gold)] text-[36px] xs:text-[40px] sm:text-[52px] md:text-[64px] lg:text-[74px] leading-[1.08] md:leading-[1.04] tracking-[-0.012em] text-left text-pretty [text-shadow:0_2px_24px_rgba(0,0,0,0.55)]"
                 >
-                  <span className="block max-w-[22ch] xs:max-w-[24ch] sm:max-w-[26ch]">{phrase}</span>
+                  <span className="hero-phrase__text block max-w-[18ch] md:max-w-[20ch]">{phrase}</span>
                 </p>
               );
             })}
