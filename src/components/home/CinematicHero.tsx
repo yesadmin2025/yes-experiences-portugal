@@ -109,10 +109,14 @@ function beatDurationMs(i: number, scale = 1): number {
   const s = sceneFor(i);
   return Math.round((s.fadeInMs + s.holdMs + s.fadeOutMs) * scale);
 }
-/** Sum of all base beat durations (intensity = 1, no video fit). */
+/** Sum of all base beat durations (intensity = 1, no video fit) including
+ *  the cinematic breathing pause inserted between phrases. */
 function baseSequenceMs(): number {
   let acc = 0;
-  for (let i = 0; i < PHRASE_SCENES.length; i++) acc += beatDurationMs(i, 1);
+  for (let i = 0; i < PHRASE_SCENES.length; i++) {
+    acc += beatDurationMs(i, 1);
+    if (i < PHRASE_SCENES.length - 1) acc += PHRASE_GAP_MS;
+  }
   return acc;
 }
 
