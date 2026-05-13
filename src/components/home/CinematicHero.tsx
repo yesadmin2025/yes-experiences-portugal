@@ -494,9 +494,9 @@ export function CinematicHero() {
                   data-hero-phrase-state={state}
                   data-hero-phrase-visible={state === "active" ? "true" : "false"}
                   style={phraseStyle}
-                  className="hero-phrase absolute inset-x-0 top-0 [font-family:var(--font-serif)] italic font-normal text-[color:var(--gold)] text-[36px] xs:text-[40px] sm:text-[52px] md:text-[64px] lg:text-[74px] leading-[1.08] md:leading-[1.04] tracking-[-0.012em] text-left text-pretty [text-shadow:0_2px_24px_rgba(0,0,0,0.55)]"
+                  className="hero-phrase absolute inset-x-0 top-0 [font-family:var(--font-serif)] italic font-normal text-[color:var(--gold)] text-[44px] xs:text-[48px] sm:text-[64px] md:text-[80px] lg:text-[88px] leading-[1.05] md:leading-[1.02] tracking-[-0.014em] text-left text-pretty [text-shadow:0_2px_28px_rgba(0,0,0,0.6)]"
                 >
-                  <span className="hero-phrase__text block max-w-[18ch] md:max-w-[20ch]">{phrase}</span>
+                  <span className="hero-phrase__text block max-w-[16ch] md:max-w-[18ch]">{phrase}</span>
                 </p>
               );
             })}
