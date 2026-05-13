@@ -61,51 +61,37 @@ type PhraseScene = {
   mdScale: number;
 };
 
-/** Premium pacing default — long fades, short copy reads, big breath. */
+/**
+ * Premium editorial pacing — left→right reveal, gentle horizontal drift,
+ * soft fade. All phrases share the same cinematic motion; only timing
+ * varies (longer holds for two-line phrases). The clip-path mask reveal
+ * is handled in CSS via [data-hero-phrase-state].
+ */
 const SCENE_DEFAULT: Omit<PhraseScene, "from" | "to" | "restXPct" | "restYPct"> = {
-  fadeInMs: 1700,
+  fadeInMs: 900,
   holdMs: 2400,
-  fadeOutMs: 1700,
-  mdScale: 1.7,
+  fadeOutMs: 700,
+  mdScale: 1,
 };
 
-/**
- * 10 phrases, each with a unique trajectory. Read like a story — every
- * phrase enters from one of the four corners and exits to another corner,
- * cycling TL → TR → BR → BL (then diagonals) so the eye is led across
- * the frame. Tweak any single phrase here without touching component logic.
- *
- * Corner map (px offsets, mobile baseline; mdScale lifts them on desktop):
- *   TL: x:-34, y:-26   TR: x: 34, y:-26
- *   BL: x:-34, y: 26   BR: x: 34, y: 26
- */
-const TL = { x: -34, y: -26 };
-const TR = { x:  34, y: -26 };
-const BL = { x: -34, y:  26 };
-const BR = { x:  34, y:  26 };
+/** Subtle horizontal drift only — phrase opens from the left, dissolves to the right. */
+const DRIFT_FROM = { x: -18, y: 0 };
+const DRIFT_TO   = { x:  10, y: 0 };
 
 const PHRASE_SCENES: PhraseScene[] = [
-  // 0 — TL → TR, settles upper-left
-  { ...SCENE_DEFAULT, from: TL, to: TR, restXPct: -6, restYPct: -14 },
-  // 1 — TR → BR, settles upper-right
-  { ...SCENE_DEFAULT, from: TR, to: BR, restXPct:  6, restYPct: -12 },
-  // 2 — BR → BL, settles lower-right
-  { ...SCENE_DEFAULT, from: BR, to: BL, restXPct:  6, restYPct:  10 },
-  // 3 — BL → TL, settles lower-left
-  { ...SCENE_DEFAULT, from: BL, to: TL, restXPct: -6, restYPct:  10 },
-  // 4 — TL → BR (diagonal), rests near centre-left
-  { ...SCENE_DEFAULT, from: TL, to: BR, restXPct: -4, restYPct:  -2 },
-  // 5 — TR → BL (diagonal), rests centre-right
-  { ...SCENE_DEFAULT, from: TR, to: BL, restXPct:  4, restYPct:  -2 },
-  // 6 — BL → TR (diagonal), rests centre-low-left
-  { ...SCENE_DEFAULT, from: BL, to: TR, restXPct: -4, restYPct:   4 },
-  // 7 — BR → TL (diagonal), rests centre-low-right
-  { ...SCENE_DEFAULT, from: BR, to: TL, restXPct:  4, restYPct:   4 },
-  // 8 — TL → TR again, lifted high for emphasis
-  { ...SCENE_DEFAULT, from: TL, to: TR, restXPct:  0, restYPct: -10 },
-  // 9 — closing breath: gentle drift in from below-centre, dissolves up
-  { ...SCENE_DEFAULT, fadeInMs: 1900, holdMs: 2800, fadeOutMs: 2000,
-    from: { x: 0, y: 18 }, to: { x: 0, y: -16 }, restXPct: 0, restYPct: 0 },
+  // Single-line phrases — standard hold.
+  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0 }, // 0 Portugal is the stage.
+  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0 }, // 1 You write your story.
+  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0, holdMs: 2600 }, // 2 Hidden chapters wait to unfold.
+  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0, holdMs: 2600 }, // 3 Locals know where they begin.
+  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0, holdMs: 2600 }, // 4 You decide how to live it.
+  // 5 — long four-clause phrase, longer reveal + hold.
+  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0, fadeInMs: 1100, holdMs: 3200 },
+  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0 }, // 6 Every story is different.
+  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0, holdMs: 2200 }, // 7 So is yours.
+  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0, holdMs: 2600 }, // 8 Portugal is waiting to be lived.
+  // 9 — closing line, breathe before CTAs land.
+  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0, fadeInMs: 1100, holdMs: 2800, fadeOutMs: 900 },
 ];
 
 /** Brief gap between the last phrase fading out and the CTA reveal. */
