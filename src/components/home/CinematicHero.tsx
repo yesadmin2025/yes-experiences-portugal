@@ -68,15 +68,18 @@ type PhraseScene = {
  * is handled in CSS via [data-hero-phrase-state].
  */
 const SCENE_DEFAULT: Omit<PhraseScene, "from" | "to" | "restXPct" | "restYPct"> = {
-  fadeInMs: 900,
-  holdMs: 2400,
-  fadeOutMs: 700,
+  fadeInMs: 1000,
+  holdMs: 2800,
+  fadeOutMs: 800,
   mdScale: 1,
 };
 
-/** Subtle horizontal drift only — phrase opens from the left, dissolves to the right. */
-const DRIFT_FROM = { x: -18, y: 0 };
-const DRIFT_TO   = { x:  10, y: 0 };
+/** Subtle horizontal drift only — phrase emerges from the left, dissolves to the right. */
+const DRIFT_FROM = { x: -20, y: 0 };
+const DRIFT_TO   = { x:   8, y: 0 };
+
+/** Cinematic breathing pause between phrases — no hard cuts. */
+const PHRASE_GAP_MS = 380;
 
 const PHRASE_SCENES: PhraseScene[] = [
   // Single-line phrases — standard hold.
@@ -94,10 +97,10 @@ const PHRASE_SCENES: PhraseScene[] = [
   { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0, fadeInMs: 1100, holdMs: 2800, fadeOutMs: 900 },
 ];
 
-/** Brief gap between the last phrase fading out and the CTA reveal. */
-const COMPOSE_GAP_MS = 700;
-/** Extra hold after closing headline settles before CTAs appear. */
-const CTA_REVEAL_DELAY_MS = 1400;
+/** Pause between the last phrase fading out and the CTA reveal. */
+const COMPOSE_GAP_MS = 800;
+/** Extra hold after closing headline settles before CTAs land. */
+const CTA_REVEAL_DELAY_MS = 800;
 
 function sceneFor(i: number): PhraseScene {
   return PHRASE_SCENES[Math.min(Math.max(i, 0), PHRASE_SCENES.length - 1)];
@@ -106,10 +109,14 @@ function beatDurationMs(i: number, scale = 1): number {
   const s = sceneFor(i);
   return Math.round((s.fadeInMs + s.holdMs + s.fadeOutMs) * scale);
 }
-/** Sum of all base beat durations (intensity = 1, no video fit). */
+/** Sum of all base beat durations (intensity = 1, no video fit) including
+ *  the cinematic breathing pause inserted between phrases. */
 function baseSequenceMs(): number {
   let acc = 0;
-  for (let i = 0; i < PHRASE_SCENES.length; i++) acc += beatDurationMs(i, 1);
+  for (let i = 0; i < PHRASE_SCENES.length; i++) {
+    acc += beatDurationMs(i, 1);
+    if (i < PHRASE_SCENES.length - 1) acc += PHRASE_GAP_MS;
+  }
   return acc;
 }
 
@@ -271,10 +278,12 @@ export function CinematicHero() {
     // Compute cumulative start time of each phrase, scaled by globalScale.
     const startOffset = 250;
     const startTimes: number[] = [];
+    const gap = Math.round(PHRASE_GAP_MS * globalScale);
     let acc = startOffset;
     for (let i = 0; i < HERO_PHRASES.length; i++) {
       startTimes.push(acc);
       acc += beatDurationMs(i, globalScale);
+      if (i < HERO_PHRASES.length - 1) acc += gap;
     }
     const sequenceEnd = acc;
     const lastFadeOut = Math.round(
@@ -462,7 +471,7 @@ export function CinematicHero() {
             aria-hidden="true"
             className="hero-phrase-scrim pointer-events-none absolute inset-0"
           />
-          <div className="hero-phrase-frame absolute left-[28px] right-[28px] top-[22%] md:left-[8vw] md:right-auto md:top-[28%] md:max-w-[680px]">
+          <div className="hero-phrase-frame absolute left-[28px] right-[28px] top-[24svh] md:left-[8vw] md:right-auto md:top-[30vh] md:max-w-[700px]">
             {HERO_PHRASES.map((phrase, i) => {
               const state =
                 i === phraseIndex ? "active" : i < phraseIndex ? "past" : "pending";
@@ -485,9 +494,9 @@ export function CinematicHero() {
                   data-hero-phrase-state={state}
                   data-hero-phrase-visible={state === "active" ? "true" : "false"}
                   style={phraseStyle}
-                  className="hero-phrase absolute inset-x-0 top-0 [font-family:var(--font-serif)] italic font-normal text-[color:var(--gold)] text-[36px] xs:text-[40px] sm:text-[52px] md:text-[64px] lg:text-[74px] leading-[1.08] md:leading-[1.04] tracking-[-0.012em] text-left text-pretty [text-shadow:0_2px_24px_rgba(0,0,0,0.55)]"
+                  className="hero-phrase absolute inset-x-0 top-0 [font-family:var(--font-serif)] italic font-normal text-[color:var(--gold)] text-[44px] xs:text-[48px] sm:text-[64px] md:text-[80px] lg:text-[88px] leading-[1.05] md:leading-[1.02] tracking-[-0.014em] text-left text-pretty [text-shadow:0_2px_28px_rgba(0,0,0,0.6)]"
                 >
-                  <span className="hero-phrase__text block max-w-[18ch] md:max-w-[20ch]">{phrase}</span>
+                  <span className="hero-phrase__text block max-w-[16ch] md:max-w-[18ch]">{phrase}</span>
                 </p>
               );
             })}
@@ -518,7 +527,7 @@ export function CinematicHero() {
               <CtaButton
                 to="/builder"
                 variant="primary"
-                className="hero-beat hero-beat--rise hero-cta-button hero-cta-button--primary cta-primary min-h-[48px] py-3 text-[11px] tracking-[0.12em] xs:min-h-[50px] xs:text-[11.75px] sm:text-[13px]"
+                className="hero-beat hero-beat--rise hero-cta-button hero-cta-button--primary cta-primary min-h-[44px] py-2.5 px-6 text-[11px] tracking-[0.14em] xs:min-h-[46px] xs:text-[11.5px] sm:text-[12.5px] sm:px-7"
                 data-hero-field="primaryCta"
                 data-hero-beat-show={showCta ? "true" : "false"}
                 data-hero-beat-delay="0"
@@ -528,7 +537,7 @@ export function CinematicHero() {
               <CtaButton
                 to="/experiences"
                 variant="ghostDark"
-                className="hero-beat hero-beat--rise hero-cta-button hero-cta-button--secondary cta-secondary-dark min-h-[48px] py-3 text-[10.75px] tracking-[0.105em] xs:min-h-[50px] xs:text-[11.25px] sm:text-[13px]"
+                className="hero-beat hero-beat--rise hero-cta-button hero-cta-button--secondary cta-secondary-dark min-h-[44px] py-2.5 px-6 text-[10.75px] tracking-[0.125em] xs:min-h-[46px] xs:text-[11.25px] sm:text-[12.5px] sm:px-7"
                 data-hero-field="secondaryCta"
                 data-cta-stagger="true"
                 data-hero-beat-show={showCta ? "true" : "false"}
@@ -542,7 +551,7 @@ export function CinematicHero() {
               data-hero-field="microcopy"
               data-hero-beat-show={showCta ? "true" : "false"}
               data-hero-beat-delay="320"
-              className="hero-beat hero-beat--rise mt-3.5 xs:mt-4 sm:mt-6 text-[11.75px] xs:text-[12px] sm:text-[13px] leading-[1.45] tracking-[0.02em] text-[color:var(--ivory)] [text-shadow:none]"
+              className="hero-beat hero-beat--rise mt-3.5 xs:mt-4 sm:mt-6 text-[11.75px] xs:text-[12px] sm:text-[13px] leading-[1.5] tracking-[0.025em] text-[color:var(--ivory)]/85 [text-shadow:none]"
             >
               {HERO_COPY.microcopy}
             </p>
