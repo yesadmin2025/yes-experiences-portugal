@@ -1958,57 +1958,46 @@
    so each phrase can come from / leave to a different direction —
    like turning the pages of a story. Light, premium easing. */
 .hero-cinematic .hero-phrase {
-  --phrase-fade-in: 900ms;
-  --phrase-fade-out: 700ms;
-  --phrase-from-x: -18px;
+  --phrase-fade-in: 1000ms;
+  --phrase-fade-out: 800ms;
+  --phrase-from-x: -20px;
   --phrase-from-y: 0px;
-  --phrase-to-x: 10px;
+  --phrase-to-x: 8px;
   --phrase-to-y: 0px;
   --phrase-md-scale: 1;
   --phrase-rest-x: 0%;
   --phrase-rest-y: 0%;
   --phrase-offset-x: var(--phrase-from-x);
   --phrase-offset-y: var(--phrase-from-y);
+  /* Cinematic ease — slow start, gentle settle, no overshoot. */
   --phrase-ease: cubic-bezier(0.22, 1, 0.36, 1);
 
   opacity: 0;
   pointer-events: none;
-  will-change: opacity, transform, clip-path;
-  /* Left → right reveal mask. Sits closed (0% width) until active. */
-  clip-path: inset(0 100% 0 0);
-  -webkit-clip-path: inset(0 100% 0 0);
+  will-change: opacity, transform;
   transform:
     translate(var(--phrase-rest-x), var(--phrase-rest-y))
     translate3d(var(--phrase-offset-x), var(--phrase-offset-y), 0);
   transition:
     opacity var(--phrase-fade-out) var(--phrase-ease),
-    transform var(--phrase-fade-out) var(--phrase-ease),
-    clip-path var(--phrase-fade-out) var(--phrase-ease),
-    -webkit-clip-path var(--phrase-fade-out) var(--phrase-ease);
+    transform var(--phrase-fade-out) var(--phrase-ease);
 }
 
-/* Active = settled at rest, fully revealed left→right, fully opaque. */
+/* Active = settled at rest, fully opaque. Pure cinematic fade — no mask. */
 .hero-cinematic .hero-phrase[data-hero-phrase-state="active"] {
   --phrase-offset-x: 0px;
   --phrase-offset-y: 0px;
   opacity: 1;
-  clip-path: inset(0 0 0 0);
-  -webkit-clip-path: inset(0 0 0 0);
   transition:
     opacity var(--phrase-fade-in) var(--phrase-ease),
-    transform calc(var(--phrase-fade-in) * 1.1) var(--phrase-ease),
-    clip-path calc(var(--phrase-fade-in) * 1.15) var(--phrase-ease),
-    -webkit-clip-path calc(var(--phrase-fade-in) * 1.15) var(--phrase-ease);
+    transform calc(var(--phrase-fade-in) * 1.05) var(--phrase-ease);
 }
 
-/* Past = drifted toward exit, dissolved away. Mask collapses on the right
-   so the line reads as gently sweeping out instead of just fading. */
+/* Past = drifted slightly to the right, dissolved away. */
 .hero-cinematic .hero-phrase[data-hero-phrase-state="past"] {
   --phrase-offset-x: var(--phrase-to-x);
   --phrase-offset-y: var(--phrase-to-y);
   opacity: 0;
-  clip-path: inset(0 0 0 100%);
-  -webkit-clip-path: inset(0 0 0 100%);
 }
 
 .hero-cinematic .hero-phrase-stage {
