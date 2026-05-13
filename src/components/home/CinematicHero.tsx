@@ -68,15 +68,18 @@ type PhraseScene = {
  * is handled in CSS via [data-hero-phrase-state].
  */
 const SCENE_DEFAULT: Omit<PhraseScene, "from" | "to" | "restXPct" | "restYPct"> = {
-  fadeInMs: 900,
-  holdMs: 2400,
-  fadeOutMs: 700,
+  fadeInMs: 1000,
+  holdMs: 2800,
+  fadeOutMs: 800,
   mdScale: 1,
 };
 
-/** Subtle horizontal drift only — phrase opens from the left, dissolves to the right. */
-const DRIFT_FROM = { x: -18, y: 0 };
-const DRIFT_TO   = { x:  10, y: 0 };
+/** Subtle horizontal drift only — phrase emerges from the left, dissolves to the right. */
+const DRIFT_FROM = { x: -20, y: 0 };
+const DRIFT_TO   = { x:   8, y: 0 };
+
+/** Cinematic breathing pause between phrases — no hard cuts. */
+const PHRASE_GAP_MS = 380;
 
 const PHRASE_SCENES: PhraseScene[] = [
   // Single-line phrases — standard hold.
