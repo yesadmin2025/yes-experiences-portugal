@@ -278,10 +278,12 @@ export function CinematicHero() {
     // Compute cumulative start time of each phrase, scaled by globalScale.
     const startOffset = 250;
     const startTimes: number[] = [];
+    const gap = Math.round(PHRASE_GAP_MS * globalScale);
     let acc = startOffset;
     for (let i = 0; i < HERO_PHRASES.length; i++) {
       startTimes.push(acc);
       acc += beatDurationMs(i, globalScale);
+      if (i < HERO_PHRASES.length - 1) acc += gap;
     }
     const sequenceEnd = acc;
     const lastFadeOut = Math.round(
