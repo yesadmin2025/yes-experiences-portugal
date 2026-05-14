@@ -42,9 +42,12 @@ function shouldRun(): boolean {
 export function HeroContractAssert({
   scenes,
   gapMs,
+  autoFixChanges = [],
 }: {
   scenes: PhraseTimings[];
   gapMs: number;
+  /** Diff produced by autoFixHeroContract when ?contract-fix=1 is on. */
+  autoFixChanges?: ContractFix[];
 }) {
   const [violations, setViolations] = useState<ContractViolation[]>([]);
   const [active, setActive] = useState(false);
@@ -56,6 +59,15 @@ export function HeroContractAssert({
     const v = validateHeroContract(scenes, gapMs);
     setViolations(v);
     window.__heroContractViolations = v;
+    window.__heroContractAutoFix = autoFixChanges;
+    if (autoFixChanges.length > 0) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        `[hero-contract] AUTO-FIX applied ${autoFixChanges.length} change${autoFixChanges.length === 1 ? "" : "s"}`,
+      );
+      // eslint-disable-next-line no-console
+      console.table(autoFixChanges);
+    }
     if (v.length > 0) {
       // eslint-disable-next-line no-console
       console.error(
@@ -65,13 +77,17 @@ export function HeroContractAssert({
       );
       // eslint-disable-next-line no-console
       console.table(v);
-    } else {
+    } else if (autoFixChanges.length === 0) {
       // eslint-disable-next-line no-console
       console.info("[hero-contract] PASS — all phrases within contract");
     }
-  }, [scenes, gapMs]);
+  }, [scenes, gapMs, autoFixChanges]);
 
-  if (!active || dismissed || violations.length === 0) return null;
+  if (!active || dismissed) return null;
+  if (violations.length === 0 && autoFixChanges.length === 0) return null;
+
+  const isFixMode = autoFixChanges.length > 0;
+  const accent = isFixMode ? "#C9A96A" : "#E58A6B";
 
   return (
     <div
