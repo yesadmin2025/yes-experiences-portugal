@@ -306,6 +306,13 @@ export function CinematicHero() {
     let cancelled = false;
     const timers: number[] = [];
 
+    // On loop restart, reset visible state so the sequence plays from the top.
+    if (loopKey > 0) {
+      setPhraseIndex(-1);
+      setComposed(false);
+      setCtaRevealed(false);
+    }
+
     // Compute cumulative start time of each phrase, scaled by globalScale.
     const startOffset = 250;
     const startTimes: number[] = [];
@@ -338,17 +345,24 @@ export function CinematicHero() {
         if (!cancelled) setComposed(true);
       }, sequenceEnd + COMPOSE_GAP_MS),
     );
+    const ctaAt = sequenceEnd + COMPOSE_GAP_MS + CTA_REVEAL_DELAY_MS;
     timers.push(
       window.setTimeout(() => {
         if (!cancelled) setCtaRevealed(true);
-      }, sequenceEnd + COMPOSE_GAP_MS + CTA_REVEAL_DELAY_MS),
+      }, ctaAt),
+    );
+    // Cinematic loop — hold the final frame, then restart from the top.
+    timers.push(
+      window.setTimeout(() => {
+        if (!cancelled) setLoopKey((k) => k + 1);
+      }, ctaAt + LOOP_HOLD_MS),
     );
 
     return () => {
       cancelled = true;
       for (const id of timers) window.clearTimeout(id);
     };
-  }, [skipIntro, globalScale]);
+  }, [skipIntro, globalScale, loopKey]);
 
   // Stamp when each phrase becomes active so the debug overlay can compute elapsed time.
   useEffect(() => {
