@@ -87,7 +87,7 @@ export function HeroContractAssert({
   if (violations.length === 0 && autoFixChanges.length === 0) return null;
 
   const isFixMode = autoFixChanges.length > 0;
-  const accent = isFixMode ? "#C9A96A" : "#E58A6B";
+  const accent = isFixMode ? "var(--gold)" : "#E58A6B";
 
   return (
     <div
