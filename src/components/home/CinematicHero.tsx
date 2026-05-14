@@ -28,6 +28,7 @@ import {
   useHeroPhraseDebugToggle,
   type PhrasePhase,
 } from "@/components/home/HeroPhraseDebug";
+import { HeroContractAssert } from "@/components/home/HeroContractAssert";
 
 const HERO_FILM_SRC_1080 = "/video/film/yes-hero-film-1080.mp4";
 const HERO_FILM_SRC_720 = "/video/film/yes-hero-film-720.mp4";
