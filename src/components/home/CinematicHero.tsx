@@ -70,36 +70,36 @@ type PhraseScene = {
  * is handled in CSS via [data-hero-phrase-state].
  */
 const SCENE_DEFAULT: Omit<PhraseScene, "from" | "to" | "restXPct" | "restYPct"> = {
-  fadeInMs: 1200,
-  holdMs: 3400,
-  fadeOutMs: 900,
+  fadeInMs: 1400,
+  holdMs: 3600,
+  fadeOutMs: 1000,
   mdScale: 1,
 };
 
 /** Subtle horizontal drift only — phrase emerges from the left, dissolves to the right. */
 const DRIFT_FROM = { x: -16, y: 0 };
-const DRIFT_TO   = { x:  14, y: 0 };
+const DRIFT_TO   = { x:  18, y: 0 };
 
-/** Cinematic breathing pause between phrases — no hard cuts. */
-let PHRASE_GAP_MS = 600;
+/** Cinematic breathing pause between phrases — 600–900ms of emotional silence. */
+let PHRASE_GAP_MS = 800;
 
 let PHRASE_SCENES: PhraseScene[] = [
-  // Every phrase shares the same cinematic cadence: 1200ms enter,
-  // ≥3400ms hold, 900ms exit, 600ms breathing pause. No phrase is
+  // Every phrase shares the same cinematic cadence: 1400ms enter,
+  // ≥3600ms hold, 1000ms exit, 800ms breathing pause. No phrase is
   // allowed to feel rushed — the user must FEEL each line.
   { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0 }, // 0 Portugal is the stage.
   { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0 }, // 1 You write your story.
   { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0 }, // 2 Hidden chapters wait to unfold.
   { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0 }, // 3 Locals know where they begin.
   { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0 }, // 4 You decide how to live it.
-  // 5 — long four-clause phrase, slightly longer hold to absorb.
-  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0, holdMs: 3800 },
+  // 5 — long four-clause phrase, longer hold to absorb.
+  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0, holdMs: 4000 },
   { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0 }, // 6 Every story is different.
   { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0 }, // 7 So is yours.
   { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0 }, // 8 Portugal is waiting to be lived.
   // 9 — closing line, longest hold so the user lives the silence
   // before the CTAs land.
-  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0, holdMs: 4000 },
+  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0, holdMs: 4200 },
 ];
 
 /**
@@ -125,11 +125,11 @@ if (autoFixEnabled()) {
 }
 
 /** Pause between the last phrase fading out and the CTA reveal. */
-const COMPOSE_GAP_MS = 900;
+const COMPOSE_GAP_MS = 1000;
 /** Extra hold after closing headline settles before CTAs land. */
-const CTA_REVEAL_DELAY_MS = 1400;
+const CTA_REVEAL_DELAY_MS = 1600;
 /** How long the CTA / final frame holds before the cinematic loop restarts. */
-const LOOP_HOLD_MS = 11000;
+const LOOP_HOLD_MS = 12000;
 
 function sceneFor(i: number): PhraseScene {
   return PHRASE_SCENES[Math.min(Math.max(i, 0), PHRASE_SCENES.length - 1)];
