@@ -71,7 +71,7 @@ type PhraseScene = {
  */
 const SCENE_DEFAULT: Omit<PhraseScene, "from" | "to" | "restXPct" | "restYPct"> = {
   fadeInMs: 1200,
-  holdMs: 3200,
+  holdMs: 3400,
   fadeOutMs: 900,
   mdScale: 1,
 };
@@ -81,22 +81,25 @@ const DRIFT_FROM = { x: -16, y: 0 };
 const DRIFT_TO   = { x:  14, y: 0 };
 
 /** Cinematic breathing pause between phrases — no hard cuts. */
-let PHRASE_GAP_MS = 520;
+let PHRASE_GAP_MS = 600;
 
 let PHRASE_SCENES: PhraseScene[] = [
-  // Single-line phrases — standard hold.
+  // Every phrase shares the same cinematic cadence: 1200ms enter,
+  // ≥3400ms hold, 900ms exit, 600ms breathing pause. No phrase is
+  // allowed to feel rushed — the user must FEEL each line.
   { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0 }, // 0 Portugal is the stage.
   { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0 }, // 1 You write your story.
-  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0, holdMs: 2600 }, // 2 Hidden chapters wait to unfold.
-  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0, holdMs: 2600 }, // 3 Locals know where they begin.
-  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0, holdMs: 2600 }, // 4 You decide how to live it.
-  // 5 — long four-clause phrase, longer reveal + hold.
-  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0, fadeInMs: 1100, holdMs: 3200 },
+  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0 }, // 2 Hidden chapters wait to unfold.
+  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0 }, // 3 Locals know where they begin.
+  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0 }, // 4 You decide how to live it.
+  // 5 — long four-clause phrase, slightly longer hold to absorb.
+  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0, holdMs: 3800 },
   { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0 }, // 6 Every story is different.
-  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0, holdMs: 2200 }, // 7 So is yours.
-  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0, holdMs: 2600 }, // 8 Portugal is waiting to be lived.
-  // 9 — closing line, breathe before CTAs land.
-  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0, fadeInMs: 1100, holdMs: 2800, fadeOutMs: 900 },
+  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0 }, // 7 So is yours.
+  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0 }, // 8 Portugal is waiting to be lived.
+  // 9 — closing line, longest hold so the user lives the silence
+  // before the CTAs land.
+  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0, holdMs: 4000 },
 ];
 
 /**
@@ -124,7 +127,9 @@ if (autoFixEnabled()) {
 /** Pause between the last phrase fading out and the CTA reveal. */
 const COMPOSE_GAP_MS = 900;
 /** Extra hold after closing headline settles before CTAs land. */
-const CTA_REVEAL_DELAY_MS = 1200;
+const CTA_REVEAL_DELAY_MS = 1400;
+/** How long the CTA / final frame holds before the cinematic loop restarts. */
+const LOOP_HOLD_MS = 11000;
 
 function sceneFor(i: number): PhraseScene {
   return PHRASE_SCENES[Math.min(Math.max(i, 0), PHRASE_SCENES.length - 1)];
@@ -227,6 +232,8 @@ export function CinematicHero() {
   const [phraseIndex, setPhraseIndex] = useState<number>(skipIntro ? HERO_PHRASES.length : -1);
   const [composed, setComposed] = useState<boolean>(skipIntro);
   const [ctaRevealed, setCtaRevealed] = useState<boolean>(skipIntro);
+  /** Increments to restart the cinematic sequence (loop). */
+  const [loopKey, setLoopKey] = useState<number>(0);
 
   // Listen for intensity changes from the debug overlay (same tab + cross tab).
   useEffect(() => {
@@ -299,6 +306,13 @@ export function CinematicHero() {
     let cancelled = false;
     const timers: number[] = [];
 
+    // On loop restart, reset visible state so the sequence plays from the top.
+    if (loopKey > 0) {
+      setPhraseIndex(-1);
+      setComposed(false);
+      setCtaRevealed(false);
+    }
+
     // Compute cumulative start time of each phrase, scaled by globalScale.
     const startOffset = 250;
     const startTimes: number[] = [];
@@ -331,17 +345,24 @@ export function CinematicHero() {
         if (!cancelled) setComposed(true);
       }, sequenceEnd + COMPOSE_GAP_MS),
     );
+    const ctaAt = sequenceEnd + COMPOSE_GAP_MS + CTA_REVEAL_DELAY_MS;
     timers.push(
       window.setTimeout(() => {
         if (!cancelled) setCtaRevealed(true);
-      }, sequenceEnd + COMPOSE_GAP_MS + CTA_REVEAL_DELAY_MS),
+      }, ctaAt),
+    );
+    // Cinematic loop — hold the final frame, then restart from the top.
+    timers.push(
+      window.setTimeout(() => {
+        if (!cancelled) setLoopKey((k) => k + 1);
+      }, ctaAt + LOOP_HOLD_MS),
     );
 
     return () => {
       cancelled = true;
       for (const id of timers) window.clearTimeout(id);
     };
-  }, [skipIntro, globalScale]);
+  }, [skipIntro, globalScale, loopKey]);
 
   // Stamp when each phrase becomes active so the debug overlay can compute elapsed time.
   useEffect(() => {
@@ -497,7 +518,7 @@ export function CinematicHero() {
             aria-hidden="true"
             className="hero-phrase-scrim pointer-events-none absolute inset-0"
           />
-          <div className="hero-phrase-frame absolute left-[24px] right-[24px] top-[20svh] md:left-[8vw] md:right-auto md:top-[26vh] md:max-w-[860px]">
+          <div className="hero-phrase-frame absolute left-[24px] right-[24px] top-[22svh] md:left-[8vw] md:right-auto md:top-[26vh] md:max-w-[920px]">
             {HERO_PHRASES.map((phrase, i) => {
               const state =
                 i === phraseIndex ? "active" : i < phraseIndex ? "past" : "pending";
@@ -520,9 +541,9 @@ export function CinematicHero() {
                   data-hero-phrase-state={state}
                   data-hero-phrase-visible={state === "active" ? "true" : "false"}
                   style={phraseStyle}
-                  className="hero-phrase absolute inset-x-0 top-0 [font-family:var(--font-serif)] italic font-normal text-[color:var(--gold)] text-[42px] xs:text-[48px] sm:text-[68px] md:text-[84px] lg:text-[94px] leading-[1.04] md:leading-[1.0] tracking-[-0.018em] text-left text-pretty [text-shadow:0_2px_36px_rgba(0,0,0,0.65),0_1px_2px_rgba(0,0,0,0.5)]"
+                  className="hero-phrase absolute inset-x-0 top-0 [font-family:var(--font-serif)] italic font-normal text-[color:var(--gold)] text-[46px] xs:text-[50px] sm:text-[72px] md:text-[88px] lg:text-[100px] leading-[1.04] md:leading-[1.0] tracking-[-0.022em] text-left text-pretty [text-shadow:0_2px_36px_rgba(0,0,0,0.65),0_1px_2px_rgba(0,0,0,0.5)]"
                 >
-                  <span className="hero-phrase__text block max-w-[15ch] md:max-w-[17ch]">{phrase}</span>
+                  <span className="hero-phrase__text block max-w-[14ch] md:max-w-[16ch]">{phrase}</span>
                 </p>
               );
             })}
@@ -549,11 +570,11 @@ export function CinematicHero() {
           </div>
 
           <div className="hero-cta-block">
-            <div className="hero-cta-flow mt-5 xs:mt-6 sm:mt-9 md:mt-10 flex flex-col sm:flex-row gap-2.5 sm:gap-4 items-stretch sm:items-center">
+            <div className="hero-cta-flow mt-6 xs:mt-7 sm:mt-10 md:mt-12 flex flex-col sm:flex-row gap-3 sm:gap-5 items-stretch sm:items-center">
               <CtaButton
                 to="/builder"
                 variant="primary"
-                className="hero-beat hero-beat--rise hero-cta-button hero-cta-button--primary cta-primary min-h-[42px] py-2 px-6 text-[10.75px] tracking-[0.16em] xs:min-h-[44px] xs:text-[11.25px] sm:text-[12px] sm:px-7 rounded-[3px]"
+                className="hero-beat hero-beat--rise hero-cta-button hero-cta-button--primary cta-primary min-h-[44px] py-2 px-7 text-[10.75px] tracking-[0.2em] xs:min-h-[46px] xs:text-[11.25px] sm:text-[12px] sm:px-8 rounded-[6px]"
                 data-hero-field="primaryCta"
                 data-hero-beat-show={showCta ? "true" : "false"}
                 data-hero-beat-delay="0"
@@ -563,7 +584,7 @@ export function CinematicHero() {
               <CtaButton
                 to="/experiences"
                 variant="ghostDark"
-                className="hero-beat hero-beat--rise hero-cta-button hero-cta-button--secondary cta-secondary-dark min-h-[42px] py-2 px-6 text-[10.5px] tracking-[0.14em] xs:min-h-[44px] xs:text-[11px] sm:text-[12px] sm:px-7 rounded-[3px]"
+                className="hero-beat hero-beat--rise hero-cta-button hero-cta-button--secondary cta-secondary-dark min-h-[44px] py-2 px-7 text-[10.5px] tracking-[0.18em] xs:min-h-[46px] xs:text-[11px] sm:text-[12px] sm:px-8 rounded-[6px]"
                 data-hero-field="secondaryCta"
                 data-cta-stagger="true"
                 data-hero-beat-show={showCta ? "true" : "false"}
