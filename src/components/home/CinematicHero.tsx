@@ -127,7 +127,9 @@ if (autoFixEnabled()) {
 /** Pause between the last phrase fading out and the CTA reveal. */
 const COMPOSE_GAP_MS = 900;
 /** Extra hold after closing headline settles before CTAs land. */
-const CTA_REVEAL_DELAY_MS = 1200;
+const CTA_REVEAL_DELAY_MS = 1400;
+/** How long the CTA / final frame holds before the cinematic loop restarts. */
+const LOOP_HOLD_MS = 11000;
 
 function sceneFor(i: number): PhraseScene {
   return PHRASE_SCENES[Math.min(Math.max(i, 0), PHRASE_SCENES.length - 1)];
