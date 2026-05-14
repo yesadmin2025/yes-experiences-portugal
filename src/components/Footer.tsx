@@ -1,7 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { Instagram, Facebook, Youtube, Linkedin, ArrowRight } from "lucide-react";
+import { Instagram, Facebook, Youtube, Linkedin } from "lucide-react";
 import { Logo } from "@/components/Logo";
-import { useState } from "react";
 
 /**
  * Footer — 4-column nav with logo + tagline on desktop,
@@ -11,7 +10,6 @@ import { useState } from "react";
  *   col 3: Company
  *   col 4: Connect (social icons)
  *
- * Newsletter strip added above bottom bar.
  * Logo + tagline sit ABOVE the column grid so the 4 columns get
  * proportionate space at desktop instead of being squeezed beside
  * a logo block. On mobile everything stacks vertically.
@@ -22,45 +20,6 @@ const SOCIALS = [
   { href: "https://youtube.com/", label: "YouTube", Icon: Youtube },
   { href: "https://linkedin.com/", label: "LinkedIn", Icon: Linkedin },
 ];
-
-function NewsletterForm() {
-  const [email, setEmail] = useState("");
-  const [done, setDone] = useState(false);
-
-  if (done) {
-    return (
-      <p className="text-[13px] text-[color:var(--gold-soft)] serif italic">
-        Thank you — we'll be in touch.
-      </p>
-    );
-  }
-
-  return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        if (email) setDone(true);
-      }}
-      className="flex items-stretch gap-0 max-w-sm w-full"
-    >
-      <input
-        type="email"
-        required
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Your email address"
-        className="flex-1 bg-transparent border border-[color:var(--ivory)]/20 text-[color:var(--ivory)] placeholder:text-[color:var(--ivory)]/40 px-4 py-2.5 text-[13px] outline-none focus:border-[color:var(--gold-warm)]/60 transition-colors duration-200"
-      />
-      <button
-        type="submit"
-        aria-label="Subscribe"
-        className="bg-[color:var(--gold)] hover:bg-[color:var(--gold-warm)] text-[color:var(--charcoal)] px-4 flex items-center justify-center transition-colors duration-200"
-      >
-        <ArrowRight size={16} />
-      </button>
-    </form>
-  );
-}
 
 export function Footer() {
   return (
@@ -128,7 +87,6 @@ export function Footer() {
             title="Company"
             links={[
               { to: "/about", label: "About YES" },
-              { to: "/local-stories", label: "Local Stories" },
               { to: "/contact", label: "Contact" },
             ]}
           />
@@ -161,29 +119,8 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Newsletter strip — added above bottom bar */}
-        <div className="mt-10 md:mt-12 pt-8 border-t border-[color:var(--gold-warm)]/20">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-            <div className="max-w-xs">
-              <p
-                className="text-[11px] uppercase tracking-[0.28em] text-[color:var(--gold-warm)] mb-1.5"
-                style={{ fontWeight: 500 }}
-              >
-                Stay inspired
-              </p>
-              <p
-                className="text-[13.5px] text-[color:var(--ivory)]/70 leading-[1.6]"
-                style={{ fontWeight: 320 }}
-              >
-                Hidden places, local stories and new experiences — direct to your inbox.
-              </p>
-            </div>
-            <NewsletterForm />
-          </div>
-        </div>
-
         {/* Bottom bar — copyright + tagline. Quiet, single line. */}
-        <div className="mt-8 md:mt-8 pt-5 border-t border-[color:var(--gold-warm)]/25">
+        <div className="mt-10 md:mt-10 pt-5 border-t border-[color:var(--gold-warm)]/25">
           <div
             className="flex flex-col md:flex-row justify-between items-center gap-3 text-[12px] text-[color:var(--ivory)]/70"
             style={{ fontWeight: 350 }}
