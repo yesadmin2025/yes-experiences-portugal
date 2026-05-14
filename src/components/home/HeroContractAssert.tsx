@@ -92,19 +92,20 @@ export function HeroContractAssert({
   return (
     <div
       role="alert"
-      data-hero-contract-violation="true"
+      data-hero-contract-violation={violations.length > 0 ? "true" : "false"}
+      data-hero-contract-autofix={isFixMode ? "true" : "false"}
       style={{
         position: "fixed",
         left: 12,
         right: 12,
         bottom: 12,
         zIndex: 9999,
-        maxHeight: "40vh",
+        maxHeight: "45vh",
         overflow: "auto",
         background: "rgba(28,12,8,0.96)",
         color: "var(--ivory)",
-        border: "1px solid #E58A6B",
-        borderLeft: "4px solid #E58A6B",
+        border: `1px solid ${accent}`,
+        borderLeft: `4px solid ${accent}`,
         borderRadius: 6,
         padding: "10px 12px",
         fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
@@ -114,8 +115,10 @@ export function HeroContractAssert({
       }}
     >
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, marginBottom: 6 }}>
-        <strong style={{ color: "#E58A6B", letterSpacing: "0.08em" }}>
-          HERO CONTRACT · {violations.length} VIOLATION{violations.length === 1 ? "" : "S"}
+        <strong style={{ color: accent, letterSpacing: "0.08em" }}>
+          {isFixMode
+            ? `HERO CONTRACT · AUTO-FIX · ${autoFixChanges.length} CHANGE${autoFixChanges.length === 1 ? "" : "S"}`
+            : `HERO CONTRACT · ${violations.length} VIOLATION${violations.length === 1 ? "" : "S"}`}
         </strong>
         <button
           type="button"
@@ -139,27 +142,67 @@ export function HeroContractAssert({
         spec: enter {HERO_PHRASE_CONTRACT.fadeInMs}ms · hold ≥{HERO_PHRASE_CONTRACT.holdMinMs}ms ·
         exit {HERO_PHRASE_CONTRACT.fadeOutMs}ms · gap {HERO_PHRASE_CONTRACT.gapMinMs}–{HERO_PHRASE_CONTRACT.gapMaxMs}ms
         (±{HERO_PHRASE_CONTRACT.toleranceMs}ms)
+        {!isFixMode && " · append ?contract-fix=1 to auto-clamp"}
       </div>
-      <table style={{ width: "100%", borderCollapse: "collapse" }}>
-        <thead>
-          <tr style={{ textAlign: "left", opacity: 0.7 }}>
-            <th style={{ padding: "2px 6px" }}>phrase</th>
-            <th style={{ padding: "2px 6px" }}>field</th>
-            <th style={{ padding: "2px 6px" }}>actual</th>
-            <th style={{ padding: "2px 6px" }}>expected</th>
-          </tr>
-        </thead>
-        <tbody>
-          {violations.map((v, i) => (
-            <tr key={i} style={{ borderTop: "1px solid rgba(250,248,243,0.1)" }}>
-              <td style={{ padding: "2px 6px" }}>{v.phraseIndex < 0 ? "—" : v.phraseIndex}</td>
-              <td style={{ padding: "2px 6px" }}>{v.field}</td>
-              <td style={{ padding: "2px 6px", color: "#E58A6B" }}>{v.actual}ms</td>
-              <td style={{ padding: "2px 6px" }}>{v.expected}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+
+      {isFixMode && (
+        <>
+          <div style={{ opacity: 0.85, margin: "6px 0 4px", color: accent, letterSpacing: "0.06em" }}>
+            APPLIED FIXES
+          </div>
+          <table style={{ width: "100%", borderCollapse: "collapse", marginBottom: 8 }}>
+            <thead>
+              <tr style={{ textAlign: "left", opacity: 0.7 }}>
+                <th style={{ padding: "2px 6px" }}>phrase</th>
+                <th style={{ padding: "2px 6px" }}>field</th>
+                <th style={{ padding: "2px 6px" }}>was</th>
+                <th style={{ padding: "2px 6px" }}>now</th>
+                <th style={{ padding: "2px 6px" }}>spec</th>
+              </tr>
+            </thead>
+            <tbody>
+              {autoFixChanges.map((c, i) => (
+                <tr key={`fix-${i}`} style={{ borderTop: "1px solid rgba(250,248,243,0.1)" }}>
+                  <td style={{ padding: "2px 6px" }}>{c.phraseIndex < 0 ? "—" : c.phraseIndex}</td>
+                  <td style={{ padding: "2px 6px" }}>{c.field}</td>
+                  <td style={{ padding: "2px 6px", color: "#E58A6B" }}>{c.actual}ms</td>
+                  <td style={{ padding: "2px 6px", color: "#7BD389" }}>{c.fixed}ms</td>
+                  <td style={{ padding: "2px 6px", opacity: 0.7 }}>{c.expected}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
+      )}
+
+      {violations.length > 0 && (
+        <>
+          <div style={{ opacity: 0.85, margin: "6px 0 4px", color: "#E58A6B", letterSpacing: "0.06em" }}>
+            REMAINING VIOLATIONS
+          </div>
+          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <thead>
+              <tr style={{ textAlign: "left", opacity: 0.7 }}>
+                <th style={{ padding: "2px 6px" }}>phrase</th>
+                <th style={{ padding: "2px 6px" }}>field</th>
+                <th style={{ padding: "2px 6px" }}>actual</th>
+                <th style={{ padding: "2px 6px" }}>expected</th>
+              </tr>
+            </thead>
+            <tbody>
+              {violations.map((v, i) => (
+                <tr key={i} style={{ borderTop: "1px solid rgba(250,248,243,0.1)" }}>
+                  <td style={{ padding: "2px 6px" }}>{v.phraseIndex < 0 ? "—" : v.phraseIndex}</td>
+                  <td style={{ padding: "2px 6px" }}>{v.field}</td>
+                  <td style={{ padding: "2px 6px", color: "#E58A6B" }}>{v.actual}ms</td>
+                  <td style={{ padding: "2px 6px" }}>{v.expected}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
+      )}
     </div>
   );
 }
+
