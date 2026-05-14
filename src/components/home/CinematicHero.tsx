@@ -68,18 +68,18 @@ type PhraseScene = {
  * is handled in CSS via [data-hero-phrase-state].
  */
 const SCENE_DEFAULT: Omit<PhraseScene, "from" | "to" | "restXPct" | "restYPct"> = {
-  fadeInMs: 1000,
-  holdMs: 2800,
-  fadeOutMs: 800,
+  fadeInMs: 1200,
+  holdMs: 3200,
+  fadeOutMs: 900,
   mdScale: 1,
 };
 
 /** Subtle horizontal drift only — phrase emerges from the left, dissolves to the right. */
-const DRIFT_FROM = { x: -20, y: 0 };
-const DRIFT_TO   = { x:   8, y: 0 };
+const DRIFT_FROM = { x: -16, y: 0 };
+const DRIFT_TO   = { x:  14, y: 0 };
 
 /** Cinematic breathing pause between phrases — no hard cuts. */
-const PHRASE_GAP_MS = 380;
+const PHRASE_GAP_MS = 520;
 
 const PHRASE_SCENES: PhraseScene[] = [
   // Single-line phrases — standard hold.
@@ -98,9 +98,9 @@ const PHRASE_SCENES: PhraseScene[] = [
 ];
 
 /** Pause between the last phrase fading out and the CTA reveal. */
-const COMPOSE_GAP_MS = 800;
+const COMPOSE_GAP_MS = 900;
 /** Extra hold after closing headline settles before CTAs land. */
-const CTA_REVEAL_DELAY_MS = 800;
+const CTA_REVEAL_DELAY_MS = 1200;
 
 function sceneFor(i: number): PhraseScene {
   return PHRASE_SCENES[Math.min(Math.max(i, 0), PHRASE_SCENES.length - 1)];
@@ -471,7 +471,7 @@ export function CinematicHero() {
             aria-hidden="true"
             className="hero-phrase-scrim pointer-events-none absolute inset-0"
           />
-          <div className="hero-phrase-frame absolute left-[28px] right-[28px] top-[24svh] md:left-[8vw] md:right-auto md:top-[30vh] md:max-w-[700px]">
+          <div className="hero-phrase-frame absolute left-[24px] right-[24px] top-[20svh] md:left-[8vw] md:right-auto md:top-[26vh] md:max-w-[860px]">
             {HERO_PHRASES.map((phrase, i) => {
               const state =
                 i === phraseIndex ? "active" : i < phraseIndex ? "past" : "pending";
@@ -494,9 +494,9 @@ export function CinematicHero() {
                   data-hero-phrase-state={state}
                   data-hero-phrase-visible={state === "active" ? "true" : "false"}
                   style={phraseStyle}
-                  className="hero-phrase absolute inset-x-0 top-0 [font-family:var(--font-serif)] italic font-normal text-[color:var(--gold)] text-[44px] xs:text-[48px] sm:text-[64px] md:text-[80px] lg:text-[88px] leading-[1.05] md:leading-[1.02] tracking-[-0.014em] text-left text-pretty [text-shadow:0_2px_28px_rgba(0,0,0,0.6)]"
+                  className="hero-phrase absolute inset-x-0 top-0 [font-family:var(--font-serif)] italic font-normal text-[color:var(--gold)] text-[42px] xs:text-[48px] sm:text-[68px] md:text-[84px] lg:text-[94px] leading-[1.04] md:leading-[1.0] tracking-[-0.018em] text-left text-pretty [text-shadow:0_2px_36px_rgba(0,0,0,0.65),0_1px_2px_rgba(0,0,0,0.5)]"
                 >
-                  <span className="hero-phrase__text block max-w-[16ch] md:max-w-[18ch]">{phrase}</span>
+                  <span className="hero-phrase__text block max-w-[15ch] md:max-w-[17ch]">{phrase}</span>
                 </p>
               );
             })}
@@ -527,7 +527,7 @@ export function CinematicHero() {
               <CtaButton
                 to="/builder"
                 variant="primary"
-                className="hero-beat hero-beat--rise hero-cta-button hero-cta-button--primary cta-primary min-h-[44px] py-2.5 px-6 text-[11px] tracking-[0.14em] xs:min-h-[46px] xs:text-[11.5px] sm:text-[12.5px] sm:px-7"
+                className="hero-beat hero-beat--rise hero-cta-button hero-cta-button--primary cta-primary min-h-[42px] py-2 px-6 text-[10.75px] tracking-[0.16em] xs:min-h-[44px] xs:text-[11.25px] sm:text-[12px] sm:px-7 rounded-[3px]"
                 data-hero-field="primaryCta"
                 data-hero-beat-show={showCta ? "true" : "false"}
                 data-hero-beat-delay="0"
@@ -537,7 +537,7 @@ export function CinematicHero() {
               <CtaButton
                 to="/experiences"
                 variant="ghostDark"
-                className="hero-beat hero-beat--rise hero-cta-button hero-cta-button--secondary cta-secondary-dark min-h-[44px] py-2.5 px-6 text-[10.75px] tracking-[0.125em] xs:min-h-[46px] xs:text-[11.25px] sm:text-[12.5px] sm:px-7"
+                className="hero-beat hero-beat--rise hero-cta-button hero-cta-button--secondary cta-secondary-dark min-h-[42px] py-2 px-6 text-[10.5px] tracking-[0.14em] xs:min-h-[44px] xs:text-[11px] sm:text-[12px] sm:px-7 rounded-[3px]"
                 data-hero-field="secondaryCta"
                 data-cta-stagger="true"
                 data-hero-beat-show={showCta ? "true" : "false"}
