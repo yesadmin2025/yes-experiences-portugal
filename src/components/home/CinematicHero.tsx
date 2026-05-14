@@ -527,7 +527,7 @@ export function CinematicHero() {
               <CtaButton
                 to="/builder"
                 variant="primary"
-                className="hero-beat hero-beat--rise hero-cta-button hero-cta-button--primary cta-primary min-h-[44px] py-2.5 px-6 text-[11px] tracking-[0.14em] xs:min-h-[46px] xs:text-[11.5px] sm:text-[12.5px] sm:px-7"
+                className="hero-beat hero-beat--rise hero-cta-button hero-cta-button--primary cta-primary min-h-[42px] py-2 px-6 text-[10.75px] tracking-[0.16em] xs:min-h-[44px] xs:text-[11.25px] sm:text-[12px] sm:px-7 rounded-[3px]"
                 data-hero-field="primaryCta"
                 data-hero-beat-show={showCta ? "true" : "false"}
                 data-hero-beat-delay="0"
@@ -537,7 +537,7 @@ export function CinematicHero() {
               <CtaButton
                 to="/experiences"
                 variant="ghostDark"
-                className="hero-beat hero-beat--rise hero-cta-button hero-cta-button--secondary cta-secondary-dark min-h-[44px] py-2.5 px-6 text-[10.75px] tracking-[0.125em] xs:min-h-[46px] xs:text-[11.25px] sm:text-[12.5px] sm:px-7"
+                className="hero-beat hero-beat--rise hero-cta-button hero-cta-button--secondary cta-secondary-dark min-h-[42px] py-2 px-6 text-[10.5px] tracking-[0.14em] xs:min-h-[44px] xs:text-[11px] sm:text-[12px] sm:px-7 rounded-[3px]"
                 data-hero-field="secondaryCta"
                 data-cta-stagger="true"
                 data-hero-beat-show={showCta ? "true" : "false"}
