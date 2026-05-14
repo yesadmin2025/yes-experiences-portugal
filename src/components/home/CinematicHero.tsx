@@ -459,7 +459,7 @@ export function CinematicHero() {
       />
 
       {showScrimRuler && <HeroScrimRuler />}
-      <HeroContractAssert scenes={PHRASE_SCENES} gapMs={PHRASE_GAP_MS} />
+      <HeroContractAssert scenes={PHRASE_SCENES} gapMs={PHRASE_GAP_MS} autoFixChanges={HERO_AUTOFIX_CHANGES} />
       {showPhraseDebug && (
         <HeroPhraseDebug
           phraseIndex={phraseIndex}
