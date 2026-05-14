@@ -36,7 +36,27 @@ export type ContractViolation = {
   expected: string;
 };
 
+export type ContractFix = ContractViolation & { fixed: number };
+
 const C = HERO_PHRASE_CONTRACT;
+
+function clampEnter(v: number): number {
+  if (Math.abs(v - C.fadeInMs) <= C.toleranceMs) return v;
+  return C.fadeInMs;
+}
+function clampHold(v: number): number {
+  if (v >= C.holdMinMs - C.toleranceMs) return v;
+  return C.holdMinMs;
+}
+function clampExit(v: number): number {
+  if (Math.abs(v - C.fadeOutMs) <= C.toleranceMs) return v;
+  return C.fadeOutMs;
+}
+function clampGap(v: number): number {
+  if (v < C.gapMinMs - C.toleranceMs) return C.gapMinMs;
+  if (v > C.gapMaxMs + C.toleranceMs) return C.gapMaxMs;
+  return v;
+}
 
 export function validateHeroContract(
   scenes: PhraseTimings[],
@@ -59,3 +79,40 @@ export function validateHeroContract(
   }
   return out;
 }
+
+/**
+ * Auto-fix mode: clamps every offending timing to the nearest in-contract
+ * value and returns the corrected scenes + gap, plus a diff of every
+ * change made. Pure function — does not mutate inputs.
+ */
+export function autoFixHeroContract<T extends PhraseTimings>(
+  scenes: T[],
+  gapMs: number,
+): { scenes: T[]; gapMs: number; changes: ContractFix[] } {
+  const changes: ContractFix[] = [];
+  const fixedScenes = scenes.map((s, i) => {
+    const next = { ...s };
+    const fIn = clampEnter(s.fadeInMs);
+    if (fIn !== s.fadeInMs) {
+      changes.push({ phraseIndex: i, field: "fadeInMs", actual: s.fadeInMs, expected: `${C.fadeInMs}ms ±${C.toleranceMs}`, fixed: fIn });
+      next.fadeInMs = fIn;
+    }
+    const hold = clampHold(s.holdMs);
+    if (hold !== s.holdMs) {
+      changes.push({ phraseIndex: i, field: "holdMs", actual: s.holdMs, expected: `≥${C.holdMinMs}ms`, fixed: hold });
+      next.holdMs = hold;
+    }
+    const fOut = clampExit(s.fadeOutMs);
+    if (fOut !== s.fadeOutMs) {
+      changes.push({ phraseIndex: i, field: "fadeOutMs", actual: s.fadeOutMs, expected: `${C.fadeOutMs}ms ±${C.toleranceMs}`, fixed: fOut });
+      next.fadeOutMs = fOut;
+    }
+    return next;
+  });
+  const fixedGap = clampGap(gapMs);
+  if (fixedGap !== gapMs) {
+    changes.push({ phraseIndex: -1, field: "gapMs", actual: gapMs, expected: `${C.gapMinMs}–${C.gapMaxMs}ms`, fixed: fixedGap });
+  }
+  return { scenes: fixedScenes, gapMs: fixedGap, changes };
+}
+

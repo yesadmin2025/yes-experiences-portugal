@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-05-14T00:48:19.853Z",
-  "filesScanned": 195,
+  "generatedAt": "2026-05-14T20:09:54.503Z",
+  "filesScanned": 197,
   "approvedPalette": {
     "teal": "#295B61",
     "teal-2": "#2A7C82",
@@ -18,10 +18,10 @@
     "#cccccc"
   ],
   "counts": {
-    "total": 172,
+    "total": 180,
     "approved": 34,
     "allowlisted": 25,
-    "mismatch": 113
+    "mismatch": 121
   },
   "findings": [
     {
@@ -979,8 +979,44 @@
       "status": "mismatch"
     },
     {
+      "file": "src/components/home/HeroContractAssert.tsx",
+      "line": 88,
+      "col": 28,
+      "raw": "#E58A6B",
+      "normalized": "#e58a6b",
+      "snippet": "border: \"1px solid #E58A6B\",",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/home/HeroContractAssert.tsx",
+      "line": 89,
+      "col": 32,
+      "raw": "#E58A6B",
+      "normalized": "#e58a6b",
+      "snippet": "borderLeft: \"4px solid #E58A6B\",",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/home/HeroContractAssert.tsx",
+      "line": 99,
+      "col": 34,
+      "raw": "#E58A6B",
+      "normalized": "#e58a6b",
+      "snippet": "<strong style={{ color: \"#E58A6B\", letterSpacing: \"0.08em\" }}>",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/home/HeroContractAssert.tsx",
+      "line": 139,
+      "col": 56,
+      "raw": "#E58A6B",
+      "normalized": "#e58a6b",
+      "snippet": "<td style={{ padding: \"2px 6px\", color: \"#E58A6B\" }}>{v.actual}ms</td>",
+      "status": "mismatch"
+    },
+    {
       "file": "src/components/home/HeroPhraseDebug.tsx",
-      "line": 115,
+      "line": 134,
       "col": 10,
       "raw": "#888",
       "normalized": "#888888",
@@ -989,7 +1025,7 @@
     },
     {
       "file": "src/components/home/HeroPhraseDebug.tsx",
-      "line": 116,
+      "line": 135,
       "col": 12,
       "raw": "#7BD389",
       "normalized": "#7bd389",
@@ -998,7 +1034,7 @@
     },
     {
       "file": "src/components/home/HeroPhraseDebug.tsx",
-      "line": 118,
+      "line": 137,
       "col": 13,
       "raw": "#E58A6B",
       "normalized": "#e58a6b",
@@ -1007,11 +1043,47 @@
     },
     {
       "file": "src/components/home/HeroPhraseDebug.tsx",
-      "line": 119,
+      "line": 138,
       "col": 10,
       "raw": "#7AA7C7",
       "normalized": "#7aa7c7",
       "snippet": "done: \"#7AA7C7\",",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/home/HeroPhraseDebug.tsx",
+      "line": 485,
+      "col": 35,
+      "raw": "#7BD389",
+      "normalized": "#7bd389",
+      "snippet": "color: allPass ? \"#7BD389\" : \"#E58A6B\",",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/home/HeroPhraseDebug.tsx",
+      "line": 485,
+      "col": 47,
+      "raw": "#E58A6B",
+      "normalized": "#e58a6b",
+      "snippet": "color: allPass ? \"#7BD389\" : \"#E58A6B\",",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/home/HeroPhraseDebug.tsx",
+      "line": 783,
+      "col": 56,
+      "raw": "#7BD389",
+      "normalized": "#7bd389",
+      "snippet": "<span aria-hidden=\"true\" style={{ color: pass ? \"#7BD389\" : \"#E58A6B\" }}>",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/home/HeroPhraseDebug.tsx",
+      "line": 783,
+      "col": 68,
+      "raw": "#E58A6B",
+      "normalized": "#e58a6b",
+      "snippet": "<span aria-hidden=\"true\" style={{ color: pass ? \"#7BD389\" : \"#E58A6B\" }}>",
       "status": "mismatch"
     },
     {
@@ -1538,7 +1610,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 3228,
+      "line": 3257,
       "col": 23,
       "raw": "#000",
       "normalized": "#000000",
@@ -1547,7 +1619,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 3559,
+      "line": 3588,
       "col": 41,
       "raw": "#000",
       "normalized": "#000000",
@@ -1556,7 +1628,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 3559,
+      "line": 3588,
       "col": 47,
       "raw": "#000",
       "normalized": "#000000",
@@ -1565,7 +1637,7 @@
     },
     {
       "file": "src/styles.css",
-      "line": 4052,
+      "line": 4081,
       "col": 7,
       "raw": "#555",
       "normalized": "#555555",
