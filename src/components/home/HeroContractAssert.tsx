@@ -25,6 +25,7 @@ import {
 declare global {
   interface Window {
     __heroContractViolations?: ContractViolation[];
+    __heroContractAutoFix?: ContractFix[];
   }
 }
 
