@@ -104,7 +104,26 @@ export type HeroPhraseDebugProps = {
   globalScale?: number;
   /** Video duration in ms once metadata has loaded; null while unknown. */
   videoDurationMs?: number | null;
+  /** Base (un-scaled) breathing pause between phrases, in ms. */
+  gapMs?: number;
 };
+
+/** Film-title cadence contract — base values at intensity=1, no video-fit. */
+const CONTRACT = {
+  fadeIn: 1200,
+  hold: 3200,
+  fadeOut: 900,
+  gapMin: 400,
+  gapMax: 600,
+} as const;
+const TIMING_TOLERANCE_MS = 40;
+
+function checkExact(actual: number, target: number) {
+  return Math.abs(actual - target) <= TIMING_TOLERANCE_MS;
+}
+function checkRange(actual: number, min: number, max: number) {
+  return actual >= min - TIMING_TOLERANCE_MS && actual <= max + TIMING_TOLERANCE_MS;
+}
 
 const INTENSITY_KEY = "hero-phrase-debug:intensity";
 const INTENSITY_EVENT = "hero-phrase-intensity-change";
