@@ -1956,11 +1956,11 @@
    so each phrase can come from / leave to a different direction —
    like turning the pages of a story. Light, premium easing. */
 .hero-cinematic .hero-phrase {
-  --phrase-fade-in: 1200ms;
-  --phrase-fade-out: 900ms;
+  --phrase-fade-in: 1400ms;
+  --phrase-fade-out: 1000ms;
   --phrase-from-x: -16px;
   --phrase-from-y: 0px;
-  --phrase-to-x: 14px;
+  --phrase-to-x: 18px;
   --phrase-to-y: 0px;
   --phrase-md-scale: 1;
   --phrase-rest-x: 0%;
