@@ -1956,11 +1956,11 @@
    so each phrase can come from / leave to a different direction —
    like turning the pages of a story. Light, premium easing. */
 .hero-cinematic .hero-phrase {
-  --phrase-fade-in: 1000ms;
-  --phrase-fade-out: 800ms;
-  --phrase-from-x: -20px;
+  --phrase-fade-in: 1200ms;
+  --phrase-fade-out: 900ms;
+  --phrase-from-x: -16px;
   --phrase-from-y: 0px;
-  --phrase-to-x: 8px;
+  --phrase-to-x: 14px;
   --phrase-to-y: 0px;
   --phrase-md-scale: 1;
   --phrase-rest-x: 0%;
@@ -1972,56 +1972,85 @@
 
   opacity: 0;
   pointer-events: none;
-  will-change: opacity, transform;
+  will-change: opacity, transform, -webkit-mask-position;
   transform:
     translate(var(--phrase-rest-x), var(--phrase-rest-y))
     translate3d(var(--phrase-offset-x), var(--phrase-offset-y), 0);
+  /* Soft left→right reveal mask: a gradient where the opaque band starts
+     fully off to the left (pending), slides across to fully reveal the
+     phrase (active), then keeps drifting off to the right (past). */
+  -webkit-mask-image: linear-gradient(
+    100deg,
+    rgba(0,0,0,1) 0%,
+    rgba(0,0,0,1) 38%,
+    rgba(0,0,0,0) 64%
+  );
+          mask-image: linear-gradient(
+    100deg,
+    rgba(0,0,0,1) 0%,
+    rgba(0,0,0,1) 38%,
+    rgba(0,0,0,0) 64%
+  );
+  -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
+  -webkit-mask-size: 240% 100%;
+          mask-size: 240% 100%;
+  -webkit-mask-position: 100% 0;
+          mask-position: 100% 0;
   transition:
     opacity var(--phrase-fade-out) var(--phrase-ease),
-    transform var(--phrase-fade-out) var(--phrase-ease);
+    transform var(--phrase-fade-out) var(--phrase-ease),
+    -webkit-mask-position var(--phrase-fade-out) var(--phrase-ease),
+    mask-position var(--phrase-fade-out) var(--phrase-ease);
 }
 
-/* Active = settled at rest, fully opaque. Pure cinematic fade — no mask. */
+/* Active = settled at rest, fully opaque, mask fully unveiled. */
 .hero-cinematic .hero-phrase[data-hero-phrase-state="active"] {
   --phrase-offset-x: 0px;
   --phrase-offset-y: 0px;
   opacity: 1;
+  -webkit-mask-position: 50% 0;
+          mask-position: 50% 0;
   transition:
     opacity var(--phrase-fade-in) var(--phrase-ease),
-    transform calc(var(--phrase-fade-in) * 1.05) var(--phrase-ease);
+    transform calc(var(--phrase-fade-in) * 1.05) var(--phrase-ease),
+    -webkit-mask-position calc(var(--phrase-fade-in) * 1.1) var(--phrase-ease),
+    mask-position calc(var(--phrase-fade-in) * 1.1) var(--phrase-ease);
 }
 
-/* Past = drifted slightly to the right, dissolved away. */
+/* Past = drifted slightly to the right, mask runs off the left edge. */
 .hero-cinematic .hero-phrase[data-hero-phrase-state="past"] {
   --phrase-offset-x: var(--phrase-to-x);
   --phrase-offset-y: var(--phrase-to-y);
   opacity: 0;
+  -webkit-mask-position: 0% 0;
+          mask-position: 0% 0;
 }
 
 .hero-cinematic .hero-phrase-stage {
-  transition: opacity 820ms cubic-bezier(0.32, 0.08, 0.24, 1);
+  transition: opacity 1100ms cubic-bezier(0.32, 0.08, 0.24, 1);
 }
 
-/* Soft left-side cinematic scrim — the text sits inside a darker pocket;
+/* Soft left-side cinematic scrim — text sits inside a darker pocket;
    the right half of the film stays luminous. Feels integrated INTO the
-   scene rather than overlaid as UI. */
+   scene rather than overlaid as UI. Slightly deeper for cinematic feel. */
 .hero-cinematic .hero-phrase-scrim {
   background: linear-gradient(
     100deg,
-    rgba(0, 0, 0, 0.66) 0%,
-    rgba(0, 0, 0, 0.42) 30%,
-    rgba(0, 0, 0, 0.18) 58%,
-    rgba(0, 0, 0, 0) 82%
+    rgba(0, 0, 0, 0.74) 0%,
+    rgba(0, 0, 0, 0.5) 32%,
+    rgba(0, 0, 0, 0.22) 60%,
+    rgba(0, 0, 0, 0) 84%
   );
 }
 @media (min-width: 768px) {
   .hero-cinematic .hero-phrase-scrim {
     background: linear-gradient(
       100deg,
-      rgba(0, 0, 0, 0.6) 0%,
-      rgba(0, 0, 0, 0.36) 34%,
-      rgba(0, 0, 0, 0.12) 60%,
-      rgba(0, 0, 0, 0) 80%
+      rgba(0, 0, 0, 0.68) 0%,
+      rgba(0, 0, 0, 0.42) 36%,
+      rgba(0, 0, 0, 0.16) 62%,
+      rgba(0, 0, 0, 0) 82%
     );
   }
 }
