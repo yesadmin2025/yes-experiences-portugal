@@ -570,11 +570,11 @@ export function CinematicHero() {
           </div>
 
           <div className="hero-cta-block">
-            <div className="hero-cta-flow mt-5 xs:mt-6 sm:mt-9 md:mt-10 flex flex-col sm:flex-row gap-2.5 sm:gap-4 items-stretch sm:items-center">
+            <div className="hero-cta-flow mt-6 xs:mt-7 sm:mt-10 md:mt-12 flex flex-col sm:flex-row gap-3 sm:gap-5 items-stretch sm:items-center">
               <CtaButton
                 to="/builder"
                 variant="primary"
-                className="hero-beat hero-beat--rise hero-cta-button hero-cta-button--primary cta-primary min-h-[42px] py-2 px-6 text-[10.75px] tracking-[0.16em] xs:min-h-[44px] xs:text-[11.25px] sm:text-[12px] sm:px-7 rounded-[3px]"
+                className="hero-beat hero-beat--rise hero-cta-button hero-cta-button--primary cta-primary min-h-[44px] py-2 px-7 text-[10.75px] tracking-[0.2em] xs:min-h-[46px] xs:text-[11.25px] sm:text-[12px] sm:px-8 rounded-[6px]"
                 data-hero-field="primaryCta"
                 data-hero-beat-show={showCta ? "true" : "false"}
                 data-hero-beat-delay="0"
@@ -584,7 +584,7 @@ export function CinematicHero() {
               <CtaButton
                 to="/experiences"
                 variant="ghostDark"
-                className="hero-beat hero-beat--rise hero-cta-button hero-cta-button--secondary cta-secondary-dark min-h-[42px] py-2 px-6 text-[10.5px] tracking-[0.14em] xs:min-h-[44px] xs:text-[11px] sm:text-[12px] sm:px-7 rounded-[3px]"
+                className="hero-beat hero-beat--rise hero-cta-button hero-cta-button--secondary cta-secondary-dark min-h-[44px] py-2 px-7 text-[10.5px] tracking-[0.18em] xs:min-h-[46px] xs:text-[11px] sm:text-[12px] sm:px-8 rounded-[6px]"
                 data-hero-field="secondaryCta"
                 data-cta-stagger="true"
                 data-hero-beat-show={showCta ? "true" : "false"}
