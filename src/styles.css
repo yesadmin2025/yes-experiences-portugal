@@ -1913,12 +1913,12 @@
   pointer-events: none;
 }
 /* Stagger CTAs + microcopy off the same "cta" trigger.
-   Primary at 0ms · secondary at 200ms · microcopy at 400ms. */
-.hero-cinematic .hero-beat[data-hero-beat-delay="160"] { transition-delay: 200ms; }
-.hero-cinematic .hero-beat[data-hero-beat-delay="320"] { transition-delay: 400ms; }
+   Primary at 0ms · secondary at 280ms · microcopy at 600ms — luxury concierge pacing. */
+.hero-cinematic .hero-beat[data-hero-beat-delay="160"] { transition-delay: 280ms; }
+.hero-cinematic .hero-beat[data-hero-beat-delay="320"] { transition-delay: 600ms; }
 @media (min-width: 768px) {
-  .hero-cinematic .hero-beat[data-hero-beat-delay="160"] { transition-delay: 200ms; }
-  .hero-cinematic .hero-beat[data-hero-beat-delay="320"] { transition-delay: 400ms; }
+  .hero-cinematic .hero-beat[data-hero-beat-delay="160"] { transition-delay: 280ms; }
+  .hero-cinematic .hero-beat[data-hero-beat-delay="320"] { transition-delay: 600ms; }
 }
 
 /* Reduced-motion: snap to final composed state, no transitions. */
