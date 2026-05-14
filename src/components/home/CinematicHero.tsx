@@ -80,9 +80,9 @@ const DRIFT_FROM = { x: -16, y: 0 };
 const DRIFT_TO   = { x:  14, y: 0 };
 
 /** Cinematic breathing pause between phrases — no hard cuts. */
-const PHRASE_GAP_MS = 520;
+let PHRASE_GAP_MS = 520;
 
-const PHRASE_SCENES: PhraseScene[] = [
+let PHRASE_SCENES: PhraseScene[] = [
   // Single-line phrases — standard hold.
   { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0 }, // 0 Portugal is the stage.
   { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0 }, // 1 You write your story.
@@ -97,6 +97,31 @@ const PHRASE_SCENES: PhraseScene[] = [
   // 9 — closing line, breathe before CTAs land.
   { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0, fadeInMs: 1100, holdMs: 2800, fadeOutMs: 900 },
 ];
+
+/**
+ * Auto-fix mode (?contract-fix=1): clamp every offending PHRASE_SCENES
+ * entry + PHRASE_GAP_MS to the nearest in-contract value at module load,
+ * BEFORE the sequence runs. The HeroContractAssert banner reports the
+ * diff (was → fixed) so reviewers can see exactly what shifted.
+ */
+function autoFixEnabled(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    return new URLSearchParams(window.location.search).has("contract-fix");
+  } catch {
+    return false;
+  }
+}
+let HERO_AUTOFIX_CHANGES: import("@/lib/hero-phrase-contract").ContractFix[] = [];
+if (autoFixEnabled()) {
+  // Lazy require avoids SSR cycles (function is pure).
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { autoFixHeroContract } = require("@/lib/hero-phrase-contract") as typeof import("@/lib/hero-phrase-contract");
+  const fixed = autoFixHeroContract(PHRASE_SCENES, PHRASE_GAP_MS);
+  PHRASE_SCENES = fixed.scenes;
+  PHRASE_GAP_MS = fixed.gapMs;
+  HERO_AUTOFIX_CHANGES = fixed.changes;
+}
 
 /** Pause between the last phrase fading out and the CTA reveal. */
 const COMPOSE_GAP_MS = 900;
