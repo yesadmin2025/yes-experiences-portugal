@@ -758,6 +758,38 @@ export function HeroPhraseDebug({
   );
 }
 
+function ContractRow({
+  label,
+  actual,
+  target,
+  pass,
+}: {
+  label: string;
+  actual: number;
+  target: string;
+  pass: boolean;
+}) {
+  return (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "auto 1fr auto auto",
+        gap: 6,
+        alignItems: "center",
+        marginTop: 3,
+        fontVariantNumeric: "tabular-nums",
+      }}
+    >
+      <span aria-hidden="true" style={{ color: pass ? "#7BD389" : "#E58A6B" }}>
+        {pass ? "✓" : "✗"}
+      </span>
+      <span style={{ opacity: 0.85 }}>{label}</span>
+      <span style={{ opacity: 0.7 }}>{actual}ms</span>
+      <span style={{ opacity: 0.55, fontSize: 9.5 }}>/ {target}</span>
+    </div>
+  );
+}
+
 function Mini({
   fromX,
   fromY,
