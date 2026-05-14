@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 import {
   validateHeroContract,
   type ContractViolation,
+  type ContractFix,
   type PhraseTimings,
   HERO_PHRASE_CONTRACT,
 } from "@/lib/hero-phrase-contract";
