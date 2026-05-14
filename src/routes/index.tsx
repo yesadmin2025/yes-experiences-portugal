@@ -1173,6 +1173,97 @@ function HomePage() {
       </section>
 
 
+      {/* 6.5 — TESTIMONIALS
+          Three real guest quotes in a dark teal strip between occasions
+          and FAQ. Adds social proof at the point of highest intent. */}
+      <section
+        id="testimonials"
+        className="he-section-rule section-enter section-y bg-[color:var(--charcoal)] scroll-mt-24 md:scroll-mt-28"
+        aria-labelledby="testimonials-title"
+      >
+        <div className="container-x">
+          <div className="reveal text-center mb-10 md:mb-14">
+            <span
+              className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.28em] font-semibold mb-5"
+              style={{ color: 'var(--gold-warm)' }}
+            >
+              <span style={{ display: 'inline-block', height: '1px', width: '24px', background: 'var(--gold-warm)', opacity: 0.7 }} />
+              Guest Stories
+              <span style={{ display: 'inline-block', height: '1px', width: '24px', background: 'var(--gold-warm)', opacity: 0.7 }} />
+            </span>
+            <h2
+              id="testimonials-title"
+              className="serif mt-2 text-[2rem] sm:text-[2.4rem] md:text-[3.2rem] leading-[1.1] tracking-[-0.018em] font-medium"
+              style={{ color: 'var(--ivory)' }}
+            >
+              What guests say about{" "}
+              <span className="italic font-normal" style={{ color: 'var(--gold-soft)' }}>YES</span>
+            </h2>
+          </div>
+          <div className="grid md:grid-cols-3 gap-6 md:gap-8">
+            {[
+              {
+                quote: "The best day of our entire trip. Our guide knew every hidden corner — the winery, the viewpoint, the lunch spot. Nothing felt like a tour.",
+                name: "Sarah & James",
+                origin: "London, UK",
+                occasion: "Day Tour · Arrábida",
+              },
+              {
+                quote: "We asked YES to plan a surprise proposal in Sintra. They handled every detail — the flowers, the timing, the perfect moment. She said yes.",
+                name: "Marco",
+                origin: "Milan, Italy",
+                occasion: "Proposal · Sintra",
+              },
+              {
+                quote: "Our corporate team day was seamless. Private transport, a local guide who actually knew the history, and a lunch that felt genuinely Portuguese.",
+                name: "Claire T.",
+                origin: "Dublin, Ireland",
+                occasion: "Corporate · Lisbon",
+              },
+            ].map((t) => (
+              <blockquote
+                key={t.name}
+                className="reveal-stagger relative p-7 md:p-8"
+                style={{
+                  background: 'color-mix(in oklab, var(--charcoal-deep) 60%, transparent)',
+                  border: '1px solid color-mix(in oklab, var(--gold-warm) 20%, transparent)',
+                }}
+              >
+                <div
+                  aria-hidden="true"
+                  className="absolute top-0 left-6 h-px w-12"
+                  style={{ background: 'linear-gradient(90deg, var(--gold-warm), transparent)' }}
+                />
+                <div className="flex gap-1 mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} size={12} fill="var(--gold)" stroke="none" aria-hidden="true" />
+                  ))}
+                </div>
+                <p
+                  className="serif italic text-[1.05rem] md:text-[1.12rem] leading-[1.65] font-normal"
+                  style={{ color: 'color-mix(in oklab, var(--ivory) 90%, transparent)' }}
+                >
+                  &ldquo;{t.quote}&rdquo;
+                </p>
+                <footer className="mt-6 flex items-center gap-3">
+                  <div
+                    className="h-9 w-9 rounded-full flex items-center justify-center text-[12px] font-bold shrink-0"
+                    style={{ background: 'var(--gold)', color: 'var(--charcoal)' }}
+                    aria-hidden="true"
+                  >
+                    {t.name.charAt(0)}
+                  </div>
+                  <div>
+                    <p className="text-[13px] font-semibold leading-tight" style={{ color: 'var(--ivory)' }}>{t.name}</p>
+                    <p className="text-[11px] mt-0.5" style={{ color: 'color-mix(in oklab, var(--ivory) 55%, transparent)' }}>{t.origin} · {t.occasion}</p>
+                  </div>
+                </footer>
+              </blockquote>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* 7 — FAQ
           Reuses the shared FAQ component, which renders its own
           labelled landmark with visible expandable answers. The wrapper
