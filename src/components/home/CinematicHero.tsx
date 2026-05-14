@@ -113,11 +113,8 @@ function autoFixEnabled(): boolean {
     return false;
   }
 }
-let HERO_AUTOFIX_CHANGES: import("@/lib/hero-phrase-contract").ContractFix[] = [];
+let HERO_AUTOFIX_CHANGES: ContractFix[] = [];
 if (autoFixEnabled()) {
-  // Lazy require avoids SSR cycles (function is pure).
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { autoFixHeroContract } = require("@/lib/hero-phrase-contract") as typeof import("@/lib/hero-phrase-contract");
   const fixed = autoFixHeroContract(PHRASE_SCENES, PHRASE_GAP_MS);
   PHRASE_SCENES = fixed.scenes;
   PHRASE_GAP_MS = fixed.gapMs;
