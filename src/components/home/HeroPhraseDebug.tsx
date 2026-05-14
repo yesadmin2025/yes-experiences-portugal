@@ -186,7 +186,20 @@ export function HeroPhraseDebug({
   intensity = 1,
   globalScale = 1,
   videoDurationMs = null,
+  gapMs,
 }: HeroPhraseDebugProps) {
+  // Derive base (un-scaled) durations so we can verify the design contract
+  // (1200 / 3200 / 900 / 400–600ms) regardless of current intensity / video-fit.
+  const safeScale = globalScale > 0 ? globalScale : 1;
+  const baseFadeIn = Math.round(fadeInMs / safeScale);
+  const baseHold = Math.round(holdMs / safeScale);
+  const baseFadeOut = Math.round(fadeOutMs / safeScale);
+  const baseGap = gapMs ?? 0;
+  const passEnter = checkExact(baseFadeIn, CONTRACT.fadeIn);
+  const passHold = baseHold >= CONTRACT.hold - TIMING_TOLERANCE_MS;
+  const passExit = checkExact(baseFadeOut, CONTRACT.fadeOut);
+  const passGap = checkRange(baseGap, CONTRACT.gapMin, CONTRACT.gapMax);
+  const allPass = passEnter && passHold && passExit && passGap;
   const beat = fadeInMs + holdMs + fadeOutMs;
   const [rect, setRect] = useState<Rect>(() => loadRect());
   const [snap, setSnap] = useState<SnapConfig>(() => loadSnap());
