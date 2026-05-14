@@ -232,6 +232,8 @@ export function CinematicHero() {
   const [phraseIndex, setPhraseIndex] = useState<number>(skipIntro ? HERO_PHRASES.length : -1);
   const [composed, setComposed] = useState<boolean>(skipIntro);
   const [ctaRevealed, setCtaRevealed] = useState<boolean>(skipIntro);
+  /** Increments to restart the cinematic sequence (loop). */
+  const [loopKey, setLoopKey] = useState<number>(0);
 
   // Listen for intensity changes from the debug overlay (same tab + cross tab).
   useEffect(() => {
