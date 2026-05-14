@@ -471,7 +471,7 @@ export function CinematicHero() {
             aria-hidden="true"
             className="hero-phrase-scrim pointer-events-none absolute inset-0"
           />
-          <div className="hero-phrase-frame absolute left-[28px] right-[28px] top-[24svh] md:left-[8vw] md:right-auto md:top-[30vh] md:max-w-[700px]">
+          <div className="hero-phrase-frame absolute left-[24px] right-[24px] top-[20svh] md:left-[8vw] md:right-auto md:top-[26vh] md:max-w-[860px]">
             {HERO_PHRASES.map((phrase, i) => {
               const state =
                 i === phraseIndex ? "active" : i < phraseIndex ? "past" : "pending";
@@ -494,9 +494,9 @@ export function CinematicHero() {
                   data-hero-phrase-state={state}
                   data-hero-phrase-visible={state === "active" ? "true" : "false"}
                   style={phraseStyle}
-                  className="hero-phrase absolute inset-x-0 top-0 [font-family:var(--font-serif)] italic font-normal text-[color:var(--gold)] text-[44px] xs:text-[48px] sm:text-[64px] md:text-[80px] lg:text-[88px] leading-[1.05] md:leading-[1.02] tracking-[-0.014em] text-left text-pretty [text-shadow:0_2px_28px_rgba(0,0,0,0.6)]"
+                  className="hero-phrase absolute inset-x-0 top-0 [font-family:var(--font-serif)] italic font-normal text-[color:var(--gold)] text-[42px] xs:text-[48px] sm:text-[68px] md:text-[84px] lg:text-[94px] leading-[1.04] md:leading-[1.0] tracking-[-0.018em] text-left text-pretty [text-shadow:0_2px_36px_rgba(0,0,0,0.65),0_1px_2px_rgba(0,0,0,0.5)]"
                 >
-                  <span className="hero-phrase__text block max-w-[16ch] md:max-w-[18ch]">{phrase}</span>
+                  <span className="hero-phrase__text block max-w-[15ch] md:max-w-[17ch]">{phrase}</span>
                 </p>
               );
             })}
