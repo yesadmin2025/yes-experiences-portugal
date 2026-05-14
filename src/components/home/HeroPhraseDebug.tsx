@@ -104,7 +104,26 @@ export type HeroPhraseDebugProps = {
   globalScale?: number;
   /** Video duration in ms once metadata has loaded; null while unknown. */
   videoDurationMs?: number | null;
+  /** Base (un-scaled) breathing pause between phrases, in ms. */
+  gapMs?: number;
 };
+
+/** Film-title cadence contract — base values at intensity=1, no video-fit. */
+const CONTRACT = {
+  fadeIn: 1200,
+  hold: 3200,
+  fadeOut: 900,
+  gapMin: 400,
+  gapMax: 600,
+} as const;
+const TIMING_TOLERANCE_MS = 40;
+
+function checkExact(actual: number, target: number) {
+  return Math.abs(actual - target) <= TIMING_TOLERANCE_MS;
+}
+function checkRange(actual: number, min: number, max: number) {
+  return actual >= min - TIMING_TOLERANCE_MS && actual <= max + TIMING_TOLERANCE_MS;
+}
 
 const INTENSITY_KEY = "hero-phrase-debug:intensity";
 const INTENSITY_EVENT = "hero-phrase-intensity-change";
@@ -167,7 +186,20 @@ export function HeroPhraseDebug({
   intensity = 1,
   globalScale = 1,
   videoDurationMs = null,
+  gapMs,
 }: HeroPhraseDebugProps) {
+  // Derive base (un-scaled) durations so we can verify the design contract
+  // (1200 / 3200 / 900 / 400–600ms) regardless of current intensity / video-fit.
+  const safeScale = globalScale > 0 ? globalScale : 1;
+  const baseFadeIn = Math.round(fadeInMs / safeScale);
+  const baseHold = Math.round(holdMs / safeScale);
+  const baseFadeOut = Math.round(fadeOutMs / safeScale);
+  const baseGap = gapMs ?? 0;
+  const passEnter = checkExact(baseFadeIn, CONTRACT.fadeIn);
+  const passHold = baseHold >= CONTRACT.hold - TIMING_TOLERANCE_MS;
+  const passExit = checkExact(baseFadeOut, CONTRACT.fadeOut);
+  const passGap = checkRange(baseGap, CONTRACT.gapMin, CONTRACT.gapMax);
+  const allPass = passEnter && passHold && passExit && passGap;
   const beat = fadeInMs + holdMs + fadeOutMs;
   const [rect, setRect] = useState<Rect>(() => loadRect());
   const [snap, setSnap] = useState<SnapConfig>(() => loadSnap());
@@ -426,6 +458,58 @@ export function HeroPhraseDebug({
           from ({fromX},{fromY}) → rest ({restXPct}%,{restYPct}%) → to ({toX},{toY})
         </div>
 
+        {/* ── Film-title cadence contract ──────────────────────────────
+           Verifies the design spec: 1200ms enter · 3200ms+ hold ·
+           900ms exit · 400–600ms breathing pause. Values are derived
+           at intensity=1 so the badge stays meaningful even when the
+           debug slider scales the live timing. */}
+        <div
+          style={{
+            marginTop: 8,
+            paddingTop: 6,
+            borderTop: "1px dashed rgba(250,248,243,0.18)",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 6 }}>
+            <span style={{ letterSpacing: "0.06em", color: "var(--gold)", fontWeight: 600 }}>
+              CONTRACT
+            </span>
+            <span
+              style={{
+                fontSize: 9,
+                letterSpacing: "0.08em",
+                padding: "1px 6px",
+                borderRadius: 3,
+                background: allPass ? "rgba(123,211,137,0.22)" : "rgba(229,138,107,0.22)",
+                border: `1px solid ${allPass ? "rgba(123,211,137,0.7)" : "rgba(229,138,107,0.7)"}`,
+                color: allPass ? "#7BD389" : "#E58A6B",
+                fontWeight: 700,
+              }}
+            >
+              {allPass ? "PASS" : "FAIL"}
+            </span>
+          </div>
+          <ContractRow label="enter" actual={baseFadeIn} target={`${CONTRACT.fadeIn}ms`} pass={passEnter} />
+          <ContractRow
+            label="hold"
+            actual={baseHold}
+            target={`≥${CONTRACT.hold}ms`}
+            pass={passHold}
+          />
+          <ContractRow label="exit" actual={baseFadeOut} target={`${CONTRACT.fadeOut}ms`} pass={passExit} />
+          <ContractRow
+            label="gap"
+            actual={baseGap}
+            target={`${CONTRACT.gapMin}–${CONTRACT.gapMax}ms`}
+            pass={passGap}
+          />
+          {safeScale !== 1 && (
+            <div style={{ marginTop: 3, opacity: 0.6, fontSize: 9 }}>
+              base values shown · live ×{safeScale.toFixed(2)}
+            </div>
+          )}
+        </div>
+
         {/* Phase progress bar */}
         <div
           style={{
@@ -671,6 +755,38 @@ export function HeroPhraseDebug({
       />
       </div>
     </>
+  );
+}
+
+function ContractRow({
+  label,
+  actual,
+  target,
+  pass,
+}: {
+  label: string;
+  actual: number;
+  target: string;
+  pass: boolean;
+}) {
+  return (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "auto 1fr auto auto",
+        gap: 6,
+        alignItems: "center",
+        marginTop: 3,
+        fontVariantNumeric: "tabular-nums",
+      }}
+    >
+      <span aria-hidden="true" style={{ color: pass ? "#7BD389" : "#E58A6B" }}>
+        {pass ? "✓" : "✗"}
+      </span>
+      <span style={{ opacity: 0.85 }}>{label}</span>
+      <span style={{ opacity: 0.7 }}>{actual}ms</span>
+      <span style={{ opacity: 0.55, fontSize: 9.5 }}>/ {target}</span>
+    </div>
   );
 }
 

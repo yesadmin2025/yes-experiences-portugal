@@ -453,6 +453,7 @@ export function CinematicHero() {
           intensity={intensity}
           globalScale={globalScale}
           videoDurationMs={videoDurationMs}
+          gapMs={PHRASE_GAP_MS}
         />
       )}
 
