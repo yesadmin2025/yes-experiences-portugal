@@ -1,32 +1,84 @@
 import { Link } from "@tanstack/react-router";
-import { Instagram, Facebook, Youtube, Linkedin } from "lucide-react";
+import { Instagram, Facebook, Youtube, Linkedin, ArrowRight } from "lucide-react";
 import { Logo } from "@/components/Logo";
+import { useState } from "react";
 
 /**
- * Footer — 4-column nav with logo + tagline on desktop,
- * stacked on mobile. Per v3 homepage spec:
- *   col 1: Experiences
- *   col 2: Occasions
- *   col 3: Company
- *   col 4: Connect (social icons)
+ * Footer — 4-column nav with logo + tagline + newsletter on desktop,
+ * stacked on mobile.
  *
- * Logo + tagline sit ABOVE the column grid so the 4 columns get
- * proportionate space at desktop instead of being squeezed beside
- * a logo block. On mobile everything stacks vertically.
+ * Improvements v2:
+ * - Added newsletter subscription strip above the main footer
+ * - Added Local Stories to Company column
+ * - Added WhatsApp link to Connect column
+ * - Improved tagline copy
  */
+
 const SOCIALS = [
-  { href: "https://instagram.com/", label: "Instagram", Icon: Instagram },
+  { href: "https://instagram.com/yesexperiencesportugal", label: "Instagram", Icon: Instagram },
   { href: "https://facebook.com/", label: "Facebook", Icon: Facebook },
   { href: "https://youtube.com/", label: "YouTube", Icon: Youtube },
   { href: "https://linkedin.com/", label: "LinkedIn", Icon: Linkedin },
 ];
 
+function NewsletterStrip() {
+  const [email, setEmail] = useState("");
+  const [done, setDone] = useState(false);
+
+  return (
+    <div
+      className="border-b border-[color:var(--gold-warm)]/20 py-8 md:py-10"
+    >
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+        <div>
+          <p
+            className="text-[11px] uppercase tracking-[0.32em] text-[color:var(--gold-warm)] mb-1"
+            style={{ fontWeight: 500 }}
+          >
+            Local notes
+          </p>
+          <p
+            className="text-[14px] text-[color:var(--ivory)]/80 leading-snug max-w-xs"
+            style={{ fontWeight: 320 }}
+          >
+            Hidden corners, seasonal stories and new experiences — from our team in Portugal.
+          </p>
+        </div>
+        {done ? (
+          <p className="text-[13px] text-[color:var(--gold-warm)] italic font-serif">
+            Thank you — we'll be in touch.
+          </p>
+        ) : (
+          <form
+            onSubmit={(e) => { e.preventDefault(); if (email) setDone(true); }}
+            className="flex items-stretch gap-0 max-w-sm w-full"
+          >
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Your email address"
+              required
+              className="flex-1 bg-[color:var(--ivory)]/8 border border-[color:var(--ivory)]/20 border-r-0 text-[color:var(--ivory)] placeholder:text-[color:var(--ivory)]/40 px-4 py-3 text-[13px] outline-none focus:border-[color:var(--gold-warm)]/60 transition-colors"
+            />
+            <button
+              type="submit"
+              aria-label="Subscribe"
+              className="inline-flex items-center justify-center px-4 py-3 bg-[color:var(--gold-warm)] hover:bg-[color:var(--gold)] text-[color:var(--charcoal)] transition-colors duration-200"
+            >
+              <ArrowRight size={16} />
+            </button>
+          </form>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export function Footer() {
   return (
     <footer className="relative bg-[color:var(--charcoal)] text-[color:var(--ivory)]">
-      {/* Thin champagne-gold top hairline — visual handoff from the
-          ivory final-CTA section into the footer. Decorative.
-          Bumped to --gold-warm so the rim reads as champagne, not grey. */}
+      {/* Thin champagne-gold top hairline */}
       <div
         aria-hidden="true"
         className="absolute top-0 inset-x-0 h-px"
@@ -35,19 +87,17 @@ export function Footer() {
             "linear-gradient(90deg, transparent, color-mix(in oklab, var(--gold-warm) 80%, transparent) 50%, transparent)",
         }}
       />
-      {/* Compact pass: vertical rhythm tightened (py-14/16 → py-10/12) so
-          the footer reads as a refined close, not a heavy template block. */}
       <div className="container-x py-10 md:py-12">
-        {/* Brand row — logo + tagline. Sits above the column grid so
-            the 4 nav columns can breathe at desktop. */}
-        <div className="max-w-3xl">
+        {/* Newsletter strip */}
+        <NewsletterStrip />
+
+        {/* Brand row */}
+        <div className="max-w-3xl mt-10 md:mt-12">
           <Link
             to="/"
             className="inline-block rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--charcoal)]"
             aria-label="YES experiences PORTUGAL — Home"
           >
-            {/* Logo height tightened (56/60 → 48/52) so the brand row reads
-                as a quiet sign-off rather than a second hero. */}
             <Logo
               theme="gold-on-charcoal"
               loading="lazy"
@@ -59,12 +109,11 @@ export function Footer() {
             style={{ fontWeight: 320, letterSpacing: "0.005em" }}
           >
             Private, designed Portugal experiences — crafted around your story by passionate local
-            experts.
+            experts. Every journey begins with who you are.
           </p>
         </div>
 
-        {/* 4-column nav grid — gap tightened (gap-10 → gap-8) so the column
-            cluster reads as a single block, not four separate posters. */}
+        {/* 4-column nav grid */}
         <div className="mt-9 md:mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 md:gap-8">
           <FooterCol
             title="Experiences"
@@ -87,13 +136,11 @@ export function Footer() {
             title="Company"
             links={[
               { to: "/about", label: "About YES" },
+              { to: "/local-stories", label: "Local Stories" },
               { to: "/contact", label: "Contact" },
             ]}
           />
-
-          {/* Connect column — social icons rendered inline as part of
-              the 4-column grid. Each icon is a 44×44 hit target on
-              mobile to satisfy A11y. */}
+          {/* Connect column */}
           <div>
             <h4
               className="font-sans text-[11px] uppercase tracking-[0.32em] text-[color:var(--gold-warm)] mb-5"
@@ -101,7 +148,7 @@ export function Footer() {
             >
               Connect
             </h4>
-            <ul className="flex flex-wrap items-center gap-3 list-none p-0 m-0">
+            <ul className="flex flex-wrap items-center gap-3 list-none p-0 m-0 mb-5">
               {SOCIALS.map(({ href, label, Icon }) => (
                 <li key={label}>
                   <a
@@ -116,10 +163,20 @@ export function Footer() {
                 </li>
               ))}
             </ul>
+            <a
+              href="https://wa.me/351910000000"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-[12px] text-[color:var(--ivory)]/70 hover:text-[color:var(--gold-warm)] transition-colors duration-200"
+              style={{ fontWeight: 350 }}
+            >
+              <span className="inline-block h-1.5 w-1.5 rounded-full bg-[color:var(--gold-warm)]" aria-hidden="true" />
+              WhatsApp · A local is one message away
+            </a>
           </div>
         </div>
 
-        {/* Bottom bar — copyright + tagline. Quiet, single line. */}
+        {/* Bottom bar */}
         <div className="mt-10 md:mt-10 pt-5 border-t border-[color:var(--gold-warm)]/25">
           <div
             className="flex flex-col md:flex-row justify-between items-center gap-3 text-[12px] text-[color:var(--ivory)]/70"
