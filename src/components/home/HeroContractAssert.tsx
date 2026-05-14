@@ -84,7 +84,7 @@ export function HeroContractAssert({
         maxHeight: "40vh",
         overflow: "auto",
         background: "rgba(28,12,8,0.96)",
-        color: "#FAF8F3",
+        color: "var(--ivory)",
         border: "1px solid #E58A6B",
         borderLeft: "4px solid #E58A6B",
         borderRadius: 6,
