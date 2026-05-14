@@ -458,6 +458,58 @@ export function HeroPhraseDebug({
           from ({fromX},{fromY}) → rest ({restXPct}%,{restYPct}%) → to ({toX},{toY})
         </div>
 
+        {/* ── Film-title cadence contract ──────────────────────────────
+           Verifies the design spec: 1200ms enter · 3200ms+ hold ·
+           900ms exit · 400–600ms breathing pause. Values are derived
+           at intensity=1 so the badge stays meaningful even when the
+           debug slider scales the live timing. */}
+        <div
+          style={{
+            marginTop: 8,
+            paddingTop: 6,
+            borderTop: "1px dashed rgba(250,248,243,0.18)",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 6 }}>
+            <span style={{ letterSpacing: "0.06em", color: "var(--gold)", fontWeight: 600 }}>
+              CONTRACT
+            </span>
+            <span
+              style={{
+                fontSize: 9,
+                letterSpacing: "0.08em",
+                padding: "1px 6px",
+                borderRadius: 3,
+                background: allPass ? "rgba(123,211,137,0.22)" : "rgba(229,138,107,0.22)",
+                border: `1px solid ${allPass ? "rgba(123,211,137,0.7)" : "rgba(229,138,107,0.7)"}`,
+                color: allPass ? "#7BD389" : "#E58A6B",
+                fontWeight: 700,
+              }}
+            >
+              {allPass ? "PASS" : "FAIL"}
+            </span>
+          </div>
+          <ContractRow label="enter" actual={baseFadeIn} target={`${CONTRACT.fadeIn}ms`} pass={passEnter} />
+          <ContractRow
+            label="hold"
+            actual={baseHold}
+            target={`≥${CONTRACT.hold}ms`}
+            pass={passHold}
+          />
+          <ContractRow label="exit" actual={baseFadeOut} target={`${CONTRACT.fadeOut}ms`} pass={passExit} />
+          <ContractRow
+            label="gap"
+            actual={baseGap}
+            target={`${CONTRACT.gapMin}–${CONTRACT.gapMax}ms`}
+            pass={passGap}
+          />
+          {safeScale !== 1 && (
+            <div style={{ marginTop: 3, opacity: 0.6, fontSize: 9 }}>
+              base values shown · live ×{safeScale.toFixed(2)}
+            </div>
+          )}
+        </div>
+
         {/* Phase progress bar */}
         <div
           style={{
