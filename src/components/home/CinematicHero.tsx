@@ -71,7 +71,7 @@ type PhraseScene = {
  */
 const SCENE_DEFAULT: Omit<PhraseScene, "from" | "to" | "restXPct" | "restYPct"> = {
   fadeInMs: 1200,
-  holdMs: 3200,
+  holdMs: 3400,
   fadeOutMs: 900,
   mdScale: 1,
 };
@@ -81,22 +81,25 @@ const DRIFT_FROM = { x: -16, y: 0 };
 const DRIFT_TO   = { x:  14, y: 0 };
 
 /** Cinematic breathing pause between phrases — no hard cuts. */
-let PHRASE_GAP_MS = 520;
+let PHRASE_GAP_MS = 600;
 
 let PHRASE_SCENES: PhraseScene[] = [
-  // Single-line phrases — standard hold.
+  // Every phrase shares the same cinematic cadence: 1200ms enter,
+  // ≥3400ms hold, 900ms exit, 600ms breathing pause. No phrase is
+  // allowed to feel rushed — the user must FEEL each line.
   { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0 }, // 0 Portugal is the stage.
   { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0 }, // 1 You write your story.
-  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0, holdMs: 2600 }, // 2 Hidden chapters wait to unfold.
-  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0, holdMs: 2600 }, // 3 Locals know where they begin.
-  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0, holdMs: 2600 }, // 4 You decide how to live it.
-  // 5 — long four-clause phrase, longer reveal + hold.
-  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0, fadeInMs: 1100, holdMs: 3200 },
+  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0 }, // 2 Hidden chapters wait to unfold.
+  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0 }, // 3 Locals know where they begin.
+  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0 }, // 4 You decide how to live it.
+  // 5 — long four-clause phrase, slightly longer hold to absorb.
+  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0, holdMs: 3800 },
   { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0 }, // 6 Every story is different.
-  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0, holdMs: 2200 }, // 7 So is yours.
-  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0, holdMs: 2600 }, // 8 Portugal is waiting to be lived.
-  // 9 — closing line, breathe before CTAs land.
-  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0, fadeInMs: 1100, holdMs: 2800, fadeOutMs: 900 },
+  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0 }, // 7 So is yours.
+  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0 }, // 8 Portugal is waiting to be lived.
+  // 9 — closing line, longest hold so the user lives the silence
+  // before the CTAs land.
+  { ...SCENE_DEFAULT, from: DRIFT_FROM, to: DRIFT_TO, restXPct: 0, restYPct: 0, holdMs: 4000 },
 ];
 
 /**
