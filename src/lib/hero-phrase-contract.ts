@@ -15,11 +15,11 @@
  */
 
 export const HERO_PHRASE_CONTRACT = {
-  fadeInMs: 1200,
-  holdMinMs: 3200,
-  fadeOutMs: 900,
-  gapMinMs: 400,
-  gapMaxMs: 600,
+  fadeInMs: 1400,
+  holdMinMs: 3600,
+  fadeOutMs: 1000,
+  gapMinMs: 600,
+  gapMaxMs: 900,
   toleranceMs: 40,
 } as const;
 

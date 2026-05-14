@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-14T20:09:54.503Z",
+  "generatedAt": "2026-05-14T20:29:49.051Z",
   "filesScanned": 197,
   "approvedPalette": {
     "teal": "#295B61",
@@ -18,10 +18,10 @@
     "#cccccc"
   ],
   "counts": {
-    "total": 180,
+    "total": 181,
     "approved": 34,
     "allowlisted": 25,
-    "mismatch": 121
+    "mismatch": 122
   },
   "findings": [
     {
@@ -980,35 +980,44 @@
     },
     {
       "file": "src/components/home/HeroContractAssert.tsx",
-      "line": 88,
-      "col": 28,
+      "line": 90,
+      "col": 47,
       "raw": "#E58A6B",
       "normalized": "#e58a6b",
-      "snippet": "border: \"1px solid #E58A6B\",",
+      "snippet": "const accent = isFixMode ? \"var(--gold)\" : \"#E58A6B\";",
       "status": "mismatch"
     },
     {
       "file": "src/components/home/HeroContractAssert.tsx",
-      "line": 89,
-      "col": 32,
+      "line": 168,
+      "col": 60,
       "raw": "#E58A6B",
       "normalized": "#e58a6b",
-      "snippet": "borderLeft: \"4px solid #E58A6B\",",
+      "snippet": "<td style={{ padding: \"2px 6px\", color: \"#E58A6B\" }}>{c.actual}ms</td>",
       "status": "mismatch"
     },
     {
       "file": "src/components/home/HeroContractAssert.tsx",
-      "line": 99,
-      "col": 34,
-      "raw": "#E58A6B",
-      "normalized": "#e58a6b",
-      "snippet": "<strong style={{ color: \"#E58A6B\", letterSpacing: \"0.08em\" }}>",
+      "line": 169,
+      "col": 60,
+      "raw": "#7BD389",
+      "normalized": "#7bd389",
+      "snippet": "<td style={{ padding: \"2px 6px\", color: \"#7BD389\" }}>{c.fixed}ms</td>",
       "status": "mismatch"
     },
     {
       "file": "src/components/home/HeroContractAssert.tsx",
-      "line": 139,
-      "col": 56,
+      "line": 180,
+      "col": 69,
+      "raw": "#E58A6B",
+      "normalized": "#e58a6b",
+      "snippet": "<div style={{ opacity: 0.85, margin: \"6px 0 4px\", color: \"#E58A6B\", letterSpacing: \"0.06em\" }}>",
+      "status": "mismatch"
+    },
+    {
+      "file": "src/components/home/HeroContractAssert.tsx",
+      "line": 197,
+      "col": 60,
       "raw": "#E58A6B",
       "normalized": "#e58a6b",
       "snippet": "<td style={{ padding: \"2px 6px\", color: \"#E58A6B\" }}>{v.actual}ms</td>",
