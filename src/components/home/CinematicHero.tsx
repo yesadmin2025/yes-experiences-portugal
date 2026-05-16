@@ -467,32 +467,46 @@ export function CinematicHero() {
       data-hero-phase={composed ? "composed" : phraseIndex < 0 ? "idle" : `phrase-${phraseIndex}`}
       data-video-fallback={videoFailed ? "true" : "false"}
     >
-      {/* Continuous film — full bleed. If autoplay fails, the poster image
-         below stays visible and the phrase sequence continues unchanged. */}
-      <video
-        ref={videoRef}
-        key={videoSrc}
-        className="absolute inset-0 z-0 w-full h-full object-cover hero-film-video"
-        poster={HERO_FILM_POSTER}
-        autoPlay
-        muted
-        playsInline
-        loop
-        preload="auto"
-        aria-hidden="true"
-        data-hero-film="true"
-        onPlaying={() => setVideoFailed(false)}
-        onError={() => setVideoFailed(true)}
-        onStalled={() => setVideoFailed(true)}
-        src={videoSrc}
-      />
-      {/* Static poster fallback — only painted if the video fails. */}
+      {/* Per-phrase real Portugal footage — stacked, crossfaded.
+         Only the active clip is visible; opacity transitions provide
+         the cinematic dissolve. The poster <img> stays painted
+         underneath as a static fallback in case any clip fails. */}
       <img
         src={HERO_FILM_POSTER}
         alt=""
         aria-hidden="true"
         className="hero-film-fallback absolute inset-0 z-0 w-full h-full object-cover"
       />
+      {PHRASE_VIDEOS.map((src, i) => {
+        const activeIdx = phraseIndex < 0 ? 0 : Math.min(phraseIndex, PHRASE_VIDEOS.length - 1);
+        const isActive = i === activeIdx || (composed && i === PHRASE_VIDEOS.length - 1);
+        const scene = sceneFor(Math.min(i, PHRASE_SCENES.length - 1));
+        const fadeMs = Math.round(((isActive ? scene.fadeInMs : scene.fadeOutMs) || 800) * globalScale);
+        return (
+          <video
+            key={src}
+            ref={(el) => { videoRefs.current[i] = el; }}
+            className="absolute inset-0 z-0 w-full h-full object-cover hero-film-video hero-phrase-video"
+            poster={HERO_FILM_POSTER}
+            muted
+            playsInline
+            loop
+            preload={i === 0 ? "auto" : "metadata"}
+            aria-hidden="true"
+            data-hero-film={i === 0 ? "true" : undefined}
+            data-hero-phrase-video={i}
+            data-hero-phrase-active={isActive ? "true" : "false"}
+            onPlaying={() => i === 0 && setVideoFailed(false)}
+            onError={() => i === 0 && setVideoFailed(true)}
+            src={src}
+            style={{
+              opacity: isActive ? 1 : 0,
+              transition: `opacity ${fadeMs}ms cubic-bezier(0.22, 0.61, 0.36, 1)`,
+              willChange: "opacity",
+            }}
+          />
+        );
+      })}
 
       {/* Bottom darken so copy stays AA against varied frames.
          Gradient stops live in --hero-scrim-base (src/styles.css). */}
