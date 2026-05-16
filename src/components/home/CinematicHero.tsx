@@ -281,6 +281,7 @@ export function CinematicHero() {
   useEffect(() => {
     const active = phraseIndex < 0 ? 0 : Math.min(phraseIndex, PHRASE_VIDEOS.length - 1);
     let cancelled = false;
+    const pauseTimers: number[] = [];
     videoRefs.current.forEach((v, i) => {
       if (!v) return;
       const shouldPlay = i === active || (composed && i === PHRASE_VIDEOS.length - 1);
@@ -293,11 +294,23 @@ export function CinematicHero() {
           p.catch(() => { if (!cancelled) setVideoFailed(true); });
         }
       } else {
-        try { v.pause(); } catch { /* noop */ }
+        // Let the outgoing clip keep playing while it fades out, so the
+        // dissolve shows motion instead of a frozen final frame. Pause
+        // only after the fade-out window has elapsed.
+        const scene = sceneFor(Math.min(i, PHRASE_SCENES.length - 1));
+        const fadeOut = Math.round(scene.fadeOutMs * globalScale) + 80;
+        const id = window.setTimeout(() => {
+          if (cancelled) return;
+          try { v.pause(); } catch { /* noop */ }
+        }, fadeOut);
+        pauseTimers.push(id);
       }
     });
-    return () => { cancelled = true; };
-  }, [phraseIndex, composed]);
+    return () => {
+      cancelled = true;
+      for (const id of pauseTimers) window.clearTimeout(id);
+    };
+  }, [phraseIndex, composed, globalScale]);
 
   // Capture duration from the first/active clip so the contract's
   // video-fit math has a sensible target.
