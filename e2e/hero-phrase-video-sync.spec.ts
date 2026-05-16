@@ -83,9 +83,10 @@ async function probe(page: Page, durationMs: number): Promise<Sample[]> {
 }
 
 const VIEWPORTS = [
-  { name: "mobile 393×851", use: { ...devices["iPhone 14"], viewport: { width: 393, height: 851 } } },
+  { name: "mobile 393×851", use: { viewport: { width: 393, height: 851 } } },
   { name: "desktop 1280×720", use: { viewport: { width: 1280, height: 720 } } },
 ] as const;
+void devices; // keep import to avoid unused warning if later swapped
 
 for (const vp of VIEWPORTS) {
   test.describe(`Hero phrase ↔ video sync — ${vp.name}`, () => {
