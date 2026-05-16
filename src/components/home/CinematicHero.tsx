@@ -204,7 +204,7 @@ function prefersReducedMotion(): boolean {
 }
 
 export function CinematicHero() {
-  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
   const sectionRef = useRef<HTMLElement | null>(null);
   const showScrimRuler = useHeroScrimRulerToggle();
   const showPhraseDebug = useHeroPhraseDebugToggle();
@@ -224,7 +224,6 @@ export function CinematicHero() {
       return false;
     }
   });
-  const [videoSrc, setVideoSrc] = useState<string>(HERO_FILM_SRC_720);
   const [videoDurationMs, setVideoDurationMs] = useState<number | null>(null);
   const [intensity, setIntensity] = useState<number>(() => loadIntensity());
 
@@ -274,46 +273,64 @@ export function CinematicHero() {
     };
   }, []);
 
-  // Resolve source on the client by viewport.
+  // Drive playback of the per-phrase real Portugal clips. We mount
+  // all 10 <video> elements stacked; only the active one is visible.
+  // To keep CPU/decoder cost low on mobile, we only let the active
+  // (and the just-finished) clip play — everything else is paused
+  // with currentTime reset, so a fresh take greets each phrase.
   useEffect(() => {
-    const isDesktop =
-      typeof window !== "undefined" &&
-      window.matchMedia("(min-width: 768px)").matches;
-    setVideoSrc(isDesktop ? HERO_FILM_SRC_1080 : HERO_FILM_SRC_720);
-  }, []);
-
-  // Autoplay the continuous film. If autoplay is rejected, the static
-  // poster <img> below stays visible and the phrase sequence still runs.
-  useEffect(() => {
-    const v = videoRef.current;
-    if (!v) return;
-    const tryPlay = () => {
-      const p = v.play();
-      if (p && typeof p.then === "function") {
-        p.catch(() => setVideoFailed(true));
+    const active = phraseIndex < 0 ? 0 : Math.min(phraseIndex, PHRASE_VIDEOS.length - 1);
+    let cancelled = false;
+    videoRefs.current.forEach((v, i) => {
+      if (!v) return;
+      const shouldPlay = i === active || (composed && i === PHRASE_VIDEOS.length - 1);
+      if (shouldPlay) {
+        if (i === active) {
+          try { v.currentTime = 0; } catch { /* noop */ }
+        }
+        const p = v.play();
+        if (p && typeof p.then === "function") {
+          p.catch(() => { if (!cancelled) setVideoFailed(true); });
+        }
+      } else {
+        try { v.pause(); } catch { /* noop */ }
       }
-    };
-    const captureDuration = () => {
+    });
+    return () => { cancelled = true; };
+  }, [phraseIndex, composed]);
+
+  // Capture duration from the first/active clip so the contract's
+  // video-fit math has a sensible target.
+  useEffect(() => {
+    const active = phraseIndex < 0 ? 0 : Math.min(phraseIndex, PHRASE_VIDEOS.length - 1);
+    const v = videoRefs.current[active];
+    if (!v) return;
+    const capture = () => {
       if (v.duration && Number.isFinite(v.duration) && v.duration > 0) {
         setVideoDurationMs(Math.round(v.duration * 1000));
       }
     };
-    if (v.readyState >= 2) tryPlay();
-    else v.addEventListener("canplay", tryPlay, { once: true });
-    if (v.readyState >= 1) captureDuration();
-    v.addEventListener("loadedmetadata", captureDuration);
-    v.addEventListener("durationchange", captureDuration);
-    const onTouch = () => v.play().catch(() => {});
+    if (v.readyState >= 1) capture();
+    v.addEventListener("loadedmetadata", capture);
+    v.addEventListener("durationchange", capture);
+    return () => {
+      v.removeEventListener("loadedmetadata", capture);
+      v.removeEventListener("durationchange", capture);
+    };
+  }, [phraseIndex]);
+
+  // First-touch nudge for browsers that reject silent autoplay.
+  useEffect(() => {
+    const onTouch = () => {
+      videoRefs.current.forEach((v) => v?.play().catch(() => {}));
+    };
     window.addEventListener("touchstart", onTouch, { once: true, passive: true });
     window.addEventListener("pointerdown", onTouch, { once: true });
     return () => {
-      v.removeEventListener("canplay", tryPlay);
-      v.removeEventListener("loadedmetadata", captureDuration);
-      v.removeEventListener("durationchange", captureDuration);
       window.removeEventListener("touchstart", onTouch);
       window.removeEventListener("pointerdown", onTouch);
     };
-  }, [videoSrc]);
+  }, []);
 
   // Phrase-by-phrase intro sequence. Each phrase advances every
   // PHRASE_DURATION_MS; after the last, fade out and reveal the
