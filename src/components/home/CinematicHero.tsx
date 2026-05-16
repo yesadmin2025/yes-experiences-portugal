@@ -31,9 +31,28 @@ import {
 import { HeroContractAssert } from "@/components/home/HeroContractAssert";
 import { autoFixHeroContract, type ContractFix } from "@/lib/hero-phrase-contract";
 
-const HERO_FILM_SRC_1080 = "/video/film/yes-hero-film-1080.mp4";
-const HERO_FILM_SRC_720 = "/video/film/yes-hero-film-720.mp4";
+/**
+ * Per-phrase real Portugal footage. Each phrase plays its own
+ * matching clip — the visual carries the message. All clips are
+ * licensed/owned real footage (no AI-generated, no stock invented
+ * locations). Mapping below was chosen so the imagery reinforces
+ * the line being read.
+ */
 const HERO_FILM_POSTER = "/video/film/yes-hero-poster.jpg";
+const PHRASE_VIDEOS: readonly string[] = [
+  "/video/real/comporta-beach.mp4",      // 0 Portugal is the stage.
+  "/video/real/vineyard-walk.mp4",        // 1 You write your story.
+  "/video/real/troia-ruins.mp4",          // 2 Hidden chapters wait to unfold.
+  "/video/real/carrasqueira-pier.mp4",    // 3 Locals know where they begin.
+  "/video/real/azulejo-workshop.mp4",     // 4 You decide how to live it.
+  "/video/real/friends-toast.mp4",        // 5 A private day. A proposal…
+  "/video/real/wine-cellar.mp4",          // 6 Every story is different.
+  "/video/real/vineyard-tasting.mp4",     // 7 So is yours.
+  "/video/hero-coast.mp4",                // 8 Portugal is waiting to be lived.
+  "/video/real/arrival-minibus.mp4",      // 9 You just have to start writing.
+] as const;
+/** Closing/composed frame uses the same clip as the final phrase. */
+const HERO_FINAL_VIDEO = PHRASE_VIDEOS[PHRASE_VIDEOS.length - 1];
 
 /**
  * Per-phrase cinematic scene.
