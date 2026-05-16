@@ -31,9 +31,28 @@ import {
 import { HeroContractAssert } from "@/components/home/HeroContractAssert";
 import { autoFixHeroContract, type ContractFix } from "@/lib/hero-phrase-contract";
 
-const HERO_FILM_SRC_1080 = "/video/film/yes-hero-film-1080.mp4";
-const HERO_FILM_SRC_720 = "/video/film/yes-hero-film-720.mp4";
+/**
+ * Per-phrase real Portugal footage. Each phrase plays its own
+ * matching clip — the visual carries the message. All clips are
+ * licensed/owned real footage (no AI-generated, no stock invented
+ * locations). Mapping below was chosen so the imagery reinforces
+ * the line being read.
+ */
 const HERO_FILM_POSTER = "/video/film/yes-hero-poster.jpg";
+const PHRASE_VIDEOS: readonly string[] = [
+  "/video/real/comporta-beach.mp4",      // 0 Portugal is the stage.
+  "/video/real/vineyard-walk.mp4",        // 1 You write your story.
+  "/video/real/troia-ruins.mp4",          // 2 Hidden chapters wait to unfold.
+  "/video/real/carrasqueira-pier.mp4",    // 3 Locals know where they begin.
+  "/video/real/azulejo-workshop.mp4",     // 4 You decide how to live it.
+  "/video/real/friends-toast.mp4",        // 5 A private day. A proposal…
+  "/video/real/wine-cellar.mp4",          // 6 Every story is different.
+  "/video/real/vineyard-tasting.mp4",     // 7 So is yours.
+  "/video/hero-coast.mp4",                // 8 Portugal is waiting to be lived.
+  "/video/real/arrival-minibus.mp4",      // 9 You just have to start writing.
+] as const;
+/** Closing/composed frame uses the same clip as the final phrase. */
+const HERO_FINAL_VIDEO = PHRASE_VIDEOS[PHRASE_VIDEOS.length - 1];
 
 /**
  * Per-phrase cinematic scene.
@@ -185,7 +204,7 @@ function prefersReducedMotion(): boolean {
 }
 
 export function CinematicHero() {
-  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
   const sectionRef = useRef<HTMLElement | null>(null);
   const showScrimRuler = useHeroScrimRulerToggle();
   const showPhraseDebug = useHeroPhraseDebugToggle();
@@ -205,7 +224,6 @@ export function CinematicHero() {
       return false;
     }
   });
-  const [videoSrc, setVideoSrc] = useState<string>(HERO_FILM_SRC_720);
   const [videoDurationMs, setVideoDurationMs] = useState<number | null>(null);
   const [intensity, setIntensity] = useState<number>(() => loadIntensity());
 
@@ -255,46 +273,64 @@ export function CinematicHero() {
     };
   }, []);
 
-  // Resolve source on the client by viewport.
+  // Drive playback of the per-phrase real Portugal clips. We mount
+  // all 10 <video> elements stacked; only the active one is visible.
+  // To keep CPU/decoder cost low on mobile, we only let the active
+  // (and the just-finished) clip play — everything else is paused
+  // with currentTime reset, so a fresh take greets each phrase.
   useEffect(() => {
-    const isDesktop =
-      typeof window !== "undefined" &&
-      window.matchMedia("(min-width: 768px)").matches;
-    setVideoSrc(isDesktop ? HERO_FILM_SRC_1080 : HERO_FILM_SRC_720);
-  }, []);
-
-  // Autoplay the continuous film. If autoplay is rejected, the static
-  // poster <img> below stays visible and the phrase sequence still runs.
-  useEffect(() => {
-    const v = videoRef.current;
-    if (!v) return;
-    const tryPlay = () => {
-      const p = v.play();
-      if (p && typeof p.then === "function") {
-        p.catch(() => setVideoFailed(true));
+    const active = phraseIndex < 0 ? 0 : Math.min(phraseIndex, PHRASE_VIDEOS.length - 1);
+    let cancelled = false;
+    videoRefs.current.forEach((v, i) => {
+      if (!v) return;
+      const shouldPlay = i === active || (composed && i === PHRASE_VIDEOS.length - 1);
+      if (shouldPlay) {
+        if (i === active) {
+          try { v.currentTime = 0; } catch { /* noop */ }
+        }
+        const p = v.play();
+        if (p && typeof p.then === "function") {
+          p.catch(() => { if (!cancelled) setVideoFailed(true); });
+        }
+      } else {
+        try { v.pause(); } catch { /* noop */ }
       }
-    };
-    const captureDuration = () => {
+    });
+    return () => { cancelled = true; };
+  }, [phraseIndex, composed]);
+
+  // Capture duration from the first/active clip so the contract's
+  // video-fit math has a sensible target.
+  useEffect(() => {
+    const active = phraseIndex < 0 ? 0 : Math.min(phraseIndex, PHRASE_VIDEOS.length - 1);
+    const v = videoRefs.current[active];
+    if (!v) return;
+    const capture = () => {
       if (v.duration && Number.isFinite(v.duration) && v.duration > 0) {
         setVideoDurationMs(Math.round(v.duration * 1000));
       }
     };
-    if (v.readyState >= 2) tryPlay();
-    else v.addEventListener("canplay", tryPlay, { once: true });
-    if (v.readyState >= 1) captureDuration();
-    v.addEventListener("loadedmetadata", captureDuration);
-    v.addEventListener("durationchange", captureDuration);
-    const onTouch = () => v.play().catch(() => {});
+    if (v.readyState >= 1) capture();
+    v.addEventListener("loadedmetadata", capture);
+    v.addEventListener("durationchange", capture);
+    return () => {
+      v.removeEventListener("loadedmetadata", capture);
+      v.removeEventListener("durationchange", capture);
+    };
+  }, [phraseIndex]);
+
+  // First-touch nudge for browsers that reject silent autoplay.
+  useEffect(() => {
+    const onTouch = () => {
+      videoRefs.current.forEach((v) => v?.play().catch(() => {}));
+    };
     window.addEventListener("touchstart", onTouch, { once: true, passive: true });
     window.addEventListener("pointerdown", onTouch, { once: true });
     return () => {
-      v.removeEventListener("canplay", tryPlay);
-      v.removeEventListener("loadedmetadata", captureDuration);
-      v.removeEventListener("durationchange", captureDuration);
       window.removeEventListener("touchstart", onTouch);
       window.removeEventListener("pointerdown", onTouch);
     };
-  }, [videoSrc]);
+  }, []);
 
   // Phrase-by-phrase intro sequence. Each phrase advances every
   // PHRASE_DURATION_MS; after the last, fade out and reveal the
@@ -431,32 +467,46 @@ export function CinematicHero() {
       data-hero-phase={composed ? "composed" : phraseIndex < 0 ? "idle" : `phrase-${phraseIndex}`}
       data-video-fallback={videoFailed ? "true" : "false"}
     >
-      {/* Continuous film — full bleed. If autoplay fails, the poster image
-         below stays visible and the phrase sequence continues unchanged. */}
-      <video
-        ref={videoRef}
-        key={videoSrc}
-        className="absolute inset-0 z-0 w-full h-full object-cover hero-film-video"
-        poster={HERO_FILM_POSTER}
-        autoPlay
-        muted
-        playsInline
-        loop
-        preload="auto"
-        aria-hidden="true"
-        data-hero-film="true"
-        onPlaying={() => setVideoFailed(false)}
-        onError={() => setVideoFailed(true)}
-        onStalled={() => setVideoFailed(true)}
-        src={videoSrc}
-      />
-      {/* Static poster fallback — only painted if the video fails. */}
+      {/* Per-phrase real Portugal footage — stacked, crossfaded.
+         Only the active clip is visible; opacity transitions provide
+         the cinematic dissolve. The poster <img> stays painted
+         underneath as a static fallback in case any clip fails. */}
       <img
         src={HERO_FILM_POSTER}
         alt=""
         aria-hidden="true"
         className="hero-film-fallback absolute inset-0 z-0 w-full h-full object-cover"
       />
+      {PHRASE_VIDEOS.map((src, i) => {
+        const activeIdx = phraseIndex < 0 ? 0 : Math.min(phraseIndex, PHRASE_VIDEOS.length - 1);
+        const isActive = i === activeIdx || (composed && i === PHRASE_VIDEOS.length - 1);
+        const scene = sceneFor(Math.min(i, PHRASE_SCENES.length - 1));
+        const fadeMs = Math.round(((isActive ? scene.fadeInMs : scene.fadeOutMs) || 800) * globalScale);
+        return (
+          <video
+            key={src}
+            ref={(el) => { videoRefs.current[i] = el; }}
+            className="absolute inset-0 z-0 w-full h-full object-cover hero-film-video hero-phrase-video"
+            poster={HERO_FILM_POSTER}
+            muted
+            playsInline
+            loop
+            preload={i === 0 ? "auto" : "metadata"}
+            aria-hidden="true"
+            data-hero-film={i === 0 ? "true" : undefined}
+            data-hero-phrase-video={i}
+            data-hero-phrase-active={isActive ? "true" : "false"}
+            onPlaying={() => i === 0 && setVideoFailed(false)}
+            onError={() => i === 0 && setVideoFailed(true)}
+            src={src}
+            style={{
+              opacity: isActive ? 1 : 0,
+              transition: `opacity ${fadeMs}ms cubic-bezier(0.22, 0.61, 0.36, 1)`,
+              willChange: "opacity",
+            }}
+          />
+        );
+      })}
 
       {/* Bottom darken so copy stays AA against varied frames.
          Gradient stops live in --hero-scrim-base (src/styles.css). */}
